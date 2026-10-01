@@ -1,0 +1,206 @@
+{
+  "config_hash": "sha256:17d509539abd34d125a7b8f21f47e2064e0f59d5eac351ba74cf8a90a0b6d5a9",
+  "public_hash": "sha256:3067e5d575393f9e36edd8215ef3e81bc8d0af9c539ba2f10b59198fd0aa380e",
+  "rows": [
+    {
+      "arm": "source_erased",
+      "duration_s": 0.932057169964537,
+      "family_id": "sha256:18e7ff2bceb96714474d507f0ac8333b856f9d65e10aa74b1f6fec40b7018039",
+      "input_tokens": 284,
+      "order": 0,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 1.0,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 284,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 307
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 1.0,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817106,
+        "id": "chatcmpl-QvaRg0MYdDpa1s9Hq39JkYlLFZIYg6OX",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 541.629,
+          "predicted_n": 23,
+          "predicted_per_second": 42.464491376938824,
+          "predicted_per_token_ms": 23.54908695652174,
+          "prompt_ms": 278.584,
+          "prompt_n": 206,
+          "prompt_per_second": 739.4538092639922,
+          "prompt_per_token_ms": 1.3523495145631068
+        },
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 284,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 307
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"\", \"original_answer\": \"El Taco Tequila Taqueria is a popular Mexican restaurant located in the heart of Santa Barbara, CA. With a 3.5-star rating and a trendy atmosphere, this establishment offers a variety of delicious tacos, margaritas, and other Mexican dishes. The restaurant has outdoor seating, takes reservations, and is good for groups, making it an ideal spot for a casual gathering or date night. However, some customers have reported issues with the service, including long wait times and poor communication from the staff. Despite these issues, the food at El Taco Tequila Taqueria is consistently praised, with highlights including the guacamole, chicken tacos, and happy hour deals. Overall, this restaurant is a solid choice for those looking for tasty Mexican cuisine in a lively setting.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [], \"source_evidence_erased\": true}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:7a8661b546542d36739e10b04a6ce4d467e9267eea5c158c5934e9a003abc4ce",
+      "started": true,
+      "status": "generated",
+      "visible_ids": []
+    },
+    {
+      "arm": "full_source",
+      "duration_s": 1.6318061240017414,
+      "family_id": "sha256:18e7ff2bceb96714474d507f0ac8333b856f9d65e10aa74b1f6fec40b7018039",
+      "input_tokens": 1044,
+      "order": 1,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 0.95,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 24,
+          "prompt_tokens": 1044,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 1068
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817108,
+        "id": "chatcmpl-lkRNBmz0XcgDtbpCIxQw3OXfcINI3tFb",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 567.676,
+          "predicted_n": 24,
+          "predicted_per_second": 42.2776372437799,
+          "predicted_per_token_ms": 23.653166666666667,
+          "prompt_ms": 960.661,
+          "prompt_n": 966,
+          "prompt_per_second": 1005.5576316723591,
+          "prompt_per_token_ms": 0.9944730848861283
+        },
+        "usage": {
+          "completion_tokens": 24,
+          "prompt_tokens": 1044,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 1068
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"{\\\"address\\\":\\\"14 E Cota St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":true,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Restaurants, Mexican\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":null,\\\"name\\\":\\\"El Taco Tequila Taqueria\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2013-12-06 03:03:14\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"On Thursday night I went to this place after a concert. A few friends and I wanted a bite and a drink. We ordered with a young woman who quickly told us they did not accommodate gluten free customers, even if you wanted a taco or tostada without the bread. Fine. I'll work around that I understand. We waited 20 minutes for our food, granted there was only one guy in the kitchen. We finally got our tacos and were missing one chicken taco and our guacamole. We ask the chef for the rest of our order and he says they are closing the kitchen. I go to the woman and tell her that we didn't get all our food and she tells me I'm lying. I point to the plates on our table to show her we didn't. I ask for our money back and she declines. We end up getting into a fight about one chicken taco and guac. \\\\n\\\\nI have worked in restaurants before and I would never scold a customer over a $3 taco. I even offed to pay for it and she wouldn't let me. Really terrible customer service. The chef did make us some guac bc I think he felt bad that we were hungry and upset. By that point we had eaten what we were served and didn't have anything to put it on.\\\\n\\\\nThat being said the food we get was yummy. Too bad our experience ended on such a bad note.\\\"},{\\\"review_date\\\":\\\"2013-03-28 15:50:04\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"We both got food poisoning here - that lasted a whole day. We narrowed it down to either the chips & salsa, the queso app, or the carnitas tacos since that's the only thing BOTH of us ate. The food seemed great, but it seems to be all about pushing the drinks for $$ and food safety was left to the sidelines.\\\"},{\\\"review_date\\\":\\\"2012-11-03 03:56:19\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Great food. WOnderful atmosphere. Great Happy hour two for one Margaritas. I love the decor too. Beautiful Bar. Amazing flan!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"El Taco Tequila Taqueria is a popular Mexican restaurant located in the heart of Santa Barbara, CA. With a 3.5-star rating and a trendy atmosphere, this establishment offers a variety of delicious tacos, margaritas, and other Mexican dishes. The restaurant has outdoor seating, takes reservations, and is good for groups, making it an ideal spot for a casual gathering or date night. However, some customers have reported issues with the service, including long wait times and poor communication from the staff. Despite these issues, the food at El Taco Tequila Taqueria is consistently praised, with highlights including the guacamole, chicken tacos, and happy hour deals. Overall, this restaurant is a solid choice for those looking for tasty Mexican cuisine in a lively setting.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24], \"source_evidence_erased\": false}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:7a8661b546542d36739e10b04a6ce4d467e9267eea5c158c5934e9a003abc4ce",
+      "started": true,
+      "status": "generated",
+      "visible_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24
+      ]
+    }
+  ]
+}

@@ -47219,3 +47219,29 @@ Readiness requires all owned checks, unambiguous custody, 64 retained slots,
 32 distinct eligible clusters and eight examples per response class. Undersized
 targets give complete_null_response_target_capacity and readiness zero. Keep the
 Exp7942 three-positive sentence null unchanged. No model is loaded or fitted.
+
+# REQ-VERIFY-7958: Measure complete-response Qwen support risk
+
+Freeze all 64 evaluation families from public bytes before evaluator access.
+Both full-source and erased-source arms ask whether the original complete answer
+has any span unsupported by its original source. Erasure changes information,
+not the event or label. Use the unchanged Exp7932 grammar and parser, seed 69058,
+temperature zero, 96 output tokens, 6000 input tokens, 128 calls and 12288 output
+tokens. Alternate arm order by public hash; no retries, repair or truncation.
+Seal each completed pair before opening labels. Unknown human targets remain
+excluded; invalid replies escalate in all-intended decision cost. Costs are
+accept=5p, reject=1-p, escalate=.25; actual costs use the same human y. Ties escalate.
+
+## SCENARIO-VERIFY-7958-QUERY
+
+Test complete UTF-8 preservation, label-free admission, equal call budgets,
+order, strict parser rejection, token/deadline censoring and pair checkpoints.
+
+## SCENARIO-VERIFY-7958-REDUCTION
+
+Require 32 complete source-cluster pairs and eight examples per class. Average
+within cluster; use 10000 paired bootstrap draws and paired sign randomization,
+with Holm correction for Brier and cost. Benefit requires both gains >=.02,
+both CI95 lower bounds >0, both adjusted p<.05, automation >=.20 and no extra
+false accepts. Otherwise publish a valid null or insufficient-data null.
+Implicit-true-excluded targets, annotation strata and sensitivity are descriptive.

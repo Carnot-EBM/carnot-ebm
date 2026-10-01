@@ -1,0 +1,186 @@
+{
+  "config_hash": "sha256:17d509539abd34d125a7b8f21f47e2064e0f59d5eac351ba74cf8a90a0b6d5a9",
+  "public_hash": "sha256:6aaa68373e52fcaba74439c700d8296d8f173582dbe30a151ae9833766f46cf2",
+  "rows": [
+    {
+      "arm": "full_source",
+      "duration_s": 1.0674689459847286,
+      "family_id": "sha256:d015fcf3af8788e6f08b2550da35e35f09b33079a490ca813c04f525fcda623a",
+      "input_tokens": 390,
+      "order": 0,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 0.0,
+        "schema_valid": true,
+        "source_sentence_id": 0,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 24,
+          "prompt_tokens": 390,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 414
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 0\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790816983,
+        "id": "chatcmpl-VUVRzvSRaDbAWscCwvKmKa0bA4qValwY",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 559.082,
+          "predicted_n": 24,
+          "predicted_per_second": 42.92751331647236,
+          "predicted_per_token_ms": 23.295083333333334,
+          "prompt_ms": 404.327,
+          "prompt_n": 312,
+          "prompt_per_second": 771.6526474858221,
+          "prompt_per_token_ms": 1.295919871794872
+        },
+        "usage": {
+          "completion_tokens": 24,
+          "prompt_tokens": 390,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 414
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"English actress Michelle Keegan has been named the sexiest woman in the world by British men's magazine FHM. The 27-year-old actress is best known for her roles on the BBC series \\\"Ordinary Lies\\\" and the long-running British soap opera \\\"Coronation Street.\\\" Her \\\"Coronation Street\\\" character Tina McIntyre was the show's first character to act as a surrogate, according to IMDB. Keegan is followed by reality television star and model Kendall Jenner, Oscar-winning actress Jennifer Lawrence, Sports Illustrated swimsuit cover girl Kate Upton and British television host Caroline Flack, who dated One Direction's Harry Styles for a few months. Sandra Bullock doesn't appear anywhere on FHM's list, even though People magazine named her the \\\"World's Most Beautiful Woman\\\" a week ago. The \\\"FHM 100 Sexiest Women in the World\\\" issue goes on sale Thursday, April 30.\\n\", \"original_answer\": \"Sure! Here's the summary in 33 words:\\n\\nActress Michelle Keegan named world's sexiest woman by FHM; Kendall Jenner, Jennifer Lawrence, Kate Upton, and Caroline Flack also ranked highly, while Sandra Bullock did not make the list.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4], \"source_evidence_erased\": false}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:1965172844adb6940577744fe9894a2182859df0742e82e79776d2998a2291d8",
+      "started": true,
+      "status": "generated",
+      "visible_ids": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "arm": "source_erased",
+      "duration_s": 0.7768942010006867,
+      "family_id": "sha256:d015fcf3af8788e6f08b2550da35e35f09b33079a490ca813c04f525fcda623a",
+      "input_tokens": 185,
+      "order": 1,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 0.0,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 17,
+          "prompt_tokens": 185,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 202
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\"unsupported_probability\": 0.0, \"source_sentence_id\": null}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790816984,
+        "id": "chatcmpl-RAEeLBfyNtF5g7DKRxEfOVNcGThBePtp",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 391.749,
+          "predicted_n": 17,
+          "predicted_per_second": 43.39513310818917,
+          "predicted_per_token_ms": 23.04405882352941,
+          "prompt_ms": 195.399,
+          "prompt_n": 107,
+          "prompt_per_second": 547.5974800280452,
+          "prompt_per_token_ms": 1.826158878504673
+        },
+        "usage": {
+          "completion_tokens": 17,
+          "prompt_tokens": 185,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 202
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"\", \"original_answer\": \"Sure! Here's the summary in 33 words:\\n\\nActress Michelle Keegan named world's sexiest woman by FHM; Kendall Jenner, Jennifer Lawrence, Kate Upton, and Caroline Flack also ranked highly, while Sandra Bullock did not make the list.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [], \"source_evidence_erased\": true}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:1965172844adb6940577744fe9894a2182859df0742e82e79776d2998a2291d8",
+      "started": true,
+      "status": "generated",
+      "visible_ids": []
+    }
+  ]
+}

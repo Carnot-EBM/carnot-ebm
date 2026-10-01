@@ -1,0 +1,188 @@
+{
+  "config_hash": "sha256:17d509539abd34d125a7b8f21f47e2064e0f59d5eac351ba74cf8a90a0b6d5a9",
+  "public_hash": "sha256:2dbc7367dc072bb179a8c310218675f904866acede9374e73eb4b0b22deb2c33",
+  "rows": [
+    {
+      "arm": "source_erased",
+      "duration_s": 1.0921790290158242,
+      "family_id": "sha256:3bf9ad90ae172adc981f66d290f2c3ead258496225d2523d517bbd929c79d1c8",
+      "input_tokens": 293,
+      "order": 0,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 1.0,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 293,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 316
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 1.0,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817002,
+        "id": "chatcmpl-PAV9ZWbc8ay3512ZpPfTS7t936TPSzui",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 535.532,
+          "predicted_n": 23,
+          "predicted_per_second": 42.94794708812918,
+          "predicted_per_token_ms": 23.284000000000002,
+          "prompt_ms": 274.558,
+          "prompt_n": 215,
+          "prompt_per_second": 783.0767998018634,
+          "prompt_per_token_ms": 1.277013953488372
+        },
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 293,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 316
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"\", \"original_answer\": \"Kyle's Kitchen, located at 5723 Calle Real, Goleta, CA, is a local business that operates from 11:00 to 21:00 daily. The restaurant specializes in burgers, salads, desserts, and other food items. It offers amenities like outdoor seating, free WiFi, takeaway service, and ample parking space in a lot. However, it doesn't provide valet services, live music, or reservations. Customer reviews indicate mixed experiences, with one customer praising the food quality, particularly the burgers, sandwiches, malts, fries, and salads, along with prompt and cheerful service. On the contrary, other customers have voiced concerns over issues with online orders using gift cards and dissatisfaction with food quality and hygiene measures. The restaurant has an overall rating of 4 stars.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [], \"source_evidence_erased\": true}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:e9ecc922e812bafcd2be2131f1886adaa9ca1574d3652c7a199a9dbcc5dd917c",
+      "started": true,
+      "status": "generated",
+      "visible_ids": []
+    },
+    {
+      "arm": "full_source",
+      "duration_s": 1.4435405219555832,
+      "family_id": "sha256:3bf9ad90ae172adc981f66d290f2c3ead258496225d2523d517bbd929c79d1c8",
+      "input_tokens": 898,
+      "order": 1,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 0.0,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 21,
+          "prompt_tokens": 898,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 919
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817004,
+        "id": "chatcmpl-GYK5RktkBtclG1QNhZw2aWcesSRSOfJY",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 488.227,
+          "predicted_n": 21,
+          "predicted_per_second": 43.012778891786,
+          "predicted_per_token_ms": 23.24890476190476,
+          "prompt_ms": 826.215,
+          "prompt_n": 820,
+          "prompt_per_second": 992.4777448969094,
+          "prompt_per_token_ms": 1.007579268292683
+        },
+        "usage": {
+          "completion_tokens": 21,
+          "prompt_tokens": 898,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 919
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"{\\\"address\\\":\\\"5723 Calle Real\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":null,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Burgers, Salad, Restaurants, Desserts, Food, Chicken Shop\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-21:0\\\",\\\"Monday\\\":\\\"11:0-21:0\\\",\\\"Saturday\\\":\\\"11:0-21:0\\\",\\\"Sunday\\\":\\\"11:0-21:0\\\",\\\"Thursday\\\":\\\"11:0-21:0\\\",\\\"Tuesday\\\":\\\"11:0-21:0\\\",\\\"Wednesday\\\":\\\"11:0-21:0\\\"},\\\"name\\\":\\\"Kyle's Kitchen\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-19 02:07:36\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"I was given two gift cards through my employer, and these gift cards are useless for online orders with delivery.\\\\nI contacted the company about the issue and was told they will fix it, and a month later it still is not fixed. It's as if Kyle's kitchen does not care about the customers to keep their word and fix this problem after saying they would.\\\\nVery poor integrity and poor leadership\\\"},{\\\"review_date\\\":\\\"2022-01-07 04:09:24\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Very good food, burgers, sandwiches, malts, fries and salads included, (an especially delicious ahi salad) with cheerful and timely service.\\\"},{\\\"review_date\\\":\\\"2021-12-31 00:59:52\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"I have been a customer since they opened. Today, I ordered a classic Kyle's burger (super well done, no pink) and super crispy fries. After waiting 40 min while it was prepared to go, the burger was pink on the inside and the fries were floppy/greasy. Really terrible food today. Also, the girl working at the counter, and putting all the food together had her mask beneath her nose.  I love Kyles, but sorry to say this was not a good experience.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Kyle's Kitchen, located at 5723 Calle Real, Goleta, CA, is a local business that operates from 11:00 to 21:00 daily. The restaurant specializes in burgers, salads, desserts, and other food items. It offers amenities like outdoor seating, free WiFi, takeaway service, and ample parking space in a lot. However, it doesn't provide valet services, live music, or reservations. Customer reviews indicate mixed experiences, with one customer praising the food quality, particularly the burgers, sandwiches, malts, fries, and salads, along with prompt and cheerful service. On the contrary, other customers have voiced concerns over issues with online orders using gift cards and dissatisfaction with food quality and hygiene measures. The restaurant has an overall rating of 4 stars.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6], \"source_evidence_erased\": false}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:e9ecc922e812bafcd2be2131f1886adaa9ca1574d3652c7a199a9dbcc5dd917c",
+      "started": true,
+      "status": "generated",
+      "visible_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ]
+    }
+  ]
+}

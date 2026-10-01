@@ -1,0 +1,204 @@
+{
+  "config_hash": "sha256:17d509539abd34d125a7b8f21f47e2064e0f59d5eac351ba74cf8a90a0b6d5a9",
+  "public_hash": "sha256:25b70bb43449bb7f8327b14e63db693ead3646414e8e58600594ae4785cf0b1e",
+  "rows": [
+    {
+      "arm": "full_source",
+      "duration_s": 1.6848947510006838,
+      "family_id": "sha256:e479d4691f7187621cebe3a475fad6e95255acf1fa5bc4f40202aba2f08d0d2b",
+      "input_tokens": 1155,
+      "order": 0,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 0.0,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 1155,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 1178
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817140,
+        "id": "chatcmpl-nv2O5EcFXTI93pWkmXN1bVx3DN9UeT1P",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 544.195,
+          "predicted_n": 23,
+          "predicted_per_second": 42.26426189141759,
+          "predicted_per_token_ms": 23.660652173913046,
+          "prompt_ms": 1039.427,
+          "prompt_n": 1077,
+          "prompt_per_second": 1036.14780066325,
+          "prompt_per_token_ms": 0.9651132776230268
+        },
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 1155,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 1178
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"{\\\"address\\\":\\\"7060 Hollister Ave, Ste 105\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":null,\\\"lot\\\":true,\\\"street\\\":null,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Bakeries, Restaurants, Food, American (Traditional), Breakfast & Brunch, Coffee & Tea\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"7:30-13:30\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"7:30-14:0\\\",\\\"Sunday\\\":\\\"7:30-14:0\\\",\\\"Thursday\\\":\\\"7:30-13:30\\\",\\\"Wednesday\\\":\\\"7:30-13:30\\\"},\\\"name\\\":\\\"Jeannine's American Bakery Restaurant\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-19 17:20:22\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"I am super disappointed. I love the Jeannine's in Montecito. But this one is just not that great. Coffee is not great , I think the drink coffee is a good indicator on how serious a place takes their coffee and this place does not do great coffee. I ordered chilequiles and we super excited since I love that dish most places I go to but tbh it was the worst chilequiles I've ever had. The taste was bitter and even my dad who eats everything and is not picky didn't eat it. Also I asked specifically not to overlook my eggs, and they were overcooked. Bummer! Paid 7 for fresh OJ... also not tasty. Ordered French toast for my boy and it was definitely the best thing we ordered. I also got a croissant and I know this is brutal but Costco makes them better. Sorry guys I hate to be so negative but to spend 65 bucks on breakfast that was a MAJOR let down. I will not be going back.\\\"},{\\\"review_date\\\":\\\"2022-01-15 17:47:45\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Visiting from SF - this place is excellent. Don't be out off by it's location in a mall. \\\\n\\\\nThe food and service are top notch and the decor inside is super cute. \\\\n\\\\nWe had the French toast and Avo toast with matcha lattes made with oat milk. \\\\n\\\\nEverything was made perfectly and was really delicious. The eggs had deep Orange yolks and were also super tasty. \\\\n\\\\nTwo thumbs up!\\\"},{\\\"review_date\\\":\\\"2022-01-07 20:07:50\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I absolutely love the ambiance, and the attentive service.\\\\nThe french toast was delicious!\\\\nFresh OJ gets a two thumbs up!\\\\nNow the bacon! I'd go there just for that! \\\\nSmokey and crisp!\\\\nMy friend had that All American and she was pleased!\\\\nDefinitely on repeat! \\\\nThanks to everyone for a nice experience!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Jeannine's American Bakery Restaurant is a traditional American bakery and restaurant located at 7060 Hollister Ave, Ste 105, in Goleta, CA. The establishment offers a variety of food categories including breakfast and brunch, coffee and tea. The restaurant operates from 7:30 am to 1:30 pm from Wednesday to Friday, and until 2 pm on Saturdays and Sundays. It offers free WiFi, outdoor seating, and take-out options, with a focus on a classy ambience. The restaurant has a business rating of 4.5 stars. Reviews are mixed, with customers praising the French toast, ambiance, service, and fresh orange juice. However, some customers were dissatisfied with the coffee and other dishes, stating they were not up to the standard expected. The restaurant also offers parking lots, but no valet, garage or street parking.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22], \"source_evidence_erased\": false}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:9f58d9b4b557fd397dfc17ecd7d64e84d334a35d9d733788b2deed71a8a63982",
+      "started": true,
+      "status": "generated",
+      "visible_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22
+      ]
+    },
+    {
+      "arm": "source_erased",
+      "duration_s": 1.0524175059981644,
+      "family_id": "sha256:e479d4691f7187621cebe3a475fad6e95255acf1fa5bc4f40202aba2f08d0d2b",
+      "input_tokens": 310,
+      "order": 1,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 1.0,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 310,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 333
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 1.0,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817141,
+        "id": "chatcmpl-W35b3ji52KJWUDw0g9bS6zUZgnbwRof5",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 539.99,
+          "predicted_n": 23,
+          "predicted_per_second": 42.59338135891406,
+          "predicted_per_token_ms": 23.477826086956522,
+          "prompt_ms": 295.693,
+          "prompt_n": 232,
+          "prompt_per_second": 784.597538663411,
+          "prompt_per_token_ms": 1.2745387931034482
+        },
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 310,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 333
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"\", \"original_answer\": \"Jeannine's American Bakery Restaurant is a traditional American bakery and restaurant located at 7060 Hollister Ave, Ste 105, in Goleta, CA. The establishment offers a variety of food categories including breakfast and brunch, coffee and tea. The restaurant operates from 7:30 am to 1:30 pm from Wednesday to Friday, and until 2 pm on Saturdays and Sundays. It offers free WiFi, outdoor seating, and take-out options, with a focus on a classy ambience. The restaurant has a business rating of 4.5 stars. Reviews are mixed, with customers praising the French toast, ambiance, service, and fresh orange juice. However, some customers were dissatisfied with the coffee and other dishes, stating they were not up to the standard expected. The restaurant also offers parking lots, but no valet, garage or street parking.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [], \"source_evidence_erased\": true}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:9f58d9b4b557fd397dfc17ecd7d64e84d334a35d9d733788b2deed71a8a63982",
+      "started": true,
+      "status": "generated",
+      "visible_ids": []
+    }
+  ]
+}

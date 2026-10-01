@@ -1,0 +1,205 @@
+{
+  "config_hash": "sha256:17d509539abd34d125a7b8f21f47e2064e0f59d5eac351ba74cf8a90a0b6d5a9",
+  "public_hash": "sha256:2edc5930178937b1fc4f16515ddf2195dbb8fca5771100900d9f02caab82043f",
+  "rows": [
+    {
+      "arm": "source_erased",
+      "duration_s": 1.144281448039692,
+      "family_id": "sha256:7d8f3ec273d25ebcfd30bb859184f736c76b571fea289a480a68a86b11c4c34b",
+      "input_tokens": 300,
+      "order": 0,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 1.0,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 300,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 323
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 1.0,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817010,
+        "id": "chatcmpl-AmipaXIAeoNH9VideU5UCzoWptnzmh9q",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 534.704,
+          "predicted_n": 23,
+          "predicted_per_second": 43.01445285615967,
+          "predicted_per_token_ms": 23.247999999999998,
+          "prompt_ms": 274.768,
+          "prompt_n": 222,
+          "prompt_per_second": 807.954346939964,
+          "prompt_per_token_ms": 1.2376936936936935
+        },
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 300,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 323
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"\", \"original_answer\": \"Modern Times Academy of Recreational Sciences is a restaurant located in Santa Barbara, CA that offers a variety of dining options including beer bar, breakfast & brunch, vegan, bars, nightlife, and restaurants. The business is open Monday through Sunday from 12:00 PM to 10:30 PM, except for Fridays and Saturdays when it stays open until midnight. \\n\\nAccording to the reviews, the atmosphere at Modern Times Academy of Recreational Sciences is great and the food is delicious. Many customers appreciate the vegan menu options, which are creative and indulgent. The beer selection is also top-notch, with many sour options available. Customers also compliment the staff, who are knowledgeable about the beers and very friendly. Overall, Modern Times Academy of Recreational Sciences seems like a popular and enjoyable spot for locals and tourists alike.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [], \"source_evidence_erased\": true}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:66653b7ebbf54772f3e120dd1923ff6d478afcf1f4de00e0131d85d9b293d815",
+      "started": true,
+      "status": "generated",
+      "visible_ids": []
+    },
+    {
+      "arm": "full_source",
+      "duration_s": 1.6792286410345696,
+      "family_id": "sha256:7d8f3ec273d25ebcfd30bb859184f736c76b571fea289a480a68a86b11c4c34b",
+      "input_tokens": 1113,
+      "order": 1,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 0.95,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 24,
+          "prompt_tokens": 1113,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 1137
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817012,
+        "id": "chatcmpl-BElyGwNag11Y3kfDJwScClppeBvKF4Cf",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 561.694,
+          "predicted_n": 24,
+          "predicted_per_second": 42.72789098690746,
+          "predicted_per_token_ms": 23.403916666666664,
+          "prompt_ms": 1003.407,
+          "prompt_n": 1035,
+          "prompt_per_second": 1031.4857281242805,
+          "prompt_per_token_ms": 0.9694753623188406
+        },
+        "usage": {
+          "completion_tokens": 24,
+          "prompt_tokens": 1113,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 1137
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"{\\\"address\\\":\\\"418 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":null,\\\"divey\\\":false,\\\"hipster\\\":true,\\\"intimate\\\":null,\\\"romantic\\\":false,\\\"touristy\\\":true,\\\"trendy\\\":true,\\\"upscale\\\":false},\\\"BusinessParking\\\":null,\\\"Music\\\":false,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Beer Bar, Breakfast & Brunch, Vegan, Bars, Nightlife, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"12:0-23:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"12:0-14:30\\\",\\\"Sunday\\\":\\\"12:0-21:0\\\",\\\"Thursday\\\":\\\"12:0-21:0\\\",\\\"Wednesday\\\":\\\"12:0-21:0\\\"},\\\"name\\\":\\\"Modern Times Academy of Recreational Sciences\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-12-03 23:17:43\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Such a great vibe there! I absolutely love Modern Times beer! I have been such a fan since my first Orderville and have followed deep into Monster's Park: Mexican hot chocolate edition! Mostly IPAs and barrel-aged stouts but everything is awesome. The vibe here is amazing and can't wait to come back, the staff is very friendly but...I must say, the girl working the gift shop in the brown plaid was seriously the sweetest! So friendly and so helpful. If everyone had employees like her, their business would be much more successful. She was very personable and relatable and also had great selections to offer. She even gave me good advice on a hoodie and also a \\\\\\\"road-soda\\\\\\\" to take with me! Her words were, \\\\\\\"the ethereal embrace is fun to say and such a great treat at the end of a shift.\\\\\\\" She was absolutely right! What a treat to sip, on the way back to OC. This location needs to do what they can to keep her around because she is EXACTLY why people return to places like this. Not just because of the environment but because of the people who make the environment great! I unfortunately didn't catch her name but she is a keeper! Thank you again for such a great experience during my first time at a Modern Times location, you're what makes these places great, I thank you.\\\"},{\\\"review_date\\\":\\\"2021-11-20 14:02:44\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"The Quick: INSANELY amazing food and awesome beer (lots of sours which we love). Get the munchwrap supreme ... Similar to a Tb favorite but plant based. Everyone who's been here has had trust issues after trying to vegan food... No one believes it's plant based. It's delicious, creative and sooo indulgent.  Enjoy yourself!\\\"},{\\\"review_date\\\":\\\"2021-11-12 01:28:07\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Best beers in town. Great vegan food and outdoor patio space as well. The staff is very knowledgeable about beers. The interior decor is really nice too.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Modern Times Academy of Recreational Sciences is a restaurant located in Santa Barbara, CA that offers a variety of dining options including beer bar, breakfast & brunch, vegan, bars, nightlife, and restaurants. The business is open Monday through Sunday from 12:00 PM to 10:30 PM, except for Fridays and Saturdays when it stays open until midnight. \\n\\nAccording to the reviews, the atmosphere at Modern Times Academy of Recreational Sciences is great and the food is delicious. Many customers appreciate the vegan menu options, which are creative and indulgent. The beer selection is also top-notch, with many sour options available. Customers also compliment the staff, who are knowledgeable about the beers and very friendly. Overall, Modern Times Academy of Recreational Sciences seems like a popular and enjoyable spot for locals and tourists alike.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23], \"source_evidence_erased\": false}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:66653b7ebbf54772f3e120dd1923ff6d478afcf1f4de00e0131d85d9b293d815",
+      "started": true,
+      "status": "generated",
+      "visible_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23
+      ]
+    }
+  ]
+}

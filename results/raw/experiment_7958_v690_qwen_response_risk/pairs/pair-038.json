@@ -1,0 +1,217 @@
+{
+  "config_hash": "sha256:17d509539abd34d125a7b8f21f47e2064e0f59d5eac351ba74cf8a90a0b6d5a9",
+  "public_hash": "sha256:d9cc3d236c0b48302c62cb0d4057bdf858def8159c778c84d0ab07f89e897dd3",
+  "rows": [
+    {
+      "arm": "source_erased",
+      "duration_s": 1.0015884430031292,
+      "family_id": "sha256:80831339757724e1b88540b639ad418c786071ac3af9ddfea06a49c2c94cf779",
+      "input_tokens": 276,
+      "order": 0,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 1.0,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 276,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 299
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 1.0,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817077,
+        "id": "chatcmpl-PL7ePk7EDdiMPioUdE0XUJpMbCjuTKDI",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 540.814,
+          "predicted_n": 23,
+          "predicted_per_second": 42.52848483951969,
+          "predicted_per_token_ms": 23.51365217391304,
+          "prompt_ms": 274.005,
+          "prompt_n": 198,
+          "prompt_per_second": 722.6145508293645,
+          "prompt_per_token_ms": 1.3838636363636363
+        },
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 276,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 299
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"\", \"original_answer\": \"Survivor host Jeff Probst has clarified the new sit-out rule, addressing complaints from fans about its previous ambiguity. The rule states that contestants cannot sit out consecutive challenges, with the clarification that this applies within a single cycle. However, the rule has been simplified to now mean that participants cannot sit out back-to-back challenges, regardless of the type. This change was prompted by previous contestant Claire Rafson, who sat out three consecutive Immunity Challenges during Season 44, causing backlash from fans and fellow tribe members. The new rule is seen as a consequence of the shortened 26-day format of the show. In other news, recently eliminated contestants Hannah Rose and Brandon Donlon have spoken about their experiences on Survivor 45.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [], \"source_evidence_erased\": true}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:efcee55274ea8dfa07fe620a4f45ce2acc693f2f7ea261ad8c3440e792e9cc04",
+      "started": true,
+      "status": "generated",
+      "visible_ids": []
+    },
+    {
+      "arm": "full_source",
+      "duration_s": 1.5200701760477386,
+      "family_id": "sha256:80831339757724e1b88540b639ad418c786071ac3af9ddfea06a49c2c94cf779",
+      "input_tokens": 970,
+      "order": 1,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 0.0,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 970,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 993
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817079,
+        "id": "chatcmpl-LcDNF9RxJGIFrcw4c2altXSClTt7lvFp",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 541.108,
+          "predicted_n": 23,
+          "predicted_per_second": 42.50537785432853,
+          "predicted_per_token_ms": 23.526434782608693,
+          "prompt_ms": 878.297,
+          "prompt_n": 892,
+          "prompt_per_second": 1015.6017839068105,
+          "prompt_per_token_ms": 0.9846378923766816
+        },
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 970,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 993
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"Survivor host Jeff Probst explains the reasons for new sit-out rule\\nSurvivor fans had complained for several years about the unclear sit-out rules.\\nAs Jeff Probst explained before, castaways could not sit out consecutive challenges.\\nBut there was a wrinkle to that rule. It meant consecutive challenges within a single cycle.\\nEverything would reset at a Tribal Council. If there were no Reward Challenges, the same people could sit out (technically) consecutive Immunity Challenges.\\nThe game was sped up to be completed in 26 days (rather than the old 39-day length). This meant less time to battle for rewards.\\nIt also created a situation where one person frequently sat out.\\nJeff Probst explains the new sit-out rules\\n\u201cYou cannot sit out of back-to-back challenges, period. So, whoever sits out of this challenge will run in the next challenge. Make sense?\u201d Jeff told the Survivor 45 castaways during Episode 2.\\nIt makes sense. And it should alleviate any future questions. Simplifying the rule also makes it easier for Survivor fans (at home) to understand.\\nDuring the 39-day seasons, episodes typically featured two challenges. That made it easier to notice when someone was sitting out too often. An adjustment to the rule was needed when the seasons became shortened.\\nClaire Rafson from Survivor 44 forced this rule change\\nSurvivor fans saw Claire sit out three consecutive Immunity Challenges during Season 44.\\nIt led to pushback from fans and her fellow tribe members.\\nAs previously reported on Monsters and Critics, Claire sitting out became a hot topic on social media. It also led to Jeff addressing the situation during his On Fire podcast.\\nThe podcast has returned this fall, accompanying episodes of the reality competition show on Wednesdays.\\nNew Survivor episodes are 90 minutes long, providing additional footage for fans to enjoy.\\nHopefully, the producers keep this format for future seasons. For now, it is seen as a consequence of the Hollywood strikes. Those strikes have limited production for shows like NCIS and Fire Country.\\nHannah Rose spoke about why she quit Survivor 45. She provided her reasoning for asking the Lulu Tribe to vote her out at the first Tribal Council.\\nSocial media has not been kind to Hannah following her elimination. Fans still debate whether or not she took a spot from someone else.\\nRecently eliminated castaway Brandon Donlon also spoke about his experience. Brandon shared a goal he completed on Survivor 45. He also talked about suffering a panic attack and blacking out.\\nPrevious episodes from Survivor 45 are available for streaming on Paramount+.\\nSurvivor airs Wednesday at 8/7c on CBS.\", \"original_answer\": \"Survivor host Jeff Probst has clarified the new sit-out rule, addressing complaints from fans about its previous ambiguity. The rule states that contestants cannot sit out consecutive challenges, with the clarification that this applies within a single cycle. However, the rule has been simplified to now mean that participants cannot sit out back-to-back challenges, regardless of the type. This change was prompted by previous contestant Claire Rafson, who sat out three consecutive Immunity Challenges during Season 44, causing backlash from fans and fellow tribe members. The new rule is seen as a consequence of the shortened 26-day format of the show. In other news, recently eliminated contestants Hannah Rose and Brandon Donlon have spoken about their experiences on Survivor 45.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35], \"source_evidence_erased\": false}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:efcee55274ea8dfa07fe620a4f45ce2acc693f2f7ea261ad8c3440e792e9cc04",
+      "started": true,
+      "status": "generated",
+      "visible_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35
+      ]
+    }
+  ]
+}

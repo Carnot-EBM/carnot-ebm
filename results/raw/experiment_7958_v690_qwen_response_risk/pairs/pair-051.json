@@ -1,0 +1,197 @@
+{
+  "config_hash": "sha256:17d509539abd34d125a7b8f21f47e2064e0f59d5eac351ba74cf8a90a0b6d5a9",
+  "public_hash": "sha256:da781cf72b2f67398493a851fb9b3fae771571cf5c7c15de838356aeae2aae04",
+  "rows": [
+    {
+      "arm": "full_source",
+      "duration_s": 1.340438577986788,
+      "family_id": "sha256:0618bf24faccb9ee344be5b25bd46dfe66ff9d485687fd02107791e06e98e284",
+      "input_tokens": 746,
+      "order": 0,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 0.0,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 746,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 769
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817113,
+        "id": "chatcmpl-bYcMtPz9MncqeHSu36eZGi1vEeARe3VY",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 542.362,
+          "predicted_n": 23,
+          "predicted_per_second": 42.40710079245965,
+          "predicted_per_token_ms": 23.58095652173913,
+          "prompt_ms": 672.614,
+          "prompt_n": 668,
+          "prompt_per_second": 993.1401963087297,
+          "prompt_per_token_ms": 1.0069071856287426
+        },
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 746,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 769
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:6) Rinse the hair completely and, if the hair is longer, use a wide-tooth comb to remove tangles and smooth the hair. 7) Apply a conditioner in the same manner you applied the shampoo. Allow the conditioner to remain on for a few mintues. 8) Rinse the hair with cool water and comb through it again. 9) Dry the hair with a towel using a patting or stroking motion. Never rub the hair back and forth or in circles with a towel as this will cause damage to the hair.\\\\n\\\\npassage 2:Oh, and a great shampoo feels good, too. Here's how to do it right. 1) First, you'll want to make sure to select the proper shampoo and conditioner for your hair type. 2) While in the shower, make sure your water is warm, but not too hot. Turn the flow down just a bit so you're not splashing all over the place. 3) Thoroughly wet the hair. 4) Apply a bit of shampoo into the palm of your hand (a nickel sized amount is usually just about right) and work it through the hair. If your hair is longer, don't pile it up on your head, instead comb through it with your fingers to reduce tangles.\\\\n\\\\npassage 3:Wrap a towel or pat it gently to soak the water from hair. Avoid rubbing it with a towel to dry it. Wet hair is weak and such frictions can lead to damage, hence handle your hair with proper care to make them beautiful. Use a hair dryer Now use a hair dryer to completely dry your hair.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to properly clean your hair\\\"}\", \"original_answer\": \"To properly clean your hair, follow these steps:\\n\\n1. Rinse your hair thoroughly with water until there are no more suds coming out.\\n2. If your hair is long, use a wide-tooth comb to detangle it and smooth it out.\\n3. Apply a conditioner to your hair, allowing it to remain on for a few minutes.\\n4. Rinse your hair with cool water and comb through it again.\\n5. Dry your hair with a towel using a patting or stroking motion, avoiding rubbing it back and forth or in circles.\\n6. Select the appropriate shampoo and conditioner for your hair type and apply it while in the shower.\\n7. Make sure the water temperature is warm but not too hot.\\n8. Thoroughly wet your hair before applying shampoo and working it through your hair with your fingers to reduce tangles.\\n9. Once your hair is dry, use a hair dryer to complete the drying process.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], \"source_evidence_erased\": false}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:b1550785dde87bbacdddadc4e7969c391701bf2b7ccde62ca4b361587b789d50",
+      "started": true,
+      "status": "generated",
+      "visible_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ]
+    },
+    {
+      "arm": "source_erased",
+      "duration_s": 1.0342104060109705,
+      "family_id": "sha256:0618bf24faccb9ee344be5b25bd46dfe66ff9d485687fd02107791e06e98e284",
+      "input_tokens": 328,
+      "order": 1,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 1.0,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 328,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 351
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 1.0,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817114,
+        "id": "chatcmpl-6WlE1HRk1IDxcGEdPwvdqRzeDaMBCSng",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 541.389,
+          "predicted_n": 23,
+          "predicted_per_second": 42.4833160629418,
+          "predicted_per_token_ms": 23.538652173913043,
+          "prompt_ms": 298.594,
+          "prompt_n": 250,
+          "prompt_per_second": 837.2572791147846,
+          "prompt_per_token_ms": 1.1943759999999999
+        },
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 328,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 351
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"\", \"original_answer\": \"To properly clean your hair, follow these steps:\\n\\n1. Rinse your hair thoroughly with water until there are no more suds coming out.\\n2. If your hair is long, use a wide-tooth comb to detangle it and smooth it out.\\n3. Apply a conditioner to your hair, allowing it to remain on for a few minutes.\\n4. Rinse your hair with cool water and comb through it again.\\n5. Dry your hair with a towel using a patting or stroking motion, avoiding rubbing it back and forth or in circles.\\n6. Select the appropriate shampoo and conditioner for your hair type and apply it while in the shower.\\n7. Make sure the water temperature is warm but not too hot.\\n8. Thoroughly wet your hair before applying shampoo and working it through your hair with your fingers to reduce tangles.\\n9. Once your hair is dry, use a hair dryer to complete the drying process.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [], \"source_evidence_erased\": true}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:b1550785dde87bbacdddadc4e7969c391701bf2b7ccde62ca4b361587b789d50",
+      "started": true,
+      "status": "generated",
+      "visible_ids": []
+    }
+  ]
+}

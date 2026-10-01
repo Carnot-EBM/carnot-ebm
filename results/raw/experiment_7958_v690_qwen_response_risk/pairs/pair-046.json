@@ -1,0 +1,205 @@
+{
+  "config_hash": "sha256:17d509539abd34d125a7b8f21f47e2064e0f59d5eac351ba74cf8a90a0b6d5a9",
+  "public_hash": "sha256:013fa97bc766e66a9fcffd72345a2e6cbfc30b6b49d91ffd2dcba9e589bddf4b",
+  "rows": [
+    {
+      "arm": "full_source",
+      "duration_s": 1.7295302450074814,
+      "family_id": "sha256:ce210fa8b1fda298f70d1269a95e16c65c964baafe0dc2a645b8455c1947c5b1",
+      "input_tokens": 1195,
+      "order": 0,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 0.95,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 24,
+          "prompt_tokens": 1195,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 1219
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817101,
+        "id": "chatcmpl-ZePBhmROw69zbxm5deVgKu8B46qNzOXL",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 567.325,
+          "predicted_n": 24,
+          "predicted_per_second": 42.303794121535276,
+          "predicted_per_token_ms": 23.63854166666667,
+          "prompt_ms": 1061.631,
+          "prompt_n": 1117,
+          "prompt_per_second": 1052.1546563730712,
+          "prompt_per_token_ms": 0.950430617726052
+        },
+        "usage": {
+          "completion_tokens": 24,
+          "prompt_tokens": 1195,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 1219
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"{\\\"address\\\":\\\"1114 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":null,\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Food, Food Delivery Services, Burgers, Pizza, Caterers, Event Planning & Services, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-22:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"11:0-22:0\\\",\\\"Sunday\\\":\\\"11:0-21:0\\\",\\\"Thursday\\\":\\\"11:0-21:0\\\",\\\"Tuesday\\\":\\\"16:0-21:0\\\",\\\"Wednesday\\\":\\\"11:0-21:0\\\"},\\\"name\\\":\\\"Bogo SB\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-08-28 00:31:31\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Good food, surprisingly easy ordering process. \\\\n\\\\nI often confuse this spot with Mizza and the adjoining 1114 restaurant. To my knowledge, they are under the same ownership. I order through Grubhub as all three spots offer crazy coupon discounts. Delivery, tax, and the driver fee will rack the price way back up so I opted to pick up from the location today. \\\\n\\\\nThe restaurant is named after their buy one, get one free pizzas. I've tried and they are amazing! Great value. Tonight, I ordered a burger which is the same one cooked at 1114. It's large, full of flavor, and comes with a hearty serving of seasoned fries. \\\\n\\\\nBOGO is located within 1114. As soon as you enter the doors, take an immediate left where you will be greeted by a white counter with their logo. They appear to operate separately from the main restaurant. I was immediately helped by 3 different employees and appreciate how efficient they all were. My food was warm and packaged well!\\\\n\\\\nI will be back soon.\\\"},{\\\"review_date\\\":\\\"2021-01-28 07:28:34\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Normally we get pizza here because it's always buy one get one free for pizza but I decided to get a burger, fries, cakes and beer. We decided to pick up the order and heads up, it has a sign that says eleven and is  near the turtle pond in the plaza behind Anderson's, near the museum, state and fig...I guess they took over eleven during covid?\\\\nI added lettuce and raw onions to my house burger and it was delicious. The chipotle sauce and angus burger patty combination went straight to my tummy and their beer batters fries adds a good texture.  We added a growler last minute and wife thought it looked like a juice jug. Lemon cake was ok but moist, but I ordered it for the wife and she said it reminded her of a cake from a grocery store.  The flourless chocolate cake had a thick fudge consistency- which I like but flavor wise was ok. Price for the cakes were not worth it in my opinion ( would rather go to Anderson's or lilac for that price). I will most likely order from here again- pizzas are good price and burgers were delicious.  Wife got Sb munchie burger so we could compare... I thought the burger here looked and tasted better\\\"},{\\\"review_date\\\":\\\"2021-01-17 01:52:24\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"best place most amazing taste and the deal of a life time great customer service wow no more thinking on what and where to go its bogo all day thankx again for the delicious pies I ordered the caramelized onion and meatball and the BBQ chicken omg these are killer quality extra ricotta on the meatball one for just a  dollar\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Bogo SB is a food delivery service and restaurant located in Santa Barbara, California. The business offers catering services, event planning and delivery services, as well as a variety of food options including burgers, pizza, and salads. Customers can order online or through the restaurant's mobile app, and the business offers a wide range of discounts and promotions. The restaurant features outdoor seating and free WiFi, and is open daily from 11am to 10pm. Based on customer reviews, Bogo SB is highly rated for its delicious food, easy ordering process, and excellent customer service.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23], \"source_evidence_erased\": false}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:a2e58aef2b800fcadd97fd9ecf5788a95709a9c20542e4e91968a13014102e48",
+      "started": true,
+      "status": "generated",
+      "visible_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23
+      ]
+    },
+    {
+      "arm": "source_erased",
+      "duration_s": 1.0479787799995393,
+      "family_id": "sha256:ce210fa8b1fda298f70d1269a95e16c65c964baafe0dc2a645b8455c1947c5b1",
+      "input_tokens": 246,
+      "order": 1,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 1.0,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 246,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 269
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 1.0,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817102,
+        "id": "chatcmpl-b8Qkh81QRhP6l0hEJ7O8Vrp1hYKnE4NU",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 548.378,
+          "predicted_n": 23,
+          "predicted_per_second": 41.941872212233164,
+          "predicted_per_token_ms": 23.842521739130436,
+          "prompt_ms": 256.586,
+          "prompt_n": 168,
+          "prompt_per_second": 654.751233504556,
+          "prompt_per_token_ms": 1.527297619047619
+        },
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 246,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 269
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"\", \"original_answer\": \"Bogo SB is a food delivery service and restaurant located in Santa Barbara, California. The business offers catering services, event planning and delivery services, as well as a variety of food options including burgers, pizza, and salads. Customers can order online or through the restaurant's mobile app, and the business offers a wide range of discounts and promotions. The restaurant features outdoor seating and free WiFi, and is open daily from 11am to 10pm. Based on customer reviews, Bogo SB is highly rated for its delicious food, easy ordering process, and excellent customer service.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [], \"source_evidence_erased\": true}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:a2e58aef2b800fcadd97fd9ecf5788a95709a9c20542e4e91968a13014102e48",
+      "started": true,
+      "status": "generated",
+      "visible_ids": []
+    }
+  ]
+}

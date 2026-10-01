@@ -1,0 +1,189 @@
+{
+  "config_hash": "sha256:17d509539abd34d125a7b8f21f47e2064e0f59d5eac351ba74cf8a90a0b6d5a9",
+  "public_hash": "sha256:17ea3bfdd4b0e645d861752d074b15b91acae1e465a742d0c6a33fbfae813bc3",
+  "rows": [
+    {
+      "arm": "full_source",
+      "duration_s": 1.1306393860140815,
+      "family_id": "sha256:3b44ba26e4b011f54a32878e342f99f8122f92121a3c07b3160edbaacf9de1a8",
+      "input_tokens": 472,
+      "order": 0,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 0.0,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 472,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 495
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817123,
+        "id": "chatcmpl-wIBAat3olCiKx9kFhDZTzhZjDtFvsLcd",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 541.237,
+          "predicted_n": 23,
+          "predicted_per_second": 42.49524699900414,
+          "predicted_per_token_ms": 23.532043478260867,
+          "prompt_ms": 489.204,
+          "prompt_n": 394,
+          "prompt_per_second": 805.3899804580502,
+          "prompt_per_token_ms": 1.2416345177664976
+        },
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 472,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 495
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:If You Were Born Today, October 14: You have a great interest in, and eye for, form and structure. You would make a good architect, interior decorator, designer, or any profession that combines art and structure.\\\\n\\\\npassage 2:Born Today: Personality Profiles. What follows are general characteristics for people born on a date in any birth year, based on Astrology, Numerology, and Cartomancy. If You Were Born Today, October 1: You are a success-oriented, charming, and personally powerful individual. You are at your best when you are in control, your own boss, or working on your own. However, you get along with others and have the necessary \u201cpeople skills\u201d to do so, although occasionally your impatience comes through!\\\\n\\\\npassage 3:Famous people born today: Charlton Heston, Jackie Collins, Anne Rice, Susan Sarandon, Alicia Silverstone, Rachael Leigh Cook, Buster Keaton. If You Were Born Today, October 5: Although restless at heart, you are a person who craves stability and security. This is why you work so hard at whatever you do.\\\\n\\\\n\\\",\\\"question\\\":\\\"what traits do people have that are born in october?\\\"}\", \"original_answer\": \"Based on the given passages, people born in October are described as having an interest in form and structure, being success-oriented, charming, personally powerful, and possessing necessary people skills. They are also described as craving stability and security and being hardworking.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7], \"source_evidence_erased\": false}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:438b35c5f92c2679d01f60e4593b2e1d1483beec1c481c16737df987a4b156f9",
+      "started": true,
+      "status": "generated",
+      "visible_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "arm": "source_erased",
+      "duration_s": 0.9216062050545588,
+      "family_id": "sha256:3b44ba26e4b011f54a32878e342f99f8122f92121a3c07b3160edbaacf9de1a8",
+      "input_tokens": 178,
+      "order": 1,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 1.0,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 178,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 201
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 1.0,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817124,
+        "id": "chatcmpl-gVF18UcNbUv0P5BcdvriGgO0t8griIR3",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 540.745,
+          "predicted_n": 23,
+          "predicted_per_second": 42.53391154795698,
+          "predicted_per_token_ms": 23.510652173913044,
+          "prompt_ms": 191.926,
+          "prompt_n": 100,
+          "prompt_per_second": 521.0341485780979,
+          "prompt_per_token_ms": 1.91926
+        },
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 178,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 201
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"\", \"original_answer\": \"Based on the given passages, people born in October are described as having an interest in form and structure, being success-oriented, charming, personally powerful, and possessing necessary people skills. They are also described as craving stability and security and being hardworking.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [], \"source_evidence_erased\": true}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:438b35c5f92c2679d01f60e4593b2e1d1483beec1c481c16737df987a4b156f9",
+      "started": true,
+      "status": "generated",
+      "visible_ids": []
+    }
+  ]
+}

@@ -1,0 +1,189 @@
+{
+  "config_hash": "sha256:17d509539abd34d125a7b8f21f47e2064e0f59d5eac351ba74cf8a90a0b6d5a9",
+  "public_hash": "sha256:07d8bbc39176f419d7ce7ca3256f7cdf9fef6326a2053339086f06b71bfdfbb0",
+  "rows": [
+    {
+      "arm": "source_erased",
+      "duration_s": 0.9521311720018275,
+      "family_id": "sha256:335fb85b642c8e95a16acb7038de0742b7c79adf00c827ca05a3ce0909a48965",
+      "input_tokens": 291,
+      "order": 0,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 1.0,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 291,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 314
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 1.0,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817060,
+        "id": "chatcmpl-BakKFrxvcpAUGay2RdbF66AAp30eYXVh",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 538.666,
+          "predicted_n": 23,
+          "predicted_per_second": 42.69807264612951,
+          "predicted_per_token_ms": 23.42026086956522,
+          "prompt_ms": 278.294,
+          "prompt_n": 213,
+          "prompt_per_second": 765.3776222268536,
+          "prompt_per_token_ms": 1.306544600938967
+        },
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 291,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 314
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"\", \"original_answer\": \"Sure! Based on the given passages, here is how E-ZPass charging works:\\n\\nWhen you sign up for E-ZPass, a certain amount is charged to your credit card to establish a balance (specifically, $100 for the EZ-Tag and $25 for the TX-Tag). This balance is used to pay for tolls as you drive through toll lanes. When you drive through a toll booth, the toll tag mounted on your windshield is read by the antennae, and your E-ZPass account is charged the appropriate amount. The amount is deducted from your balance. If your balance falls below a certain threshold ($10 for the TX-Tag), E-ZPass will charge your credit card an additional $100 or $25 to top up your balance.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [], \"source_evidence_erased\": true}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:de624983e01823ad1da4721e337b6578c1f738ab604dc751e346c35165e2da23",
+      "started": true,
+      "status": "generated",
+      "visible_ids": []
+    },
+    {
+      "arm": "full_source",
+      "duration_s": 1.2153158119763248,
+      "family_id": "sha256:335fb85b642c8e95a16acb7038de0742b7c79adf00c827ca05a3ce0909a48965",
+      "input_tokens": 588,
+      "order": 1,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 0.0,
+        "schema_valid": true,
+        "source_sentence_id": 0,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 24,
+          "prompt_tokens": 588,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 612
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 0\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817061,
+        "id": "chatcmpl-h2T4TYo8huPQaF6LeNm7EJSGfAiFfLKM",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 563.72,
+          "predicted_n": 24,
+          "predicted_per_second": 42.57432768040871,
+          "predicted_per_token_ms": 23.488333333333333,
+          "prompt_ms": 533.219,
+          "prompt_n": 510,
+          "prompt_per_second": 956.4550400492104,
+          "prompt_per_token_ms": 1.0455274509803922
+        },
+        "usage": {
+          "completion_tokens": 24,
+          "prompt_tokens": 588,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 612
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Report Abuse. Here, they charge a certain amount from your credit card to establish a balance (it's $100 for the EZ-Tag, $25 for the TX-Tag). They deduct the tolls from that balance till the balance goes below a certain value ($10 for the TX-Tag) and they charge your credit card another $100, or $25, to increase your balance.\\\\n\\\\npassage 2:E-ZPASS CUSTOMER WARNING \u2013 EMAIL PHISHING SCAM. If you received email that appears to be part of the E-ZPass Phishing Scam, we encourage you to file a complaint with the Internet Crime Complaint Center (IC3).\\\\n\\\\npassage 3:How does E-ZPass\u00ae work? As your vehicle enters the toll lane, the toll tag (1) that is mounted on your vehicle's windshield is read by the antennae (2). As your vehicle passes through, your E-ZPass\u00ae account is charged the proper amount. Feedback is provided to you on an electronic display (3). If your vehicle does not have a toll tag, the system classifies you as a violator and cameras take photos of your license plate for processing.\\\\n\\\\n\\\",\\\"question\\\":\\\"how does ez pass charges work\\\"}\", \"original_answer\": \"Sure! Based on the given passages, here is how E-ZPass charging works:\\n\\nWhen you sign up for E-ZPass, a certain amount is charged to your credit card to establish a balance (specifically, $100 for the EZ-Tag and $25 for the TX-Tag). This balance is used to pay for tolls as you drive through toll lanes. When you drive through a toll booth, the toll tag mounted on your windshield is read by the antennae, and your E-ZPass account is charged the appropriate amount. The amount is deducted from your balance. If your balance falls below a certain threshold ($10 for the TX-Tag), E-ZPass will charge your credit card an additional $100 or $25 to top up your balance.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7], \"source_evidence_erased\": false}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:de624983e01823ad1da4721e337b6578c1f738ab604dc751e346c35165e2da23",
+      "started": true,
+      "status": "generated",
+      "visible_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
+    }
+  ]
+}

@@ -1,0 +1,195 @@
+{
+  "config_hash": "sha256:17d509539abd34d125a7b8f21f47e2064e0f59d5eac351ba74cf8a90a0b6d5a9",
+  "public_hash": "sha256:6550df056303778025a231d4c3381ed5a5fe6f5183d5a7836da31e5d3ec45281",
+  "rows": [
+    {
+      "arm": "full_source",
+      "duration_s": 1.5731613429961726,
+      "family_id": "sha256:10b4e7cf3b08344e36c7058e8c9ea2e64ee50e65ec0ba8991689dbb82dd42040",
+      "input_tokens": 1002,
+      "order": 0,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 0.0,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 1002,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 1025
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817116,
+        "id": "chatcmpl-OIDzhXQ6hQ65o9Svbi6WZX2qVColf6iF",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 542.403,
+          "predicted_n": 23,
+          "predicted_per_second": 42.40389525869141,
+          "predicted_per_token_ms": 23.582739130434785,
+          "prompt_ms": 927.545,
+          "prompt_n": 924,
+          "prompt_per_second": 996.1780830040592,
+          "prompt_per_token_ms": 1.00383658008658
+        },
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 1002,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 1025
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"{\\\"address\\\":\\\"509 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":null},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"New Mexican Cuisine, Restaurants, Mexican\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"17:30-21:30\\\",\\\"Saturday\\\":\\\"17:30-21:30\\\",\\\"Sunday\\\":\\\"17:30-21:0\\\",\\\"Thursday\\\":\\\"17:30-21:30\\\",\\\"Tuesday\\\":\\\"17:0-21:0\\\",\\\"Wednesday\\\":\\\"17:30-21:0\\\"},\\\"name\\\":\\\"Alito\u2019s\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2019-08-06 20:06:12\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Terrible service. No utensils. Menus had typos everywhere. Food took forever and wasn't very hot. Duct tape and graffiti on the walls. Knew it was going to be bad but gave it a shot. Wish we hadent.\\\"},{\\\"review_date\\\":\\\"2019-07-06 13:20:09\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Food was great! Very accommodating to our group of 13- best Mexican a girl could want on the 4th of July!\\\"},{\\\"review_date\\\":\\\"2019-06-18 03:09:55\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Made last minute dinner reservations for UCSB Grad night on Sunday. We had a wonderful waitress named AnaKay wait on us and she was fantastic. The food had great presentation and was delicious.  A party of 8 and all had great food. The the Margheritas were excellent!  Finally, if you dont have great chips and salsa, I dont come back to the place, but at Alitos, they do everything  well!  You wont be disappointed at this place.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Alito's is a local Mexican restaurant located at 509 State St in Santa Barbara, California. The restaurant specializes in New Mexican cuisine and offers a variety of dishes. According to the provided structured data, Alito's is open for dinner from Tuesday to Sunday, with varying hours each day.\\n\\nCustomers have left mixed reviews about their experiences at Alito's. One customer mentioned poor service, lack of utensils, typos on menus, and slow and lukewarm food. They also noted duct tape and graffiti on the walls. However, another customer had a positive experience, praising the food and mentioning that the restaurant was accommodating to their large group on the 4th of July. Another customer had a great experience celebrating UCSB Grad night, highlighting the delicious food, excellent presentation, and friendly service provided by waitress AnaKay.\\n\\nBased on the structured data, Alito's offers outdoor seating and accepts reservations. They also offer takeout options for customers. The restaurant has a 4.0 star rating, indicating a generally positive reputation. The ambience of the restaurant is described as classy. However, specific details about Wi-Fi availability, whether the restaurant is good for groups, and the presence of music are not provided in the structured data.\\n\\nOverall, Alito's is a local Mexican restaurant in Santa Barbara that offers New Mexican cuisine. While some customers have had negative experiences, others have enjoyed the food and service provided by the restaurant.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], \"source_evidence_erased\": false}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:91e18d81e209650c9ce21b7664214018a631aa8ff8c0be4dd023ea6dac9b3ccd",
+      "started": true,
+      "status": "generated",
+      "visible_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ]
+    },
+    {
+      "arm": "source_erased",
+      "duration_s": 1.2137402219814248,
+      "family_id": "sha256:10b4e7cf3b08344e36c7058e8c9ea2e64ee50e65ec0ba8991689dbb82dd42040",
+      "input_tokens": 425,
+      "order": 1,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 1.0,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 425,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 448
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 1.0,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817117,
+        "id": "chatcmpl-gl3v2ib7GT9HvTKxTGryspSHMXeC2SGr",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 541.431,
+          "predicted_n": 23,
+          "predicted_per_second": 42.48002053816645,
+          "predicted_per_token_ms": 23.540478260869566,
+          "prompt_ms": 441.286,
+          "prompt_n": 347,
+          "prompt_per_second": 786.338111791446,
+          "prompt_per_token_ms": 1.2717175792507205
+        },
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 425,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 448
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"\", \"original_answer\": \"Alito's is a local Mexican restaurant located at 509 State St in Santa Barbara, California. The restaurant specializes in New Mexican cuisine and offers a variety of dishes. According to the provided structured data, Alito's is open for dinner from Tuesday to Sunday, with varying hours each day.\\n\\nCustomers have left mixed reviews about their experiences at Alito's. One customer mentioned poor service, lack of utensils, typos on menus, and slow and lukewarm food. They also noted duct tape and graffiti on the walls. However, another customer had a positive experience, praising the food and mentioning that the restaurant was accommodating to their large group on the 4th of July. Another customer had a great experience celebrating UCSB Grad night, highlighting the delicious food, excellent presentation, and friendly service provided by waitress AnaKay.\\n\\nBased on the structured data, Alito's offers outdoor seating and accepts reservations. They also offer takeout options for customers. The restaurant has a 4.0 star rating, indicating a generally positive reputation. The ambience of the restaurant is described as classy. However, specific details about Wi-Fi availability, whether the restaurant is good for groups, and the presence of music are not provided in the structured data.\\n\\nOverall, Alito's is a local Mexican restaurant in Santa Barbara that offers New Mexican cuisine. While some customers have had negative experiences, others have enjoyed the food and service provided by the restaurant.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [], \"source_evidence_erased\": true}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:91e18d81e209650c9ce21b7664214018a631aa8ff8c0be4dd023ea6dac9b3ccd",
+      "started": true,
+      "status": "generated",
+      "visible_ids": []
+    }
+  ]
+}

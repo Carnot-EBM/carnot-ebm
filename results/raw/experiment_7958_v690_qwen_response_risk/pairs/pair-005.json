@@ -1,0 +1,186 @@
+{
+  "config_hash": "sha256:17d509539abd34d125a7b8f21f47e2064e0f59d5eac351ba74cf8a90a0b6d5a9",
+  "public_hash": "sha256:fd807bb9b478b3575a6224b13112f1cdf0cb849743714817a0d0398108890d46",
+  "rows": [
+    {
+      "arm": "full_source",
+      "duration_s": 1.288538585009519,
+      "family_id": "sha256:731cd6030abbf7a5bbb65fe114c368a89e5e0c6b77ff840305e4dc5c75280f6d",
+      "input_tokens": 730,
+      "order": 0,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 0.0,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 21,
+          "prompt_tokens": 730,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 751
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790816993,
+        "id": "chatcmpl-rFqFmOFs3YHamqIO7i2Wk0NcnqV99sw8",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 488.354,
+          "predicted_n": 21,
+          "predicted_per_second": 43.00159310663985,
+          "predicted_per_token_ms": 23.254952380952382,
+          "prompt_ms": 649.347,
+          "prompt_n": 652,
+          "prompt_per_second": 1004.0856429613134,
+          "prompt_per_token_ms": 0.995930981595092
+        },
+        "usage": {
+          "completion_tokens": 21,
+          "prompt_tokens": 730,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 751
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"{\\\"address\\\":\\\"\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":true,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":false,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Performing Arts, Arts & Entertainment, Caterers, Party & Event Planning, Comedy Clubs, Venues & Event Spaces, Event Planning & Services, Nightlife\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"18:0-23:0\\\",\\\"Saturday\\\":\\\"13:0-23:0\\\",\\\"Tuesday\\\":\\\"18:0-1:0\\\"},\\\"name\\\":\\\"Comedy Hideaway\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2019-05-11 20:55:41\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Great local club to see rising talent. A hidden gem. You need to experience this before it's too late (plans are to move to a bigger location in DTSB).\\\"},{\\\"review_date\\\":\\\"2018-11-12 20:03:58\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Went Saturday to see Laurie Kilmartin and it was great.  Drinks are cheap, plenty of laughs to be had and next to the airport makes it feel like a super incognito location.  All said the show was a blast.\\\"},{\\\"review_date\\\":\\\"2018-10-30 02:26:26\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"The place is fun the comics are good food is good seating could be better but for free it's awesome\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Comedy Hideaway is a popular nightlife spot in Santa Barbara, California, renowned for performing arts, comedy clubs, and event planning. The club is open on Tuesdays, Fridays, and Saturdays, and offers ample lot parking but doesn't provide WiFi or outdoor seating. The ambience is intimate and casual, making it suitable for group outings. According to customer reviews, the club is recognized for featuring rising talent and hosting enjoyable shows with affordable drinks. One reviewer lauded a performance by Laurie Kilmartin, while another appreciated the good food and fun atmosphere, albeit remarking on the seating. Currently, the club has an average rating of 4.5 stars. There are plans to move the establishment to a larger location in downtown Santa Barbara.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4], \"source_evidence_erased\": false}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:2ef7cce37458dd6d311a8aae471646461da275dda93d99685ce1606742370382",
+      "started": true,
+      "status": "generated",
+      "visible_ids": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "arm": "source_erased",
+      "duration_s": 1.0647558349883184,
+      "family_id": "sha256:731cd6030abbf7a5bbb65fe114c368a89e5e0c6b77ff840305e4dc5c75280f6d",
+      "input_tokens": 278,
+      "order": 1,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 1.0,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 278,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 301
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 1.0,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790816994,
+        "id": "chatcmpl-0XNOfeI6tfrsdbUfe5FKR4JLbyzRcAeo",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 535.682,
+          "predicted_n": 23,
+          "predicted_per_second": 42.935920938168536,
+          "predicted_per_token_ms": 23.290521739130437,
+          "prompt_ms": 268.136,
+          "prompt_n": 200,
+          "prompt_per_second": 745.8901452994003,
+          "prompt_per_token_ms": 1.34068
+        },
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 278,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 301
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"\", \"original_answer\": \"Comedy Hideaway is a popular nightlife spot in Santa Barbara, California, renowned for performing arts, comedy clubs, and event planning. The club is open on Tuesdays, Fridays, and Saturdays, and offers ample lot parking but doesn't provide WiFi or outdoor seating. The ambience is intimate and casual, making it suitable for group outings. According to customer reviews, the club is recognized for featuring rising talent and hosting enjoyable shows with affordable drinks. One reviewer lauded a performance by Laurie Kilmartin, while another appreciated the good food and fun atmosphere, albeit remarking on the seating. Currently, the club has an average rating of 4.5 stars. There are plans to move the establishment to a larger location in downtown Santa Barbara.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [], \"source_evidence_erased\": true}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:2ef7cce37458dd6d311a8aae471646461da275dda93d99685ce1606742370382",
+      "started": true,
+      "status": "generated",
+      "visible_ids": []
+    }
+  ]
+}

@@ -1,0 +1,201 @@
+{
+  "config_hash": "sha256:17d509539abd34d125a7b8f21f47e2064e0f59d5eac351ba74cf8a90a0b6d5a9",
+  "public_hash": "sha256:1d3231228e506423f0187a7de3234f5cec9e6d0048dc117c0e5cef55b578b0a3",
+  "rows": [
+    {
+      "arm": "source_erased",
+      "duration_s": 0.9041818889672868,
+      "family_id": "sha256:a06db1a77ca5209f3b3e144ebd33c1ad9e35932d55bd7c8151855d434171fe9c",
+      "input_tokens": 248,
+      "order": 0,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 1.0,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 248,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 271
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 1.0,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817134,
+        "id": "chatcmpl-LdRQQSsDL0offF05Ht9nagxHCe4zocyd",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 548.975,
+          "predicted_n": 23,
+          "predicted_per_second": 41.89626121408078,
+          "predicted_per_token_ms": 23.868478260869566,
+          "prompt_ms": 257.066,
+          "prompt_n": 170,
+          "prompt_per_second": 661.3087689542764,
+          "prompt_per_token_ms": 1.5121529411764705
+        },
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 248,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 271
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"\", \"original_answer\": \"Noemi Pizza Romana is a restaurant located in Santa Barbara, California. The business offers a variety of pizza options as well as outdoor seating and takeout options. The restaurant has a 4.5 out of 5 rating on Google reviews, with many customers praising the quality of their pizzas and the helpfulness of the staff. The restaurant offers free WiFi and ample parking. However, some customers have had negative experiences with the food, with one customer describing the pizza as the worst they have ever had. Despite this, the majority of customers seem to enjoy the restaurant and would recommend it to others.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [], \"source_evidence_erased\": true}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:9f2ca35a8c1135afaf969d71839e9ea38be882bbf66baaf20ff3d3b797dac799",
+      "started": true,
+      "status": "generated",
+      "visible_ids": []
+    },
+    {
+      "arm": "full_source",
+      "duration_s": 1.5849622700479813,
+      "family_id": "sha256:a06db1a77ca5209f3b3e144ebd33c1ad9e35932d55bd7c8151855d434171fe9c",
+      "input_tokens": 1064,
+      "order": 1,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 0.05,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 22,
+          "prompt_tokens": 1064,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 1086
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n \"unsupported_probability\": 0.05,\n \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817136,
+        "id": "chatcmpl-oufhtmQugOKCwrZBOvcoeFuS7jTFc4m1",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 518.806,
+          "predicted_n": 22,
+          "predicted_per_second": 42.40506085126232,
+          "predicted_per_token_ms": 23.582090909090912,
+          "prompt_ms": 965.324,
+          "prompt_n": 986,
+          "prompt_per_second": 1021.41871537432,
+          "prompt_per_token_ms": 0.9790304259634888
+        },
+        "usage": {
+          "completion_tokens": 22,
+          "prompt_tokens": 1064,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 1086
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"{\\\"address\\\":\\\"3534 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Restaurants, Pizza\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"16:0-21:0\\\",\\\"Saturday\\\":\\\"12:0-21:0\\\",\\\"Sunday\\\":\\\"12:0-20:0\\\",\\\"Thursday\\\":\\\"16:0-20:0\\\",\\\"Tuesday\\\":\\\"16:0-20:0\\\",\\\"Wednesday\\\":\\\"16:0-20:0\\\"},\\\"name\\\":\\\"Noemi Pizza Romana\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2020-12-14 02:24:05\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"By far the best pizza in town! Great toppings, amazing pizza crust and a super helpful staff, what else can you ask for? Their calzone is simply the best, you have to try it at least once! This place is a must, ample parking convenient hours. Try it and you'll be hooked.\\\"},{\\\"review_date\\\":\\\"2020-12-12 16:59:29\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"There are two things that really bum me out: places that make bad burritos, and places that make bad pizza. Unfortunately, this was the worst \\\\\\\"pizza\\\\\\\" I've ever had. \\\\nPizza is one of those foods that should almost always give you joy, whether it's a $3 frozen pizza from the grocery store or a late night slice at a hole in the wall. \\\\nBut this pizza (and it was the \\\\\\\"soppressata\\\\\\\" supposedly one of the most popular) gave us no joy.\\\\n\\\\nThis isn't even \\\\\\\"thick crust\\\\\\\". This is just bad bread with mediocre use of toppings. \\\\n\\\\nUnsuccessful flavor combination.\\\\nHeavy and filling (in a bad way).\\\\n\\\\nI will never make that mistake again.\\\\nI just don't understand.. if you open a pizza place, don't you have a passion for pizza? How does one mess that up so badly?\\\"},{\\\"review_date\\\":\\\"2020-12-07 05:49:00\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Never had Roman style pizza before and i am thoroughly impressed!!! The crust was incredible, and the ratio of toppings to bread was perfect. The toppings also matched so so well\\\\nDifferent pizzas we tried :\\\\n- Bbq chicken : Wow. I'm a huge fan of bbq anything, but with this specific type of dough it was even more amazing. There were some parts that were too heavy with the bbq, but overall i was blown away \\\\n - Mushroom : Really yummy! The umami flavor from the mushroom really came through\\\\n- Potato : Never had potato pizza before, and i will continue to get it from now on. It was so delicious, and the addition of goat cheese was heavenly. The potatoes were cooked to perfection and just *chefs kiss* \\\\n\\\\nWill definitely be back ! I want to try all the other combinations offered !\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Noemi Pizza Romana is a restaurant located in Santa Barbara, California. The business offers a variety of pizza options as well as outdoor seating and takeout options. The restaurant has a 4.5 out of 5 rating on Google reviews, with many customers praising the quality of their pizzas and the helpfulness of the staff. The restaurant offers free WiFi and ample parking. However, some customers have had negative experiences with the food, with one customer describing the pizza as the worst they have ever had. Despite this, the majority of customers seem to enjoy the restaurant and would recommend it to others.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19], \"source_evidence_erased\": false}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:9f2ca35a8c1135afaf969d71839e9ea38be882bbf66baaf20ff3d3b797dac799",
+      "started": true,
+      "status": "generated",
+      "visible_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ]
+    }
+  ]
+}

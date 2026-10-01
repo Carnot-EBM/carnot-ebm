@@ -1,0 +1,227 @@
+{
+  "config_hash": "sha256:17d509539abd34d125a7b8f21f47e2064e0f59d5eac351ba74cf8a90a0b6d5a9",
+  "public_hash": "sha256:cfe899ee4d53d3b87df9688e80632dfcbc794cdd2165e8eed0d5fa1bc8bc1d85",
+  "rows": [
+    {
+      "arm": "full_source",
+      "duration_s": 2.310954412969295,
+      "family_id": "sha256:4f94cb181ef31c3c0ca6d44eb237af08a651f3e01978898a4631fbc81349b0ad",
+      "input_tokens": 2003,
+      "order": 0,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 0.0,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 2003,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 2026
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817024,
+        "id": "chatcmpl-Lpc0lybylQbuc8mZaReRYtz3AtjehOTa",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 539.359,
+          "predicted_n": 23,
+          "predicted_per_second": 42.643211664216224,
+          "predicted_per_token_ms": 23.45039130434783,
+          "prompt_ms": 1652.625,
+          "prompt_n": 1925,
+          "prompt_per_second": 1164.813554194085,
+          "prompt_per_token_ms": 0.8585064935064936
+        },
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 2003,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 2026
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"Debates on climate change can break down fairly fast. There are those who believe that mankind's activities are changing the planet's climate, and those who don't. But a new way to talk about climate change is emerging, which shifts focus from impersonal discussions about greenhouse gas emissions and power plants to a very personal one: your health. It's easy to brush aside debates involving major international corporations, but who wouldn't stop to think -- and perhaps do something -- about their own health, or the health of their children? This new way of talking about climate change -- and linking it to public health issues -- was part of a roundtable discussion Tuesday at Howard University's College of Medicine. President Barack Obama joined U.S. Surgeon General Dr. Vivek Murthy and EPA Administrator Gina McCarthy for a roundtable discussion on the topic as part of National Public Health Week. \\\"I think we've always known -- or at least in the 20th century we've understood -- that environment has an impact on public health,\\\" the President told CNN's Dr. Sanjay Gupta. \\\"I remember when I first went to college in Los Angeles in 1979, the air was so bad that you couldn't go running outside,\\\" Obama said. \\\"You'd have air quality alerts, and people who had respiratory problems or were vulnerable had to stay inside. We took action, and the air's a lot better.\\\" \\\"There are a whole host of public health impacts that are going to hit home, so we've got to do better in protecting vulnerable Americans,\\\" Obama continued. \\\"Ultimately, though, all of our families are going to be vulnerable. You can't cordon yourself off from air or climate.\\\" Murthy revealed to the group that asthma is a personal issue for him, as a favorite uncle died from a severe attack when he was younger. \\\"It's also personal to me because I've cared for many patients over the years who have suffered from asthma and have seen firsthand how frightening it can be to suddenly be wheezing and fighting for every breath,\\\" Murthy said.  \\\"Asthma can be very difficult for patients, but also for their families. The impacts of climate change could make the situation worse.\\\" \\\"This is not just a future threat -- this is a present threat,\\\" said Brian Deese, a senior adviser to the President. Deese cited a recent study by the American Thoracic Society that found seven out of 10 doctors reported climate change is contributing to more health problems among their patients. \\\"The good news is that, in addition to having doctors and nurses, public health officials, schools of medicine joining together to raise awareness -- and to in some cases impact their practice -- they anticipate, for example, increased asthma instances, and plan ahead of time to deal with those,\\\" Obama told Gupta. \\\"What we have is companies like Google and Microsoft that are going to take data we're releasing and start developing apps so that, potentially, individual families are going to be able to monitor the air quality in their communities in a real-time basis.\\\" \\\"Communities can start planning for prevention and mitigation efforts more effectively, and hopefully the other thing that happens is that families and parents join with these doctors and nurses to start putting some pressure on elected officials to try to make something happen to reduce the impacts of climate change,\\\" said Obama. The impacts of climate change on health will depend on a multitude of factors, according to the Environmental Protection Agency. \\\"These factors include the effectiveness of a community's public health and safety systems to address or prepare for the risk and the behavior, age, gender, and economic status of individuals affected,\\\" the EPA says on its website. \\\"Impacts will likely vary by region, the sensitivity of populations, the extent and length of exposure to climate change impacts, and society's ability to adapt to change.\\\" The World Health Organization estimates climate change will cause an additional 250,000 deaths per year between 2030 and 2050. \\\"Most will likely perish from malaria, diarrhea, heat exposure and under-nutrition.\\\" \\\"Around the world, variations in climate are affecting, in profoundly diverse ways, the air we breathe, the food we eat, and the water we drink,\\\" writes Dr. Maria Neira, director of the WHO's public health and environment department. \\\"We are losing our capacity to sustain human life in good health.\\\" \\\"Consider air pollution, the single greatest environmental health risk we face. In 2012 alone, exposure to indoor and outdoor pollutants killed more than 7 million people -- one in eight deaths worldwide. Under-nutrition already accounts for 3 million deaths each year in the world's poorest regions. Rising temperatures and more variable rainfall patters are expected to reduce crop yields, further compromising food security. Floods are increasing in frequency and intensity, creating breeding grounds for disease-carrying insects. Mosquito-borne diseases, like malaria, are particularly sensitive to heat and humidity. What will happen if rising temperatures accelerate the lifecycle of the malaria parasite?\\\" \\\"Children and the elderly will be among the most vulnerable,\\\" writes Neira. \\\"Areas with health infrastructure will be least able to cope. Developing countries will be hardest hit. The health gaps we have been trying hard to close may grow even wider.\\\" Earth's average temperature has risen by 1.4 degrees Fahrenheit over the past century, and is projected to rise an additional 2 degrees over the next hundred years, according to the EPA. \\\"Small changes in the average temperature of the planet can translate to large and potentially dangerous shifts in climate and weather,\\\" the agency warns. \\\"Many places have seen changes in rainfall, resulting in more floods, droughts, or intense rain, as well as more frequent and severe heat waves.\\\" Still, there exists a sizable group of people who doubt climate change is happening. \\\"Although climate scientists have been in the news describing this winter as a strong signal that global warming is producing extreme weather, Americans are no more likely today (55%) than in the past two years to believe the effects of global warming are occurring,\\\" according to a March Gallup poll. A 2013 TIME magazine article makes the case that medical professionals may be the best messengers for global warming. \\\"Framing global warming as a public health issue rather than as an environmental or national security one produces the most emotionally compelling response among people, since it focuses on the immediate implications a warmer climate would have on people's lives,\\\" the article says. \\\"This strategy also has the benefit of providing a sense of hope that the problems can be addressed and avoided, if action is taken early enough.\\\" The President said what happened with Los Angeles' air proved that point. \\\"When the Clean Air Act was passed, not only was there a terrible smog in Los Angeles, it was true in most metropolitan areas across the country,\\\" Obama said. \\\"The fact is that air quality has dramatically improved and it's been much cheaper than anybody expected, because technology advanced and people figured out how to do it. As a consequence, the American people are a lot healthier, in addition to being able to, you know, see the mountains in the background because it's not covered in smog.\\\" \\\"We know how to do this,\\\" Obama said. \\\"We just have to be bold and recognize and trust the kind of innovative spirit that the American people have always displayed.\\\"\\n\", \"original_answer\": \"Here is a summary of the article in 200 words or less:\\n\\nPresident Barack Obama and health experts are highlighting the link between climate change and public health, focusing on personal health risks to raise awareness and push for action. At a roundtable discussion at Howard University's College of Medicine, Obama emphasized the improvement in air quality in Los Angeles due to the Clean Air Act and expressed confidence in America's innovative spirit to address climate change. The discussion linked climate change to increased asthma instances, heat-related illnesses, and other health problems. According to the World Health Organization, climate change could cause an additional 250,000 deaths per year by 2050. Despite this, a significant portion of the public remains skeptical about climate change, with a recent Gallup poll showing that only 55% of Americans believe its effects are occurring. Medical professionals may be key messengers in raising awareness about the public health risks of climate change.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45], \"source_evidence_erased\": false}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:98f7f8b730fe0c1d7ede1a123f224b7c2a6bd1f698e5d3975a94893a31335fae",
+      "started": true,
+      "status": "generated",
+      "visible_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45
+      ]
+    },
+    {
+      "arm": "source_erased",
+      "duration_s": 1.0793900659773499,
+      "family_id": "sha256:4f94cb181ef31c3c0ca6d44eb237af08a651f3e01978898a4631fbc81349b0ad",
+      "input_tokens": 322,
+      "order": 1,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 1.0,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 322,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 345
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 1.0,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817026,
+        "id": "chatcmpl-jsilqig9dMrShwfDy88xsSNe29f5e70G",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 536.637,
+          "predicted_n": 23,
+          "predicted_per_second": 42.859512109675634,
+          "predicted_per_token_ms": 23.332043478260868,
+          "prompt_ms": 293.415,
+          "prompt_n": 244,
+          "prompt_per_second": 831.5866605320109,
+          "prompt_per_token_ms": 1.2025204918032788
+        },
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 322,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 345
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"\", \"original_answer\": \"Here is a summary of the article in 200 words or less:\\n\\nPresident Barack Obama and health experts are highlighting the link between climate change and public health, focusing on personal health risks to raise awareness and push for action. At a roundtable discussion at Howard University's College of Medicine, Obama emphasized the improvement in air quality in Los Angeles due to the Clean Air Act and expressed confidence in America's innovative spirit to address climate change. The discussion linked climate change to increased asthma instances, heat-related illnesses, and other health problems. According to the World Health Organization, climate change could cause an additional 250,000 deaths per year by 2050. Despite this, a significant portion of the public remains skeptical about climate change, with a recent Gallup poll showing that only 55% of Americans believe its effects are occurring. Medical professionals may be key messengers in raising awareness about the public health risks of climate change.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [], \"source_evidence_erased\": true}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:98f7f8b730fe0c1d7ede1a123f224b7c2a6bd1f698e5d3975a94893a31335fae",
+      "started": true,
+      "status": "generated",
+      "visible_ids": []
+    }
+  ]
+}

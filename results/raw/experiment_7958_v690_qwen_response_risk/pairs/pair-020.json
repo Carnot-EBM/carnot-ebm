@@ -1,0 +1,190 @@
+{
+  "config_hash": "sha256:17d509539abd34d125a7b8f21f47e2064e0f59d5eac351ba74cf8a90a0b6d5a9",
+  "public_hash": "sha256:5b4b8efbb9b591b4d0747d15a83da31ed7d5ec2cc648a3da89b84ff5886c97de",
+  "rows": [
+    {
+      "arm": "source_erased",
+      "duration_s": 0.8674885970540345,
+      "family_id": "sha256:e1c3c2a85c7cdc2bdde380c824f2fdd414642b4c7aa744181ea35c741166f8c1",
+      "input_tokens": 180,
+      "order": 0,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 1.0,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 180,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 203
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 1.0,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817031,
+        "id": "chatcmpl-Ub6oaE7VdXvflJsF7hxtWgF044Xe8dBI",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 536.27,
+          "predicted_n": 23,
+          "predicted_per_second": 42.88884330654335,
+          "predicted_per_token_ms": 23.316086956521737,
+          "prompt_ms": 196.038,
+          "prompt_n": 102,
+          "prompt_per_second": 520.3072873626542,
+          "prompt_per_token_ms": 1.9219411764705883
+        },
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 180,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 203
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"\", \"original_answer\": \"A video showing a woman furiously beating her son for participating in the Baltimore riots has gone viral. The woman, who was seen dragging her son away from the crowd and hitting him, was praised by the Police Commissioner, Anthony Batts, for her actions.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [], \"source_evidence_erased\": true}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:37473dd28cede99109c40f5ddf3c147452c2ef9d1f1d0db0d3f67012518c18f2",
+      "started": true,
+      "status": "generated",
+      "visible_ids": []
+    },
+    {
+      "arm": "full_source",
+      "duration_s": 1.0969132269965485,
+      "family_id": "sha256:e1c3c2a85c7cdc2bdde380c824f2fdd414642b4c7aa744181ea35c741166f8c1",
+      "input_tokens": 434,
+      "order": 1,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 0.0,
+        "schema_valid": true,
+        "source_sentence_id": 7,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 24,
+          "prompt_tokens": 434,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 458
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 7\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817032,
+        "id": "chatcmpl-chsYkBr4U1XoNDUk2q7SQgXI2GbWVnBJ",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 561.196,
+          "predicted_n": 24,
+          "predicted_per_second": 42.76580731152752,
+          "predicted_per_token_ms": 23.383166666666668,
+          "prompt_ms": 435.435,
+          "prompt_n": 356,
+          "prompt_per_second": 817.5732313663348,
+          "prompt_per_token_ms": 1.2231320224719102
+        },
+        "usage": {
+          "completion_tokens": 24,
+          "prompt_tokens": 434,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 458
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"A mom furious at her son for apparently taking part in the Baltimore riots has become a sensation online. In video captured by CNN affiliate WMAR, the woman is seen pulling her masked son away from a crowd, smacking him in the head repeatedly, and screaming at him. As he tries to walk away, she follows him, screaming, \\\"Get the f--- over here!\\\" Eventually, he turns toward her, his face no longer covered.  The boy is dressed in dark pants and a black hoodie, with a dark backpack on. WMAR reports that the woman saw her son on television throwing rocks at police. The name of the woman dressed in light blue jeans, a yellow lace tunic and a cropped yellow jacket was not immediately known. But Police Commissioner Anthony Batts thanked her in remarks to the media. \\\"And if you saw in one scene you had one mother who grabbed their child who had a hood on his head and she started smacking him on the head because she was so embarrassed,\\\" he said Monday.  \\\"I wish I had more parents that took charge of their kids out there tonight.\\\"\\n\", \"original_answer\": \"A video showing a woman furiously beating her son for participating in the Baltimore riots has gone viral. The woman, who was seen dragging her son away from the crowd and hitting him, was praised by the Police Commissioner, Anthony Batts, for her actions.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8], \"source_evidence_erased\": false}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:37473dd28cede99109c40f5ddf3c147452c2ef9d1f1d0db0d3f67012518c18f2",
+      "started": true,
+      "status": "generated",
+      "visible_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    }
+  ]
+}

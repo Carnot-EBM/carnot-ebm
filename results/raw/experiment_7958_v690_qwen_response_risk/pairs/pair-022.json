@@ -1,0 +1,195 @@
+{
+  "config_hash": "sha256:17d509539abd34d125a7b8f21f47e2064e0f59d5eac351ba74cf8a90a0b6d5a9",
+  "public_hash": "sha256:934e1af0e158354d791bf721b08c4472d7bd03bc2809c8fb2cb04a00cf20b3ee",
+  "rows": [
+    {
+      "arm": "full_source",
+      "duration_s": 1.293943214986939,
+      "family_id": "sha256:3e323acc341e781b2178a4e6022805c2a2b0b5f8481b2676aea778991e853297",
+      "input_tokens": 701,
+      "order": 0,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 0.0,
+        "schema_valid": true,
+        "source_sentence_id": 1,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 24,
+          "prompt_tokens": 701,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 725
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 1\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817036,
+        "id": "chatcmpl-ucyj7Z0VHQBTUvcHljObz1xqk4Z7id5Z",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 561.937,
+          "predicted_n": 24,
+          "predicted_per_second": 42.7094140446349,
+          "predicted_per_token_ms": 23.414041666666666,
+          "prompt_ms": 621.851,
+          "prompt_n": 623,
+          "prompt_per_second": 1001.8477094995425,
+          "prompt_per_token_ms": 0.9981556982343499
+        },
+        "usage": {
+          "completion_tokens": 24,
+          "prompt_tokens": 701,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 725
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:A brain natriuretic peptide (BNP) test measures the amount of the BNP hormone in the blood. BNP values tend to increase with age and are higher in women than men.The normal values listed here-called a reference range-are just a guide. brain natriuretic peptide (BNP) test measures the amount of the BNP hormone in the blood. BNP values tend to increase with age and are higher in women than men.\\\\n\\\\npassage 2:The B-type Natriuretic Peptide (BNP) Test is a blood test for heart failure. It measures the level of B-type natriuretic peptide in your blood. Your heart 's ventricles produce extra B-type natriuretic peptide when they can't pump enough blood to meet your body's needs.So if your B-type natriuretic peptide level is high, you probably have heart failure.The higher the levels are at diagnosis, the worse your heart failure is likely to be. The finding of low levels tends to exclude heart failure.o if your B-type natriuretic peptide level is high, you probably have heart failure. The higher the levels are at diagnosis, the worse your heart failure is likely to be. The finding of low levels tends to exclude heart failure.\\\\n\\\\npassage 3:Test Overview. A brain natriuretic peptide (BNP) test measures the amount of the BNP hormone in your blood. BNP is made by your heart and shows how well your heart is working. Normally, only a low amount of BNP is found in your blood.hy It Is Done. The brain natriuretic peptide (BNP) test is used to: 1  Check for heart failure. 2  A doctor may think you have heart failure if you are having problems such as trouble breathing and swelling (edema) in the arms or legs.\\\\n\\\\n\\\",\\\"question\\\":\\\"what is the normal b natriuretic peptide\\\"}\", \"original_answer\": \"Based on the given passages, it is difficult to determine what the normal range of brain natriuretic peptide (BNP) levels would be. However, it is known that BNP values tend to increase with age and are higher in women than men. Additionally, BNP is primarily used to check for heart failure and its levels can vary depending on factors such as a person's age, gender, and medical condition. Therefore, a doctor would typically use a BNP test to diagnose heart failure and would take into account other relevant factors in interpreting the results.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], \"source_evidence_erased\": false}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:7eaa2988200979c69c96b470913436a34c076365ecc8a54c4d2aa9d7f1d51c17",
+      "started": true,
+      "status": "generated",
+      "visible_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ]
+    },
+    {
+      "arm": "source_erased",
+      "duration_s": 1.0028986649704166,
+      "family_id": "sha256:3e323acc341e781b2178a4e6022805c2a2b0b5f8481b2676aea778991e853297",
+      "input_tokens": 241,
+      "order": 1,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 1.0,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 241,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 264
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 1.0,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817037,
+        "id": "chatcmpl-cME6BwpOaVOyXO5LneFGYGsalwWokOeX",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 544.274,
+          "predicted_n": 23,
+          "predicted_per_second": 42.25812734027347,
+          "predicted_per_token_ms": 23.66408695652174,
+          "prompt_ms": 238.321,
+          "prompt_n": 163,
+          "prompt_per_second": 683.9514772093102,
+          "prompt_per_token_ms": 1.4620920245398772
+        },
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 241,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 264
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"\", \"original_answer\": \"Based on the given passages, it is difficult to determine what the normal range of brain natriuretic peptide (BNP) levels would be. However, it is known that BNP values tend to increase with age and are higher in women than men. Additionally, BNP is primarily used to check for heart failure and its levels can vary depending on factors such as a person's age, gender, and medical condition. Therefore, a doctor would typically use a BNP test to diagnose heart failure and would take into account other relevant factors in interpreting the results.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [], \"source_evidence_erased\": true}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:7eaa2988200979c69c96b470913436a34c076365ecc8a54c4d2aa9d7f1d51c17",
+      "started": true,
+      "status": "generated",
+      "visible_ids": []
+    }
+  ]
+}

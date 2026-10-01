@@ -1,0 +1,201 @@
+{
+  "config_hash": "sha256:17d509539abd34d125a7b8f21f47e2064e0f59d5eac351ba74cf8a90a0b6d5a9",
+  "public_hash": "sha256:155213a2eec75223efcca8fc5b99505af0be175ca4c5d5783116f3549d674fa9",
+  "rows": [
+    {
+      "arm": "full_source",
+      "duration_s": 2.1352807140210643,
+      "family_id": "sha256:705bba6c3d5d70a96a4b6a3fdeb111ffad22cb3cae1376790cb4ee5564a6f0f9",
+      "input_tokens": 1816,
+      "order": 0,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 0.0,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 1816,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 1839
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817021,
+        "id": "chatcmpl-PK2Wd9voVJs5p2kCZB2jQUgZ0p67nz0N",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 539.172,
+          "predicted_n": 23,
+          "predicted_per_second": 42.65800152826927,
+          "predicted_per_token_ms": 23.442260869565217,
+          "prompt_ms": 1495.596,
+          "prompt_n": 1738,
+          "prompt_per_second": 1162.0785292284816,
+          "prompt_per_token_ms": 0.8605270425776755
+        },
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 1816,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 1839
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"{\\\"address\\\":\\\"1221 State St, Ste 205\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":null,\\\"divey\\\":false,\\\"hipster\\\":null,\\\"intimate\\\":null,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":null,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":true,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":true,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Music Venues, Bars, Nightlife, Arts & Entertainment, Restaurants, American (Traditional)\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"18:30-2:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"18:30-2:0\\\",\\\"Sunday\\\":\\\"18:30-23:0\\\",\\\"Thursday\\\":\\\"18:30-23:0\\\",\\\"Tuesday\\\":\\\"18:30-23:0\\\",\\\"Wednesday\\\":\\\"18:30-23:0\\\"},\\\"name\\\":\\\"Soho Restaurant & Music Club\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-12 17:40:26\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"called us idiots. we're extremely rude and racist. went to have a good time but clearly i didn't.\\\"},{\\\"review_date\\\":\\\"2022-01-09 01:50:53\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"I tested positive for COVID (despite being vaccinated and boosted) and even though I am feeling fine, I made the responsible decision to not attend a show at Soho I had purchased tickets to in advance.  \\\\n\\\\nUnfortunately, their no refund policy encourages people who have tested positive to attend shows anyway, increasing the chance of spreading COVID, when cases are currently surging in Santa Barbara County with the highly contagious omicron variant.\\\\n\\\\nI understand that a no refund policy for event tickets may be standard in normal circumstances, but many, if not all, concert venues in town have adapted flexible and generous refund/exchange policies for obvious reasons in the current climate.\\\"},{\\\"review_date\\\":\\\"2021-12-31 15:51:19\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Bottom Line:  The best live music venue in Santa Barbara, without question.  I think we are in House of Blues territory now!\\\\n\\\\nToe's Tavern, The Hibar, Yukitan, The Coach House, The history of Santa Barbara music venues is nearly as colorful as the history of the bands that came out of this town; Toad the Wet Sproket, Dishwalla, Big Bad Voodoo Daddy, The Ataris, Lagwagon, No Use for a Name, Snot, Nerf Herder......the SBCC Lunch Break band.\\\\n\\\\nNearly every single live music venue is gone from the golden era of music in this town.  Back in the 1990's I used to be on the local 'sound guys' that would turn up and try and make sure people could hear the bands.\\\\n\\\\nSoho was absolutely one of the places where I used to do sound and sit against the wall behind what was basically a TV tray with a Mackie 1604 on it for $40 a night plus free drinks.  It was dark and kind of dingy but thats what they were all like back in the world of analog.\\\\n\\\\nHow times have changed in 20+ years (which is essentially the amount of time its been since i have been to Soho).\\\\n\\\\nIve heard people talk about it recently but never put much thought into it as I used to work there - still had the idea of a dark, hole in the wall type place in my brain.\\\\n\\\\nWell, last night the wife tells me that we have a date night.  Sweet!   It had been some time since we had been able to get out together.  I didnt know that local hero Chris Schiflett was going to be playing so having dinner with the wife was going to be icing on the cake for sure.\\\\n\\\\nWe had the hamburger and the raviolis both of which were great.  The burger was excellent which frankly is really saying something with the burger game being what it is these days.  Tender, moist, lots of flavor - steak fries done properly which is a little crispy and not doughy and hot enough to burn my mouth!   Yes!!\\\\nThe raviolis are very similar to the ones I have had at Ca'Dario and were excellent.\\\\n\\\\nOver drinks we had a Creme Brule as well and that was also delicious.\\\\n\\\\nInto the room for the show and do you know how you can tell how the sound is pretty good?  When you dont notice it.\\\\n\\\\nWhile getting my audio engineering degree years ago, I realized that the best sound people are ones that you never notice.  Which is kind of sad but it absolutely true - Ive always said that a good sound are like good windshield wipers: if they are doing their job properly, you'll never know they are there.\\\\n\\\\nHalf way through the show, I realized that I had just been enjoying the show and not critiquing how it sounded and it hit me - thats because the sound was good!  How refreshing and thank you kind engineer, whomever you are.\\\\n\\\\n\\\\nI was properly blown away last night at our visit to Soho.  Food was great, the venue is great, the staff are helpful, the bathrooms are modern and functional, the sound was great....  I may not have even recognized it had I been teleported - they have done an incredible job right down to the super modern and very fancy bathrooms.\\\\n\\\\nIll be back here just for dinner - not even for a show but I will absolutely be back for both. \\\\n\\\\nWell done, Soho!  You're keeping the local music scene alive\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Based on the provided structured data, Soho Restaurant & Music Club is a popular local spot in Santa Barbara that offers a variety of experiences, including live music performances, dining, and drinks. According to customer reviews, the restaurant serves American-style cuisine, including burgers and pasta, and has a full bar with a selection of cocktails. One reviewer mentions that the food is delicious and compares the restaurant favorably to other local establishments.\\n\\nThe venue also hosts live music events, which appear to be well-received by customers. One reviewer praises the sound quality during a performance by Chris Schiflett, indicating that the venue has made significant improvements in recent years. Additionally, customers appreciate the modern and clean bathrooms, which suggests that the venue prioritizes comfort and hygiene.\\n\\nHowever, there are some drawbacks noted in the reviews. One reviewer expresses disappointment with the venue's no-refund policy for tickets, even in the case of a positive COVID test result. Another reviewer had a negative experience with staff behavior, reporting that they were called \\\"idiots\\\" by a staff member.\\n\\nOverall, Soho Restaurant & Music Club appears to be a lively and enjoyable spot in Santa Barbara, offering a range of experiences for locals and visitors alike. While there may be some areas for improvement in terms of customer service and ticket policies, the venue generally receives high marks from customers for its food, drinks, and live music performances.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19], \"source_evidence_erased\": false}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:baa34b59e31caba60bd32487c1e828ca72879082ba1fe4d8c7e92696699963c3",
+      "started": true,
+      "status": "generated",
+      "visible_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ]
+    },
+    {
+      "arm": "source_erased",
+      "duration_s": 1.2442165699903853,
+      "family_id": "sha256:705bba6c3d5d70a96a4b6a3fdeb111ffad22cb3cae1376790cb4ee5564a6f0f9",
+      "input_tokens": 413,
+      "order": 1,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 1.0,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 413,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 436
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 1.0,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817022,
+        "id": "chatcmpl-LJ9yvUk3jm3rhqFCFUkfgY18fYZWTKV3",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 536.182,
+          "predicted_n": 23,
+          "predicted_per_second": 42.89588236830031,
+          "predicted_per_token_ms": 23.31226086956522,
+          "prompt_ms": 412.83,
+          "prompt_n": 335,
+          "prompt_per_second": 811.4720344936173,
+          "prompt_per_token_ms": 1.2323283582089553
+        },
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 413,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 436
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"\", \"original_answer\": \"Based on the provided structured data, Soho Restaurant & Music Club is a popular local spot in Santa Barbara that offers a variety of experiences, including live music performances, dining, and drinks. According to customer reviews, the restaurant serves American-style cuisine, including burgers and pasta, and has a full bar with a selection of cocktails. One reviewer mentions that the food is delicious and compares the restaurant favorably to other local establishments.\\n\\nThe venue also hosts live music events, which appear to be well-received by customers. One reviewer praises the sound quality during a performance by Chris Schiflett, indicating that the venue has made significant improvements in recent years. Additionally, customers appreciate the modern and clean bathrooms, which suggests that the venue prioritizes comfort and hygiene.\\n\\nHowever, there are some drawbacks noted in the reviews. One reviewer expresses disappointment with the venue's no-refund policy for tickets, even in the case of a positive COVID test result. Another reviewer had a negative experience with staff behavior, reporting that they were called \\\"idiots\\\" by a staff member.\\n\\nOverall, Soho Restaurant & Music Club appears to be a lively and enjoyable spot in Santa Barbara, offering a range of experiences for locals and visitors alike. While there may be some areas for improvement in terms of customer service and ticket policies, the venue generally receives high marks from customers for its food, drinks, and live music performances.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [], \"source_evidence_erased\": true}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:baa34b59e31caba60bd32487c1e828ca72879082ba1fe4d8c7e92696699963c3",
+      "started": true,
+      "status": "generated",
+      "visible_ids": []
+    }
+  ]
+}

@@ -1,0 +1,188 @@
+{
+  "config_hash": "sha256:17d509539abd34d125a7b8f21f47e2064e0f59d5eac351ba74cf8a90a0b6d5a9",
+  "public_hash": "sha256:6857b4b3428de88f1bda48c4f0a961dc405c93b5562c896836553c8908403024",
+  "rows": [
+    {
+      "arm": "source_erased",
+      "duration_s": 1.0447612639982253,
+      "family_id": "sha256:63a71024302e3b51a31f29a9b53ec525436d81f3be9874192fee59e1a5f685e8",
+      "input_tokens": 416,
+      "order": 0,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 1.0,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 416,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 439
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 1.0,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790816985,
+        "id": "chatcmpl-S08dBGnEQOGKY7lE9YFRiYCzI1s8hs0w",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 535.293,
+          "predicted_n": 23,
+          "predicted_per_second": 42.96712267860779,
+          "predicted_per_token_ms": 23.273608695652175,
+          "prompt_ms": 410.133,
+          "prompt_n": 338,
+          "prompt_per_second": 824.1229064718032,
+          "prompt_per_token_ms": 1.2134112426035502
+        },
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 416,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 439
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"\", \"original_answer\": \"Based on the provided passages, here is how to fold a quilt:\\n\\nPassage 1 provides instructions for sewing binding to the edges of a quilt. However, it does not provide instructions for folding the quilt itself. Therefore, I am unable to answer the question based on this passage alone.\\n\\nPassage 2 describes how to fold a quilt into thirds along the bias of the fabric. The steps are as follows:\\n\\n1. Lay the quilt on a flat surface.\\n2. Fold the lower right corner up towards the center of the quilt, making sure the fold is on the bias.\\n3. Fold the lower left corner up towards the center of the quilt, making sure the fold is on the bias.\\n4. Fold the top left corner down towards the center of the quilt, making sure the fold is on the bias.\\n5. Fold the top right corner down towards the center of the quilt, making sure the fold is on the bias.\\n\\nTherefore, based on Passage 2, you should fold a quilt by laying it flat and folding it in thirds along the bias of the fabric.\\n\\nPassage 3 does not provide instructions for folding a quilt.\\n\\nIn conclusion, based on the provided passages, the steps for folding a quilt are:\\n\\n1. Lay the quilt flat.\\n2. Fold the quilt in thirds along the bias of the fabric.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [], \"source_evidence_erased\": true}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:794e18f7c53b6dc7b28d10a4b51031c6c672e9b533130b2169cc51116508a60d",
+      "started": true,
+      "status": "generated",
+      "visible_ids": []
+    },
+    {
+      "arm": "full_source",
+      "duration_s": 1.3129956279881299,
+      "family_id": "sha256:63a71024302e3b51a31f29a9b53ec525436d81f3be9874192fee59e1a5f685e8",
+      "input_tokens": 695,
+      "order": 1,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 0.95,
+        "schema_valid": true,
+        "source_sentence_id": 1,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 25,
+          "prompt_tokens": 695,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 720
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": 1\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790816986,
+        "id": "chatcmpl-emmXxsYmb5HKeuYVQe5CWNl7PswWPwyE",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 581.16,
+          "predicted_n": 25,
+          "predicted_per_second": 43.01741344896414,
+          "predicted_per_token_ms": 23.246399999999998,
+          "prompt_ms": 612.399,
+          "prompt_n": 617,
+          "prompt_per_second": 1007.5130756255318,
+          "prompt_per_token_ms": 0.9925429497568882
+        },
+        "usage": {
+          "completion_tokens": 25,
+          "prompt_tokens": 695,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 720
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Begin Sewing Binding to the Quilt Use my step-by-step instructions to learn how to sew mitered binding to the edges of a quilt. Trim the quilt sandwich to remove excess batting and backing. If the quilt top is skewed, fold back the other two layers and use a rotary ruler to very carefully square up the quilt.\\\\n\\\\npassage 2:The Timepiece Quilt used in this tutorial measures 56 inches by 70 inches, but this method can be used on any size quilt. 1  Step 1: Lay your quilt on a bed, table or other flat surface. 2  Step 2: Fold the lower right corner up toward the center of the quilt making sure the fold is on the bias.\\\\n\\\\npassage 3:Step 3: Fold the lower left corner up toward the center of the quilt making sure the fold is on the bias. Step 4: Fold the top left corner down toward the center of the quilt making sure the fold is on the bias. Step 5: Making sure the fold is on the bias, fold the top right corner down toward the center of the quilt.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to fold a quilt\\\"}\", \"original_answer\": \"Based on the provided passages, here is how to fold a quilt:\\n\\nPassage 1 provides instructions for sewing binding to the edges of a quilt. However, it does not provide instructions for folding the quilt itself. Therefore, I am unable to answer the question based on this passage alone.\\n\\nPassage 2 describes how to fold a quilt into thirds along the bias of the fabric. The steps are as follows:\\n\\n1. Lay the quilt on a flat surface.\\n2. Fold the lower right corner up towards the center of the quilt, making sure the fold is on the bias.\\n3. Fold the lower left corner up towards the center of the quilt, making sure the fold is on the bias.\\n4. Fold the top left corner down towards the center of the quilt, making sure the fold is on the bias.\\n5. Fold the top right corner down towards the center of the quilt, making sure the fold is on the bias.\\n\\nTherefore, based on Passage 2, you should fold a quilt by laying it flat and folding it in thirds along the bias of the fabric.\\n\\nPassage 3 does not provide instructions for folding a quilt.\\n\\nIn conclusion, based on the provided passages, the steps for folding a quilt are:\\n\\n1. Lay the quilt flat.\\n2. Fold the quilt in thirds along the bias of the fabric.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6], \"source_evidence_erased\": false}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:794e18f7c53b6dc7b28d10a4b51031c6c672e9b533130b2169cc51116508a60d",
+      "started": true,
+      "status": "generated",
+      "visible_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ]
+    }
+  ]
+}

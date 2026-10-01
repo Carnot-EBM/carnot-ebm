@@ -1,0 +1,188 @@
+{
+  "config_hash": "sha256:17d509539abd34d125a7b8f21f47e2064e0f59d5eac351ba74cf8a90a0b6d5a9",
+  "public_hash": "sha256:baf36a0795d9370116d45e31461786b6ad5fdd93611e4388fee1d4280d47224c",
+  "rows": [
+    {
+      "arm": "full_source",
+      "duration_s": 1.5472361990250647,
+      "family_id": "sha256:d07665c65e9397b9ab0db0861669014d356322cd10943ea62577e160b475e4a3",
+      "input_tokens": 857,
+      "order": 0,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 0.0,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 21,
+          "prompt_tokens": 857,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 878
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817137,
+        "id": "chatcmpl-U3HgiPXQDEMQPz3eCZ6OgQQImhDaglKB",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 493.723,
+          "predicted_n": 21,
+          "predicted_per_second": 42.53397147793398,
+          "predicted_per_token_ms": 23.51061904761905,
+          "prompt_ms": 823.321,
+          "prompt_n": 779,
+          "prompt_per_second": 946.1680195209401,
+          "prompt_per_token_ms": 1.0568947368421053
+        },
+        "usage": {
+          "completion_tokens": 21,
+          "prompt_tokens": 857,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 878
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"{\\\"address\\\":\\\"6527 Madrid Rd\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":null,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":null,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Ethnic Food, Specialty Food, Local Flavor, Mexican, Restaurants, Food, Breakfast & Brunch, Fast Food, Juice Bars & Smoothies\\\",\\\"city\\\":\\\"Isla Vista\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"7:0-0:0\\\",\\\"Monday\\\":\\\"7:0-0:0\\\",\\\"Saturday\\\":\\\"7:0-0:0\\\",\\\"Sunday\\\":\\\"7:0-0:0\\\",\\\"Thursday\\\":\\\"7:0-0:0\\\",\\\"Tuesday\\\":\\\"7:0-0:0\\\",\\\"Wednesday\\\":\\\"7:0-0:0\\\"},\\\"name\\\":\\\"Super Cucas\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-11-03 21:59:35\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Super Cucas is really tasty and the portion sizes are so generous. They're also open late which is always great when you're in a college town. I love that they have a menu that offers every style of meat veganized (including soy pastor!) \\\\n\\\\nI'd love to try the vegan fries with meat (asada fries) and the breakfast burritos on my next visit. The portions are huge so I would recommend splitting or saving for 2 meals.\\\"},{\\\"review_date\\\":\\\"2021-11-02 17:48:00\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Literally experienced the worst costumer service. A man yelled at me because I told him I was allergic to beans which I noticed were on tacos and asked if they can re-make them.\\\"},{\\\"review_date\\\":\\\"2021-10-17 19:12:17\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"Decent food, but they always mess up our order. Super disappointing when we pick up food then get home and realize they gave us the completely wrong thing, especially when it's covered in cheese and my boyfriend can't eat dairy!!!! Not the best customer service either\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Super Cucas, located at 6527 Madrid Rd, Isla Vista, CA, is a local Mexican restaurant known for its generous portion sizes and late opening hours. The restaurant offers a diverse menu that includes ethnic, specialty, and fast food, with a variety of meat and vegan options. A notable feature is the option to veganize every style of meat offered. However, the customer service has received mixed reviews. Some customers have raised concerns about issues with order accuracy and handling of dietary restrictions. The restaurant does not offer WiFi and it's not suitable for trendy, upscale, or intimate dining as it has a casual ambiance. Street parking is available, and the restaurant is suitable for group dining. It has an average rating of 3.5 stars.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6], \"source_evidence_erased\": false}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:42ccc9e95abb17f9b6f18e1cc1d5730a500432bb2408bb7736376927458e8738",
+      "started": true,
+      "status": "generated",
+      "visible_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ]
+    },
+    {
+      "arm": "source_erased",
+      "duration_s": 1.0425382889807224,
+      "family_id": "sha256:d07665c65e9397b9ab0db0861669014d356322cd10943ea62577e160b475e4a3",
+      "input_tokens": 281,
+      "order": 1,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 1.0,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 281,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 304
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 1.0,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817139,
+        "id": "chatcmpl-UlB0KTSXIi7FFE7tgs8lZKeqC05QvorW",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 541.435,
+          "predicted_n": 23,
+          "predicted_per_second": 42.479706705329356,
+          "predicted_per_token_ms": 23.540652173913042,
+          "prompt_ms": 277.538,
+          "prompt_n": 203,
+          "prompt_per_second": 731.4313715599304,
+          "prompt_per_token_ms": 1.3671822660098523
+        },
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 281,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 304
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"\", \"original_answer\": \"Super Cucas, located at 6527 Madrid Rd, Isla Vista, CA, is a local Mexican restaurant known for its generous portion sizes and late opening hours. The restaurant offers a diverse menu that includes ethnic, specialty, and fast food, with a variety of meat and vegan options. A notable feature is the option to veganize every style of meat offered. However, the customer service has received mixed reviews. Some customers have raised concerns about issues with order accuracy and handling of dietary restrictions. The restaurant does not offer WiFi and it's not suitable for trendy, upscale, or intimate dining as it has a casual ambiance. Street parking is available, and the restaurant is suitable for group dining. It has an average rating of 3.5 stars.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [], \"source_evidence_erased\": true}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:42ccc9e95abb17f9b6f18e1cc1d5730a500432bb2408bb7736376927458e8738",
+      "started": true,
+      "status": "generated",
+      "visible_ids": []
+    }
+  ]
+}

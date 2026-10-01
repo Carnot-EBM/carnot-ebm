@@ -1,0 +1,225 @@
+{
+  "config_hash": "sha256:17d509539abd34d125a7b8f21f47e2064e0f59d5eac351ba74cf8a90a0b6d5a9",
+  "public_hash": "sha256:8aaf19c165f72e15e6e6a0cec855f4ea1af4782b098caa0c81f314699206af1a",
+  "rows": [
+    {
+      "arm": "source_erased",
+      "duration_s": 1.1846937779919244,
+      "family_id": "sha256:d72fc41d1216d0b83229f641a7ad2ce71dd4ba488ca75f6b920bd3e61fb67e56",
+      "input_tokens": 350,
+      "order": 0,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 1.0,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 350,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 373
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 1.0,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817080,
+        "id": "chatcmpl-MfQMqWQNWH7ApTnuBGBU0gtgTJA5sqtB",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 539.529,
+          "predicted_n": 23,
+          "predicted_per_second": 42.62977522987643,
+          "predicted_per_token_ms": 23.457782608695652,
+          "prompt_ms": 386.57,
+          "prompt_n": 272,
+          "prompt_per_second": 703.6241819075458,
+          "prompt_per_token_ms": 1.4212132352941176
+        },
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 350,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 373
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"\", \"original_answer\": \"ISIS militants are nearing the key Iraqi city of Ramadi, according to Falih Essawi, the deputy head of the Anbar Provincial Council. He stated that government troops are struggling to hold their front lines against the ISIS offensive and pleaded for reinforcements and air support from the Iraqi government and the US-led coalition against ISIS. Essawi warned that security in the city is collapsing rapidly, and urgent support is needed to save it. The recent fighting has resulted in the displacement of at least 150,000 people, causing huge traffic jams on the roads leading out of the city. Areas north and south of Ramadi are already under ISIS control, and the western positions held by government forces are under threat. Despite months of US-led airstrikes and the recent defeat of ISIS in Tikrit, the extremist group continues to show resilience. The US military has carried out multiple airstrikes near Ramadi in recent weeks, but a military official stated that the fall of the city is not imminent. Ramadi has been a site of intense fighting for months, with ISIS gaining control of parts of the city last year.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [], \"source_evidence_erased\": true}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:0301588ddf50a3f5595adf2264b2f3d73354590d596f7ec186bceea65e4b582e",
+      "started": true,
+      "status": "generated",
+      "visible_ids": []
+    },
+    {
+      "arm": "full_source",
+      "duration_s": 1.9238817330333404,
+      "family_id": "sha256:d72fc41d1216d0b83229f641a7ad2ce71dd4ba488ca75f6b920bd3e61fb67e56",
+      "input_tokens": 1489,
+      "order": 1,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 0.0,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 1489,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 1512
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817082,
+        "id": "chatcmpl-KTZbgcbWbCb7yBfvYygazLsjtKSiBgwf",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 542.396,
+          "predicted_n": 23,
+          "predicted_per_second": 42.40444251063799,
+          "predicted_per_token_ms": 23.582434782608694,
+          "prompt_ms": 1262.264,
+          "prompt_n": 1411,
+          "prompt_per_second": 1117.832719621252,
+          "prompt_per_token_ms": 0.8945882352941176
+        },
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 1489,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 1512
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"West of Baghdad, Iraq (CNN)Falih Essawi shouted on the phone as he described his situation. From his point of view, ISIS militants might be just hours away from taking the key Iraqi city of Ramadi. Fierce fighting has engulfed Ramadi, which lies only about 70 miles (113 kilometers) west of Baghdad and is the capital of Anbar province, Iraq's Sunni heartland. Essawi, the deputy head of the Anbar Provincial Council, told CNN from inside the city Wednesday that it's unclear how much longer government troops can hold their front lines against the ISIS offensive. The politician said he was on a front line himself, armed with a machine gun. Security was \\\"collapsing rapidly in the city,\\\" and he begged the Iraqi government for reinforcements and the U.S.-led coalition against ISIS for air support. He stressed that urgent support from the military and security forces is needed to save the city. \\\"This is what we warned Baghdad of what's going to happen,\\\" Essawi told CNN by phone, referring to the Iraqi government at the capital. \\\"Where is Baghdad? Where is al-Abadi?\\\" His plea for help comes the day after Iraqi Prime Minister Haider al-Abadi met with U.S. President Barack Obama in Washington to seek more support for the fight against ISIS. \\\"Just Allah knows if we will survive this,\\\" Essawi said. According to the Anbar official, at least 10 Iraqi security forces were killed and more than 100 others were wounded in the fighting against ISIS on Wednesday. The extremist group's offensive in Ramadi shows its resilience despite months of U.S.-led airstrikes and its recent defeat by Iraqi forces in the northern city of Tikrit. ISIS fighters have Ramadi under pressure from several angles. Essawi said ISIS militants made significant advances Wednesday in three areas east of Ramadi: Albu Soda, Albu Ghanem and parts of Soufia, which leads to central Ramadi. Later, he said that militants were rolling into the center of Ramadi. Over the weekend, the militants seized control of areas north of Ramadi. Routes south of the city were taken some months ago. That leaves only areas to the west of Ramadi in the hands of government forces, but those positions are under threat, Essawi warned. The recent fighting has driven a steady stream of refugees out of the city. On Wednesday, some residents packed what they could into metal carts as they prepared to flee on foot. People also were fleeing the areas where ISIS was advancing east of Ramadi. At least 150,000 people have already fled since Wednesday morning, causing huge traffic jams on the roads leading outside the city, according to Essawi. A CNN team met with three families that had fled an ISIS assault in the Albu Ghanem area. Those families said Iraqi security and military forces withdrew from Albu Ghanem after a battle with ISIS, which took over the area quickly. One fleeing Albu Ghanem resident, Abu Ahmed, paused to talk to CNN as he and his family walked east toward Baghdad, crossing a bridge over the Euphrates River. He said four ISIS militants had entered his house and set up a sniper position on his roof. Abu Ahmed said he, his wife and four children walked away from the home with his elderly mother while the ISIS fighters were busy setting things up there. He said his family left everything behind. His family was using a cart to carry his mother, who couldn't walk. While talking about the fighters' takeover of his home, his wife started crying and asked God to help the rest of the families who are stuck in Albu Ghanem. Ramadi has seen intense and persistent fighting for months. ISIS took over parts of the city in the first half of last year, placing it at the heart of a deadly tug of war ever since. The U.S. military has carried out multiple airstrikes against ISIS targets near Ramadi in recent weeks. \\\"The coalition has been supporting the fight in Ramadi with airstrikes, and there have been seven airstrikes in Ramadi since Monday,\\\" Col. Ed Thomas, spokesman for Joint Chiefs Chairman Col. Martin Dempsey, said on Wednesday. He stressed that Ramadi remains contested. Another U.S. military official, who spoke on the condition of anonymity, told CNN that the fall of Ramadi is \\\"not imminent.\\\" Sizable parts of the city are under ISIS control or influence, but the area has been a target of a months-long offensive, that official said. CNN's Hamdi Alkhshali and Arwa Damon reported from west of Baghdad, and Jethro Mullen wrote from Hong Kong. CNN's Jason Hanna, Jim Sciutto, Jamie Crawford contributed to this report.\\n\", \"original_answer\": \"ISIS militants are nearing the key Iraqi city of Ramadi, according to Falih Essawi, the deputy head of the Anbar Provincial Council. He stated that government troops are struggling to hold their front lines against the ISIS offensive and pleaded for reinforcements and air support from the Iraqi government and the US-led coalition against ISIS. Essawi warned that security in the city is collapsing rapidly, and urgent support is needed to save it. The recent fighting has resulted in the displacement of at least 150,000 people, causing huge traffic jams on the roads leading out of the city. Areas north and south of Ramadi are already under ISIS control, and the western positions held by government forces are under threat. Despite months of US-led airstrikes and the recent defeat of ISIS in Tikrit, the extremist group continues to show resilience. The US military has carried out multiple airstrikes near Ramadi in recent weeks, but a military official stated that the fall of the city is not imminent. Ramadi has been a site of intense fighting for months, with ISIS gaining control of parts of the city last year.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43], \"source_evidence_erased\": false}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:0301588ddf50a3f5595adf2264b2f3d73354590d596f7ec186bceea65e4b582e",
+      "started": true,
+      "status": "generated",
+      "visible_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43
+      ]
+    }
+  ]
+}

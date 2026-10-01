@@ -87738,6 +87738,30 @@ after nested sidecars get newer mtimes. Fixture agreement is circular_positive.
 External incompleteness is terminal blocked; owned check failures disqualify.
 Ops/status/traceability reconciliation belongs to the conductor for this task.
 
+# REQ-REPORT-7958: Publish bounded whole-response Qwen measurement
+
+Authenticate the declared Exp7955 primary and its readiness=1, eligible verdict,
+adversarial=false operands. Missing external custody or GPU lease is terminal
+blocked without repeated attempts. Use the authenticated cached mandated GGUF
+with an owned CUDA lease and measured offload. Bound load plus inference to
+3000 seconds; expose flushed phase and call progress with supervised heartbeats.
+Keep weights and defaults fixed, exposed development scope and GAP-ORACLE-DISTINCT
+open. Freeze files, consumers, argv, exits, failure reasons, deadlines and coverage
+includes before results. Keep private CLI routes separate and all sidecars below
+raw. Publish one checked primary atomically; both real readers select its hash
+after nested sidecars become newer. Required owned failures disqualify readiness.
+
+## SCENARIO-REPORT-7958-TERMINAL
+
+Tests cover blocked, fixture, live ownership, negative, cold-replay and terminal
+routes. Require nonempty 100% new-module/CLI statement coverage, scoped Ruff,
+strict mypy, explicit-test spec coverage, E2E-015/019, real CPU grammar transport,
+and E2E-016 fixture and replay with historical date 20260929. Current date is
+20261001. Cold reconstruction uses recorded raw replies and original annotations
+without another model invocation. Inspect adversarial and strict-row reports,
+bind final sidecars to final bytes, preserve historical failures and September 28
+oracle-distinct correction. The conductor owns ops/status/traceability updates.
+
 V690 implementation: task-owned authority, methods, validation and parameterized
 Exp7953 CLI. Private regressions preserve V685 lifecycle assertions and reproduce
 both V689 authority failures. Exact current verification receipts and measured

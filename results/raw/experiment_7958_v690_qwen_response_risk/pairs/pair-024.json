@@ -1,0 +1,196 @@
+{
+  "config_hash": "sha256:17d509539abd34d125a7b8f21f47e2064e0f59d5eac351ba74cf8a90a0b6d5a9",
+  "public_hash": "sha256:00eb26bd13d37fdb962bad3b349ef0bd6bad0cec1e96a70ffcef1513f5eb292d",
+  "rows": [
+    {
+      "arm": "source_erased",
+      "duration_s": 0.9945413529640064,
+      "family_id": "sha256:1296def2f77f14cb4a8c4c4a29e21d0264e72ddb5cd12f49eae4b1e7de49fd62",
+      "input_tokens": 179,
+      "order": 0,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 1.0,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 179,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 202
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 1.0,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817040,
+        "id": "chatcmpl-FYE4yb5kePz77fKNCzoJ9Cyiu3vVsXCe",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 536.734,
+          "predicted_n": 23,
+          "predicted_per_second": 42.851766424336816,
+          "predicted_per_token_ms": 23.33626086956522,
+          "prompt_ms": 194.261,
+          "prompt_n": 101,
+          "prompt_per_second": 519.9190779415322,
+          "prompt_per_token_ms": 1.9233762376237624
+        },
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 179,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 202
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"\", \"original_answer\": \"Children learn various gross motor skills, academic concepts, scientific knowledge, and develop creativity through water play. Teachers can enhance water play by providing interesting and challenging materials, encouraging active play, using open-ended questions, modeling new vocabulary, and observing children's actions.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [], \"source_evidence_erased\": true}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:dc08c0cd113c3caa2e3510e2d0cc9463bea57acfe5d3c81f9cbc35bf27255672",
+      "started": true,
+      "status": "generated",
+      "visible_ids": []
+    },
+    {
+      "arm": "full_source",
+      "duration_s": 1.1650503990240395,
+      "family_id": "sha256:1296def2f77f14cb4a8c4c4a29e21d0264e72ddb5cd12f49eae4b1e7de49fd62",
+      "input_tokens": 558,
+      "order": 1,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 0.0,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 558,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 581
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817042,
+        "id": "chatcmpl-DMe085EUje1qoe74xABpGZsbWKXhn8Q4",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 538.93,
+          "predicted_n": 23,
+          "predicted_per_second": 42.67715658805411,
+          "predicted_per_token_ms": 23.43173913043478,
+          "prompt_ms": 524.95,
+          "prompt_n": 480,
+          "prompt_per_second": 914.372797409277,
+          "prompt_per_token_ms": 1.0936458333333334
+        },
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 558,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 581
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:A lot of children enjoy water play, especially outside during the warmer months of the year! There are so many great benefits from water play. Water play helps a child with gross motor skills. During water play, the children may be running through sprinklers or filling buckets up with water and pouring the water out. Water play also helps with academic learning as well. As far as science, the children are able to learn about floating and sinking and seeing that different objects can sink and float. In math, children are able to learn about measuring a certain amount of water into a bucket, more and less by filling one bucket with more water and one bucket with less water. Water play also encourages creativity. The children are able to pretend and use their imagination, while playing with the water.\\\\n\\\\npassage 2:To make the most of water play the teacher needs to be an enabler. Structure the center so children have interesting, challenging, and puzzling materials to stimulate their active play. Sometimes, post open-ended questions, engage in active listening, model the use of new vocabulary, encourage prediction, and thoughtfully observe what children do.\\\\n\\\\npassage 3:Water is not just for washing, and it is not just for ducks. Water is for children to enjoy and learn from! 25 Great Ideas for Promoting Discovery Learning in Water Play. Fill the water table with ice cubes, and provide shakers of salt and lengths of string. Suspend a funnel low, over the water table.\\\\n\\\\n\\\",\\\"question\\\":\\\"what do children learn with water play\\\"}\", \"original_answer\": \"Children learn various gross motor skills, academic concepts, scientific knowledge, and develop creativity through water play. Teachers can enhance water play by providing interesting and challenging materials, encouraging active play, using open-ended questions, modeling new vocabulary, and observing children's actions.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], \"source_evidence_erased\": false}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:dc08c0cd113c3caa2e3510e2d0cc9463bea57acfe5d3c81f9cbc35bf27255672",
+      "started": true,
+      "status": "generated",
+      "visible_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ]
+    }
+  ]
+}

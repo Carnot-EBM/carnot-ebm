@@ -1,0 +1,208 @@
+{
+  "config_hash": "sha256:17d509539abd34d125a7b8f21f47e2064e0f59d5eac351ba74cf8a90a0b6d5a9",
+  "public_hash": "sha256:bd7a20ee9a350b8f1ac9996b9b9d340d7e5903eb973995b4ef5db6d8f420a458",
+  "rows": [
+    {
+      "arm": "full_source",
+      "duration_s": 1.2789300080039538,
+      "family_id": "sha256:2113b9b3c5eb5c395a8887f38a40e202f2cf0d16ae7e63448834fad0f8c3138b",
+      "input_tokens": 706,
+      "order": 0,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 0.85,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 22,
+          "prompt_tokens": 706,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 728
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n \"unsupported_probability\": 0.85,\n \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817062,
+        "id": "chatcmpl-j2zZmXTSLCduOlfp5EAXRSEm549piLKg",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 514.99,
+          "predicted_n": 22,
+          "predicted_per_second": 42.71927610244859,
+          "predicted_per_token_ms": 23.408636363636365,
+          "prompt_ms": 629.378,
+          "prompt_n": 628,
+          "prompt_per_second": 997.8105367521584,
+          "prompt_per_token_ms": 1.0021942675159237
+        },
+        "usage": {
+          "completion_tokens": 22,
+          "prompt_tokens": 706,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 728
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:How did the colonists react to the stamp act of 1765? The colonists reacted in many ways, violent and non-violent. Most times it would start out as a peaceful protest like holding signs and saying chants like No Taxation without\u2026 Representation. Then some of the Red Coats would come along to cause a fight and get people arrested.\\\\n\\\\npassage 2:April: SUGAR ACT & CURRENCY ACT are passed by Parliament. 1765____. March 22: STAMP ACT is passed by Parliament to raise funds for the mainte-. nance of British troops in the colonies. The first direct tax imposed. on the colonists, it requires the use of tax-stamped paper for all. newspapers, magazines, legal documents, etc.\\\\n\\\\npassage 3:1765____. March 22: STAMP ACT is passed by Parliament to fund the maintenance. of British troops in the colonies after the French and Indian War. The first direct tax imposed by Parliament, it requires the use of. tax-stamped paper for all newspapers, legal documents, etc. Summer/Fall: Public protests, legislative resolutions, town meetings, and. citizen boycotts of British goods occur throughout the colonies. Nov. 1: Stamp Act goes into effect. 1766____. March 18: STAMP ACT is repealed by Parliament, which also passes. DECLARATORY ACT to affirm its authority to \u201cmake laws . . . of. sufficient force and validity to bind the colonies and people of. America .\\\\n\\\\n\\\",\\\"question\\\":\\\"how the colonists respond to the stamp act. why was it so upsetting?\\\"}\", \"original_answer\": \"Based on the given passages, the colonists responded to the Stamp Act of 1765 with a mix of violent and non-violent protests. They were upset about being subjected to the first direct tax imposed by Parliament, which they felt was a violation of their rights as British subjects. The passages mention public protests, legislative resolutions, town meetings, and citizen boycotts of British goods throughout the colonies. The colonists' reaction to the Stamp Act was significant because it marked a turning point in the relationship between the American colonies and Great Britain, leading to further conflicts and eventually the American Revolution.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26], \"source_evidence_erased\": false}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:151d4402be2bf76feb30c9d340e8d185adc17b1ffc7d22f6558ea34545825db9",
+      "started": true,
+      "status": "generated",
+      "visible_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26
+      ]
+    },
+    {
+      "arm": "source_erased",
+      "duration_s": 0.9908641460351646,
+      "family_id": "sha256:2113b9b3c5eb5c395a8887f38a40e202f2cf0d16ae7e63448834fad0f8c3138b",
+      "input_tokens": 248,
+      "order": 1,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 1.0,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 248,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 271
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 1.0,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817063,
+        "id": "chatcmpl-7VTXxnTNL1lFWCxBUuW69mKhe0MGAefT",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 545.746,
+          "predicted_n": 23,
+          "predicted_per_second": 42.144147643775675,
+          "predicted_per_token_ms": 23.72808695652174,
+          "prompt_ms": 254.623,
+          "prompt_n": 170,
+          "prompt_per_second": 667.6537469121014,
+          "prompt_per_token_ms": 1.4977823529411765
+        },
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 248,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 271
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"\", \"original_answer\": \"Based on the given passages, the colonists responded to the Stamp Act of 1765 with a mix of violent and non-violent protests. They were upset about being subjected to the first direct tax imposed by Parliament, which they felt was a violation of their rights as British subjects. The passages mention public protests, legislative resolutions, town meetings, and citizen boycotts of British goods throughout the colonies. The colonists' reaction to the Stamp Act was significant because it marked a turning point in the relationship between the American colonies and Great Britain, leading to further conflicts and eventually the American Revolution.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [], \"source_evidence_erased\": true}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:151d4402be2bf76feb30c9d340e8d185adc17b1ffc7d22f6558ea34545825db9",
+      "started": true,
+      "status": "generated",
+      "visible_ids": []
+    }
+  ]
+}

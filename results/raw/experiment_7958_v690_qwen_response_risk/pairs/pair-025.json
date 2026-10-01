@@ -1,0 +1,200 @@
+{
+  "config_hash": "sha256:17d509539abd34d125a7b8f21f47e2064e0f59d5eac351ba74cf8a90a0b6d5a9",
+  "public_hash": "sha256:4f2631811d2b5e7fb18f486b35980dfe6dddcfd637b45453b2438493ec4f07d3",
+  "rows": [
+    {
+      "arm": "source_erased",
+      "duration_s": 1.0685692640254274,
+      "family_id": "sha256:9e307b895baf7e16286aa1eaa407344017180a0d269f9ac8c7e8c70d3781ba76",
+      "input_tokens": 317,
+      "order": 0,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 1.0,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 317,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 340
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 1.0,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817043,
+        "id": "chatcmpl-kRd3e2nOy8K4k0YBBHm6KafYHh5luoVG",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 537.016,
+          "predicted_n": 23,
+          "predicted_per_second": 42.82926393254577,
+          "predicted_per_token_ms": 23.348521739130433,
+          "prompt_ms": 293.619,
+          "prompt_n": 239,
+          "prompt_per_second": 813.980021728839,
+          "prompt_per_token_ms": 1.2285313807531382
+        },
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 317,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 340
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"\", \"original_answer\": \"Based on the given passages, here is the answer to the question \\\"What is the average weather like in Sausalito?\\\":\\n\\nAccording to Passage 2, the average weather in Sausalito, California is as follows:\\n\\n* Annual rainfall: 34 inches\\n* Number of days with any measurable precipitation: 56\\n* Average number of sunny days per year: 256\\n* Highest monthly average temperature: 69\u00b0F (in July)\\n* Lowest monthly average temperature: 43\u00b0F (in January)\\n* Comfort index score: 84 out of 100 (based on the total number of days annually within the comfort range of 70-80 degrees, with a penalty for days of excessive humidity)\\n\\nTherefore, the average weather in Sausalito is characterized by mild temperatures, moderate rainfall, and many sunny days throughout the year.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [], \"source_evidence_erased\": true}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:362cf618bce0ad1f1a9e0a5f87755bdbd80d761b79073cc69794ca4188f2d565",
+      "started": true,
+      "status": "generated",
+      "visible_ids": []
+    },
+    {
+      "arm": "full_source",
+      "duration_s": 1.3432084349915385,
+      "family_id": "sha256:9e307b895baf7e16286aa1eaa407344017180a0d269f9ac8c7e8c70d3781ba76",
+      "input_tokens": 768,
+      "order": 1,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 0.0,
+        "schema_valid": true,
+        "source_sentence_id": 1,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 24,
+          "prompt_tokens": 768,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 792
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 1\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817044,
+        "id": "chatcmpl-X8YnNKiRl2xTGN6uIUsAMoq8mKrwBVOB",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 562.986,
+          "predicted_n": 24,
+          "predicted_per_second": 42.629834489667594,
+          "predicted_per_token_ms": 23.45775,
+          "prompt_ms": 679.049,
+          "prompt_n": 690,
+          "prompt_per_second": 1016.1269658007006,
+          "prompt_per_token_ms": 0.9841289855072464
+        },
+        "usage": {
+          "completion_tokens": 24,
+          "prompt_tokens": 768,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 792
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:The highest monthly average temperature in Sausalito for September is 58 degrees. The lowest monthly average temperature in Sausalito for December is 50 degrees. The most monthly precipitation in Sausalito occurs in January with 0 inches. The air quality index in Sausalito is 13% better than the national average. The pollution index in Sausalito is 61% worse than the national average.\\\\n\\\\npassage 2:CLIMATE OVERVIEW : Sausalito, California, gets 34 inches of rain per year. The US average is 39. Snowfall is 0 inches. The average US city gets 26 inches of snow per year. The number of days with any measurable precipitation is 56. On average, there are 256 sunny days per year in Sausalito, California. The July high is around 69 degrees. The January low is 43. Sperling's comfort index for Sausalito is a 84 out of 100, where a higher score indicates a more comfortable year-around climate. The US average for the comfort index is 54. Our index is based on the total number of days annually within the comfort range of 70-80 degrees, and we also applied a penalty for days of excessive humidity.\\\\n\\\\npassage 3:Weather. Today's Forecast; Hourly Forecast; 10 Day Forecast; National Forecast; Get Notifications; Maps. Weather in Motion\u00ae Radar Maps; Classic Weather Maps; Regional Satellite; Driving Difficulty Map; Traffic and Radar NEW! Severe. Severe Alerts; Hurricane Central; Tornado Central; Local Severe Storm Risk; Winter Storm Central; Responding by Storm; Safety and Preparedness\\\\n\\\\n\\\",\\\"question\\\":\\\"average weather sausalito\\\"}\", \"original_answer\": \"Based on the given passages, here is the answer to the question \\\"What is the average weather like in Sausalito?\\\":\\n\\nAccording to Passage 2, the average weather in Sausalito, California is as follows:\\n\\n* Annual rainfall: 34 inches\\n* Number of days with any measurable precipitation: 56\\n* Average number of sunny days per year: 256\\n* Highest monthly average temperature: 69\u00b0F (in July)\\n* Lowest monthly average temperature: 43\u00b0F (in January)\\n* Comfort index score: 84 out of 100 (based on the total number of days annually within the comfort range of 70-80 degrees, with a penalty for days of excessive humidity)\\n\\nTherefore, the average weather in Sausalito is characterized by mild temperatures, moderate rainfall, and many sunny days throughout the year.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], \"source_evidence_erased\": false}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:362cf618bce0ad1f1a9e0a5f87755bdbd80d761b79073cc69794ca4188f2d565",
+      "started": true,
+      "status": "generated",
+      "visible_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18
+      ]
+    }
+  ]
+}

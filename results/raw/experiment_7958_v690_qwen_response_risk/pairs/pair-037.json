@@ -1,0 +1,196 @@
+{
+  "config_hash": "sha256:17d509539abd34d125a7b8f21f47e2064e0f59d5eac351ba74cf8a90a0b6d5a9",
+  "public_hash": "sha256:434df15d73a49080b653e917c118d7da376b7927de0a6577420caa410a50b136",
+  "rows": [
+    {
+      "arm": "source_erased",
+      "duration_s": 0.9697361969738267,
+      "family_id": "sha256:37e99eb420f23e7a23d60c91e0e5ddba5495974862a9c8e1e071af1c68e2ccc3",
+      "input_tokens": 233,
+      "order": 0,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 1.0,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 233,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 256
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 1.0,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817075,
+        "id": "chatcmpl-emVsZoxmeTryzK1UDnRbtZSAfTkQ3iOi",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 539.669,
+          "predicted_n": 23,
+          "predicted_per_second": 42.61871628720567,
+          "predicted_per_token_ms": 23.46386956521739,
+          "prompt_ms": 239.261,
+          "prompt_n": 155,
+          "prompt_per_second": 647.828104037014,
+          "prompt_per_token_ms": 1.5436193548387096
+        },
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 233,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 256
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"\", \"original_answer\": \"Sure! Here is the summary you requested within 68 words:\\n\\nLynyrd Skynyrd's original drummer, Robert Lewis Burns Jr., died in a car crash in Georgia at 64. He was not restrained and hit a mailbox and tree. Burns was part of the band's original lineup and played on early hits like \\\"Sweet Home Alabama\\\" before leaving the group in 1975. The band was inducted into the Rock and Roll Hall of Fame in 2006.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [], \"source_evidence_erased\": true}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:eac632b231956d8102e32a51059727f15a626156e34c479d97cb012840ad126d",
+      "started": true,
+      "status": "generated",
+      "visible_ids": []
+    },
+    {
+      "arm": "full_source",
+      "duration_s": 1.2455503740347922,
+      "family_id": "sha256:37e99eb420f23e7a23d60c91e0e5ddba5495974862a9c8e1e071af1c68e2ccc3",
+      "input_tokens": 663,
+      "order": 1,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 0.0,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 663,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 686
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817076,
+        "id": "chatcmpl-AYUyZr03qOJhp6cWXtj84mxhWkHTfKDu",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 540.419,
+          "predicted_n": 23,
+          "predicted_per_second": 42.5595695192064,
+          "predicted_per_token_ms": 23.496478260869566,
+          "prompt_ms": 607.674,
+          "prompt_n": 585,
+          "prompt_per_second": 962.6872303241541,
+          "prompt_per_token_ms": 1.0387589743589742
+        },
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 663,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 686
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"Atlanta (CNN)Robert Lewis Burns Jr., the original drummer in Southern rock band Lynyrd Skynyrd, died Friday night in a car crash, a Georgia State Patrol spokesman said. Burns, 64, died after his car hit a mailbox and a tree in Cartersville, spokesman James Tallent said. No other cars were involved in the crash, which occurred shortly before midnight. \\\"He was not restrained at the time of the crash,\\\" Tallent told CNN. The musician lived in northern Georgia. Burns was part of the genre-defining band's original lineup, which formed in Jacksonville, Florida, in 1965. Lead singer Ronnie Van Zant started Noble Five with Burns, guitarists Gary Rossington and Allen Collins and bassist Larry Junstrom in their hometown. It then made a name change in a reference to a high school gym teacher. Lynyrd Skynyrd changed members over the years as it produced rock anthems including \\\"Sweet Home Alabama\\\" and \\\"Freebird.\\\" Burns left the band before its third studio album, \\\"Nuthin Fancy,\\\" in 1975, \\\"exhausted by touring,\\\" according to the band's Rock and Roll Hall of Fame biography. He was not involved in the 1977 plane crash that killed three members, including Van Zant. The band was inducted into the Rock and Roll Hall of Fame in 2006. Lynyrd Skynyrd still tours with Rossington, the only original member still in the band. \\\"Today I'm at a loss for words but I just remember Bob being a funny guy,\\\" Rossington said on the band's official Facebook page. \\\"My heart goes out to his family and God bless him and them in this sad time. He was a great great drummer.\\\" People we've lost in 2015.\\n\", \"original_answer\": \"Sure! Here is the summary you requested within 68 words:\\n\\nLynyrd Skynyrd's original drummer, Robert Lewis Burns Jr., died in a car crash in Georgia at 64. He was not restrained and hit a mailbox and tree. Burns was part of the band's original lineup and played on early hits like \\\"Sweet Home Alabama\\\" before leaving the group in 1975. The band was inducted into the Rock and Roll Hall of Fame in 2006.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], \"source_evidence_erased\": false}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:eac632b231956d8102e32a51059727f15a626156e34c479d97cb012840ad126d",
+      "started": true,
+      "status": "generated",
+      "visible_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ]
+    }
+  ]
+}

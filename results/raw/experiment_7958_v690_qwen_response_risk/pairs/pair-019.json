@@ -1,0 +1,191 @@
+{
+  "config_hash": "sha256:17d509539abd34d125a7b8f21f47e2064e0f59d5eac351ba74cf8a90a0b6d5a9",
+  "public_hash": "sha256:55cb9fe338b01f0e3698079b51ac475b3baff352b330d4940d7768e6ffd03562",
+  "rows": [
+    {
+      "arm": "full_source",
+      "duration_s": 1.3436661959858611,
+      "family_id": "sha256:5c8afc65d507ea0dbdfd14b6d44aaa563f4432fc3889debd4759d06f956a970b",
+      "input_tokens": 802,
+      "order": 0,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 0.95,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 22,
+          "prompt_tokens": 802,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 824
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n \"unsupported_probability\": 0.95,\n \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817029,
+        "id": "chatcmpl-AVKNaFJ9k2g3BvyDZBpVmoXmamXPJzFE",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 513.111,
+          "predicted_n": 22,
+          "predicted_per_second": 42.8757130523415,
+          "predicted_per_token_ms": 23.323227272727273,
+          "prompt_ms": 699.925,
+          "prompt_n": 724,
+          "prompt_per_second": 1034.3965424866951,
+          "prompt_per_token_ms": 0.9667472375690607
+        },
+        "usage": {
+          "completion_tokens": 22,
+          "prompt_tokens": 802,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 824
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"{\\\"address\\\":\\\"966 Embarcadero Del Mar, Unit C\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":null,\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":null},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Restaurants, Chinese, Hot Pot, Pan Asian, Szechuan, Chicken Wings\\\",\\\"city\\\":\\\"Isla Vista\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-14:0\\\",\\\"Monday\\\":\\\"11:0-14:0\\\",\\\"Saturday\\\":\\\"11:0-14:0\\\",\\\"Sunday\\\":\\\"11:0-14:0\\\",\\\"Thursday\\\":\\\"11:0-14:0\\\",\\\"Tuesday\\\":\\\"11:0-14:0\\\",\\\"Wednesday\\\":\\\"11:0-14:0\\\"},\\\"name\\\":\\\"Jay C's Place\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2020-07-24 00:35:40\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"This place always being one of my favourite! Friendly owner and Foods are sooooooooooo good! I love their homemade dumplings, Chicken popcorn, Taiwanese sausage, pork belly bowl, special carts noodle and lamp skewers!!\\\"},{\\\"review_date\\\":\\\"2020-03-23 00:54:06\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Place has amazing homemade dumplings that I can't get enough of. The staff is very nice and helpful. I went for the soft opening and while it wasn't perfect, they did all they could to make the service amazing, and it worked. They also serve Mala Tang, which I tried, and it was really good. The medium spicy is exactly as it sounds like. They also have other items I haven't tried yet but I will definitely go back for more!\\\"},{\\\"review_date\\\":\\\"2020-02-25 08:58:42\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"A bit pricey for just a simple dumplings n malatang ( the spicy soup) ... But it taste good... Just not worthy to go back again.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Jay C's Place is a popular Chinese restaurant located in Isla Vista, CA, known for its delicious homemade dumplings, Chicken popcorn, Taiwanese sausage, pork belly bowl, special carts noodle, and lamp skewers. The restaurant has a cozy atmosphere and friendly staff, with a rating of 4.5 stars based on customer reviews. Customers rave about the restaurant's homemade dumplings, Mala Tang, and other menu items, praising the flavors and quality of the food. However, some customers find the prices to be a bit high compared to the portion sizes. The restaurant offers takeout and reservations, and is open seven days a week from 11am to 2pm. Overall, Jay C's Place is a great option for those looking for authentic Chinese cuisine in the Isla Vista area.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], \"source_evidence_erased\": false}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:d924432221610e0b1f0c38fa996c2a6ed1cbbeba7b37d6083087fd21f58e094e",
+      "started": true,
+      "status": "generated",
+      "visible_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ]
+    },
+    {
+      "arm": "source_erased",
+      "duration_s": 1.0738992329570465,
+      "family_id": "sha256:5c8afc65d507ea0dbdfd14b6d44aaa563f4432fc3889debd4759d06f956a970b",
+      "input_tokens": 289,
+      "order": 1,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 1.0,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 289,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 312
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 1.0,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817030,
+        "id": "chatcmpl-7ERolQwR64QJgm66rbh5Uft665knO9KR",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 537.077,
+          "predicted_n": 23,
+          "predicted_per_second": 42.8243994808938,
+          "predicted_per_token_ms": 23.35117391304348,
+          "prompt_ms": 273.959,
+          "prompt_n": 211,
+          "prompt_per_second": 770.1882398461083,
+          "prompt_per_token_ms": 1.2983838862559243
+        },
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 289,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 312
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"\", \"original_answer\": \"Jay C's Place is a popular Chinese restaurant located in Isla Vista, CA, known for its delicious homemade dumplings, Chicken popcorn, Taiwanese sausage, pork belly bowl, special carts noodle, and lamp skewers. The restaurant has a cozy atmosphere and friendly staff, with a rating of 4.5 stars based on customer reviews. Customers rave about the restaurant's homemade dumplings, Mala Tang, and other menu items, praising the flavors and quality of the food. However, some customers find the prices to be a bit high compared to the portion sizes. The restaurant offers takeout and reservations, and is open seven days a week from 11am to 2pm. Overall, Jay C's Place is a great option for those looking for authentic Chinese cuisine in the Isla Vista area.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [], \"source_evidence_erased\": true}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:d924432221610e0b1f0c38fa996c2a6ed1cbbeba7b37d6083087fd21f58e094e",
+      "started": true,
+      "status": "generated",
+      "visible_ids": []
+    }
+  ]
+}

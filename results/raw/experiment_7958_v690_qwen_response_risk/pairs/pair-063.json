@@ -1,0 +1,203 @@
+{
+  "config_hash": "sha256:17d509539abd34d125a7b8f21f47e2064e0f59d5eac351ba74cf8a90a0b6d5a9",
+  "public_hash": "sha256:4470844665e577979fb525971e059c1167cb4b1f67995250fc30dc6a62ed6a93",
+  "rows": [
+    {
+      "arm": "source_erased",
+      "duration_s": 0.8776946970028803,
+      "family_id": "sha256:6463f441a65a6dd380ed2d2b3a4a113c829385dae098b58b86a7e86008c7ce93",
+      "input_tokens": 222,
+      "order": 0,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 1.0,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 222,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 245
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 1.0,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817142,
+        "id": "chatcmpl-88OrW35MxgSldOAsbp7p2fEphwh1by8C",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 540.973,
+          "predicted_n": 23,
+          "predicted_per_second": 42.51598508613184,
+          "predicted_per_token_ms": 23.5205652173913,
+          "prompt_ms": 237.666,
+          "prompt_n": 144,
+          "prompt_per_second": 605.8923026432052,
+          "prompt_per_token_ms": 1.6504583333333334
+        },
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 222,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 245
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"\", \"original_answer\": \"Kanye West has settled a lawsuit with a paparazzo he assaulted in 2013. The photographer, Daniel Ramos, sought damages for interfering with his right to work. West pleaded guilty to battery and was sentenced to probation and anger management classes. The settlement includes an apology from West to Ramos. This is the second time West has settled a legal dispute involving physical altercations, having previously reached a civil settlement with another man in 2014.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [], \"source_evidence_erased\": true}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:61d19b3ec8244c7b05899cb0db32419cf89ed13d614d49c992c80073834c50b3",
+      "started": true,
+      "status": "generated",
+      "visible_ids": []
+    },
+    {
+      "arm": "full_source",
+      "duration_s": 1.3777079139836133,
+      "family_id": "sha256:6463f441a65a6dd380ed2d2b3a4a113c829385dae098b58b86a7e86008c7ce93",
+      "input_tokens": 824,
+      "order": 1,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 0.0,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 824,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 847
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817144,
+        "id": "chatcmpl-MZZfUHUNz3cpA8TEoGbQtLz7anjnrzMy",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 542.403,
+          "predicted_n": 23,
+          "predicted_per_second": 42.40389525869141,
+          "predicted_per_token_ms": 23.582739130434785,
+          "prompt_ms": 729.475,
+          "prompt_n": 746,
+          "prompt_per_second": 1022.6532780424277,
+          "prompt_per_token_ms": 0.9778485254691689
+        },
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 824,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 847
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"Kanye West has settled a lawsuit with a paparazzi photographer he assaulted -- and the two have shaken on it. The photographer, Daniel Ramos, had filed the civil suit against West  after the hip-hop star attacked him and tried to wrestle his camera from him in July 2013 at Los Angeles International Airport. West pleaded no contest last year to a misdemeanor count of battery over the scuffle. A judge sentenced him to two years' probation, as well as anger management sessions and community service. Ramos and his lawyer, Gloria Allred, sought general and punitive damages in the civil suit, saying that West had interfered with the photographer's rights to pursue a lawful occupation. The case had been set for trial next week, but Allred issued a statement Tuesday night saying Ramos' side had filed a dismissal \\\"because the case was settled to the satisfaction of the parties.\\\" She didn't disclose the details of the settlement other than saying that \\\"one important aspect of it was an apology by Kanye West to our client, Daniel Ramos.\\\" Her statement included a picture of West and Ramos shaking hands, which she said happened after the apology. The original incident was caught on video, including the following exchange. \\\"Kanye! Kanye! Talk to me, Kanye!\\\" Ramos shouts outside a terminal at the Los Angeles airport on the night of July 19, 2013. \\\"What's' going on? Why can't we talk to you?  I mean, why?\\\" he asks as West moves through a group of paparazzi. \\\"Now come on, Kanye, I don't want to fight with you,\\\" he says as West advances toward him. \\\"I told you, don't talk to me, right,\\\" West says. \\\"You're trying to get me in trouble so I step off and have to pay you like $250,000.\\\" West is then seen rushing the photographer and attempting to wrestle his camera from his hands. West retreats after about 15 seconds of scuffling with the photographer. \\\"We believe that this case sent an important message,\\\" Allred said. \\\"Celebrities are not above the law, and they have no right to physically attack someone simply because they were asked a question.\\\" Beverly Hills Police investigated an incident in January 2014 in which West was accused of assaulting a man at a Beverly Hills chiropractor's office. West avoided criminal charges by reaching a civil settlement with the man. Kanye West apologizes to Beck, Bruno Mars. CNN's Sonya Hamasaki contributed to this report.\\n\", \"original_answer\": \"Kanye West has settled a lawsuit with a paparazzo he assaulted in 2013. The photographer, Daniel Ramos, sought damages for interfering with his right to work. West pleaded guilty to battery and was sentenced to probation and anger management classes. The settlement includes an apology from West to Ramos. This is the second time West has settled a legal dispute involving physical altercations, having previously reached a civil settlement with another man in 2014.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21], \"source_evidence_erased\": false}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:61d19b3ec8244c7b05899cb0db32419cf89ed13d614d49c992c80073834c50b3",
+      "started": true,
+      "status": "generated",
+      "visible_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21
+      ]
+    }
+  ]
+}
