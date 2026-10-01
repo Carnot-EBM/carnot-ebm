@@ -1,0 +1,389 @@
+.....................FFF.                                                [100%]
+=================================== FAILURES ===================================
+______________________ test_private_publication[passing] _______________________
+
+tmp_path = PosixPath('/tmp/carnot-7977-check-FoX5fc/pytest/test_private_publication_passi0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f92ea4f4050>
+mode = 'passing'
+
+    @pytest.mark.parametrize("mode", ["passing", "validator_failure", "reader_failure"])
+    def test_private_publication(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, mode: str) -> None:
+        """SCENARIO-REPORT-7977-VALIDATION: actual readers select checked bytes."""
+    
+        def qualified(root: Path, date: str, output: Path, raw: Path, **kwargs: Any) -> int:
+            assert kwargs["evidence"] is q and kwargs["validation"] is plan
+            value = q.read_evidence(root, date)
+            value["validation_receipts"]["required_checks_passed"] = True
+            atomic_json(output, value)
+            return 0
+    
+        def child(
+            spec: dict[str, Any], private: Path, durable: Path, started: float, units: int
+        ) -> dict[str, Any]:
+            log = durable / (spec["name"] + ".log")
+            log.parent.mkdir(parents=True, exist_ok=True)
+            log.write_text(json.dumps({"flagged_count": 0}))
+            return {
+                **spec,
+                "passed": mode != "validator_failure",
+                "log_path": str(log),
+                "log_sha256": sha256_file(log),
+                "exit_code": 0,
+                "timed_out": False,
+            }
+    
+        monkeypatch.setattr(publication.runner, "qualify", qualified)
+        monkeypatch.setattr(publication.runner, "run_child", child)
+        output = tmp_path / "results/experiment_7977_v691_hardware_evidence.json"
+        raw = output.parent / "raw" / output.stem
+        if mode == "reader_failure":
+            monkeypatch.setattr(publication, "reader_receipt", lambda *a, **k: {"passed": False})
+        if mode != "passing":
+            with pytest.raises(ValueError, match="candidate_rejected|reader_identity"):
+                q.qualify(q.ROOT, "20261001", output, raw)
+            return
+>       assert q.qualify(q.ROOT, "20261001", output, raw) == 0
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_experiment_7977_v691_hardware_evidence.py:253: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/experiment_7977_v691_hardware_evidence.py:481: in qualify
+    return publish(root, run_date, output, raw_root)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/publication_7977.py:98: in qualify
+    published = publish_primary(output, value, validator)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/primary_publication.py:71: in publish_primary
+    report = validator(candidate)
+             ^^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/publication_7977.py:81: in validator
+    reduced = q.cold_reduce(root, json.loads(candidate.read_text()))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+root = PosixPath('/home/ianblenke/github.com/ianblenke/carnot')
+candidate = {'MODEL_SPECS': [], 'acceptance_gate_results': {'calibration': 'not_measured', 'decision_benefit': 'not_measured', 'ef...m': 'historical_accounting', 'blocker': '0xffffffff', 'board': 'GateMate', ...}], 'changed_physical_receipts': [], ...}
+
+    def cold_reduce(root: Path, candidate: dict[str, Any]) -> dict[str, Any]:
+        """SCENARIO-REPORT-7977-VALIDATION: recompute claims from primitive evidence."""
+        fresh = read_evidence(root, candidate["run_date"])
+        variable = {
+            "duration_s",
+            "phase_spans",
+            "started_at",
+            "finished_at",
+            "field_principles",
+            "reproducibility_checksum",
+            "validation_receipts",
+            "validation_command_manifest_path",
+            "observed_child_commands",
+            "coverage_statement_counts",
+            "resolved_imports",
+            "repository_health",
+            "primary_resolution_receipt",
+            "terminal_validation_sidecar_path",
+            "scratch_root_receipt",
+            "honest_verdict",
+            "verdict_class",
+            "flagged_adversarial",
+            "hardware_evidence_ready_score",
+            "acceptance_gate_results",
+            "gate_check_summary",
+        }
+        for field in fresh.keys() - variable:
+            if fresh[field] != candidate.get(field):
+>               raise ValueError(f"claims_changed:{field}")
+E               ValueError: claims_changed:duration_scope
+
+python/carnot/reporting/experiment_7977_v691_hardware_evidence.py:439: ValueError
+----------------------------- Captured stdout call -----------------------------
+[exp7913] phase=final_validation event=before_cold_reduction elapsed_s=0.340 completed_units=0
+_________________ test_private_publication[validator_failure] __________________
+
+tmp_path = PosixPath('/tmp/carnot-7977-check-FoX5fc/pytest/test_private_publication_valid0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f92ea467e00>
+mode = 'validator_failure'
+
+    @pytest.mark.parametrize("mode", ["passing", "validator_failure", "reader_failure"])
+    def test_private_publication(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, mode: str) -> None:
+        """SCENARIO-REPORT-7977-VALIDATION: actual readers select checked bytes."""
+    
+        def qualified(root: Path, date: str, output: Path, raw: Path, **kwargs: Any) -> int:
+            assert kwargs["evidence"] is q and kwargs["validation"] is plan
+            value = q.read_evidence(root, date)
+            value["validation_receipts"]["required_checks_passed"] = True
+            atomic_json(output, value)
+            return 0
+    
+        def child(
+            spec: dict[str, Any], private: Path, durable: Path, started: float, units: int
+        ) -> dict[str, Any]:
+            log = durable / (spec["name"] + ".log")
+            log.parent.mkdir(parents=True, exist_ok=True)
+            log.write_text(json.dumps({"flagged_count": 0}))
+            return {
+                **spec,
+                "passed": mode != "validator_failure",
+                "log_path": str(log),
+                "log_sha256": sha256_file(log),
+                "exit_code": 0,
+                "timed_out": False,
+            }
+    
+        monkeypatch.setattr(publication.runner, "qualify", qualified)
+        monkeypatch.setattr(publication.runner, "run_child", child)
+        output = tmp_path / "results/experiment_7977_v691_hardware_evidence.json"
+        raw = output.parent / "raw" / output.stem
+        if mode == "reader_failure":
+            monkeypatch.setattr(publication, "reader_receipt", lambda *a, **k: {"passed": False})
+        if mode != "passing":
+            with pytest.raises(ValueError, match="candidate_rejected|reader_identity"):
+>               q.qualify(q.ROOT, "20261001", output, raw)
+
+tests/python/test_experiment_7977_v691_hardware_evidence.py:251: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/experiment_7977_v691_hardware_evidence.py:481: in qualify
+    return publish(root, run_date, output, raw_root)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/publication_7977.py:98: in qualify
+    published = publish_primary(output, value, validator)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/primary_publication.py:71: in publish_primary
+    report = validator(candidate)
+             ^^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/publication_7977.py:81: in validator
+    reduced = q.cold_reduce(root, json.loads(candidate.read_text()))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+root = PosixPath('/home/ianblenke/github.com/ianblenke/carnot')
+candidate = {'MODEL_SPECS': [], 'acceptance_gate_results': {'calibration': 'not_measured', 'decision_benefit': 'not_measured', 'ef...m': 'historical_accounting', 'blocker': '0xffffffff', 'board': 'GateMate', ...}], 'changed_physical_receipts': [], ...}
+
+    def cold_reduce(root: Path, candidate: dict[str, Any]) -> dict[str, Any]:
+        """SCENARIO-REPORT-7977-VALIDATION: recompute claims from primitive evidence."""
+        fresh = read_evidence(root, candidate["run_date"])
+        variable = {
+            "duration_s",
+            "phase_spans",
+            "started_at",
+            "finished_at",
+            "field_principles",
+            "reproducibility_checksum",
+            "validation_receipts",
+            "validation_command_manifest_path",
+            "observed_child_commands",
+            "coverage_statement_counts",
+            "resolved_imports",
+            "repository_health",
+            "primary_resolution_receipt",
+            "terminal_validation_sidecar_path",
+            "scratch_root_receipt",
+            "honest_verdict",
+            "verdict_class",
+            "flagged_adversarial",
+            "hardware_evidence_ready_score",
+            "acceptance_gate_results",
+            "gate_check_summary",
+        }
+        for field in fresh.keys() - variable:
+            if fresh[field] != candidate.get(field):
+>               raise ValueError(f"claims_changed:{field}")
+E               ValueError: claims_changed:duration_scope
+
+python/carnot/reporting/experiment_7977_v691_hardware_evidence.py:439: ValueError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = PosixPath('/tmp/carnot-7977-check-FoX5fc/pytest/test_private_publication_valid0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f92ea467e00>
+mode = 'validator_failure'
+
+    @pytest.mark.parametrize("mode", ["passing", "validator_failure", "reader_failure"])
+    def test_private_publication(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, mode: str) -> None:
+        """SCENARIO-REPORT-7977-VALIDATION: actual readers select checked bytes."""
+    
+        def qualified(root: Path, date: str, output: Path, raw: Path, **kwargs: Any) -> int:
+            assert kwargs["evidence"] is q and kwargs["validation"] is plan
+            value = q.read_evidence(root, date)
+            value["validation_receipts"]["required_checks_passed"] = True
+            atomic_json(output, value)
+            return 0
+    
+        def child(
+            spec: dict[str, Any], private: Path, durable: Path, started: float, units: int
+        ) -> dict[str, Any]:
+            log = durable / (spec["name"] + ".log")
+            log.parent.mkdir(parents=True, exist_ok=True)
+            log.write_text(json.dumps({"flagged_count": 0}))
+            return {
+                **spec,
+                "passed": mode != "validator_failure",
+                "log_path": str(log),
+                "log_sha256": sha256_file(log),
+                "exit_code": 0,
+                "timed_out": False,
+            }
+    
+        monkeypatch.setattr(publication.runner, "qualify", qualified)
+        monkeypatch.setattr(publication.runner, "run_child", child)
+        output = tmp_path / "results/experiment_7977_v691_hardware_evidence.json"
+        raw = output.parent / "raw" / output.stem
+        if mode == "reader_failure":
+            monkeypatch.setattr(publication, "reader_receipt", lambda *a, **k: {"passed": False})
+        if mode != "passing":
+>           with pytest.raises(ValueError, match="candidate_rejected|reader_identity"):
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AssertionError: Regex pattern did not match.
+E             Expected regex: 'candidate_rejected|reader_identity'
+E             Actual message: 'claims_changed:duration_scope'
+
+tests/python/test_experiment_7977_v691_hardware_evidence.py:250: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp7913] phase=final_validation event=before_cold_reduction elapsed_s=0.337 completed_units=0
+___________________ test_private_publication[reader_failure] ___________________
+
+tmp_path = PosixPath('/tmp/carnot-7977-check-FoX5fc/pytest/test_private_publication_reade0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f92e9f97440>
+mode = 'reader_failure'
+
+    @pytest.mark.parametrize("mode", ["passing", "validator_failure", "reader_failure"])
+    def test_private_publication(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, mode: str) -> None:
+        """SCENARIO-REPORT-7977-VALIDATION: actual readers select checked bytes."""
+    
+        def qualified(root: Path, date: str, output: Path, raw: Path, **kwargs: Any) -> int:
+            assert kwargs["evidence"] is q and kwargs["validation"] is plan
+            value = q.read_evidence(root, date)
+            value["validation_receipts"]["required_checks_passed"] = True
+            atomic_json(output, value)
+            return 0
+    
+        def child(
+            spec: dict[str, Any], private: Path, durable: Path, started: float, units: int
+        ) -> dict[str, Any]:
+            log = durable / (spec["name"] + ".log")
+            log.parent.mkdir(parents=True, exist_ok=True)
+            log.write_text(json.dumps({"flagged_count": 0}))
+            return {
+                **spec,
+                "passed": mode != "validator_failure",
+                "log_path": str(log),
+                "log_sha256": sha256_file(log),
+                "exit_code": 0,
+                "timed_out": False,
+            }
+    
+        monkeypatch.setattr(publication.runner, "qualify", qualified)
+        monkeypatch.setattr(publication.runner, "run_child", child)
+        output = tmp_path / "results/experiment_7977_v691_hardware_evidence.json"
+        raw = output.parent / "raw" / output.stem
+        if mode == "reader_failure":
+            monkeypatch.setattr(publication, "reader_receipt", lambda *a, **k: {"passed": False})
+        if mode != "passing":
+            with pytest.raises(ValueError, match="candidate_rejected|reader_identity"):
+>               q.qualify(q.ROOT, "20261001", output, raw)
+
+tests/python/test_experiment_7977_v691_hardware_evidence.py:251: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/experiment_7977_v691_hardware_evidence.py:481: in qualify
+    return publish(root, run_date, output, raw_root)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/publication_7977.py:98: in qualify
+    published = publish_primary(output, value, validator)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/primary_publication.py:71: in publish_primary
+    report = validator(candidate)
+             ^^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/publication_7977.py:81: in validator
+    reduced = q.cold_reduce(root, json.loads(candidate.read_text()))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+root = PosixPath('/home/ianblenke/github.com/ianblenke/carnot')
+candidate = {'MODEL_SPECS': [], 'acceptance_gate_results': {'calibration': 'not_measured', 'decision_benefit': 'not_measured', 'ef...m': 'historical_accounting', 'blocker': '0xffffffff', 'board': 'GateMate', ...}], 'changed_physical_receipts': [], ...}
+
+    def cold_reduce(root: Path, candidate: dict[str, Any]) -> dict[str, Any]:
+        """SCENARIO-REPORT-7977-VALIDATION: recompute claims from primitive evidence."""
+        fresh = read_evidence(root, candidate["run_date"])
+        variable = {
+            "duration_s",
+            "phase_spans",
+            "started_at",
+            "finished_at",
+            "field_principles",
+            "reproducibility_checksum",
+            "validation_receipts",
+            "validation_command_manifest_path",
+            "observed_child_commands",
+            "coverage_statement_counts",
+            "resolved_imports",
+            "repository_health",
+            "primary_resolution_receipt",
+            "terminal_validation_sidecar_path",
+            "scratch_root_receipt",
+            "honest_verdict",
+            "verdict_class",
+            "flagged_adversarial",
+            "hardware_evidence_ready_score",
+            "acceptance_gate_results",
+            "gate_check_summary",
+        }
+        for field in fresh.keys() - variable:
+            if fresh[field] != candidate.get(field):
+>               raise ValueError(f"claims_changed:{field}")
+E               ValueError: claims_changed:duration_scope
+
+python/carnot/reporting/experiment_7977_v691_hardware_evidence.py:439: ValueError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = PosixPath('/tmp/carnot-7977-check-FoX5fc/pytest/test_private_publication_reade0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f92e9f97440>
+mode = 'reader_failure'
+
+    @pytest.mark.parametrize("mode", ["passing", "validator_failure", "reader_failure"])
+    def test_private_publication(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, mode: str) -> None:
+        """SCENARIO-REPORT-7977-VALIDATION: actual readers select checked bytes."""
+    
+        def qualified(root: Path, date: str, output: Path, raw: Path, **kwargs: Any) -> int:
+            assert kwargs["evidence"] is q and kwargs["validation"] is plan
+            value = q.read_evidence(root, date)
+            value["validation_receipts"]["required_checks_passed"] = True
+            atomic_json(output, value)
+            return 0
+    
+        def child(
+            spec: dict[str, Any], private: Path, durable: Path, started: float, units: int
+        ) -> dict[str, Any]:
+            log = durable / (spec["name"] + ".log")
+            log.parent.mkdir(parents=True, exist_ok=True)
+            log.write_text(json.dumps({"flagged_count": 0}))
+            return {
+                **spec,
+                "passed": mode != "validator_failure",
+                "log_path": str(log),
+                "log_sha256": sha256_file(log),
+                "exit_code": 0,
+                "timed_out": False,
+            }
+    
+        monkeypatch.setattr(publication.runner, "qualify", qualified)
+        monkeypatch.setattr(publication.runner, "run_child", child)
+        output = tmp_path / "results/experiment_7977_v691_hardware_evidence.json"
+        raw = output.parent / "raw" / output.stem
+        if mode == "reader_failure":
+            monkeypatch.setattr(publication, "reader_receipt", lambda *a, **k: {"passed": False})
+        if mode != "passing":
+>           with pytest.raises(ValueError, match="candidate_rejected|reader_identity"):
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AssertionError: Regex pattern did not match.
+E             Expected regex: 'candidate_rejected|reader_identity'
+E             Actual message: 'claims_changed:duration_scope'
+
+tests/python/test_experiment_7977_v691_hardware_evidence.py:250: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp7913] phase=final_validation event=before_cold_reduction elapsed_s=0.342 completed_units=0
+=========================== short test summary info ============================
+FAILED tests/python/test_experiment_7977_v691_hardware_evidence.py::test_private_publication[passing]
+FAILED tests/python/test_experiment_7977_v691_hardware_evidence.py::test_private_publication[validator_failure]
+FAILED tests/python/test_experiment_7977_v691_hardware_evidence.py::test_private_publication[reader_failure]
+3 failed, 22 passed in 7.52s

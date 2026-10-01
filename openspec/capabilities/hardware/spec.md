@@ -2564,3 +2564,23 @@ precondition for future KV260 access. NPU and TSU remain unqualified.
 
 Given authenticated history and absent optional service evidence, retain three
 board rows, zero current device executions and no hardware speedup claim.
+
+
+## REQ-HW-7977: Historical obligations do not imply device execution
+
+Exp7977 SHALL preserve all three authenticated Exp7964 board rows and physical
+blockers while mapping separately qualified Exp7976 service branches. Current
+device execution count is zero. CPU, Rust, GPU, LUT/FPGA and TSU operation
+placements are estimates constrained by representation and measured byte costs.
+No acquisition priority change is supported by CPU timing alone.
+
+### SCENARIO-HW-7977-SCOPE
+
+Retain KV260 quadratic Ising k_max<=5, PolarFire Linux CPU-only dispatch,
+GateMate 0xffffffff and unknown NPU/TSU qualification. Absent optional service
+leaves placement unknown. Sparse-spline coefficient memory traffic remains a
+reference, without a claim that the existing overlay trains splines.
+
+Implementation: Exp7977 callable aggregation, parameterized CLI and private
+reader tests preserve historical custody and map the exact current service.
+The frozen producer records owned validation, coverage, E2E and final hashes.

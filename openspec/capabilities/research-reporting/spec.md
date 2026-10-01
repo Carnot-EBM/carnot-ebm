@@ -88205,3 +88205,50 @@ Cold-check claims, inspect both terminal validators and publish only checked
 bytes. Bind sidecars and both live readers to the final hash despite nested
 sidecars. Preserve the September 28 correction and exposed-development scope.
 The conductor owns ops/status/changelog/traceability reconciliation for this task.
+
+
+## REQ-REPORT-7977: Preserve board custody and map qualified current service
+
+Exp7977 SHALL freeze exact Exp7964 and declared Exp7976 primary identities,
+hashes, terminal receipts, board rows, dependencies and validation commands.
+Historical custody SHALL retain each producer's own date. Missing, malformed,
+retired or gate-blocked required history SHALL end complete_blocked_* with
+exact failed operands. Optional service absence SHALL leave placement unknown
+without invalidating historical custody. Readiness means measurement validity.
+
+### SCENARIO-REPORT-7977-CUSTODY
+
+Authenticate the three board obligations and their receipts. Preserve KV260
+quadratic Ising fabric k_max<=5, PolarFire Linux CPU dispatch and GateMate
+physical/JTAG 0xffffffff. Keep NPU and TSU unqualified, zero current device
+executions and no scheduled installation, flash, purchase or availability probe.
+Future KV260 reachability requires ssh kria. Preserve unchanged prior verdicts.
+
+### SCENARIO-REPORT-7977-WORKLOAD
+
+Attach only the exact eligible unflagged Exp7976 primary after cold replay of
+primitive request spans and authenticated checkpoints. Map every measured
+branch and request mode separately to CPU, Rust, GPU, LUT/FPGA and TSU-compatible
+operations. Preserve host spans, transfer bytes, state traffic and modeled
+100x-kernel and ideal Amdahl bounds. Nonlinear Gibbs is not quadratic Ising.
+Sparse-spline coefficient traffic does not prove existing KV260 spline training.
+Vendor TSU projections are not local measurements. Wishlist priorities remain
+unchanged without complete-service device benefit.
+
+### SCENARIO-REPORT-7977-VALIDATION
+
+Write failing private reader tests first. Freeze explicit unit/consumer, actual
+CLI success, missing-input, negative, cold-replay and terminal-recheck commands
+with identical coverage includes. Use unique scratch outside results and the
+checkout; archive immutable logs and nonempty 100 percent owned statement
+coverage. Run scoped Ruff, strict mypy and explicit spec coverage, plus E2E-016
+fixture and replay both dated 20260929. Measure repository health once separately
+and preserve historical failed receipts. Required owned failures disqualify.
+Cold-reduce terminal claims, inspect adversarial and strict row reports, atomically
+publish checked bytes and bind both real reader selections despite newer nested
+sidecars. Preserve the September 28 correction and exposed-development limits.
+The conductor owns ops/status/changelog/traceability reconciliation for this task.
+
+Implementation: Exp7977 callable aggregation, parameterized CLI and private
+reader tests preserve historical custody and map the exact current service.
+The frozen producer records owned validation, coverage, E2E and final hashes.
