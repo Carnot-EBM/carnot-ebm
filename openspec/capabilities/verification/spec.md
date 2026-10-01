@@ -1,5 +1,28 @@
 # Verification Capability Specification
 
+## REQ-VERIFY-7968: Isolate complete-response calibration roles
+
+Reuse Exp7955 freeze/check_roles/join and its authenticated all-role union.
+Preserve the pinned 640-family allocation and all exclusions. Export public
+bytes separately from evaluator labels for all eight roles. An authenticated
+unsupported span anywhere gives y=1, including implicit_true and due_to_null.
+Unknown or poor-quality annotation never gives y=0. Keep the alternative
+implicit_true-excluded target descriptive. Reject normalized-source leakage.
+Readiness measures custody and role isolation, without downstream class floors.
+All roles remain exposed development. Preserve original evaluation labels.
+
+### SCENARIO-VERIFY-7968-CUSTODY
+
+Check Unicode offsets, duplicate source clusters, unknown annotation, swapped
+roles, truncated responses and evaluator metadata injected into public rows.
+Keep 64 intended evaluation slots and the original 62 eligible labels.
+
+### SCENARIO-VERIFY-7968-ACCESS
+
+Capture reads public bytes and role IDs only. Fitting reads fit/tune labels;
+threshold design reads policy_design labels. Evaluation and retention label
+access requires hash-bound head and policy seals. Cross-role access fails.
+
 ## REQ-VERIFY-7942: Authenticate human sentence targets
 
 Exp7942 SHALL use the pinned RAGTruth revision

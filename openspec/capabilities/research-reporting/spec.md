@@ -1,5 +1,27 @@
 # Research Reporting Capability Specification
 
+## REQ-REPORT-7968: Publish authenticated response-role views
+
+Publish exactly one Exp7968 primary for milestone 2026.10.691 on 20261001.
+Authenticate upstream bytes against each producer's own identity and date.
+External missing, retired or gate-blocked inputs produce complete_blocked
+with exact gate operands. Owned failures disqualify and zero readiness.
+Use host aggregation with no model calls. Freeze commands, hashes, deadlines
+and identical coverage includes before results. Keep pytest, coverage and
+mutable CLI replay candidates in unique private temporary directories.
+Archive immutable receipts below task raw/. Cold-reduce primitive rows and
+recheck final candidate bytes through both terminal validators. Both existing
+readers must select the checked primary hash despite newer nested sidecars.
+Preserve historical determinations and the September 28 corrigendum.
+
+### SCENARIO-REPORT-7968-TERMINAL
+
+Exercise private export, public-only capture, forbidden label access, blocked
+input, cold replay, changed hash and aggregate rejection. Run E2E-015/019,
+explicit unit and consumer tests, scoped Ruff, strict mypy, spec coverage and
+100 percent statement coverage of new modules and CLI. Run repository health
+once and preserve its failures separately. Record actual UTC and monotonic spans.
+
 ## REQ-REPORT-7942: Seal sentence annotation transport
 
 Exp7942 SHALL publish one current primary for milestone 2026.09.689 on
