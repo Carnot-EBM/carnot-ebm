@@ -7161,3 +7161,10 @@ Operational evidence addendum: this entry supersedes earlier operational asserti
 - theme: Capstone outcome reduction, bounded Qwen calibration capture, and task binding across an all-compute set lacking sub-phase telemetry
 - key result: honest operational negative — 9 compute-bound experiments completed in 63.6 wall-time minutes led by capstone outcome reduction (20.58 min) and Qwen calibration capture (13.85 min), while available records lack intra-task stage breakdowns, continuous execution-window GPU telemetry, and multi-model dispatch opportunities
 - acceptance: no data available this milestone
+
+### Milestone 2026.10.692
+
+- exp_range: no data available this milestone
+- theme: Evidence feature preparation, source evidence ablation, and conditional energy fitting across an all-compute set lacking sub-phase telemetry
+- key result: honest operational negative — 9 compute-bound experiments completed in 117.5 wall-time minutes led by public source feature preparation (22.29 min), source evidence ablation (21.65 min), and conditional energy fitting (20.18 min), while available records lack intra-task stage breakdowns, continuous execution-window GPU telemetry, and multi-model dispatch opportunities
+- acceptance: no data available this milestone
