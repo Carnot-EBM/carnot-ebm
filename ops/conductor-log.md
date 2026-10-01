@@ -19268,3 +19268,4 @@ code |
 | 2026-10-01 12:05 UTC | Capture bounded Qwen judgments for delayed feedbac | OK | 98 passed, 1 warning in 17.82s |
 | 2026-10-01 12:55 UTC | Fit a small conditional energy using Qwen and sour | OK | 104 passed, 1 warning in 38.22s |
 | 2026-10-01 12:57 UTC | Evaluate typed energy decisions on the reserved so | GATE_BLOCK | gate-unsat(final): 2 of 6 gate(s) failed; first failure: exp7981-qwen-stream-capture.fresh_capture_ready_score (actual=0 == expected=1) |
+| 2026-10-01 13:50 UTC | Test whether source features add signal beyond sca | OK | 95 passed, 1 warning in 61.24s (0:01:01) |
