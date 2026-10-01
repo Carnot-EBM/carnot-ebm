@@ -1,0 +1,123 @@
+{
+  "adversarial_report": {
+    "flagged_count": 0,
+    "reports": [
+      {
+        "artifact": "/tmp/carnot-7978-validation-3x10wtd1/terminal/candidate.json",
+        "exp_id": 7978,
+        "flag_count": 0,
+        "flags": [],
+        "gate_version": "197e0a5eacacb09ce6607ae8bdfd507498082857f0d02ec2003a62c251b69a24",
+        "honest_verdict": "complete_disqualified_terminal_verification",
+        "loaded": true,
+        "max_severity": -1,
+        "title": ""
+      }
+    ]
+  },
+  "candidate_sha256": "sha256:f16ac6273071803ce1c7667dc5eb50785dd37c4293bba18218758c772218fc0d",
+  "primary_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7978_v691_capstone.json",
+  "strict_row_report": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+  "validator_receipts": [
+    {
+      "actual_exit": 0,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/adversarial_verify.py",
+        "--json",
+        "/tmp/carnot-7978-validation-3x10wtd1/terminal/candidate.json"
+      ],
+      "classification": "terminal",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json /tmp/carnot-7978-validation-3x10wtd1/terminal/candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/adversarial_verify.py",
+        "--json",
+        "/tmp/carnot-7978-validation-3x10wtd1/terminal/candidate.json"
+      ],
+      "deadline_s": 60,
+      "duration_s": 0.9041371759958565,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7978_v691_capstone/0b63e892e6ec8932d68d20e11db181c28542aeb7d7b0d8c5eea702473b9b2ce7/terminal/logs/adversarial_verify-a79f9e8cb67ca6bc1aca87ab052993462a891163daa1e0761dd55a38f0f02b9a.log",
+      "log_sha256": "sha256:a79f9e8cb67ca6bc1aca87ab052993462a891163daa1e0761dd55a38f0f02b9a",
+      "name": "adversarial_verify",
+      "output_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/tmp/carnot-7978-validation-3x10wtd1/terminal/candidate.json\",\n      \"loaded\": true,\n      \"exp_id\": 7978,\n      \"title\": \"\",\n      \"honest_verdict\": \"complete_disqualified_terminal_verification\",\n      \"flag_count\": 0,\n      \"max_severity\": -1,\n      \"flags\": [],\n      \"gate_version\": \"197e0a5eacacb09ce6607ae8bdfd507498082857f0d02ec2003a62c251b69a24\"\n    }\n  ],\n  \"flagged_count\": 0\n}\n",
+      "passed": true,
+      "scope": "terminal",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 0,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/tmp/carnot-7978-validation-3x10wtd1/terminal/candidate.json"
+      ],
+      "classification": "terminal",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/verdict_row_consistency_lint.py --strict /tmp/carnot-7978-validation-3x10wtd1/terminal/candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/tmp/carnot-7978-validation-3x10wtd1/terminal/candidate.json"
+      ],
+      "deadline_s": 60,
+      "duration_s": 0.028221265005413443,
+      "exit_code": 0,
+      "expected_exit": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7978_v691_capstone/0b63e892e6ec8932d68d20e11db181c28542aeb7d7b0d8c5eea702473b9b2ce7/terminal/logs/strict_rows-ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f.log",
+      "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+      "name": "strict_rows",
+      "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+      "passed": true,
+      "scope": "terminal",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 1,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7978_v691_capstone.py",
+        "--date",
+        "20261001",
+        "--root",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "--design",
+        "/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/research-roadmap-vNEXT.md",
+        "--active",
+        "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+        "--cold-replay",
+        "/tmp/carnot-7978-validation-3x10wtd1/terminal/candidate.json"
+      ],
+      "classification": "terminal",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7978_v691_capstone.py --date 20261001 --root /home/ianblenke/github.com/ianblenke/carnot --design /home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/research-roadmap-vNEXT.md --active /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml --cold-replay /tmp/carnot-7978-validation-3x10wtd1/terminal/candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7978_v691_capstone.py",
+        "--date",
+        "20261001",
+        "--root",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "--design",
+        "/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/research-roadmap-vNEXT.md",
+        "--active",
+        "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+        "--cold-replay",
+        "/tmp/carnot-7978-validation-3x10wtd1/terminal/candidate.json"
+      ],
+      "deadline_s": 120,
+      "duration_s": 28.39548179000849,
+      "exit_code": 1,
+      "expected_exit": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7978_v691_capstone/0b63e892e6ec8932d68d20e11db181c28542aeb7d7b0d8c5eea702473b9b2ce7/terminal/logs/terminal_cold_replay-796cbba35afbf309086a517b3eade37c7f9a3e9dc52daefdae8d397d3c625960.log",
+      "log_sha256": "sha256:796cbba35afbf309086a517b3eade37c7f9a3e9dc52daefdae8d397d3c625960",
+      "name": "terminal_cold_replay",
+      "output_tail": "[exp7978] start current capstone CLI\n[exp7978] phase=start completed_units=0 elapsed_s=0.000\n[exp7978] phase=inputs_hashes_invocations_frozen completed_units=12 elapsed_s=24.056\n[exp7978] phase=independent_reduction completed_units=1 elapsed_s=24.121\n[exp7978] phase=independent_reduction completed_units=2 elapsed_s=24.374\n[exp7978] phase=independent_reduction completed_units=3 elapsed_s=25.287\n[exp7978] phase=independent_reduction completed_units=4 elapsed_s=25.391\n[exp7978] phase=independent_reduction completed_units=5 elapsed_s=25.645\n[exp7978] phase=independent_reduction completed_units=6 elapsed_s=25.693\n[exp7972] uncertainty completed_units=1/6 elapsed_s=0.015\n[exp7972] uncertainty completed_units=2/6 elapsed_s=0.019\n[exp7972] uncertainty completed_units=3/6 elapsed_s=0.024\n[exp7972] uncertainty completed_units=4/6 elapsed_s=0.028\n[exp7972] uncertainty completed_units=5/6 elapsed_s=0.032\n[exp7972] uncertainty completed_units=6/6 elapsed_s=0.037\n[exp7972] uncertainty completed_units=1/6 elapsed_s=0.016\n[exp7972] uncertainty completed_units=2/6 elapsed_s=0.021\n[exp7972] uncertainty completed_units=3/6 elapsed_s=0.025\n[exp7972] uncertainty completed_units=4/6 elapsed_s=0.030\n[exp7972] uncertainty completed_units=5/6 elapsed_s=0.034\n[exp7972] uncertainty completed_units=6/6 elapsed_s=0.038\n[exp7978] phase=independent_reduction completed_units=7 elapsed_s=25.863\n[exp7978] phase=independent_reduction completed_units=8 elapsed_s=25.907\n[exp7978] phase=independent_reduction completed_units=9 elapsed_s=25.950\n[exp7978] phase=independent_reduction completed_units=10 elapsed_s=26.368\n[exp7978] phase=independent_reduction completed_units=11 elapsed_s=26.440\n[exp7978] phase=independent_reduction completed_units=12 elapsed_s=26.628\n[exp7978] phase=independent_reduction completed_units=13 elapsed_s=26.789\n{\"errors\": [\"reproducibility_checksum_changed\", \"source_bytes_changed\"]}\n",
+      "passed": false,
+      "scope": "terminal",
+      "timed_out": false
+    }
+  ]
+}

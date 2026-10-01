@@ -88252,3 +88252,39 @@ The conductor owns ops/status/changelog/traceability reconciliation for this tas
 Implementation: Exp7977 callable aggregation, parameterized CLI and private
 reader tests preserve historical custody and map the exact current service.
 The frozen producer records owned validation, coverage, E2E and final hashes.
+
+## V691 independent capstone custody (2026-10-01)
+
+### REQ-REPORT-7978-V691
+
+Reduce Exp7966 through Exp7978 in declared order. Resolve each exact primary
+before separate conductor dispatch evidence. Preserve every disposition.
+Exclude absent, blocked, disqualified and flagged inputs from science.
+Authenticate upstream dates against frozen producer invocation identities and
+hashes. An honest UTC midnight crossing must pass. Identity drift must fail.
+Keep source-feature decision evidence separate from Qwen scalar calibration.
+Recompute claims from primitive rows and sealed checkpoints. Report three PRD
+gap decisions, publication G1–G4, unchanged prior verdicts and exact reopen
+conditions. External absence is terminal blocked. A valid measured null is
+terminal. Audit readiness must not imply scientific benefit.
+Use private scratch, bounded children and one checked primary. Preserve the
+September 28 oracle-distinct corrigendum and exposed-development limits.
+Require nonempty 100 percent statement coverage for new modules and CLI.
+
+### SCENARIO-REPORT-7978-DATES
+
+Given a producer issued before midnight and finished after midnight, its own
+frozen receipt passes. Changing only its date or bytes fails authentication.
+
+### SCENARIO-REPORT-7978-BRANCHES
+
+Given missing source producers and complete Qwen calibration, retain all
+thirteen rows. Cold-reduce Qwen checkpoints independently. Report the source
+branch blocked and Qwen result null. Dispatch receipts never become science.
+
+### SCENARIO-REPORT-7978-PUBLICATION
+
+Private CLI success, missing-input blocking, expected argument failure,
+negative replay and terminal recheck retain exact exits. Required owned
+failures disqualify readiness. Both consumers select the checked primary hash
+after newer nested validator sidecars. Frozen includes cover only new code.
