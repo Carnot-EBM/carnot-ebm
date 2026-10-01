@@ -87895,3 +87895,44 @@ explicit spec coverage and both E2E-016 routes dated 20260929. Current date is
 health never becomes a current pass. Owned failures disqualify readiness.
 Cold-reduce claims and bind both terminal validators to atomically published
 final bytes. Conductor owns ops and traceability reconciliation.
+
+## REQ-REPORT-7965-V690: Independently reduce thirteen current dispositions
+
+Exp7965 SHALL observe activation through the V690 authority reader. Bind the
+thirteen-task table, machine contract and full task digest to exact snapshots.
+Read twelve declared producer primaries once and reserve the self row. Keep
+conductor pre-gate receipts separate from missing scientific input. Reduce
+primitive metrics with qualified callable reducers. Rebuild the complete
+response target join against original corpus bytes. Preserve source groups,
+mask and seed denominators, causal order, future-label exclusions and nulls.
+External absence is complete_blocked, never partial. Own required failures
+disqualify readiness. Audit readiness one can coexist with science_ready=false.
+Keep three PRD decisions, exact lineage retirement and legitimate ARC scans.
+Publication G1-G4 remain separate. Preserve the September 28 corrigendum and
+DiffusionGemma pending. No models, device operations or roadmap activation run.
+
+### SCENARIO-REPORT-7965-CUSTODY
+
+Missing, pre-gated, retired, invalid and qualified producers retain their own
+path, hash, identity, roles and failed operands. Valid nulls can be eligible.
+Original human response labels stay separate from feasibility and model-self
+stress labels. Cold reduction rejects changed bytes, counts, claims and dates.
+
+### SCENARIO-REPORT-7965-QUALIFICATION
+
+Freeze exact affected files, consumer commands, deadlines, expected exits,
+reasons and coverage includes before results. Require explicit tests, Ruff,
+strict mypy and spec coverage. Combine unit and real private CLI success,
+blocked, negative, replay and terminal coverage with nonempty 100 percent new
+module and CLI statements. Keep repository health historical when no shared
+dependency changes. E2E-015/016/017/018 use private routes. Both E2E-016 calls
+use 20260929; current execution uses 20261001.
+
+### SCENARIO-REPORT-7965-PUBLICATION
+
+Each CLI scenario uses its own publication directory. One top-level primary
+is published atomically from checked bytes. Raw rows and validation sidecars
+stay nested. Both actual consumers select the same primary hash after nested
+sidecars acquire newer mtimes. Inspect adversarial and strict row reports on
+final bytes, including any changed verdict. Preserve historical failures.
+Conductor owns ops, changelog and traceability reconciliation.
