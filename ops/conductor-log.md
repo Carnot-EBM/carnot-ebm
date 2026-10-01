@@ -19258,3 +19258,4 @@ code |
 | 2026-10-01 06:28 UTC | Measure persistent constraint additions before del | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7970-energy-fit, exp7970-energy-fit, exp7970-energy-fit) |
 | 2026-10-01 06:28 UTC | Test issued-state confidence updates on a sealed l | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7973-causal-acquisition, exp7973-causal-acquisition, exp7973-causal-acquisition) |
 | 2026-10-01 06:56 UTC | Assess new live ARC supervisor outcomes for transf | OK | 95 passed, 1 warning in 7.55s |
+| 2026-10-01 07:21 UTC | Measure complete decision-service cost for each qu | OK | 94 passed, 1 warning in 12.15s |
