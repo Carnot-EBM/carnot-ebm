@@ -1,0 +1,1905 @@
+{
+  "affected_tests": [
+    "tests/python/test_experiment_7979_v692_contract_methods.py",
+    "tests/python/test_experiment_7891_v685_authority_lifecycle.py"
+  ],
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "--basetemp=/tmp/exp7979-1pisjv9r/affected",
+        "tests/python/test_experiment_7979_v692_contract_methods.py",
+        "tests/python/test_experiment_7891_v685_authority_lifecycle.py"
+      ],
+      "classification": "required",
+      "deadline_s": 900,
+      "expected_exit": 0,
+      "failure_reason": "required_check_failed",
+      "name": "affected_pytest"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "--basetemp=/tmp/exp7979-1pisjv9r/consumer",
+        "tests/python/test_roadmap_schema.py",
+        "tests/python/test_audit_roadmap_gates.py",
+        "tests/python/test_exclusion_manifest_lint.py",
+        "tests/python/test_conductor_gates.py"
+      ],
+      "classification": "required",
+      "deadline_s": 240,
+      "expected_exit": 0,
+      "failure_reason": "required_check_failed",
+      "name": "consumer_pytest"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/exp7979-1pisjv9r/.coverage.unit",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v692_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v692_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7979_v692_contract_methods.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "--basetemp=/tmp/exp7979-1pisjv9r/coverage",
+        "tests/python/test_experiment_7979_v692_contract_methods.py",
+        "tests/python/test_experiment_7891_v685_authority_lifecycle.py"
+      ],
+      "classification": "required",
+      "deadline_s": 900,
+      "expected_exit": 0,
+      "failure_reason": "required_check_failed",
+      "name": "coverage_unit"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/exp7979-1pisjv9r/.coverage.cli",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v692_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v692_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7979_v692_contract_methods.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7979_v692_contract_methods.py",
+        "--date",
+        "20261001",
+        "--fixture-e2e",
+        "--design",
+        "/tmp/exp7979-1pisjv9r/design.md",
+        "--active",
+        "/tmp/exp7979-1pisjv9r/active.yaml",
+        "--staged",
+        "/tmp/exp7979-1pisjv9r/consumed.yaml",
+        "--output",
+        "/tmp/exp7979-1pisjv9r/fixture.json",
+        "--raw",
+        "/tmp/exp7979-1pisjv9r/rows.json"
+      ],
+      "classification": "required",
+      "deadline_s": 120,
+      "expected_exit": 0,
+      "failure_reason": "required_check_failed",
+      "name": "coverage_cli_success"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/exp7979-1pisjv9r/.coverage.blocked",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v692_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v692_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7979_v692_contract_methods.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7979_v692_contract_methods.py",
+        "--date",
+        "20261001",
+        "--fixture-e2e",
+        "--design",
+        "/tmp/exp7979-1pisjv9r/design.md",
+        "--active",
+        "/tmp/exp7979-1pisjv9r/active.yaml",
+        "--staged",
+        "/tmp/exp7979-1pisjv9r/consumed.yaml",
+        "--output",
+        "/tmp/exp7979-1pisjv9r/blocked.json",
+        "--raw",
+        "/tmp/exp7979-1pisjv9r/blocked-rows.json",
+        "--source",
+        "/tmp/exp7979-1pisjv9r/missing-source.json"
+      ],
+      "classification": "required",
+      "deadline_s": 120,
+      "expected_exit": 0,
+      "failure_reason": "required_check_failed",
+      "name": "coverage_cli_blocked"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/exp7979-1pisjv9r/.coverage.failure",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v692_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v692_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7979_v692_contract_methods.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7979_v692_contract_methods.py",
+        "--date",
+        "20261001",
+        "--cold-replay",
+        "/tmp/exp7979-1pisjv9r/negative.json",
+        "--raw",
+        "/tmp/exp7979-1pisjv9r/negative-rows.json",
+        "--expect-rejection"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "failure_reason": "cold_replay_mismatch",
+      "name": "coverage_expected_failure"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/exp7979-1pisjv9r/.coverage.replay",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v692_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v692_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7979_v692_contract_methods.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7979_v692_contract_methods.py",
+        "--date",
+        "20261001",
+        "--cold-replay",
+        "/tmp/exp7979-1pisjv9r/fixture.json",
+        "--raw",
+        "/tmp/exp7979-1pisjv9r/rows.json"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "failure_reason": "required_check_failed",
+      "name": "coverage_cold_replay"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--data-file=/tmp/exp7979-1pisjv9r/.coverage.combined",
+        "/tmp/exp7979-1pisjv9r/.coverage.unit",
+        "/tmp/exp7979-1pisjv9r/.coverage.cli",
+        "/tmp/exp7979-1pisjv9r/.coverage.failure",
+        "/tmp/exp7979-1pisjv9r/.coverage.replay",
+        "/tmp/exp7979-1pisjv9r/.coverage.blocked"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "failure_reason": "required_check_failed",
+      "name": "coverage_combine"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/exp7979-1pisjv9r/.coverage.combined",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v692_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v692_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7979_v692_contract_methods.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "failure_reason": "required_check_failed",
+      "name": "coverage_report"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "json",
+        "--data-file=/tmp/exp7979-1pisjv9r/.coverage.combined",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v692_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v692_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7979_v692_contract_methods.py",
+        "-o",
+        "/tmp/exp7979-1pisjv9r/coverage.json"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "failure_reason": "required_check_failed",
+      "name": "coverage_json"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/reporting/v692_contract_methods.py",
+        "python/carnot/reporting/v692_contract_validation.py",
+        "scripts/experiments/experiment_7979_v692_contract_methods.py",
+        "tests/python/test_experiment_7979_v692_contract_methods.py"
+      ],
+      "classification": "required",
+      "deadline_s": 90,
+      "expected_exit": 0,
+      "failure_reason": "required_check_failed",
+      "name": "ruff_check"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/reporting/v692_contract_methods.py",
+        "python/carnot/reporting/v692_contract_validation.py",
+        "scripts/experiments/experiment_7979_v692_contract_methods.py",
+        "tests/python/test_experiment_7979_v692_contract_methods.py"
+      ],
+      "classification": "required",
+      "deadline_s": 90,
+      "expected_exit": 0,
+      "failure_reason": "required_check_failed",
+      "name": "ruff_format"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "python/carnot/reporting/v692_contract_methods.py",
+        "python/carnot/reporting/v692_contract_validation.py",
+        "scripts/experiments/experiment_7979_v692_contract_methods.py"
+      ],
+      "classification": "required",
+      "deadline_s": 180,
+      "expected_exit": 0,
+      "failure_reason": "required_check_failed",
+      "name": "mypy_strict"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7979_v692_contract_methods.py",
+        "tests/python/test_experiment_7891_v685_authority_lifecycle.py"
+      ],
+      "classification": "required",
+      "deadline_s": 180,
+      "expected_exit": 0,
+      "failure_reason": "required_check_failed",
+      "name": "scoped_spec_coverage"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q"
+      ],
+      "classification": "diagnostic",
+      "deadline_s": 180,
+      "expected_exit": 0,
+      "failure_reason": "required_check_failed",
+      "name": "repository_full_suite",
+      "reused_receipt": {
+        "actual_exit": -15,
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+          "tests/python",
+          "-q"
+        ],
+        "classification": "diagnostic",
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest tests/python -q",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+          "tests/python",
+          "-q"
+        ],
+        "deadline_s": 180,
+        "duration_s": 206.175925093994,
+        "exit_code": -15,
+        "expected_exit": 0,
+        "failure_reason": "required_check_failed",
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7979_v692_contract_methods/sealed_logs/repository_full_suite-154effc3c72b2fcf13932365e96fa200dcf863b7f892ee6ea5e5e7b9002dee49.log",
+        "log_sha256": "sha256:154effc3c72b2fcf13932365e96fa200dcf863b7f892ee6ea5e5e7b9002dee49",
+        "name": "repository_full_suite",
+        "output_tail": "............................ [  3%]\n............................................................F........... [  3%]\n..................................................F..................... [  3%]\n........................................................................ [  3%]\n................................F....................................... [  3%]\n........................................................................ [  3%]\n.......................F................................................ [  3%]\n........................................................................ [  3%]\n........................................................................ [  3%]\n........................................................................ [  4%]\n........................................................................ [  4%]\n........................................................................ [  4%]\n...........s............................................................ [  4%]\n........................................................................ [  4%]\n........................................................................ [  4%]\n........................................................................ [  4%]\n........................................................................ [  4%]\n........................................................................ [  4%]\n........................................................................ [  4%]\n........................................................................ [  5%]\n..........F............................................................. [  5%]\n........................................................................ [  5%]\n........................................................................ [  5%]\n........................................................................ [  5%]\n........................................................................ [  5%]\n........................................................................ [  5%]\n.......................................................F................ [  5%]\n......F..F.F............................................................ [  5%]\n........................................................................ [  5%]\n........................................................................ [  6%]\n........................................................................ [  6%]\n........................................................................ [  6%]\n........................................................................ [  6%]\n................................................................../home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:353: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.\nPlugin: 139937898790304, Hook: pytest_sessionfinish\nOSError: cannot send (already closed?)\nFor more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning\n  config.hook.pytest_sessionfinish(\n/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:353: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.\nPlugin: 140697131492288, Hook: pytest_sessionfinish\nOSError: cannot send (already closed?)\nFor more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning\n  config.hook.pytest_sessionfinish(\n/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:353: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.\nPlugin: 139623042495312, Hook: pytest_sessionfinish\nOSError: cannot send (already closed?)\nFor more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning\n  config.hook.pytest_sessionfinish(\n",
+        "passed": false,
+        "scope": "diagnostic",
+        "timed_out": true
+      }
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "--basetemp=/tmp/exp7979-1pisjv9r/authority-e2e",
+        "tests/python/test_experiment_7891_v685_authority_lifecycle.py"
+      ],
+      "classification": "required",
+      "deadline_s": 120,
+      "expected_exit": 0,
+      "name": "e2e_018_private"
+    }
+  ],
+  "consumer_tests": [
+    "tests/python/test_roadmap_schema.py",
+    "tests/python/test_audit_roadmap_gates.py",
+    "tests/python/test_exclusion_manifest_lint.py",
+    "tests/python/test_conductor_gates.py"
+  ],
+  "coverage_includes": [
+    "python/carnot/reporting/v692_contract_methods.py",
+    "python/carnot/reporting/v692_contract_validation.py",
+    "scripts/experiments/experiment_7979_v692_contract_methods.py"
+  ],
+  "dependency_hashes": {
+    "python/carnot/__init__.py": "sha256:54a412ef98981dc2a81350103234369fa56cd96f17f4f1fdfbb9f6cde9415da4",
+    "python/carnot/_rust_compat.py": "sha256:0d9145d00884db86e06cf4dda66ddede79e4618767e6fecdf4f0753c4fe9ef55",
+    "python/carnot/_version.py": "sha256:9f816815d13dcbd2f86e62cbfb9174990e0ff855795880082f8b71449ff1e570",
+    "python/carnot/core/__init__.py": "sha256:4c0e250986e229b64e9f8b3948ce2f5395fab3a37560fa1a0057f7bea07e1069",
+    "python/carnot/core/energy.py": "sha256:12f929cb933e4171773c077b42d17af87c5280ccffd4a3bd1a8d88e915459013",
+    "python/carnot/core/state.py": "sha256:0950123528c008954177f9b3d0656d6c15f62aa95a2cf4d36d2929197a042280",
+    "python/carnot/models/__init__.py": "sha256:a68c61c664e881e8efb128c413cd62b5fe86cd157a0b78f7464d9d1c00edd5cf",
+    "python/carnot/models/boltzmann/__init__.py": "sha256:a916d20fb41b6403121c6b560aa033cbe6ea7229ba479cf667f5b91abb29995d",
+    "python/carnot/models/cikan_energy.py": "sha256:c187064e6ad12333ad5136483ea8bfab40ec138614f4558dd1c66e3a5a3f504e",
+    "python/carnot/models/cikan_verifier.py": "sha256:f2843bafa949eb6fafa1e861923ad5c94b16cedd9e29607c5cbb0bcbc8ce00fb",
+    "python/carnot/models/compliance_checker.py": "sha256:adafaff21c55d7dbaa2c5c3d1bedf83f584d02dd459c85c280ac4d91eb6890df",
+    "python/carnot/models/ebm_cot_calibrator.py": "sha256:acd64e9aa4422f0fd4cbbe54571367c8e9085ed7671c232533b1276b4f80dbfd",
+    "python/carnot/models/ebm_cot_calibrator_v3.py": "sha256:7b9788e2770fa38794345d15576bf58b6ec0f2e9a87cbd75c552460ea0419fa8",
+    "python/carnot/models/ebrm_scorer.py": "sha256:6ba77eb09bbfbb717aaca29cd4c2cca785ecd23ffc2cec8e65c07702cae7cb86",
+    "python/carnot/models/ebt.py": "sha256:8c7073b7fa8cd43c22230bdb25a5571d041183e42ad5a20ea13cfc64c609419f",
+    "python/carnot/models/eorm.py": "sha256:054f7be6c8901efbbb6f48e8080bafcd8fbc7f2657292d0431aff7f62b4b44ea",
+    "python/carnot/models/gibbs/__init__.py": "sha256:a08e2ef56a946eabc9901cdee4846e34f7d39dbb4eb8355da011aaf2174afcbd",
+    "python/carnot/models/ising/__init__.py": "sha256:6acefaa5f40c6a95d74a2f25ead9167e3abac7f4bd9635722479ebfcf09677b8",
+    "python/carnot/models/jepa_curriculum_diagnostic.py": "sha256:ff72ae6747aecfdb7a32d2e5f6995035cd3c4b896a5308c6742e6cf4d52bd26d",
+    "python/carnot/models/jepa_curriculum_trainer.py": "sha256:637f2094a4c7fbfdd1a03d37c536597ac43379fec9d3df438339ee91fed96dfe",
+    "python/carnot/models/jepa_platt.py": "sha256:39cc8e7447b8a3175276937c3f7bc17a467b4e4ffcb4cf3c39f0c636a80e2366",
+    "python/carnot/models/jepa_retrain_v2.py": "sha256:bcebc92b496468de023b906e19f06b4f807a85307b0f369c371cb15c21b521d6",
+    "python/carnot/models/kaem_adaptive_topology.py": "sha256:e605b193f5de924bd624c633ae46e69c17d22913dc672c3aaef820cda6094301",
+    "python/carnot/models/kaem_crossover.py": "sha256:17ce761e0d4029bd3b104fc4a461c1daf5e26ff8235873f65179494dae0d6712",
+    "python/carnot/models/kaem_distribution_benchmark.py": "sha256:3c80d4b6969ca5dc78d7d01ac33d177a7f9fc038cbfa6ed126c6287c1a36b37f",
+    "python/carnot/models/kaem_energy.py": "sha256:61a0d7eaf2958876b5a74e43e9e34e461e4ad5f198a127a7a5aa8f4dfa6a5132",
+    "python/carnot/models/kaem_extended_result.py": "sha256:f395d9cf7218afa091bb96de0918b5d4d384a9afb286dc0022597ff4b34a9357",
+    "python/carnot/models/kan/__init__.py": "sha256:191cb4eb1154ed302b6479d1150a5034f7a4baa08239b1d74cbb8499bfe0c69a",
+    "python/carnot/models/lowrank_kaem.py": "sha256:abeb784d422d32b2593f6d393d58400cc93b2135b8ce2ec58e542d3bf313556f",
+    "python/carnot/models/otv_verifier.py": "sha256:eb9559fd15ec8f204d16e2d0db507ba4184bd79f048585b3dc3a423b9510789c",
+    "python/carnot/models/pinet_layer.py": "sha256:1222fc7ed81c7c8c86d50dad0dae3faa0611e4d7779ecb443e4de5479f05af23",
+    "python/carnot/models/potts_machine.py": "sha256:d7cd27e603774b8446ea49a29f3a592c98f3177ff9b15843f17eae0ce0084e7f",
+    "python/carnot/models/pwa_kan.py": "sha256:64f98fa05f75d805ac0dacee431d4633fc55fceab7f7fd4fd5cea2b1a052ad1e",
+    "python/carnot/models/rkan.py": "sha256:301888a2c3c6b32f0e82dbc53d975b35524eccae7392284376280cdfbe8aa0de",
+    "python/carnot/models/sparse_kaem_energy.py": "sha256:5e9c441494fa3f8f8b00982d48ab7b2588ebdd623e007747a6379589b7353408",
+    "python/carnot/models/symbolic_kan_energy.py": "sha256:3836cd07f361b5a4b6c7ff748f8eaa4f5493ed05ae10c70c6eb49683f54d55ae",
+    "python/carnot/paths.py": "sha256:16128da118007bfc7d4c971603cf08c2409bdd24b4d818c43f30e56364595f61",
+    "python/carnot/reporting/__init__.py": "sha256:602501860fed64c2b107a195aadd7f67667ecb7c9d1ee28d822051a5c9bf9aa5",
+    "python/carnot/reporting/current_work_receipt.py": "sha256:428d1696eef0820ce9df519532743aeccb8ec1156eb8c1b52fa0c8f72bf16a10",
+    "python/carnot/reporting/experiment_7303_validation_scope.py": "sha256:e6291ced5d52a50544cc6dcc46870886cdb2149796fc5eb7781e16c9ce42d229",
+    "python/carnot/reporting/primary_publication.py": "sha256:7fe8c6caa2725d68eeae612d2f4a17146b08afc29ff5a8003a4f1ad5f21d1310",
+    "python/carnot/reporting/roadmap_contract.py": "sha256:eed75373b8b00f3dc6442fbf878cc833ec7bcf44f6c258019eebcb3e89e4ea63",
+    "python/carnot/reporting/source_boundary_7866.py": "sha256:566e2812d90ece23115f9ab40bedde52de825a52113a17799cccf1134ae7ee71",
+    "python/carnot/reporting/source_boundary_7880.py": "sha256:a61d7339babc0abd515fe8a9740633b58e71a8deb80e602b0d2b1651226226cb",
+    "python/carnot/reporting/source_boundary_7892.py": "sha256:52942073239cdce193893331c0142d8b287728d1707cb878b66293b363aef4e8",
+    "python/carnot/reporting/v685_authority_lifecycle.py": "sha256:e24db0845c9dcf805034ad4845ed22b45bee74713a125d7a4c7d22b70c654dd4",
+    "python/carnot/reporting/v686_contract_methods.py": "sha256:185a408bd44ffbeb9c91f42941b0dd5bfe63944e9afdc7cb518e844081418cf9",
+    "python/carnot/reporting/v686_contract_validation.py": "sha256:a426b1d1e47e12deb84842f5e9ce5540701972f30c23f6e8fdab8b256c2b8df3",
+    "python/carnot/reporting/v687_contract_methods.py": "sha256:16c2fc53f0dc275c19e5ec07787de9ae6edd9ef9ce85cc7cd1a6f4cbc3f4c88e",
+    "python/carnot/reporting/v687_contract_validation.py": "sha256:c7734da4f57f517b53860b8356ac81020d8dd02190c473adae4bdc3568e3a563",
+    "python/carnot/reporting/v688_contract_methods.py": "sha256:b2a83f90fb93655a0e8c8942a6682f8a86a33c20117ffe0736b6285576750d11",
+    "python/carnot/reporting/v689_contract_methods.py": "sha256:8422e0f1f188887433ca02b455769b5046b9c03e313d46ffca96c07776a3efff",
+    "python/carnot/reporting/v689_contract_validation.py": "sha256:7e4aae10ba5cc3a367f2becdf66fd56a0ee29194bf02bf4626ae34ce5f9121ac",
+    "python/carnot/reporting/v690_authority.py": "sha256:44becd2417d4cbde3e3d64c4f4b4aa26db52b0b735ab27d7bcb9a92054ab3f1c",
+    "python/carnot/reporting/v690_contract_methods.py": "sha256:5ff229f140cd9f18c70ad39994e78d9ab8fb8074a9be4a2164ee25a476b0bb64",
+    "python/carnot/reporting/v690_contract_validation.py": "sha256:791b3f941e95fb800cd57363daf97a28ad3c52cbabe393639486f2127e93f9df",
+    "python/carnot/reporting/v691_contract_methods.py": "sha256:1db9cf38f32c49f179ab288bd54e7237f5ebfd22b6feec6dfd1b464454833ae5",
+    "python/carnot/reporting/v691_contract_validation.py": "sha256:dce65511d6ade51a2d9760140ad69985d0abab61953cf2ac6616e91cacf29437",
+    "python/carnot/reporting/v692_contract_methods.py": "sha256:7409fc313a5d41a7786b0bd4a963ee5284eaccd09ed2d843c9416d875f4b051c",
+    "python/carnot/reporting/v692_contract_validation.py": "sha256:51e45423a4a7088ca7c300409d4715cdb8e2cdd55cd86995bee4cd870a0d9931",
+    "python/carnot/samplers/__init__.py": "sha256:73ecac85f64ec47e0f7c5a171571ac78d496a45ff21ef3571c81999643cf78f9",
+    "python/carnot/samplers/parallel_ising.py": "sha256:9e949d9b6b9ea3a660373ce8cdb709166e8b3995287b9ef0605d7b014952da87",
+    "python/carnot/serialization_safety.py": "sha256:b93276a29918d8ec1b0697889c30ad27c964e11b929ab1b3a23d30b1d256dd6e",
+    "python/carnot/terminal_artifacts.py": "sha256:c4ac466c5ccf0cb12198eaac58ade42632d18854c4818aa7633a1d39c158b591",
+    "python/carnot/training/__init__.py": "sha256:4672e5dd8416801ab076156dc4d7e832377bc508fa6cd73e689206b61e90215c",
+    "python/carnot/training/capo_loss.py": "sha256:8f8389e89d5ee23b92db8edc7eeb371fa2498b1e603ba3015449a3a1f82ce4aa",
+    "python/carnot/training/ebft_objective.py": "sha256:eb3316bb1cecc0252e42a8b791270611eace306788ce9ac0a63620da2c1b815b",
+    "python/carnot/training/fast_slow.py": "sha256:83cdfb030340c0808cbf69a12e570f8acce601f56efbcbdb33d44a75c982640d",
+    "python/carnot/training/multilevel_kan_trainer.py": "sha256:aaaf22ccf9cb483b489fc944802d7588b8061e1f5a86f4566eb522a6f6019eb9",
+    "python/carnot/training/multilevel_sparse_kaem.py": "sha256:4302ba92ad731d9864f4f11c7c2c8ebee47ce8c6f016acab9ad5f5ca1e68cf67",
+    "python/carnot/training/nce.py": "sha256:bc6f0cfd99a97b70c9af9cafb19c69e0d20ad3f14aa37b7a2110cf7b6cef7a50",
+    "python/carnot/training/optimization_training.py": "sha256:e032eaca75ccd2b4df4e1c4d31d043d0ec5561cfc241b273b66f379262b45717",
+    "python/carnot/training/platt_scaler.py": "sha256:8eaa82e6528dbdf271512f6ea6e76189ddc5d5bbfeeac429472640ae51f555d5",
+    "python/carnot/training/replay_buffer.py": "sha256:ada2c93d38042c00ac1b8177c17561cd25a95049fd24014362ff23520fbaa406",
+    "python/carnot/training/score_matching.py": "sha256:1dd202306a62b1f309890e69af7e7fde2520ed57fff8f7a106ab1036640e6197",
+    "python/carnot/training/semantic_pruning.py": "sha256:9b1266215d930fb0e7ce5ddd61b581454635955ee577533eaefebb18bbff3d24",
+    "python/carnot/training/snl.py": "sha256:3d6b337c076be02b5b071888d22d3e7a970ecd5da5eb589f4877a7764a7bcaff",
+    "python/carnot/verify/__init__.py": "sha256:fd21b6e7e7d21d45097f582387ff0e11021ebcd47c0f9a41be4bb1562daa47cb",
+    "python/carnot/verify/constraint.py": "sha256:4946da275e270f3d67ee0e9ad53d29edc350b262952f6304543bc058a384bec7",
+    "python/carnot/verify/convergence.py": "sha256:47f1a51d22ad292db553f39fba63aa359a7ccb872c56cdf11dca8c3cfc64be53",
+    "python/carnot/verify/deentangled_ensemble.py": "sha256:bc0bf1565d48cf89531da45d476f953b0f407c7ac1fd4bd2c5492010e40f3c7e",
+    "python/carnot/verify/evidence_views.py": "sha256:dbebf5bbb362ee324bd19b529957c689ca5165aefa043de08451f197d31eed3d",
+    "python/carnot/verify/graph_coloring.py": "sha256:7c8c5e7ac7f523712b0fe39993ff4139cefb894498b17e0570e43a9ab15e6734",
+    "python/carnot/verify/landscape.py": "sha256:a66946a44a778253600fa3e8a4b9dc95b7636f8b32b2197b60eb0b2878f50689",
+    "python/carnot/verify/linear_probe_calibrator.py": "sha256:05a77a20ce6148563f13da6a5b98487f067ce5b58cac17d768bfb530375cb879",
+    "python/carnot/verify/property_test.py": "sha256:88030590b0247e4002983f6aac21e0786bf70c5e61dce410e6804f6defb66bc4",
+    "python/carnot/verify/python_types.py": "sha256:0c75c468f843e7adead0831354e10243ae404c1dc810afb786ba225f0117e34c",
+    "python/carnot/verify/sandbox.py": "sha256:447a4845ea42945da373b20670a422ea9fff1601dd19e4831a77400aca73e54a",
+    "python/carnot/verify/sat.py": "sha256:af6544d7612c84f2670145cb575cc6c30645b8e1737a552b608ff007ab80c496",
+    "python/carnot/verify/source_alignment.py": "sha256:10d5329444d47dc2421d8cceca615c8d5c76df5267c1a70eb669340f05ea475b",
+    "python/carnot/verify/source_projection.py": "sha256:0497fdc01af13f5d1652f57302de1db5be7307803f1eae8131931df8eef3e169",
+    "python/carnot/verify/tier0e_eorm.py": "sha256:7a5ed3894fbb23af1960f23d2fd51d09824958c870f9039ffe054af1066b057f",
+    "python/carnot/verify/tier0f_semantic_calibration.py": "sha256:afd5c061d3642cb6bfc1478554ebcb01fa13d7b6d3bc85a2eb1a5c6bfa1794aa",
+    "python/carnot/verify/tier0g_semantic_energy.py": "sha256:12332ccea9a5794f5fdc9c9c0cee6c9f7d026ff5812e6429c2444449c244562f",
+    "python/carnot/verify/tier0r_curry_howard.py": "sha256:437706272063ea08a4d8d97da681d2c8396841e1942b528c608edf32b7f16ca6",
+    "python/carnot/verify/tier0s_halluguard.py": "sha256:4bcb71754d58b473b7f63c2ff65b7cc00a0f13c76c3dccaaf5f31a57278517ac",
+    "python/carnot/verify/tier0u_logical_consistency.py": "sha256:a48d1b5fd0e212d590ee4693545afc25c6de3c74ef663090135f1df82120944d",
+    "python/carnot/verify/tier0v_set_consistency.py": "sha256:7fcaad9bc14cff6103c71575a5fc7135c8beda5d02b9e72af0ac3653169b9582",
+    "python/carnot/verify/training_runtime.py": "sha256:250b14aac412d1be2d835c37e9b9a3457d5f97bf728e672ffab8cabdc0b00f4b",
+    "scripts/__init__.py": "sha256:13d4c70bdead43f0de9faeb10757b5057c26fe0ce66616764c13ba5237e8c9eb",
+    "scripts/adversarial_verify.py": "sha256:941c931701a51eb3553d3e37b51b2ea7b1c3d595315d5864be6ef822ba2b80fa",
+    "scripts/conductor_gates.py": "sha256:d406171cde38a594a78e7bff8958212e722fced9fc583b2b1858f8fc9d3732ca",
+    "scripts/exclusion_manifest_lint.py": "sha256:7f2eba6577f71e349aa03debd8c4e77fd6b23fdd24c3b0e945f12e1b7a53e042",
+    "scripts/experiments/__init__.py": "sha256:4c8f727f8ca16395fb8bfdcf17f81a067a3744465bab1de87177fe45f0f121eb",
+    "scripts/experiments/experiment_7891_v685_authority_lifecycle.py": "sha256:371f3d1633c17c7ab3a5218f33e1c7da34622ce7381540fbd32c0b0f42b545f2",
+    "scripts/experiments/experiment_7979_v692_contract_methods.py": "sha256:50851f4290a0d57cac606a3515b4e920d944062425c4648f13ea2bd0c5e4b6c5",
+    "scripts/failure_ledger.py": "sha256:d18d74d27a831eba7d294f13521e5401df2f96561572466ae4f2871e9b9c1a4b",
+    "scripts/in_process_doc_reconcile.py": "sha256:7fbff3005af55d74acf50c6f932998ea282c674dce197400ea5c1ec219ccd762",
+    "tests/python/test_audit_roadmap_gates.py": "sha256:aa36a48a71269dcf41c5772280436c2fe0db1060c04040c719953ba6ba5eaaf8",
+    "tests/python/test_conductor_gates.py": "sha256:a5a22b1908237000a737920d22c36a9df38e14e92996956e96f1864411b3b409",
+    "tests/python/test_exclusion_manifest_lint.py": "sha256:142fa1d54c1996f213df2a710ddcc1fcb8fcf0047ca7cbfb0769076eaa937d8a",
+    "tests/python/test_experiment_7891_v685_authority_lifecycle.py": "sha256:2d67e9cb874659e87788a9202b9d513c6b13e7edb2387e624a6c6dfea35dd157",
+    "tests/python/test_experiment_7979_v692_contract_methods.py": "sha256:ac80b6f2924037147846c214cf14684567dfce7e0709452c00540120bf7a9ae0",
+    "tests/python/test_roadmap_schema.py": "sha256:a6ddb92b180f24011eb266db87be84bbbfb604d5c7d0653b25ab38739f24598f"
+  },
+  "e2e_018": "Private immutable lifecycle tests only; no historical publishing CLI against V686",
+  "environment": {
+    "JAX_PLATFORMS": "cpu",
+    "PYTHONPATH": "python:."
+  },
+  "future_scope": "Task prompt snapshots freeze methods; future producers must freeze their actual code closure before running",
+  "input_hashes": {
+    "authorities": {
+      "active": {
+        "exists": true,
+        "role": "active",
+        "sha256": "sha256:666fd95c2cf851c2f8610e2c3900b8eea32fb23763578768e779fac53dd121ac",
+        "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7979_v692_contract_methods/authority_snapshots/active-666fd95c2cf851c2f8610e2c3900b8eea32fb23763578768e779fac53dd121ac.bin",
+        "snapshot_sha256": "sha256:666fd95c2cf851c2f8610e2c3900b8eea32fb23763578768e779fac53dd121ac",
+        "source_path": "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml"
+      },
+      "design": {
+        "exists": true,
+        "role": "design",
+        "sha256": "sha256:74b3e32479bf30e10e2fe1f54abde14d6b0d5d590961d2f12497053a6e53e9cb",
+        "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7979_v692_contract_methods/authority_snapshots/design-74b3e32479bf30e10e2fe1f54abde14d6b0d5d590961d2f12497053a6e53e9cb.bin",
+        "snapshot_sha256": "sha256:74b3e32479bf30e10e2fe1f54abde14d6b0d5d590961d2f12497053a6e53e9cb",
+        "source_path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/research-roadmap-vNEXT.md"
+      },
+      "staged": {
+        "exists": false,
+        "role": "staged",
+        "sha256": null,
+        "source_path": "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap-next.yaml"
+      }
+    },
+    "historical": {
+      "gate_check_summary": [],
+      "hashes": [
+        {
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7966_v691_contract_methods.json",
+          "role": "historical_primary",
+          "sha256": "sha256:b0952033f8c04fdba25657a85acd42f91e2f984cdcdefe436fd8e9b7a818e8fc"
+        },
+        {
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7967_v691_private_training_qualification.json",
+          "role": "historical_primary",
+          "sha256": "sha256:630e22ac967c45ecdf69304b9a62656f15ab4c0ff94a19a767744a4f99c67e71"
+        },
+        {
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7968_v691_response_role_targets.json",
+          "role": "historical_primary",
+          "sha256": "sha256:5978a0302945b4111afd06ee5f756ff0d8d810a3d84e2cf4fec4d88acb8f06d1"
+        },
+        {
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7969_v691_qwen_calibration_capture.json",
+          "role": "historical_primary",
+          "sha256": "sha256:3f25b2e4b43d50536525e64ace321db55e9d6889aab97cc2581e4665014f2f51"
+        },
+        {
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7972_v691_qwen_energy_calibration.json",
+          "role": "historical_primary",
+          "sha256": "sha256:a47d19ca7af500014117ff083249469597cd7e6bc0ff57778098fa39cfa41c63"
+        },
+        {
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7975_v691_arc_supervisor_delta.json",
+          "role": "historical_primary",
+          "sha256": "sha256:a28af99cf2de2a4ba93348d7c2fb3ce18879a46a468fb02961f407180fc48a4f"
+        },
+        {
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7976_v691_service_cost.json",
+          "role": "historical_primary",
+          "sha256": "sha256:48444e30e0aeeb796ff7a5a1cad04bcc3f6c9eaf8d8c61505aa3ef6efee44190"
+        },
+        {
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7977_v691_hardware_evidence.json",
+          "role": "historical_primary",
+          "sha256": "sha256:15147d4b31b7a1c525eda300e7333942346e05e74efd1f28af28ffe4a5c45d7e"
+        },
+        {
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7978_v691_capstone.json",
+          "role": "historical_primary",
+          "sha256": "sha256:184f29fb56fe71f1f7b4f75c6a88861bd7ffe0c9a574f63a4122f5ad799445a0"
+        },
+        {
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7966_v691_contract_methods/authority_snapshots/active-de030e642f27925dd4a2d84172b674b5db71b83e503e57d4d2e3be32771ad776.bin",
+          "role": "historical_authority",
+          "sha256": "sha256:de030e642f27925dd4a2d84172b674b5db71b83e503e57d4d2e3be32771ad776"
+        },
+        {
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7970_energy_fit.json",
+          "role": "conductor_skip_receipt",
+          "sha256": "sha256:966ca46c2c41ef7b5e02e5ab887fb04dad5d0ab27d0cb029323781aacf44cee8"
+        }
+      ],
+      "ready": true,
+      "rows": [
+        {
+          "dispatch_receipt": {
+            "gates_evaluated": [],
+            "path": null,
+            "sha256": null
+          },
+          "disposition": "preserve_historical_verdict",
+          "gate_check_summary": [],
+          "honest_verdict": "complete_circular_positive_contract_methods",
+          "planned_producer_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7966_v691_contract_methods.json",
+          "producer_invocation": {
+            "historical_timestamps": {
+              "finished_at": "2026-10-01T03:47:31.563160+00:00",
+              "started_at": "2026-10-01T03:39:16.766380+00:00"
+            },
+            "identity": {
+              "current_run_id": "exp7966-20261001",
+              "execution_date": "20261001",
+              "experiment_id": 7966,
+              "milestone": "2026.10.691",
+              "run_date": "20261001",
+              "task_id": "exp7966-contract-methods"
+            },
+            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7966_v691_contract_methods.json",
+            "sha256": "sha256:b0952033f8c04fdba25657a85acd42f91e2f984cdcdefe436fd8e9b7a818e8fc"
+          },
+          "readiness_fields": {
+            "contract_ready_score": 1,
+            "planning_ready_score": 0
+          },
+          "scientific_benefit_transferred": false,
+          "task_id": "exp7966-contract-methods",
+          "verdict_class": "circular_positive"
+        },
+        {
+          "dispatch_receipt": {
+            "gates_evaluated": [],
+            "path": null,
+            "sha256": null
+          },
+          "disposition": "preserve_historical_verdict",
+          "gate_check_summary": [],
+          "honest_verdict": "complete_disqualified_required_checks",
+          "planned_producer_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7967_v691_private_training_qualification.json",
+          "producer_invocation": {
+            "historical_timestamps": {
+              "finished_at": "2026-10-01T04:10:29.860338+00:00",
+              "started_at": "2026-10-01T04:07:02.030701+00:00"
+            },
+            "identity": {
+              "current_run_id": null,
+              "execution_date": "20261001",
+              "experiment_id": 7967,
+              "milestone": "2026.10.691",
+              "run_date": "20261001",
+              "task_id": "exp7967-private-training-qualification"
+            },
+            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7967_v691_private_training_qualification.json",
+            "sha256": "sha256:630e22ac967c45ecdf69304b9a62656f15ab4c0ff94a19a767744a4f99c67e71"
+          },
+          "readiness_fields": {
+            "prefit_coverage_ready_score": 0,
+            "runtime_ready_score": 0,
+            "training_coverage_ready_score": 0,
+            "training_execution_ready_score": 0,
+            "training_publication_ready_score": 0,
+            "training_runtime_ready_score": 0
+          },
+          "scientific_benefit_transferred": false,
+          "task_id": "exp7967-private-training-qualification",
+          "verdict_class": "disqualified"
+        },
+        {
+          "dispatch_receipt": {
+            "gates_evaluated": [],
+            "path": null,
+            "sha256": null
+          },
+          "disposition": "preserve_historical_verdict",
+          "gate_check_summary": [],
+          "honest_verdict": "complete_null_response_role_transport",
+          "planned_producer_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7968_v691_response_role_targets.json",
+          "producer_invocation": {
+            "historical_timestamps": {
+              "finished_at": "2026-10-01T04:48:09.935121+00:00",
+              "started_at": "2026-10-01T04:44:18.341665+00:00"
+            },
+            "identity": {
+              "current_run_id": null,
+              "execution_date": "20261001",
+              "experiment_id": 7968,
+              "milestone": "2026.10.691",
+              "run_date": "20261001",
+              "task_id": "exp7968-response-role-targets"
+            },
+            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7968_v691_response_role_targets.json",
+            "sha256": "sha256:5978a0302945b4111afd06ee5f756ff0d8d810a3d84e2cf4fec4d88acb8f06d1"
+          },
+          "readiness_fields": {
+            "response_roles_ready_score": 1
+          },
+          "scientific_benefit_transferred": false,
+          "task_id": "exp7968-response-role-targets",
+          "verdict_class": "null"
+        },
+        {
+          "dispatch_receipt": {
+            "gates_evaluated": [],
+            "path": null,
+            "sha256": null
+          },
+          "disposition": "preserve_historical_verdict",
+          "gate_check_summary": [],
+          "honest_verdict": "complete_null_qwen_calibration_capture",
+          "planned_producer_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7969_v691_qwen_calibration_capture.json",
+          "producer_invocation": {
+            "historical_timestamps": {
+              "finished_at": "2026-10-01T05:40:08.999760+00:00",
+              "started_at": "2026-10-01T05:26:17.710336+00:00"
+            },
+            "identity": {
+              "current_run_id": null,
+              "execution_date": "20261001",
+              "experiment_id": 7969,
+              "milestone": "2026.10.691",
+              "run_date": "20261001",
+              "task_id": "exp7969-qwen-calibration-capture"
+            },
+            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7969_v691_qwen_calibration_capture.json",
+            "sha256": "sha256:3f25b2e4b43d50536525e64ace321db55e9d6889aab97cc2581e4665014f2f51"
+          },
+          "readiness_fields": {
+            "qwen_capture_ready_score": 1
+          },
+          "scientific_benefit_transferred": false,
+          "task_id": "exp7969-qwen-calibration-capture",
+          "verdict_class": "null"
+        },
+        {
+          "dispatch_receipt": {
+            "gates_evaluated": [
+              {
+                "actual": 0,
+                "actual_type": "int",
+                "artifact_field": "training_execution_ready_score",
+                "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7967_v691_private_training_qualification.json",
+                "artifact_sha256": "sha256:630e22ac967c45ecdf69304b9a62656f15ab4c0ff94a19a767744a4f99c67e71",
+                "expected": 1,
+                "expected_type": "int",
+                "op": "==",
+                "passed": false,
+                "reason": "actual=0 == expected=1",
+                "upstream": "exp7967-private-training-qualification"
+              },
+              {
+                "actual": false,
+                "actual_type": "bool",
+                "artifact_field": "flagged_adversarial",
+                "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7967_v691_private_training_qualification.json",
+                "artifact_sha256": "sha256:630e22ac967c45ecdf69304b9a62656f15ab4c0ff94a19a767744a4f99c67e71",
+                "expected": false,
+                "expected_type": "bool",
+                "op": "==",
+                "passed": true,
+                "reason": "actual=False == expected=False",
+                "upstream": "exp7967-private-training-qualification"
+              },
+              {
+                "actual": "disqualified",
+                "actual_type": "str",
+                "artifact_field": "verdict_class",
+                "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7967_v691_private_training_qualification.json",
+                "artifact_sha256": "sha256:630e22ac967c45ecdf69304b9a62656f15ab4c0ff94a19a767744a4f99c67e71",
+                "expected": [
+                  "positive",
+                  "circular_positive",
+                  "null"
+                ],
+                "expected_type": "list",
+                "op": "in",
+                "passed": false,
+                "reason": "actual='disqualified' in expected=['positive', 'circular_positive', 'null']",
+                "upstream": "exp7967-private-training-qualification"
+              }
+            ],
+            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7970_energy_fit.json",
+            "sha256": "sha256:966ca46c2c41ef7b5e02e5ab887fb04dad5d0ab27d0cb029323781aacf44cee8"
+          },
+          "disposition": "dispatch_blocked",
+          "gate_check_summary": [
+            {
+              "artifact_field": "producer_exists",
+              "expected": true,
+              "hash": null,
+              "observed": false,
+              "op": "==",
+              "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7970_v691_energy_fit.json",
+              "upstream_id": "exp7970-energy-fit"
+            },
+            {
+              "artifact_field": "energy_fit_ready_score",
+              "artifact_hash": null,
+              "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7970_v691_energy_fit.json",
+              "expected": 1,
+              "observed": "missing_source",
+              "op": "==",
+              "upstream_id": "exp7970-energy-fit"
+            },
+            {
+              "artifact_field": "authenticated_producer_eligible",
+              "artifact_hash": null,
+              "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7970_v691_energy_fit.json",
+              "expected": true,
+              "observed": false,
+              "op": "==",
+              "upstream_id": "exp7970-energy-fit"
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "artifact_hash": null,
+              "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7970_v691_energy_fit.json",
+              "expected": false,
+              "observed": "missing_source",
+              "op": "==",
+              "upstream_id": "exp7970-energy-fit"
+            },
+            {
+              "artifact_field": "authenticated_producer_eligible",
+              "artifact_hash": null,
+              "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7970_v691_energy_fit.json",
+              "expected": true,
+              "observed": false,
+              "op": "==",
+              "upstream_id": "exp7970-energy-fit"
+            },
+            {
+              "artifact_field": "verdict_class",
+              "artifact_hash": null,
+              "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7970_v691_energy_fit.json",
+              "expected": [
+                "positive",
+                "circular_positive",
+                "null"
+              ],
+              "observed": "missing_source",
+              "op": "in",
+              "upstream_id": "exp7970-energy-fit"
+            },
+            {
+              "artifact_field": "authenticated_producer_eligible",
+              "artifact_hash": null,
+              "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7970_v691_energy_fit.json",
+              "expected": true,
+              "observed": false,
+              "op": "==",
+              "upstream_id": "exp7970-energy-fit"
+            },
+            {
+              "artifact_field": "energy_fit_ready_score",
+              "artifact_hash": null,
+              "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7970_v691_energy_fit.json",
+              "expected": 1,
+              "observed": "missing_source",
+              "op": "==",
+              "upstream_id": "exp7970-energy-fit"
+            },
+            {
+              "artifact_field": "authenticated_producer_eligible",
+              "artifact_hash": null,
+              "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7970_v691_energy_fit.json",
+              "expected": true,
+              "observed": false,
+              "op": "==",
+              "upstream_id": "exp7970-energy-fit"
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "artifact_hash": null,
+              "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7970_v691_energy_fit.json",
+              "expected": false,
+              "observed": "missing_source",
+              "op": "==",
+              "upstream_id": "exp7970-energy-fit"
+            },
+            {
+              "artifact_field": "authenticated_producer_eligible",
+              "artifact_hash": null,
+              "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7970_v691_energy_fit.json",
+              "expected": true,
+              "observed": false,
+              "op": "==",
+              "upstream_id": "exp7970-energy-fit"
+            },
+            {
+              "artifact_field": "verdict_class",
+              "artifact_hash": null,
+              "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7970_v691_energy_fit.json",
+              "expected": [
+                "positive",
+                "circular_positive",
+                "null"
+              ],
+              "observed": "missing_source",
+              "op": "in",
+              "upstream_id": "exp7970-energy-fit"
+            },
+            {
+              "artifact_field": "authenticated_producer_eligible",
+              "artifact_hash": null,
+              "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7970_v691_energy_fit.json",
+              "expected": true,
+              "observed": false,
+              "op": "==",
+              "upstream_id": "exp7970-energy-fit"
+            }
+          ],
+          "honest_verdict": null,
+          "planned_producer_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7970_v691_energy_fit.json",
+          "producer_invocation": {
+            "historical_timestamps": {
+              "finished_at": null,
+              "started_at": null
+            },
+            "identity": {
+              "current_run_id": null,
+              "execution_date": null,
+              "experiment_id": null,
+              "milestone": null,
+              "run_date": null,
+              "task_id": null
+            },
+            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7970_v691_energy_fit.json",
+            "sha256": null
+          },
+          "readiness_fields": {},
+          "scientific_benefit_transferred": false,
+          "task_id": "exp7970-energy-fit",
+          "verdict_class": null
+        },
+        {
+          "dispatch_receipt": {
+            "gates_evaluated": [],
+            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7971_decision_abstention.json",
+            "sha256": null
+          },
+          "disposition": "dispatch_blocked",
+          "gate_check_summary": [
+            {
+              "artifact_field": "producer_exists",
+              "expected": true,
+              "hash": null,
+              "observed": false,
+              "op": "==",
+              "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7971_v691_decision_abstention.json",
+              "upstream_id": "exp7971-decision-abstention"
+            }
+          ],
+          "honest_verdict": null,
+          "planned_producer_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7971_v691_decision_abstention.json",
+          "producer_invocation": {
+            "historical_timestamps": {
+              "finished_at": null,
+              "started_at": null
+            },
+            "identity": {
+              "current_run_id": null,
+              "execution_date": null,
+              "experiment_id": null,
+              "milestone": null,
+              "run_date": null,
+              "task_id": null
+            },
+            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7971_v691_decision_abstention.json",
+            "sha256": null
+          },
+          "readiness_fields": {},
+          "scientific_benefit_transferred": false,
+          "task_id": "exp7971-decision-abstention",
+          "verdict_class": null
+        },
+        {
+          "dispatch_receipt": {
+            "gates_evaluated": [],
+            "path": null,
+            "sha256": null
+          },
+          "disposition": "preserve_historical_verdict",
+          "gate_check_summary": [],
+          "honest_verdict": "complete_null_qwen_energy_calibration",
+          "planned_producer_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7972_v691_qwen_energy_calibration.json",
+          "producer_invocation": {
+            "historical_timestamps": {
+              "finished_at": "2026-10-01T06:25:17.507863+00:00",
+              "started_at": "2026-10-01T06:23:26.219096+00:00"
+            },
+            "identity": {
+              "current_run_id": null,
+              "execution_date": "20261001",
+              "experiment_id": 7972,
+              "milestone": "2026.10.691",
+              "run_date": "20261001",
+              "task_id": "exp7972-qwen-energy-calibration"
+            },
+            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7972_v691_qwen_energy_calibration.json",
+            "sha256": "sha256:a47d19ca7af500014117ff083249469597cd7e6bc0ff57778098fa39cfa41c63"
+          },
+          "readiness_fields": {
+            "qwen_calibration_ready_score": 1
+          },
+          "scientific_benefit_transferred": false,
+          "task_id": "exp7972-qwen-energy-calibration",
+          "verdict_class": "null"
+        },
+        {
+          "dispatch_receipt": {
+            "gates_evaluated": [],
+            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7973_causal_acquisition.json",
+            "sha256": null
+          },
+          "disposition": "dispatch_blocked",
+          "gate_check_summary": [
+            {
+              "artifact_field": "producer_exists",
+              "expected": true,
+              "hash": null,
+              "observed": false,
+              "op": "==",
+              "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7973_v691_causal_acquisition.json",
+              "upstream_id": "exp7973-causal-acquisition"
+            },
+            {
+              "artifact_field": "learning_measurement_ready_score",
+              "artifact_hash": null,
+              "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7973_v691_causal_acquisition.json",
+              "expected": 1,
+              "observed": "missing_source",
+              "op": "==",
+              "upstream_id": "exp7973-causal-acquisition"
+            },
+            {
+              "artifact_field": "authenticated_producer_eligible",
+              "artifact_hash": null,
+              "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7973_v691_causal_acquisition.json",
+              "expected": true,
+              "observed": false,
+              "op": "==",
+              "upstream_id": "exp7973-causal-acquisition"
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "artifact_hash": null,
+              "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7973_v691_causal_acquisition.json",
+              "expected": false,
+              "observed": "missing_source",
+              "op": "==",
+              "upstream_id": "exp7973-causal-acquisition"
+            },
+            {
+              "artifact_field": "authenticated_producer_eligible",
+              "artifact_hash": null,
+              "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7973_v691_causal_acquisition.json",
+              "expected": true,
+              "observed": false,
+              "op": "==",
+              "upstream_id": "exp7973-causal-acquisition"
+            },
+            {
+              "artifact_field": "verdict_class",
+              "artifact_hash": null,
+              "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7973_v691_causal_acquisition.json",
+              "expected": [
+                "positive",
+                "circular_positive",
+                "null"
+              ],
+              "observed": "missing_source",
+              "op": "in",
+              "upstream_id": "exp7973-causal-acquisition"
+            },
+            {
+              "artifact_field": "authenticated_producer_eligible",
+              "artifact_hash": null,
+              "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7973_v691_causal_acquisition.json",
+              "expected": true,
+              "observed": false,
+              "op": "==",
+              "upstream_id": "exp7973-causal-acquisition"
+            }
+          ],
+          "honest_verdict": null,
+          "planned_producer_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7973_v691_causal_acquisition.json",
+          "producer_invocation": {
+            "historical_timestamps": {
+              "finished_at": null,
+              "started_at": null
+            },
+            "identity": {
+              "current_run_id": null,
+              "execution_date": null,
+              "experiment_id": null,
+              "milestone": null,
+              "run_date": null,
+              "task_id": null
+            },
+            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7973_v691_causal_acquisition.json",
+            "sha256": null
+          },
+          "readiness_fields": {},
+          "scientific_benefit_transferred": false,
+          "task_id": "exp7973-causal-acquisition",
+          "verdict_class": null
+        },
+        {
+          "dispatch_receipt": {
+            "gates_evaluated": [],
+            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7974_delayed_calibration.json",
+            "sha256": null
+          },
+          "disposition": "dispatch_blocked",
+          "gate_check_summary": [
+            {
+              "artifact_field": "producer_exists",
+              "expected": true,
+              "hash": null,
+              "observed": false,
+              "op": "==",
+              "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7974_v691_delayed_calibration.json",
+              "upstream_id": "exp7974-delayed-calibration"
+            }
+          ],
+          "honest_verdict": null,
+          "planned_producer_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7974_v691_delayed_calibration.json",
+          "producer_invocation": {
+            "historical_timestamps": {
+              "finished_at": null,
+              "started_at": null
+            },
+            "identity": {
+              "current_run_id": null,
+              "execution_date": null,
+              "experiment_id": null,
+              "milestone": null,
+              "run_date": null,
+              "task_id": null
+            },
+            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7974_v691_delayed_calibration.json",
+            "sha256": null
+          },
+          "readiness_fields": {},
+          "scientific_benefit_transferred": false,
+          "task_id": "exp7974-delayed-calibration",
+          "verdict_class": null
+        },
+        {
+          "dispatch_receipt": {
+            "gates_evaluated": [],
+            "path": null,
+            "sha256": null
+          },
+          "disposition": "preserve_historical_verdict",
+          "gate_check_summary": [
+            {
+              "artifact_field": "exit_code",
+              "expected": 0,
+              "observed": 1,
+              "op": "==",
+              "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7975_v691_arc_supervisor_delta/logs/affected_pytest-3c641fbc10928652a3f38c9ce6f10195202c8036aa84fd202c2109a57bc2aa2f.log",
+              "sha256": "sha256:3c641fbc10928652a3f38c9ce6f10195202c8036aa84fd202c2109a57bc2aa2f",
+              "upstream_id": "affected_pytest-3c641fbc10928652a3f38c9ce6f10195202c8036aa84fd202c2109a57bc2aa2f"
+            },
+            {
+              "artifact_field": "exit_code",
+              "expected": 0,
+              "observed": 1,
+              "op": "==",
+              "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7975_v691_arc_supervisor_delta/logs/unit_coverage-25f046fa1b6f951bb742bf8feb459a24d616e59d7b8bb0d4e3f9154dbdaf8640.log",
+              "sha256": "sha256:25f046fa1b6f951bb742bf8feb459a24d616e59d7b8bb0d4e3f9154dbdaf8640",
+              "upstream_id": "unit_coverage-25f046fa1b6f951bb742bf8feb459a24d616e59d7b8bb0d4e3f9154dbdaf8640"
+            }
+          ],
+          "honest_verdict": "complete_disqualified_supervisor_delta_prerequisites",
+          "planned_producer_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7975_v691_arc_supervisor_delta.json",
+          "producer_invocation": {
+            "historical_timestamps": {
+              "finished_at": "2026-10-01T06:41:47.595657+00:00",
+              "started_at": "2026-10-01T06:38:56.083022+00:00"
+            },
+            "identity": {
+              "current_run_id": null,
+              "execution_date": "20261001",
+              "experiment_id": 7975,
+              "milestone": "2026.10.691",
+              "run_date": "20261001",
+              "task_id": "exp7975-arc-supervisor-delta"
+            },
+            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7975_v691_arc_supervisor_delta.json",
+            "sha256": "sha256:a28af99cf2de2a4ba93348d7c2fb3ce18879a46a468fb02961f407180fc48a4f"
+          },
+          "readiness_fields": {
+            "arc_evidence_ready_score": 0
+          },
+          "scientific_benefit_transferred": false,
+          "task_id": "exp7975-arc-supervisor-delta",
+          "verdict_class": "disqualified"
+        },
+        {
+          "dispatch_receipt": {
+            "gates_evaluated": [],
+            "path": null,
+            "sha256": null
+          },
+          "disposition": "preserve_historical_verdict",
+          "gate_check_summary": [
+            {
+              "artifact_hash": "sha256:966ca46c2c41ef7b5e02e5ab887fb04dad5d0ab27d0cb029323781aacf44cee8",
+              "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7970_energy_fit.json",
+              "expected": 1,
+              "field": "energy_fit_ready_score",
+              "observed": null,
+              "op": "==",
+              "passed": false,
+              "upstream_id": "exp7970"
+            },
+            {
+              "artifact_hash": "sha256:966ca46c2c41ef7b5e02e5ab887fb04dad5d0ab27d0cb029323781aacf44cee8",
+              "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7970_energy_fit.json",
+              "expected": [
+                "positive",
+                "circular_positive",
+                "null"
+              ],
+              "field": "verdict_class",
+              "observed": null,
+              "op": "in",
+              "passed": false,
+              "upstream_id": "exp7970"
+            },
+            {
+              "artifact_hash": "sha256:966ca46c2c41ef7b5e02e5ab887fb04dad5d0ab27d0cb029323781aacf44cee8",
+              "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7970_energy_fit.json",
+              "expected": false,
+              "field": "flagged_adversarial",
+              "observed": null,
+              "op": "==",
+              "passed": false,
+              "upstream_id": "exp7970"
+            },
+            {
+              "artifact_hash": null,
+              "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7973_v691_causal_acquisition.json",
+              "expected": true,
+              "field": "exists",
+              "observed": false,
+              "op": "==",
+              "passed": false,
+              "upstream_id": "exp7973"
+            },
+            {
+              "artifact_hash": null,
+              "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7973_v691_causal_acquisition.json",
+              "expected": 7973,
+              "field": "experiment_id",
+              "observed": null,
+              "op": "==",
+              "passed": false,
+              "upstream_id": "exp7973"
+            },
+            {
+              "artifact_hash": null,
+              "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7973_v691_causal_acquisition.json",
+              "expected": 1,
+              "field": "learning_measurement_ready_score",
+              "observed": null,
+              "op": "==",
+              "passed": false,
+              "upstream_id": "exp7973"
+            },
+            {
+              "artifact_hash": null,
+              "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7973_v691_causal_acquisition.json",
+              "expected": [
+                "positive",
+                "circular_positive",
+                "null"
+              ],
+              "field": "verdict_class",
+              "observed": null,
+              "op": "in",
+              "passed": false,
+              "upstream_id": "exp7973"
+            },
+            {
+              "artifact_hash": null,
+              "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7973_v691_causal_acquisition.json",
+              "expected": false,
+              "field": "flagged_adversarial",
+              "observed": null,
+              "op": "==",
+              "passed": false,
+              "upstream_id": "exp7973"
+            }
+          ],
+          "honest_verdict": "complete_null_service_cost",
+          "planned_producer_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7976_v691_service_cost.json",
+          "producer_invocation": {
+            "historical_timestamps": {
+              "finished_at": "2026-10-01T07:20:00.552583+00:00",
+              "started_at": "2026-10-01T07:14:17.376970+00:00"
+            },
+            "identity": {
+              "current_run_id": null,
+              "execution_date": "20261001",
+              "experiment_id": 7976,
+              "milestone": "2026.10.691",
+              "run_date": "20261001",
+              "task_id": "exp7976-service-cost"
+            },
+            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7976_v691_service_cost.json",
+            "sha256": "sha256:48444e30e0aeeb796ff7a5a1cad04bcc3f6c9eaf8d8c61505aa3ef6efee44190"
+          },
+          "readiness_fields": {
+            "service_measurement_ready_score": 1
+          },
+          "scientific_benefit_transferred": false,
+          "task_id": "exp7976-service-cost",
+          "verdict_class": "null"
+        },
+        {
+          "dispatch_receipt": {
+            "gates_evaluated": [],
+            "path": null,
+            "sha256": null
+          },
+          "disposition": "preserve_historical_verdict",
+          "gate_check_summary": [],
+          "honest_verdict": "complete_null_historical_board_scope_current_host_mapping",
+          "planned_producer_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7977_v691_hardware_evidence.json",
+          "producer_invocation": {
+            "historical_timestamps": {
+              "finished_at": "2026-10-01T07:42:16.310351+00:00",
+              "started_at": "2026-10-01T07:39:03.044461+00:00"
+            },
+            "identity": {
+              "current_run_id": null,
+              "execution_date": "20261001",
+              "experiment_id": 7977,
+              "milestone": "2026.10.691",
+              "run_date": "20261001",
+              "task_id": "exp7977-hardware-evidence"
+            },
+            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7977_v691_hardware_evidence.json",
+            "sha256": "sha256:15147d4b31b7a1c525eda300e7333942346e05e74efd1f28af28ffe4a5c45d7e"
+          },
+          "readiness_fields": {
+            "hardware_evidence_ready_score": 1
+          },
+          "scientific_benefit_transferred": false,
+          "task_id": "exp7977-hardware-evidence",
+          "verdict_class": "null"
+        },
+        {
+          "dispatch_receipt": {
+            "gates_evaluated": [],
+            "path": null,
+            "sha256": null
+          },
+          "disposition": "preserve_historical_verdict",
+          "gate_check_summary": [
+            {
+              "artifact_field": "training_execution_ready_score",
+              "artifact_hash": "sha256:630e22ac967c45ecdf69304b9a62656f15ab4c0ff94a19a767744a4f99c67e71",
+              "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7967_v691_private_training_qualification.json",
+              "expected": 1,
+              "observed": 0,
+              "op": "==",
+              "upstream_id": "exp7967-private-training-qualification"
+            },
+            {
+              "artifact_field": "authenticated_producer_eligible",
+              "artifact_hash": "sha256:630e22ac967c45ecdf69304b9a62656f15ab4c0ff94a19a767744a4f99c67e71",
+              "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7967_v691_private_training_qualification.json",
+              "expected": true,
+              "observed": false,
+              "op": "==",
+              "upstream_id": "exp7967-private-training-qualification"
+            },
+            {
+              "artifact_field": "authenticated_producer_eligible",
+              "artifact_hash": "sha256:630e22ac967c45ecdf69304b9a62656f15ab4c0ff94a19a767744a4f99c67e71",
+              "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7967_v691_private_training_qualification.json",
+              "expected": true,
+              "observed": false,
+              "op": "==",
+              "upstream_id": "exp7967-private-training-qualification"
+            },
+            {
+              "artifact_field": "verdict_class",
+              "artifact_hash": "sha256:630e22ac967c45ecdf69304b9a62656f15ab4c0ff94a19a767744a4f99c67e71",
+              "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7967_v691_private_training_qualification.json",
+              "expected": [
+                "positive",
+                "circular_positive",
+                "null"
+              ],
+              "observed": "disqualified",
+              "op": "in",
+              "upstream_id": "exp7967-private-training-qualification"
+            },
+            {
+              "artifact_field": "authenticated_producer_eligible",
+              "artifact_hash": "sha256:630e22ac967c45ecdf69304b9a62656f15ab4c0ff94a19a767744a4f99c67e71",
+              "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7967_v691_private_training_qualification.json",
+              "expected": true,
+              "observed": false,
+              "op": "==",
+              "upstream_id": "exp7967-private-training-qualification"
+            },
+            {
+              "artifact_field": "producer_exists",
+              "expected": true,
+              "hash": null,
+              "observed": false,
+              "op": "==",
+              "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7970_v691_energy_fit.json",
+              "upstream_id": "producer_invocation"
+            },
+            {
+              "artifact_field": "energy_fit_ready_score",
+              "artifact_hash": null,
+              "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7970_v691_energy_fit.json",
+              "expected": 1,
+              "observed": "missing_source",
+              "op": "==",
+              "upstream_id": "exp7970-energy-fit"
+            },
+            {
+              "artifact_field": "authenticated_producer_eligible",
+              "artifact_hash": null,
+              "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7970_v691_energy_fit.json",
+              "expected": true,
+              "observed": false,
+              "op": "==",
+              "upstream_id": "exp7970-energy-fit"
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "artifact_hash": null,
+              "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7970_v691_energy_fit.json",
+              "expected": false,
+              "observed": "missing_source",
+              "op": "==",
+              "upstream_id": "exp7970-energy-fit"
+            },
+            {
+              "artifact_field": "authenticated_producer_eligible",
+              "artifact_hash": null,
+              "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7970_v691_energy_fit.json",
+              "expected": true,
+              "observed": false,
+              "op": "==",
+              "upstream_id": "exp7970-energy-fit"
+            },
+            {
+              "artifact_field": "verdict_class",
+              "artifact_hash": null,
+              "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7970_v691_energy_fit.json",
+              "expected": [
+                "positive",
+                "circular_positive",
+                "null"
+              ],
+              "observed": "missing_source",
+              "op": "in",
+              "upstream_id": "exp7970-energy-fit"
+            },
+            {
+              "artifact_field": "authenticated_producer_eligible",
+              "artifact_hash": null,
+              "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7970_v691_energy_fit.json",
+              "expected": true,
+              "observed": false,
+              "op": "==",
+              "upstream_id": "exp7970-energy-fit"
+            },
+            {
+              "artifact_field": "producer_exists",
+              "expected": true,
+              "hash": null,
+              "observed": false,
+              "op": "==",
+              "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7971_v691_decision_abstention.json",
+              "upstream_id": "producer_invocation"
+            },
+            {
+              "artifact_field": "energy_fit_ready_score",
+              "artifact_hash": null,
+              "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7970_v691_energy_fit.json",
+              "expected": 1,
+              "observed": "missing_source",
+              "op": "==",
+              "upstream_id": "exp7970-energy-fit"
+            },
+            {
+              "artifact_field": "authenticated_producer_eligible",
+              "artifact_hash": null,
+              "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7970_v691_energy_fit.json",
+              "expected": true,
+              "observed": false,
+              "op": "==",
+              "upstream_id": "exp7970-energy-fit"
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "artifact_hash": null,
+              "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7970_v691_energy_fit.json",
+              "expected": false,
+              "observed": "missing_source",
+              "op": "==",
+              "upstream_id": "exp7970-energy-fit"
+            },
+            {
+              "artifact_field": "authenticated_producer_eligible",
+              "artifact_hash": null,
+              "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7970_v691_energy_fit.json",
+              "expected": true,
+              "observed": false,
+              "op": "==",
+              "upstream_id": "exp7970-energy-fit"
+            },
+            {
+              "artifact_field": "verdict_class",
+              "artifact_hash": null,
+              "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7970_v691_energy_fit.json",
+              "expected": [
+                "positive",
+                "circular_positive",
+                "null"
+              ],
+              "observed": "missing_source",
+              "op": "in",
+              "upstream_id": "exp7970-energy-fit"
+            },
+            {
+              "artifact_field": "authenticated_producer_eligible",
+              "artifact_hash": null,
+              "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7970_v691_energy_fit.json",
+              "expected": true,
+              "observed": false,
+              "op": "==",
+              "upstream_id": "exp7970-energy-fit"
+            },
+            {
+              "artifact_field": "producer_exists",
+              "expected": true,
+              "hash": null,
+              "observed": false,
+              "op": "==",
+              "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7973_v691_causal_acquisition.json",
+              "upstream_id": "producer_invocation"
+            },
+            {
+              "artifact_field": "learning_measurement_ready_score",
+              "artifact_hash": null,
+              "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7973_v691_causal_acquisition.json",
+              "expected": 1,
+              "observed": "missing_source",
+              "op": "==",
+              "upstream_id": "exp7973-causal-acquisition"
+            },
+            {
+              "artifact_field": "authenticated_producer_eligible",
+              "artifact_hash": null,
+              "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7973_v691_causal_acquisition.json",
+              "expected": true,
+              "observed": false,
+              "op": "==",
+              "upstream_id": "exp7973-causal-acquisition"
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "artifact_hash": null,
+              "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7973_v691_causal_acquisition.json",
+              "expected": false,
+              "observed": "missing_source",
+              "op": "==",
+              "upstream_id": "exp7973-causal-acquisition"
+            },
+            {
+              "artifact_field": "authenticated_producer_eligible",
+              "artifact_hash": null,
+              "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7973_v691_causal_acquisition.json",
+              "expected": true,
+              "observed": false,
+              "op": "==",
+              "upstream_id": "exp7973-causal-acquisition"
+            },
+            {
+              "artifact_field": "verdict_class",
+              "artifact_hash": null,
+              "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7973_v691_causal_acquisition.json",
+              "expected": [
+                "positive",
+                "circular_positive",
+                "null"
+              ],
+              "observed": "missing_source",
+              "op": "in",
+              "upstream_id": "exp7973-causal-acquisition"
+            },
+            {
+              "artifact_field": "authenticated_producer_eligible",
+              "artifact_hash": null,
+              "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7973_v691_causal_acquisition.json",
+              "expected": true,
+              "observed": false,
+              "op": "==",
+              "upstream_id": "exp7973-causal-acquisition"
+            },
+            {
+              "artifact_field": "producer_exists",
+              "expected": true,
+              "hash": null,
+              "observed": false,
+              "op": "==",
+              "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7974_v691_delayed_calibration.json",
+              "upstream_id": "producer_invocation"
+            },
+            {
+              "artifact_field": "exit_code",
+              "expected": 0,
+              "observed": 1,
+              "op": "==",
+              "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7975_v691_arc_supervisor_delta/logs/affected_pytest-3c641fbc10928652a3f38c9ce6f10195202c8036aa84fd202c2109a57bc2aa2f.log",
+              "sha256": "sha256:3c641fbc10928652a3f38c9ce6f10195202c8036aa84fd202c2109a57bc2aa2f",
+              "upstream_id": "affected_pytest-3c641fbc10928652a3f38c9ce6f10195202c8036aa84fd202c2109a57bc2aa2f"
+            },
+            {
+              "artifact_field": "exit_code",
+              "expected": 0,
+              "observed": 1,
+              "op": "==",
+              "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7975_v691_arc_supervisor_delta/logs/unit_coverage-25f046fa1b6f951bb742bf8feb459a24d616e59d7b8bb0d4e3f9154dbdaf8640.log",
+              "sha256": "sha256:25f046fa1b6f951bb742bf8feb459a24d616e59d7b8bb0d4e3f9154dbdaf8640",
+              "upstream_id": "unit_coverage-25f046fa1b6f951bb742bf8feb459a24d616e59d7b8bb0d4e3f9154dbdaf8640"
+            },
+            {
+              "artifact_hash": "sha256:966ca46c2c41ef7b5e02e5ab887fb04dad5d0ab27d0cb029323781aacf44cee8",
+              "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7970_energy_fit.json",
+              "expected": 1,
+              "field": "energy_fit_ready_score",
+              "observed": null,
+              "op": "==",
+              "passed": false,
+              "upstream_id": "exp7970"
+            },
+            {
+              "artifact_hash": "sha256:966ca46c2c41ef7b5e02e5ab887fb04dad5d0ab27d0cb029323781aacf44cee8",
+              "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7970_energy_fit.json",
+              "expected": [
+                "positive",
+                "circular_positive",
+                "null"
+              ],
+              "field": "verdict_class",
+              "observed": null,
+              "op": "in",
+              "passed": false,
+              "upstream_id": "exp7970"
+            },
+            {
+              "artifact_hash": "sha256:966ca46c2c41ef7b5e02e5ab887fb04dad5d0ab27d0cb029323781aacf44cee8",
+              "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7970_energy_fit.json",
+              "expected": false,
+              "field": "flagged_adversarial",
+              "observed": null,
+              "op": "==",
+              "passed": false,
+              "upstream_id": "exp7970"
+            },
+            {
+              "artifact_hash": null,
+              "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7973_v691_causal_acquisition.json",
+              "expected": true,
+              "field": "exists",
+              "observed": false,
+              "op": "==",
+              "passed": false,
+              "upstream_id": "exp7973"
+            },
+            {
+              "artifact_hash": null,
+              "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7973_v691_causal_acquisition.json",
+              "expected": 7973,
+              "field": "experiment_id",
+              "observed": null,
+              "op": "==",
+              "passed": false,
+              "upstream_id": "exp7973"
+            },
+            {
+              "artifact_hash": null,
+              "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7973_v691_causal_acquisition.json",
+              "expected": 1,
+              "field": "learning_measurement_ready_score",
+              "observed": null,
+              "op": "==",
+              "passed": false,
+              "upstream_id": "exp7973"
+            },
+            {
+              "artifact_hash": null,
+              "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7973_v691_causal_acquisition.json",
+              "expected": [
+                "positive",
+                "circular_positive",
+                "null"
+              ],
+              "field": "verdict_class",
+              "observed": null,
+              "op": "in",
+              "passed": false,
+              "upstream_id": "exp7973"
+            },
+            {
+              "artifact_hash": null,
+              "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7973_v691_causal_acquisition.json",
+              "expected": false,
+              "field": "flagged_adversarial",
+              "observed": null,
+              "op": "==",
+              "passed": false,
+              "upstream_id": "exp7973"
+            },
+            {
+              "artifact_field": "required_validation",
+              "artifact_hash": "sha256:7f6efb07aeb6f35d5d9e67a0c53537c7edd59c459afb3ab4d819f534e044f045",
+              "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7978_v691_capstone/f071c45da7f6fee25e7eec66fd3cd67e6c1fc4c4f0baf6e048af79e75f238343/logs/cli_blocked_replay-7f6efb07aeb6f35d5d9e67a0c53537c7edd59c459afb3ab4d819f534e044f045.log",
+              "expected": 0,
+              "observed": 1,
+              "op": "==",
+              "upstream_id": "exp7978-owned-validation"
+            }
+          ],
+          "honest_verdict": "complete_disqualified_required_validation",
+          "planned_producer_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7978_v691_capstone.json",
+          "producer_invocation": {
+            "historical_timestamps": {
+              "finished_at": "2026-10-01T08:42:24.389628+00:00",
+              "started_at": "2026-10-01T08:33:58.302812+00:00"
+            },
+            "identity": {
+              "current_run_id": "exp7978-20261001",
+              "execution_date": "20261001",
+              "experiment_id": 7978,
+              "milestone": "2026.10.691",
+              "run_date": "20261001",
+              "task_id": "exp7978-capstone"
+            },
+            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7978_v691_capstone.json",
+            "sha256": "sha256:184f29fb56fe71f1f7b4f75c6a88861bd7ffe0c9a574f63a4122f5ad799445a0"
+          },
+          "readiness_fields": {
+            "capstone_execution_ready_score": 0
+          },
+          "scientific_benefit_transferred": false,
+          "task_id": "exp7978-capstone",
+          "verdict_class": "disqualified"
+        }
+      ]
+    },
+    "source_custody": [
+      {
+        "expected_sha256": "sha256:528a2243693f2543f43bbf4f0b2ce789f2b01ccf14d795260c7e15029230ca14",
+        "exposure": "exposed_development",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7892_v685_source_boundary.json",
+        "role": "qualified_source_receipt",
+        "sha256": "sha256:528a2243693f2543f43bbf4f0b2ce789f2b01ccf14d795260c7e15029230ca14"
+      },
+      {
+        "expected_sha256": "sha256:36abe2ee281b27b4e1c7c3e74f2d5859582ab95844b01f4acb7f8d3636e5957c",
+        "exposure": "exposed_development",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7892_v685_source_boundary/cohort-f9a948857e47caa3b670331f66e80144b600041ed891ef3cb7a05c88002d63a5.json",
+        "role": "cohort_manifest",
+        "sha256": "sha256:36abe2ee281b27b4e1c7c3e74f2d5859582ab95844b01f4acb7f8d3636e5957c"
+      },
+      {
+        "expected_sha256": "sha256:9a6a9b07f1aa2ab150e272c83dcab782a2a37e8aba5aa42b6ec12c4194368550",
+        "exposure": "exposed_development",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7892_v685_source_boundary/public_0.jsonl",
+        "role": "public_shards",
+        "sha256": "sha256:9a6a9b07f1aa2ab150e272c83dcab782a2a37e8aba5aa42b6ec12c4194368550"
+      },
+      {
+        "expected_sha256": "sha256:b669628bef55c3379056cc5cdbe0d542931616c2ad0c455989408f941f8827fe",
+        "exposure": "exposed_development",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7892_v685_source_boundary/public_1.jsonl",
+        "role": "public_shards",
+        "sha256": "sha256:b669628bef55c3379056cc5cdbe0d542931616c2ad0c455989408f941f8827fe"
+      },
+      {
+        "expected_sha256": "sha256:374ae136b99662fb8cda0c2b64fcf09c65d244b729fa8dae8ea2cf933d292a5e",
+        "exposure": "exposed_development",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7892_v685_source_boundary/evaluator_0.jsonl",
+        "role": "evaluator_shards",
+        "sha256": "sha256:374ae136b99662fb8cda0c2b64fcf09c65d244b729fa8dae8ea2cf933d292a5e"
+      },
+      {
+        "expected_sha256": "sha256:2564ccb54f2cc97f4661795f5b7c313a2ab6b4691b22671133bdf7ceca59e142",
+        "exposure": "exposed_development",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7892_v685_source_boundary/evaluator_1.jsonl",
+        "role": "evaluator_shards",
+        "sha256": "sha256:2564ccb54f2cc97f4661795f5b7c313a2ab6b4691b22671133bdf7ceca59e142"
+      },
+      {
+        "expected_sha256": "sha256:f5d16b28a7aa21706b85c6a0716744c3940b1f6bccf89297dac0043e08431e65",
+        "exposure": "exposed_development",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7892_v685_source_boundary/features_0.jsonl",
+        "role": "feature_shards",
+        "sha256": "sha256:f5d16b28a7aa21706b85c6a0716744c3940b1f6bccf89297dac0043e08431e65"
+      },
+      {
+        "expected_sha256": "sha256:ff1838a153af50adc3e40295e27aad013bffea42a92f17b5ce0e0e36aa0d37a4",
+        "exposure": "exposed_development",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7892_v685_source_boundary/features_1.jsonl",
+        "role": "feature_shards",
+        "sha256": "sha256:ff1838a153af50adc3e40295e27aad013bffea42a92f17b5ce0e0e36aa0d37a4"
+      },
+      {
+        "expected_sha256": "sha256:8aa4fa74e8ab2e2802d2b4376cb5a51be5925db23193e5aeef29ce508a23acde",
+        "exposure": "exposed_development",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7892_v685_source_boundary/validation_logs/00_affected_pytest_8aa4fa74e8ab2e2802d2b4376cb5a51be5925db23193e5aeef29ce508a23acde.log",
+        "role": "qualified_source_validation",
+        "sha256": "sha256:8aa4fa74e8ab2e2802d2b4376cb5a51be5925db23193e5aeef29ce508a23acde"
+      },
+      {
+        "expected_sha256": "sha256:6e0c1bfb5dbf60b32121ce48b5ff04607364803ac757099b8a5721a04dc7d6fa",
+        "exposure": "exposed_development",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7892_v685_source_boundary/validation_logs/01_coverage_unit_6e0c1bfb5dbf60b32121ce48b5ff04607364803ac757099b8a5721a04dc7d6fa.log",
+        "role": "qualified_source_validation",
+        "sha256": "sha256:6e0c1bfb5dbf60b32121ce48b5ff04607364803ac757099b8a5721a04dc7d6fa"
+      },
+      {
+        "expected_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "exposure": "exposed_development",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7892_v685_source_boundary/validation_logs/02_coverage_cli_success_e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.log",
+        "role": "qualified_source_validation",
+        "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "expected_sha256": "sha256:5384a1c360dccccf4933afbb156c951bc252da40af9048263c3553bbe2749030",
+        "exposure": "exposed_development",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7892_v685_source_boundary/validation_logs/03_coverage_cli_failure_5384a1c360dccccf4933afbb156c951bc252da40af9048263c3553bbe2749030.log",
+        "role": "qualified_source_validation",
+        "sha256": "sha256:5384a1c360dccccf4933afbb156c951bc252da40af9048263c3553bbe2749030"
+      },
+      {
+        "expected_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "exposure": "exposed_development",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7892_v685_source_boundary/validation_logs/04_coverage_cold_replay_e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.log",
+        "role": "qualified_source_validation",
+        "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "expected_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "exposure": "exposed_development",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7892_v685_source_boundary/validation_logs/05_coverage_historical_cli_e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.log",
+        "role": "qualified_source_validation",
+        "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "expected_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+        "exposure": "exposed_development",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7892_v685_source_boundary/validation_logs/06_ruff_check_82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18.log",
+        "role": "qualified_source_validation",
+        "sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+      },
+      {
+        "expected_sha256": "sha256:177f260a5645724013185e4b140c7045cc39e56c0c97b120f5cb23599f85f0de",
+        "exposure": "exposed_development",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7892_v685_source_boundary/validation_logs/07_ruff_format_177f260a5645724013185e4b140c7045cc39e56c0c97b120f5cb23599f85f0de.log",
+        "role": "qualified_source_validation",
+        "sha256": "sha256:177f260a5645724013185e4b140c7045cc39e56c0c97b120f5cb23599f85f0de"
+      },
+      {
+        "expected_sha256": "sha256:5c0e9403142555d05cc1959eb978548f7737c00539a0f33070641f0860916e35",
+        "exposure": "exposed_development",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7892_v685_source_boundary/validation_logs/08_mypy_5c0e9403142555d05cc1959eb978548f7737c00539a0f33070641f0860916e35.log",
+        "role": "qualified_source_validation",
+        "sha256": "sha256:5c0e9403142555d05cc1959eb978548f7737c00539a0f33070641f0860916e35"
+      },
+      {
+        "expected_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+        "exposure": "exposed_development",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7892_v685_source_boundary/validation_logs/09_scoped_spec_coverage_6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867.log",
+        "role": "qualified_source_validation",
+        "sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867"
+      },
+      {
+        "expected_sha256": "sha256:d173bcc58c4ca7e8eab98a96f45beb1bb055f8c076e2c43814b345b4786554b4",
+        "exposure": "exposed_development",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7892_v685_source_boundary/validation_logs/10_e2e_015_d173bcc58c4ca7e8eab98a96f45beb1bb055f8c076e2c43814b345b4786554b4.log",
+        "role": "qualified_source_validation",
+        "sha256": "sha256:d173bcc58c4ca7e8eab98a96f45beb1bb055f8c076e2c43814b345b4786554b4"
+      },
+      {
+        "expected_sha256": "sha256:150b1a4c49d41aa1d34c49cf762a87044329805a4cba52d2d7be65e01964a9ae",
+        "exposure": "exposed_development",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7892_v685_source_boundary/validation_logs/11_e2e_016_fixture_150b1a4c49d41aa1d34c49cf762a87044329805a4cba52d2d7be65e01964a9ae.log",
+        "role": "qualified_source_validation",
+        "sha256": "sha256:150b1a4c49d41aa1d34c49cf762a87044329805a4cba52d2d7be65e01964a9ae"
+      },
+      {
+        "expected_sha256": "sha256:79c7063bc1c96f08171695e00f2c68f98efa65aae613ceff2ad0fe3335b5c922",
+        "exposure": "exposed_development",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7892_v685_source_boundary/validation_logs/12_e2e_016_replay_79c7063bc1c96f08171695e00f2c68f98efa65aae613ceff2ad0fe3335b5c922.log",
+        "role": "qualified_source_validation",
+        "sha256": "sha256:79c7063bc1c96f08171695e00f2c68f98efa65aae613ceff2ad0fe3335b5c922"
+      },
+      {
+        "expected_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "exposure": "exposed_development",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7892_v685_source_boundary/validation_logs/13_cold_feature_replay_0_e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.log",
+        "role": "qualified_source_validation",
+        "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "expected_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "exposure": "exposed_development",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7892_v685_source_boundary/validation_logs/14_cold_feature_replay_1_e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.log",
+        "role": "qualified_source_validation",
+        "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "expected_sha256": "sha256:692e83e649223740c6119dc5f19dc6a72d9a8b3c846db4b12839acc92ef7ce1c",
+        "exposure": "exposed_development",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7892_v685_source_boundary/validation_logs/15_coverage_combine_692e83e649223740c6119dc5f19dc6a72d9a8b3c846db4b12839acc92ef7ce1c.log",
+        "role": "qualified_source_validation",
+        "sha256": "sha256:692e83e649223740c6119dc5f19dc6a72d9a8b3c846db4b12839acc92ef7ce1c"
+      },
+      {
+        "expected_sha256": "sha256:e83b993f92b25e81a422544f29685440aedecd6c5847f679a3295cc5c6b4468a",
+        "exposure": "exposed_development",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7892_v685_source_boundary/validation_logs/16_coverage_report_e83b993f92b25e81a422544f29685440aedecd6c5847f679a3295cc5c6b4468a.log",
+        "role": "qualified_source_validation",
+        "sha256": "sha256:e83b993f92b25e81a422544f29685440aedecd6c5847f679a3295cc5c6b4468a"
+      }
+    ]
+  },
+  "prior_owned_attempts": [
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7979_v692_contract_methods/owned_attempts/5e1e1b834759e10ff40d3bd62e7699dd78c95d5f8bee33377d767694411ca546/primary.json",
+      "role": "failed_owned_attempt",
+      "sha256": "sha256:5e1e1b834759e10ff40d3bd62e7699dd78c95d5f8bee33377d767694411ca546"
+    }
+  ],
+  "scratch_root": "/tmp/exp7979-1pisjv9r"
+}

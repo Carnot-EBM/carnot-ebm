@@ -47385,3 +47385,21 @@ automation >=.20 and no extra false accepts. Require 32 evaluation clusters
 and eight per class. The spline cannot replace the registered primary.
 Risk-coverage thresholds are fixed before evaluation; no conformal guarantee.
 Synthetic distortion recovery is circular_positive, separate from human science.
+## V692 administrative evidence boundary (2026-10-01)
+
+### REQ-VERIFY-7979-V692
+
+Freeze future scoring and delayed feedback gates without executing science.
+Authority fixture acceptance is circular_positive and contributes zero independent
+sources. Historical positive counters cannot become current model invocations.
+Authenticate frozen producer identities and source bytes during cold replay.
+
+### SCENARIO-VERIFY-7979-CUSTODY
+
+A historically failed capstone stays disqualified while an honest producer date
+rollover remains valid. A changed source hash or forged date fails with exact
+path, hash, field, operator, expected and observed operands.
+
+Implementation: the V692 contract methods module freezes current scoring and
+delayed feedback methods. Its private custody and CLI tests reference this
+requirement. Imported historical failures retain their original verdicts.

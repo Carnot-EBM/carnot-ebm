@@ -88317,3 +88317,43 @@ Planning status, 2026-10-01: staged in
 not mark future experiment implementations complete. Validation passed the
 exact contract comparison, prior-failure/schema lint, exclusion lint and
 113 existing unit/CLI checks, including E2E-018's private authority routes.
+## V692 authority and methods invocation (2026-10-01)
+
+### REQ-REPORT-7979-V692
+
+Freeze thirteen ordered Exp7979–Exp7991 contracts from the visible table,
+V692 machine JSON and active YAML. Bind full prompts, gates, models and task
+digest. Preserve observed activation separately from consumed staging custody.
+Authenticate exact historical producer bytes and their own invocation dates;
+historical failures and conductor skip receipts remain historical evidence.
+Freeze eight public source features plus Qwen q, 640 unchanged roles, 96 reserved
+sources, class floors, six cost/Brier comparisons, delayed learning and retention
+gates before any numerical work. Record EBT, ARM-EBM, evidence alignment,
+delayed ACI and sparse spline mechanisms, adaptations and deferred scope.
+This administrative audit makes zero model calls and no scientific benefit claim.
+Owned validation failure disqualifies readiness; external absence blocks it.
+Publish one atomic primary with nested immutable validation evidence.
+
+### SCENARIO-REPORT-7979-AUTHORITY
+
+Accept matched current contracts. Reject deletion, reordering, duplicate ID,
+changed gate, prompt or source hash. Accept honest historical producer date
+rollover and reject forged identity. Preserve all thirteen V691 dispositions,
+including Exp7978's failed negative replay. No science branch requires this audit.
+
+### SCENARIO-REPORT-7979-VALIDATION
+
+Run private E2E-018 routes and consumer tests with the artifact guard enabled.
+Require nonempty 100 percent new statement coverage, scoped Ruff, strict mypy
+and spec coverage on actual tests. A negative CLI wrapper exits zero only after
+asserting inner exit one. Cold replay from outside the checkout without
+PYTHONPATH, terminal adversarial and strict row checks, and both live consumers
+bind the final primary bytes. Keep full-suite health separate from owned scope.
+The conductor owns ops and traceability reconciliation for this invocation.
+
+Implementation: `python/carnot/reporting/v692_contract_methods.py` and
+`v692_contract_validation.py`, exposed through
+`scripts/experiments/experiment_7979_v692_contract_methods.py`.
+`tests/python/test_experiment_7979_v692_contract_methods.py` checks current
+authority, exact historical custody, negative CLI exits and private publication.
+The primary's frozen manifest and terminal sidecar retain observed qualification.
