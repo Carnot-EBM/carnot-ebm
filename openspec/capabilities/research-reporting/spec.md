@@ -88588,3 +88588,56 @@ bytes. Execution SHALL authenticate receipt and log hashes, retain failed
 health outcomes, and exclude reused health commands from current observations.
 Save fresh health receipts for subsequent runs; never relabel them as a current
 global pass.
+
+## REQ-REPORT-7990: Preserve board custody and bound the fitted-head service
+
+Exp7990 SHALL pin Exp7977 and Exp7989 primary bytes, terminal receipts and
+imported source bytes. Historical producer dates and execution scope SHALL
+remain separate from the current 20261001 invocation at milestone 2026.10.692.
+KV260 qualifies only quadratic Ising with k_max<=5. PolarFire qualifies Linux
+CPU dispatch only. GateMate retains the unchanged 0xffffffff physical/JTAG
+blocker. NPU and TSU remain unqualified. No device probe or model call is made.
+
+### SCENARIO-REPORT-7990-CUSTODY
+
+Private fixtures SHALL preserve three board rows, exact receipt hashes and
+current evidence ages. Missing or altered required bytes SHALL block with
+exact path/hash, field, operator, expected and observed operands. Service
+absence SHALL keep board custody but block mapping and readiness.
+
+### SCENARIO-REPORT-7990-MAPPING
+
+Map every measured Exp7989 arm, storage mode and operation to authenticated
+board capabilities. Preserve sparse spline coefficient touches, host work,
+final readout, persistence and unknown learning costs. A future fixed-point
+LUT needs a new implementation, precision parity and complete-service timing.
+The existing KV260 overlay SHALL NOT be described as executing that head.
+For compatible fraction f, report 1/(1-f) and
+1/((1-f)+f/100+transfer_time/total_time). Unknown transfer with zero transfer
+assumed SHALL be labeled an optimistic estimate. No compatible kernel gives
+a complete null, never measured acceleration or a purchase recommendation.
+
+### SCENARIO-REPORT-7990-VALIDATION
+
+Freeze commands before audit work. Required owned tests, private CLI custody
+and hash-tamper replay, nonempty 100% new-statement coverage, scoped Ruff,
+strict mypy and spec checks SHALL have actual exits and hash-bound logs.
+Cold replay SHALL work outside the checkout without PYTHONPATH. Final-byte
+adversarial and strict row checks and both readers SHALL bind one atomic
+primary with nested sidecars. Owned failures disqualify and zero readiness.
+Full-suite health SHALL remain separate. No physical board E2E applies.
+The conductor owns ops/status, ops/changelog and traceability reconciliation.
+
+Implementation: `python/carnot/reporting/experiment_7990_v692_hardware_evidence.py`
+reuses Exp7977 custody and Exp7989 cold reduction. `validation_7990.py` freezes
+private checks and uses the existing child supervisor and atomic publisher.
+The bounded script bootstraps imports outside the checkout. Tests in
+`tests/python/test_experiment_7990_v692_hardware_evidence.py` cover board custody,
+blocked current producer hashes, archived private fixtures and cold tampering.
+Current Exp7989 code/test drift is an external block. Private archived bytes
+exercise the valid mapping path without replacing or repairing its primary.
+
+An invalid required source chain SHALL stop before fitted-head replay. A
+private validation timeout SHALL remain preserved with its original deadline,
+exit and log hash. A later bounded attempt SHALL record changed code and its
+own command plan; it SHALL NOT erase or relabel the failed attempt.

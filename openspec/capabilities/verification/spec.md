@@ -47572,3 +47572,22 @@ Storage-repair verification SHALL reopen the response on the declared volume,
 check its filesystem observation, and cold-replay the same paired timing rows.
 Health-reuse verification SHALL preserve failed historical diagnostics and
 reject altered receipt bytes without launching a new full-suite child.
+
+## REQ-VERIFY-7990: Reject acceleration and custody overclaims
+
+Cold reduction SHALL reconstruct board custody, service placement, coefficient
+touches and conditional bounds from exact upstream bytes. Synthetic fixtures
+SHALL NOT establish accelerator performance or independent scientific benefit.
+
+### SCENARIO-VERIFY-7990-BOUNDS
+
+Tests SHALL exercise nonzero compatible fractions, known and unknown transfer,
+invalid operands and complete-kernel limits. Unknown acquisition and learning
+costs SHALL remain unknown. Current pretrained loads and generation calls are
+zero; imported fitted heads SHALL remain separate trained_head_specs.
+
+### SCENARIO-VERIFY-7990-REPLAY
+
+Private cold replay SHALL reject altered board receipts, operation mappings,
+readiness and aggregate bounds. Disqualification requires failed owned check
+receipts. Immutable logs SHALL be archived only after supervised children exit.
