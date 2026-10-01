@@ -47764,3 +47764,15 @@ uses a label-free predictor and separate reporting evaluator.
 `tests/python/test_typed_development_7997.py` and
 `tests/python/test_experiment_7997_v693_typed_development_decisions.py`
 verify the frozen decision and custody requirements.
+
+## REQ-VERIFY-7998: Selected-label update boundary
+
+The sparse learner receives only public observations and due selected labels.
+All adaptive arms share basis, initial coefficients, temperature and optimizer.
+A prediction must reach durable storage before its due feedback can be requested.
+Keep missing slots and pending terminal feedback. Dense-gradient parity checks
+use identical selected past labels. No pretrained model is invoked.
+
+Implementation: `python/carnot/verify/selective_feedback_7998.py` implements
+selected due-label updates and independent dense parity. Its matching unit tests
+trace to REQ-SELF-7998 and REQ-VERIFY-7998.

@@ -29931,3 +29931,38 @@ uses a label-free predictor and separate reporting evaluator.
 `tests/python/test_typed_development_7997.py` and
 `tests/python/test_experiment_7997_v693_typed_development_decisions.py`
 verify the frozen decision and custody requirements.
+
+## REQ-SELF-7998: Randomized delayed sparse adaptation
+
+Exp7998 starts from Exp7996 spline seed 17 and calibrates only temperature by
+calibration Brier with tie order 1, .5, 2. Freeze rate .01, L2 .001, typed costs,
+coefficients and acquisition before stream-label access. Only 256 stream slots
+may train; retention targets stay sealed. Targeted acquisition has pi=.5 inside
+[.05,.75], .125 outside and zero for ineligible public observations. Uniform pi
+is sum(targeted pi)/eligible count. Seeds 101 through 120 share one deterministic
+source/seed draw across arms. Report expected and realized budgets separately.
+
+Compare targeted IPW, targeted unweighted, uniform IPW, full feedback and frozen
+no-write. IPW weights are exactly 1/pi, at most 8, without clipping; L2 decay is
+unweighted. Full feedback is a descriptive upper-budget reference. Issue and
+persist prediction/action at t before releasing selected origin t-20. Never
+compress slots or flush terminal pending labels. Update once per due receipt.
+Atomic state stores coefficients, pending due times, RNG identity, seen IDs and
+checksum. Report physical coefficient touches and durable bytes.
+
+### SCENARIO-SELF-7998-CAUSAL
+
+Future and never-selected label mutation leave earlier predictions unchanged.
+Duplicate receipts do not update twice. Restart at slot 128 equals uninterrupted
+execution. Sparse updates match independent dense gradients on identical labels.
+A circular known-benefit fixture changes future predictions; a no-headroom
+fixture asserts no benefit. Save past-label shuffle separately. Twenty schedules
+are not twenty independent datasets. Exp7999 alone decides natural benefit.
+
+Implementation: `python/carnot/verify/selective_feedback_7998.py` stores issued
+and committed slot receipts. `tests/python/test_selective_feedback_7998.py`
+checks delayed custody, mutation invariance, interrupted issuance at slot 128,
+idempotence, sparse/dense parity, controls and corrupt checkpoint rejection.
+The separate shuffle diagnostic samples only selected labels whose origin is no
+later than the currently due receipt. It records the sampled origin explicitly;
+reversing a complete stream is forbidden because that exposes future labels.

@@ -88908,3 +88908,33 @@ A prior stream-target read before prediction sealing is an owned custody
 failure. Preserve its receipt and run a frozen negative custody check.
 Later correct replay cannot erase this failure or restore readiness.
 Normalize authenticated generated responses to completed predictor inputs.
+
+## REQ-REPORT-7998: Selective feedback custody and terminal publication
+
+Freeze code, configuration and commands before measurements. Authenticate
+Exp7994/7995/7996 immutable bytes; Exp7997 success is not required. Save raw
+acquisition, prediction, reveal, update and checkpoint rows with source/arm/seed,
+numerators, denominators, eligibility and failure/censor status. Retention labels
+remain sealed. Current pretrained calls are zero; fitted heads are separate.
+Complete valid mechanism is null, blocked prerequisites name exact operands,
+and owned failures disqualify with readiness zero. Require nonempty 100 percent
+new-statement coverage, private CLI success/blocked/cold replay, E2E-019,
+consumers, scoped Ruff, strict mypy and explicit spec checks. Run full-suite
+health once and preserve existing failures. Validate actual private candidate
+bytes with unchanged adversarial and strict row validators and both conductor
+readers before publishing. The conductor owns ops and BMAD reconciliation.
+
+### SCENARIO-REPORT-7998-CLI
+
+Private real CLI routes keep the artifact guard enabled. Cold reconstruction
+rejects changed primitive rows or checkpoint hashes. Validation commands, exit
+codes and logs bind to this invocation. Final-byte receipts remain in a sidecar.
+
+Implementation: `python/carnot/experiment_7998_v693_selective_feedback_learning.py`
+and its script expose private publication and cold replay. The validation helper
+freezes real commands; the matching CLI tests trace to REQ-REPORT-7998. Current
+terminal readiness and repository-health receipts live in the checked artifact.
+After an owned fix, regenerate owned receipts. A prior full-suite attempt may be
+retained by its exact log hash, command, exit status, producer date and immutable
+configuration receipt. Audit that reference with a real CLI command and label
+it historical; never count it as a current passing check or run the suite twice.
