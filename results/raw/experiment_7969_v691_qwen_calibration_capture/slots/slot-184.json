@@ -1,0 +1,109 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.5513917910284363,
+  "exclusion_reason": null,
+  "family_id": "sha256:e39c9d8f09a382a16ea3cfd1dda0fb7b75ece28a81a81bddf419877bf59c3816",
+  "input_tokens": 958,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 958,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 981
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:84995a6461bde7731e488ba7b2698d3992123d3af68952c815772f9adfe86502",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832723,
+    "id": "chatcmpl-i8EyBxwNekxjJZP6bGL83SCxv8UHGNth",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.0,
+      "predicted_n": 23,
+      "predicted_per_second": 42.513863216266174,
+      "predicted_per_token_ms": 23.52173913043478,
+      "prompt_ms": 880.236,
+      "prompt_n": 880,
+      "prompt_per_second": 999.7318900840229,
+      "prompt_per_token_ms": 1.0002681818181818
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 958,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 981
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:There are five main types of cars you can request, each with different pricing, and pricing also varies by city. Surge pricing also applies when demand for rides exceeds supply. uberX: The low-cost Uber seats 4. In San Francisco the fare is $2.20 plus $0.26 per minute plus $1.30 per mile.In New York City the fare is $3 plus $0.40 per minute plus $2.15 per mile.uberXL: Seats 6.In San Francisco the fare is $5 plus $0.45 per minute plus $2.15 per mile. In New York City the fare is $4.50 plus $0.60 per minute plus $3.25 per mile. uberTAXI: A normal taxi ride, except requests and payment are done via Uber.berXL: Seats 6. In San Francisco the fare is $5 plus $0.45 per minute plus $2.15 per mile. In New York City the fare is $4.50 plus $0.60 per minute plus $3.25 per mile. uberTAXI: A normal taxi ride, except requests and payment are done via Uber.\\\\n\\\\npassage 2:1 As of 2014, there is a $15 minimum for all rides. 2  The official Uber.com blog notes that the average ride is going to be double of a cab ride; however, when you put everything in perspective, it is well worth it when you factor in your valuable time. Otherwise, the fee is calculated on a time basis below that speed. 2  If you download the app, you will be able to get an estimate based on your current location and final destination. 3  On average, be prepared to spend about $8 for a base price and up to $5 per mile.\\\\n\\\\npassage 3:How to Estimate Your Uber Fare. The fare you'll owe from the car service Uber will depend on various different factors such as city, distance, and type of car.You can use a few pieces of info to estimate it though.croll down a little more to where it says Sample Fares. . This will give you examples of how much trips in your local city will tend to cost for each car type. This should help you estimate. You can also ask the Twitter contact from Uber in your city about what the rate would likely be.\\\\n\\\\n\\\",\\\"question\\\":\\\"cost of an uber\\\"}\", \"original_answer\": \"Based on the given passages, the cost of an Uber ride varies depending on the city, type of car requested, and distance traveled. In San Francisco, the cost of an UberX ride starts at $2.20 plus $0.26 per minute and $1.30 per mile, while in New York City, it starts at $3 plus $0.40 per minute and $2.15 per mile. For a larger vehicle, such as an UberXL, the cost is higher, starting at $5 plus $0.45 per minute and $2.15 per mile in San Francisco and $4.50 plus $0.60 per minute and $3.25 per mile in New York City. Additionally, there is a $15 minimum for all rides and the cost can also vary based on surge pricing during times of high demand. It's estimated that the average ride is double the cost of a traditional taxi, but the cost can vary depending on the specific circumstances. To get a more accurate estimate, users can use the Uber app to calculate the fare based on their current location and final destination.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:06999674853e90c6a48a475f32aedfbc7121cf4af0caf666f6dd8109cc4b1971",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17
+  ]
+}

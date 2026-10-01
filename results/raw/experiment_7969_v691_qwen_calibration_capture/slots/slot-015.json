@@ -1,0 +1,123 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.4978585360222496,
+  "exclusion_reason": null,
+  "family_id": "sha256:72f42ad4e7fcf40afe091d278066749fd19eefe5a31a6e00a98b464c84770836",
+  "input_tokens": 908,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 908,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 932
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:07de754abf16ef10bf231d4c22e6b19f248ef63a7e16ae008bf6b86bc242a02d",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832491,
+    "id": "chatcmpl-w2YrObFoA0tCJf8q73VnJRQmgLyqvW04",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 557.774,
+      "predicted_n": 24,
+      "predicted_per_second": 43.028179872134594,
+      "predicted_per_token_ms": 23.240583333333333,
+      "prompt_ms": 826.438,
+      "prompt_n": 830,
+      "prompt_per_second": 1004.3100631868331,
+      "prompt_per_token_ms": 0.9957084337349398
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 908,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 932
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Big Brother 25 spoilers: Eviction nominees set after Veto Meeting\\nThe Big Brother 25 Veto Meeting just took place.\\nThis means the final nominations for Week 9 are set.\\nCameron Hardin won the Head of Household Competition, allowing him to set the targets.\\nCameron put Felicia Cannon and Mecole Hayes on the block at the Nomination Ceremony.\\nThis led to Felicia trying to make a BB25 deal with Cameron, but he turned her down.\\nFelicia also came up short of saving herself at the Veto Competition.\\nThe Power of Veto winner gets to set the terms\\nBlue Kim, America Lopez, and Matt Klotz also got to play in the Veto Competition this past weekend.\\nThe six houseguests played in an extensive challenge to decide the POV winner.\\nCameron also chatted with his alliance members about possibly planning a backdoor plan.\\nCameron, Jag Bains, and Matt Klotz had numerous chats about what to do this week.\\nBut Matt can\u2019t keep secrets and chatted about everything he learned with Cirie Fields. Again.\\nCameron won the Power of Veto on Saturday. Would he choose to shake things up?\\nDid Cameron use the Power of Veto this week?\\nThe Veto Meeting took place on Monday, where many Big Brother fans felt Cameron could go after a big target.\\nThe feeds were down much longer than usual for the meeting. It led to some anxious people in the chats.\\nWhen the feeds did return, many people were handing out in the HOH Room, and a chat broke out about fantasy football.\\nFelicia left the group, and that\u2019s when people began discussing what had happened at the Veto Meeting.\\nCameron did not use the Power of Veto. There is no backdoor option for the Week 9 Eviction Ceremony.\\nOn October 5, Felicia Cannon or Mecole Hayes will be sent home.\\nThis is the final person going home before the jury phase begins.\\nAs a reminder, host Julie Chen Moonves announced that there are only seven members of the BB25 jury.\\nCBS shifted the days and nights for upcoming Big Brother episodes, including taking away Wednesday night content.\\nHere is the updated BB25 episode schedule for October.\\nAnd Jared Fields has been giving exit interviews now that he is outside the house. He has spoken about his showmance with Blue Kim, leaving his mother (Cirie) behind, and mistakes he made playing Big Brother.\\nBlue Kim was seen sending Jared a message through the live feeds.\\nPrevious episodes of Big Brother 25 are available for streaming on Paramount+.\\nBig Brother 25 airs on CBS.\", \"original_answer\": \"Here is a summary of the article in 106 words:\\n\\nThe latest Big Brother 25 spoilers reveal that Cameron Hardin won the Head of Household Competition and nominated Felicia Cannon and Mecole Hayes for eviction. The Power of Veto competition was held, and the winner, Blue Kim, was unable to save either of them. Cameron did not use the Power of Veto, and Felicia will likely be evicted on October 5. This marks the final eviction before the jury phase begins.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:86cad7ee5986d732592e832bb44fded1c24c923ee37552403a9e04c51d040edc",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31
+  ]
+}

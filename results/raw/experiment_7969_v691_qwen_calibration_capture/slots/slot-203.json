@@ -1,0 +1,98 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.189317445969209,
+  "exclusion_reason": null,
+  "family_id": "sha256:d4d11df0e6a8d8b696fd43904919e8c7d37ed9a87dd7dd4c46b8c99444d7c04d",
+  "input_tokens": 528,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 528,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 552
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:905390638b905f8a554d87bbecd613966e13b2a60f21e235c2581a3cc8c122c7",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832752,
+    "id": "chatcmpl-6udR4iwOOOhcIOv4LbYWUr6PXioyH0bJ",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.043,
+      "predicted_n": 24,
+      "predicted_per_second": 42.47464352270535,
+      "predicted_per_token_ms": 23.543458333333334,
+      "prompt_ms": 503.133,
+      "prompt_n": 450,
+      "prompt_per_second": 894.395716440782,
+      "prompt_per_token_ms": 1.1180733333333333
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 528,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 552
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:A sigma bond is the end-to-end overlap of the bonding orbitals, usually hybrid orbitals. The sigma bond is a single bond. A pi bond is the side-to-side overlap of unhybridized p-orbitals. A pi bond, along with a sigma bond form a double bond. sigma bond is used in hybridization but pi bond when dealing with saturated molecules is not used,that is double bonds.The oygen molecule is sp hybridized have you ever reasoned or found out why.\\\\n\\\\npassage 2:In organic chemistry sigma bonds (\u03c3) are always the first bond between two atoms, resulting from overlap along the bonding axis (of hybrid orbitals), while pi bonds (\u03c0) are second and third bonds resulting from the overlap of p orbitals, above and below (or in front and back of) the bonding axis.\\\\n\\\\npassage 3:The number of hybrid orbitals formed is always equal to the number of atomic orbitals taking part in hybridization. The hybrid orbitals repel each other and tend to be farthest apart. Hybrid orbitals forms only sigma(\u03c3 bonds) \u03c3 and pi bonds(\u03c0 bonds)are formed by unhybridised orbitals.\\\\n\\\\n\\\",\\\"question\\\":\\\"the difference between pi bonds and sigma bonds\\\"}\", \"original_answer\": \"Based on the given passages, a sigma bond is formed by the end-to-end overlap of hybrid orbitals, while a pi bond is formed by the side-to-side overlap of unhybridized p-orbitals. Sigma bonds are always the first bond between two atoms and are used in hybridization, while pi bonds are second and third bonds and are formed by unhybridized orbitals. Sigma bonds are used in saturated molecules, such as single bonds, while pi bonds are used in unsaturated molecules, such as double bonds.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:0e6e1cb21d855384010593279f6e378fb5043e83b87082e5916882b713954824",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ]
+}

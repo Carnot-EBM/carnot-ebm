@@ -1,0 +1,99 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.2290042340173386,
+  "exclusion_reason": null,
+  "family_id": "sha256:b522351c1adf0d5f7e2840d89fa19ed5e80a8a65efcf266eb954e87474d406f7",
+  "input_tokens": 580,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 1,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 580,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 604
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:819d37f3e3182cc4b4399bceb95e9cacb78a828196db37a9b917aa97d192dfa7",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 1\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832712,
+    "id": "chatcmpl-Y6jsyPBfZosiwuGO4L7rBEs0vSrWf8rg",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.919,
+      "predicted_n": 24,
+      "predicted_per_second": 42.483966727973396,
+      "predicted_per_token_ms": 23.538291666666666,
+      "prompt_ms": 535.049,
+      "prompt_n": 502,
+      "prompt_per_second": 938.2318254963565,
+      "prompt_per_token_ms": 1.0658346613545817
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 580,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 604
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:(Answer #1). The Berlin Airlift happened in 1949. It was a time when the American and British air forces supplied the city of West Berlin with everything it needed to survive -- everything from food to coal.It all had to be flown in.he reason it happened is that the Russians had cut off access from the Allied zones of occupation in West Germany to West Berlin, which was in the Russian zone (what became East Germany). So the Allies had to either surrender West Berlin or they had to supply it by air.\\\\n\\\\npassage 2:The second reason for the Berlin Blockade was that the USA and the USSR had different Aims for what they wanted to do to Germany. The USSR had already disagreed with Britain and the USA at Potsdam (July 1945) about this.he next day the Russians stopped all road and rail traffic into Berlin. The Americans claimed that Stalin was trying to force the USA out of Berlin, and that the blockade was Russian empire-building in eastern Europe.\\\\n\\\\npassage 3:The Berlin Airlift occurred after World War 2. When Germany surrendered, the four major countries of the Allies were placed in charge as occupation forces.The four countries were USA, Britain, France and Russia.nswer       The relief provided by air by America, Britain and France to West Berlin when it was blockaded by Stalin's Soviet Union in 1948-49. It lasted for ab \u2026 out 11 months until the Soviet Union abandoned the blockade.\\\\n\\\\n\\\",\\\"question\\\":\\\"why did the berlin blockade happen\\\"}\", \"original_answer\": \"The Berlin Blockade happened because the Soviet Union, led by Stalin, cut off access from the Allied zones of occupation in West Germany to West Berlin, which was in the Russian zone. This was done as the USA and USSR had different aims for what they wanted to do with Germany, and the USSR disagreed with Britain and the USA's plans. The Americans claimed that Stalin was trying to force the USA out of Berlin, and that the blockade was Russian empire-building in Eastern Europe.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:6d28245b0920a671cda875c06ccac288bec00a346c1cad7e02b422f53e527cab",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ]
+}

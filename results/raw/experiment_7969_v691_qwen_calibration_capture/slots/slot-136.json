@@ -1,0 +1,112 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.8045184430084191,
+  "exclusion_reason": null,
+  "family_id": "sha256:837dcfb0912195668fb3ca8a1c549792fd13ebdc2d8cdcd956c623c05e8bda1b",
+  "input_tokens": 1304,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": 1,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1304,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1327
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:648cdff6b856138515c2cbc41be9705b064f91dec60e609c20e9ddbae427cd76",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.95,\n \"source_sentence_id\": 1\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832659,
+    "id": "chatcmpl-3vxPgQM6ksEOUs4M13aSgbnJgxy6Ypmd",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.61,
+      "predicted_n": 23,
+      "predicted_per_second": 42.465981056479755,
+      "predicted_per_token_ms": 23.54826086956522,
+      "prompt_ms": 1146.535,
+      "prompt_n": 1226,
+      "prompt_per_second": 1069.3088305197834,
+      "prompt_per_token_ms": 0.9351835236541599
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1304,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1327
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"214 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":null,\\\"divey\\\":false,\\\"hipster\\\":true,\\\"intimate\\\":null,\\\"romantic\\\":null,\\\"touristy\\\":false,\\\"trendy\\\":true,\\\"upscale\\\":null},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":false,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Breweries, Bars, Burgers, Mexican, Tacos, Cocktail Bars, Club Crawl, Breakfast & Brunch, Beer Bar, Nightlife, Restaurants, Food\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":null,\\\"name\\\":\\\"The Project -- Coraz\u00f3n Cocina & Taproom\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-12-02 16:15:44\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"Wanted to have a great experience here when they reopened but it was pretty ok. \\\\n\\\\nWe arrived and we're seated quickly which was great and they accommodated getting us in a spot where a baby car seat could easily fit next to our table outside. \\\\n\\\\nThe menu seems to be a lot smaller and different than the previous menu at the project which we were bummed about. \\\\n\\\\nWhen our waiter first came over I let them know I had a few dietary restrictions, he seemed unsure about how to answer my questions so bc of his uncertainties he just said I shouldn't order basically anything. When I asked him to check with the kitchen he initially said no. After much pressing on this he finally went back and asked. I learned that the blue corn tortillas (which are gluten free at corazon) are not gluten free at the project. When he finally asked the kitchen they let him know they did have some pre made gluten free corn tortillas on hand that they could use to make a taco. It always is odd to me when restaurants make corn tortillas which are traditionally gluten free with gluten, this should be more clearly identified on a menu and staff should be more knowledgeable and willing to accommodate. \\\\n\\\\nOnce we finally got through the pain of ordering with our waiter we got our appetizer. We ordered the \\\\\\\"avocado\\\\\\\" which we assumed would be chips and guac. It was a little different but was delicious! The avocado dip had some sort of different season in it which made it delightful, would definitely recommend this! \\\\n\\\\nAs for the tacos, we all thought the old project menu had better options and decided we'd prefer to just get the tacos at corazon as we thought they are ultimately better.\\\\n\\\\nLove the fun vibe of the project, but we'll keep going to Corazon at public market where they have everything down to an art and customer service seems to be be more on par.\\\"},{\\\"review_date\\\":\\\"2021-10-10 17:32:30\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"Went here for dinner and had the steak and fries, as well as the mussels and clams. The steak had a chimichurri sauce that really overpowered the whole plate. I left most of it because of the overpowering taste, and it was not tender. The mussels and clams were pretty good, but not great (maybe a 3.5 out of 5 review, for that plate). The restaurant wasn't too busy and we never got a water refill. 2 stars for the pricey chewy steak  and subpar service.\\\"},{\\\"review_date\\\":\\\"2021-09-25 02:55:18\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"This was exceptional Mexican food. Wonderful, complex flavors that I never experienced before. A real treat.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"The Project - Coraz\u00f3n Cocina & Taproom is located at 214 State St in Santa Barbara, CA and operates in the Breweries, Bars, Burgers, Mexican, Tacos, Cocktail Bars, Club Crawl, Breakfast & Brunch, Beer Bar, Nightlife, Restaurants, and Food categories. The business hours are not available, but the location offers outdoor seating and has free Wi-Fi available. The business has a rating of 4.0 out of 5 stars, based on customer reviews. In one review, the customer had a positive experience at the project when they reopened but found that the menu was different from the previous menu. The customer also encountered difficulties in ordering due to the uncertainty of the waiter regarding their dietary restrictions. However, the customer enjoyed the avocado appetizer and the tacos at Coraz\u00f3n Cocina & Taproom, and recommended it as a superior option to The Project. Another review had a negative experience at the project, citing an overpowering chimichurri sauce on the steak and subpar service. However, a third review had a very positive experience with the complex flavors of the Mexican food, calling it a real treat. Overall, customers seem to appreciate the fun vibe of the location and enjoy the quality of the food and service.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:ed1a81a7d725337ea0fc75fc167264705e03a5f49d5a00780763c1b0be253a30",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20
+  ]
+}

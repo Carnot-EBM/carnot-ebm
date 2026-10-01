@@ -1,0 +1,119 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.7489420089987107,
+  "exclusion_reason": null,
+  "family_id": "sha256:0dacd562071c2a1fc4ba754af78bbc17214cb51bbc8c87544e8a81fb1209f02d",
+  "input_tokens": 1229,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1229,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1253
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:261c372c06212f7a209dca730fad703c78faeb6661555d78746b1d1bd9ae4eb9",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832539,
+    "id": "chatcmpl-7kpeRKWhXaKJrX2kH8hcvyj179Hm0Cq0",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 561.494,
+      "predicted_n": 24,
+      "predicted_per_second": 42.743110344901275,
+      "predicted_per_token_ms": 23.395583333333335,
+      "prompt_ms": 1064.778,
+      "prompt_n": 1151,
+      "prompt_per_second": 1080.9765040224347,
+      "prompt_per_token_ms": 0.9250894874022589
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1229,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1253
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"1295 Coast Village Rd\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":null,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":null,\\\"romantic\\\":true,\\\"touristy\\\":null,\\\"trendy\\\":null,\\\"upscale\\\":null},\\\"BusinessParking\\\":{\\\"garage\\\":true,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":true,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"French, American (New), Restaurants, Italian\\\",\\\"city\\\":\\\"Montecito\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"17:0-22:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"11:0-19:0\\\",\\\"Sunday\\\":\\\"17:0-22:0\\\",\\\"Thursday\\\":\\\"17:0-22:0\\\",\\\"Tuesday\\\":\\\"17:0-22:0\\\",\\\"Wednesday\\\":\\\"17:0-22:0\\\"},\\\"name\\\":\\\"Coast & Olive\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-11 19:46:36\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Excellent menu choices. It's not too much to completely overwhelm you. To start off the night, we were given a little bowl of lightly salted popcorn as something to munch on while looking at the menu. I love the little light and saltiness to whet the appetite before an actual meal. From the appetizers, we ordered artichoke hearts which was an excellent balance of herbiness and tartness. The French onion soup was pretty good but a little on the salty side and the organic egg ravioli. The ravioli was AMAZING. They place a lightly poached egg in the ravioli so when you cut it, it oozes with ricotta and yolk creaminess. To die for. From the entrees we had a truffle pappardelle which was very good. The fresh pasta was delicate and complimented the creamy truffle sauce. We also shared a garganelli filet Ragu. This wasn't as impressive but the portion sizes was very generous. We ordered three appetizers and two entrees for four people and left very satisfied. Service was also very good as we had two birthdays and they gave complimentary dessert to both of my friends.\\\"},{\\\"review_date\\\":\\\"2022-01-10 00:51:09\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Delicious fresh food.  Something for every palate! Don't leave without trying the chocolate chip skillet cookie with ice cream!\\\"},{\\\"review_date\\\":\\\"2022-01-06 21:41:10\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Coast and olive remains one of my favorites. Came here on a slow night and sat outside with heat lamps. \\\\nAgain- good service and great food. Had to get the dip duo again ( my fave) served with fresh delicious flatbread.\\\\n\\\\nThis time we tried the chicken piccata (excellent) , burger w/ side salad ( yummy), and the vanilla bean panna cotta for dessert ( good but not my favorite- reminded me of yogurt with granola).  \\\\nI also tried the espresso martini which was very tasty and appealing to the eye. At first, I ordered a chocolate martini and it didn't appear the way the cocktail list described it.. it was rather sad looking. I was imagining a frothy drink with chocolate sauce around.... But instead It looked like Coca Cola. Once I changed it to espresso martini.. voila! Perfect.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Coast & Olive is a restaurant located in Montecito, California that serves French, American (New), and Italian cuisine. The restaurant has outdoor seating and offers free Wi-Fi, takeout services, and reservations. Customers can park their cars either in the garage or on the street, and there is valet parking available. The restaurant's menu features a variety of appetizers, entrees, and desserts, with options for vegetarian and gluten-free diners. According to customer reviews, the restaurant offers delicious and fresh food with something for everyone. The chocolate chip skillet cookie with ice cream is highly recommended by some customers, while others praise the dip duo, which includes hummus, tzatziki, and pita bread. The truffle pappardelle and garganelli filet Ragu are also popular dishes. Overall, customers seem to enjoy the restaurant's ambiance, which is romantic and classy, and the friendly and attentive service.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:05c87f87068436a53924b4b56f4be0b5744d33c465b98161dafe1f5e76878fa5",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27
+  ]
+}

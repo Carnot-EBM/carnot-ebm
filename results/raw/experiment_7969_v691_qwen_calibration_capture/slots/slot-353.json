@@ -1,0 +1,111 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.5637586349621415,
+  "exclusion_reason": null,
+  "family_id": "sha256:23c416735bb1e2f04b77bd4f01e757b944ea9e129b28e4330aeb1dec20cd81f1",
+  "input_tokens": 949,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 949,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 973
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:ec439b67d9e2f36448dbd03dc43d75532760c403bdbb940784e8eb69a4e6072d",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832964,
+    "id": "chatcmpl-S26IXS4ykmP703f8UpQ3N1aWeaCb75c2",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.921,
+      "predicted_n": 24,
+      "predicted_per_second": 42.40874609707008,
+      "predicted_per_token_ms": 23.58004166666667,
+      "prompt_ms": 878.105,
+      "prompt_n": 871,
+      "prompt_per_second": 991.9087125116017,
+      "prompt_per_token_ms": 1.0081572904707232
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 949,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 973
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"1112 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":null,\\\"intimate\\\":true,\\\"romantic\\\":null,\\\"touristy\\\":null,\\\"trendy\\\":null,\\\"upscale\\\":null},\\\"BusinessParking\\\":{\\\"garage\\\":true,\\\"lot\\\":false,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Restaurants, Salad, Sandwiches, Italian, Pizza\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-21:0\\\",\\\"Monday\\\":\\\"11:0-21:0\\\",\\\"Saturday\\\":\\\"11:0-21:0\\\",\\\"Sunday\\\":\\\"11:0-20:0\\\",\\\"Thursday\\\":\\\"11:0-21:0\\\",\\\"Tuesday\\\":\\\"11:0-21:0\\\",\\\"Wednesday\\\":\\\"11:0-21:0\\\"},\\\"name\\\":\\\"MIZZA\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-12-30 23:46:31\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Great Italian place for both vegetarians and non vegetarians. We didn't order a lot of food, but everything we ordered was ready good. Butternut squash ravioli is a must try. It is on a richer side so someone with dairy sensitivity might find it too much. I'm dairy sensitive too, but it was so good I had to try couple bites. My friend almost licked the plate after finishing. Veggie pizza was fresh and juicy. Service was quick and of quality. We'll definitely be stopping by again.\\\"},{\\\"review_date\\\":\\\"2021-12-13 05:11:15\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Best meal I have had for a long time! My husband had the spaghetti and meatballs and was spicy. I had the chicken parmigiana. It had so many flavors!\\\"},{\\\"review_date\\\":\\\"2021-12-04 22:15:23\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Enjoyable lunch at Mizza with my son. Broccolini and carrots were delightful. So nice when veggies are not over or under cooked.  Chic parm was quite good but not amazing. I can say the same about the bruschetta. Nice outdoor seating with good heat sources when cold outside. Nice, friendly staff. Definitely recommend for people looking for creative twist to pasta, salad, and pizza. Bon appetitto!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"MIZZA is a popular Italian restaurant located in the heart of Santa Barbara, offering a creative twist on traditional pasta, salads, and pizzas. With a cozy and intimate atmosphere, the restaurant is known for its delicious dishes made with fresh ingredients and rich flavors. The menu includes a variety of options for both vegetarians and non-vegetarians, such as the must-try butternut squash ravioli and the flavorful veggie pizza. The service is prompt and attentive, and the outdoor seating area is a great spot to enjoy your meal on a nice day. Reviews praise the restaurant for its high-quality food, cozy ambiance, and friendly staff. With an average rating of 4.5 stars, MIZZA is a great choice for those looking for a tasty and satisfying meal in Santa Barbara.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:246e9e288cc9e7b05bfd536d749f0e1858c6e6a6690ee2f478a6d2085b156112",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ]
+}

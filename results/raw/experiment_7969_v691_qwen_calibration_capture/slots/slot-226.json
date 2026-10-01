@@ -1,0 +1,115 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.7011030860012397,
+  "exclusion_reason": null,
+  "family_id": "sha256:53ac642d90c6215a4d7de05b725515926b8aea7bfb2216ebde76a774933f032d",
+  "input_tokens": 1178,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1178,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1201
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:9ccffb08fe63381bc22ae783fae1cb1fdd319079b27890d58dc94d2e42804f8b",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832788,
+    "id": "chatcmpl-W6hYlq2OyNzD1YsWZdYTPAwMf2roNAYm",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.883,
+      "predicted_n": 23,
+      "predicted_per_second": 42.444586746585514,
+      "predicted_per_token_ms": 23.56013043478261,
+      "prompt_ms": 1049.343,
+      "prompt_n": 1100,
+      "prompt_per_second": 1048.2749682420333,
+      "prompt_per_token_ms": 0.9539481818181819
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1178,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1201
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"3987 State St, Ste B\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"American (Traditional), Bakeries, Restaurants, Italian, Breakfast & Brunch, Food\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-20:0\\\",\\\"Monday\\\":\\\"11:0-20:0\\\",\\\"Saturday\\\":\\\"11:0-20:0\\\",\\\"Thursday\\\":\\\"11:0-20:0\\\",\\\"Tuesday\\\":\\\"11:0-20:0\\\",\\\"Wednesday\\\":\\\"11:0-20:0\\\"},\\\"name\\\":\\\"Fresco Cafe\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-13 13:09:25\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"The Walnut Gorgonzola salad never disappoints. Ordered with a scoop of chicken salad, it is the perfect meal. The mixed greens are fresh with the proper ratio of walnuts and Gorgonzola. The chicken salad is tasty and tender, but seems to be lacking in something for added flavor, a little lemon or dill perhaps for some added zest. Ordering is easy, and there is ample dining outdoors. Fresco Cafe is definitely on my go to list for a delicious meal.\\\"},{\\\"review_date\\\":\\\"2021-12-31 02:24:26\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"I've eaten at Fresco on and off for the past 15 years. I stopped by on 12/30 at 4:30 pm to pick up a quick order of fries, soup and desserts. After paying, I walked by the open kitchen to wait for my order and noticed that one of the cooks was NOT WEARING A MASK and was USING HIS HANDS TO EAT WHILE ALSO PREPPING FOOD IN THE KITCHEN. I was shocked, especially based upon the skyrocketing COVID cases in the past few days. I spoke with the manager and asked for a refund. He was very nice but explained that this was his first shift and he did not know how to issue a refund. I asked for the contact information for the owner and he was unable to provide this (said they were out of business cards). He promised me that if I left my number someone would contact me.\\\"},{\\\"review_date\\\":\\\"2021-12-22 20:12:27\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Really great locals joint... used to live/work nearby and would eat here almost every day. Huge selection of different types of food, good cupcakes & chocolate cake, Arnold Palmer unlimited refills, friendly & efficient staff! Delicious salads the Gorgonzola walnut is classic. Their Saturday special Jack Daniels ribs & fries with Dijon are phenomenal. Best ribs in town with Carlitos. A terrific spot where you'll always know what to expect. The wraps are delicious as well. Pretty sure they have largest, most diverse salad selection in town. Their Ahi club is all worldly see photo. French club sandwiches are so half assed. Frescos is quality & savoir faire in club sandwich department.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Fresco Cafe is a popular local restaurant located in Santa Barbara, California, known for its American, Italian, and breakfast cuisine. The cafe has a cozy atmosphere with outdoor seating and offers take-out and good for groups options. According to customer reviews, the menu offers a diverse selection of salads, including the signature Walnut Gorgonzola salad, which is a favorite among regulars. The chicken salad is also a popular choice, but some customers have noted that it could benefit from additional seasoning. The restaurant has received positive reviews for its friendly and efficient service, and the staff is said to be knowledgeable about their offerings. However, one customer had a negative experience with a maskless cook in the open kitchen, which raises concerns about the cafe's commitment to COVID safety protocols. Despite this, Fresco Cafe remains a go-to spot for locals and visitors alike, offering delicious food and a welcoming atmosphere.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "tune",
+  "source_cluster_id": "sha256:80e2e1924e0f1156c199cfcad5052466733e3b14fec6e191a310a41c4f7cafd8",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23
+  ]
+}

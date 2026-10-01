@@ -1,0 +1,98 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.3284310409799218,
+  "exclusion_reason": null,
+  "family_id": "sha256:b54f3893f40e7b52bc29a4e8baf574248923332e91be18f239e220230c697e53",
+  "input_tokens": 714,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 714,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 738
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:f8d520d28300c131bb427e787c0c66197b396fcf61ca7343429325d093a06226",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832991,
+    "id": "chatcmpl-isuBKi1136BH2hsWr7vWeqQAbdA4vlk6",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.212,
+      "predicted_n": 24,
+      "predicted_per_second": 42.46194348315322,
+      "predicted_per_token_ms": 23.5505,
+      "prompt_ms": 642.509,
+      "prompt_n": 636,
+      "prompt_per_second": 989.8694026075899,
+      "prompt_per_token_ms": 1.0102342767295598
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 714,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 738
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"2840 De La Vina St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Pizza, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"12:0-21:0\\\",\\\"Monday\\\":\\\"12:0-21:0\\\",\\\"Saturday\\\":\\\"12:0-21:0\\\",\\\"Sunday\\\":\\\"12:0-21:0\\\",\\\"Thursday\\\":\\\"12:0-21:0\\\",\\\"Tuesday\\\":\\\"12:0-21:0\\\",\\\"Wednesday\\\":\\\"12:0-21:0\\\"},\\\"name\\\":\\\"Nicky D's Wood fired Pizza\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2018-07-21 17:37:28\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Excellent wood fired pizza. I ordered the Pesto Pizza with Ramano & Mozzarella Cheeses, Spinach, Artichoke, Chicken, Basil and Tomato. Perfect!\\\"},{\\\"review_date\\\":\\\"2018-06-03 02:28:58\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"The best pizza money can buy IN Santa Barbara hands down .. I met Nicky D he is always there on weekends great guy to talk 2 ..\\\"},{\\\"review_date\\\":\\\"2018-05-12 03:42:57\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"We just ate dinner here tonight! I Yelped pizza's nearby since we are from San Diego and I am so glad we found this place!!! It was sooooo good! Really good cheese and great flavor!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Nicky D's Wood Fired Pizza is a restaurant located at 2840 De La Vina St in Santa Barbara, California. They serve pizza and are open seven days a week from 12:00 PM to 9:00 PM. They have outdoor seating available and offer takeout and delivery services. According to customer reviews, their pizzas are of high quality and their staff is friendly. Many customers also praised the atmosphere and the value for money.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:9cef8b37ad1e6caa06faec6bb3735dcad7aa062267b6649bb3f446e9b6a8ca19",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ]
+}

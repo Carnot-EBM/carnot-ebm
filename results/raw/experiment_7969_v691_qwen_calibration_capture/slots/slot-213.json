@@ -1,0 +1,100 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.5768070630147122,
+  "exclusion_reason": null,
+  "family_id": "sha256:5fa538fad8406f39d6bdce1c3b20936f29a9d3640981a03550cd9943144bc44d",
+  "input_tokens": 1065,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 1065,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1086
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:946a9b5264a7142a30b2b5ab732efb090c8427b7bb9d3f9952e6401e3bde3803",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832767,
+    "id": "chatcmpl-jQHEs2Fx3HH0UcJ1ehr30N2sGUlviBu5",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 493.024,
+      "predicted_n": 21,
+      "predicted_per_second": 42.59427532939573,
+      "predicted_per_token_ms": 23.477333333333334,
+      "prompt_ms": 965.24,
+      "prompt_n": 987,
+      "prompt_per_second": 1022.5436160954789,
+      "prompt_per_token_ms": 0.9779533941236069
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 1065,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1086
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"119 Harbor Way\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Cocktail Bars, Fish & Chips, Nightlife, Seafood, Restaurants, Bars\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-16:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"11:0-16:0\\\",\\\"Sunday\\\":\\\"11:0-22:0\\\",\\\"Thursday\\\":\\\"11:0-22:0\\\",\\\"Tuesday\\\":\\\"11:0-22:0\\\",\\\"Wednesday\\\":\\\"11:0-22:0\\\"},\\\"name\\\":\\\"Brophy Bros - Santa Barbara\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-17 20:14:55\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"This place is AMAZING. Great service. Drinks are strong. Just the way I like them. The Hot Sampler is good for 2.\\\"},{\\\"review_date\\\":\\\"2022-01-16 22:13:42\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Can't order to-go in person\\\\nCan't order oysters/uni online\\\\nCan't bring dogs to their outdoor patio.\\\\nLines are pretty packed\\\\n\\\\nBut most importantly the waitress wasted my time by telling me their sister restaurant \\\\\\\"on-the-ally\\\\\\\" had their oysters and does take out, but they do not carry any of the seafood there.\\\\n\\\\nIm sure the food tastes great, too bad the accessibility is poor.\\\"},{\\\"review_date\\\":\\\"2022-01-15 23:57:51\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"My go-to seafood spot in Santa Barbara - casual, fresh seafood, friendly service, beautiful views of the Marina where you can literally watch the boats come in with seafood! Parking is difficult but folks are usually coming and going so we've always managed to score a spot. Check in with the hostess downstairs and if it's a typical beautiful day, try to get a table outside otherwise they also have indoor and bar seating too. My favorites are:\\\\n- Cold combo app: Nice variety, perfect to share and savor\\\\n- Clam chowder: Amazing!\\\\n- Fish and chips: Large, freshly fried fish and plentiful fries\\\\nThey also have cioppino here (a rare find) and a simple kids' menu but our kids and I dig the opportunity to eat seafood here\\\\nAlso a great place to wander around after lunch since the beach is right there ... and when we were last there they had sand hills that look perfect for sand sledding!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Brophy Bros - Santa Barbara is a seafood restaurant located at 119 Harbor Way in Santa Barbara, California. They offer a variety of dishes such as cocktails, fish and chips, nightlife, seafood, restaurants, and bars. The restaurant is open from Monday to Sunday and has several hours available each day. They offer street parking and a lot parking option but no garage parking or valet services. They do not accept reservations and have outdoor seating available. They also provide free WiFi and takeout options. The restaurant is classified as classy and casual. According to customer reviews, the drinks are strong, and the hot sampler is good for two people. However, some customers have had issues with ordering food for takeout and bringing dogs to their outdoor patio. Another customer was told that their sister restaurant \\\"on-the-ally\\\" had oysters and takes out but they did not carry any seafood there. Overall, the restaurant appears to be a popular seafood spot in Santa Barbara with a mix of indoor and outdoor seating options and a variety of dishes to choose from.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:8e0a356049305895b695351bfc9c3e32b0ee26e2d1d145f56bda376f52130f44",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ]
+}

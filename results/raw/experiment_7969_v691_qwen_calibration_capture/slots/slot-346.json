@@ -1,0 +1,104 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.651965865981765,
+  "exclusion_reason": null,
+  "family_id": "sha256:975a05522c1d830d5d310678bff0138fac0c2c9dbde89b92b73c3c4ff541c94c",
+  "input_tokens": 1106,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1106,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1129
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:e7950b79a7e13e826178e5b03b8f2b528b3c20f3b2fc15fbcdc37b96ee0d20ae",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832955,
+    "id": "chatcmpl-rFCflCLYPbQPtKiWESg1mRmBILS7l7ze",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.707,
+      "predicted_n": 23,
+      "predicted_per_second": 42.458376945470526,
+      "predicted_per_token_ms": 23.552478260869567,
+      "prompt_ms": 974.905,
+      "prompt_n": 1028,
+      "prompt_per_second": 1054.461716782661,
+      "prompt_per_token_ms": 0.9483511673151751
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1106,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1129
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"1485 E Valley Rd, Ste 14\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Delis, Nightlife, Bars, Food, Wine Bars, Restaurants, Coffee & Tea, Sandwiches, Wineries, Specialty Food, Arts & Entertainment, Cheese Shops\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"9:0-16:0\\\",\\\"Monday\\\":\\\"9:0-16:0\\\",\\\"Saturday\\\":\\\"10:0-15:0\\\",\\\"Thursday\\\":\\\"9:0-16:0\\\",\\\"Tuesday\\\":\\\"9:0-16:0\\\",\\\"Wednesday\\\":\\\"9:0-16:0\\\"},\\\"name\\\":\\\"Montecito Gourmet by Village Cheese & Wine\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-09-29 19:02:16\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Best sandwhich ever in my life and the people who work there are super cool people to talk to awesome place i'll be back tomarrow\\\"},{\\\"review_date\\\":\\\"2021-09-20 04:59:33\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Patrick was absolutely incredible, and the food and coffee were above and beyond.\\\\nIn addition to that, the place itself has the most inspiring story - highly recommended to come and hear the story, enioy the fresh coffee, and last but not least - unparalleled sandwiches (with mind boggling selection of cheese and meats).\\\"},{\\\"review_date\\\":\\\"2021-08-31 16:13:17\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Tucked away in the back corner of a modest looking shopping center in Montecito, this place was jammin! Owner Patrick was working alone and kicking ass! I was wondering why the sandwiches were taking longer than I expected, but then I realized that the few single people before us were ordering multiple Sammys. No doubt the take out orders were rolling in too. Patrick still made time to chat with customers and hand out free samples of delicious charcuterie. While we were eating outside, he kept bringing us more samples. The meats and cheeses and bread were of the highest quality and my \\\\\\\"Italian style\\\\\\\" sub on a heavenly soft French roll was the best I've ever had. This coming from a private chef/food fanatic. Charming side note: this place has been here since 1973 and was handed down from father to son.  From what I've read, Patrick's father John was beloved in the community. Well known to Montecito locals but new to this Venturan, I will definitely be back to this hidden gem. Seating is limited but there's a pretty, grassy area in the shopping center that would make for a lovely picnic. Keep up the good work and good works Patrick, of charity and community involvement.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Montecito Gourmet by Village Cheese & Wine is a highly rated local business in Santa Barbara, CA. The establishment boasts a diverse array of offerings, including deli services, nightlife and bar facilities, coffee and tea, sandwiches, and specialty food, among others. It operates from 9:00 AM to 4:00 PM from Monday to Friday and 10:00 AM to 3:00 PM on Saturdays. The venue offers free WiFi, takeout options, and is suitable for groups, although it does not take reservations. Many positive reviews praise the quality of the sandwiches, with one reviewer calling it the \\\"best sandwich ever\\\". The staff, particularly the owner Patrick, is commended for their service. The business has a rich history, having been in operation since 1973 and handed down from father to son. It has a rating of 4.5 stars. There's a lot available for parking, but no outdoor seating is mentioned.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "calibration_replay",
+  "source_cluster_id": "sha256:5520f4bfb831f0b3708ce6dc937feed239b22a2f28cffd3059d4d67bfba0f7db",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ]
+}

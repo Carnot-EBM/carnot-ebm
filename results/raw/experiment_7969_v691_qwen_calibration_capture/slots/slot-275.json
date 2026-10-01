@@ -1,0 +1,112 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.304157620004844,
+  "exclusion_reason": null,
+  "family_id": "sha256:1329119114988b47b07f5044b889f95550cca27e1091e6132d32999142753d7d",
+  "input_tokens": 691,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 691,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 714
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:b78790f6dc998868e04b15d58c04968922b60b0e14c0bbad77e643ac0900a3c0",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832859,
+    "id": "chatcmpl-CPJHgdjzk1HDZMrgYr2fbelLQZzW30Nl",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.634,
+      "predicted_n": 23,
+      "predicted_per_second": 42.54264437678725,
+      "predicted_per_token_ms": 23.50582608695652,
+      "prompt_ms": 629.677,
+      "prompt_n": 613,
+      "prompt_per_second": 973.5149926073209,
+      "prompt_per_token_ms": 1.027205546492659
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 691,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 714
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"'Young and the Restless' Spoilers: Is Courtney Hope Leaving 'Y&R'? The Soap Star Responds\\nThe Young and the Restless (Y&R) spoilers tease that Sally Spectra (Courtney Hope) could be leaving Genoa City. Courtney Hope replied to a comment on her Instagram, clearing up the pesty rumor of her exit.\\nA Y&R fan replied to one of Hope's posts, stating she will miss her when she leaves the CBS soap opera. She praised her acting abilities, noting that it was sad that she was leaving the show.\\nCourtney responded, \\\"I am not leaving. I am not going anywhere:)\\\"\\nIn July, Soap Opera Spy reported that Courtney could leave the soap to return to The Bold and the Beautiful. It never happened, and so far, it appears she isn't planning on a soap jump.\\nThe soap publication supported their claims of Hope's departure by pointing out her absence for a few weeks. Sally had a miscarriage and left for Los Angeles to reconnect with her family.\\nHope stated her disappearance from The Young and the Restless was a vacation. She had been on the show daily for several months. The actress earned a well-deserved break.\\nNow, she's back on the show and is gearing up to open her fashion house in Genoa City. She still needs to decide what Newman brothers is right for her. Eventually, she will have to make a decision. Y&R viewers expect her to pick Adam Newman (Mark Grossman), which could reignite another battle between Adam and Nick Newman (Joshua Morrow).\\nY&R fans, are you glad Courtney Hope isn't leaving the show? Keep watching The Young and the Restless, airing weekdays on CBS and streaming on Paramount Plus. Please share your thoughts with me in the comments section below. Remember to follow me to read more of my content.\", \"original_answer\": \"Courtney Hope, who plays Sally Spectra on The Young and the Restless, has responded to rumors of her leaving the show. She clarified on Instagram that she is not going anywhere. There were previous reports suggesting she might leave to return to The Bold and the Beautiful, but it seems she is staying put for now. Hope had taken a break from the show, but it was just a vacation, and she has since returned. Y&R viewers are speculating about her character's future and who she will choose between Adam and Nick Newman.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "calibration_replay",
+  "source_cluster_id": "sha256:b5352431ea9423438da6dec3db9934c8d27ccdbf23527640cb7a7e557274de10",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20
+  ]
+}

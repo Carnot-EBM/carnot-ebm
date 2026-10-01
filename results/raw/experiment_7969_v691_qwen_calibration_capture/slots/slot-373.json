@@ -1,0 +1,123 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 2.052380183013156,
+  "exclusion_reason": null,
+  "family_id": "sha256:09b29a707d7d63052788f1783042839a47ad85a4c4e0fa1c88697e4f4bc21692",
+  "input_tokens": 1508,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.15,
+    "schema_valid": true,
+    "source_sentence_id": 12,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 26,
+      "prompt_tokens": 1508,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1534
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:fb553da0447aaa45c36a870d8169922829cc9bbb0ce24164686f774ef7814c45",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.15,\n  \"source_sentence_id\": 12\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832996,
+    "id": "chatcmpl-E6OsR61bqVLSj5WZjBzA9fJNnscc4qgC",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 615.202,
+      "predicted_n": 26,
+      "predicted_per_second": 42.26254140916317,
+      "predicted_per_token_ms": 23.661615384615384,
+      "prompt_ms": 1305.239,
+      "prompt_n": 1430,
+      "prompt_per_second": 1095.5847932830693,
+      "prompt_per_token_ms": 0.9127545454545455
+    },
+    "usage": {
+      "completion_tokens": 26,
+      "prompt_tokens": 1508,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1534
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"In 2001, the Taliban wiped out 1700 years of history in a matter of seconds, by blowing up ancient Buddha statues in central Afghanistan with dynamite. They proceeded to do so after an attempt at bringing down the 175-foot tall sculptures with anti-aircraft artillery had failed. Sadly, the event was just the first in a series of atrocities that have robbed the world of some of its most prized cultural heritage. But historical architecture is also under threat from calamities which might well escape our control, such as earthquakes and climate change. The thought of losing a piece of our collective history is a bleak one. But if loss can't be avoided, technology can lend a hand. Now CyArk, a non-profit company founded by an Iraqi-born engineer, is using groundbreaking laser scanning to ensure that -- at the very least -- incredibly accurate digital versions of the world's treasures will stay with us forever. Ben Kacyra was born in Mosul, Iraq, in 1940. He moved to the United States in 1964, and in the 1990s he was instrumental in the design of the first portable laser scanner. He founded CyArk, a company that specializes in digital preservation of threatened ancient and historical architecture, in 2003. \\\"Two events happened that really influenced me and my wife,\\\" he told CNN's Nick Glass, \\\"The Taliban blew up the Buddhas and an earthquake happened in Bam, in Iran. \\\"It demolished a whole mud city. So we looked at each other and we said, you know, sometimes you can't prevent an earthquake, obviously, and it's very expensive to go back and rebuild, but if it had been scanned, our children and grandchildren would get the opportunity to come back and learn the history of that place.\\\" Since then, Kacyra has been doing exactly that: in a 2011 TED talk he explained his quest to preserve our \\\"collective treasure\\\", and he has a plan to scan 500 World Heritage sites in five years. So far, the list of completed scans includes Ancient Thebes, Chichen Itza, Fort Laramie, Mesa Verde, Mount Rushmore, Petra, Pompeii, Rapa Nui, the Sydney Opera House, Tikal, and his native Mosul. The idea is not just to protect endangered structures, but to offer free educational access to the digital recreations of important monuments via the web. \\\"We have that data, and if something -- God forbid -- happens to these, the data is there,\\\" says Kacyra. In fact, current events have already caught up with the project: the Royal Tombs of Kasubi, in Uganda, were destroyed in 2010 by suspected arson. CyArk had mapped them a year earlier, and that could lead to the reconstruction of what was lost. \\\"I'm constantly looking at what's happening in Iraq and Syria. \\\"I'm so glad that we had already started and developed the tools that allowed us to go and be proactive to capture some of these things before these very unfortunate events.\\\" To scan the surroundings, CyArk uses a portable, eye-safe laser device based on a technology called Lidar -- a portmanteau of the words light and radar. It accurately maps a physical area much like a radar, but using lasers instead of radio waves. \\\"We have a very powerful laser that sends a beam of light  pulsing 50,000 times per second,\\\" explains Kacyra, \\\"which means that it's collecting 50,000 points of everything that's in front it as it pulses up and down and in a circular fashion, generating the geometry of everything that's in the space around it.\\\" In other words, \\\"We gave the world a 3D laser scanner that has revolutionized how reality is captured.\\\" Although its focus is in providing open access to cultural heritage, CyArk is also attracting interest for alternative uses of the technology. \\\"We are discovering applications way beyond what we had anticipated,\\\" says Kacyra. \\\"For example, the Highway Patrol wants to use it in accident reconstruction on the road or in crime scene investigations. Where did the bullets go, trajectories and all that - this gives you the entire thing in minutes and then you can do all the analysis work.\\\" Not even Hollywood is immune from the allure of laser scanning. \\\"Imagine it going all the way to art, the movies, movie sets. My wife got really excited about the first use in the movie field.\\\" Before founding CyArk, Kacyra had developed a similar technology called Cyrax, which he then subsequently sold. This technology was first used during the production of the 1997 sci-fi cult movie Starship Troopers, to scan an underground cave. \\\"They found out it was going to cost too much money to measure the cave so they could model it, something like half a million dollars and six weeks. \\\"They had heard about our scanning system so we went there. I think we did it for 20,000 dollars, and in a day or two, and it got used in a movie for the first time. \\\"It's ubiquitous now in the movie industry for virtual sets.\\\"\\n\", \"original_answer\": \"The Taliban's destruction of ancient Buddha statues in Afghanistan in 2001 sparked a movement to digitally preserve cultural heritage. Ben Kacyra, an Iraqi-born engineer, founded CyArk, a non-profit organization that uses laser scanning technology to create highly accurate digital versions of endangered historical sites. CyArk has scanned over 100 sites, including Ancient Thebes, Chichen Itza, and Mount Rushmore, and plans to scan 500 more in the next five years. The technology used by CyArk is a portable, eye-safe laser device based on Lidar technology, which sends a beam of light 50,000 times per second to map its surroundings. CyArk's mission is not only to protect endangered structures but also to provide free educational access to digital recreations of important monuments. The technology has also attracted interest from various fields, such as law enforcement and movie production.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "policy_design",
+  "source_cluster_id": "sha256:5be7cd6482e0231cfe0f3ef2e5a76d78f341c6b15931803cb35b7aa002bc0e7e",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31
+  ]
+}

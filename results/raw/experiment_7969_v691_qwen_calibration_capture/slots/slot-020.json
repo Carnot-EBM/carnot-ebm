@@ -1,0 +1,118 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.7193815249484032,
+  "exclusion_reason": null,
+  "family_id": "sha256:2916775823afbb3d010f065ad0be4c728481fe26d899411c9777f573825b6955",
+  "input_tokens": 1310,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 1310,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1331
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:0d75066458ee00036a2bde382939a73c6c9fb141e60633a615c13daad3001fd0",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832499,
+    "id": "chatcmpl-p8juo2NGgonKdJdY2XpHAYHLP6HFnKPR",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 487.538,
+      "predicted_n": 21,
+      "predicted_per_second": 43.07356554771115,
+      "predicted_per_token_ms": 23.21609523809524,
+      "prompt_ms": 1115.224,
+      "prompt_n": 1232,
+      "prompt_per_second": 1104.71080249349,
+      "prompt_per_token_ms": 0.9052142857142856
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 1310,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1331
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"3052 De La Vina\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Food, Coffee & Tea, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"6:0-18:0\\\",\\\"Monday\\\":\\\"6:0-18:0\\\",\\\"Saturday\\\":\\\"6:0-18:0\\\",\\\"Sunday\\\":\\\"6:0-18:0\\\",\\\"Thursday\\\":\\\"6:0-18:0\\\",\\\"Tuesday\\\":\\\"6:0-18:0\\\",\\\"Wednesday\\\":\\\"6:0-18:0\\\"},\\\"name\\\":\\\"The Coffee Bean & Tea Leaf\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2020-02-01 01:45:04\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"My gripe with my experience would pertain to the rudeness of the wait staff and the lack of care towards their customer. I find it absurd that that they have the audacity to charge for a cup after their cup failed to preform. Please fulfill your coffee needs elsewhere.\\\"},{\\\"review_date\\\":\\\"2020-01-13 15:31:02\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Well, if you're in a hurry and, say, order ahead of time like I do, leave extra time for a lecture from the staff if they don't like the way you ordered your drink. My drink was withheld. I was held up in the morning by an employee. She wasn't friendly or accommodating. It wasn't as if I was patronizing their business. I was essentially scolded with no respect for my time or the fact that I purchase things here often. This isn't the first time. We were treated rudely about refills on more than one occasion with the staff demanding a receipt (even when they never gave us one). I don't need the third degree or rude treatment when I'm overpaying for coffee on a Monday morning. I suggest going to the State Street location where the staff is always friendly, accommodating, and wonderful.\\\"},{\\\"review_date\\\":\\\"2020-01-06 01:40:12\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Nice shaded location (near TJ's) and there is almost always a parking space. One of the few coffee shops around town that has power outlets. Solid coffee. Decent Jasmine and Dragonwell green tea. $1.00 refill for coffee. The service is great for the most part - it seems like quite a few people work here. However, the employee this morning left a bad taste in my mouth. She didn't say anything specifically unkind, but I got the feeling my presence was a burden to her. Maybe she is in pain and doesn't have much kindness to give. I've worked many years in retail - and I know workers aren't robots and have complex inner lives - but even at my worst I could fake it, or at least not be a grouch to my customers. I left feeling a bit resentful (or hurt) that a stranger would be so rigid and unkind to me. I don't deserve that! I'll get over it though haha. For prospective customers: the organic light roast (Peru) was infinitely better than the dark roast, which I had for refill. Four stars because of the location, affordability, power outlets, and most of the customer service. I couldn't go full 5 stars because, frankly, it's 2020 and you can find tastier, more complex, higher-quality coffee elsewhere.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"The Coffee Bean & Tea Leaf is a local business located at 3052 De La Vina in Santa Barbara, CA. It falls under the categories of Food, Coffee & Tea, and Restaurants. The business operates from 6:00 AM to 6:00 PM every day of the week. The establishment offers free WiFi and outdoor seating for its customers. They also provide takeout services. The parking options include a lot for customers to use.\\n\\nBased on customer reviews, the business has received mixed feedback. Some customers have complained about the rudeness of the wait staff and the lack of care towards customers. There were instances where the staff charged for a cup even after it failed to perform. Additionally, some customers have experienced lectures and unfriendly behavior from the employees. On the other hand, other customers have praised the location, availability of parking spaces, and the presence of power outlets. The coffee and tea options were generally regarded as solid, although one customer mentioned the organic light roast as being better than the dark roast.\\n\\nOverall, The Coffee Bean & Tea Leaf has a rating of 3.5 stars. While there are some negative aspects in terms of customer service, the location and affordability make it a decent choice for coffee and tea in Santa Barbara.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:bc550afc023baffa47bc07394305efbffb014a24b4fbe683e14c8545624b1231",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26
+  ]
+}

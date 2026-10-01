@@ -1,0 +1,70 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 0.0,
+  "exclusion_reason": "answer_units_over_budget",
+  "family_id": "sha256:1dad3a4d0efd090705013196ed904d5de6af0ba1ca0e7b3db0035a8519ffa653",
+  "input_tokens": null,
+  "parsed": {
+    "citation_valid": false,
+    "completed": false,
+    "finish_reason": null,
+    "probability": null,
+    "schema_valid": false,
+    "source_sentence_id": null,
+    "status": "invalid_envelope",
+    "syntax_valid": false,
+    "usage": {}
+  },
+  "public_eligible": false,
+  "public_hash": "sha256:b3d49c0b16bfb3d1e7b5030cd9f3fa93d8b1fe55638c7f553e1b45c5b5747a0f",
+  "raw_response": {},
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:2. Prevent DNA Damage. Tomatoes are high in important antioxidants such as vitamin C and Vitamin A. These vitamins work to fend of DNA damage from free radicals. Consequently, tomatoes may help to ward off age related diseases such as atherosclerosis and diabetes.ere are some of the health benefits of tomatoes. 1. Ward off Cancer. Numerous studies have concluded that the more tomatoes people eat the lower their risks of certain cancers, especially lung, stomach and prostate cancers.\\\\n\\\\npassage 2:1. Eating tomatoes is thought to reduce the risk of prostate cancer as well as other cancers like throat, pharynx, esophagus, mouth, cervical, lung, stomach, colon and ovarian cancers. Lycopene is the ingredient that promotes these health benefits.s you can see there are many health benefits to the common tomato. But tomatoes aren\u2019t just good for you, they are actually lovely to eat. They are an adaptable fruit that can be eaten in salads, on sandwiches, in soups, curries and casseroles.\\\\n\\\\npassage 3:6/13/2011 \u2013 There is more to eating Florida tomatoes than good taste, they are great for your health! 10 good reasons to eat more! Tomatoes are full of health enhancing properties, read on to discover how the humble tomato can improve your health.Tomatoes are loaded with many, many health benefits. In fact, they are incredibly versatile and can be prepared in a seemingly endless number of dishes, as well as being great to eat alone.Keep reading to find out why you need to stop neglecting tomatoes as a part of your regular balanced diet.10 Health Benefits from Eating Tomatoes. 1. Tomatoes are good for your skin.Tomatoes contain a high level of lycopene, which is a substance that is used in some of the more pricy facial cleansers that are available for purchase over-the-counter.n fact, they are incredibly versatile and can be prepared in a seemingly endless number of dishes, as well as being great to eat alone. Keep reading to find out why you need to stop neglecting tomatoes as a part of your regular balanced diet. 10 Health Benefits from Eating Tomatoes. 1. Tomatoes are good for your skin.\\\\n\\\\n\\\",\\\"question\\\":\\\"what are nutrition benefits eating tomatoes\\\"}\", \"original_answer\": \"Based on the provided passages, here are the nutrition benefits of eating tomatoes:\\n\\n1. Prevent DNA damage: Tomatoes are high in antioxidants such as vitamin C and Vitamin A, which help protect against DNA damage from free radicals, reducing the risk of age-related diseases.\\n2. Ward off cancer: Eating tomatoes has been shown to reduce the risk of various cancers, including lung, stomach, and prostate cancers. The antioxidant lycopene in tomatoes is responsible for these health benefits.\\n3. Improve skin health: Tomatoes contain lycopene, which is also found in some high-end facial cleansers. Lycopene can improve skin health by reducing inflammation and protecting against sun damage.\\n4. Reduce the risk of prostate cancer: Lycopene in tomatoes has been shown to reduce the risk of prostate cancer.\\n5. Protect against chronic diseases: Tomatoes are rich in vitamins and minerals that can help protect against chronic diseases such as atherosclerosis and diabetes.\\n6. Support eye health: Tomatoes contain lutein and zeaxanthin, which can help protect the eyes against age-related macular degeneration.\\n7. Promote cardiovascular health: Tomatoes are low in calories and fat, but high in fiber, making them a heart-healthy snack.\\n8. Support bone health: Tomatoes contain vitamin K, which is essential for bone health.\\n9. Boost immune system: Tomatoes contain vitamin C, which can help boost the immune system and fight off infections.\\n10. May help regulate blood sugar levels: Some studies suggest that consuming tomatoes regularly may help regulate blood sugar levels and reduce the risk of developing type 2 diabetes.\\n\\nUnable to answer based on given passages.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 0,
+  "role": "fit",
+  "source_cluster_id": "sha256:44f4a80244f5ac59f07597a5be91ec82f7289868c3d9e66cea10ee16ec645b98",
+  "started": false,
+  "status": "excluded",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20
+  ]
+}

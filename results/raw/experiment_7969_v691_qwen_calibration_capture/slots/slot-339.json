@@ -1,0 +1,111 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.294405268970877,
+  "exclusion_reason": null,
+  "family_id": "sha256:1fb8c6c0ae624d9b5c8f089535976b3ca40915a2f2cb1c1d1de75744a20dcc12",
+  "input_tokens": 684,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 684,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 707
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:e48372309647b728fd0b695a76b76600a82ef764a974372c73e966608d1b9ab2",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832946,
+    "id": "chatcmpl-fU10fv8z5SflmGx7XY3O5YVSTdmAx0Qo",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.645,
+      "predicted_n": 23,
+      "predicted_per_second": 42.541778801246664,
+      "predicted_per_token_ms": 23.506304347826084,
+      "prompt_ms": 620.689,
+      "prompt_n": 606,
+      "prompt_per_second": 976.3343639084953,
+      "prompt_per_token_ms": 1.0242392739273927
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 684,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 707
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"'Bold and the Beautiful' Spoilers: Hope and Steffy\u2019s New Feud, Logan Believes Finn Deserves Better?\\nThe Bold and the Beautiful (B&B) spoilers tease that Steffy Forrester (Jacqueline MacInnes Wood) and Hope Logan's (Annika Noelle) will be reignited. She Knows Soaps reports that Hope makes a play for John 'Finn' Finnegan (Tanner Novlan), and Steffy finds out.\\nHope and Steffy spent years fighting over Liam Spencer (Scott Clifton). He would waffle between the women, each one believing they were his favorite. He did this for years. Steffy decided she could not do that anymore, finding a man with only eyes for her.\\nSheila Carter's (Kimberlin Brown) charges were dropped, making her a free woman. Ever since her jail release, Sheila has been a thorn in Finn's side, demanding to have a relationship with him.\\nThe Bold and the Beautiful spoilers say that Finn and Hope will bond over Sheila and Deacon Sharpe's (Sean Kanan) relationship. They will plot for a way to break them up. In the meantime, they will develop a deep friendship that could become more.\\nSoaps Spoilers reports that Hope will confide in her mother, Brooke Logan (Katherine Kelly Lang), that she believes Finn deserves better than Steffy. She points out that she wouldn't leave town even with a Sheila threat if he were her husband.\\nIt's clear that Hope is beginning to develop feelings for the handsome doctor. It could spell trouble when Steffy gets wind of it.\\nB&B fans, do you think Finn and Hope will cross the line? Keep watching The Bold and the Beautiful, airing weekdays on CBS and streaming on Paramount Plus. Please share your thoughts with me in the comments section below. Remember to follow me to read more of my content.\", \"original_answer\": \"Sure! Here's the summary within 72 words:\\n\\nOn The Bold and the Beautiful, Hope Logan and Steffy Forrester's feud reignites as Hope pursues John \\\"Finn\\\" Finnegan. Hope believes Finn deserves better than Steffy, who has a history of competing with Hope for men. Finn and Hope bond over their shared dislike of Sheila Carter, leading to a possible romance. Steffy may become jealous and try to sabotage their relationship.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:76ad4982da84f31d579aeaaa874af24833660792aa45b1498c8952a51def6e2a",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ]
+}

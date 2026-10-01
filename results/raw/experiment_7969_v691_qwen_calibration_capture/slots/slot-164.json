@@ -1,0 +1,98 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.5563444150029682,
+  "exclusion_reason": null,
+  "family_id": "sha256:6c34a1caa7c25fe828a815d6eca29b53cae2a5ef1938cd0f07dec78692ed5242",
+  "input_tokens": 938,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 938,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 962
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:7b76a7c51a2548a8d789c759fd9a8374822f5b3568f23cf54d95ce733baeccaa",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832696,
+    "id": "chatcmpl-s5qjDTqTIeyk9u4a5iOWsZFELgC95B7N",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.326,
+      "predicted_n": 24,
+      "predicted_per_second": 42.45338088111992,
+      "predicted_per_token_ms": 23.55525,
+      "prompt_ms": 876.538,
+      "prompt_n": 860,
+      "prompt_per_second": 981.1325920838572,
+      "prompt_per_token_ms": 1.0192302325581395
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 938,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 962
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"217 G Stearns Wharf\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":true,\\\"validated\\\":true},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Bars, Venues & Event Spaces, Event Planning & Services, Wine Tasting Room, Arts & Entertainment, Food, Wine Bars, Beer, Wine & Spirits, Nightlife, Wineries\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-21:0\\\",\\\"Monday\\\":\\\"11:0-20:0\\\",\\\"Saturday\\\":\\\"11:0-21:0\\\",\\\"Sunday\\\":\\\"11:0-20:0\\\",\\\"Thursday\\\":\\\"11:0-20:0\\\",\\\"Tuesday\\\":\\\"11:0-20:0\\\",\\\"Wednesday\\\":\\\"11:0-20:0\\\"},\\\"name\\\":\\\"Deep Sea Tasting Room\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-12-18 00:53:58\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Beautiful beautiful view and friendly staff. We went on a rainy morning and still enjoyed the view. Wines are serviceable but it's really about the view.\\\"},{\\\"review_date\\\":\\\"2021-12-03 20:29:36\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"It's a great location to have a drink. Beautiful views. Good breeze. It's unfortunate that the wine isn't as good as the location.\\\"},{\\\"review_date\\\":\\\"2021-12-01 23:32:42\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Good Afternoon,\\\\n\\\\nI am again submitting this review in reference to prior feedback i offered regarding an unfortunate very racially charged incident at Deep Sea Tasting room. To date the venue has still made no attempt at reaching out to me to discuss this rather u fortunate encounter with management that resulted in me cancelling my membership and not returning.\\\\n\\\\nI wish the follow-up on the part of the leadership was as good as the view from the tasting room.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Sure! Here is an objective overview of the Deep Sea Tasting Room based on the provided structured data:\\n\\nThe Deep Sea Tasting Room is a popular destination for wine enthusiasts and those looking to take in the stunning views of Santa Barbara's coastline. Located on Stearns Wharf, the tasting room offers a wide selection of wines, including reds, whites, and sparkling varieties. With its casual and inviting atmosphere, the Deep Sea Tasting Room is a great spot for groups of all sizes, and its outdoor seating area offers a unique opportunity to enjoy your wine while taking in the ocean views. The tasting room also features live music and events, making it a lively and entertaining destination for locals and tourists alike.\\n\\nAccording to customer reviews, the Deep Sea Tasting Room offers a beautiful view and friendly staff, but some patrons have noted that the wine selection is not as impressive as the location. Additionally, one reviewer had a negative experience with a racially charged incident, which the tasting room has yet to address. Overall, the Deep Sea Tasting Room is a great spot for a relaxing afternoon of wine tasting and taking in the sights and sounds of the Santa Barbara coastline.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:379db4d70d6e6635bf321913ad890090aa833d112fd0a1f23d2a698a05cc1181",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ]
+}

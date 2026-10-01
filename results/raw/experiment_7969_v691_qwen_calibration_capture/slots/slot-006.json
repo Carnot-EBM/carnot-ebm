@@ -1,0 +1,100 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.2626210779999383,
+  "exclusion_reason": null,
+  "family_id": "sha256:e5293f19e9f83c7d8e1aacd5702841367536adf6636ae417bd94c1f829cb58a2",
+  "input_tokens": 668,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 5,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 668,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 692
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:030bbd545754f6ac84d49bad358fcdf9ac2e3ac5f5a6ef944e8c66acac2e2144",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 5\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832477,
+    "id": "chatcmpl-CPMQ2f9UCphNTsHhwcbe0EwUgiWVuxq3",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 556.129,
+      "predicted_n": 24,
+      "predicted_per_second": 43.15545493941154,
+      "predicted_per_token_ms": 23.17204166666667,
+      "prompt_ms": 591.24,
+      "prompt_n": 590,
+      "prompt_per_second": 997.9027129422907,
+      "prompt_per_token_ms": 1.0021016949152544
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 668,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 692
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Prince Harry's Departure from Royalty Was Already Planned\\nA Long-Planned Strategy, Not a Sudden Whim\\nPrince Harry's decision to distance himself from the royal household was not a sudden move, but a long-planned strategy. The Duke of Sussex had always intended to carve his own path.\\nReports have surfaced suggesting that Prince Harry's choice to step back from the royal family was not an impromptu decision, but rather a path he had planned to tread long before his marriage to Meghan Markle.\\nThe Duke of Sussex had reportedly always intended to \\\"do his own thing,\\\" as per insights from 2019.\\nThe plans to split the royal household and staff between Prince Harry and his brother, Prince William, were already in motion ahead of Prince Archie's birth.\\nRoyal correspondent Omid Scobie stated that Kensington Palace aides confirmed these plans were in place \\\"long before Meghan even came on the scene.\\\"\\nScobie shared, \\\"Kensington Palace aides have told me that they always knew that when he got married and wasn't sort of the spare wheel, that he would go off and do his own thing with his partner and they would very much live under their own household with their own staff.\\\"\\nThe split was not a sign of discord but a strategic move to accommodate the growing families of the princes.\\nIn 2022, Bryony Gordon, a journalist and friend of the Sussexes, reiterated Harry's long-standing desire to step away from royal duties. Gordon told that Harry \\\"wanted out from the crazy cult of royalty\\\" since childhood, and Meghan Markle was a \\\"catalyst\\\" for this.\\nThe Duke himself confirmed this sentiment on the Armchair Expert podcast in May 2021, expressing his reluctance to be part of the royal \\\"business model.\\\"\\nThis revelation sheds new light on the Sussexes' decision to step back from royal duties, emphasizing that it was not a sudden whim but a long-considered decision.\", \"original_answer\": \"Prince Harry had long planned to carve his own path and leave the royal family, according to royal correspondents and sources close to the Duke and Duchess of Sussex. Kensington Palace aides have confirmed that the split between the royal households and staff was part of a long-term plan to accommodate the growing families of the princes, including Princess Diana's sons, Prince Harry and Prince William. Prince Harry has expressed his reluctance to be part of the royal business model since childhood and viewed Meghan Markle as a catalyst for his desire to step away from royal duties.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "calibration_replay",
+  "source_cluster_id": "sha256:9c6b1f4f7096b0219ebdba8f6baae5260e0fe2702c488369a480035ef029b170",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ]
+}

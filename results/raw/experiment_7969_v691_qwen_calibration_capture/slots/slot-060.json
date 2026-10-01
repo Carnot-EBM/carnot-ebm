@@ -1,0 +1,106 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.3156638820073567,
+  "exclusion_reason": null,
+  "family_id": "sha256:69e817303f57801c0c918e2d04eee8f33f62d4b6a2bb7465c58b47111b7e8b8b",
+  "input_tokens": 732,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 732,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 755
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:285d141b25f1fd62496c8184d324212ca0dbd353f7352f2366d63ba6f17ef730",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832553,
+    "id": "chatcmpl-UhDhLupa2k63xipvT48R7iY1YSRcA55d",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 537.116,
+      "predicted_n": 23,
+      "predicted_per_second": 42.821290000670245,
+      "predicted_per_token_ms": 23.35286956521739,
+      "prompt_ms": 662.568,
+      "prompt_n": 654,
+      "prompt_per_second": 987.0684971202957,
+      "prompt_per_token_ms": 1.0131009174311927
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 732,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 755
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:By: Joe Truini. To remove rust from tools, combine salt and lemon juice in a container, then rub the solution on using steel wool or a scourging pad. The salt acts as an abrasive while the acid in the lemon juice cuts through the corrosion. For heavily rusted tools, allow the solution to remain on the surface for a few minutes first. Once the corrosion has been removed, wipe the tool clean with a dry rag.\\\\n\\\\npassage 2:How to Remove Rust from Old Tools. For those who want to clean rust from a particular object, vinegar is the best solution. Vinegar (acetic acid) removes rust magically, like you see in the pictures. You can also remove rust from bronze objects, jewels, etc. The method is simple: take a bowl, put the rusty tools inside and pour vinegar until you cover them. For objects with thick rust layer you must let the vinegar act up to 2 days. After removing the objects from the vinegar, rust will turn into a viscous film that can be easily cleaned with a strong water jet. If there is any rust left, remove it with a wire brush. Wash the tools with soap and water to remove any remaining vinegar trace. This is the method we used to remove rust from the tools in the pictures above.\\\\n\\\\npassage 3:thank for the info on how to remove rust\u2026appreciate the video!.:-) We want to hear from you! In addition to posting comments on articles and videos, you can also send your comments and questions to us on our contact page or at (800) 946-4420.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to remove rust from old tools\\\"}\", \"original_answer\": \"There are two methods shared in the passages to remove rust from old tools. The first method involves making a solution of salt and lemon juice. This can be rubbed onto the tools with steel wool or a scourging pad. The salt acts as an abrasive and the acid in the lemon juice cuts through the rust. For heavily rusted tools, the solution should be left on the surface for a few minutes before wiping clean with a dry rag.\\n\\nThe second method uses vinegar. The rusty tools should be put in a bowl and covered with vinegar. If the rust is thick, the tools may need to remain in the vinegar for up to two days. After removal from the vinegar, the rust will have turned into a viscous film that can be cleaned off with a strong water jet. If any rust remains, it can be removed with a wire brush. Finally, the tools should be washed with soap and water to remove any traces of vinegar.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:9ee8a6d6f87269fbfc88ec5c7e6fe7e14b7fadda8a4aa34a87d4d3d4b65cc5e7",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ]
+}

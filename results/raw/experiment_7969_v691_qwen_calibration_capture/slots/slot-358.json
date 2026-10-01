@@ -1,0 +1,112 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.6590069939848036,
+  "exclusion_reason": null,
+  "family_id": "sha256:f8ed6c325cee86485749661736410af930d10a3db994f4e6563513d09e607eed",
+  "input_tokens": 1041,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1041,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1064
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:f1cea972ec5b11535de70a40ddee7928b9d8ed31d66791babaf6434b94ad05d0",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832973,
+    "id": "chatcmpl-fLPxxFEG473ctraPCUww3XX7JBolnImP",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.842,
+      "predicted_n": 23,
+      "predicted_per_second": 42.44779843570635,
+      "predicted_per_token_ms": 23.558347826086955,
+      "prompt_ms": 939.967,
+      "prompt_n": 963,
+      "prompt_per_second": 1024.5040517379866,
+      "prompt_per_token_ms": 0.9760820353063343
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1041,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1064
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"I've visited Nepal at least half a dozen times over the last decade, and of the more than 100 countries that Save the Children serves, it is undoubtedly one of my favorites. There are the usual things that are said about it -- the stunning landscape, which includes Mount Everest, and the amazing food. But Nepal has also made some of the most remarkable progress on maternal and child health in the last few years. In fact, I remember a time just last May when I sat with a group of mothers and their tiny babies as they told me how proud they were that they now understood how important it was to make sure they prioritized breastfeeding and nutritious foods. They spoke of the wonderful future they were now expecting for their children, and they shared with me the big dreams that they had. So you can imagine the indescribable sadness I experienced waking up this morning and seeing the news reports that Nepal had been hit by its worst earthquake since 1934, when more than 10,000 people were killed. While casualty accounts following the magnitude-7.8 quake Saturday are still difficult to confirm -- hardly surprising considering that communication lines have been severely disrupted -- estimates we are hearing from the ground are already placing the number lost in the thousands, with the official toll now at around 1,500 expected to keep growing as the hours and days pass. The fact that the epicenter of this quake was so close to the capital of Kathmandu, where the majority of Nepal's citizens reside, makes the situation even more dire. Many of these people live in cramped conditions and have never lived outside the city. As a result, it is unlikely they even have a home village to go to temporarily for shelter. Housing the scores of newly homeless will be a tall order. It is still quite cold at night in Nepal, so getting these people into shelters quickly will be of the utmost importance. Compounding this very serious problem will be the difficulty in ensuring that those affected have access to clean water in the coming days; Nepal already had one of the lowest standards of sanitation in the world before the quake. In fact, even getting food to people will be a logistical nightmare, given that the entire country -- which is about the size of Tennessee -- is served by only two main roads, which have likely been badly damaged, if not destroyed. We have been in situations like this before, and know what to do. But time is not on our side -- we have only a few short weeks before the rainy season begins, which will make an already difficult job close to impossible. With that in mind, we have set up a fund to help address the immediate needs of children, who are always the most vulnerable in an emergency. We and other relief organizations will be doing everything we can to help get Nepal back on its feet without having to wait for more people to die from diseases that will inevitably come from contaminated water and the like. Only the oldest Nepalese will remember the last major earthquake, so the psychological toll for the majority of the country will be a significant and ongoing concerning for us as we and other agencies launch our response. And while we can rebuild Nepal after this tragedy, it will take time and help. I hope that we can all play a role in making sure that the tremendous gains that have been made in this country that I love so dearly will not have been in vain.\\n\", \"original_answer\": \"A powerful earthquake struck Nepal, killing thousands of people and leaving many more homeless. The quake's epicenter was near the capital city of Kathmandu, where many people live in cramped conditions and have nowhere else to go. The disaster has caused widespread damage to infrastructure, making it difficult to provide aid and shelter to those affected. The situation is particularly dire due to the lack of sanitation and clean water, which could lead to the spread of disease. Relief organizations are working to address the immediate needs of children, who are the most vulnerable in this crisis. The road to recovery will be long and difficult, but with the help of donations and support, it is possible to rebuild Nepal and ensure that the progress made in recent years is not lost.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:51bd298572efb7ef2f3cdf936dca0b6dfbf3102b0ab3259bf012289a196559d4",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20
+  ]
+}

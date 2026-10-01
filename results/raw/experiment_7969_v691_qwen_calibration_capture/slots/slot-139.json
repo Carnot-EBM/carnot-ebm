@@ -1,0 +1,105 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.3446060090209357,
+  "exclusion_reason": null,
+  "family_id": "sha256:a037c55497cfefb35edf5c789b74ae7c645f1e209165bd62f8f70f57736f99d6",
+  "input_tokens": 663,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 13,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 663,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 688
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:666a85535558482fa8c8cba24642f41dbcf34a8156ff33e32d56dc828311fe6e",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 13\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832664,
+    "id": "chatcmpl-YfhReJHZFr9zo8EV0lnmEetj6EBxwGvt",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 588.421,
+      "predicted_n": 25,
+      "predicted_per_second": 42.486586984488994,
+      "predicted_per_token_ms": 23.53684,
+      "prompt_ms": 607.644,
+      "prompt_n": 585,
+      "prompt_per_second": 962.7347591681971,
+      "prompt_per_token_ms": 1.0387076923076923
+    },
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 663,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 688
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"California man sentenced to prison after unwanted touching on flight to LAX\\nA 50-year-old man from Diamond Bar, Mohammad Jawad Ansari, was sentenced today to 21 months in federal prison after being found guilty of abusive sexual contact during a flight from Cleveland to Los Angeles in February 2020.\\nUnited States District Judge Fernando L. Aenlle-Rocha handed down the sentence, along with additional fines and the requirement for Ansari to register as a sex offender.\\nThe incident occurred on February 17, 2020, as the flight took off from Cleveland Hopkins International Airport bound for Los Angeles International Airport.\\nAnsari was seated in a window seat, with the victim occupying the middle seat beside him.\\nThe victim, wearing a dress, had fallen asleep shortly after takeoff, and the armrest separating Ansari from her was down.\\nDuring the flight, Ansari intentionally touched the victim's inner thigh without her consent.\\nA witness seated in the aisle noticed Ansari's actions and alerted the victim. Upon being awoken and made aware of the assault, the victim immediately reported the incident to a flight attendant.\\nFollowing a four-day trial, a jury found Ansari guilty of one count of abusive sexual contact on May 9.\\nIn the sentencing memorandum, prosecutors stressed the severe impact this incident had on the victim, causing her immediate distress and lasting emotional trauma. The victim now experiences fear and anxiety while traveling, a lasting consequence of the assault.\\nThe investigation into this matter was conducted jointly by the FBI and the Los Angeles Airport Police, leading to Ansari's conviction and subsequent sentencing.\\nIn addition to the prison term, Judge Aenlle-Rocha ordered Ansari to pay a $33,750 fine, $1,600 in restitution, a $100 special assessment, and an additional $5,000 special assessment.\", \"original_answer\": \"Here is a summary of the news in 72 words or less:\\n\\nMohammad Jawad Ansari, 50, from California was sentenced to 21 months in federal prison for abusive sexual contact during a flight from Cleveland to Los Angeles in February 2020. He must also pay a $35,350 fine and register as a sex offender. The incident caused lasting emotional trauma to the victim, who experienced fear and anxiety while traveling.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "policy_design",
+  "source_cluster_id": "sha256:c131823305c79cd35a15b980edb50389fea056d5c7f2010bf68a0a6c2c6fdbd2",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ]
+}

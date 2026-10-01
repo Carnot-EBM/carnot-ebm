@@ -1,0 +1,103 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.5471904930309393,
+  "exclusion_reason": null,
+  "family_id": "sha256:db42d3d6310bdbf950887335392809fa6441b7c0a328364de7314cab2663362e",
+  "input_tokens": 610,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.85,
+    "schema_valid": true,
+    "source_sentence_id": 3,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 610,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 635
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:001eccccbd1f048a476149c66de5e917106b66da4e82885a67c0b1877efcb8ca",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.85,\n  \"source_sentence_id\": 3\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832468,
+    "id": "chatcmpl-78pngtMZoEReOsGKBPcUkdF5irafew3p",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 583.568,
+      "predicted_n": 25,
+      "predicted_per_second": 42.83990897376142,
+      "predicted_per_token_ms": 23.34272,
+      "prompt_ms": 931.255,
+      "prompt_n": 610,
+      "prompt_per_second": 655.0300401071672,
+      "prompt_per_token_ms": 1.5266475409836064
+    },
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 610,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 635
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Ovarian cysts & Polycystic Ovary Syndrome (PCOS) are related conditions with several similar symptoms. We explain the differences between the two. Ovarian cysts & Polycystic Ovary Syndrome (PCOS) are related conditions with several similar symptoms.\\\\n\\\\npassage 2:There are many differences between endometriosis and polycystic ovary syndrome . One of the main differences is the part of the body that is involved. Endometriosis is basically a condition in which the type of tissue that normally lines a woman\u2019s uterus is found outside of the uterus; this often causes pain, infertility, and heavy bleeding.\\\\n\\\\npassage 3:PCOS vs Endometriosis. Women\u2019s health is a gem among individuals around the world. A woman\u2019s delicate condition compared to man is of utmost concern as she is heavily responsible for reproduction. Certain conditions that mostly affect women put them at serious risks. Among these are Polycystic Ovary Syndrome (PCOS) and endometriosis. PCOS is a condition wherein a woman\u2019s hormones are not stabilized. The root cause sites are the ovaries. Normally, the ovary produces hormones that are essential and enough for a woman like minimal amounts of androgen.\\\\n\\\\n\\\",\\\"question\\\":\\\"what's the difference between endometriosis and polycystic ovarian syndrome\\\"}\", \"original_answer\": \"Based on the given passages, it appears that endometriosis and polycystic ovary syndrome (PCOS) are two distinct conditions that affect women. The primary difference between the two is the part of the body that is involved. Endometriosis is a condition where tissue similar to the lining of the uterus grows outside of the uterus, leading to pain, infertility, and heavy bleeding. On the other hand, PCOS is a hormonal disorder that affects the ovaries, causing irregular menstrual cycles, cysts, and excess androgen hormones. While both conditions can cause similar symptoms such as pelvic pain and infertility, they have different underlying causes and affect different parts of the body. Therefore, it is important to differentiate between the two conditions for proper diagnosis and treatment.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:8d3243059d92db9c60c5a71a6e25f088f4a61c3f06f77df5891b5f07aef2bdd9",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]
+}

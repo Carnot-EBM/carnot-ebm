@@ -1,0 +1,136 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.9919559360132553,
+  "exclusion_reason": null,
+  "family_id": "sha256:3be10128262001db67d34f4eae56cc225e49db9f469d6ff282d623b26d6733c3",
+  "input_tokens": 1478,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": 26,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 26,
+      "prompt_tokens": 1478,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1504
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:c8951d41b33e211ce6b30ffc8d9ed8574ee1239b54026935851d92325f8822e3",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": 26\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832886,
+    "id": "chatcmpl-Mwpl0OSuGLMTUIplP0SAdO6SMnLwp23d",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 615.01,
+      "predicted_n": 26,
+      "predicted_per_second": 42.275735353896685,
+      "predicted_per_token_ms": 23.654230769230768,
+      "prompt_ms": 1262.293,
+      "prompt_n": 1400,
+      "prompt_per_second": 1109.0927383737373,
+      "prompt_per_token_ms": 0.901637857142857
+    },
+    "usage": {
+      "completion_tokens": 26,
+      "prompt_tokens": 1478,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1504
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Aden, Yemen (CNN)It didn't look like much, but we'd been told it was typical of the kind of craft ferrying the route between Djibouti and Aden. Better, everyone advised, to be low key, even if low key meant faded lights and three water pumps chugging at all times. The wooden vessel was called Mecca \u2014 after the holy city. We were told we'd be at the port in Aden by the next morning, but as the hours ticked by it soon became apparent that that was wildly optimistic. Morning came and we were still only halfway there. We'd been given a secure route, charted for us by the Djiboutian Coast Guard. It meant hugging the coastline, trying to stay as much as possible out of the deeper water in the middle of the Gulf of Aden where the world's navies seemed to be squaring off. It was almost double the distance of the direct route. Add to that a strong current -- and stomach-churning seas -- and it felt like we would spend an eternity on board. After our second sunset, we were finally close enough for my phone to ping with a Yemeni welcome message. However, we couldn't risk arriving at night; even getting too close to shore would risk being mistaken for a re-supply vessel and potentially taking a Saudi hit. The captain slowed the boat to a crawl so the remaining miles would stretch until daybreak. Finally, morning came. It was time to go into town to see what life was like for the people of Aden. We weren't really sure what to expect but we did know we couldn't stay for long. From the moment we stepped through the gates of the port, we were met by noise and desperation, shoving and shouting. \\\"Where are you going?\\\" \\\"I'll pay, I'll pay\\\" \\\"Are you here to take the Americans?\\\" I shouted back that we'd return soon. We had just five hours on the ground and we needed to visit the hospital, the shuttered markets, the frontlines. There was so much we needed to see. The crowds clustered around our camera lens, asking \\\"Why?\\\" \\\"Why is this happening?\\\" \\\"Why hasn't it stopped?\\\" It felt like no time had passed before we were told we had to go. The shelling had begun. We'd been hearing pops of sniper fire all day but now we could hear rounds of automatic weapons and they were getting louder. As we arrived back at port, we found we weren't leaving alone. After waiting at port, praying a passing ship would dock, ours had become an unexpected lifeline for some of the families caught in the fighting. The Harbor-Master asked if we could take 60 refugees. It didn't feel like the answer could be anything but yes. What we didn't realize until it was too late was that the refugees were being charged $300  a person: An \\\"exit fee.\\\" Those who didn't have the money were pushed back behind the wrought iron gates of the port. Those that did shared our day-and-a-half trip home. As the shores of Djibouti grew closer, you could see the uncertainty begin to take over. Many of them had come from comfortable lives, before the war shattered them. They had left homes that once hummed with air conditioners and televisions. Would the camps have TVs, they asked. No, they wouldn't, I said. What I didn't say was that they'd be lucky to have electricity. But woven amid the uncertainty was the relief of escape. Some of the refugees took over our ship's galley -- the kitchen. They'd found a former chef amongst their number who commandeered the store cupboard, sending out a pick and mix of heaped trays. We got tuna spaghetti and more Turkish coffee than our cameraman Byron could possibly drink. Because we'd brought refugees back with us, we were asked by the Djibouti Coast Guard to dock in the country's north, in Obok, so they could be given the proper status while they wait to see what happens back home. The immigration officials were -- understandably -- a little bemused by our presence amongst a boatload of people fleeing Yemen, but to their credit they decided the important thing was that these families were now safe. From there Djibouti Port was just a few hours away, hours that stretched into infinity for the families ringing my phone to check that their loved ones had made it into harbor. Over the last few hours, people had shyly come up to ask if they could borrow our phone to tell their families they were safe. Now a deluge of anxious parents, siblings and partners flooded my ear, asking how it could possibly be that we weren't yet on dry land. But eventually we were, and as we watched the Djiboutian officials unload what remained of people's belongings onto shore, it was a reminder that these were the lucky ones. Thousands more are still waiting back in Yemen, hoping they too will reach a safe port.\\n\", \"original_answer\": \"A group of journalists traveled from Djibouti to Aden, Yemen via a small wooden vessel despite the dangerous conditions in the Gulf of Aden. The journey took twice as long as expected due to strong currents and rough seas, but they finally reached the port in Aden after several days. However, their intended visit to the city was cut short as shelling began, forcing them to leave immediately. As they returned to port, they became an unexpected lifeline for 60 Yemeni refugees who were fleeing the conflict and were charging them $300 each for passage. Despite the challenges and uncertainties, the refugees were grateful for their escape and the journalists were able to safely return to Djibouti.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:dda63214b50b1fd9807d883c749249d877ae75b70d838fc5a4c803c08359a90d",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44
+  ]
+}

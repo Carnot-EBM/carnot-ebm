@@ -1,0 +1,101 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.1320454629603773,
+  "exclusion_reason": null,
+  "family_id": "sha256:605384025de5cf99ded9a483e093a8a4c710508258388eca359362140bcd756c",
+  "input_tokens": 455,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 5,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 455,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 479
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:6b22d1e0791c627eeee57e641aacabd88169c9a20f3e8a835725a1c178e0860b",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 5\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832671,
+    "id": "chatcmpl-cTbGqujNNv35E3oFqPV8AB3QbyBIkEc9",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 563.802,
+      "predicted_n": 24,
+      "predicted_per_second": 42.56813562208009,
+      "predicted_per_token_ms": 23.49175,
+      "prompt_ms": 446.884,
+      "prompt_n": 377,
+      "prompt_per_second": 843.6193732601748,
+      "prompt_per_token_ms": 1.185368700265252
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 455,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 479
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Cigarettes have been put out across the bars of New Orleans. Cigars are welcome no more. The city known for excess of everything -- drinking, eating, dancing in the street until all hours -- went smoke-free as Tuesday became Wednesday at midnight. How can that be? It turns out that the city known for its over-the-top Mardi Gras celebrations and incredible jazz fests (starting Friday!) didn't want its waiters and musicians to have to breathe smoke to do their jobs anymore. The New Orleans City Council passed its ban against smoking in most places across the city -- including bars, casinos and restaurants -- in January, and the vote was unanimous, the New Orleans Times-Picayune reports. Bar owners worried about potential revenue loss, while puffing customers bemoaned the loss of their smoking spots. Harrah's New Orleans and bar owners filed a lawsuit to stop the ban, and a hearing is scheduled in state court in a month, CNN affiliate WAPT reports. Fines start at $50. Luckily for us, none of CNN's 15 New Orleans must-do's -- including touring Treme or eating a beignet -- requires smoking.\\n\", \"original_answer\": \"The city of New Orleans, known for its excesses, has gone smoke-free. The New Orleans City Council passed a ban against smoking in most public spaces, including bars, casinos and restaurants, in a unanimous decision in January. A hearing against the ban is scheduled in state court next month.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "policy_design",
+  "source_cluster_id": "sha256:d4d28db74e95d1d4d0fc8955d279c56de7253409e3df9e3e960a36c1527118dc",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ]
+}

@@ -1,0 +1,110 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.7467234969954006,
+  "exclusion_reason": null,
+  "family_id": "sha256:73200f786051de38b4a1f67c9d441c8548adb8dead9f9e0c08a4308ad4847dad",
+  "input_tokens": 1204,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1204,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1227
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:d83ee0919bc115d442f59008b3d32a3205a975f9ff7f5b963a5d57f9d422172a",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832925,
+    "id": "chatcmpl-3uW4p22wxCmTVmJvgv0a90phyHOyBBy6",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 542.142,
+      "predicted_n": 23,
+      "predicted_per_second": 42.424309498249535,
+      "predicted_per_token_ms": 23.571391304347827,
+      "prompt_ms": 1070.801,
+      "prompt_n": 1126,
+      "prompt_per_second": 1051.5492607870183,
+      "prompt_per_token_ms": 0.9509777975133215
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1204,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1227
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"7010 Market Pl Dr\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"American (New), Burgers, Restaurants, Hawaiian\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-21:30\\\",\\\"Monday\\\":\\\"11:0-21:0\\\",\\\"Saturday\\\":\\\"11:0-21:30\\\",\\\"Sunday\\\":\\\"11:0-21:0\\\",\\\"Thursday\\\":\\\"11:0-21:0\\\",\\\"Tuesday\\\":\\\"11:0-21:0\\\",\\\"Wednesday\\\":\\\"11:0-21:0\\\"},\\\"name\\\":\\\"Kahuna Grill\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2020-03-01 05:15:45\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"When we arrived at 5:30 and found the place empty, we should have known it's not the same Kahuna we knew and loved. The fries were limp and tasteless, the fish sandwich now had the lowest grade white fish, and the onion rings were not crispy at all.  And these are only a few items ordered that were not worth the $60 we paid for 5 people (with no drinks!).\\\"},{\\\"review_date\\\":\\\"2019-02-22 04:59:45\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"When we arrived at 5:30 and found the place empty, we should have known it's not the same Kahuna we knew and loved. The fries were limp and tasteless, the fish sandwich now had the lowest grade white fish, and the onion rings were not crispy at all.  And these are only a few items ordered that were not worth the $60 we paid for 5 people (with no drinks!).\\\"},{\\\"review_date\\\":\\\"2019-02-17 04:37:32\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"The Merriam Webster dictionary defines the word Flawless as \\\\\\\"having no flaw or imperfection : PERFECT\\\\\\\". I define it as Kahuna Grill AND it's employee Patrick. The service was perhaps the best service on the planet and the food is insane. Never before have I seen a more perfect employee then my cashier and server, Patrick. His hospitality and amazing service deserves not a 5 stars, but an 100 stars. Looking back on this amazing experience, I don't believe I've ever seen service quite like this. It shocks me that this amazing dining experience only has a 4/5 stars when the service and food was that good. The food came very quick and was the perfect temperature. The food was seasoned perfectly, with the best flavor I've ever tasted. Patrick's laid back personality really shows in his service. He was very chill, while being helpful and professional. Patrick's amazing assistance leads me to believe he deserves a tremendous raise. Looking back on this experience, I am nostalgic. I miss Kahuna Grill but I am also very glad I was able to meet Patrick and eat the delicious food. In my professional opinion, Patrick and this astounding dining establishment is the G.O.A.T (Greatest Of All Time).\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Kahuna Grill is a casual dining establishment located at 7010 Market Pl Dr, Goleta, CA. It serves a mix of American (New), Burgers, Hawaiian cuisines, and is suitable for groups. The restaurant offers outdoor seating, takeout options, and a parking lot, but does not provide WiFi or reservation services. It operates from 11 am to 9 or 9:30 pm throughout the week, and holds a business rating of 4.0 stars. Customer reviews are mixed - some customers express dissatisfaction about the quality of the food, citing limp fries, low-grade fish sandwiches, and non-crispy onion rings, feeling that the food wasn't worth the price. However, other reviews highly praise Kahuna Grill, with particular commendation for the employee named Patrick whose service is described as flawless, professional, and deserving of a hundred stars. The food is also complimented, with one customer describing it as perfectly seasoned, well-flavored, and served at an ideal temperature.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:2a05021d1c2aa30209f755b08ce9334ffd0c46a07d547eeea989a97157de55b2",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18
+  ]
+}

@@ -1,0 +1,101 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.3192754780175164,
+  "exclusion_reason": null,
+  "family_id": "sha256:193a91fad3f3454187457a73e1d03e2636c15df02e9f6846bdf3a469f7cf5fd6",
+  "input_tokens": 711,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 711,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 735
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:cd1fbfbad659ec85c1a2eec626a83e7c0b558e70662ca17694aefaf388e68f60",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832892,
+    "id": "chatcmpl-f5dSVfG6OGKyyq5Qk7zNLuNE93GkdVlO",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.963,
+      "predicted_n": 24,
+      "predicted_per_second": 42.48065802539281,
+      "predicted_per_token_ms": 23.540125,
+      "prompt_ms": 641.819,
+      "prompt_n": 633,
+      "prompt_per_second": 986.2593659583154,
+      "prompt_per_token_ms": 1.0139320695102685
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 711,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 735
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"UCSB University Center\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":null,\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Pizza, Gluten-Free, Restaurants, Event Planning & Services, Caterers\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"10:30-15:30\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Thursday\\\":\\\"10:30-15:30\\\",\\\"Tuesday\\\":\\\"10:30-15:30\\\",\\\"Wednesday\\\":\\\"10:30-15:30\\\"},\\\"name\\\":\\\"A Slice of Woodstock's\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-09-30 14:43:47\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Got out of lab hella hungry. Wanted to see if I could get some pizza. Google said they were open. The person there just ignored me so I'm not going there again.\\\"},{\\\"review_date\\\":\\\"2019-08-19 01:59:01\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"A slice of Woodstock's is my favorite on campus spot to grab a quick lunch. Fast service, nice employees, and they always play cool music that lightens my mood in line. Overall one of the best quick lunch spots I've ever been to\\\"},{\\\"review_date\\\":\\\"2019-07-22 19:30:28\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Higher quality food and faster service than the Woodstock's in Isla Vista. Insanely convenient. The employees there are always playing great music too. Overall my favorite Woodstock's of all time. Crust is crispy on the outside and soft on the inside.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"A Slice of Woodstock's is a popular pizza joint located in the UCSB University Center in Santa Barbara, CA. They offer a variety of pizzas, including gluten-free options, and are known for their fast service and friendly staff. The restaurant has a casual atmosphere with outdoor seating and plays a variety of music to enhance the dining experience. They also offer catering and event planning services. While some customers have reported long wait times, most reviews praise the high-quality food and quick service. With a 4.0-star rating and mostly positive reviews, A Slice of Woodstock's is a solid choice for pizza lovers in the area.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:940b54c0733cae79da5cd17ebce7ae2328ddd7e52ed062ef07c225a331db7f80",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ]
+}

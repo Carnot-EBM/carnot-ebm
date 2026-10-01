@@ -1,0 +1,118 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.911186893004924,
+  "exclusion_reason": null,
+  "family_id": "sha256:fc2e1ba5534e229d9a3a59954107ec64aebe3b47a4b6430ab757d46135a74085",
+  "input_tokens": 1410,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1410,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1434
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:c2848076627be6374ba073a72ea05b16b3486c7943ab66af87a3845a8fa65832",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832880,
+    "id": "chatcmpl-Nzsptwewg8hDGH9Z69DDL6Vzd5xuIYed",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 566.526,
+      "predicted_n": 24,
+      "predicted_per_second": 42.363457281748765,
+      "predicted_per_token_ms": 23.605249999999998,
+      "prompt_ms": 1229.81,
+      "prompt_n": 1332,
+      "prompt_per_second": 1083.0941364926289,
+      "prompt_per_token_ms": 0.9232807807807807
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1410,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1434
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"7060 Hollister Ave, Ste 105\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":false,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":2.5,\\\"categories\\\":\\\"Southern, Barbeque, Restaurants\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-21:0\\\",\\\"Monday\\\":\\\"11:0-21:0\\\",\\\"Saturday\\\":\\\"11:0-21:0\\\",\\\"Sunday\\\":\\\"11:0-21:0\\\",\\\"Thursday\\\":\\\"11:0-21:0\\\",\\\"Tuesday\\\":\\\"11:0-21:0\\\",\\\"Wednesday\\\":\\\"11:0-21:0\\\"},\\\"name\\\":\\\"Dickey's Barbecue Pit\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2017-11-23 02:54:22\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"I ordered online 45 minutes ago. I've been standing in line for ten minutes without being addressed. I finally get to the front, I'm told that my food isn't yet made AND he didn't bother to call and tell me that part of my order isn't available. He then says it will be another 20 minutes before my food is ready. When I mention that not waiting 20 minutes was the whole reason I ordered online 45 damn minutes ago, the guy working says the ownership is shit. That's probably true, but passing the blame isn't something I was ever allowed to do when I worked for The Man because it's not the customers fault, it's your job to offer a solution. I'd have gladly accepted an actual solution, but it was just this dude complaining that it's not HIS fault. Well dude, the owner probably does suck, but you're also bad at your job. I'm not sure the owner is the one who never once bothered to call about my order then acted like I was being unreasonable for suggesting that I should have been called. Did not offer a discount for the missing items OR the wait. Overheard him tell the next customer \\\\\\\"Everything in this place is shit.\\\\\\\"\\\\n\\\\nThe food isn't even that good, I was getting it because it's close to home and I'm sick (thus the desire to not stand around for the rest of time immemorial). But now I won't even bother. I know this review makes me sound impolite but this is one of the first times I was ever annoyed with a place enough to come leave a review like this.\\\\n\\\\nEdited to add: after I posted this, another customer came in who had ALREADY placed an online order (for which one has to pay in advance) and the worker refused to fulfill his order, told him to \\\\\\\"call corporate\\\\\\\" if he had an issue. Absolutely fucking ridiculous.\\\"},{\\\"review_date\\\":\\\"2017-10-30 03:15:01\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Awful!! Always out of something mainly ribs. Was the best when they had taco Tuesday but they stopped that. \\\\n\\\\nEvery time I try to go they are out of most of their meats. Save yourself some time, NEVER go on a Sunday! \\\\n\\\\nIf your lucky you might be able to enjoy the best thing they have. The FREE ice cream. That's if the machine is working 99% of the time it's not. \\\\n\\\\nWas very excited when this came in to town but ever sense it's been a disappointment. I would rather visit the Santa Maria or Ventura one. \\\\n\\\\nHope they can turn things around too survive in this town. Good Luck.\\\"},{\\\"review_date\\\":\\\"2017-10-30 00:46:55\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"How do you run out of ribs at a rib joint before 6:00 pm on a Sunday?Ask Dickey's because that what happened. No spinach, no sausages and no ribs.   Just wondering....\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Based on the provided structured data, here is an objective overview of Dickey's Barbecue Pit:\\n\\nLocated in Goleta, California, Dickey's Barbecue Pit is a Southern and Barbecue restaurant that offers takeout and has a rating of 2.5 stars. The restaurant has limited parking options, with no validated parking, street parking, or valet services available. WiFi is not available at the restaurant.\\n\\nAccording to customer reviews, the restaurant has faced issues with food availability and service. One reviewer experienced long wait times and poor communication about their order, while another reviewer mentioned that the restaurant is often out of popular menu items, such as ribs. A third reviewer noted that the restaurant ran out of ribs before 6 PM on a Sunday, which is unusual for a rib joint. Additionally, one reviewer mentioned that the free ice cream machine is often not working properly.\\n\\nWhile the restaurant has a loyal fan base, with many customers praising its casual atmosphere and good value, the recent reviews suggest that there are some service and supply chain issues that need to be addressed.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:7e533ec338ba2463ced6897f891b7c579570410cf6b1a08081468138374d2463",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26
+  ]
+}

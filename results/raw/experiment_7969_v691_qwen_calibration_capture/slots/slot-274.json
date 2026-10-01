@@ -1,0 +1,109 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.6720144620048814,
+  "exclusion_reason": null,
+  "family_id": "sha256:c8618f6d612be3332efae2f6cc4a744a82a883e43920b0d7bd6b2ebdb73f931f",
+  "input_tokens": 1094,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1094,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1118
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:b77faa0317ea21e1dcab003676779214714f82685bc327c863e115d10de082f3",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832857,
+    "id": "chatcmpl-8ohaIldpipS2Kfkx24TbvjDidtctRXG7",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 566.372,
+      "predicted_n": 24,
+      "predicted_per_second": 42.37497616407591,
+      "predicted_per_token_ms": 23.59883333333333,
+      "prompt_ms": 971.616,
+      "prompt_n": 1016,
+      "prompt_per_second": 1045.6805980963672,
+      "prompt_per_token_ms": 0.9563149606299213
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1094,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1118
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"1134 Chapala St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":null,\\\"intimate\\\":null,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":null,\\\"upscale\\\":null},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Japanese, Restaurants, Noodles, Sushi Bars\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"17:0-22:0\\\",\\\"Monday\\\":\\\"17:0-21:30\\\",\\\"Saturday\\\":\\\"17:0-22:0\\\",\\\"Thursday\\\":\\\"17:0-21:30\\\",\\\"Tuesday\\\":\\\"17:0-21:30\\\",\\\"Wednesday\\\":\\\"17:0-21:30\\\"},\\\"name\\\":\\\"Sushi Bar 29\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-16 08:22:01\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"Back in Santa Barbara is another sushi place, at Sushi Bar 29. They had tempura ice cream, and if you know me, this is one of my favorite desserts because of how it defies logic by frying ice cream in hot oil. Here, the tempura batter was fried nice and crisp which added great texture to the cold smooth green tea ice cream in the interior. This version is an adequate serving of the dish and nothing more.\\\\n\\\\nBeef Sukiyaki is an excellent dish that I rarely find in the Santa Barbara area. The broth here was excellent -- it had a strong soy and mirin flavor as expected and really nailed the taste. But don't be fooled by the large pot because it only contains a few pieces of low quality beef and a few pieces of vegetable and a small bunch of yam noodles. The amount of content in the bowl was very minimal, which is really a shame.\\\\n\\\\nFresh, sweet, juicy uni at Sushi Bar 29! While smaller and more pricey ($16) than Sun Sushi, their uni still hits the quality mark as they are fresh, vibrant, and delicious. Highly recommend everyone to try some fresh sea urchin in their lifetime.\\\\n\\\\nMy biggest problem with this restaurant is that place has both the unpleasant attributes of penny pinching and expensive food. I think it's pretty ridiculous for an upscale restaurant to charge for something as basic as tea, sauce, and condiments if you ask me.\\\"},{\\\"review_date\\\":\\\"2021-12-18 17:48:18\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"My new \\\\\\\"go-to\\\\\\\" for sushi! They are reasonably priced and the fish is excellent! We loved their red and green dragon rolls! We will be going here for the sushi cravings from now on! Thanks for the great service!\\\"},{\\\"review_date\\\":\\\"2021-11-15 17:55:08\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"Everything was too salty. \\\\nRamen was no flavor but salty, very salty. Their seasoned egg that came with the ramen was overcooked. \\\\nRolls are too saucy. \\\\nThe space is small.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Based on the provided structured data, here is an objective overview of Sushi Bar 29:\\n\\nSushi Bar 29 is a Japanese restaurant located in Santa Barbara, California. It offers a range of dishes, including sushi, noodles, and tempura. The restaurant has a rating of 4.5 stars and is known for its high-quality fish and unique dishes such as tempura ice cream. However, some customers have complained about the portion size and value for money, describing the restaurant as \\\"penny-pinching\\\" and overpriced. Despite these criticisms, many customers have praised the restaurant's fresh and delicious seafood, particularly the uni, and friendly service. The restaurant also offers outdoor seating and WiFi.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "policy_design",
+  "source_cluster_id": "sha256:26abcdb22fcb0d69b0814f54a269280017f143cc2feed07848e9430c78113d56",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17
+  ]
+}

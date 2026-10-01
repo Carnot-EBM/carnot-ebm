@@ -1,0 +1,107 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.3151074899942614,
+  "exclusion_reason": null,
+  "family_id": "sha256:06475d10504081628a30d02fef178f5911d2916b54777f48f227cf1c377c4a61",
+  "input_tokens": 744,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 744,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 767
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:25f8dedb3e4e787c92ffde23a954537ac066473c595b4ed918357d565deaaaae",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832535,
+    "id": "chatcmpl-PKJLqKbXogfC8jSyAnAMbPFJ5BCfG48r",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 536.221,
+      "predicted_n": 23,
+      "predicted_per_second": 42.89276249904424,
+      "predicted_per_token_ms": 23.31395652173913,
+      "prompt_ms": 660.868,
+      "prompt_n": 666,
+      "prompt_per_second": 1007.7655447078689,
+      "prompt_per_token_ms": 0.9922942942942944
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 744,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 767
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Seoul (CNN)North Korean leader Kim Jong Un is continuing to rule with an iron fist, having ordered the execution of about 15 senior officials so far this year, according to an assessment by South Korean intelligence agents, a lawmaker who attended a closed briefing said. Shin Kyung-min, a lawmaker with the New Politics Alliance for Democracy, told a handful of reporters that he had been given the information by the South Korean National Intelligence Service. CNN cannot independently confirm the executions. The nature of the intelligence supporting the National Intelligence Service allegations was also not immediately clear. North Korea is one of the most closed societies in the world. According to Shin, intelligence officials say Kim is ruling in an impromptu manner and does not countenance excuses or any views at variance with his own. He considers those a challenge to his authority, the intelligence officials said, according to Shin. For example, a senior official with Ministry of Forestry was executed for expressing dissatisfaction with the country's forestry program, the lawmaker said. North Korean defectors share their ordeals. The vice chairman of the State Planning Commission was executed because he objected to changing the design of a science and technology hall from a rounded shape to one resembling a flower, the intelligence officials said, according to the lawmaker. And in March, according to the South Korean lawmaker, Kim executed on charges of espionage four members of the Unhasu Orchestra, including the general director, because of a scandal, Shin said. Kim became North Korea's Supreme Commander in December 2011 following the death of his father, Kim Jong Il. According to the National Intelligence Service, he is reported to have executed 17 senior officials in 2012, 10 in 2013 and 41 in 2014. The National Intelligence Service says there is a strong possibility that Kim will visit Russia, but given his nature, there is no way to be sure until the last minute. Why Putin is hosting Kim Jong Un. CNN's KJ Kwon reported from Seoul and Don Melvin wrote this report from London.\\n\", \"original_answer\": \"North Korean leader Kim Jong Un has reportedly executed around 15 senior officials this year, according to South Korean intelligence agents. The information was given to lawmakers by the South Korean National Intelligence Service, although CNN cannot independently confirm the executions. The officials were allegedly executed for various reasons, including expressing dissatisfaction with forestry programs and objecting to changes in design. Kim has a reputation for ruling with an iron fist, and the National Intelligence Service reports that he executed 17 senior officials in 2012, 10 in 2013, and 41 in 2014. There are rumors that Kim may visit Russia, but it is uncertain.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:946b18527b1e1b3aa9fb290b2438e52db65a82cc912b60e143867303ef94a672",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ]
+}

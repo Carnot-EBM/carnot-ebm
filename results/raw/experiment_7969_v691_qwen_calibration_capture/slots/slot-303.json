@@ -1,0 +1,122 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.5812400379800238,
+  "exclusion_reason": null,
+  "family_id": "sha256:99c68e81a460a8e96ae2bca91995462b0036b6fc0ac03e6ac4e726d8e37c35ef",
+  "input_tokens": 983,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 983,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1006
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:ce6e7e44cd337cae0c55d346020419264e5a0af94a961c89b2603df1f4f5b2a4",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832895,
+    "id": "chatcmpl-gM3IJLgpIeNUTDWuuBy8C7aOUACvajha",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.387,
+      "predicted_n": 23,
+      "predicted_per_second": 42.483473005447124,
+      "predicted_per_token_ms": 23.5385652173913,
+      "prompt_ms": 923.423,
+      "prompt_n": 905,
+      "prompt_per_second": 980.0492298762323,
+      "prompt_per_token_ms": 1.020356906077348
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 983,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1006
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"\\\"Star Wars\\\" is once again back in our lives, the Burger-King couple helped us believe love can be found in fast food, and Mindy Kaling's brother had a shocking announcement. Those are just a few of the stories that trended this week. 1. 'Star Wars' streaming. The Force is with the streaming device of your choice, thanks to this week's surprise announcement that the entire \\\"Star Wars\\\" saga (so far, anyway) would be released on digital HD at the end of the week. Between this and the release of \\\"Daredevil,\\\"  we imagine lots of nerds called in sick on Friday. 2. Mindy Kaling's brother: I faked being black to get into medical school. Actress Mindy Kaling's brother says that he posed as a black man years ago to get into medical school and that the experience opened his eyes to what he calls the hypocrisy of affirmative action. Among those who disapprove of the book he's planning to write about the whole thing: his sister. 3. Farewell, Rosco. \\\"Dukes of Hazzard\\\" fans mourned the loss of actor James Best, best known as Hazzard County's hapless sheriff Rosco P. Coltrane, this week. Others who passed on: \\\"L.A. Law\\\" actor Richard Dysart and frequent Clint Eastwood co-star Geoffrey Lewis. 4. When Burger met King, it was love. Joel Burger is set to marry Ashley King in July, and when fast food giant Burger King got wind of the nuptials, the couple scored a free wedding. 5. Michelle Obama broke it down (again) The first lady's Let's Move campaign has featured her dancing on more than one occasion, but she brought the (White) House down on Monday with the \\\"So You Think You Can Dance\\\" all-stars during the Easter egg roll. 6. \\\"The Vampire Diaries\\\" crisis. Not since Zayn Malik announced that he was quitting One Direction has Twitter had such a meltdown: \\\"Vampire Diaries\\\" star Nina Dobrev is leaving the CW series. \\\"Nothing will be the same again,\\\" one fan tweeted. Other things we loved:. More than 10 million people have seen Anne Hathaway's take on Miley Cyrus' \\\"Wrecking Ball,\\\" complete with props, from Spike's hit show \\\"Lip Sync Battle.\\\" Go, greased lightning! \\\"Late Late Show\\\" host and Tony winner James Corden put on \\\"Grease\\\" for Los Angeles drivers waiting in traffic. The cast of the movie \\\"Suicide Squad,\\\" including Will Smith and Margot Robbie, assembled for the first time this week in a Twitter photo from director David Ayer. And no worries, future Joker Jared Leto was taking the photo (in an image inspired by classic comic book \\\"The Killing Joke\\\"). The comments are the whole reason to read this \\\"Humans of New York\\\" post on a woman named Beyonce.\\n\", \"original_answer\": \"This week's top news stories included the release of the entire \\\"Star Wars\\\" saga on digital HD, Mindy Kaling's brother confessing to pretending to be black to get into medical school, the passing of several notable actors, a free wedding for a Burger King employee, Michelle Obama's energetic performance during the Easter egg roll, and the departure of \\\"Vampire Diaries\\\" star Nina Dobrev. In entertainment news, Anne Hathaway's cover of Miley Cyrus' \\\"Wrecking Ball\\\" went viral on social media, while the cast of \\\"Suicide Squad\\\" came together for the first time in a Twitter photo.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:d9347026d37c7844ce4d9bf83392314bc5e6b2168ba7339e1d99ed098450bd0d",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30
+  ]
+}

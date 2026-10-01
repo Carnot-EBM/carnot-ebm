@@ -1,0 +1,105 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.5064748320146464,
+  "exclusion_reason": null,
+  "family_id": "sha256:6409b40e58393c58564be7a49c685a0efa980ad2194470a68091d411b2dde364",
+  "input_tokens": 950,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 950,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 971
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:ceef54d2164b45641f681d6a23d34ac3775014ae7c871e47a31d87f2e01b2d19",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832898,
+    "id": "chatcmpl-qvyVDOIICXAi10WWOLEt5YqwzFkTxb6r",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 492.765,
+      "predicted_n": 21,
+      "predicted_per_second": 42.61666311527807,
+      "predicted_per_token_ms": 23.465,
+      "prompt_ms": 878.591,
+      "prompt_n": 872,
+      "prompt_per_second": 992.498215893402,
+      "prompt_per_token_ms": 1.007558486238532
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 950,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 971
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"5838 Hollister Ave\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":null,\\\"divey\\\":null,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":null,\\\"trendy\\\":null,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Mexican, Restaurants, Desserts, Food\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"10:0-21:0\\\",\\\"Monday\\\":\\\"10:0-21:0\\\",\\\"Saturday\\\":\\\"8:0-21:0\\\",\\\"Sunday\\\":\\\"8:0-21:0\\\",\\\"Thursday\\\":\\\"10:0-21:0\\\",\\\"Tuesday\\\":\\\"10:0-21:0\\\",\\\"Wednesday\\\":\\\"10:0-21:0\\\"},\\\"name\\\":\\\"Altamiranos Restaurant\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-04 01:00:29\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"The food was delicious. I got the posole and my husband got the chile verde burrito. The guy working was the hostess, server, bartender cashier for the whole restaurant and he did amazing. I didn't wait long for anything.\\\"},{\\\"review_date\\\":\\\"2021-12-14 04:39:13\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Weirdly enough it's been hard to find a good authentic mexican restaurant in SB, since moving here 4 years ago. We're from LA area. Definitely recommend!\\\"},{\\\"review_date\\\":\\\"2021-11-08 22:45:33\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Ok, just when I thought that I had been to EVERY Mexican restaurant in town...my wife gets me a burrito from a little place in old town Goleta called Altamiranos! \\\\nThis burrito was so damn good, we have since gone back 3 times in 3 weeks.\\\\nThe service here is really nice. Friendly. Helpful. \\\\nThey really show that they care about their guests. \\\\nThe Asada burrito with everything is my go-to. The rice is well seasoned, the asada is tender and delicious.\\\\nThe wife had chicken enchiladas verde and ate half of hers. Really good.\\\\nSalsa bar is on point. \\\\nTry this place, it's good!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Altamiranos Restaurant, located at 5838 Hollister Ave, Goleta, CA, is a Mexican cuisine restaurant that also offers desserts. It is open from 10:00-21:00 from Monday to Friday and 8:00-21:00 on Saturday and Sunday. Unfortunately, it does not provide WiFi and does not offer reservations but it does offer outdoor seating and takeout services. It is also a good place for groups. The restaurant maintains a casual ambiance and provides street parking. The restaurant has a 4-star business rating, and recent reviews praise the quality of the food, with dishes such as the posole, chile verde burrito, and asada burrito mentioned favorably. Customers also appreciate the efficient service and friendly, helpful staff. The restaurant is recommended for its authentic Mexican food.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "tune",
+  "source_cluster_id": "sha256:db5d6f1843ede3dccbb46fbcb91f9dcc6f868e7fd1dccf3f85a19e59fbba788f",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ]
+}

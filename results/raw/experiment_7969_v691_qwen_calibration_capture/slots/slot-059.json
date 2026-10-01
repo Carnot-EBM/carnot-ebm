@@ -1,0 +1,108 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.3030856479890645,
+  "exclusion_reason": null,
+  "family_id": "sha256:765c48f874077e791334df364c79ffb28502e2451808e7aab9669a4dba1d8931",
+  "input_tokens": 665,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 2,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 665,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 689
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:285ab9a42421e6ef321331d32d80573fe910f426d1868cb1ef945128f515303f",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 2\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832552,
+    "id": "chatcmpl-imMmzvyVkCqdvweqv05H4rh69ffc51fv",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 561.48,
+      "predicted_n": 24,
+      "predicted_per_second": 42.744176106005554,
+      "predicted_per_token_ms": 23.395,
+      "prompt_ms": 604.732,
+      "prompt_n": 587,
+      "prompt_per_second": 970.6779201365233,
+      "prompt_per_token_ms": 1.0302078364565588
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 665,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 689
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:All living things, large or small, plant or animal, are made up of cells. Most living things are made up of one cell and they are called unicellular organisms. Many other living things are made up of a large number of cells that form a larger plant or animal. These living things are known as multicellular organisms.n humans, there are about 200 different types of cells, and within these cells there are about 20 different types of structures or organelles. All cells have a membrane. Cell membranes are the outer layers that hold the cell together. They let nutrients pass into the cell and waste products pass out.\\\\n\\\\npassage 2:All the parts of your body are made up of cells. There is no such thing as a typical cell. Your body has many different kinds of cells. Though they might look different under a microscope, most cells have chemical and structural features in common.n humans, there are about 200 different types of cells, and within these cells there are about 20 different types of structures or organelles. All cells have a membrane. Cell membranes are the outer layers that hold the cell together. They let nutrients pass into the cell and waste products pass out.\\\\n\\\\npassage 3:Epidermis: The upper or outer layer of the two main layers of cells that make up the skin. The epidermis is mostly made up of flat, scale-like cells called squamous cells. Under the squamous cells are round cells called basal cells.The deepest part of the epidermis also contains melanocytes.These cells produce melanin, which gives the skin its color.The other main layer of the skin is the dermis, the inner layer of skin, that contains blood and lymph vessels, hair follicles, and glands.he deepest part of the epidermis also contains melanocytes. These cells produce melanin, which gives the skin its color. The other main layer of the skin is the dermis, the inner layer of skin, that contains blood and lymph vessels, hair follicles, and glands.\\\\n\\\\n\\\",\\\"question\\\":\\\"what type of cells mostly made up our skin\\\"}\", \"original_answer\": \"Based on the provided passages, the type of cells that make up the skin is:\\n\\nAnswer: Squamous cells and basal cells.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "tune",
+  "source_cluster_id": "sha256:f283d2f63b1a9cc0e17f889ee21e8767502af479c6404c6c4f1a40b84ac5d258",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+  ]
+}

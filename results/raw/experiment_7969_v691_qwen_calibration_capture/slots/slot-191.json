@@ -1,0 +1,100 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.1967412179801613,
+  "exclusion_reason": null,
+  "family_id": "sha256:964d8f8370e95e44720af8b5c5c42e4081a2b6b2269a2f108bd772315d006e7d",
+  "input_tokens": 522,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.85,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 522,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 546
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:8a3161abe23ce550f2332fece2ed40df78ceed804bc93f769d64935d82bc6dc3",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.85,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832734,
+    "id": "chatcmpl-bSCGfvwx53LsUZwVHAJu09Hp3ndixLPR",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.105,
+      "predicted_n": 24,
+      "predicted_per_second": 42.46998345440228,
+      "predicted_per_token_ms": 23.546041666666667,
+      "prompt_ms": 499.072,
+      "prompt_n": 444,
+      "prompt_per_second": 889.6511926134907,
+      "prompt_per_token_ms": 1.124036036036036
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 522,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 546
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Loss Mitigation. Loss mitigation is a process used by mortgage lenders to work with buyers who are delinquent on their home loans. Through the loss mitigation process, a lender may modify the terms of a home loan, allowing the homeowner to sell the property for less than is owed, or transfer the deed back to the lender. The goals of loss mitigation are to reduce the potential loss being incurred by a lender when the borrower is delinquent.\\\\n\\\\npassage 2:Kinds of loss mitigation. Loan modification: This is a process whereby a homeowner's mortgage is modified and both lender and homeowner are bound by the new terms. The most common modifications are lowering the interest rate and extending the term to up to 40 years.\\\\n\\\\npassage 3:putting in place new procedures to facilitate borrowers\u2019 access to foreclosure avoidance options. The new rules are designed to provide consistent and meaningful protections for borrowers, and to give industry necessary flexibility. The following summary highlights the key provisions. Foreclosure process The new CFPB mortgage rules provide important new\\\\n\\\\n\\\",\\\"question\\\":\\\"what of the procedures of a loss mitigation mortgage\\\"}\", \"original_answer\": \"Based on the given passages, it appears that the loss mitigation mortgage process involves several steps. First, the lender works with the borrower to determine the best course of action to mitigate potential losses. This may involve modifying the terms of the loan or transferring the deed back to the lender. Loan modification is one such option, which involves modifying the terms of the loan and binding both parties to the new agreement. Other types of loss mitigation may include short sales, deed-in-lieu of foreclosure, or payment plans. The goal of these processes is to reduce the potential loss being incurred by the lender while also providing protection for the borrower.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:6fb8dd8cc9b84dc7860fbc0e149eec28b1b57ec7f945acec8d34816a38171985",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 0.0,
+  "exclusion_reason": "answer_units_over_budget",
+  "family_id": "sha256:62a516909954a6b96d0548e67688a9c4a304faa837cde3c578e577b37d026110",
+  "input_tokens": null,
+  "parsed": {
+    "citation_valid": false,
+    "completed": false,
+    "finish_reason": null,
+    "probability": null,
+    "schema_valid": false,
+    "source_sentence_id": null,
+    "status": "invalid_envelope",
+    "syntax_valid": false,
+    "usage": {}
+  },
+  "public_eligible": false,
+  "public_hash": "sha256:e0d01c6df21a71994efa3112891ec1031b540b319c3ffbdd353f81534f119953",
+  "raw_response": {},
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Meetings form an important part of workplace communication. Creatas Images/Creatas/Getty Images. Workplace meetings are an important element of business management. Meetings enable you and your employees to communicate and share information, solve problems or resolve disputes, improve performance, build teamwork and move projects forward.\\\\n\\\\npassage 2:1 This type of meeting is very common in the workplace. 2  Private meeting: Private meeting is called for discussing confidential and restricted issues where general people have prohibition to access. 3  Only selected people are allowed to attend the meeting.\\\\n\\\\npassage 3:1 Informal meeting: When any meeting is arranged without maintaining official rules and regulation, it is called informal meeting. 2  Such meeting can be called upon by giving short notice using informal media. 3  This type of meeting is very common in the workplace.\\\\n\\\\n\\\",\\\"question\\\":\\\"types of meetings in the workplace and their purposes\\\"}\", \"original_answer\": \"Based on the given passages, here are the different types of meetings in the workplace and their purposes:\\n\\n1. Formal Meeting: A formal meeting is a structured gathering that follows strict rules and protocols. It is used for discussing important issues, solving problems, improving performance, and building teamwork. The purpose of a formal meeting is to make decisions, set goals, and provide feedback in a professional setting.\\n2. Informal Meeting: An informal meeting is a casual gathering that does not follow strict rules or protocols. It is used for discussing less formal matters and building relationships among colleagues. The purpose of an informal meeting is to foster open communication and collaboration.\\n3. Private Meeting: A private meeting is a closed-door meeting that is restricted to a select few individuals. The purpose of a private meeting is to discuss confidential or sensitive information that cannot be shared with everyone.\\n\\nTherefore, the three types of meetings in the workplace and their purposes are:\\n\\n1. Formal Meeting - to make decisions, set goals, and provide feedback in a professional setting.\\n2. Informal Meeting - to foster open communication and collaboration.\\n3. Private Meeting - to discuss confidential or sensitive information that cannot be shared with everyone.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 0,
+  "role": "fit",
+  "source_cluster_id": "sha256:e9f4a5e502621343b2feca68af3d1b35e7d5854b6e227b175bfa66c6b0b9e26a",
+  "started": false,
+  "status": "excluded",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ]
+}

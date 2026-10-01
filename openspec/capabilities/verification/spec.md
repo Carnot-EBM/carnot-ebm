@@ -47309,3 +47309,36 @@ with Holm correction for Brier and cost. Benefit requires both gains >=.02,
 both CI95 lower bounds >0, both adjusted p<.05, automation >=.20 and no extra
 false accepts. Otherwise publish a valid null or insufficient-data null.
 Implicit-true-excluded targets, annotation strata and sensitivity are descriptive.
+
+# REQ-VERIFY-7969: Capture only unmeasured calibration roles
+
+Freeze 384 public slots: fit 256, tune 64, policy_design 32 and
+calibration_replay 32, ordered by public hash. Preserve exclusions. Reuse the
+Exp7958 full_source messages, sentence IDs, grammar, revision and decoder
+without changes: temperature 0, seed 69058, 96 output and 6000 input tokens.
+Never generate evaluation, online or retention responses. Never truncate,
+repair, retry or replace the mandated Q4_K_M model. Seal each request and raw
+reply before evaluator access; this task opens no evaluator labels.
+
+## SCENARIO-VERIFY-7969-CAPTURE
+
+Test public-only role access, exact prompt identity, exclusions, token admission,
+strict parsing, failed calls, expired budgets and eight-row checkpoints. Resume
+only matching code/config/input identity and never repeat a started request.
+Bound load plus capture to 3000 seconds, 384 calls and 36864 output tokens.
+Capture readiness needs every admitted slot accounted for, 128 valid independent
+fit clusters and 32 tune clusters. Readiness is validity, never decision benefit.
+
+## SCENARIO-VERIFY-7969-REPLAY
+
+Cold-reconstruct requests, parses, denominators and role counts without model
+execution. Reject changed code, input, raw response, request or reduction hashes.
+Censored, excluded and failed slots remain in the intended denominator.
+
+### Implementation Status (REQ-VERIFY-7969)
+
+Implemented in `python/carnot/verify/qwen_calibration_capture_7969.py`.
+The fixed role roster, unchanged full-source prompt, public hash order,
+strict parser, eight-slot checkpoints and matching checkpoint resume are
+covered by `tests/python/test_qwen_calibration_capture_7969.py`.
+Scientific accuracy and decision benefit remain unmeasured in this capture.

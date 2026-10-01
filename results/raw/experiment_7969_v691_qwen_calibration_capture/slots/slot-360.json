@@ -1,0 +1,108 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.1998097429750487,
+  "exclusion_reason": null,
+  "family_id": "sha256:e8716f5905cfd2a3e41f22f546a9e2f349360080a8c2a2cda678b75bad05762b",
+  "input_tokens": 503,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 503,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 527
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:f466e60f94363bbbe041347ea79d861b0dbbee3045dd6c22e35d6c5d96a86b78",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832976,
+    "id": "chatcmpl-wSr2lnNlvBuFKjAj1XNKpWDLN0cz2eyC",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 571.462,
+      "predicted_n": 24,
+      "predicted_per_second": 41.99754314372609,
+      "predicted_per_token_ms": 23.810916666666667,
+      "prompt_ms": 495.496,
+      "prompt_n": 425,
+      "prompt_per_second": 857.7263994058478,
+      "prompt_per_token_ms": 1.1658729411764706
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 503,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 527
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Best Answer: There are many differences- 1. Organic compounds are produced by living things. Inorganic compounds are produced by non-living natural processes or by human intervention in the laboratory. 2. Organic compounds can not form salts but Inorganic compounds can form salts. 3. Organic compounds contain carbon. Inorganic compounds don't. 4. Organic compounds contain carbon-hydrogen bonds. Inorganic compounds don't. 5. Organic compounds do not contain metal atoms but Inorganic compounds contain metal atoms.\\\\n\\\\npassage 2:Best Answer: There are many differences- 1. Organic compounds are produced by living things. Inorganic compounds are produced by non-living natural processes or by ...\\\\n\\\\npassage 3:There are, however, some inorganic compounds that still contain... The distinction between the two terms is primarily that organic compounds contain carbon, while almost all inorganic compounds do not. There are, however, some inorganic compounds that still contain...\\\\n\\\\n\\\",\\\"question\\\":\\\"difference between organic and inorganic compounds\\\"}\", \"original_answer\": \"The difference between organic and inorganic compounds is primarily based on their origin and composition. Organic compounds are produced by living things and contain carbon-hydrogen bonds. They do not contain metal atoms and can not form salts. On the other hand, inorganic compounds are produced by non-living natural processes or by human intervention in the laboratory. They do not contain carbon or carbon-hydrogen bonds, but they do contain metal atoms and can form salts.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:7c4c8f64c1bc0069df796295b1f13f01f6e8f987c044eef9a47d5471704d6b05",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+  ]
+}

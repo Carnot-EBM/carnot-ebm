@@ -1,0 +1,120 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 2.097151011985261,
+  "exclusion_reason": null,
+  "family_id": "sha256:47953049cedbc5bf84622023f3479dc5ff8fc22f54d4bbac0e4594722225aa1e",
+  "input_tokens": 1753,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1753,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1776
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:01251d590388e92424f6d578075ccb1e26fc95edf38fe95809f1a83c722a526e",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832472,
+    "id": "chatcmpl-krtBhSafjDEq2MNtdEGDgXQdHgeCFfYt",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 534.077,
+      "predicted_n": 23,
+      "predicted_per_second": 43.064951308519184,
+      "predicted_per_token_ms": 23.220739130434783,
+      "prompt_ms": 1429.668,
+      "prompt_n": 1675,
+      "prompt_per_second": 1171.6006793185552,
+      "prompt_per_token_ms": 0.8535331343283581
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1753,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1776
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"You may know Mindy Kaling from Fox's cult hit comedy \\\"The Mindy Project,\\\" in which she plays Mindy Lahiri, a perky, quirky OB/GYN juggling her career and love life in New York. (Only in the Big Apple can a doctor not afford an apartment!) The show was a breakthrough for on-screen representation \u2014 the first network sitcom created by and starring a woman of color \u2014 and it looks likely to be renewed for the coming 2015-16 season. Recently, however, Kaling's brother Vijay Chokalingam unveiled a project of his own, and while it has been getting a lot of attention, it hasn't generated quite as many laughs \u2014 either from observers or from his famous sibling, who told him it brought \\\"shame upon their family.\\\" You see, Chokalingam revealed that, as an undergraduate at the University of Chicago, he engaged in a daring (his view) or ridiculous and offensive (pretty much everyone else) scam: He applied to medical school claiming to be African-American. Chokalingam had spent his college years as a \\\"hard-partying frat boy,\\\" and achieved a less than stunning 3.1 GPA. Upon facing graduation and exploring his med school options, he realized that fellow Indian-Americans with his grades were getting turned down from the universities of his choice \u2014 but that \\\"black, Hispanic, and Native American applicants with my grades and test scores were much more likely to gain acceptance.\\\" This revelation led him to make the decision to pose as a black man, both to \\\"dramatically improve\\\" his chances of admission, and to illustrate the unfair advantage that blacks and other underrepresented minorities receive when applying to prestigious schools. To accomplish this goal, Chokalingam shaved his head of its naturally wavy black locks, trimmed his \\\"long Indian-American eyelashes,\\\" checked \\\"black\\\" under the optional race/ethnicity declaration and submitted his application to 14 schools under his childhood nickname \\\"JoJo.\\\" He received invitations for in-person interviews at 11 schools, results that he claims support the notion that African-Americans garner special privileges that are unavailable to whites or Asians. And now that the statute of limitations on his act of fraud has expired, he's looking to write a book on his experiences, titled \\\"Almost Black: The True Story of an Indian American Who Got Into Medical School Pretending to Be an African American.\\\" What's truly curious is that even if you agree with Chokalingam that affirmative action is merely a form of \\\"systematic racism,\\\" when all is said and done, it offers very little evidence of the \\\"privilege\\\" that he claims is accorded to black, Hispanic and Native American candidates. Chokalingam had mediocre grades and MCATs, but he graduated from one of the most prestigious schools in the nation. Yet even while representing himself as black, Chokalingam received only a single admission offer, to St. Louis University's School of Medicine, which falls somewhere between 57th and 67th in national rankings. Harvard, University of Pennsylvania, Columbia and all the higher ranked schools he applied to rejected him. Meanwhile, he admits, pretending to be black came with disadvantages. He found himself being accused of shoplifting by store clerks and harassed by cops \u2014 who would regularly stop him while driving and demand that he tell them how much his car cost, implying that he must have stolen it. These acts of very real prejudice, experienced regularly by blacks and Hispanics of all backgrounds \u2014 multimillionaire comedian Chris Rock has recently been tweeting pictures of the occasions when he is pulled over by police for no reason \u2014 didn't seem to dissuade Chokalingam from his adamant belief in the unfairness of a system that seeks to address the shockingly low numbers of minority health practitioners by providing some weight to race and ethnicity in decision-making. It's not just a matter of what individual applicants \\\"deserve.\\\" One-third of Americans are black, Hispanic or Native American; just one in 10 physicians are. Since minority medical practitioners are up to three times as likely to practice in their own communities, this lack of diversity has produced \\\"doctor deserts,\\\" in which urban and rural ethnic enclaves across the nation go without access to primary care physicians. Years ago, when I told my father \u2014 a doctor from a long line of doctors \u2014 that I didn't want to follow in his footsteps, he told me that was fine, because medicine is a service trade, and anyone not interested in serving should avoid the profession. A medical degree isn't a reward to be earned, he said, but a responsibility to be accepted. Which really cuts to the heart of what's so sad about Chokalingam's racial farce. Like others who've recently been exposed for falsely claiming racial identities \u2014 including putative presidential candidate Jeb Bush, who registered himself as \\\"Hispanic\\\" on a 2009 voter form, and Massachusetts Sen. Elizabeth Warren, who was excoriated during her campaign for having claimed Native American ancestry in the past \u2014 Chokalingam wanted to claim the fruits of racial affiliation without having to carry black people's burden. Race isn't just about color or blood; it is about the collective experiences and inherited cultural context and present-day condition of a community of people. Many of the markers of race are persistently corrosive; others are deeply painful. Affirmative action programs are a means of redress for these awful realities of our nation's history; an imperfect one, but necessary. There are some fields where the imbalances might never correct themselves on their own. Industries like health care and Hollywood. Because what's most ironic about Chokalingam's decision to ride on his sister's coattails in telling his story: While Asians are well represented in medicine, our numbers are vanishingly low in the entertainment and media world, and until the recent breakthrough of modern pioneers like Mindy Kaling, it was impossible to imagine film and television that included our faces, voices and stories. Kaling's immense talent and charisma made her a star. But it was a quota-based affirmative action initiative -- NBC's Diversity Writers Program -- that gave her a start.\\n\", \"original_answer\": \"Vijay Chokalingam, brother of American actress Mindy Kaling, has revealed that he pretended to be African-American to gain admission into a top medical school. He accomplished this by shaving his head, trimming his eyelashes, and selecting \u201cblack\u201d in the optional race/ethnicity declaration of the application. Chokalingam believes he was able to receive invitations for interviews at 11 of the 14 schools he applied to because of the racial advantage. He claims that the results of his experiment prove that African-Americans have privileges which are unavailable to whites or Asians. However, he received only one admission offer, to St. Louis University's School of Medicine, which ranks between 57 and 67 in national rankings. He was rejected by all of the top-ranking schools he applied to. In addition, Chokalingam experienced racial discrimination while pretending to be African-American, such as being accused of shoplifting and being pulled over by police for no reason. Now that the statute of limitations on his act of fraud has expired, Chokalingam plans to write a book about his experiences called \u201cAlmost Black: The True Story of an Indian American Who Got Into Medical School Pretending to Be an African American\u201d.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:fa4f665a1fc6deb776f5b5671076ae78ed7ab505f8a205283ac95becd38365e2",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28
+  ]
+}

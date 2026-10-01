@@ -1,0 +1,99 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.3449347230489366,
+  "exclusion_reason": null,
+  "family_id": "sha256:b84aba292ec70346864eef1c1e7869d88d6203007c28c69155356f0a40b5a22d",
+  "input_tokens": 822,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 822,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 843
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:3f4920f4b270825eb6d4c946323325b5bfb134f7c438257f4007ace9b2b6a705",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832599,
+    "id": "chatcmpl-mpTWoRS1MU5wrAYkNJ8z4okqxnW7j4Ds",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 491.716,
+      "predicted_n": 21,
+      "predicted_per_second": 42.707579171717,
+      "predicted_per_token_ms": 23.41504761904762,
+      "prompt_ms": 724.081,
+      "prompt_n": 744,
+      "prompt_per_second": 1027.5093532353424,
+      "prompt_per_token_ms": 0.9732271505376344
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 822,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 843
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"1435 San Andres St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":null,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Restaurants, Mexican\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"6:30-21:0\\\",\\\"Monday\\\":\\\"6:30-21:0\\\",\\\"Saturday\\\":\\\"7:0-21:0\\\",\\\"Sunday\\\":\\\"7:0-21:0\\\",\\\"Thursday\\\":\\\"6:30-21:0\\\",\\\"Tuesday\\\":\\\"6:30-21:0\\\",\\\"Wednesday\\\":\\\"6:30-21:0\\\"},\\\"name\\\":\\\"El Zarape\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-12-22 20:42:21\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Need some real California Mexican food? This is the spot. Everything is incredible. My mouth waters thinking of the carnitas.\\\"},{\\\"review_date\\\":\\\"2021-12-18 02:47:05\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"What a great local restaurant.  We always get good service and good food!   I have to say this is surprisingly clean food, free of extra salt and fat which I've often experience at other Taquerias.\\\"},{\\\"review_date\\\":\\\"2021-10-31 21:18:47\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"My personal favorite breakfast burrito option in Santa Barbara. Amazing ingredients, tortilla and salsa options. Highly recommend!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"El Zarape is a Mexican restaurant located at 1435 San Andres St in Santa Barbara, CA. The restaurant is known for its authentic California Mexican food and has received positive reviews from customers. With a rating of 4.0 stars, customers have praised the quality of the food and the variety of options available. One customer mentioned that everything at El Zarape is incredible and their mouth waters just thinking about the carnitas. Another customer appreciated the cleanliness of the restaurant and the fact that the food is free of excessive salt and fat, which they have often experienced at other taquerias. Additionally, El Zarape is highly recommended for its breakfast burritos, which are considered the personal favorite of one customer. The restaurant offers takeout services and is suitable for groups. The ambiance is described as casual, and there is no outdoor seating available. The restaurant does not provide WiFi. El Zarape is open from 6:30 am to 9:00 pm from Monday to Friday, and from 7:00 am to 9:00 pm on Saturdays and Sundays.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:bea4ae5147392bd75561dc365c07c5a41045d2ebd33ef583c9047f3af9bd8b9d",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ]
+}

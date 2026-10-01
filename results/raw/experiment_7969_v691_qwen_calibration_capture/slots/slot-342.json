@@ -1,0 +1,109 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.28674436500296,
+  "exclusion_reason": null,
+  "family_id": "sha256:97c7b15f0f99b518a8960506977d4933e298451edb8198db7d8d4e21fa275577",
+  "input_tokens": 665,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 1,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 665,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 689
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:e5a96873e344690591fcbe8aaaa5ed564c048679055d3b3f6f560010ff20d208",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 1\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832949,
+    "id": "chatcmpl-oOePzlMuDVFxJcseCvfCxuQXKlJVQLOU",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.326,
+      "predicted_n": 24,
+      "predicted_per_second": 42.45338088111992,
+      "predicted_per_token_ms": 23.55525,
+      "prompt_ms": 610.814,
+      "prompt_n": 587,
+      "prompt_per_second": 961.0126814382121,
+      "prompt_per_token_ms": 1.0405689948892674
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 665,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 689
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"'Bold and the Beautiful' Spoilers: Deacon Begs Finn To Give Sheila A Chance, Hope Learns The Secret?\\nThe Bold and the Beautiful (B&B) spoilers for the week of October 2 tease that Deacon Sharpe (Sean Kanan) will beg John 'Finn' Finnegan (Tanner Novlan) to give his birth mother, Sheila Carter (Kimberlin Brown) another chance.\\nShe Knows Soaps reports that Deacon will tell Finn he's in a relationship with Sheila and wants her to be happy. He thinks the only way for Sheila to feel at peace is if Finn opens his heart to a relationship with her.\\nAfter Finn learns the truth about Sheila and Deacon's relationship, Daytime Confidential reports that the handsome doctor contacts Hope Logan (Annika Noelle) to spill the juicy secret. The scoop stuns Hope. She had no idea that her father had a connection to Sheila.\\nThe Bold and the Beautiful spoilers say that Sheila is unsure about marrying Deacon. She worries that it would complicate his relationship with Hope, knowing how important his daughter is to Deacon. But she knows that she loves Deacon and wants to spend the rest of her life with him.\\nAs for Hope, she will unravel after learning the news. She will confront her father about the scoop, but not before getting advice from he mother, Brooke Logan (Katherine Kelly Lang). She will drop the bombshell about Deacon's relationship with Sheila on Brooke, who will be in disbelief that Hope's dad would want to marry the nine-toe bandit.\\nB&B fans, will Hope demand for Deacon to break up with Sheila or lose her and his grandkids forever? Will Finn give Sheila a chance, knowing it would destroy his marriage?\\nKeep watching The Bold and the Beautiful, airing weekdays on CBS and streaming on Paramount Plus. Please share your thoughts with me in the comments section below. Remember to follow me to read more of my content.\", \"original_answer\": \"Deacon will beg Finn to give his birth mother, Sheila, another chance. Sheila is unsure about marrying Deacon due to its potential impact on his relationship with Hope. Hope will learn the truth and confront Deacon, potentially leading to a rift between them. Finn may consider opening up to a relationship with Sheila, despite its potential consequences for his marriage.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "policy_design",
+  "source_cluster_id": "sha256:c4966c28f9617c84420a13241208c149538f536440ab74698423c3108582d3d4",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17
+  ]
+}

@@ -1,0 +1,103 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.5971413930528797,
+  "exclusion_reason": null,
+  "family_id": "sha256:a6ef1289ecc5a0041ba0947e711a88a2601d4cc12d0c2b4cf1518a5a415c6cb6",
+  "input_tokens": 1019,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1019,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1042
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:8c2cdd3a4159e4aca3fcb04c22389b258d03bb16bb48c8d3e004437af7f9f783",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832740,
+    "id": "chatcmpl-GMZEUWPKhPjJMFqSrMZRWJqqywZDRlVJ",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 548.063,
+      "predicted_n": 23,
+      "predicted_per_second": 41.96597836380124,
+      "predicted_per_token_ms": 23.82882608695652,
+      "prompt_ms": 930.89,
+      "prompt_n": 941,
+      "prompt_per_second": 1010.8605742891211,
+      "prompt_per_token_ms": 0.9892561105207226
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1019,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1042
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"119 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":true,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":true,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Italian, American (New), Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"17:0-23:0\\\",\\\"Monday\\\":\\\"17:0-23:0\\\",\\\"Saturday\\\":\\\"17:0-23:0\\\",\\\"Sunday\\\":\\\"17:0-23:0\\\",\\\"Thursday\\\":\\\"17:0-23:0\\\",\\\"Tuesday\\\":\\\"17:0-23:0\\\",\\\"Wednesday\\\":\\\"17:0-23:0\\\"},\\\"name\\\":\\\"Anchor Woodfire Kitchen\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2014-08-15 21:32:45\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Parking available, GREAT STAFF, clean, modern and the food is delicious!!! Highly recommend\\\"},{\\\"review_date\\\":\\\"2014-06-24 03:23:37\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Probably a good thing it is closed. we liked the food and ate there several times because we were staying at the hotel where it is located. But with our last meal there we got the worst food poisoning we even had. Nearly sent us to the hospital.\\\"},{\\\"review_date\\\":\\\"2013-09-07 13:38:13\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"This place has closed, as of 9/5/13.  Not a huge loss.\\\\n\\\\nI went there twice.  It was OK.  Not particularly overpriced for a restaurant of this type and location, but the dishes were small.  I had a pork dish on my first visit that was good, but small; on my second visit, I had the rabbit lasagna, which was quite noticeably and remarkably undersized.  \\\\n\\\\nUsual trendy \\\\\\\"mixologist\\\\\\\" cocktails that are long on ingredients and short on alcohol.\\\\n\\\\nThe place was loud.  And we were seated at the last table in the back, near the oven.  So, it was loud AND hot.\\\\n\\\\nOn to the new....\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Anchor Woodfire Kitchen is a local business located at 119 State St in Santa Barbara, CA. It is a restaurant that offers Italian and American (New) cuisines. The restaurant is open from 5:00 PM to 11:00 PM every day of the week. \\n\\nAccording to customer reviews, the staff at Anchor Woodfire Kitchen is highly praised for being great and the establishment is described as clean and modern. Customers highly recommend the food, as it is described as delicious. \\n\\nHowever, there is also a negative review mentioning food poisoning after a meal at the restaurant. This review raises concerns about the quality and safety of the food.\\n\\nThe business has a rating of 3.5 stars, indicating a mixed reception among customers. It offers amenities such as free WiFi and takeout services. It is also good for groups and provides parking options such as street parking and a parking lot. However, it does not have outdoor seating.\\n\\nThe ambiance of the restaurant is described as trendy, but not particularly romantic or intimate. The restaurant has closed as of September 5, 2013, according to one of the reviews. Overall, Anchor Woodfire Kitchen has both positive and negative aspects, with customer opinions varying.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "tune",
+  "source_cluster_id": "sha256:3ce1eeef960065dd223765869b57f616dac617bcc461d058a2a6c534945c797a",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]
+}

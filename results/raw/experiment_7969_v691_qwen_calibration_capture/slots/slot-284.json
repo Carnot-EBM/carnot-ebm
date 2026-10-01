@@ -1,0 +1,99 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.098560932034161,
+  "exclusion_reason": null,
+  "family_id": "sha256:fcb041f42717508a0081903e782bc4ccf8330cc782403bdb84d15bc88a6ed3cf",
+  "input_tokens": 415,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 3,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 415,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 439
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:bf8ac91084ac0773d86a24ec3659b3dd3bf79fdf1a23b919fdd4e592ea6445e5",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 3\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832871,
+    "id": "chatcmpl-xjQrhu7IYnuu5D2AtBqzV0S3wwXSJM4J",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.58,
+      "predicted_n": 24,
+      "predicted_per_second": 42.50947607070742,
+      "predicted_per_token_ms": 23.52416666666667,
+      "prompt_ms": 421.733,
+      "prompt_n": 337,
+      "prompt_per_second": 799.0837804961907,
+      "prompt_per_token_ms": 1.251433234421365
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 415,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 439
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Recovering Deleted Files. Your browser history is stored just like everything else on your computer, as a file (or collection of files). Clearing your browser history merely deletes these files from your hard drive.\\\\n\\\\npassage 2:Two Methods: Using System Restore Using Windows Registry. Windows records a number of user activities in log files. These logs, (aka 'History'), can be deleted by users concerned about privacy issues. Follow along after the jump to learn how to recover deleted history from a PC.\\\\n\\\\npassage 3:Your browser history is saved on your PC\u2019s hard drive just like other files. When you delete browsing history from your browser, it is actually deleted from your PC. You can use a Data recovery tool to recover these files just like you can recover other deleted data on PC.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to retrieve deleted web history on pc\\\"}\", \"original_answer\": \"You can retrieve deleted web history on a PC by using a data recovery tool to recover these files, as they are saved on your PC\u2019s hard drive just like other files. Another method is to use Windows System Restore or Windows Registry, as Windows records user activities in log files. These logs, including browsing history, can be recovered if they have been deleted.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "policy_design",
+  "source_cluster_id": "sha256:a819772b76388ddcd7e0617e677af0796f9e0ae35f04267b3341b78690f6da51",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ]
+}

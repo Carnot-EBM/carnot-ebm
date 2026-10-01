@@ -1,0 +1,110 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.6777295719948597,
+  "exclusion_reason": null,
+  "family_id": "sha256:13318f0f5ce216bc3349d7eb905daa037b7c5ffa1af0fe281b279d7ec0d42688",
+  "input_tokens": 1131,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1131,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1154
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:ace708b8a92c931a278854e52c94a0cbeab847da689a9ef1d8cf34787783ea17",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832831,
+    "id": "chatcmpl-g5Eb5c7ezsSSQEbDqFOGJRUQjfyrbrKy",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.95,
+      "predicted_n": 23,
+      "predicted_per_second": 42.439339422455944,
+      "predicted_per_token_ms": 23.563043478260873,
+      "prompt_ms": 1020.704,
+      "prompt_n": 1053,
+      "prompt_per_second": 1031.6409066683386,
+      "prompt_per_token_ms": 0.969329534662868
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1131,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1154
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"2315 Lillie Ave\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Diners, Restaurants\\\",\\\"city\\\":\\\"Summerland\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"6:30-19:30\\\",\\\"Monday\\\":\\\"6:30-19:30\\\",\\\"Saturday\\\":\\\"6:30-19:30\\\",\\\"Sunday\\\":\\\"6:30-19:30\\\",\\\"Thursday\\\":\\\"6:30-19:30\\\",\\\"Tuesday\\\":\\\"6:30-19:30\\\",\\\"Wednesday\\\":\\\"6:30-19:30\\\"},\\\"name\\\":\\\"Stacky's Seaside\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2018-07-11 04:42:29\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Drove by this weekend and was bummed to see that Stacky's is closed. They had very good \\\\\\\"insane breakfast burritos\\\\\\\" and I enjoyed their fish and chips too. Loved the fact that you could sit in a boat outside on their patio and eat. Found out about this place in 2007. It was a lovely little hole in the wall that had been there for 30 years as of April 2015 (since approx. 1985). Was reading that in April 2015 Rusty's Pizza bought the location and was planning to open a Rusty's Summerland in the same spot.\\\"},{\\\"review_date\\\":\\\"2016-10-16 13:57:49\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I have been going to this place for so many years now, always visiting after bringing my kids  swimming at the beach, to now bringing their kids (my grandchildren) on a beautiful day.\\\\nI have always loved their decor, so beachy and comfortable. Outside is like on a picnic bench! The best part is they offer 1/2 sandwiches, for 1/2 price....not more costly for the trouble, and leaving you the option of getting a bit of this sandwich and a bit of that. That was always my favorite reason! My kids ordered the fish n' chips last time we visited, and they said it was so delicious. I  love their great selection of sandwiches, so creatively combined, like 'The Griller' or the New Yorker...and many more.....Unfortunately, I think their hours and days open have changed, so it's wise to check before going. We tried this past Friday @ 3 p.m. and they were closed. Hopefully, it is not closing, after so many years around. Over 20 yrs. visiting for me....\\\\nIt will forever be a favorite of mine.\\\"},{\\\"review_date\\\":\\\"2016-09-03 00:45:03\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Thanks Yelp for the recommendation! The fish and chips were the best we've ever had!! The onion rings were delicious too!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Stacky's Seaside is a casual dining restaurant located at 2315 Lillie Ave, Summerland, CA. It is known for its \\\"insane breakfast burritos\\\" and fish and chips as described by customers. The restaurant is also praised for its decor and comfortable, beachy ambiance. The outdoor seating area, which includes picnic benches and a boat, is a highlight for many patrons. Stacky's Seaside offers menu options that are good for groups and also provides take-out services. However, it doesn't offer Wi-Fi or parking facilities other than street parking. The restaurant, which has been in business since approximately 1985, operates daily from 6:30 to 19:30. It has an average rating of 3.5 stars with some customers rating it as high as 5 stars.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:0f9bc3427200eea09b4d9c858964d6256778fec920975ec28d612301fd3ba18b",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18
+  ]
+}

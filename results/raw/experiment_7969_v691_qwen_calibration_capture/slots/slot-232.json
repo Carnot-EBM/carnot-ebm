@@ -1,0 +1,94 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.119998771988321,
+  "exclusion_reason": null,
+  "family_id": "sha256:cb885196e76b782bbac539d220d624e41842958f37620bd62349943619b971f1",
+  "input_tokens": 394,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 394,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 418
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:a0682ae60fd6a96ada2071fb3273e69f5af2243d96e468942159aa631c68a736",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832796,
+    "id": "chatcmpl-5NoZLuSVwcuSergLASoj6LizmcppPsiS",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.68,
+      "predicted_n": 24,
+      "predicted_per_second": 42.50194800595028,
+      "predicted_per_token_ms": 23.528333333333332,
+      "prompt_ms": 415.355,
+      "prompt_n": 316,
+      "prompt_per_second": 760.7949826052413,
+      "prompt_per_token_ms": 1.3144145569620254
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 394,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 418
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:You may be one of those people who cry at the drop of a hat -- not to mention weddings, birthday parties, your kids' school plays, and the humane society public service announcements showing those adorable dogs in need of new homes. Or you may be the type who can't remember when you last cried.\\\\n\\\\npassage 2:You may be one of those people who cry at the drop of a hat -- not to mention weddings, birthday parties, your kids' school plays, and the humane society public service announcements showing those adorable dogs in need of new homes.\\\\n\\\\npassage 3:I cried like crazy when I watched the Notebook, for almost the whole movie, and I just watched The Source Code and I couldn't stop crying near the end of the movie. Like real tears, and the weird thing is I don't even cry that much at the problems that I have in my own life, or things that happen to me.\\\\n\\\\n\\\",\\\"question\\\":\\\"what does it mean if you cry at a sad movie\\\"}\", \"original_answer\": \"Based on the given passages, it can be inferred that if someone cries at a sad movie, it could mean that they are emotionally moved or empathetic towards the characters and storyline.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "tune",
+  "source_cluster_id": "sha256:ffb0e664e7f1d622077a7f0fd818b894b16943da9119d7b8b49a478ed97e0397",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 0.0,
+  "exclusion_reason": "answer_units_over_budget",
+  "family_id": "sha256:fc60a669b9d3226c7e9695a0d1910b97d6c55626ed721889a818d11bb0472849",
+  "input_tokens": null,
+  "parsed": {
+    "citation_valid": false,
+    "completed": false,
+    "finish_reason": null,
+    "probability": null,
+    "schema_valid": false,
+    "source_sentence_id": null,
+    "status": "invalid_envelope",
+    "syntax_valid": false,
+    "usage": {}
+  },
+  "public_eligible": false,
+  "public_hash": "sha256:5f72bc826ff8c09a4bd6b51650f8dd7b507c9cc41375ec67299cf7552ca0689b",
+  "raw_response": {},
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:1. Cook potatoes in plenty of salted water until cooked through. Meanwhile gently fry onion until translucent and set aside. 2. In a large bowl, combine potatoes, eggs, pancetta, onions, butter and chives. Season with salt and pepper to taste. Adjust the texture with a bit of milk if necessary. 3. Preheat your oven to 400\u00b0F (190\u00b0C) and line a baking sheet with parchment paper.\\\\n\\\\npassage 2:Preheat oven to 425\u00b0. Heat a large nonstick skillet over medium heat. Coat pan with cooking spray. Add green onions to pan, and cook 2 minutes or until tender, stirring occasionally. Remove from heat. Place mashed potatoes in a medium bowl. Stir in onions, cheese, salt, pepper, and bacon. Divide potato mixture into 6 equal portions, shaping each into a 1/2-inch-thick patty. Place panko in a shallow dish. Dredge patties in panko. Place patties on a baking sheet coated with cooking spray. Bake at 425\u00b0 for 12 minutes.\\\\n\\\\npassage 3:{{model.addEditText}} Print. 1  Prep. 5 m. 2  Cook. 10 m. 3  Ready In. 15 4  m. Combine potatoes, eggs, flour, and garlic powder in a bowl.  Heat oil in a skillet over medium-high heat; fry potato mixture in skillet, pressing with a spatula to flatten evenly. Cover and cook until bottom is crispy, about 10 minutes; invert onto serving platter.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to make potato cakes from mashed potatoes\\\"}\", \"original_answer\": \"To make potato cakes from mashed potatoes, follow these steps:\\n\\n1. Cook potatoes in plenty of salted water until cooked through.\\n2. While the potatoes are cooking, gently fry onions until translucent and set aside.\\n3. In a large bowl, combine potatoes, eggs, pancetta, onions, butter, and chives.\\n4. Season with salt and pepper to taste. Adjust the texture with a bit of milk if necessary.\\n5. Preheat your oven to 400\u00b0F (190\u00b0C) and line a baking sheet with parchment paper.\\n6. Shape the potato mixture into 1/2-inch-thick patties.\\n7. Place the patties on the prepared baking sheet.\\n8. Bake in the preheated oven for 20-25 minutes, or until golden brown and crispy on top.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 0,
+  "role": "policy_design",
+  "source_cluster_id": "sha256:1d08d606e2caba7ebe30c99d6894dd766a00ef5ec9dc7f2c0c457b6adb1e3386",
+  "started": false,
+  "status": "excluded",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28
+  ]
+}

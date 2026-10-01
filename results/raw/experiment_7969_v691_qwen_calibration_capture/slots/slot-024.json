@@ -1,0 +1,102 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.2083752210019156,
+  "exclusion_reason": null,
+  "family_id": "sha256:3a0a631c892f3a5d89775a7b483864df89a3ae6c7a74f2285c91dab8054fdec1",
+  "input_tokens": 564,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 564,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 588
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:10295cc926d038aff2020e28a1857129c628d00359a359e02245b8daaf5a60e5",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832503,
+    "id": "chatcmpl-8OsoyLq3GeEQr9UsRWqyN2y5Q6UUUalG",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 558.532,
+      "predicted_n": 24,
+      "predicted_per_second": 42.96978507945829,
+      "predicted_per_token_ms": 23.272166666666667,
+      "prompt_ms": 518.44,
+      "prompt_n": 486,
+      "prompt_per_second": 937.4276676182393,
+      "prompt_per_token_ms": 1.0667489711934157
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 564,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 588
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Climate consists of patterns of change in a longer period of time. Weather is a local event caused by temporary changes in clouds, wind, etc. Climate is a regional and usually long lasting event. Weather and climate are different by weather is the condition of the atmosphere at a specific time and place. Climate is the average weather conditions in an area. roflcopter6969. WEATHER: Weather is basically the way the atmosphere is behaving, mainly with respect to its effects upon life and human activities. Most people think of weather in terms of temperature, humidity, precipitation, cloudiness, brightness, visibility, wind, and atmospheric pressure, as in high and low pressure.\\\\n\\\\npassage 2:Key Difference: Weather is the state or conditions of the atmosphere over a short period of time, usually a day or so. Weather and climate are words that are often heard in meteorology, while weather is also used in day to day in order to refer to the conditions outside.\\\\n\\\\npassage 3:Weather and climate are different by weather is the condition of the atmosphere at a specific time and place. Climate is the average weather conditions in an area. WEATHER: Weather is basically the way the atmosphere is behaving, mainly with respect to its effects upon life and human activities.\\\\n\\\\n\\\",\\\"question\\\":\\\"what is the difference between weather and climate?\\\"}\", \"original_answer\": \"Based on the given passages, we can say that the main difference between weather and climate is that weather refers to the temporary changes in the atmosphere over a short period of time, typically a day or so, while climate refers to the long-term patterns of weather in a particular region. Weather is a local event caused by factors such as clouds, wind, etc., while climate is a regional and usually long-lasting event. In other words, weather is the current condition of the atmosphere, while climate is the average weather condition in a specific area over a period of time.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:48d71458831d60f8af7fc57a6f17fb1db3577c72efca5e081379da1d73e849ee",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ]
+}

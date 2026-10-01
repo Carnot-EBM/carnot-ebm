@@ -1,0 +1,106 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.2417977470322512,
+  "exclusion_reason": null,
+  "family_id": "sha256:ad00623f0edf92cea291d0d14b6a86f38aee7826e6d45987d715a153aaad2159",
+  "input_tokens": 595,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 595,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 619
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:cd26ce7b705f63bb64c6c53fe1ee28e8d4fc9a9dd1d2fda6a312261c82b51814",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832893,
+    "id": "chatcmpl-rP5DT9fN7klw12f3ia16iOplj51QYcPF",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.856,
+      "predicted_n": 24,
+      "predicted_per_second": 42.488705085898,
+      "predicted_per_token_ms": 23.535666666666668,
+      "prompt_ms": 560.928,
+      "prompt_n": 517,
+      "prompt_per_second": 921.6869188202407,
+      "prompt_per_token_ms": 1.0849671179883946
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 595,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 619
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Add about 1 tablespoon of oil to a saut\u00e9 pan. Heat the oil over medium-high heat until it sizzles. Add the baby broccoli to the pan and cook for 2 to 3 minutes, or until it becomes tender and bright green. Stir or toss the broccoli constantly so all sides cook evenly without overcooking. Serve warm. Season sweet baby broccoli simply with a touch of butter and salt and pepper for taste.\\\\n\\\\npassage 2:The Goodness of Broccoli for Babies. Broccoli is very high in Vitamin C and is a great source of soluble fiber. This makes broccoli wonderful to add to baby food recipes. Soluble fiber is the fiber that helps loosen up the bowels as it changes its form as it passes through the digestive tract.\\\\n\\\\npassage 3:Fill a pot with 2 to 3 inches of water. Set a steamer basket on top so the basket sits above the water inside. Bring the water to a boil over high heat. Lay the baby broccoli in the steamer basket and place the lid on top. Steam the baby broccoli for 2 to 3 minutes, or until the stalks and florets brighten in color and become tender. Serve warm. Wash and trim the stalks.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to prepare baby broccoli\\\"}\", \"original_answer\": \"To prepare baby broccoli, you can either saut\u00e9 it in a skillet with a bit of oil or steam it in a steamer basket. The steamed method may be better for babies who are just learning to eat solids, as it allows the broccoli to retain more of its natural nutrients. Before cooking, wash and trim the stalks of the baby broccoli. For saut\u00e9ing, heat oil in a skillet over medium-high heat, then add the broccoli and cook until it turns bright green and tender. You can serve baby broccoli with a sprinkle of butter and salt and pepper for taste. If using soluble fiber, remember that it may need to be cooked separately before adding the baby broccoli.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "policy_design",
+  "source_cluster_id": "sha256:b5a009449651b97186755e6e6c67fdc8dd690e24b17aca5b09713c8956aa42fa",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ]
+}

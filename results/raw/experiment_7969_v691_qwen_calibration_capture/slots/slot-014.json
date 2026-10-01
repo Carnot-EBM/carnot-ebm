@@ -1,0 +1,96 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.2969003189937212,
+  "exclusion_reason": null,
+  "family_id": "sha256:6795e3e55b90d9b82f42fba999b2813877c934efab4bdbd723d244c4555f2f14",
+  "input_tokens": 643,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 643,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 668
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:067ed6fe5b8bbda2b6477d1be77af1f3d9eb323ecdc606961cf07f736a8961ae",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832489,
+    "id": "chatcmpl-0qKIGDAcq7EJwpbMMmmFw9zAWel2t9Ra",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 581.072,
+      "predicted_n": 25,
+      "predicted_per_second": 43.023928187900985,
+      "predicted_per_token_ms": 23.24288,
+      "prompt_ms": 580.005,
+      "prompt_n": 565,
+      "prompt_per_second": 974.1295333660918,
+      "prompt_per_token_ms": 1.0265575221238938
+    },
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 643,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 668
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:The TLC Diet is an all-around healthy eating plan that promotes eating plenty of fruits, vegetables, whole grains, fish and lean meats. Vegetarians can follow a similar approach known as the Flexitarian Diet, which replaces meat with foods such as tofu, beans, lentils, peas, nuts and eggs.\\\\n\\\\npassage 2:The Slimfast diet is a convenient, grab-and-go type of eating plan and will help you lose weight by keeping calories low enough to result in a 1- to 2-pound drop per week. Proprietary ready-made shakes, shake mixes and meal bars are part of the eating plan, along with one 500-calorie meal per day that you prepare.\\\\n\\\\npassage 3:Other diets. 1  Alkaline diet: The avoidance of relatively acidic foods \u2013 foods with low pH levels \u2013 such as grains, dairy, meat, sugar, alcohol, caffeine and fungi. 2  Blood type diet: A diet based on a belief that people's diets should reflect their blood types.\\\\n\\\\n\\\",\\\"question\\\":\\\"different diets and their benefits\\\"}\", \"original_answer\": \"Here are brief answers to the question \\\"different diets and their benefits\\\" based on the given passages:\\n\\n1. TLC Diet: Promotes healthy eating habits, rich in fruits, vegetables, whole grains, lean proteins, and low in saturated fats and cholesterol. Benefits include lowering cholesterol levels, blood pressure, and risk of heart disease.\\n2. Flexitarian Diet: Similar to the TLC Diet, but replaces meat with plant-based protein sources like tofu, beans, lentils, and nuts. Benefits include weight loss, improved heart health, and reduced risk of chronic diseases.\\n3. SlimFast Diet: A low-calorie diet that promotes weight loss through meal replacement shakes, shake mixes, and meal bars, along with one 500-calorie meal per day. Benefits include convenience, weight loss, and structure for those who struggle with portion control.\\n4. Alkaline Diet: Focuses on avoiding acidic foods and promoting alkaline ones, such as fruits, vegetables, and whole grains. Benefits include improved digestion, reduced inflammation, and potential cancer prevention.\\n5. Blood Type Diet: Based on the idea that certain foods react positively or negatively with different blood types. Benefits include improved digestion, increased energy, and weight loss. However, there is limited scientific evidence supporting this diet's effectiveness.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:e191387215b9b7bf6c1405e94ae498d03ff840f995e4c930f3ad6fc13bb411b7",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ]
+}

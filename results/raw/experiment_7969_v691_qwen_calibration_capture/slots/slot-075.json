@@ -1,0 +1,103 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.7222313049715012,
+  "exclusion_reason": null,
+  "family_id": "sha256:a4d97e5ed6abbe82e01484c0915632ac75b63c9635ed711fcbac31c7af5d658e",
+  "input_tokens": 1154,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1154,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1178
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:31a18875cad03666a99785830d586b29d32fa932ec4c9171f9ee1f2a4d784eb2",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832576,
+    "id": "chatcmpl-0pNZpz2wizwHaC1B1xyQtop4czgKAiiA",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 563.955,
+      "predicted_n": 24,
+      "predicted_per_second": 42.55658696172567,
+      "predicted_per_token_ms": 23.498125,
+      "prompt_ms": 1025.129,
+      "prompt_n": 1076,
+      "prompt_per_second": 1049.6239985406717,
+      "prompt_per_token_ms": 0.9527221189591077
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1154,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1178
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"1024 Coast Village Rd\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":null},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Food, Cafes, Bakeries, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-18:0\\\",\\\"Saturday\\\":\\\"11:0-17:0\\\",\\\"Thursday\\\":\\\"11:0-18:0\\\",\\\"Tuesday\\\":\\\"11:0-18:0\\\",\\\"Wednesday\\\":\\\"11:0-18:0\\\"},\\\"name\\\":\\\"Merci To Go\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2020-12-29 02:06:36\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Merci To Go is located at the Montecito Country Mart with its own free parking lot (at the front and the back).\\\\n\\\\nIt's a great place to grab a quick bite to go. And when I say great place, I meant the food is great.\\\\n\\\\nYou can eat very good food AND not have to be fussy about it. Go in you PJ's, line up, point at what you want, pay and then walk out and eat your food wherever you are comfortable.\\\\n\\\\nAnd with you to-go item, you can be feasting on a great baguette, a duck confit and a well-dressed salad.\\\\n\\\\nThere are drinks available too.\\\\n\\\\nMasks are required. Number of people are limited indoors so there is a line starting from the door.\\\\n\\\\nAt the time of my visit, outdoor dining was still allowed so there were patio furniture set up and some people were availing themselves of it.\\\\n\\\\nWhich was great because next door is Caffe Luxxe!\\\"},{\\\"review_date\\\":\\\"2019-08-29 21:44:41\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"My buddy kept telling me, \\\\\\\"MTG has the best purple worms I've ever had.\\\\\\\" Now I love worms, eat em all the time, but purple? And not underground by the La Colina baseball field? We I gotta see this. So I go for a taste, and low and behold, WEVE GOT WORMS PEOPLE! The waitress kept saying they were octo-somethin and they come from the SEA, but I know a damn worm when I see one. 10/10 love this place!\\\"},{\\\"review_date\\\":\\\"2016-12-01 19:54:43\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Best chocolate chip cookies you'll ever eat.  The salads are all amazing.  The quiche on the weekend (bacon especially) can't be beat.  Definitely worth a stop.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Sure! Here's an objective overview of Merci To Go based on the provided structured data in JSON format:\\n\\nMerci To Go is a popular food establishment located at the Montecito Country Mart in Santa Barbara, California. It offers a variety of menu items such as baguettes, salads, sandwiches, and desserts, including their famous purple worms (according to one review). The business has a rating of 4.5 stars and is open Tuesday through Saturday from 11:00 am to 5:00 pm, with extended hours during the summer.\\n\\nThe reviews highlight the delicious food, convenient to-go options, and outdoor seating. One reviewer praised the variety of menu items and the quality of the ingredients, while another raved about the purple worms, which are said to be a unique and tasty treat. A third review commended the salads, quiche, and chocolate chip cookies.\\n\\nSome notable features of Merci To Go include its free parking lot, outdoor seating, and takeout options. However, masks are currently required due to the COVID-19 pandemic, and there may be limits on the number of people allowed inside the establishment. Overall, Merci To Go appears to be a popular and highly rated food spot in Santa Barbara, offering a variety of tasty options for both takeout and dine-in.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:4edf0aaa0bfdee2bf912b7677c5653574bb669127d3351dc78d4373a261f2f43",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]
+}

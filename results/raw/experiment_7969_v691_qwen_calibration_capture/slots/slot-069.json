@@ -1,0 +1,111 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.431489301030524,
+  "exclusion_reason": null,
+  "family_id": "sha256:14c83052cb0030884778777696d7d292a32dee8f87b4428990435d5fe1ee3fb0",
+  "input_tokens": 757,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": 10,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 26,
+      "prompt_tokens": 757,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 783
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:2e4423329f4e39472214c66dae6e80d3558a8c4e3a38476d1ec3ba7c1a901b20",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": 10\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832568,
+    "id": "chatcmpl-8I0do1Ywd0pDHhEif3gebxocUr8mBKfD",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 617.999,
+      "predicted_n": 26,
+      "predicted_per_second": 42.07126548748461,
+      "predicted_per_token_ms": 23.769192307692308,
+      "prompt_ms": 680.811,
+      "prompt_n": 679,
+      "prompt_per_second": 997.3399372219309,
+      "prompt_per_token_ms": 1.0026671575846835
+    },
+    "usage": {
+      "completion_tokens": 26,
+      "prompt_tokens": 757,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 783
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Mercedes driver and F1 championship leader Lewis Hamilton stole pole position for Sunday's Chinese Grand Prix from teammate and fierce rival Nico Rosberg in dramatic fashion. Hamilton took first place on the front row on the last lap, beating Rosberg by a slim four hundredths of a second margin. Frenemies. The two former friends have enjoyed, or rather endured, a heated rivalry since falling out last season and Rosberg's annoyance at Hamilton's last ditch success was obvious. The German appeared upset as he left his car and refused to shake Hamilton's hand. He did, however, find time to congratulate fellow German driver Sebastian Vettel, who will start in third after the Ferrari driver surprisingly won the Malaysian GP two weeks ago. \\\"I don't actually mind him having more (poles),\\\" a nonplussed Hamilton told AFP after the session. \\\"He can have the trophy for most poles. As long as I have the trophy for winning -- that's all that matters. Ultimately qualifying is not the end of the world.\\\" \\\"I am frustrated\\\" In the post qualifying press conference Rosberg appeared more magnanimous, but still shocked by Hamilton's last minute burst of speed. \\\"I was frustrated, I am frustrated, yeah,\\\" Rosberg admitted. \\\"It's so close and of course I would have wanted to have pole today... It's just four hundredths and that makes it even more annoying because it's just very, very close. A lap is never 100 per cent perfect and four hundredths is really the blink of an eye.\\\" Kimi Raikkonen will join his teammate Vettel on the second row and will be looking for a repeat of Ferrari's performance in Malaysia, which shocked Mercedes and Hamilton in particular. Huge support. But Hamilton has been quickest all weekend and will enjoy a surprising amount of support in Shanghai, a track the British driver has always thrived on. \\\"Have you seen the banners that I have here?\\\" he told the assembled press when asked why he liked racing at Shanghai so much. \\\"The support I have here's pretty unreal. I just like the track. I guess it just naturally suits my driving style.\\\"\\n\", \"original_answer\": \"Lewis Hamilton stole the pole position from his Mercedes teammate Nico Rosberg in the final moments of qualifying for the Chinese Grand Prix, with a margin of just four hundredths of a second. Despite their heated rivalry, Hamilton remained magnanimous in defeat, focusing on his ultimate goal of winning the race. Rosberg was visibly frustrated by the narrow loss, but maintained a more composed demeanor in the post-qualifying press conference. The top three drivers will be joined by Kimi Raikkonen and Sebastian Vettel on the second row, with Ferrari looking to build on their surprise win in Malaysia.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "policy_design",
+  "source_cluster_id": "sha256:79830426b0d87d766f34c5d934f3df0dfcd8bdb473c89819a2d92c34cecb835d",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ]
+}

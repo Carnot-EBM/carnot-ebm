@@ -1,0 +1,110 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.4019559930311516,
+  "exclusion_reason": null,
+  "family_id": "sha256:f7f537f1e1f2b831a2e77520c0d0a65412eaed7acb827e61417aa3b9c1259e9c",
+  "input_tokens": 767,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 767,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 791
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:f7a18d6bd9f9495dd09506b794fbad5b24ab8cfe9fe8c437c790ddcb440eac9f",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832987,
+    "id": "chatcmpl-5Dg4MEym3XsMayQvspzFHY2dYBeVfm6j",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 567.627,
+      "predicted_n": 24,
+      "predicted_per_second": 42.2812868309647,
+      "predicted_per_token_ms": 23.651124999999997,
+      "prompt_ms": 689.433,
+      "prompt_n": 689,
+      "prompt_per_second": 999.3719476729428,
+      "prompt_per_token_ms": 1.0006284470246734
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 767,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 791
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Use Privacy Settings. Log in to your Facebook account. Select the Privacy Settings option under the Account tab in the top right corner. Click the View Settings link in the Connecting on Facebook section.Scroll down to See Your Friend List and click the drop-down menu to the right. Select Customize from the drop-down menu next to the These People option.Choose Only Me from the drop-down menu in the resulting window.Click Save Setting to make your friends list invisible.croll down to See Your Friend List and click the drop-down menu to the right. Select Customize from the drop-down menu next to the These People option. Choose Only Me from the drop-down menu in the resulting window.\\\\n\\\\npassage 2:1 To add a person to a block list, type her name or email address in the appropriate section. 2  To add someone to the restricted list, click the On This List button, change the setting to Friends and then click on the name of the friend you want to add to the restricted list. To remove someone from a block list, click the Undo link next to her name and click Confirm.. 2  To remove someone from the restricted list, click the X on his profile picture while viewing the list. 3  To add a person to a block list, type her name or email address in the appropriate section.\\\\n\\\\npassage 3:1 Click account in the upper right corner of your Facebook page. 2  Select privacy settings.. 3  Under block lists at the bottom center of the page, click edit your lists.. 4  At the top, under block users, add the name or e-mail address of the person you'd like to block.5  Click block.. Click account in the upper right corner of your Facebook page. 2  Select privacy settings.. 3  Under block lists at the bottom center of the page, click edit your lists.. 4  At the top, under block users, add the name or e-mail address of the person you'd like to block. 5  Click block..\\\\n\\\\n\\\",\\\"question\\\":\\\"how do you block your friend list on facebook\\\"}\", \"original_answer\": \"To block your friend list on Facebook, you can follow these steps based on the given passages:\\n1. Log in to your Facebook account.\\n2. Select the Privacy Settings option under the Account tab in the top right corner.\\n3. Click the View Settings link in the Connecting on Facebook section.\\n4. Scroll down to See Your Friend List and click the drop-down menu to the right.\\n5. Select Customize from the drop-down menu next to the These People option.\\n6. Choose Only Me from the drop-down menu in the resulting window.\\n7. Click Save Setting to make your friends list invisible.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:27def31a2611d7ef605f34cca6c5ca6777ee9b905cd0d27ed0060465ae22c781",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18
+  ]
+}

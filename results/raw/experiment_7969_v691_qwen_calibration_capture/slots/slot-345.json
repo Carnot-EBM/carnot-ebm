@@ -1,0 +1,106 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.6222614370053634,
+  "exclusion_reason": null,
+  "family_id": "sha256:ecee2f24b339bfce9f9c73ffe204562f796a8228da9ad2dbdf56b9d40026cfd9",
+  "input_tokens": 1080,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1080,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1103
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:e78a5828a86475c7448e2d824406fb702b8c44972d3fb07645c43530a00c78d5",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832953,
+    "id": "chatcmpl-yAI95LUnNDsdXS76ntKl0U44aMlgtLVc",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.874,
+      "predicted_n": 23,
+      "predicted_per_second": 42.44529170988089,
+      "predicted_per_token_ms": 23.559739130434785,
+      "prompt_ms": 968.791,
+      "prompt_n": 1002,
+      "prompt_per_second": 1034.2788072969297,
+      "prompt_per_token_ms": 0.9668572854291417
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1080,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1103
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"791 Chapala St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":true,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Cafes, Restaurants, Sandwiches, Chicken Shop, Salad, American (New), Burgers, Breakfast & Brunch\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-21:0\\\",\\\"Monday\\\":\\\"11:0-21:0\\\",\\\"Saturday\\\":\\\"11:0-21:0\\\",\\\"Sunday\\\":\\\"11:0-21:0\\\",\\\"Thursday\\\":\\\"10:30-20:0\\\",\\\"Tuesday\\\":\\\"11:0-21:0\\\",\\\"Wednesday\\\":\\\"11:0-21:0\\\"},\\\"name\\\":\\\"Kyle's Kitchen\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-18 00:41:04\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Had lunch here today and was pleasantly surprised. My husband mentioned this place to me before since he said he tried the Kyle Burger and liked it. Since we had to do some errands at Fedex (right beside it), we decided to have lunch here. I had the kale and caesar salad and Kyle Burger while my husband had tomato soup and Buffalo Chicken Sandwich. We were pleased with our orders and the serving was just right.\\\\n\\\\nIn their menu, you could create your perfect meal by selecting any 2 options for $13 (upgrades are available for an additional cost -just check the menu). They call this Pair It!\\\\nThese are the options for Pair It!\\\\n1. Burger or chicken sandwich\\\\n2. Salad\\\\n3. Bowl of soup\\\\n4. Beverage\\\\n\\\\nThis place is clean and the interior is nice. We will definitely come back to this place especially if we have burger cravings!\\\"},{\\\"review_date\\\":\\\"2022-01-14 20:57:48\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"The best burgers and salads ( my fave is the Thai peanut with chicken) and the staff is always great!\\\"},{\\\"review_date\\\":\\\"2021-12-28 06:51:01\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Kyle's Kitchen is an unexpected gem in Santa Barbara. At first they look like some sort of chain restaurant like Eureka but no, they actually have really great quality fast food. \\\\n\\\\nWe came during a Sunday and their daily deal was chicken sandwiches and I must say, I was pleasantly surprised at how delicious it was. I guess I wasn't expecting to have received such a quality crispy chicken sandwich given the sort of sub-par marketing and location. Needless to say, I have definitely come back and I am excited to try more things from their menu.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Kyle's Kitchen is a popular local business in Santa Barbara, CA, known for its diverse menu offering a range of cuisines such as American, burgers, salads, sandwiches, and breakfast & brunch. Located on 791 Chapala St, the restaurant operates from 11:00 to 21:00 on most days, with slightly shorter hours on Thursdays. Customers appreciate their \\\"Pair It!\\\" menu option where they can create a perfect meal with any 2 options for $13. Some of the customer favorites are the Kyle Burger, Buffalo Chicken Sandwich, and Thai peanut salad with chicken. The restaurant is also lauded for its clean interior and friendly staff. They offer free WiFi, outdoor seating, and are good for groups. Parking options include garage and street parking. Kyle's Kitchen, with an overall rating of 4.0 stars, is a go-to spot for quality fast food in Santa Barbara.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:f959196a42e2fce2229ec992216cd50fb8d52e1e6f1fdd19d22bea00530132c5",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ]
+}

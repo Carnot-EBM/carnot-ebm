@@ -1,0 +1,105 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.2592125160153955,
+  "exclusion_reason": null,
+  "family_id": "sha256:ccc110337ccb76312faa713e2595c5a33a000faab86de8dc01f3021292792db7",
+  "input_tokens": 543,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 12,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 543,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 568
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:57b29a359825369d949a720524daa1109ad7d90dfe6e636c5ab7d314ba1aab37",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 12\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832647,
+    "id": "chatcmpl-cUM0TOPgzH818TYjokYLkNGBetuMnHrU",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 588.22,
+      "predicted_n": 25,
+      "predicted_per_second": 42.50110502873075,
+      "predicted_per_token_ms": 23.5288,
+      "prompt_ms": 527.296,
+      "prompt_n": 465,
+      "prompt_per_second": 881.8576283529553,
+      "prompt_per_token_ms": 1.1339698924731183
+    },
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 543,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 568
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:1. Place the tea leaves in the teapot. 2. Prepare water at the appropriate temperature. Pour the water from the kettle into the tea cups to bring it to the appropriate temperature and then pour it into the teapot. 3. Wait while the tea's components infuse. 4. To ensure the tea's strength is even, pour a little tea at a time into each cup. Pour the tea until the last drop is poured.\\\\n\\\\npassage 2:It is a good idea to know the cup capacity of your teapot beforehand to prevent any miscalculating while pouring the water. Allow the tea to steep in the teapot, about 2 to 5 minutes for green teas and about 4 to 7 minutes for black tea. This is the perfect opportunity to select someone to serve the tea to the guests attending your afternoon tea party.\\\\n\\\\npassage 3:, Tea and coffee lover. If you have high quality tea, such as milk oolong, you don\u2019t need any additions, just tea and good water. I don\u2019t recommend you to use high temperatures of water it can ruin health benefits of this tea and classic taste.\\\\n\\\\n\\\",\\\"question\\\":\\\"tutorial on how to make proper tea\\\"}\", \"original_answer\": \"To make proper tea, follow these steps: \\n1. Place the tea leaves in the teapot.\\n2. Prepare water at the appropriate temperature and pour it into the teapot.\\n3. Allow the tea to steep in the teapot for the recommended time (2 to 5 minutes for green teas, 4 to 7 minutes for black tea).\\n4. To ensure even strength, pour a little tea at a time into each cup.\\n5. Serve the tea to your guests.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "calibration_replay",
+  "source_cluster_id": "sha256:82e5a666c9c7dc727df32f77c778f9f5b957bb6312e5c1833a6408afb6807bc2",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ]
+}

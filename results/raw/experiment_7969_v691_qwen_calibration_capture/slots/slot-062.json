@@ -1,0 +1,117 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.8385844299918972,
+  "exclusion_reason": null,
+  "family_id": "sha256:7cde9645048c9c4c2a895d816ff9d8d11cb2e911e95d73071a005bae743ad548",
+  "input_tokens": 1299,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1299,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1323
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:28ab6ec873a30f856a5cbe793ea7c4da233dc20669c25f43d1ba2bec3b172000",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832557,
+    "id": "chatcmpl-SfxVC7MTXZfTpFNntYXy2Rry6tQRqMlo",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 563.706,
+      "predicted_n": 24,
+      "predicted_per_second": 42.57538504113847,
+      "predicted_per_token_ms": 23.487750000000002,
+      "prompt_ms": 1133.28,
+      "prompt_n": 1221,
+      "prompt_per_second": 1077.4036425243542,
+      "prompt_per_token_ms": 0.9281572481572481
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1299,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1323
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"1221 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":5.0,\\\"categories\\\":\\\"Restaurants, Nightlife, American (New), Food, Farmers Market, Bars, Wine Bars\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"17:0-21:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"17:0-21:0\\\",\\\"Sunday\\\":\\\"11:0-14:30\\\",\\\"Thursday\\\":\\\"11:0-14:0\\\",\\\"Wednesday\\\":\\\"17:0-21:0\\\"},\\\"name\\\":\\\"The Daisy Restaurant\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-17 05:49:58\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Visiting Santa Barbara today, my wife yelped this place based on prior reviews.  First the service was professional & very courteous.  My wife ordered the house fish plate and I ordered Mary's chicken salad sandwich.   My wife's reaction to her first bite was of pure satisfaction, she closed her eyes and spoke in tongues, she was in heaven, my sandwich on toasted sourdough was simple yet amazing.  Interior of restaurant is clean and modern/chic. Highly recommend this place, you won't be disappointed.\\\"},{\\\"review_date\\\":\\\"2021-12-06 22:49:57\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"If I could give more than 5 stars, I would! I reserved The Daisy for 25 people to surprise my daughter for her 18th birthday. The reservation process including requesting the specific spot in the restaurant and the cakes to serve was easy and hassle-free.  We had family and friends over from Los Angeles and they enjoyed the ambiance, the delicious food, and the super friendly staff.  They reserved the patio for us and it was ready as soon as they opened at 11 am.  We were able to prepare what we needed to surprise my daughter who arrived 10 minutes or so after. Do yourself a favor and visit The Daisy. Excellent location. The service is unmatched. The staff truly cares about your experience. The food is absolutely amazing - everything we tasted melted in other mouths. Absolutely the best meal we had while in Santa Barbara. Highly recommend!  Thank you Dominic and staff!\\\"},{\\\"review_date\\\":\\\"2021-12-02 21:58:57\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I recently had lunch with my daughter at the Daisy. The food was absolutely phenomenal- everything was very fresh and super flavorful. We shared the mezza platter - which was out of this world. The beet hummus was so good - as was the two other hummus'  The flatbread was grilled to perfection- it was flaky almost the consistency of pastry. The smoked salmon- was excellent and the gem salad with green goddess dressing is a MUST!  The service was super friendly- we ate outside in which is in a quaint setting. Everything was fantastic!  Thank you!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"The Daisy Restaurant is a highly-rated eatery located in the heart of Santa Barbara, offering an intimate and stylish atmosphere with both indoor and outdoor seating options. The restaurant is known for its exceptional service, delicious American cuisine, and extensive wine list. The menu features a variety of dishes, including seafood, meat, and vegetarian options, all made with fresh and locally-sourced ingredients. The restaurant is particularly popular for its brunch and dinner services, and has received rave reviews for its outstanding food and attentive staff.\\n\\nAccording to customer reviews, The Daisy Restaurant is a must-visit destination for anyone looking for a top-notch dining experience in Santa Barbara. Reviewers have praised the restaurant's modern and chic interior, excellent location, and above all, the exquisite taste and presentation of the dishes. Customers have also appreciated the friendly and professional service, with one reviewer noting that the staff went above and beyond to accommodate their group's needs.\\n\\nOne reviewer described their experience at The Daisy Restaurant as \\\"absolutely phenomenal,\\\" highlighting the freshness and flavor of the food, including the mezze platter, flatbread, and smoked salmon. Another reviewer noted that the service was \\\"super friendly\\\" and that the outdoor seating area was \\\"quaint and charming.\\\"\\n\\nOverall, The Daisy Restaurant is an excellent choice for anyone looking for a high-quality dining experience in Santa Barbara. With its focus on using fresh, locally-sourced ingredients and providing exceptional service, this restaurant is sure to impress even the most discerning diners.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "policy_design",
+  "source_cluster_id": "sha256:61cafe3f6cf2139eb50c261ee9c48d96e2b10a876b4b6e0c392dca0985899194",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25
+  ]
+}

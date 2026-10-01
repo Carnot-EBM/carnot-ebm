@@ -1,0 +1,115 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.5195813220343553,
+  "exclusion_reason": null,
+  "family_id": "sha256:87a6271338fbdad2945fe986a4cf576d30b9471ff0a95d30cc178284cf44cdc6",
+  "input_tokens": 901,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 901,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 924
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:642cbc1b5e560f85cbd654c704e6aa4dcdc7361f05b97b1abb9739f65361c126",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832655,
+    "id": "chatcmpl-Jzfi2RmnKgz7I3QShCdOKOXkEHWfw9me",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.652,
+      "predicted_n": 23,
+      "predicted_per_second": 42.541227998786646,
+      "predicted_per_token_ms": 23.506608695652176,
+      "prompt_ms": 847.912,
+      "prompt_n": 823,
+      "prompt_per_second": 970.6195925992319,
+      "prompt_per_token_ms": 1.0302697448359661
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 901,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 924
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Boston (CNN)The Boston Marathon is traditionally an event in which people in and around the Massachusetts capital come together, celebrate and enjoy. But not in 2013, when three people died and over 200 were injured when a pair of bombs went off within 12 seconds of each other at the finish line. And not this year -- at least not if you're a member of the jury that convicted Dzhokhar Tsarnaev in the bombings. That's what federal Judge George A. O'Toole told jurors Tuesday, stressing the importance of avoiding anything that could be prejudicial in the trial's sentencing phase. That begins April 21, a day after this year's edition of the landmark race. \\\"Do not attend the Boston Marathon or any events or gatherings related to the anniversary or the current running of the Boston Marathon,\\\" O'Toole said in court. The judge spoke for less than 10 minutes, and stressed the seriousness of his warnings. The first phase of Tsarnaev's trial began March 4, after which federal prosecutors called 92 witnesses, and the defense just four. Timeline of the bombings, manhunt and aftermath. Tsarnaev's lawyers never disputed that their client was at the scene of the bombings and part of the days-long mayhem that followed. Tsarnaev lawyer Judy Clarke acknowledged in opening arguments that: \\\"It was him.\\\" But Clarke argued that Dzhokhar Tsarnaev only took part in the plot under the influence of his brother Tamerlan Tsarnaev, who died after the bombings, but before his brother was captured in a boat parked in a Watertown backyard,. That argument wasn't enough to sway the jury, though. Rather, they convicted Dzhokhar Tsarnaev on all 30 counts he faced -- including using weapons of mass destruction, bombing a place of public use, conspiracy and aiding and abetting. A look at all of the charges. The only question now, short of a successful appeal of that verdict, is what price he'll now pay. The maximum penalty for several of the charges is death. Talking to the jury on Tuesday, O'Toole predicted that the sentencing phase will last four weeks before cautioning that forecasting a specific timetable is less reliable than guessing the weather. The plan is for the court to be in session for four days a week, as long as the process takes. Until then, O'Toole told the jurors, \\\"Please put the case out of your minds. Enjoy the warm weather.\\\" What's next for Tsarnaev? CNN's Ann O'Neill reported from Boston. CNN's Catherine E. Shoichet, Alexandra Field, Aaron Cooper, Kevin Conlon, Jason Hanna and Steve Almasy contributed to this report.\\n\", \"original_answer\": \"The jury that convicted Dzhokhar Tsarnaev in the Boston Marathon bombing case has been warned by a federal judge not to attend this year's marathon or any related events. The judge emphasized the importance of avoiding anything that could be seen as prejudicial during the trial's sentencing phase, which begins on April 21. Tsarnaev was convicted on all 30 counts he faced, including using weapons of mass destruction and conspiracy. The maximum penalty for several of the charges is death. The sentencing phase is expected to last four weeks, but the judge cautioned that the timetable is uncertain.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "tune",
+  "source_cluster_id": "sha256:56b37a13aa202ef1992e67cc1b6e95246b9e0adc0fae2660b39cb4e67c299dfe",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23
+  ]
+}

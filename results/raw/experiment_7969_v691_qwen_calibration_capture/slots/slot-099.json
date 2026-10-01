@@ -1,0 +1,108 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.5975139189977199,
+  "exclusion_reason": null,
+  "family_id": "sha256:c791aa202c761d1c0b5aafd75e28388f01204e52b6fdb8c6ad3e22e0a59bbe2d",
+  "input_tokens": 1030,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1030,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1053
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:42245585adc6ce2229ede58c2e11253a5bcff4fa8a5281f4dcd64c422b9f77a4",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832610,
+    "id": "chatcmpl-NxwP527ZzvzzcWqbRWrenkAQcNQWIBQV",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.554,
+      "predicted_n": 23,
+      "predicted_per_second": 42.47037229897665,
+      "predicted_per_token_ms": 23.54582608695652,
+      "prompt_ms": 931.944,
+      "prompt_n": 952,
+      "prompt_per_second": 1021.5206063883667,
+      "prompt_per_token_ms": 0.9789327731092436
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1030,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1053
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":null},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Food, Limos, Bars, Wineries, Tours, Wine Bars, Arts & Entertainment, Breweries, Hotels & Travel, Wine Tours, Transportation, Taxis, Nightlife\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"8:0-22:0\\\",\\\"Monday\\\":\\\"8:0-22:0\\\",\\\"Saturday\\\":\\\"8:0-22:0\\\",\\\"Sunday\\\":\\\"8:0-22:0\\\",\\\"Thursday\\\":\\\"8:0-22:0\\\",\\\"Tuesday\\\":\\\"8:0-22:0\\\",\\\"Wednesday\\\":\\\"8:0-22:0\\\"},\\\"name\\\":\\\"Wine Tasting Designated Drivers of Santa Barbara\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-10-22 02:18:04\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I was a little nervous using this designated driver set up, but the set up could not have been any better.  Our driver was Kevin.  He was on time, polite and professional.  He was very accommodating to our needs.  We had a great time wine tasting and felt very safe.  I would 100% recommend this company.  Excellent customer service from the beginning to the end.\\\"},{\\\"review_date\\\":\\\"2021-10-09 01:40:13\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Chris was our driver and he was great. I trusted him to drive my car, he knew his way around the area very well and made suggestions when we asked for his recommendations. He was familiar with all the wineries and suggested a new one we had a great time at. He was patient with us too! Lots of middle aged ladies in the car for two days!\\\"},{\\\"review_date\\\":\\\"2021-08-29 21:18:12\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"What a great service.  Chris responded almost immediately during scheduling.  Mitch was our driver and we thought he was perfect.  Super laid back and friendly but not overbearing.  We'd already planned our appointments but if you haven't, Mitch has a wealth of knowledge of the area and the winery options.  He is also an artist, so make sure to get his card and check out his website.  Thanks Chris and Mitch for 2 fantastic days!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Wine Tasting Designated Drivers of Santa Barbara is a local business located in Santa Barbara, CA. The business offers services in the food, limos, bars, wineries, tours, wine bars, arts & entertainment, breweries, hotels & travel, wine tours, transportation, taxis, and nightlife categories. They operate from 8:00 AM to 10:00 PM every day of the week.\\n\\nCustomers have left positive reviews about their experiences with the designated drivers from this company. One customer, who had Kevin as their driver, mentioned that the set up was excellent and Kevin was punctual, polite, and professional. They felt safe and had a great time wine tasting. Another customer praised their driver, Chris, for his knowledge of the area and wineries. Chris was patient and made suggestions, making their experience enjoyable. A third customer appreciated the prompt response during scheduling and complimented their driver, Mitch, for being laid back and friendly. Mitch's knowledge and artistic background were also highlighted.\\n\\nOverall, Wine Tasting Designated Drivers of Santa Barbara has received positive reviews for their customer service, professionalism, and knowledgeable drivers. They provide a safe and enjoyable experience for wine tasting tours in the Santa Barbara area.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:77e0985f1765f9516c6132b332be5d30fa4ed60db380865423aad83642a935cf",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+  ]
+}

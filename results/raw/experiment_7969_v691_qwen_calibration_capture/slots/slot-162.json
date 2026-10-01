@@ -1,0 +1,100 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.2866265699849464,
+  "exclusion_reason": null,
+  "family_id": "sha256:1999f1e3d724e6c0290f510be97fb126fa5ec2e4e5f85b9eea39b361f8f049f8",
+  "input_tokens": 711,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 711,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 733
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:7a8e92332054c0df43ceeb83293a65adc256fafdb11ce6a1ddc6ecb655f05f9b",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.95,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832694,
+    "id": "chatcmpl-xqpsbtJ9JaZR0CmarmzLhKh2Ll08ung4",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 516.425,
+      "predicted_n": 22,
+      "predicted_per_second": 42.600571234932474,
+      "predicted_per_token_ms": 23.473863636363635,
+      "prompt_ms": 640.689,
+      "prompt_n": 633,
+      "prompt_per_second": 987.9988574799943,
+      "prompt_per_token_ms": 1.0121469194312795
+    },
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 711,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 733
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"216 S Milpas St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":null,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Restaurants, Burgers\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":null,\\\"name\\\":\\\"The Habit\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-15 14:22:45\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"The burger was delicious and the service was pleasant. Burgers are a dime a dozen but A GOOD BURGER is devine.\\\\nThis was DEVINE! We'll be back.\\\"},{\\\"review_date\\\":\\\"2022-01-15 00:15:00\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Legit, excellent burgers. I asked for an off the menu item - patty melt - and they happily built that very tasty sandwich. And they have malt vinegar for their tasty fries. Great place!\\\"},{\\\"review_date\\\":\\\"2022-01-06 23:38:36\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Best fast food burger in SB... their tempura green beans with sriracha mayo are fire and not the usual fast food offering. My French homies eat here and wish they could get this in France. A very California burger joint like in n out.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Sure! Here's an objective overview of The Habit based on the provided structured data:\\n\\nThe Habit is a restaurant located in Santa Barbara, CA, specializing in burgers and offering outdoor seating, takeout, and reservations. The restaurant has a casual atmosphere and serves a variety of menu items, including burgers, salads, and sides. According to customer reviews, the food is delicious and the service is pleasant. One reviewer described the burger as \\\"devine\\\" and another praised the restaurant's ability to accommodate special requests. The restaurant also offers unique menu items such as tempura green beans with sriracha mayo, which sets it apart from other fast food options. Overall, The Habit appears to be a popular and well-regarded burger joint in Santa Barbara.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:76da5b161f09393a9e7c60872543acb05d023c515a7c329071f1415ff98df04c",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ]
+}

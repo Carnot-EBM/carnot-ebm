@@ -1,0 +1,110 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.6872126290109009,
+  "exclusion_reason": null,
+  "family_id": "sha256:49bd54b39f5d1e975ea9a4f81ca976d4363367238df306044580dba6336ffdc2",
+  "input_tokens": 1219,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 1219,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1240
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:c18fa468b07230a82ce43f2e2b3da038294beb0a204b7c380edafdb8490e5523",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832877,
+    "id": "chatcmpl-aNQ5NzKmX6XolLISrt5h9bQd8sjp7oFV",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 493.191,
+      "predicted_n": 21,
+      "predicted_per_second": 42.57985243039715,
+      "predicted_per_token_ms": 23.485285714285713,
+      "prompt_ms": 1080.267,
+      "prompt_n": 1141,
+      "prompt_per_second": 1056.2203603368425,
+      "prompt_per_token_ms": 0.9467721297107801
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 1219,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1240
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":null,\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":false,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Food Trucks, Food, Food Delivery Services, Tacos, Mexican, Event Planning & Services, Restaurants, Vegan, Caterers\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Saturday\\\":\\\"0:0-0:15\\\",\\\"Wednesday\\\":\\\"16:0-19:0\\\"},\\\"name\\\":\\\"Taco Tuyo\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2018-07-15 18:20:02\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Since I last posted, I must've been here over 15 times.  Every time they make something for their Specials menu, I wish they would add it to the main menu because it's THAT good -- Portobello taco, Guaco taco.  \\\\n\\\\nTheir vegan Tres Leches Cake should be called the No Tres Leches because it uses 3 different types of coconut oil instead and it's to die for.  I buy a slice every time.\\\\n\\\\nI think these guys really capture the savory element of Mexican food and it's all vegan!\\\\n\\\\nA super underrated business in town with heart. Don't miss out on this train.\\\"},{\\\"review_date\\\":\\\"2018-06-07 21:48:28\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"The staff is unapproachable and the food lacks flavor. \\\\nAlthough their ingredients are creative? I think the way everything comes together tastes like cardboard.\\\\nSerious waste of money.\\\\n\\\\nI gave my feedback to the staff and they laugh at me. Awesome feeling being laughed at for suggesting how to improve your food.\\\\n\\\\nI wish I could give a negative review, because this place is so bad.\\\\n\\\\nDefinitely NOT a Santa Barbara vibe\\\"},{\\\"review_date\\\":\\\"2018-06-05 23:48:40\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Taco Tuyo is pretty good! I'm not vegan myself but my roommate is, so I always go to the newest vegan places in town with her. The jackfruit nachos were our favorite thing we got! They were full of flavor and were loaded to the top full of all the toppings. We loved that they were semi spicy with lots of the vegan cheese melted on top. :)\\\\n\\\\nWe got the portobello tamale which we both liked. We loved the corn and kale that the tamale had in it along with the salsa that was on top.  \\\\n\\\\nWe loved the salsa so much so we asked for an extra salsa on the side, that we added on top of everything!\\\\n\\\\nWe also got the taco cuete, which we both weren't that big of a fan of because we didn't like the sauce on it. \\\\n\\\\nOverall I will go back to this place again to try something new like the burrito or the ceviche! The people who worked there were friendly and very helpful in helping us pick out what to get. \\\\n\\\\nEven if you aren't vegan you will like this place because it's full of flavor and spice! Check it out if your looking for a healthy plant based mexican meal.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Taco Tuyo is a local business located in Santa Barbara, CA, specializing in food trucks and food delivery services. They offer a wide range of options including tacos, Mexican cuisine, vegan dishes, and catering services. The business has received positive reviews from customers, with an average rating of 4.5 stars.\\n\\nOne customer mentioned that they have visited Taco Tuyo multiple times and praised the specials menu, particularly the Portobello taco and Guaco taco. They also highly recommended the vegan Tres Leches Cake, which they described as using three different types of coconut oil and being incredibly delicious.\\n\\nAnother customer had a negative experience, stating that the staff was unapproachable and the food lacked flavor. They expressed disappointment with the overall taste and felt that their feedback was not taken seriously.\\n\\nHowever, another customer who visited with their vegan roommate had a positive experience. They enjoyed the jackfruit nachos, which were described as flavorful and topped with vegan cheese. They also mentioned liking the portobello tamale and the salsa that accompanied it.\\n\\nOverall, Taco Tuyo has both positive and negative reviews, but it appears to be a popular choice for those looking for vegan Mexican food in Santa Barbara. The business has been praised for its flavorful dishes and friendly staff, although improvements in customer service and taste consistency could be made.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "calibration_replay",
+  "source_cluster_id": "sha256:02cc982e205c06a320c87f8235afbcf7923bae8a46a29ff19376d8eac031738f",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18
+  ]
+}

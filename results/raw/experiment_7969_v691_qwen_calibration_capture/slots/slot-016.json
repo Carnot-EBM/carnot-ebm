@@ -1,0 +1,102 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.3582104700035416,
+  "exclusion_reason": null,
+  "family_id": "sha256:006468a3328bf1f5e70c81b8282b473b2cf25b29d2d17a665676b9a9386969ac",
+  "input_tokens": 815,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 815,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 838
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:0ac2f3ec080bb91390fbdda8ca64abd168793ac9fa988827b53bd820ecec5d6a",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832492,
+    "id": "chatcmpl-R0fSB8tV5S0YJlRkblkP9kfulgQOgzmJ",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 533.979,
+      "predicted_n": 23,
+      "predicted_per_second": 43.07285492500641,
+      "predicted_per_token_ms": 23.216478260869568,
+      "prompt_ms": 692.185,
+      "prompt_n": 737,
+      "prompt_per_second": 1064.7442518979753,
+      "prompt_per_token_ms": 0.9391926729986431
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 815,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 838
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"4317 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":null},\\\"business_stars\\\":2.0,\\\"categories\\\":\\\"Specialty Food, Delis, Restaurants, Food, Meat Shops\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":null,\\\"name\\\":\\\"Ye Olde Butcher Shop\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2018-08-13 23:08:07\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Came to visit the shop as a detour on a trip to la. Very shitty sandwiches if you care about your health don't get the man-which. I can hear them microwave my sandwich and it tastes terrible. It was the worst sandwich I have ever ate in my entire life. It ruined my day and save your money and just get Thai food next door. Better service and food.\\\"},{\\\"review_date\\\":\\\"2018-01-18 21:06:38\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Found three large thin black hairs in my sandwich. My hair is thick and was tied up in a bun. There was no possibility it was mine.  Absolutely gross maybe they should wear hair nets.\\\"},{\\\"review_date\\\":\\\"2017-02-09 21:45:57\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Used to be great and now it's a waste of money.  I called to express my frustration on a poorly made sandwich and they just hung up. Such a shame\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Ye Olde Butcher Shop is a local business located at 4317 State St in Santa Barbara, CA. It offers specialty food, deli items, and meat products. The business has received a rating of 2.0 stars. Customers have left negative reviews about the quality of the sandwiches and the service. One customer mentioned that the sandwiches were microwaved and tasted terrible, stating that it was the worst sandwich they had ever eaten. Another customer found three large thin black hairs in their sandwich and expressed their disgust. They mentioned that their own hair was tied up and there was no possibility that the hairs belonged to them. The customer also suggested that the staff should wear hair nets. Another customer mentioned that the quality of the sandwiches has declined and expressed frustration over a poorly made sandwich. When they called to express their frustration, they claim that the staff hung up on them. Based on the provided information, it seems that Ye Olde Butcher Shop has faced issues with the quality of their sandwiches and customer service, which has led to negative reviews from customers.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:562874356b3f034042ad44adbb7de1c21d699ae6d8ce6b9ea7abd5aeb45ced70",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ]
+}

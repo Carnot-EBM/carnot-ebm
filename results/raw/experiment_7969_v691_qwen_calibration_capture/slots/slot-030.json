@@ -1,0 +1,100 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.1098758809966967,
+  "exclusion_reason": null,
+  "family_id": "sha256:de37c673a5798e187e6f8f91073e1368e488421abe6859bb0599c0b54ba0c8ca",
+  "input_tokens": 466,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 466,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 490
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:14c5f7d05bb46165d37cb0b6a91d5d8cae6bc207d5c2b67b5749d4b7d0ee8f15",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832510,
+    "id": "chatcmpl-ABE0aZ2Hn3N4Yj5aTYWCahW7Y1UitRl1",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 558.346,
+      "predicted_n": 24,
+      "predicted_per_second": 42.98409946520616,
+      "predicted_per_token_ms": 23.264416666666666,
+      "prompt_ms": 439.615,
+      "prompt_n": 388,
+      "prompt_per_second": 882.5904484605848,
+      "prompt_per_token_ms": 1.133028350515464
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 466,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 490
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Confidence votes 637. A defined benefit plan provides a set amount of benefit to the employee at the time of retirement, and a defined contribution plan specifies the amount of money an employer contributes to a retirement fund for each individual employee. 7 people found this useful.\\\\n\\\\npassage 2:Less favored as primary plans by union leaders. Flexible Benefit Retirement Plan Provision. Defined benefit plans cannot be part of a flexible benefit package. Some types of defined contribution plans (401(k), profit sharing, and stock bonus) may be included in a flexible benefit package.\\\\n\\\\npassage 3:The benefit amount is usually based on your average salary, years of service, etc. A definent contribution plan is like a 401(k). You, and in some cases your employer, contribute a certain amount each paycheck. At retirement, the amount you receive, and for how long, isn't certain as it is with a defined benefit plan.\\\\n\\\\n\\\",\\\"question\\\":\\\"differences between defined benefit and defined contribution retirement plans\\\"}\", \"original_answer\": \"A defined benefit plan provides a set amount of benefit to the employee at the time of retirement, while a defined contribution plan specifies the amount of money an employer contributes to a retirement fund for each individual employee. The benefit amount in a defined benefit plan is usually based on factors like average salary and years of service, whereas the amount received in a defined contribution plan is uncertain and depends on the contributions made by the employee and sometimes the employer.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:103b05322f408f0a4845c32b2017ce129a6beb25f071e7cd1a34abb7b89cd70d",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ]
+}

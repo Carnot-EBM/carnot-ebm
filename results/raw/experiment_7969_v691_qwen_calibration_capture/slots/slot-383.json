@@ -1,0 +1,101 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.5122039769776165,
+  "exclusion_reason": null,
+  "family_id": "sha256:684849a4c852e1cb0c6c30fbbfd3f54ac33931c0ceddc03b11584df83cc5fc9a",
+  "input_tokens": 905,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 905,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 928
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:ff56dae8c96993dc7f1461d686c915247f26c9f527012909581176f1d277a79d",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790833010,
+    "id": "chatcmpl-5Vq8O9Hd0dD4vkeFfnCSCa1TaxYCzgtS",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.3,
+      "predicted_n": 23,
+      "predicted_per_second": 42.490301126916684,
+      "predicted_per_token_ms": 23.53478260869565,
+      "prompt_ms": 849.662,
+      "prompt_n": 827,
+      "prompt_per_second": 973.3282175735764,
+      "prompt_per_token_ms": 1.0274026602176543
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 905,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 928
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"865 Linden Ave\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Restaurants, Cajun/Creole\\\",\\\"city\\\":\\\"Carpinteria\\\",\\\"hours\\\":null,\\\"name\\\":\\\"Cajun Kitchen Cafe\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2016-04-06 03:58:29\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Blackened Cajun & Spinach Eggs Benedict were awesome. Service was great and will come back many times again.\\\"},{\\\"review_date\\\":\\\"2015-10-18 07:33:42\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"This place is not friendly to Latinos and/or POC\\\\n\\\\nI've been coming to Carpinteria since I was a child and have never experienced any form of racial prejudice. The staff was judgmental, cold, and passive aggressive.\\\\n\\\\nWe decided to pop in for some beignets and counter the sweetness, waters were ordered. This seemed to to be what unlocked the floodgates within our waitress as she gave us a judgmental glance as she walked away. Upon returning back with our waters, we weren't quite ready on what type of beignets we wanted to order, so we asked for a little more time. This must have added fuel to her fire because she purposely didn't bother returning to our table even when we made it obvious we were ready. We even locked eyes with her several times and this still didn't register.\\\\nMy mother had to get up, walk towards the bar where the woman was sitting and chatting away with another waitress, just to put in our orders. Fortunately my mom doesn't take crap or sass from anyone so she did let her have it, in a respectable tone as there were other diners eating.\\\\nThe beignets were, surprisingly, really good but we just vowed to never come back due to the shifty service and I'm not shocked that this place is now closed. It's 2015, no one has time for that type of behavior.\\\"},{\\\"review_date\\\":\\\"2015-07-03 15:23:07\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Always a great meal at any of the Cajun Kitchen locations.  Sadly, the Carp one closed as of 6/14/15.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Cajun Kitchen Cafe is a restaurant located at 865 Linden Ave in Carpinteria, California. They serve Cajun and Creole cuisine and offer takeout options. The restaurant has outdoor seating and is rated 4.0 out of 5.0 stars based on customer reviews. While most customers had positive experiences, one reviewer noted that they encountered racial prejudice and poor service at the location. As a result, the restaurant has closed its doors. Overall, while Cajun Kitchen Cafe may have offered delicious food, their customer service and treatment of all patrons left something to be desired.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:b817bcb1c20a7e0850e82825fc642d5788fb6af0e78504b8d98360240550032d",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ]
+}

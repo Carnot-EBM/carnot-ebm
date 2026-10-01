@@ -1,0 +1,102 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.4912029970437288,
+  "exclusion_reason": null,
+  "family_id": "sha256:948dfe7a402b5a79371b89604c1792dba450098152e3c42cf69b7e821e56bd8b",
+  "input_tokens": 858,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 858,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 881
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:817e521338405821ca746e2ad7e2dce6be5aed01ef6b44518ed5db3713e52687",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832711,
+    "id": "chatcmpl-ReXBzo8G2wq8mHSXyUAVSxdbrgkRA2Kd",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 539.622,
+      "predicted_n": 23,
+      "predicted_per_second": 42.622428292397274,
+      "predicted_per_token_ms": 23.46182608695652,
+      "prompt_ms": 819.925,
+      "prompt_n": 780,
+      "prompt_per_second": 951.3065219379822,
+      "prompt_per_token_ms": 1.0511858974358974
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 858,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 881
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"415 E De La Guerra St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Food, Sandwiches, Restaurants, Delis, Grocery\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"7:0-19:0\\\",\\\"Monday\\\":\\\"7:0-19:0\\\",\\\"Saturday\\\":\\\"7:0-19:0\\\",\\\"Sunday\\\":\\\"7:0-19:0\\\",\\\"Thursday\\\":\\\"7:0-19:0\\\",\\\"Tuesday\\\":\\\"7:0-19:0\\\",\\\"Wednesday\\\":\\\"7:0-19:0\\\"},\\\"name\\\":\\\"Italian Grocery & Deli\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2014-11-17 20:47:40\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"This a great day!  Tino's is back open serving delicious sandwiches. At their new location on Carrillo St.   The new storefront looks great.  Looking forward to many more lunches here.  Great excite!!!\\\"},{\\\"review_date\\\":\\\"2014-10-18 15:06:06\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"My father & Tino went to school together, dad use to take me to Tinos on Saturdays for sandwiches & to visit with Tino at original store.  I took my children to the second store and I look forward to taking my grandchildren to the new store.  Living in NY now but I have to say Tinos Super Deluxe or for that matter any of their sandwiches are the best I have had in the US.\\\"},{\\\"review_date\\\":\\\"2014-03-06 06:26:17\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Super deluxe Sub is awesome!  Bummed the are moving to Carrillo!  Loved that they were this hole in the wall neighborhood deli.  Great tuna sandwiches with olives.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Italian Grocery & Deli is a well-regarded local food spot located at 415 E De La Guerra St, Santa Barbara, CA. It operates daily from 7:00 to 19:00, offering a variety of services including sandwiches, deli items, and groceries. With a business star rating of 4.0, it's appreciated for its casual ambience and outdoor seating facility. Although it doesn't accept reservations or provide WiFi, it is good for groups and offers take-out options. Customers have fond memories of visiting the original and second locations, expressing excitement for its relocation to Carrillo St. Customers highly recommend the Super Deluxe Sub, with one citing it as the best sandwich they've had in the US. The deli also provides ample parking on the street and in a dedicated lot.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:9048469840aac404c1cdb9fcbe19acdf4480fd126dbf4fd69859d2a927d61dd4",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ]
+}

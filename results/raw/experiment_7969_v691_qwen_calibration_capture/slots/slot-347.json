@@ -1,0 +1,116 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.601881148002576,
+  "exclusion_reason": null,
+  "family_id": "sha256:dcc35024e3428bd01dcdab5a0a20ef08751feaaab56b15145443d18a45c84711",
+  "input_tokens": 916,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": 19,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 26,
+      "prompt_tokens": 916,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 942
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:e7a7ca0a8183c70e46d1e7af01df92a6fd0036e293634eca2218182802fa4cfc",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": 19\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832956,
+    "id": "chatcmpl-2bwmYfZjQvm5fQFV9eJJfeGyY0wVu12a",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 614.182,
+      "predicted_n": 26,
+      "predicted_per_second": 42.33272873513063,
+      "predicted_per_token_ms": 23.622384615384615,
+      "prompt_ms": 851.491,
+      "prompt_n": 838,
+      "prompt_per_second": 984.1560274859042,
+      "prompt_per_token_ms": 1.016099045346062
+    },
+    "usage": {
+      "completion_tokens": 26,
+      "prompt_tokens": 916,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 942
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"The Young and the Restless spoilers: Audra propositions Kyle as Nick worries Victoria and Nikki\\nThe Young and the Restless spoilers tease plans are being put into motion in Genoa City.\\nNovember sweeps are right around the corner, so the hit CBS soap is dropping some bombshells ahead of the big month.\\nWhat\u2019s going on with Victor (Eric Braeden) remains front and center on the show.\\nHowever, there\u2019s so much more to this story than meets the eye right now.\\nThe latest preview video for Y&R hints at that story and the return of Danny (Michael Damian) shaking things up.\\nOh, and Audra (Zuleyka Silver) is trying to lure Kyle (Michael Mealor) into her scheme with Tucker (Trevor St. John) against the Abbotts.\\nNick thinks Victor is fading fast\\nIn the footage, Nick (Joshua Morrow) has a meeting with Victoria (Amelia Heinle) and Nikki (Melody Thomas Scott) after seeing Victor. Nick doesn\u2019t mince words about his concern for his father and how fast he is fading.\\nGlances between Nikki and Victoria make it clear they are just as worried as Nick. However, Nikki knows something that her children do not.\\nVictor has reassured her that nothing is wrong with him and that his recent actions have to do with his master plan. According to the mustache, even Victor calling Adam (Mark Grossman) Nick was intentional.\\nThe Young and the Restless spoilers did reveal that Victor plans to test Nick. It sounds like Nick just might be playing right into his father\u2019s hand.\\nAudra and Daniel have ideas\\nMeanwhile, after hitting the sheets with Kyle, Audra uses pillow talk time to pitch him an idea. Kyle is unemployed now and won\u2019t return to Jabot unless he is co-CEO, which means Billy (Jason Thompson) must be fired.\\nAudra plants seeds of Kyle joining her and Tucker in their latest plan. Will she tell him the whole truth or just enough to entice him to join their team?\\nElsewhere in Genoa City, Daniel (Michael Graziadei) and Lily (Christel Khalil) meet up with Danny and Phyllis (Michelle Stafford) in the park. Daniel happily informs Danny that he has a guest bedroom at his new house with his father\u2019s name on it.\\nThen Danny shocks everyone with the news that he plans to stick around town for a while, an extended stay, so to speak. The news certainly takes Daniel and Phyllis by surprise.\\nAs Monsters and Critics previously reported, Michael Damian teased the show is revisiting the love triangle of Danny, Phyllis, and Christine that was super-hot back in the 80s.\\nThe Young and the Restless airs weekdays on CBS.\", \"original_answer\": \"Spoiler alert! The Young and the Restless is gearing up for November sweeps with some major plot twists. In the upcoming weeks, we'll see Audra making a move on Kyle with Tucker against the Abbotts. Meanwhile, Victor's recent actions are causing concerns among the Abbott family, with Nick thinking his father is fading fast. But it turns out Victor has a master plan and will be testing Nick soon. Additionally, Danny returns to shake things up, and Victor may be sticking around town for a while. This is a huge shift from the past and will certainly be a game-changer in Genoa City.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "policy_design",
+  "source_cluster_id": "sha256:702600c9294fa9868c420257e55a7b5e2b9d3a3c7b645d860cf54a4db36d0340",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+  ]
+}

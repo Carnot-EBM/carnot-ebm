@@ -1,0 +1,115 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.476730770955328,
+  "exclusion_reason": null,
+  "family_id": "sha256:461ff774d5022a79701e2b887cb162a10db797ed47784f432a0563e7cc76279b",
+  "input_tokens": 861,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 861,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 884
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:66ff783205af8f18d19cd32f9548b8ecaa751c3722e09e5e4f3c9747e2059908",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832665,
+    "id": "chatcmpl-sW3BdzA1nS4we0BKdR7L2VVvRkissL2f",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.894,
+      "predicted_n": 23,
+      "predicted_per_second": 42.522194736861564,
+      "predicted_per_token_ms": 23.517130434782608,
+      "prompt_ms": 821.475,
+      "prompt_n": 783,
+      "prompt_per_second": 953.1635168447,
+      "prompt_per_token_ms": 1.0491379310344828
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 861,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 884
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Han and Chewie are back. An ESPN reporter went on a regrettable rant. And we all taxed our brains trying to deduce the date of Cheryl's damn birthday. Here are pop culture's most talked-about stories of the week. Producers of \\\"Star Wars: The Force Awakens\\\" unveiled a nearly two-minute trailer for the upcoming movie, arriving in December. When Harrison Ford shows up with Chewbacca at the end, you can almost hear the Internet's collective squeals. A logic problem from a Singapore math test somehow spread across the Web, leaving millions trying to figure out the hypothetical birthday of someone named Cheryl. We're guessing that most of us cheated and peeked at the answer. Who retires at age 34? Supermodel Gisele Bundchen, who walked what she says was her last fashion-show runway this week in her native Brazil. She'll still keep modeling, though -- and hanging out with her husband, who is apparently a football player of some kind. Oh, Britt McHenry. We all hate having our car towed. But for someone who's on air at ESPN, you don't seem to understand how to behave on camera. Speaking of McHenry, a new book by Jon Ronson explores how social media may go too far in encouraging haters to shame people who make public missteps. Ronson told CNN, \\\"It's so corrosive to create that kind of society.\\\" The first set of female quintuplets in the world since 1969 was born in Houston, Texas. Just imagine how fun it'll be for their parents 16 years from now when they all start dating. Fire department, I need you now. Singer Hillary Scott of country band Lady Antebellum had to vacate her tour bus when it caught fire outside of Dallas. Most of her stuff was burned, but her Bible survived. To infinity and beyond. Famed physicist Stephen Hawking, known for his sense of humor, partnered with the silly lads of Monty Python to recreate the \\\"Galaxy Song\\\" from their 1983 film \\\"The Meaning of Life.\\\" Duckie dances! Remember Duckie from \\\"Pretty in Pink?\\\" Of course you do. Actor Jon Cryer charmed fans on CBS's \\\"Late Late Show\\\" by reprising his character's record-store dance to Otis Redding's \\\"Try a Little Tenderness,\\\" right down to the wall-dancing and counter-bashing.\\n\", \"original_answer\": \"This week in pop culture, the new trailer for \\\"Star Wars: The Force Awakens\\\" was unveiled, featuring Harrison Ford and Chewbacca, causing excitement across the internet. A Singapore math test problem which spread across the web left millions trying to figure out a hypothetical birthday. Supermodel Gisele Bundchen retired at 34, but will continue to model. ESPN reporter Britt McHenry faced backlash for her behaviour on camera. The first female quintuplets since 1969 were born in Texas. Physicist Stephen Hawking partnered with Monty Python to recreate their \\\"Galaxy Song\\\". Actor Jon Cryer reprised his role as Duckie on CBS's \\\"Late Late Show\\\".\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "policy_design",
+  "source_cluster_id": "sha256:986d8ad14f8274dd2f2f26f030d8bf744277db51acb19082f8fc0443d1343a16",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23
+  ]
+}

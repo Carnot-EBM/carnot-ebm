@@ -1,0 +1,97 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.3537230980000459,
+  "exclusion_reason": null,
+  "family_id": "sha256:8ceb3f71ee38539836b0d6a8e31c32dc253073711a94080ad64946db2333d08a",
+  "input_tokens": 745,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 745,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 769
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:41f96c0ba1bb25d6a5bb59ebb140d729b99f015b8593de561d0d2114dd11a90f",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832608,
+    "id": "chatcmpl-t1JaunRXPlMmqLUIjlPdpeLat2ARUwcx",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.851,
+      "predicted_n": 24,
+      "predicted_per_second": 42.489081191323024,
+      "predicted_per_token_ms": 23.535458333333334,
+      "prompt_ms": 670.283,
+      "prompt_n": 667,
+      "prompt_per_second": 995.1020688276445,
+      "prompt_per_token_ms": 1.0049220389805098
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 745,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 769
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"21 W Victoria Street\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Restaurants, Nightlife, American (New)\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"16:0-0:0\\\",\\\"Monday\\\":\\\"16:0-0:0\\\",\\\"Saturday\\\":\\\"16:0-0:0\\\",\\\"Sunday\\\":\\\"16:0-22:0\\\",\\\"Thursday\\\":\\\"16:0-0:0\\\",\\\"Tuesday\\\":\\\"16:0-0:0\\\",\\\"Wednesday\\\":\\\"16:0-0:0\\\"},\\\"name\\\":\\\"Arlington Tavern\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2018-12-11 03:04:19\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"My husband and I picked the Arlington Tavern for a pre-concert meal.  We loved it. The food was delicious, the service was prompt, friendly, and attentive.\\\"},{\\\"review_date\\\":\\\"2015-11-12 21:58:43\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"I'm glad this place closed down. The service was terrible they sat me in the corner and neglected the hell out of me. The watermelon salad was fantastic but I was really upset by the service\\\"},{\\\"review_date\\\":\\\"2015-08-09 19:58:39\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"SO sad this place is closed! They had amazing food, just ridiculously good.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Sure! Here's an objective overview of Arlington Tavern based on the provided structured data:\\n\\nArlington Tavern is a restaurant located in Santa Barbara, California that offers American (New) cuisine. It has a rating of 4.0 stars based on reviews from customers. The restaurant has a cozy atmosphere with outdoor seating and is open from 4 pm to 2 am, Monday through Sunday. The menu includes a variety of dishes such as burgers, sandwiches, salads, and entrees. The restaurant accepts reservations and takes credit cards. Customers have praised the delicious food and friendly service, but some have complained about poor service in the past. Overall, Arlington Tavern is a popular spot for pre-concert meals and has a casual, intimate atmosphere.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:d73ec4dceea326d8bd1fe75fa5f5f75a3f668588547eec2bc8d6c6fba9182657",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ]
+}

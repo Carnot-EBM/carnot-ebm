@@ -1,0 +1,102 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.5393718869891018,
+  "exclusion_reason": null,
+  "family_id": "sha256:a4e4117f662dbff030b7c50d00c7c5d5bd1b2246b961e52e2962cb636d1ae1ef",
+  "input_tokens": 932,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 932,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 955
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:43fccf957cddd629962e54c45774379513e0efb0207ac6f68c27e871877134f9",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832614,
+    "id": "chatcmpl-XG81Bi5WiMXALYyW5FIdCczpn3RNPDL3",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.799,
+      "predicted_n": 23,
+      "predicted_per_second": 42.52966444094756,
+      "predicted_per_token_ms": 23.512999999999998,
+      "prompt_ms": 873.294,
+      "prompt_n": 854,
+      "prompt_per_second": 977.9066385432627,
+      "prompt_per_token_ms": 1.0225925058548009
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 932,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 955
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"211 Helena Ave\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":true,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":false,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Food, Bars, Tapas Bars, Restaurants, Pubs, Wine Bars, Nightlife, Coffee & Tea\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"15:0-1:0\\\",\\\"Saturday\\\":\\\"13:0-1:0\\\",\\\"Sunday\\\":\\\"13:0-1:0\\\",\\\"Thursday\\\":\\\"15:0-1:0\\\",\\\"Tuesday\\\":\\\"15:0-1:0\\\",\\\"Wednesday\\\":\\\"15:0-1:0\\\"},\\\"name\\\":\\\"Reds Bin 211\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2016-04-30 05:17:13\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Reds Bin is a chill lil spot in Santa Barbara I have come to frequent. If you get sick of the State Street scene and want a bit of a different, more relaxed vibe, I would go to Reds. The bar food is also super yummy, and the bartenders are lovely people. I really love this place.\\\"},{\\\"review_date\\\":\\\"2016-04-23 01:42:23\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Not a fan of a place who likes to serve alcohol to underage kids...... Prob should think bout hiring some new bartenders.\\\"},{\\\"review_date\\\":\\\"2016-03-29 22:03:46\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"This place was so fun. Great cocktails. Great vibe. \\\\n\\\\nMy boyfriend and I hung out here while we were visiting Santa Barbara on a saturday night. There was ample seating (which is a huge deal to me). \\\\n\\\\nThe bartenders were super great and it seemed like a place for locals. Not touristy which was great.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Reds Bin 211 is a local business located at 211 Helena Ave in Santa Barbara, CA. It is a tapas bar, restaurant, pub, wine bar, and coffee & tea shop, offering a diverse range of food and beverages. The business has received positive reviews from customers, with an average rating of 4.0 stars.\\n\\nCustomers appreciate the relaxed and chilled vibe of Reds Bin 211, which provides a refreshing alternative to the bustling State Street scene. The bar food is highly praised for its delicious taste. The bartenders are described as lovely people, providing excellent service to the customers.\\n\\nThe business offers outdoor seating and free WiFi. It is open from 3:00 PM to 1:00 AM on weekdays and from 1:00 PM to 1:00 AM on weekends. Reds Bin 211 is known for being a local hangout spot, attracting both locals and visitors who are looking for a great cocktail and a fun atmosphere.\\n\\nOverall, Reds Bin 211 is a popular local establishment in Santa Barbara, providing a relaxed and enjoyable experience with delicious food, great cocktails, and friendly bartenders.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:f33f6e2da8b7e7114e28c0e2dfc8c956767b6ab6f67c16bbb3b780a4659d6fda",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ]
+}

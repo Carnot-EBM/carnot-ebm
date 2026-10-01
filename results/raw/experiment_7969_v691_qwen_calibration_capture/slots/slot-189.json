@@ -1,0 +1,125 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 2.0004927949630655,
+  "exclusion_reason": null,
+  "family_id": "sha256:b81d7a56c472dba769bd830b9d74e4caf14d4c5d7accb7f448dbf6d6d0d6c280",
+  "input_tokens": 1563,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1563,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1586
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:892f7d9d22a0112d71b173bc0811ef0fe9392d80f0cff3be34ed1ee5daafd640",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832731,
+    "id": "chatcmpl-jFI9qX5UfgAKNjs9iuku2HjqRHE1oT0Y",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 542.507,
+      "predicted_n": 23,
+      "predicted_per_second": 42.395766321909214,
+      "predicted_per_token_ms": 23.587260869565217,
+      "prompt_ms": 1342.975,
+      "prompt_n": 1485,
+      "prompt_per_second": 1105.7540162698488,
+      "prompt_per_token_ms": 0.9043602693602693
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1563,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1586
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"1117 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":true,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":\\\"{dj: False, live: None, jkebox: False, video: False, backgrond_msic: False, karaoke: None, no_msic: False}\\\",\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Restaurants, Vegan, Tapas/Small Plates, Vegetarian, Bars, Farmers Market, Beer, Wine & Spirits, Beer Bar, Food, Cafes, Nightlife, Wine Bars\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"12:0-21:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"12:0-21:0\\\",\\\"Sunday\\\":\\\"12:0-17:0\\\",\\\"Thursday\\\":\\\"12:0-20:0\\\",\\\"Tuesday\\\":\\\"12:0-20:0\\\",\\\"Wednesday\\\":\\\"12:0-20:0\\\"},\\\"name\\\":\\\"Satellite\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-12 07:45:19\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"A wine bar in the middle of Santa Barbara that doesn't list a single white wine from California by the glass: not a good start. Food is super limited, overpriced, and cashier (there really is no wait staff) couldn't even describe the few basics, like, What's on the cheese plate? Our group of three left within half an hour because the noise level was too loud for any conversation, but we were told that it was \\\\\\\"music night,\\\\\\\" and DJ didn't care that we couldn't talk. What arrogance\\\"},{\\\"review_date\\\":\\\"2022-01-06 21:08:54\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Definitely recommend this spot as an out-of-towner. The food was great, I recommend asking the server what they recommend. I think it was all vegetarian too which left you feeling light. It's a cool concept to order up and be served by the table, I was just a little unclear if I should clear the table (don't!). The wine list was truly inspired with lots to explore locally and internationally. The band was amazing and supported my terrible dance moves. The patio is gorgeous and warm with heaters. Great staff, great food. One recommendation would be to get more support and follow up on wine selections, but overall staff was very attentive. Has been my best food and wine experience in Santa Barbara so far!\\\"},{\\\"review_date\\\":\\\"2021-12-14 17:44:51\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"I agonized over this review. Bottom line it is unlikely we would return. The small plate  food was good. The overall dining experience was not.\\\\n\\\\nWe started out waiting in a line to order, ala McDonalds. When ordering, the order taker did not rush us but you felt subtle pressure not to delay people waiting behind you. Again, like McDonalds you pay when you order (including leaving a tip under the watchful eyes of the order taker). \\\\n\\\\nWe ordered a bottle of wine and received two wine glasses and two water cups. I carried them to the table where my partner was sitting in two trips. At the prices this restaurant charges this lack of service is inexcusable.\\\\n\\\\nThe wine was brought out an plopped on our table, no tasting offered. The wine was not good. I did not realize how important a drinkable wine was to a meal. We are absolutely not wine snobs, all we look for is a drinkable red. This was not drinkable (no, it was not a 'big' high tannin wine). We discussed how we ended up with this bottle; I thought the order taker *might* have been warning us off, partner thought he was saying it was good (maybe to get rid of it?). In retrospect we should have returned the bottle, but alas we did not.\\\\n\\\\nWell situated patio dining with great people watching. All menu options are vegetarian and vegan options are clearly marked. The food was good, ordered 4 small plates and enjoyed each of them, at least until we sipped the wine. The real killer was the pricing, it is expensive. At this price point we have higher expectations for service.\\\\n\\\\nIt is impossible for us to review this restaurant without comparing it to Olivers. Two of the dishes we ordered were the same at both Olivers and Satellite. We preferred Olivers food by a slight margin, but both were good. Pricing was essentially the same, food options were very similar, the dining experiences were night and day different.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Satellite is a well-rated 4.5 star restaurant located at 1117 State St, Santa Barbara, CA. It offers a variety of categories including Vegetarian, Vegan, Tapas/Small Plates, Bars, and Cafes, among others. The restaurant is open throughout the week, with business hours extending till late on weekends. Satellite provides facilities like free WiFi, outdoor seating, and is good for group dining. The ambiance is described as casual, classy yet intimate. \\n\\nHowever, reviews indicate a mixed customer experience. Some customers enjoyed the food, ambiance, and staff service, while others found it overpriced with limited food options and inadequate service. The wine selection has also received mixed reviews, with some customers appreciating the inspired list, and others criticizing the quality and lack of local options. The restaurant's unique order-up and table service concept was found to be unclear by some. Overall, customers praised the vegetarian menu, patio dining, and live music.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:52d2f0eef380e13661d7d35e66fca7ce6dfb8740d655bf21a6d2ecf2e9c9433b",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33
+  ]
+}

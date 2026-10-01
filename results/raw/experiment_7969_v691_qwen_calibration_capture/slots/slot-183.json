@@ -1,0 +1,117 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.516227106039878,
+  "exclusion_reason": null,
+  "family_id": "sha256:8ddff4ff3211882dfbb6f40301a97c4c34a5f720f8a30824b44a2f2ad6255c16",
+  "input_tokens": 871,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 871,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 894
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:84870a1125b755052a5a08ed94d387f3e5ad44082737dfab64c1f0b1ccc61f74",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832721,
+    "id": "chatcmpl-Zij1U6bCzjZR5Ft1grkncwfWXBauAtb6",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.045,
+      "predicted_n": 23,
+      "predicted_per_second": 42.510327237105976,
+      "predicted_per_token_ms": 23.52369565217391,
+      "prompt_ms": 823.975,
+      "prompt_n": 793,
+      "prompt_per_second": 962.4078400436906,
+      "prompt_per_token_ms": 1.0390605296343
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 871,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 894
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:1 Wash your Bike Frame and Wheels. 2  Go from top to bottom, front to back, using a diluted soap or a dedicated product and the soft bristled brush. 3  Use the brush to scrub the braking surfaces of your rims. 4  Rinse your Bike, being careful not to shoot high pressure water at bearing packs or shock seals.5  Dry the Bike.f you have a suspended bike, try not to spray water at the seals where the shock pistons move. 1  Clean your Drivetrain. 2  Wet your Bike. 3  Wash your Bike Frame and Wheels. 4  Rinse your Bike, being careful not to shoot high pressure water at bearing packs or shock seals. 5  Dry the Bike. 6  Lubricate.\\\\n\\\\npassage 2:Clean the drivetrain first. If you use degreaser, remove the rear wheel and angle it cassette-side down so the degreaser runs off. Use a mess-containing chain-cleaning system like Park Tool's Chain Scrubber.Work from top to bottom, front to back.Use a bucket of warm, soapy water and a soft-bristled handheld brush (usually sold with a dustpan).lean the drivetrain first. If you use degreaser, remove the rear wheel and angle it cassette-side down so the degreaser runs off. Use a mess-containing chain-cleaning system like Park Tool's Chain Scrubber.\\\\n\\\\npassage 3:If you have a suspended bike, try not to spray water at the seals where the shock pistons move. 1  Clean your Drivetrain. 2  Wet your Bike. 3  Wash your Bike Frame and Wheels. 4  Rinse your Bike, being careful not to shoot high pressure water at bearing packs or shock seals. 5  Dry the Bike. 6  Lubricate.f you have a suspended bike, try not to spray water at the seals where the shock pistons move. 1  Clean your Drivetrain. 2  Wet your Bike. 3  Wash your Bike Frame and Wheels. 4  Rinse your Bike, being careful not to shoot high pressure water at bearing packs or shock seals. 5  Dry the Bike. 6  Lubricate.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to clean a bike\\\"}\", \"original_answer\": \"To clean your bike, start by cleaning the drivetrain. If you're using a degreaser, remove the rear wheel and angle it cassette-side down so the degreaser can run off. You can also use a chain-cleaning system like Park Tool's Chain Scrubber. Then, wet your bike. Wash the frame and wheels from top to bottom, front to back, using a diluted soap or a dedicated product and a soft bristled brush. Be sure to scrub the braking surfaces of your rims. When rinsing your bike, avoid shooting high pressure water at bearing packs or shock seals. If your bike is suspended, avoid spraying water at the seals where the shock pistons move. Finally, dry your bike and apply lubrication.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "policy_design",
+  "source_cluster_id": "sha256:0bf1a8edfea06bb2066b5fe7afa098eea9091fd21a565ebb55856bbc46a85af0",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25
+  ]
+}

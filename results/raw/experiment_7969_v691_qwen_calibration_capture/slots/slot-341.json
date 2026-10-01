@@ -1,0 +1,68 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 0.0,
+  "exclusion_reason": "answer_units_over_budget",
+  "family_id": "sha256:fbc815ce1956282f7a88d090972de64c879de4a1882a512b18a88c0e706cda8a",
+  "input_tokens": null,
+  "parsed": {
+    "citation_valid": false,
+    "completed": false,
+    "finish_reason": null,
+    "probability": null,
+    "schema_valid": false,
+    "source_sentence_id": null,
+    "status": "invalid_envelope",
+    "syntax_valid": false,
+    "usage": {}
+  },
+  "public_eligible": false,
+  "public_hash": "sha256:e55805ea02d277bd88b02dc1ac0c87f29f4e12e3d24a0de0c6393f409aaeb4ba",
+  "raw_response": {},
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:THEN. This is where a squirt bottle comes in handy. Spray vinegar all over the baking soda. Use your fingers or a rubber spatula to spread the baking soda around so that it comes into contact with the vinegar and every dirty part of your oven floor.Let sit for 10-20 minutes. (alternative: Mix vinegar and baking soda in a bowl to form a paste, and then spread that over your oven floor.pray vinegar all over the baking soda. Use your fingers or a rubber spatula to spread the baking soda around so that it comes into contact with the vinegar and every dirty part of your oven floor.\\\\n\\\\npassage 2:Instructions. 1  Remove the oven racks: Remove your oven racks, pizza stone, oven thermometer, and anything else you have inside the oven. 2  Set aside. 3  Make a baking soda paste: In a small bowl, mix a 1/2 cup of baking soda with a few tablespoons of water. 4  Adjust the ratio of both as needed until you have a spreadable paste. Make a baking soda paste: In a small bowl, mix a 1/2 cup of baking soda with a few tablespoons of water. 2  Adjust the ratio of both as needed until you have a spreadable paste. 3  For me this took about 3 tablespoons of water to get the desired spreadable consistency.\\\\n\\\\npassage 3:Here it is: Step 1: Sprinkle a thick layer of baking soda over the baked-on mess (your oven needs to be completely cool for this). Step 2: Then, spray the baking soda down with water (white vinegar is even better). Step 3: When the baking soda dries out, spray it down again.Step 4: Come back in a couple hours, and scoop out the baking soda. All of that stuck-on mess should come right out with it (with no scrubbing required).Step 5: Wipe down the bottom of the oven to remove any remaining baking soda, and your oven is ready for use again.Filed Under: Clean It.tep 4: Come back in a couple hours, and scoop out the baking soda. All of that stuck-on mess should come right out with it (with no scrubbing required). Step 5: Wipe down the bottom of the oven to remove any remaining baking soda, and your oven is ready for use again. Filed Under: Clean It.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to clean a oven without oven cleaner\\\"}\", \"original_answer\": \"To clean an oven without using oven cleaner, one can follow these steps:\\n\\n1. Remove any removable items from the oven, such as oven racks, pizza stone, and oven thermometer.\\n2. Mix equal parts baking soda and white vinegar in a small bowl to create a paste.\\n3. Apply the paste to the baked-on mess in the oven, making sure to cover all surfaces.\\n4. Let the paste sit for 10-20 minutes.\\n5. After the baking soda has dried, apply another layer of paste and let it sit for an additional 10-20 minutes.\\n6. After the second application of paste has dried, carefully scoop out the baking soda with a non-abrasive brush or scraper.\\n7. Once all of the baking soda has been removed, wipe down the oven's interior with a damp cloth.\\n8. Rinse the cloth thoroughly and dry it before wiping down the oven again with a clean, dry cloth.\\n9. The oven is now clean and ready for use.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 0,
+  "role": "fit",
+  "source_cluster_id": "sha256:70e1241207f4a1304a0aee513f6050bca7f1323e940c62d7c31d197c84afc941",
+  "started": false,
+  "status": "excluded",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18
+  ]
+}

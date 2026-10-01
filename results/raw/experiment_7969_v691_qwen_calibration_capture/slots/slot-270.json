@@ -1,0 +1,106 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.361104006995447,
+  "exclusion_reason": null,
+  "family_id": "sha256:7cc69719e31402763415f418fc5f9c3874a03ddfac9fcba3f234d56a61d70726",
+  "input_tokens": 752,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 752,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 776
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:b40ce89ad29f2c0a13408760ed327a92b5c6de9bbf07dd8217c126944365d999",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832851,
+    "id": "chatcmpl-qemSWxwUy8APZ3RW235ai22yrGTsjbf2",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 572.107,
+      "predicted_n": 24,
+      "predicted_per_second": 41.95019463142384,
+      "predicted_per_token_ms": 23.837791666666664,
+      "prompt_ms": 671.865,
+      "prompt_n": 674,
+      "prompt_per_second": 1003.1777217149278,
+      "prompt_per_token_ms": 0.9968323442136499
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 752,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 776
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Daylights Saving Time 2023: When to Set Clocks Back an Hour\\nDaylight saving time is approaching at a rapid pace, regardless of whether we are prepared or not. On Sunday, November 5th, at 2 a.m. local time, our clocks will be turned back by an hour, granting us an additional hour of sleep. This is part of the regular biannual time adjustment that has an impact on most, but not all, Americans.In the following year, on 2024, daylight saving time will commence again in March, causing us to move our clocks forward and lose one hour of sleep. The purpose behind gaining an hour in November, rather than losing one in the spring, is to make room for more daylight in the mornings. Conversely, when we \\\"spring forward\\\" in March, the intention is to extend daylight during the summer evenings. It is worth mentioning that in the Northern Hemisphere, the autumnal equinox occurred on September 23rd, signifying the commencement of the fall season. Daylight saving time is a biannual occurrence that impacts most Americans, whether they are ready for it or not.\\nOn November 5th, our clocks are set backward by an hour, providing us with an additional hour of rest. This adjustment is designed to allow for more daylight in the mornings during the fall and winter seasons. However, it is important to note that not all Americans are affected by this time change, as there are some states and territories that do not observe daylight saving time.Looking ahead to 2024, daylight saving time will once again take place in March, resulting in us losing an hour of sleep. This shift is focused on extending daylight during the summer evenings, as we \\\"spring forward\\\" our clocks. It is interesting to consider the timing of these time adjustments in relation to the autumnal equinox, which occurred on September 23rd in the Northern Hemisphere, marking the beginning of the fall season. As we approach daylight saving time, it is important for individuals to be aware of these changes and adjust their schedules accordingly to minimize any disruptions in their daily routines.\\nSource:\\nhttps://www.usatoday.com/story/news/nation/2023/10/02/daylight-saving-time-2023/70971436007/\", \"original_answer\": \"Sure! Here's the summary within 88 words:\\n\\nDaylight saving time begins on November 5th at 2am, setting clocks back by an hour. This bi-annual change grants us an extra hour of sleep but affects only some Americans as some states don't observe daylight saving time. In March 2024, we'll lose an hour of sleep as clocks \\\"spring forward\\\" for extended daylight in the evening.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "calibration_replay",
+  "source_cluster_id": "sha256:b47423a1d45de2bd835c18a96b1c12c47d0b4714f28c86e956b56c17920dfe26",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ]
+}

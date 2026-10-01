@@ -1,0 +1,107 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.5211745040141977,
+  "exclusion_reason": null,
+  "family_id": "sha256:288da422e88e947a381cdb130e9e5966a3f36b9fb581b81b9e1f8057028d8ed0",
+  "input_tokens": 905,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 905,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 929
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:15ae6ffd26e483bcba25576091de0059e71a15750856859f38908d5fdc7f2f0b",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832513,
+    "id": "chatcmpl-JzWVHyK2rGYayBFHfziZXBulhup3u5y2",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 559.79,
+      "predicted_n": 24,
+      "predicted_per_second": 42.87322031476089,
+      "predicted_per_token_ms": 23.324583333333333,
+      "prompt_ms": 830.489,
+      "prompt_n": 827,
+      "prompt_per_second": 995.798860671243,
+      "prompt_per_token_ms": 1.0042188633615479
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 905,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 929
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"721 Cliff Dr\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"paid\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"American (Traditional), Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":null,\\\"name\\\":\\\"JSB Cafe at Santa Barbara City College\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2019-10-24 19:13:40\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Ordered a medium well \\\\\\\"JSB burger\\\\\\\". I'm not sure what I served was ever a living creature at any point in time. My friend took one bite out of it and spit it out. By far the worst dining experience I've ever had. The patty was pink, falling apart and soggy. The most unfortunate part was that the bun was honestly not that bad, but the patty soaked through it after about 30 seconds. Please make sure the food they serve you is edible before you take a bite #regrets #throwingupinthebathroom\\\\n\\\\nMuch love JSB cafe a\\\"},{\\\"review_date\\\":\\\"2019-03-15 03:32:25\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"These gals and lads work hard. Their food is great and they practice a lot and it shows. My only real negative feedback is that the food can SOMETIMES be a hit or miss. But hey, you're at a college and it's a place of learning. The fries really need to go however. Same fries given in the regular cafeteria, those are really not so good. But that's not their fault, that falls on faculty/staff.\\\"},{\\\"review_date\\\":\\\"2018-11-14 19:05:55\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Very good, prices are mid range but not unreasonable.  All of the food is made fresh, daily I'm pretty sure.  The selection is huge, I'm surprised to see this high quality of food on a college campus.  There are lots of things to choose from and they all look great.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"JSB Cafe at Santa Barbara City College is a traditional American restaurant located on the college campus. It offers a wide variety of options and has a casual atmosphere with outdoor seating available. While the food is made fresh daily, some customers have reported inconsistent quality, with some dishes being delicious and others being subpar. The menu includes burgers, sandwiches, salads, and other classic American fare. The cafe also offers paid Wi-Fi and takes reservations for groups. Some customers have noted that the fries served are the same as those in the regular cafeteria and are not impressive. However, the staff is friendly and works hard to provide good service. Overall, JSB Cafe is a solid option for those looking for a casual meal on campus, but diners may want to proceed with caution when ordering certain dishes.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:0419375d9909dc4b148f79105a6fcc16968b7797ce5b03788435e05e3b9bfcab",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ]
+}

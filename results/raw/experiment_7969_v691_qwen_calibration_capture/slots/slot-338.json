@@ -1,0 +1,118 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.5461885390104726,
+  "exclusion_reason": null,
+  "family_id": "sha256:6da2960d79da0fc5ceac34775f65baac9ccb58352f7a1d8a49028a5d868a1d9a",
+  "input_tokens": 975,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 975,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 998
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:e46040852c2e20c5cb51b7b3e0a92e4870ad89d493452611077b1f932c641fb7",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832945,
+    "id": "chatcmpl-XeG0cCZJmNaqrp2yuwBWClbXfmU2Axqa",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.646,
+      "predicted_n": 23,
+      "predicted_per_second": 42.46315859435868,
+      "predicted_per_token_ms": 23.54982608695652,
+      "prompt_ms": 884.651,
+      "prompt_n": 897,
+      "prompt_per_second": 1013.9591771218256,
+      "prompt_per_token_ms": 0.9862329988851728
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 975,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 998
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Deputies rushed Kenneth Morgan Stancil III from court Thursday after the 20-year-old murder suspect swore at a judge and tried to flip over a table. Stancil is accused of killing an employee Monday at Wayne Community College in Goldsboro, North Carolina. Relatives have said victim Ron Lane was gay, CNN affiliate WNCN reported, and investigators are looking into whether the shooting was a hate crime. Authorities arrested Stancil after he was found sleeping on a Florida beach on Tuesday. Just a few minutes into Thursday's hearing on the first-degree murder charge he faces, Stancil snapped back at the judge after he was offered a court-appointed lawyer. \\\"No, I don't need one,\\\" said Stancil, who stood before the judge with his legs shackled and his arms handcuffed in front of him. \\\"You know what I'm saying? I knew I would get life anyway.\\\" Superior Court Judge Arnold O. Jones interjected, pointing out that the maximum sentence Stancil faces is the death penalty. \\\"Yes, I know that,\\\" Stancil fired back. \\\"But when I knew what I had to do and I knew when I got caught, you know, I knew in my mind that I could get life, I could get the death penalty. You know what I'm saying? Do you follow my topic? I would have killed you, you know what I'm saying, if you're a f---ing child molester.\\\" The judge told him not to swear. \\\"I don't give a f--- what you want,\\\" Stancil said, lunging forward and lifting up the table in front of him. Deputies quickly corralled him and hustled him from the courtroom. The hearing resumed about 25 minutes later, when Stancil was brought back into the courtroom, this time with his arms handcuffed behind him. When asked again by Jones whether he wanted a lawyer, his response was quick -- and calm. \\\"Yes, sir,\\\" he said. In an interview with CNN affiliate WRAL, Stancil described himself as a neo-Nazi and said he hates gay people \\\"with a passion.\\\" Stancil had worked for Lane, the school's print shop operator, as part of a work-study program, but was let go from the program in early March because of poor attendance, college officials said. During the interview, and during a court appearance in Florida on Tuesday, Stancil said Lane deserved to die, accusing him of being a child molester who'd made advances in online messages to Stancil's 16-year-old brother. Lane's family has described those accusations as untrue and slanderous. His cousin, Steve Smith, told WRAL that Lane never made sexual advances toward children or anyone with whom he worked. He described him as a loving man who was dedicated to family and friends. \\\"Yes, Ron was gay. But people need to get over it,\\\" Smith said. \\\"That's between him and the Lord, him and his savior.\\\"\\n\", \"original_answer\": \"Sure! Here's the summary in 116 words:\\n\\nA court hearing for Kenneth Morgan Stancil III, accused of killing a college employee in North Carolina, was adjourned after he lashed out at the judge and attempted to flip over a table. Stancil, 20, is charged with first-degree murder and could face the death penalty. He allegedly killed the victim, Ron Lane, because he believed Lane was a child molester and had made advances towards Stancil's teenage brother. Stancil is a self-proclaimed neo-Nazi and has said he hates gay people \\\"with a passion.\\\"\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:130e5b4ad9e40ec819adc5ebcc2a78fad9ea6ff4df6bf61ede841f248ca6b7ef",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26
+  ]
+}

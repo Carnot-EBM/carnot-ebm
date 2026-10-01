@@ -88023,3 +88023,45 @@ cases and verifies archived hashes, prediction drift and dependency drift.
 Private terminal publication and cold replay pass. Execution qualification
 remains zero when historical blocked fixture reader gates lack their required
 readiness field; current coverage never overrides a failed gate.
+
+## REQ-REPORT-7969: Publish an owned bounded calibration capture
+
+Exp7969 records 20261001 and milestone 2026.10.691. Authenticate the Exp7968
+response_roles_ready_score=1 gate and Exp7958 protocol against exact path/hash
+and each historical producer's own invocation identity. Missing, retired or
+blocked external prerequisites yield complete_blocked_* with operands and zero
+calls. Own an idle CUDA lease within 60 seconds, validate GGUF, native binary,
+PID start identity, offload and resident memory, then release only owned work.
+The inference child reads public manifests only. No generator weights change.
+
+### SCENARIO-REPORT-7969-VALIDATION
+
+Freeze code/config/input hashes, explicit affected and consumer tests, command
+argv, exits, failure reasons, deadlines and identical coverage includes before
+results. Use unique temporary scratch outside checkout/results for pytest,
+coverage and mutable private CLI candidates; archive evidence after children
+exit. Combine unit, private success, blocked, failure, replay and terminal
+coverage to nonempty 100 percent added-module and CLI statements. Run scoped
+Ruff, strict mypy, explicit spec coverage and E2E-015/016 with historical
+20260929 arguments. Run the full Python suite once and preserve its real result
+as repository health. Owned required failures disqualify readiness.
+
+### SCENARIO-REPORT-7969-TERMINAL
+
+Cold-reduce primitive rows without generation. Inspect adversarial and strict
+row reports on final candidate bytes after verdict changes. Atomically publish
+one primary, with final-hash-bound sidecars under raw. Both actual readers
+select that path/hash after newer nested sidecars. Capture is complete_null;
+fixture agreement is circular_positive. Only unfinished owned capture work is
+partial. Retain historical evaluation provenance with zero current evaluation
+calls and the September 28 oracle-distinct corrigendum and exposed limits.
+The conductor owns ops/status, changelog and traceability reconciliation.
+
+### Implementation Status (REQ-REPORT-7969)
+
+Implemented in `python/carnot/experiment_7969_v691_qwen_calibration_capture.py`
+and its script-path CLI. The owned child opens four public role manifests.
+Private fixture, blocked, failure and cold-replay routes exercise publication
+and custody. The primary is `results/experiment_7969_v691_qwen_calibration_capture.json`;
+its validation receipts and final-hash sidecars determine capture readiness.
+The conductor retains responsibility for ops and traceability reconciliation.

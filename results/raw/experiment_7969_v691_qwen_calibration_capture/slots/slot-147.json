@@ -1,0 +1,112 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.6621474330313504,
+  "exclusion_reason": null,
+  "family_id": "sha256:dde267d821530f24c847802f0fbcea2420cf2c998f11d199bdd249ae42719400",
+  "input_tokens": 1060,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1060,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1084
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:6d0836b4ae320ef68eb9ae75dce47594a3eb84f6eea25ef717c60cff3c5962cc",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832675,
+    "id": "chatcmpl-tDvnu4baM9tbBxnc4IbsqWzsU2z5s7gG",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.738,
+      "predicted_n": 24,
+      "predicted_per_second": 42.422464108827754,
+      "predicted_per_token_ms": 23.57241666666667,
+      "prompt_ms": 963.774,
+      "prompt_n": 982,
+      "prompt_per_second": 1018.9110725128505,
+      "prompt_per_token_ms": 0.9814399185336049
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1060,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1084
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:1 PREHEAT oven to 250F. Place steaks on a rack over a baking sheet. 2  Rub with 1 tbsp oil and season with salt and pepper. 3  Roast steaks in the centre of the oven for about 20 minutes for medium-rare. 4  Remove from oven.HEAT oil in a medium skillet over high heat. Add steaks and sear until deep brown and crisp, about 3 minutes a side. Hold the steak on their sides and cook the edges for 1 min per side.Remove to rack and let rest for 10 min.oast steaks in the centre of the oven for about 20 minutes for medium-rare. Remove from oven. HEAT oil in a medium skillet over high heat. Add steaks and sear until deep brown and crisp, about 3 minutes a side.\\\\n\\\\npassage 2:Preheat grill to medium-high. Remove steak from marinade and discard marinade. Season steak with salt and pepper and grill over medium-high heat until cooked to medium-rare, about 6 minutes per side.Let steak rest for 10 minutes, loosely covered with aluminum foil, before slicing.Meanwhile, warm tortillas on the grill. Slice the steak on the bias into thin slices.reheat grill to medium-high. Remove steak from marinade and discard marinade. Season steak with salt and pepper and grill over medium-high heat until cooked to medium-rare, about 6 minutes per side.\\\\n\\\\npassage 3:No problem grill indoors with your Grill Pan. Just be sure to let your grill pan get very, very hot before cooking. Yes you can use a regular cast iron pan. Start with high quality steaks, choice grade or better like a center cut, be it a filet, rib eye, or strip steak.With marbling, the white ribbons of fat running through the beef.ust be sure to let your grill pan get very, very hot before cooking. Yes you can use a regular cast iron pan. Start with high quality steaks, choice grade or better like a center cut, be it a filet, rib eye, or strip steak. With marbling, the white ribbons of fat running through the beef.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to cook flank steak indoors\\\"}\", \"original_answer\": \"Based on the provided passages, here is how to cook flank steak indoors:\\n\\nPassage 1 provides instructions for roasting flank steak in the oven. To cook flank steak indoors using this method, preheat the oven to 250\u00b0F (120\u00b0C), place the steak on a rack over a baking sheet, rub with 1 tablespoon of oil, and season with salt and pepper. Roast the steak in the center of the oven for about 20 minutes for medium-rare. Remove the steak from the oven and sear it in a medium skillet over high heat for 3 minutes on each side, until it is deep brown and crisp.\\n\\nPassage 2 provides instructions for grilling flank steak outdoors. However, if you are cooking flank steak indoors, you can replicate this method by using a grill pan. Preheat the grill pan over medium-high heat, remove the steak from any marinade, season it with salt and pepper, and grill it until it is cooked to medium-rare, about 6 minutes per side. Let the steak rest for 10 minutes before slicing.\\n\\nPassage 3 provides general tips for cooking flank steak indoors without an outdoor grill. The passage recommends using a cast iron pan and high-quality steaks with marbling. To cook flank steak using this method, preheat the cast iron pan over medium-high heat, rub the steak with oil, season it with salt and pepper, and cook it until it is cooked to medium-rare, about 6 minutes per side.\\n\\nIn summary, to cook flank steak indoors, you can either roast it in the oven or grill it in a pan over medium-high heat. Make sure to preheat the pan or oven to the appropriate temperature and season the steak with salt and pepper before cooking.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:4a46ab30657aa245030403e408750d93ae79bc71377fb00b6ce82f45f666908d",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20
+  ]
+}

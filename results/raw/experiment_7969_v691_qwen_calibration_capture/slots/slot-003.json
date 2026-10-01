@@ -1,0 +1,109 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.7229546509915963,
+  "exclusion_reason": null,
+  "family_id": "sha256:7bae2d2397a96df88c4adacc2d4c3e8ff1062d996f64ef86c58b90a7e7f98009",
+  "input_tokens": 1172,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1172,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1196
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:0146c2d13f2e3fe1d3e5c3e872306946fad800b09c0ca03f8c0355216ed42b20",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832474,
+    "id": "chatcmpl-9FWmwV1aFudHaBSBQ5s1J2B8b6BKks5b",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 557.102,
+      "predicted_n": 24,
+      "predicted_per_second": 43.080082282957164,
+      "predicted_per_token_ms": 23.21258333333333,
+      "prompt_ms": 1008.917,
+      "prompt_n": 1094,
+      "prompt_per_second": 1084.3310202920557,
+      "prompt_per_token_ms": 0.9222276051188301
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1172,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1196
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"719 Paseo Nuevo\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":null,\\\"trendy\\\":null,\\\"upscale\\\":null},\\\"BusinessParking\\\":{\\\"garage\\\":true,\\\"lot\\\":false,\\\"street\\\":null,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":3.0,\\\"categories\\\":\\\"Restaurants, American (Traditional), American (New), Salad, Pizza, Gluten-Free\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-23:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"11:0-23:0\\\",\\\"Sunday\\\":\\\"11:0-22:0\\\",\\\"Thursday\\\":\\\"11:0-20:0\\\",\\\"Tuesday\\\":\\\"11:0-22:0\\\",\\\"Wednesday\\\":\\\"11:0-22:0\\\"},\\\"name\\\":\\\"California Pizza Kitchen at Santa Barbara\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-16 02:52:42\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Took the family out... Great service and food, Tyler was the bomb...!  Note to self, order the smaller Asian salad.  The large/regular is enough for 2... bummer the Samuel Adams (draft) wasn't available.\\\"},{\\\"review_date\\\":\\\"2021-11-21 23:51:41\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"First time at this location. I'm not that picky with my service, but this was honestly terrible. Our server took 15 minutes to get us water, another 10 to take our order. And maybe 30 minutes to actually receive our food. Our waiter forgot to grab the correct drinks and didn't take down our orders right. The waiter didn't put down one of the pizzas on our order, so we had to remind him once all the other members got their food. By the time we finished our meals, that pizza was still not at the table. We also found hair baked into our bread, and another in one of our pastas. He also never grabbed our check, he just stared at it and then left. We had to call him back over to take it. The waiter was extremely unapologetic and almost seemed completely lost at what he was supposed to be doing. The only reason there is 2 stars is because the manager was extremely sweet and apologetic, she comped the late pizza, gave us a second, and comped the pasta with the hair in it. Overall, good food, bad service.\\\"},{\\\"review_date\\\":\\\"2021-11-12 01:39:14\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Service was excellent and I got a free pizza for being a veteran.  My dog sat with me outside\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"California Pizza Kitchen at Santa Barbara is a restaurant located at 719 Paseo Nuevo, in the city of Santa Barbara, California. The business offers a variety of cuisines, including American (traditional), American (new), salad, pizza, and gluten-free options. The hours of operation are from Monday to Sunday, from 11 am to 11 pm. \\n\\nThe restaurant has several attributes that make it appealing to customers, such as valet parking, outdoor seating, Wi-Fi, take-out options, and a good atmosphere for groups. However, some customers have expressed dissatisfaction with the service they received. In particular, one customer complained that their server took too long to serve them water, take their order, and bring them their food. Another customer reported finding hair baked into their bread and pasta, and the server did not grab their check or even apologize for the poor service. Despite these issues, the business has a decent rating of 3.0 stars out of 5.0. \\n\\nOn the positive side, another customer praised the service they received, noting that they were given a free pizza for being a veteran and their dog was allowed to sit outside with them. Additionally, a customer who rated the business highly appreciated the quality of the food, stating that the smaller Asian salad was more than enough for two people. Overall, while there are some areas for improvement, California Pizza Kitchen at Santa Barbara seems like a decent place to go for good food and outdoor dining.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:7fcb1dda5d8c01d898c8dcc97907cf84390cba5a8523d4434e02455b74f60143",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17
+  ]
+}

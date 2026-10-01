@@ -1,0 +1,133 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.8572983240010217,
+  "exclusion_reason": null,
+  "family_id": "sha256:49f4a9077253dcfc68f78121b6751e3919079566943a12e992c1cdce8879985a",
+  "input_tokens": 1428,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1428,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1451
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:1c80911d914961b1fd49e3fc4b8b53d35ed21470a36b67fa208266372d22a396",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832524,
+    "id": "chatcmpl-86bUdEy4bGzBumSnkToPsLl8Y4kRb9Hp",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 537.895,
+      "predicted_n": 23,
+      "predicted_per_second": 42.759274579611265,
+      "predicted_per_token_ms": 23.386739130434783,
+      "prompt_ms": 1206.786,
+      "prompt_n": 1350,
+      "prompt_per_second": 1118.6738991005861,
+      "prompt_per_token_ms": 0.8939155555555556
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1428,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1451
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Kabul, Afghanistan (CNN)It is a strangely detached scene for the close of America's longest war: military trainers bouncing between multi-million dollar, high security bases, on Black Hawks, miles from the front line. But it is how Washington wants this to be. And even though the departure of American troops will be fractionally slower, they will all be inside the U.S. Embassy by the end of next year, making these some of their last weeks outside of the wire. We are near Jalalabad, at a regional logistics hub for the Afghan police force -- a generous facility that was originally intended to resupply the entire east of the country with uniforms, ammunition, even fuel for vehicles. The intentions, first hatched in 2011 when the U.S. had tens of thousands of troops and still large ambitions for their war here, were large in scale. But the project has been handed between rotations of U.S. officers and is perhaps a little distant from its first conception. We are taken on a proud tour of a series of clean and newly painted blocks. Dozens of Afghan police gather there, and mill around, waiting for their commanders to arrive. Nick Paton Walsh's Afghanistan series: Afghan forced to marry her rapist. Yet a few problems are immediately visible. There are no doorhandles on the outer doors -- we're told they've been removed while a new master key is being sought. There seem to be few supplies in the actual hub. We ask the Afghan policemen how many of them get resupplied there, at this stage, four months since it opened, and they say: none. About 20 units a month file paperwork for resupply in the base, but supplies often still come from where they did before -- Kabul. U.S. officials told us they are optimistic the logistical road ahead can be smoothed -- that in the 18 plus months they have left they can get the Afghan army and police up to furnishing themselves with the supply lines they need. But here, now, that seems far away. As does the base, incidentally. It's quite a rough drive from the main road, surrounded by hills, and with at best patchy cellphone coverage -- far from ideal for a transit hub. Nick Paton Walsh's Afghanistan series: ISIS recruits in Taliban territory. And it is far away in terms of its cost. Like so much in the most costly of wars, its price tag may have made sense in briefings on Capitol Hill, where effectiveness is gauged in millions, but here in dusty eastern Afghanistan, it seems exorbitant. This as-yet, partially functional resupply hub cost $21 million, a price that presumably includes new doorhandles. There are about fifty Afghan police currently on the base -- meaning each one has so far cost $400,000 to the US taxpayer. But this is an unfair way of representing the challenge the U.S. trainers here face: working, as they are, against a clock, with diminishing resources and public interest, in an endlessly complex and often corrupt land where, when the Taliban aren't thriving, ISIS are waiting in the wings to fill the gap. With the clock ticking in the background, U.S. officer Colonel JB Vowell remains upbeat: \\\"It's going to be a challenge, to get all those little hubs and spokes -- logistics to maintenance, supplies, resupply. I'm optimistic though; much of this didn't exist in November.\\\" On the outskirts of the base are the relics of the U.S.'s military involvement in a conflict that still continues to kill Afghan security forces at an accelerated  rate. SUVs, even old American Humvees -- now gifted to Afghan police to drive around -- lie disabled by mine strikes. The Americans were hoping the police could stack the vehicles here, assess their resupply needs, or cannibalize the damaged vehicles for spare parts. Throughout, the surreal changes in how this war was, and continues to be, fought are omnipresent. Years ago, the threat would have mostly been from insurgents taking potshots at an American base. Now we are far from the threat, but another has taken its place. Surrounding our crew at all times are \\\"Guardian Angels\\\" -- U.S. soldiers on guard duty, protecting their own from rogue Afghan police or soldiers, trying to prevent the newest and most serious scourge -- \\\"green on blue\\\" attacks, in which Afghan security forces turn their guns on Americans. It is a strange experience to be protected from those who America seeks to hand the country over to. But this is how the war ended. Not with ideological victories, or dramatic withdrawals, just the slow and deliberate stepping to one side.\\n\", \"original_answer\": \"The US military is preparing to leave Afghanistan after a 20-year presence, but the departure is not without challenges. A visit to a regional logistics hub for the Afghan police force highlights the issues faced by US trainers. The facility, which was meant to resupply the entire east of the country, is still not fully functional and lacks supplies. The cost of the hub, $21 million, is also raising questions. Colonel JB Vowell, a US officer, remains optimistic that the logistical challenges can be overcome, but the reality on the ground is that the US is handing over responsibility to Afghan forces amidst a still-raging conflict. The base is surrounded by disabled vehicles, including old American Humvees, and the threat of \\\"green on blue\\\" attacks by Afghan security forces is ever-present. Despite the challenges, the US is determined to complete its mission and hand over control to the Afghans.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "policy_design",
+  "source_cluster_id": "sha256:e91c810a60e61443d563d6a8ccb4507e9f20d5c414a6c335d8ec24e51ed3ff6d",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41
+  ]
+}

@@ -1,0 +1,105 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.344853567017708,
+  "exclusion_reason": null,
+  "family_id": "sha256:ab003e285f371598da64023551cd2a95b2e583e7d2433c2d463ce5373b19b3c8",
+  "input_tokens": 844,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 844,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 865
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:9a6deefd84ad5430dbf8fa167bac8c3de96dd38c934dbfcba54e5483af4fc1e2",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832782,
+    "id": "chatcmpl-vdi7Wo8OKZhfdTIfJn8CixVpnnIkNxVl",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 492.901,
+      "predicted_n": 21,
+      "predicted_per_second": 42.60490443314175,
+      "predicted_per_token_ms": 23.471476190476192,
+      "prompt_ms": 732.167,
+      "prompt_n": 766,
+      "prompt_per_second": 1046.2094030460264,
+      "prompt_per_token_ms": 0.9558315926892951
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 844,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 865
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Sorry, Mom, but those darned contractions last well after giving birth. Once the baby arrives, your uterus starts to tighten as it returns to its pre-pregnancy size and location. That means shrinking from more than two pounds to about two ounces and making its way back down into the pelvis.he day your baby arrives will be among the happiest of your life, but it's also normal to experience emotional highs and lows in the first days or weeks after giving birth.\\\\n\\\\npassage 2:What happens at the actual birth. During the second stage, the baby\u2019s head moves down the vagina until it can be seen. When the head is almost ready to come out, the midwife will ask you to stop pushing and to do a couple of quick short breaths, blowing out through your mouth.he first stage of labour \u2013 dilation. The cervix needs to open about 10cm for a baby to pass through. This is what's called being fully dilated. Contractions at the start of labour help to soften the cervix, so that it gradually opens.\\\\n\\\\npassage 3:1 The first stage, when your contractions make your cervix gradually open up (dilate). 2  This is usually the longest stage. 3  The second stage of labour is when your cervix is fully open and you give birth.This is the part of labour where you help your baby move through your vagina by pushing with your contractions. The third stage of labour is after the birth, when your womb contracts and causes the placenta to come out through the vagina.he first stage of labour \u2013 dilation. The cervix needs to open about 10cm for a baby to pass through. This is what's called being fully dilated. Contractions at the start of labour help to soften the cervix, so that it gradually opens.\\\\n\\\\n\\\",\\\"question\\\":\\\"what happens at birth\\\"}\", \"original_answer\": \"Based on the provided passages, here are some answers to the question \\\"What happens at birth?\\\":\\n\\n1. What happens during the first stage of Labour - Dilation?\\nAnswer: The cervix gradually opens up (dilates) during the first stage of labour, which is usually the longest stage. Contractions help to soften the cervix, allowing it to open up to about 10cm for the baby to pass through. (Passage 1 & Passage 3)\\n2. What happens during the second stage of Labour - Pushing?\\nAnswer: During the second stage, the mother pushes the baby through the vagina. The midwife may ask the mother to stop pushing and take a few quick breaths before resuming the pushing. The baby's head moves down the vagina until it can be seen, and when the head is almost ready to come out, the midwife will ask the mother to stop pushing again. (Passage 2)\\n3. What happens during the third stage of Labour - Placental Birth?\\nAnswer: After the baby is born, the mother's womb contracts and causes the placenta to come out through the vagina. This is known as the third stage of labour. (Passage 3)\\n\\nUnable to answer based on given passages.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "tune",
+  "source_cluster_id": "sha256:49732d3681ceaa38d1f779118dd6c0fe847aabfebfcb936ccb72671c8dfb23e7",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ]
+}

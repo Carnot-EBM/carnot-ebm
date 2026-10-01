@@ -1,0 +1,108 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.3066274599987082,
+  "exclusion_reason": null,
+  "family_id": "sha256:478dbfc6575a8312e8c8ee39340e29a32ce5433c1196413d76489f156c8614bd",
+  "input_tokens": 699,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 699,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 722
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:f07ae6899c626c64a6ccd09b7f99c66e4c65b3b3d7867f500277d0c4a0355915",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832969,
+    "id": "chatcmpl-azBTQO3s5V8ZvxIHSEeRPOkbU7Gu7yuc",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.082,
+      "predicted_n": 23,
+      "predicted_per_second": 42.507420317068394,
+      "predicted_per_token_ms": 23.525304347826086,
+      "prompt_ms": 634.017,
+      "prompt_n": 621,
+      "prompt_per_second": 979.46900477432,
+      "prompt_per_token_ms": 1.020961352657005
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 699,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 722
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:The set-up. Housed between two sheets of glass is the technology that allows flat screen TVs to work. Depending on the type of flat screen TV, the process can differ slightly. In a plasma TVs are cells that contain the gases xenon and neon as well as electrodes.There are two types of electrodes, display and address, that are arranged in a grid-like pattern on either side of the cells.n a LCD flat screen TV, tiny liquid-crystal-filled cells are between the glass sheets. A bright white light is located behind the cells and illuminates them to create the picture.\\\\n\\\\npassage 2:Like said earlier, a LED TV is an enhanced and improved version of a LCD TV. LED TVs have slimmer and thinner body panel. The back-light intensity and brightness is much more. Pixel clarity is fine and clear. The baseline functioning of LED is that it illuminates the LCD panels by using LED technology.his chemical is what makes the pixels red, green, or blue. When the plasma TV is electronically turned on, the electricity causes the colored phosphors to produce light. This in turn paints the moving pictures on the screen. For more information on plasma televisions, read How a Plasma TV Works.\\\\n\\\\npassage 3:Powering the picture. The power supply enters the TV and creates the energy needed to create the picture. In a plasma TV, electric pulses excite the gases, which produce release ultraviolet photons. These photons react with the phosphor material that is contained in the cells. The phosphor then produces light.n a LCD flat screen TV, tiny liquid-crystal-filled cells are between the glass sheets. A bright white light is located behind the cells and illuminates them to create the picture.\\\\n\\\\n\\\",\\\"question\\\":\\\"how does a flat screen tv work\\\"}\", \"original_answer\": \"Flat screen TVs work through technology housed between two sheets of glass. In plasma TVs, cells contain gases xenon and neon, as well as electrodes which are arranged in a grid-like pattern. When the TV is turned on, electric pulses excite the gases which react with phosphor material to produce light, creating the image on the screen. LCD flat screen TVs, on the other hand, contain tiny liquid-crystal-filled cells between the glass sheets. A bright white light located behind these cells illuminates them to produce the picture. LED TVs operate similarly to LCD TVs, but illuminate the LCD panels using LED technology, which allows for better back-light intensity, brightness, and pixel clarity.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:4ac5d3407d08b5c14e5dea84c8b17cf37504af2e1be8511763ab82384ed9fe39",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+  ]
+}

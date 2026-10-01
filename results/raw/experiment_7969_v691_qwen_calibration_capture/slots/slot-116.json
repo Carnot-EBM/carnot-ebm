@@ -1,0 +1,97 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.3917813849984668,
+  "exclusion_reason": null,
+  "family_id": "sha256:477f959921600c9408a01ac37d103a83a95181f711561fb1edb8987771048697",
+  "input_tokens": 813,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 813,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 837
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:504cc6d638e16f7fea365e159c8a3547a6d8022a9945d4c92e1854a89f5a45cf",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832634,
+    "id": "chatcmpl-BXIGXQ8bBDQtTOyMXRHHKLrZjZO7rG11",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.138,
+      "predicted_n": 24,
+      "predicted_per_second": 42.542782085234464,
+      "predicted_per_token_ms": 23.505750000000003,
+      "prompt_ms": 712.689,
+      "prompt_n": 735,
+      "prompt_per_second": 1031.3053800465561,
+      "prompt_per_token_ms": 0.9696448979591836
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 813,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 837
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"821 N Milpas Street\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":true,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Breakfast & Brunch, Fast Food, Tex-Mex, Restaurants, Mexican, Tacos\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"8:0-0:0\\\",\\\"Monday\\\":\\\"8:0-0:0\\\",\\\"Saturday\\\":\\\"8:0-0:0\\\",\\\"Sunday\\\":\\\"8:0-0:0\\\",\\\"Thursday\\\":\\\"8:0-0:0\\\",\\\"Tuesday\\\":\\\"8:0-0:0\\\",\\\"Wednesday\\\":\\\"8:0-0:0\\\"},\\\"name\\\":\\\"Taco Bell\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-08-30 06:50:10\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Came here on our way to Montana de oro state park.\\\\nSmall location with no drive-thur.\\\\nEmployees were friendly & welcoming.\\\\nEstablishment was clean & tidy.\\\\nFood was hot & freshly made.\\\"},{\\\"review_date\\\":\\\"2021-06-29 16:48:55\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"I go here all the time, and the tacos are always the same and just what I want. Ive lived in this neighborhood for 20 years and this Taco Bell is always always good. I order stuff to go and get trays for kids parties, its only a block away! The staff wear masks, its very clean, and fast everything you want from a Taco Bell.\\\"},{\\\"review_date\\\":\\\"2021-06-14 02:02:09\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"This Taco Bell always comes through with our orders, even when we have lots of modifications and diet restrictions to take care of. They're very on time, friendly whenever we pick up, and the quality and orders have always been on-point. And it's an OG Taco Bell with the bell!!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Taco Bell is a popular fast-food chain located in Santa Barbara, CA, serving Mexican-inspired cuisine. With a 3.5-star rating, this location has received positive reviews for its friendly and welcoming staff, clean and tidy establishment, and freshly made food. Customers appreciate the variety of options available, including vegetarian and gluten-free choices. This Taco Bell also offers convenient take-out and pick-up options. While some reviewers mention that the location is small and lacks a drive-thru, they praise the quality and speed of service. Overall, this Taco Bell is a reliable choice for delicious, affordable meals in a casual setting.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "policy_design",
+  "source_cluster_id": "sha256:777769c727aba56f7eb29e8d266f3a1cffbd2c407a713c31038b4a676ff273bd",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ]
+}

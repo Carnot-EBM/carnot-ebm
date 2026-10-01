@@ -1,0 +1,105 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.6501287859864533,
+  "exclusion_reason": null,
+  "family_id": "sha256:72e63e6f60f8a43bba148d97845e1f2da9cc3429489d73b80ccf5ab0e9de87f7",
+  "input_tokens": 1172,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 1172,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1193
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:0b4fe4e589ad457fba1d0634bd86e32e2c425dec7b21728e59ff7375bbd05aa0",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832496,
+    "id": "chatcmpl-iRVALAFg9PGLi5EiD9NFtyfjzHAxgQnL",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 486.22,
+      "predicted_n": 21,
+      "predicted_per_second": 43.190325367117765,
+      "predicted_per_token_ms": 23.153333333333336,
+      "prompt_ms": 1019.365,
+      "prompt_n": 1094,
+      "prompt_per_second": 1073.2171498923349,
+      "prompt_per_token_ms": 0.9317778793418647
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 1172,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1193
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"224 Helena St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":true,\\\"divey\\\":null,\\\"hipster\\\":null,\\\"intimate\\\":null,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":true,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":true,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Lounges, Art Galleries, American (New), Bars, Shopping, Nightlife, Restaurants, Music Venues, Gastropubs, Cocktail Bars, Arts & Entertainment\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"16:0-1:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"14:0-1:0\\\",\\\"Sunday\\\":\\\"14:0-23:0\\\",\\\"Thursday\\\":\\\"17:0-0:0\\\",\\\"Wednesday\\\":\\\"17:0-0:0\\\"},\\\"name\\\":\\\"Seven Bar & Kitchen\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-12-27 07:24:20\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Staff wasn't friendly. Bathroom was absolutely disgusting, like it had not been cleaned in a week. Drinks were wrong and kicked out at 11pm (before closing time) into 40 degree weather.  My conversation was interrupted mid conversation to close out our tab an hour before posted closing time. Would've been nice to at least wait for the Uber inside.\\\"},{\\\"review_date\\\":\\\"2021-11-19 07:53:01\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"In a town that closes down fairly early midweek it's nice to have SB&K for late night vittles.\\\\n\\\\nAnd right in the middle of the Funk Zone, it's always fun to be amongst party-people who are out having a fun time. Right across the street from Test Pilot, and around the corner from Figueroa Mountain Brewery.\\\\n\\\\nThe inside bar area was a buzz of activity, and we headed out to their outside patio area for a nice table. Under the stars and with heaters full blast, it was pretty comfy cozy as the night went on.\\\\n\\\\nServer Hilary was very helpful with recommendations for both drinks and food items, and got us started with the oh-so-tasty Westside Gin Cocktails. And then with all the possible food choices, she recommended the Beef Sliders, Mac Daddy (incredibly delicious), and Chicken Bites. \\\\n\\\\nStill so much on the menu to try, and looking forward to being there for their Happy Hour. Nice to have SB&K as an option for late night dining. Thanks again Hilary for taking such good care of us.\\\"},{\\\"review_date\\\":\\\"2021-11-19 02:53:52\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Very cool place off the beaten path. Friendly staff, great food. Really nice outdoor patio in the back.\\\\nPlease get a larger mirror for the bathroom. ;)\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Seven Bar & Kitchen is a local business located at 224 Helena St, Santa Barbara, CA. It offers a variety of services and amenities, including lounges, art galleries, American (New) cuisine, bars, shopping, nightlife, restaurants, music venues, gastropubs, cocktail bars, and arts & entertainment. The business operates during specific hours, with opening times varying throughout the week. Notably, it is closed on Mondays, but opens in the late afternoon on Wednesdays, Thursdays, and Fridays. On weekends, it opens at 2:00 PM on Saturdays and Sundays. \\n\\nBased on customer reviews, the business has received mixed feedback. One customer mentioned experiencing unfriendly staff, an unclean bathroom, and incorrect drink orders. They were also disappointed to be asked to leave an hour before the posted closing time. However, another customer praised the establishment for its late-night dining options, vibrant atmosphere, and helpful server named Hilary. They enjoyed the outdoor patio and recommended the Westside Gin Cocktails, Beef Sliders, Mac Daddy, and Chicken Bites. Another customer appreciated the friendly staff, great food, and the inviting outdoor patio.\\n\\nOverall, Seven Bar & Kitchen has a rating of 4.0 stars. While there were some negative experiences, the positive review highlighted the potential for a enjoyable dining experience with good food and attentive service.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "policy_design",
+  "source_cluster_id": "sha256:878d0d19be32077be54835cc2366306a82628c559711c5f3429ed9a4e9947904",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ]
+}
