@@ -3536,3 +3536,19 @@ REQ-CONDUCTOR-FIXGATE-1 tests pass; `scripts/research_conductor.py` remains
 byte-identical to HEAD. Historical full-suite health remains failed. Global
 spec traceability retains 1,142 pre-existing gaps. Evidence:
 `results/raw/experiment_7975_v691_arc_supervisor_delta/fixgate-validation/`.
+
+## V692 research planning contract — 2026-10-01
+
+REQ-REPORT-V692-PLAN and SCENARIO-REPORT-V692-PLAN map to
+`openspec/change-proposals/research-roadmap-vNEXT.md` and
+`research-roadmap-next.yaml`. The matching contract contains thirteen tasks,
+Exp7979–Exp7991, over four phases. Prior design history is preserved in
+`openspec/change-proposals/research-roadmap-v691-preserved-20261001.md`.
+The dated literature review precedes the plan in `research-references.md`.
+
+Verification: exact table/machine/YAML/hash and gate-field comparison;
+`validate_prior_failures.py`; `exclusion_manifest_lint.py`;
+`overdue_priority_lint.py`; 113 passing existing roadmap, gate, exclusion and
+private authority CLI tests, including E2E-018. Scoped Ruff and explicit-path
+spec coverage pass. No implementation or new experiment result is claimed.
+No active-roadmap or conductor modification is part of this planning change.

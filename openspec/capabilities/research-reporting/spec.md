@@ -88288,3 +88288,32 @@ Private CLI success, missing-input blocking, expected argument failure,
 negative replay and terminal recheck retain exact exits. Required owned
 failures disqualify readiness. Both consumers select the checked primary hash
 after newer nested validator sidecars. Frozen includes cover only new code.
+
+## REQ-REPORT-V692-PLAN — Matched research plan and dispatch contract
+
+The staged 2026.10.692 milestone shall contain exactly thirteen ordered tasks,
+Exp7979 through Exp7991. The visible design table, machine contract, YAML and
+canonical full-task digest shall agree. Each structured gate shall reference
+an earlier task and a field declared in that producer's required artifact fields.
+
+The plan shall distinguish qualified historical scalar calibration from the
+blocked source-fitting chain. It shall reserve source-support evaluation before
+label access and retain independent continuous-learning prerequisites. It shall
+require the current Qwen GGUF for bounded generation and empty model lists for
+cached numerical work. Failed-scope continuations shall include all four
+prior-failure fields, including the retirement flag.
+
+### SCENARIO-REPORT-V692-PLAN — Validate before activation
+
+Parse both planning files. Compare count, order, IDs, titles, phases, paths,
+models, gates and the full-task hash. Reject a deleted task, a gate whose field
+is not declared, or a prompt without progress and bounded-write steps. Run the
+existing roadmap schema, prior-failure and exclusion checks. Preserve the V691
+design and leave the active roadmap and conductor source unchanged.
+
+Planning status, 2026-10-01: staged in
+`openspec/change-proposals/research-roadmap-vNEXT.md` and
+`research-roadmap-next.yaml`. This requirement governs planning only; it does
+not mark future experiment implementations complete. Validation passed the
+exact contract comparison, prior-failure/schema lint, exclusion lint and
+113 existing unit/CLI checks, including E2E-018's private authority routes.

@@ -1,3 +1,83 @@
+## 2026-10-01 — V692 planning review, before experiment design
+
+This review follows completed milestone 2026.10.691. Its Qwen scalar-energy
+calibrator qualified, but did not beat matched classical calibrators. The
+source-energy and continuous-learning branches did not execute. These facts
+favor richer observable evidence and a learning path through qualified code.
+They do not justify another scalar calibration sweep or a global-suite gate.
+
+### Findings to test
+
+- **Hallucination Span Detection with Input-Side Evidence Alignment**,
+  2026-08-16, [arXiv:2608.15804](https://arxiv.org/abs/2608.15804).
+  The authors align output tokens with source evidence using masked prediction.
+  Carnot can test the narrower hypothesis that source-alignment features add
+  information beyond a single Qwen probability. Use independent human targets
+  and equal-information classical controls. This is an adaptation; no encoder
+  training or reproduction of the paper's results is proposed.
+- **Decomposed Entailment for Factuality Checking and Hallucination Detection**,
+  2026-08-06, [arXiv:2608.05823](https://arxiv.org/abs/2608.05823).
+  HallDetect combines claim-level evidence across source chunks. This supports
+  a source-feature ablation with complete response boundaries. Keep lexical
+  mismatch distinct from semantic contradiction. Do not discard qualifiers or
+  label a byte check as entailment. Do not reopen compact generated spans.
+- **Online Conformal Abstention for Factuality Control Under Adversarial
+  Bandit Feedback**, revised 2026-05-05,
+  [arXiv:2506.14067v4](https://arxiv.org/abs/2506.14067v4).
+  The current title differs from the older titles retained below. ExAUL studies
+  abstention with partial feedback. Test randomized label acquisition against
+  selected-only and uniform controls with recorded reveal probabilities.
+  A small delayed three-action replay does not inherit the paper's FDR bound.
+- **Adaptive Conformal Inference Under Delayed Feedback**, 2026-09-07,
+  [arXiv:2609.07251](https://arxiv.org/abs/2609.07251).
+  The delayed recursion uses the state that issued the prediction. Test issued
+  state, pending-label persistence, and frozen versus adaptive confidence on
+  identical probability trajectories. Small dependent streams give descriptive
+  coverage evidence, not a theorem about deployment.
+- **Ultrafast On-Chip Online Learning via Spline Locality in
+  Kolmogorov-Arnold Networks**, revised 2026-06-19,
+  [arXiv:2602.02056v4](https://arxiv.org/abs/2602.02056v4).
+  Local spline updates motivate a sparse residual control and coefficient-touch
+  accounting. The reported FPGA implementation is external evidence. Host
+  fitting, lookup timing, or an Amdahl estimate cannot establish local speedup.
+
+### Broad scan and deliberate deferrals
+
+| Topic | Primary source checked | Planning implication |
+|---|---|---|
+| EBM reasoning | [EBT, 2507.02092](https://arxiv.org/abs/2507.02092), 2025; [ICLR 2026 paper](https://openreview.net/pdf/608231a168a72d241775e5d1d28a092f5532becb.pdf) | Conditional energy is a useful small-head substrate. Foundation-model training exceeds this milestone. |
+| ARM/EBM connection | [2512.15605](https://arxiv.org/abs/2512.15605); [ICML 2026 proceedings](https://proceedings.mlr.press/v306/blondel26a.html) | Function-space equivalence is not a correctness certificate or an independent-verifier result. |
+| Neural constraint satisfaction | [Hard linear decision rules, 2505.13858](https://arxiv.org/abs/2505.13858); [CAffNet, 2605.24437](https://arxiv.org/abs/2605.24437) | Feasibility guarantees concern encoded constraints. Preserve extraction and target-fidelity checks; no retired repair-stack revival. |
+| Energy-guided decoding | [ETS, 2601.21484v3](https://arxiv.org/abs/2601.21484v3), revised 2026-05-19 | Inference-time energy guidance needs a useful reward first. Defer generation steering until matched decision benefit exists. |
+| Continual KAN | [KAN-CL, 2605.12306](https://arxiv.org/abs/2605.12306); [KAC, 2503.21076](https://arxiv.org/abs/2503.21076) | These motivate retention controls. They do not reopen the retired unchanged importance-anchor mechanism. |
+| Ising/FPGA | [Dual-BRAM p-bit annealer, 2602.16143](https://arxiv.org/abs/2602.16143), 2026-02-18 | Its MAX-CUT hardware does not execute Carnot's scalar or multivariate calibration service. Require a compatible measured kernel before hardware work. |
+| Thermodynamic computing | [Extropic Z1T](https://extropic.ai/writing/z1t) | The vendor separates Z1 and FPGA work. Its main energy ratio excludes transfer and final dense readout. Preserve the whole-service boundary; no local TSU claim. |
+| Kona | [Logical Intelligence Kona](https://logicalintelligence.com/kona) | The inspected product page supplies no reproducible local training recipe or weights. Retain as architectural context. |
+
+### Secondary checks and limits
+
+- **OpenReview:** searched ICLR/ICML EBM and reasoning records. The EBT PDF
+  labels itself an ICLR 2026 conference paper. Other retrieved energy-transformer
+  PDFs say under review; that is not an acceptance claim.
+- **Semantic Scholar:** searched both seed titles and attempted both Graph API
+  citation endpoints for `ARXIV:2507.02092` and `ARXIV:2512.15605`. Both endpoint
+  reads failed in this session. No complete citing-paper list or citation count
+  is claimed. Primary arXiv and conference pages supply the method evidence.
+- **Hugging Face:** checked [Spilled Energy](https://huggingface.co/papers/2602.18671)
+  and the [EBT paper page](https://huggingface.co/papers/2507.02092). Feed summaries
+  are discovery aids. They do not qualify activation confidence as correctness.
+- **GitHub trending:** checked weekly [Python](https://github.com/trending/python?since=weekly)
+  and [Rust](https://github.com/trending/rust?since=weekly) pages. Returned pages
+  were cached about two weeks earlier. No verified new EBM/constraint/KAN
+  replacement emerged from those pages; no current ranking is claimed.
+- **Extropic:** checked the [writing index](https://extropic.ai/writing) and Z1T
+  article directly. The index exposed navigation but no usable article listing.
+  **Logical Intelligence:** the older Kona URL redirects to `/kona`.
+
+All adaptations remain hypotheses. A new feature must beat controls with the
+same information and label access. Official RAGTruth test data remain sealed;
+any new development panel needs a history-exposure audit before a freshness claim.
+
 ## 2026-09-19 — V651 planning source review
 
 This review precedes the V651 experiment design. The V650 terminal artifacts,

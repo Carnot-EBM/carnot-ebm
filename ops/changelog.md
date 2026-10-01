@@ -21195,3 +21195,20 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-10-01: Preserve all board obligations and map current measured workload (⚠️ Research Finding) — honest_verdict=complete_null_historical_board_scope_current_host_mapping; results/experiment_7977_v691_hardware_evidence.json
 - 2026-10-01: Independently reduce thirteen outcomes and decide the three PRD gaps (⚠️ Research Finding) — honest_verdict=complete_disqualified_terminal_verification; results/experiment_7978_v691_capstone.json
 - 2026-10-01: Completed operational retrospective for milestone 2026.10.691. All 9 completed experiments were compute-bound, totaling 63.6 wall-time minutes (averaging 7 minutes per experiment) reconstructed from disk-mtime fallback data. The slowest experiment was 'Independently reduce thirteen outcomes and decide the three PRD gaps' (20.58 minutes), followed by 'Capture bounded Qwen judgments for fitting and calibration' (13.85 minutes), 'Bind thirteen tasks across UTC rollover and freeze research methods' (8.24 minutes), 'Measure complete decision-service cost for each qualified branch' (5.72 minutes), and 'Qualify complete-response labels for disjoint calibration roles' (3.86 minutes). The locked GPU-idle indicator on compute-bound tasks is false, while static monitor telemetry recorded 0% utilization across both RTX 3090 GPUs with 4MB allocated. Recommended operational improvements include granular task phase timing receipts to isolate compute stages, continuous execution-time GPU utilization logging, profiling capstone outcome reduction and Qwen calibration tasks, and restricting DualGPURunner strictly to verified concurrent multi-model workloads. Estimated time savings are 0% pending empirical measurement of phase receipts. Artifact: results/operational_retro_2026_10_691.json.
+
+## 2026-10-01 — Stage V692 source evidence and continuous-learning plan
+
+- Record current arXiv and secondary-source findings before experiment design,
+  including source alignment, delayed ACI, sparse spline learning and access limits.
+- Preserve the V691 design and create a matching thirteen-task V692 design/YAML
+  contract. Use the mandated Qwen model for bounded capture and explicit CPU
+  substrates for cached scoring, replay and audits.
+- Separate new multivariate fitting from continuous-learning prerequisites.
+  Freeze evaluation custody, feedback windows, action rules, controls and
+  minimum support. Include ARC, service costs and hardware evidence boundaries.
+- Apply adversarial planning review: fixed windows and candidate ties, inert
+  predicate handling, positive controls, exact energy/classifier parity and
+  explicit limits on small-stream inference.
+- Validate schema, failure history, exclusion rules, task/gate/hash agreement,
+  113 existing tests including E2E-018, scoped Ruff and spec traceability.
+  No implementation, active-roadmap change or conductor-source change was made.

@@ -17674,3 +17674,23 @@ Scoped Ruff and spec coverage passed. E2E-015/017/018 private tests passed;
 E2E-016 fixture and cold replay passed with the historical 20260929 date.
 Repository-wide test/spec debt remains open; no global-suite pass is claimed.
 Next: normal conductor review and activation of the staged milestone.
+
+## 2026-10-01 — V692 research plan staged
+
+Milestone 2026.10.692 contains thirteen tasks, Exp7979–Exp7991, in four phases.
+The design and staged YAML have matching task tables, machine contracts and a
+full-task digest. The previous V691 design is preserved. Activation has not
+been performed by this planning task.
+
+The plan follows qualified V691 Qwen capture and its scalar-calibration null.
+It tests public source features on a reserved panel, then delayed constraint
+addition, restart/retention and issued-state confidence through separate inputs.
+The small learning replay supports descriptive causal evidence; it cannot meet
+the registered minimum block count for a population-level benefit claim.
+ARC supervisor evidence, complete service cost and board limits remain included.
+
+Validation: schema/prior-failure, exclusion and overdue-priority checks pass;
+113 relevant unit/private CLI tests pass, including E2E-018 authority routes.
+Scoped Ruff, explicit-path spec coverage and exact contract/gate checks pass.
+No new scientific result, hardware execution or publication is claimed.
+`research-roadmap.yaml` and `scripts/research_conductor.py` are unchanged.

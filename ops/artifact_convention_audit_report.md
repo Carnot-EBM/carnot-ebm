@@ -9,60 +9,10 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 3 |
-| CANNOT_DETERMINE | 5 |
+| CHECKABLE | 4 |
+| CANNOT_DETERMINE | 4 |
 
-## experiment_7953_v690_contract_methods.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-no claim
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7954_v690_training_coverage.json
-
-**CANNOT_DETERMINE**
-
-reviewer call failed
-
-## experiment_7955_v690_response_targets.json
-
-**CANNOT_DETERMINE**
-
-reviewer call failed
-
-## experiment_7956_energy_fit.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The experiment was blocked prior to execution because upstream prerequisite exp7954-training-coverage failed three of its four gate checks.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7958_v690_qwen_response_risk.json
-
-**CANNOT_DETERMINE**
-
-reviewer call failed
-
-## experiment_7962_v690_arc_supervisor_delta.json
+## experiment_7968_v691_response_role_targets.json
 
 **CHECKABLE**
 
@@ -78,13 +28,73 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7964_v690_hardware_evidence.json
+## experiment_7969_v691_qwen_calibration_capture.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+no claim
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7970_energy_fit.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The experiment was blocked from executing because pre-execution qualification gates on upstream experiment 7967 failed.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7972_v691_qwen_energy_calibration.json
 
 **CANNOT_DETERMINE**
 
 reviewer call failed
 
-## experiment_7965_v690_capstone.json
+## experiment_7975_v691_arc_supervisor_delta.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The experiment was disqualified at supervisor delta prerequisites due to gate check failures, with no causal benefit or new level solves claimed.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7976_v691_service_cost.json
+
+**CANNOT_DETERMINE**
+
+reviewer call failed
+
+## experiment_7977_v691_hardware_evidence.json
+
+**CANNOT_DETERMINE**
+
+reviewer call failed
+
+## experiment_7978_v691_capstone.json
 
 **CANNOT_DETERMINE**
 
