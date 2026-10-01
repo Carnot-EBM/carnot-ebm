@@ -19233,3 +19233,5 @@ code |
 | 2026-10-01 00:21 UTC | Qualify the fitting exception routes before numeri | OK | 96 passed, 1 warning in 14.36s |
 | 2026-10-01 00:35 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_substrate_leading_token age-week 2: OPEN 20 days: REAL_B |
 | 2026-10-01 00:35 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::offline_arc_methodology_descriptor age-week 2: OPEN 19 da |
+| 2026-10-01 00:43 UTC | Rebuild full-response support targets from origina | OK | 99 passed, 1 warning in 22.51s |
+| 2026-10-01 00:45 UTC | OPERATOR-ATTENTION: WRONG_MODEL_LOADED | WARN | host: pid 265278 serves 'Ternary-Bonsai-2-27B-PTQ1_0.gguf', live pin is 'Qwen3.8 |
