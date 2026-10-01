@@ -47502,3 +47502,38 @@ Implementation: `python/carnot/verify/multivariate_energy_7982.py` reuses
 Exp7972 numerical primitives and its analytical binary-energy gradient pattern.
 `tests/python/test_multivariate_energy_7982.py` checks every coefficient,
 normalization, fit-only scaling, seed means, null inputs and circular fixtures.
+
+## REQ-VERIFY-7984: Matched scalar and source-feature mechanism controls
+
+Four nine-input Gibbs heads SHALL use Exp7982's exact 97-parameter capacity,
+seeds, Adam budget, fit normalization and tune Brier temperature rule: full,
+q_only, source_only, and q_donor. Masked inputs remain zero in the same head.
+Donors SHALL be a seed69284 permutation within public power-of-two source byte
+length bins and roles, excluding normalized same-source pairs. Unmatchable bins
+SHALL be explicit exclusions. Full response bytes and qualifiers SHALL persist.
+Erased evidence SHALL use the existing null-location lexical features; original
+human truth SHALL never be assigned to donor or erased sources.
+
+### SCENARIO-VERIFY-7984-MECHANISM
+
+Given public rows with qualified fit/tune targets, when matched heads score
+original evaluation bytes and erased, donor and unchanged duplicates, then
+unchanged scores agree within 1e-12 and exact intervention hashes are retained.
+Changing labels cannot change the frozen donor mapping. Policies are fitted
+only on original policy_design. Cost is accept=5*y, reject=1-y, escalate=.25.
+
+### SCENARIO-VERIFY-7984-INFORMATION
+
+Full versus q_only and source_only Brier and cost differences SHALL use paired
+original source clusters, seed means, 10000 bootstrap/sign-flip draws and Holm
+across four tests. Fewer than 32 eligible clusters or 8 per class gives a valid
+null. An added-information finding requires full versus q_only Brier gain at
+least .01, positive paired lower bound and adjusted p below .05. Historical
+Exp7958 full/erased q is a separate protocol contrast. Probability movement or
+lower energy alone SHALL NOT imply improved truth detection or architecture
+advantage. No generator, text reranker or span extractor is changed.
+
+Implementation: `python/carnot/verify/evidence_ablation_7984.py` reuses the
+qualified Exp7982 binary head and Exp7980 lexical measurements. Tests in
+`tests/python/test_evidence_ablation_7984.py` exercise exact byte mapping,
+matched target eligibility, inference failures, parity and information gates.

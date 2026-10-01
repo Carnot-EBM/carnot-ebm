@@ -88451,3 +88451,37 @@ and `python/carnot/reporting/multivariate_validation_7982.py`, exposed through
 `scripts/experiments/experiment_7982_v692_multivariate_energy.py`.
 `tests/python/test_experiment_7982_v692_multivariate_energy.py` covers private
 fitting, frozen scalar controls, cold replay, exact gates and failure disposition.
+
+## REQ-REPORT-7984: Cached evidence ablation with exact byte custody
+
+Exp7984 SHALL authenticate qualified Exp7982, Exp7980, Exp7969, Exp7968,
+Exp7972 and historical Exp7958 inputs by path, hash, identity, producer date
+and readiness. It SHALL freeze its validation manifest and within-role public
+length-bin donor permutation before opening labels. Only original fit, tune,
+policy_design and old64 evaluation targets may be opened. Reserved targets
+SHALL remain unavailable. External gate failures SHALL be blocked with exact
+operands; failed owned checks SHALL be disqualified with readiness zero.
+One atomic primary SHALL bind immutable sidecars, actual work and final-byte
+validators. It SHALL declare zero current pretrained loads and calls.
+
+### SCENARIO-REPORT-7984-CUSTODY
+
+Given authenticated historical inputs, when the real private CLI runs and
+cold-replays outside the checkout without PYTHONPATH, then exact interventions,
+primitive rows and reductions reproduce. Missing inputs and changed seals fail
+closed. Consumer resolvers select the same primary. Nonempty changed-statement
+coverage, scoped lint, strict types, spec checks and E2E-015/019 have receipts.
+
+## REQ-REPORT-7984-DISPOSITION: Readiness is separate from information gain
+
+A valid descriptive null may have ablation_ready_score=1. Positive information
+requires the registered Brier benefit gate. Synthetic targets SHALL be marked
+circular. Historical failed producer checks and unrelated repository health
+SHALL remain separate from current owned validation. No failed check may be
+removed to qualify the artifact.
+
+Implementation: `python/carnot/experiment_7984_v692_evidence_ablation.py` and
+`python/carnot/reporting/evidence_ablation_validation_7984.py`, exposed by
+`scripts/experiments/experiment_7984_v692_evidence_ablation.py`. Registered
+custody, disposition and private CLI tests live in
+`tests/python/test_experiment_7984_v692_evidence_ablation.py`.

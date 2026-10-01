@@ -1,0 +1,91 @@
+{
+  "passed": true,
+  "primary_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7984_v692_evidence_ablation.json",
+  "primary_sha256": "sha256:f2dfc195e3f9c2bb79964707df1880599fff39bc2560683064283dfdf34959b9",
+  "reader_resolution": {
+    "document_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7984_v692_evidence_ablation.json",
+    "document_sha256": "sha256:f2dfc195e3f9c2bb79964707df1880599fff39bc2560683064283dfdf34959b9",
+    "document_status": "\u26a0\ufe0f Research Finding",
+    "gate_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7984_v692_evidence_ablation.json",
+    "gate_sha256": "sha256:f2dfc195e3f9c2bb79964707df1880599fff39bc2560683064283dfdf34959b9",
+    "gates": [
+      {
+        "actual": 1,
+        "artifact_field": "ablation_ready_score",
+        "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7984_v692_evidence_ablation.json",
+        "artifact_sha256": "sha256:f2dfc195e3f9c2bb79964707df1880599fff39bc2560683064283dfdf34959b9",
+        "expected": 1,
+        "op": "==",
+        "passed": true,
+        "reason": "actual=1 == expected=1",
+        "upstream": "exp7984-evidence-ablation",
+        "upstream_final": true
+      }
+    ],
+    "passed": true,
+    "summary": "1 gate(s) satisfied",
+    "task_id": "exp7984-evidence-ablation"
+  },
+  "receipts": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/experiment_7984_v692_evidence_ablation.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+        "--json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7984_v692_evidence_ablation.json"
+      ],
+      "duration_s": 0.986217605008278,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7984_v692_evidence_ablation/final_primary_logs/00_adversarial_final_primary.log",
+      "log_sha256": "sha256:5ff6a191fdd7d2b18491faf5f94d9db7ffb6b06dce5600aef6de0ae975d86548",
+      "name": "adversarial_final_primary",
+      "output_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7984_v692_evidence_ablation.json\",\n      \"loaded\": true,\n      \"exp_id\": 7984,\n      \"title\": \"\",\n      \"honest_verdict\": \"complete_null_evidence_ablation\",\n      \"flag_count\": 0,\n      \"max_severity\": -1,\n      \"flags\": [],\n      \"gate_version\": \"197e0a5eacacb09ce6607ae8bdfd507498082857f0d02ec2003a62c251b69a24\"\n    }\n  ],\n  \"flagged_count\": 0\n}\n",
+      "passed": true,
+      "scope": "final_primary",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/experiment_7984_v692_evidence_ablation.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7984_v692_evidence_ablation.json"
+      ],
+      "duration_s": 0.08012381399748847,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7984_v692_evidence_ablation/final_primary_logs/01_strict_final_primary.log",
+      "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+      "name": "strict_final_primary",
+      "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+      "passed": true,
+      "scope": "final_primary",
+      "timed_out": false
+    },
+    {
+      "command": "/usr/bin/env -u PYTHONPATH /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7984_v692_evidence_ablation.py --cold-replay /home/ianblenke/github.com/ianblenke/carnot/results/experiment_7984_v692_evidence_ablation.json",
+      "command_argv": [
+        "/usr/bin/env",
+        "-u",
+        "PYTHONPATH",
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7984_v692_evidence_ablation.py",
+        "--cold-replay",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7984_v692_evidence_ablation.json"
+      ],
+      "duration_s": 7.545672092004679,
+      "exit_code": 0,
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7984_v692_evidence_ablation/final_primary_logs/cold/00_cold_final_primary.log",
+      "log_sha256": "sha256:f49dc7e0cc8e62c0e8067f9a604c7a3131eedc6f50816567417c4a326130e539",
+      "name": "cold_final_primary",
+      "output_tail": "[exp7984] phase=begin\n[exp7984] public_mapping role=evaluation rows=64\n[exp7984] public_mapping role=fit rows=256\n[exp7984] public_mapping role=policy_design rows=32\n[exp7984] public_mapping role=tune rows=64\n[exp7984] evaluation arm=full sources=64\n[exp7984] evaluation arm=q_only sources=64\n[exp7984] evaluation arm=source_only sources=64\n[exp7984] evaluation arm=q_donor sources=64\n[exp7984] paired_comparison=q_only_brier independent=62\n[exp7984] paired_comparison=q_only_cost independent=62\n[exp7984] paired_comparison=source_only_brier independent=62\n[exp7984] paired_comparison=source_only_cost independent=62\n[exp7984] phase=replay_passed\n",
+      "passed": true,
+      "scope": "final_primary",
+      "timed_out": false
+    }
+  ]
+}

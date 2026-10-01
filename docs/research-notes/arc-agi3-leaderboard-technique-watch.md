@@ -406,3 +406,17 @@ The team also tried LoRA training on its model’s successful traces and on huma
 
 CHECK_TIMED_OUT
 
+## 2026-10-01 13:42 UTC -- NEW
+
+- **New top-five entrants, October 1:** **gng #3 (34.77)**, **markintell #4 (34.21)**, and **Rogers Johnson #5 (32.99)**. Their methods remain unpublished in the sources I found. [Live Kaggle leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard)
+
+New Milestone #2 releases provide concrete techniques from the previously leading contenders; organizer confirmation of awards is pending. [Release comparison](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/744792)
+
+- **Daniel Franzen — classification (b), general-purpose.** Uses **Qwen3.8-Flash-Next, AutoRound W4A16 weights, an INT4 MTP speculative draft, FP8 KV cache, and SGLang**, with 128-Ki context and ten active streams. His scheduler prioritizes games using level progress, actions and tokens spent, and estimated remaining-level value. Games retain their inference slot until history trimming forces new prefill; the final 20% of runtime increasingly favors immediate completions. Python functions persist across levels. Action batches stop on ineffective interior-board changes, avoiding false progress from shrinking border bars. He disabled Duck’s structured text-memory mechanism after negative experiments and performed no model fine-tuning. **POSSIBLE CARNOT LEVER:** scheduling generator compute across games by progress, cost, and cache residency could improve completions per GPU-hour while preserving Carnot’s verifier pipeline. [Writeup and code](https://github.com/da-fr/arc-agi-3-solution/blob/main/WRITEUP.md)
+
+- **Lord Han Solo — classification (b), general-purpose.** Uses mixed **NVFP4/FP8 Flash-Next with built-in MTP through vLLM**. Model-written Python modules persist across levels; saving a replacement requires passing existing and newly supplied tests, and failed validation preserves the previous module. A strategy-audit prompt activates after a level consumes 25% of the game’s time allowance. [Published configuration comparison](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/744792), [module-validation code](https://github.com/tonghuikang/daniel-franzen-arc-agi-3/blob/main/kaggle/lordhansolo/dataset-taaf-kaggle-source/src/ARC3-Inference/inference/agent/python_workspace.py)
+
+- **rellik13 / sirikilohit — classification (b), general-purpose.** Pins each cleared level’s learned rule and last 30 winning actions into subsequent context. Uses object segmentation and exposes intermediate animation frames. Reports **14.49→22.53** after switching BF16 KV to FP8 and expanding history trimming from **36,864→26,624** tokens to **57,344→45,056**, with prompts and model unchanged. This is a limited-run observation with substantial reported variance. [Writeup](https://github.com/LohitSiriki/arc-agi-3-milestone2-solution/blob/main/WRITEUP.md)
+
+For these three published inference paths, I found no game-source reading or per-game hardcoding.
+
