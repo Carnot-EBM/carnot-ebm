@@ -19237,3 +19237,7 @@ code |
 | 2026-10-01 00:45 UTC | OPERATOR-ATTENTION: WRONG_MODEL_LOADED | WARN | host: pid 265278 serves 'Ternary-Bonsai-2-27B-PTQ1_0.gguf', live pin is 'Qwen3.8 |
 | 2026-10-01 00:45 UTC | Fit calibrated source energies after complete exec | GATE_BLOCK | gate-unsat(final): 3 of 4 gate(s) failed; first failure: exp7954-training-coverage.training_coverage_ready_score (actual=0 == expected=1) |
 | 2026-10-01 00:47 UTC | Measure calibrated decisions against equal-informa | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7956-energy-fit, exp7956-energy-fit, exp7956-energy-fit) |
+| 2026-10-01 01:17 UTC | Measure bounded Qwen response support against huma | OK | 98 passed, 1 warning in 12.34s |
+| 2026-10-01 01:19 UTC | Compare evidence fragility and confidence on indep | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7956-energy-fit, exp7956-energy-fit, exp7956-energy-fit) |
+| 2026-10-01 01:19 UTC | Measure causal constraint acquisition with delayed | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7956-energy-fit, exp7956-energy-fit, exp7956-energy-fit) |
+| 2026-10-01 01:19 UTC | Test issued-state confidence updates on the same l | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7960-causal-acquisition, exp7960-causal-acquisition, exp7960-causal-acquisition) |
