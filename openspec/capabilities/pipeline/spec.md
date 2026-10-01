@@ -5166,3 +5166,41 @@ Python numerical fallback. Closing a client MUST make later calls unavailable.
 **Then** the typed result is unavailable, unverified, unacknowledged, and not durable.
 
 **Spec traces:** REQ-PIPELINE-7641, REQ-REPORT-7641
+
+### REQ-INFRA-7091: Conductor Push Reconciles With origin/main Instead Of Piling Up Unpushed Commits
+
+**Origin.** 2026-09-30. An outer-loop session pushed merges to origin that the live
+checkout's `main` did not contain. The conductor's `git_commit_and_push` then ran a plain
+`git push origin main`, which origin rejected as non-fast-forward, logged one warning, and
+moved on. Every later commit hit the same rejection, so the local-only backlog grew to 233
+commits and then to 75. Nothing raised an alarm, and the mirrors went stale in step.
+
+When `git push origin main` is rejected as non-fast-forward, the conductor MUST fetch
+`origin main` and merge `origin/main` into local `main` with `--no-edit` and the merge
+hook-skip flag (the same hook-skip rule the conductor's own commit uses), then retry the push
+once. If the fetch or the merge fails, the conductor MUST run `git merge --abort` (a no-op
+when no merge started), leave every local commit in place, log a warning that names the
+cause, and return without a second push. It MUST NOT stash, reset, rebase, force-push, or
+discard any local commit or working-tree file. A rejection for any other reason MUST NOT
+start a fetch or merge. The commit that was just made is preserved in every case.
+
+### SCENARIO-INFRA-7091-RECONCILE: A non-fast-forward rejection is reconciled and retried once
+
+**Given** the first push is rejected as non-fast-forward
+**When** the fetch and the merge both succeed
+**Then** the push is retried exactly once and `git_commit_and_push` reports success.
+
+### SCENARIO-INFRA-7091-CONFLICT: A conflicting merge is aborted and nothing is lost
+
+**Given** the first push is rejected as non-fast-forward and the merge fails
+**When** the conductor handles the failure
+**Then** it runs `git merge --abort`, does not push a second time, keeps the local commit, and
+still returns true because the commit succeeded.
+
+### SCENARIO-INFRA-7091-OTHER: Other push failures start no merge
+
+**Given** a push fails for a reason other than non-fast-forward
+**When** the conductor handles the failure
+**Then** it runs no fetch and no merge.
+
+**Spec traces:** REQ-INFRA-7091
