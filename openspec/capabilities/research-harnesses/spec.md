@@ -8352,6 +8352,17 @@ given the same task with an `operator_override`, it SHALL return none.
 |---|---|---|
 | REQ-CONDUCTOR-DENYHOOK-1 | Implemented (`scripts/deny_forbidden_bash_commands.py`; `.claude/settings.json` PreToolUse Bash hook; `scripts/research_conductor.py:_submission_verb_warnings` wired in the live `_activate_next_roadmap`) | Implemented (`tests/python/test_deny_forbidden_bash_commands.py`; mutations: stash rule removed -> RED, override skip removed -> RED) |
 
+**AMENDMENT 2026-10-01 (append-only): the hook wiring MUST NOT depend on the shell cwd, and MUST
+fail open on a missing script.** The settings.json command was `python3
+scripts/deny_forbidden_bash_commands.py`, a cwd-relative path. After a Bash call left the tool
+shell in `python/` on 2026-09-30, `python3` exited 2 for the missing file. A PreToolUse hook reads
+exit 2 as DENY, so every later Bash call was denied, including the `cd` that would have recovered.
+That contradicted the script's own stated fail-open direction. The command SHALL now resolve the
+script through `${CLAUDE_PROJECT_DIR:-.}`, SHALL run it only if the file exists, SHALL print a
+stderr note and exit 0 if it does not, and SHALL propagate the script's own exit status (a deny
+from the script is still exit 2). Tests: `tests/python/test_deny_hook_settings_wiring.py` runs the
+command settings.json actually configures from a drifted cwd; the old wiring fails 5 of its 8 tests.
+
 ## REQ-CONDUCTOR-PRECOND-1: Compute-Bound Artifacts Lacking preconditions_checked SHALL Draw A WARN
 
 Design: `docs/research-notes/cumulative-coherence-rule-to-check-2026-08-21.md`
