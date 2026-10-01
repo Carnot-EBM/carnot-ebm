@@ -47537,3 +47537,16 @@ Implementation: `python/carnot/verify/evidence_ablation_7984.py` reuses the
 qualified Exp7982 binary head and Exp7980 lexical measurements. Tests in
 `tests/python/test_evidence_ablation_7984.py` exercise exact byte mapping,
 matched target eligibility, inference failures, parity and information gates.
+
+
+## REQ-VERIFY-7988: Preserve audit qualification and observational limits
+
+The current supervisor audit SHALL validate exact predecessor custody, primitive
+counts and new statement coverage. A repaired historical diagnostic SHALL NOT
+replace a disqualified primary. No synthetic control may supply a live firing.
+
+### SCENARIO-VERIFY-7988-QUALIFICATION
+
+Private tests SHALL observe blocked external gates, disqualified owned checks,
+zero model calls, valid empty controls and rejection of altered cold summaries.
+Required command receipts SHALL contain actual exits and immutable log hashes.

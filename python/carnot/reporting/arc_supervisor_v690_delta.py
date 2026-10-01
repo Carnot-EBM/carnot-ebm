@@ -202,14 +202,15 @@ def execute(output: Path, private: Path, scope: Any = None) -> int:
             heartbeat_s=30,
             execution_date=scope.RUN_DATE,
             historical_fixture_date="20260929",
-            applicable_e2e=["E2E-016", "E2E-017"],
+            applicable_e2e=getattr(scope, "APPLICABLE_E2E", ["E2E-016", "E2E-017"]),
             terminal_checks=[
                 dict(script=s, expected_exit=0, deadline_s=60)
                 for s in (
                     "scripts/adversarial_verify.py",
                     "scripts/verdict_row_consistency_lint.py",
                 )
-            ],
+            ]
+            + getattr(scope, "TERMINAL_CHECKS", []),
         ),
     )
     sources[str(manifest)] = sha256_file(manifest)
@@ -422,6 +423,7 @@ def execute(output: Path, private: Path, scope: Any = None) -> int:
             reference="ops/known-issues.md CORRIGENDUM 2026-09-28",
         ),
     )
+    value.update(scope.artifact_fields(value, checked) if hasattr(scope, "artifact_fields") else {})
     value["field_principles"] = {
         k: "Bind current producer custody; inherited observations do not establish benefit."
         for k in value
@@ -444,7 +446,7 @@ def execute(output: Path, private: Path, scope: Any = None) -> int:
 
     def validator(candidate: Path) -> dict[str, Any]:
         last.clear()
-        last.update(previous.terminal(candidate, private, durable))
+        last.update(getattr(scope, "terminal", previous.terminal)(candidate, private, durable))
         last["replay_errors"] = replay(json.loads(candidate.read_text()))
         last["passed"] = last["passed"] and not last["replay_errors"]
         return last

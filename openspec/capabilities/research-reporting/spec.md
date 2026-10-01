@@ -88485,3 +88485,49 @@ Implementation: `python/carnot/experiment_7984_v692_evidence_ablation.py` and
 `scripts/experiments/experiment_7984_v692_evidence_ablation.py`. Registered
 custody, disposition and private CLI tests live in
 `tests/python/test_experiment_7984_v692_evidence_ablation.py`.
+
+
+## REQ-REPORT-7988: Audit new live supervisor outcomes from the eligible frontier
+
+Exp7988 SHALL bind its identity to 2026.10.692 and invocation date 20261001.
+It SHALL preserve the pinned disqualified Exp7975 primary and use its last
+eligible predecessor Exp7962 as the exact content frontier. Authenticate both
+primaries, their inventories, producer dates, roles and registry bytes. Reuse
+the repaired direct receipt reader. Scan once for at most 120 seconds. No model,
+game, solved-level attempt, hidden source read or production change is allowed.
+Missing or failed external operands SHALL block. Owned required failures SHALL
+disqualify. Empty authenticated evidence SHALL give a valid null with readiness
+one only after scoped validation. Preserve historical health failures separately.
+
+### SCENARIO-REPORT-7988-FRONTIER
+
+Private tests SHALL reject missing or changed inputs, failed readiness, changed
+producer identity, retired authority and inventory drift. Preserve Exp7975's
+original verdict and failures. Receipt/run identity and content, rather than
+filename date, define novelty. Registry levels and live provenance bound claims.
+
+### SCENARIO-REPORT-7988-ROWS
+
+Publish primitive per-game/per-arm rows and an empty-ledger control. Count fired,
+helped, actions_to_levelup and stagnations_unredirected without counting one
+receipt's stagnations once per redirect. Samples below eight firings in three
+games SHALL be descriptive. Recommendation fields SHALL preserve curated arms
+and defaults. Record the exact frozen arms, randomized assignments, budgets,
+held-out games, invocation IDs and signed outcome receipts needed for a future
+controlled generalization test. This ledger SHALL NOT imply causal benefit.
+
+### SCENARIO-REPORT-7988-CLI
+
+Freeze the command manifest before science. Private pytest, coverage and CLI
+outputs SHALL stay outside the checkout. Exercise actual success, block,
+argument, false-firing and cold-replay routes, including E2E-017. Cover every new
+statement and the shared publication extension. Run affected/consumer tests,
+scoped Ruff, strict mypy and spec coverage. Measure full-suite health once with
+a bounded supervisor; preserve failures without claiming a current global pass.
+
+### SCENARIO-REPORT-7988-SEAL
+
+Cold replay SHALL detect changed aggregate fields. Validate final primary bytes
+with adversarial_verify and strict verdict consistency. Both conductor readers
+SHALL select the one atomic primary. Sidecars SHALL live below its raw directory.
+The conductor owns ops/status/changelog/traceability reconciliation for this task.
