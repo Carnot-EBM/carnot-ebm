@@ -47550,3 +47550,25 @@ replace a disqualified primary. No synthetic control may supply a live firing.
 Private tests SHALL observe blocked external gates, disqualified owned checks,
 zero model calls, valid empty controls and rejection of altered cold summaries.
 Required command receipts SHALL contain actual exits and immutable log hashes.
+## REQ-VERIFY-7989: Bound engineering claims by measured source work
+
+Reuse the qualified public lexical extraction, frozen normalization and exact
+binary head scoring. Timing repetitions and head seeds SHALL NOT increase the
+independent source count. No measured scientific benefit is required for cost
+readiness. No compatible authenticated board kernel means compatible_fraction=0.
+
+### SCENARIO-VERIFY-7989-ACCOUNTING
+
+Private controls SHALL prove adjacent spans sum to elapsed CPU time, persisted
+and no-write decisions agree, missing acquisition stays unknown, and altered
+primitive rows fail cold replay. Source-level paired intervals SHALL compare
+CPU service only. Cached CPU cost SHALL never form a live-model speedup ratio.
+
+Implementation: the Exp7989 service reuses Exp7980 lexical extraction and
+Exp7982 binary scoring. `tests/python/test_service_cost_7989.py` verifies
+source counts, missing costs, persisted decisions and cold accounting.
+
+Storage-repair verification SHALL reopen the response on the declared volume,
+check its filesystem observation, and cold-replay the same paired timing rows.
+Health-reuse verification SHALL preserve failed historical diagnostics and
+reject altered receipt bytes without launching a new full-suite child.

@@ -88351,6 +88351,13 @@ PYTHONPATH, terminal adversarial and strict row checks, and both live consumers
 bind the final primary bytes. Keep full-suite health separate from owned scope.
 The conductor owns ops and traceability reconciliation for this invocation.
 
+Implementation: `python/carnot/reporting/service_cost_7989.py` and
+`python/carnot/experiment_7989_v692_service_cost.py`, exposed by
+`scripts/experiments/experiment_7989_v692_service_cost.py`. Tests in
+`tests/python/test_service_cost_7989.py` and
+`tests/python/test_experiment_7989_v692_service_cost.py` cover branch failures,
+source accounting, durable responses and private publication routes.
+
 Implementation: `python/carnot/reporting/v692_contract_methods.py` and
 `v692_contract_validation.py`, exposed through
 `scripts/experiments/experiment_7979_v692_contract_methods.py`.
@@ -88531,3 +88538,53 @@ Cold replay SHALL detect changed aggregate fields. Validate final primary bytes
 with adversarial_verify and strict verdict consistency. Both conductor readers
 SHALL select the one atomic primary. Sidecars SHALL live below its raw directory.
 The conductor owns ops/status/changelog/traceability reconciliation for this task.
+## REQ-REPORT-7989: Measure service cost by independently available branch
+
+Exp7989 SHALL authenticate Exp7982, Exp7985, and Exp7972 with Exp7981 as
+independent alternatives. A scientific null SHALL remain eligible. Failed
+operands SHALL retain path, byte hash, producer date, field, operator and values.
+One named warmup and ten paired repetitions SHALL measure up to 64 fixed source
+groups, public bytes through typed decisions and durable response storage.
+The primary measurement SHALL fsync on the primary's persistent filesystem.
+Private tmpfs controls SHALL name their filesystem and remain wiring controls.
+Historical acquisition and model setup SHALL stay separate from current CPU work.
+Missing learner or model cost SHALL stay unknown. No pretrained model is loaded.
+
+### SCENARIO-REPORT-7989-GATES
+
+Missing and altered receipts block their branch without disabling a qualified
+peer. Preserve historical verdicts. Owned validation failure disqualifies and
+zeros readiness. Full-suite health is separately reported without a global pass.
+
+### SCENARIO-REPORT-7989-SERVICE
+
+Measure all qualified multivariate arms against the existing scalar head on the
+same public inputs, with paired source-level 95% intervals. Report fsync versus
+no-write cost, complete acquisition cost, nonoverlapping spans and source counts.
+Durable learning costs remain unknown when Exp7985 does not qualify.
+
+### SCENARIO-REPORT-7989-CLI
+
+Freeze validation commands before measurement. Tests and actual private CLI
+routes SHALL cover every new statement. Run scoped lint, strict typing, spec
+coverage and E2E-015. Cold replay outside the checkout without PYTHONPATH SHALL
+reject changed timing, decisions and reductions. Publish one atomic primary
+with terminal verification and both reader receipts below its raw directory.
+The conductor owns ops and traceability reconciliation for this invocation.
+
+### SCENARIO-REPORT-7989-STORAGE-REPAIR
+
+The measurement callable SHALL accept an explicit response storage path and
+create its parent before timing. Every fsync response SHALL use that path;
+environmental observations SHALL name its parent and actual filesystem type.
+The publication CLI SHALL store measured responses beneath its raw directory
+on the output filesystem, independently of its temporary request workspace.
+
+### SCENARIO-REPORT-7989-HEALTH-REUSE
+
+The frozen command plan SHALL accept an optional saved repository-health
+receipt, preserve an explicit non-required health command, and pin the receipt
+bytes. Execution SHALL authenticate receipt and log hashes, retain failed
+health outcomes, and exclude reused health commands from current observations.
+Save fresh health receipts for subsequent runs; never relabel them as a current
+global pass.

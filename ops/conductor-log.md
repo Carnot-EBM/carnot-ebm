@@ -19273,3 +19273,5 @@ code |
 | 2026-10-01 13:54 UTC | Independently test learning benefit retention and | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7985-delayed-acquisition, exp7985-delayed-acquisition, exp7985-delayed-acquisition) |
 | 2026-10-01 13:54 UTC | Compare delayed confidence updates on a fixed qual | GATE_BLOCK | gate-unsat(final): 2 of 6 gate(s) failed; first failure: exp7981-qwen-stream-capture.stream_capture_ready_score (actual=0 == expected=1) |
 | 2026-10-01 14:09 UTC | Review new live ARC supervisor outcomes for transf | OK | 87 passed, 1 warning in 7.65s |
+| 2026-10-01 14:50 UTC | Measure complete decision and durable learning cos | FAIL | Post-tests failed: 2 failed, 91 passed, 1 warning in 16.97s |
+| 2026-10-01 14:52 UTC | Measure complete decision and durable learning cos | OK | Deliverable already exists in repo |
