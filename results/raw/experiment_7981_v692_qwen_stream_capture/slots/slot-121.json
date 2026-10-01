@@ -1,0 +1,105 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.6128684140276164,
+  "exclusion_reason": null,
+  "family_id": "sha256:a38dbb068d3f7b532e605fb65dca56488b5ec7bc4464240db178a66e38395525",
+  "input_tokens": 1007,
+  "invocation_finished_at": "2026-10-01T11:44:02.336840+00:00",
+  "invocation_started_at": "2026-10-01T11:44:00.723970+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1007,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1030
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:941f81c9b49364ec469c8072dc1930eb772c01ec4924c1bf979e78d9b74214dd",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855042,
+    "id": "chatcmpl-KboZtuG6bUGUDLYgiQl1EcxgzbJaQTgU",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 547.575,
+      "predicted_n": 23,
+      "predicted_per_second": 42.0033785326211,
+      "predicted_per_token_ms": 23.807608695652174,
+      "prompt_ms": 927.271,
+      "prompt_n": 929,
+      "prompt_per_second": 1001.864611316433,
+      "prompt_per_token_ms": 0.9981388589881592
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1007,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1030
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"416 E Haley St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Coffee Roasteries, Acai Bowls, Food, Coffee & Tea, Sandwiches, Bagels, Restaurants, Cafes\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"7:30-15:0\\\",\\\"Monday\\\":\\\"7:30-15:0\\\",\\\"Saturday\\\":\\\"7:30-15:0\\\",\\\"Sunday\\\":\\\"7:30-15:0\\\",\\\"Thursday\\\":\\\"7:30-15:0\\\",\\\"Tuesday\\\":\\\"7:30-15:0\\\",\\\"Wednesday\\\":\\\"7:30-15:0\\\"},\\\"name\\\":\\\"Caj\u00e9 Coffee Roasters - Haley St\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-17 23:45:48\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"overpriced, paid $7 for small coffee that tasted GRAINY and UNTASTEFUL. as quoted by my friend \\\\\\\"i would rather drink black coffee with boogers.\\\\\\\" my other friend got a caramel iced latte, a basic right!? you think that ANY coffee shop could master this....but no! such a disappointment. the ice cubes & aesthetic were the only good things.\\\"},{\\\"review_date\\\":\\\"2022-01-14 03:46:16\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"This is my second time to this Caje location but it's been a while so I don't recall my first visit.  When you walk in this establishment, the employees are very nice and accommodating.  Seems like a nice, quiet environment to sit and work in.  I like the variety of items on the menu as far as coffees/drinks go.  The caramel latte was very good, the drinks are all very unique and are presented very well.  I have never had the food items so I can not say if I would recommend them but according to others reviews, I will have to try the avocado toast on my next visit--as well as one of the specialty drinks.\\\"},{\\\"review_date\\\":\\\"2022-01-06 18:25:41\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Discovered this little coffee shop while visiting Santa Barbara. So cute inside and they have outside seating. Cappuccinos and bagels were great!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Caj\u00e9 Coffee Roasters - Haley St is a coffee roastery located at 416 E Haley St, Santa Barbara, CA. They offer various categories such as Coffee Roasteries, Acai Bowls, Food, Coffee & Tea, Sandwiches, Bagels, Restaurants, and Cafes. The business has different hours available for customers, which are Monday to Sunday from 7:30 AM to 3 PM.\\n\\nThe business has a rating of 4.5 stars on Google, and customers have left their reviews regarding their experience at the store. Some customers have commented that the coffee they ordered was not up to their expectations, with grains in the coffee and overpriced prices. However, some customers have praised the staff's kindness and the unique drinks presented on the menu. The outdoor seating option was also appreciated by some customers. Overall, Caj\u00e9 Coffee Roasters - Haley St seems like a nice place to sit and work in, with a wide range of drinks to choose from.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_admission",
+  "source_cluster_id": "sha256:87b448f61c356224bbd8ee65b1fb5c3a8c2b419fe131d0d3bb9662c7d8913965",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]
+}

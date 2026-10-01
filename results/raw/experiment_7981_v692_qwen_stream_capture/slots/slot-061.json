@@ -1,0 +1,107 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.2146027549752034,
+  "exclusion_reason": null,
+  "family_id": "sha256:fa5d95f0d85b9b12622619667ae6145352dae79a085c65981678c49f988450b6",
+  "input_tokens": 599,
+  "invocation_finished_at": "2026-10-01T11:42:35.478638+00:00",
+  "invocation_started_at": "2026-10-01T11:42:34.264032+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 3,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 599,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 621
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:481d3045f4a8035350517b0ec8cb826f875053f1e87abef123e57cbc73dd36bc",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"unsupported_probability\": 0.0,\n\"source_sentence_id\": 3\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790854955,
+    "id": "chatcmpl-6SMvNh7OcmFF8ut5Foo6bjW6leelvqZo",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 512.329,
+      "predicted_n": 22,
+      "predicted_per_second": 42.94115695188053,
+      "predicted_per_token_ms": 23.287681818181817,
+      "prompt_ms": 572.541,
+      "prompt_n": 521,
+      "prompt_per_second": 909.9784993563779,
+      "prompt_per_token_ms": 1.0989270633397314
+    },
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 599,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 621
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:For more than 20 years Earth Networks has operated the world\u2019s largest and most comprehensive weather observation, lightning detection, and climate networks. We are now leveraging our big data smarts to deliver on the promise of IoT. By integrating our hyper-local weather data with Smart Home connected devices we are delievering predictive energy efficiency insight to homeowners and Utility companies. Company About\\\\n\\\\npassage 2:Aviation Weather Fire Weather Forecast Discussion Forecast Text Products Hydrology Local Model Data Marine Weather Tropical Weather\\\\n\\\\npassage 3:Weather Forecast for. Seminole County, FL. Tonight: A 30 percent chance of showers and thunderstorms before 2am. Mostly cloudy, with a low around 78. South southeast wind around 5 mph. Friday: A slight chance of showers between 8am and noon, then showers and thunderstorms likely after noon. Partly sunny, with a high near 92. South southwest wind 5 to 10 mph. Chance of precipitation is 60%. New rainfall amounts between a tenth and quarter of an inch, except higher amounts possible in thunderstorms. Friday Night: A 40 percent chance of showers and thunderstorms, mainly before midnight.\\\\n\\\\n\\\",\\\"question\\\":\\\"weather forecast in seminole county\\\"}\", \"original_answer\": \"Based on the given passages, the current weather forecast in Seminole County, FL is as follows: Today, there is a 30% chance of showers and thunderstorms before 2am. The temperature will be mostly cloudy with a low of 78 and a south-southeast wind around 5 mph. Tomorrow, there is a slight chance of showers between 8am and noon, followed by showers and thunderstorms likely after noon. The chance of precipitation is 60%, with new rainfall amounts expected to be between a tenth and a quarter of an inch, except for higher amounts possible in thunderstorms. The night will be partly sunny with a high of 92 and a south-southwest wind of 5-10 mph.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_update",
+  "source_cluster_id": "sha256:001e23b7f6e80dd9579688d36c974710540732e51b6e52ce13534ac15849ba70",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ]
+}

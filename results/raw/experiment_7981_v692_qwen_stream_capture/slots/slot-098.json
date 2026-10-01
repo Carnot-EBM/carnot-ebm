@@ -1,0 +1,104 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.249849670974072,
+  "exclusion_reason": null,
+  "family_id": "sha256:0de58d9cb04f4a5c74533a84a51e20e11d3d83a9eb81acebab1ef2dfb7572215",
+  "input_tokens": 619,
+  "invocation_finished_at": "2026-10-01T11:43:30.516994+00:00",
+  "invocation_started_at": "2026-10-01T11:43:29.267143+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 619,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 642
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:75e8ccbafe049541cd40d980f7e59ac85c12684f713b05e559c16d09c08ea228",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855010,
+    "id": "chatcmpl-x4WXr8JChUFHZSZfG3K9aSdGQOo2pB2d",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 539.144,
+      "predicted_n": 23,
+      "predicted_per_second": 42.660216936477084,
+      "predicted_per_token_ms": 23.44104347826087,
+      "prompt_ms": 575.902,
+      "prompt_n": 541,
+      "prompt_per_second": 939.395938892381,
+      "prompt_per_token_ms": 1.0645138632162663
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 619,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 642
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:1 In a small saucepan, place prunes, water, and orange juice. 2  Bring to boil, cover, and simmer for 30 minutes. 3  Prunes will absorb most of the water, and the remaining water will thicken into a consistency of syrup. 4  If there is a lot of liquid remaining, simmer, uncovered, for a few minutes until sauce reduces.\\\\n\\\\npassage 2:Directions. 1  In a small saucepan, place prunes, water, and orange juice. 2  Bring to boil, cover, and simmer for 30 minutes. 3  Prunes will absorb most of the water, and the remaining water will thicken into a consistency of syrup. 4  If there is a lot of liquid remaining, simmer, uncovered, for a few minutes until sauce reduces.\\\\n\\\\npassage 3:1 Prunes will absorb most of the water, and the remaining water will thicken into a consistency of syrup. 2  If there is a lot of liquid remaining, simmer, uncovered, for a few minutes until sauce reduces. 3  Transfer hot prunes and syrup to a bowl. 4  Pour cold milk over the prunes to cover.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to eat prunes for constipation\\\"}\", \"original_answer\": \"Based on the given passages, here's how to eat prunes for constipation:\\n\\n1. Place prunes, water, and orange juice in a small saucepan.\\n2. Bring to a boil, cover, and simmer for 30 minutes.\\n3. Let the prunes absorb most of the water and thicken into a syrup-like consistency.\\n4. If there's excess liquid, simmer uncovered for a few minutes until it reduces.\\n5. Transfer the hot prunes and syrup to a bowl.\\n6. Pour cold milk over the prunes to cover them.\\n\\nIt's important to note that while prunes can help alleviate constipation, it's also crucial to maintain a balanced diet and adequate hydration to support digestive health. Additionally, individuals with persistent constipation should consult their healthcare provider for proper evaluation and treatment.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_admission",
+  "source_cluster_id": "sha256:87277dd3d241f1b6e39d5346428afa00a4ccae9502451d54bca14a2838db3b8d",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ]
+}

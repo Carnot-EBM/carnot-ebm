@@ -1,0 +1,104 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.3411566370050423,
+  "exclusion_reason": null,
+  "family_id": "sha256:111cb026877bf31d7fe71d139519768332145ec103f57cfaed05d7e251de1f74",
+  "input_tokens": 780,
+  "invocation_finished_at": "2026-10-01T11:42:01.580281+00:00",
+  "invocation_started_at": "2026-10-01T11:42:00.239122+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 780,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 803
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:2b3220b0e68388a78cedb5dfdb1e16bf9d5aa0e065eb1e6d173ecbfd364f32fb",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790854921,
+    "id": "chatcmpl-IRCrbthSNPOLWNIB7iOXZMFu5uVS7sH6",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 538.734,
+      "predicted_n": 23,
+      "predicted_per_second": 42.69268321657812,
+      "predicted_per_token_ms": 23.423217391304348,
+      "prompt_ms": 677.356,
+      "prompt_n": 702,
+      "prompt_per_second": 1036.3826407384006,
+      "prompt_per_token_ms": 0.9648945868945868
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 780,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 803
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Prince Harry and Meghan Markle's Holiday Plans May Bring King Charles Some Unfortunate News\\nA royal analyst has stated that King Charles may not receive much holiday cheer from Prince Harry and Meghan Markle's Christmas preparations.\\nThe Duke and Duchess of Sussex missed out on joyful celebrations with the royal family the previous year, and this year, royal researcher and historian Tessa Dunlop claims the couple intends to forgo a visit to Harry's native country.\\nDunlop told the Mirror, \\\"Christmas is coming, and we want Meghan and Harry to inject a bit of transatlantic tension into the Windsor brand.\\\"\\n\\\"However, don't hold your breath; it is unlikely that Harry will grace Sandringham with his presence, just as he did not show up at Balmoral this summer.\\\"\\nShe went on, mentioning the couple's children Prince Archie and Princess Lilibet, \\\"Far from buying a penthouse near London, it doesn't even look like King Charles will get a Christmas cuddle with those absent grandchildren.\\\"\\nThe King sent Harry, 39, and Meghan, 42, with an eviction notice from their previous royal house, Frogmore Cottage, meaning they no longer have an official place to dwell in the UK.\\nDunlop describes the couple's plan as \\\"a mission-driven by homesick Harry,\\\" believing that they will \\\"branch out and buy somewhere of their own.\\\"\\n\\\"Marital tension is the subtext here, as it is with so many rumors about Sussex,\\\" she went on.\\nWith her hot new agent, her famous friends, and her impending comeback as an influencer, Meghan is doing great in California. Not so Harry, who is frequently portrayed as, well, sparse.\\nDunlop added that the couple will now need to pay more for their protection when they travel to Britain.\\nShe continued, \\\"It makes no sense for the safety-obsessed Sussexes to invest in a private property when they can bunk up with cousins on the Windsor estate or stay in one of London's working palaces where the security brief is on-tap. I'm sure Harry would like a bolthole in London\u2014it's his home city after all.\\\"\\nRather, Harry is missing from us, the British public. It's a bit dull, to be honest, this new, more reserved Duke and Duchess who live in seclusion in America and only sometimes appear to carry out charitable deeds.\\nSource: nypost.com\", \"original_answer\": \"Prince Harry and Meghan Markle are unlikely to visit the UK for Christmas, causing disappointment for King Charles who will miss his grandchildren, according to royal analyst Tessa Dunlop. The couple, who were evicted from their royal home, Frogmore Cottage, and do not have an official UK residence, will face increased security costs when travelling to Britain. Dunlop suggested that the Duke and Duchess of Sussex may consider purchasing their own property, but raised concerns about security arrangements. Meanwhile, Meghan is reportedly thriving in California, unlike Harry, who is often portrayed as isolated.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_update",
+  "source_cluster_id": "sha256:f5c7921f88056c5173196f838017d4ea20ebec7224285e9574c7c0349fa520d6",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ]
+}

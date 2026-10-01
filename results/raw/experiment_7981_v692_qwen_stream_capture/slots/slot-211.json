@@ -1,0 +1,109 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.3670555730350316,
+  "exclusion_reason": null,
+  "family_id": "sha256:a028020e8f3bae792974b360d26d73f938b0c6973e63d8aa7cc5eb9af021aca6",
+  "input_tokens": 795,
+  "invocation_finished_at": "2026-10-01T11:46:11.571909+00:00",
+  "invocation_started_at": "2026-10-01T11:46:10.204853+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 795,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 818
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:eedd8dd7e8c3d3fea7bdecb816d3c64ba61f2f96b32044e54fe431902801df85",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855171,
+    "id": "chatcmpl-hiDbzj5arg6rbmnmDjrjEVjXFCldiOzP",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.52,
+      "predicted_n": 23,
+      "predicted_per_second": 42.55161696144454,
+      "predicted_per_token_ms": 23.50086956521739,
+      "prompt_ms": 707.613,
+      "prompt_n": 717,
+      "prompt_per_second": 1013.2657257568754,
+      "prompt_per_token_ms": 0.9869079497907951
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 795,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 818
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"4123 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Restaurants, Mexican\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-22:0\\\",\\\"Monday\\\":\\\"11:0-21:0\\\",\\\"Saturday\\\":\\\"7:0-21:0\\\",\\\"Sunday\\\":\\\"7:0-21:0\\\",\\\"Thursday\\\":\\\"11:0-21:0\\\",\\\"Tuesday\\\":\\\"11:0-21:0\\\",\\\"Wednesday\\\":\\\"11:0-21:0\\\"},\\\"name\\\":\\\"Palapa\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-17 20:53:15\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"This my absolute favorite Mexican food in town. And I have made it my mission to eat at all of them. I only wish I had found it sooner. The food is excellent, the service is even better. Get the carnitas. SOOOO good!\\\"},{\\\"review_date\\\":\\\"2021-12-28 20:41:57\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Fantastic food and service! All the fish dishes are fantastic! Highly recommend! We were sitting outside and they have comfy heat lamps!\\\"},{\\\"review_date\\\":\\\"2021-12-12 18:07:20\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I can easily give this place five stars. While it's not fancy, with the food tasting like it does it doesn't heed to be. My gosh the flautas were delicious. Crispy and still soft on the inside. So good. Nachos were a huge hit as well. Jamaica Agra Fresca was one if the best we've had. Absolutely delicious!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Palapa is a restaurant located in Santa Barbara, California. It serves Mexican cuisine and has a casual ambiance. It offers outdoor seating, takeout options, and reservations. WiFi is available for free. Customers have praised the food, which includes carnitas, flautas, nachos, and Jamaica agua fresca, among other menu items. The service has also been highly recommended by customers. Overall, Palapa appears to be a popular choice for those seeking authentic Mexican food in a friendly and casual atmosphere.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "sha256:fba9e0c1f8139ecf8a91c99918621162e1a8f1203f16c7788fcfe95653622115",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ]
+}

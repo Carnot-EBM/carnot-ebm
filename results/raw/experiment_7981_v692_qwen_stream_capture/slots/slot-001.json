@@ -1,0 +1,114 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.5245159699697979,
+  "exclusion_reason": null,
+  "family_id": "sha256:2c7ad8517475c8ec774e5437e9f86f95bbcaf0c231299c55e3c78c1e7b4e3c9d",
+  "input_tokens": 861,
+  "invocation_finished_at": "2026-10-01T11:41:20.332710+00:00",
+  "invocation_started_at": "2026-10-01T11:41:18.808193+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 10,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 861,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 886
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:01767b6840353a4b177151bcf216e90e737832205908d95341eb4f8d0e95c2d8",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 10\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790854880,
+    "id": "chatcmpl-wiLU90ATZObwoygAWnet8d3MKGA7rWaz",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 579.636,
+      "predicted_n": 25,
+      "predicted_per_second": 43.130516393046676,
+      "predicted_per_token_ms": 23.18544,
+      "prompt_ms": 793.011,
+      "prompt_n": 783,
+      "prompt_per_second": 987.3759632590215,
+      "prompt_per_token_ms": 1.0127854406130268
+    },
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 861,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 886
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Kyle Richards reveals she initiated separation from Mauricio Umansky as he moves on\\nThe Real Housewives of Beverly Hills Season 13 premiere night dropped plenty of piping hot tea.\\nKyle Richards and her good friend, Teddi Mellencamp, appeared on Watch What Happens Live following the RHOBH premiere.\\nAndy Cohen wasted no time getting into the nitty gritty with Kyle over what is happening with Mauricio Umansky and where the couple stands in the present.\\nBut first, the RHOBH star wanted to clear up one major thing. Despite the speculation that she and Mau separated to drum up ratings, that is not true. Their split is very real.\\nNo one had Kyle and Mau separating on their 2023 Bravo Bingo card, so the interest in this situation is heavy.\\nHere\u2019s what Kyle told Andy about her marriage.\\nKyle Richards admits she initiated the split\\nAs The Real Housewives of Beverly Hills Season 13 kicked off, things were tense between Kyle Richards and Mauricio Umansky.\\nWhen Andy Cohen asked Kyle about who initiated the split, she admitted she was the one who did.\\nDespite being separated, the two live together in their sprawling Beverly Hills mansion. She revealed that Mau got the main bedroom, and she moved to the upper level, which was more \u201cglam\u201d than the \u201cmasculine\u201d room Mau remained in.\\nKyle chose her words carefully, but she seemed hurt by the entire situation. She denied anything was happening between her and Morgan Wade. Viewers are waiting to see the two interact on RHOBH, and Morgan will appear on the show while filming with Kyle.\\nKyle Richards believes there is \u2018something\u2019 between Mauricio Umanksy and Emma Slater\\nWhile fighting back emotion after Andy asked about the photos circulating of Mauricio Umanksy and his Dancing with the Star partner, Emma Slater, holding hands, Kyle revealed that she is unsure if anything has happened between them, but that \u201csomething\u201d was there.\\nShe admitted that seeing the photos hurt her, and Teddi Mellencamp piped in to criticize Mau, insinuating they were spotted in the middle of Beverly Hills, where they had to know there would be photogs.\\nIt will be interesting to see what develops between Mau and Emma as they continue dancing through this Dancing with the Stars season. This wouldn\u2019t be the first time a pro and a celebrity have developed feelings for one another while doing the show.\\nAs the RHOBH season unfolds, it will be interesting to see what clues viewers notice between Kyle and Mau and when their separation took place.\\nThe Real Housewives of Beverly Hills airs Wednesdays at 8/7c on Bravo.\", \"original_answer\": \"Kyle Richards revealed on Watch What Happens Live that she initiated the separation from her husband Mauricio Umansky, despite rumors that their split was a publicity stunt. She admitted that she was hurt by photos of Mauricio holding hands with his Dancing with the Stars partner Emma Slater, and believes there may be \\\"something\\\" between them. Kyle and Mauricio still live together, but in separate rooms, and she denied any romantic involvement with Morgan Wade. The RHOBH star expressed uncertainty about what will happen between Mauricio and Emma as they continue dancing together.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_admission",
+  "source_cluster_id": "sha256:987e0b5eff7c34d1c60cc128aaa9cffc46ac8d8d84bc553c733dce10922f7a17",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20
+  ]
+}

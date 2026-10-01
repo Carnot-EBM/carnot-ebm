@@ -1,0 +1,106 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.4162488050060347,
+  "exclusion_reason": null,
+  "family_id": "sha256:115379b5d3cd07cfa250c38325b6fbacd744fec1b994c3bf136dbc7c8d68e4bd",
+  "input_tokens": 841,
+  "invocation_finished_at": "2026-10-01T11:43:23.595787+00:00",
+  "invocation_started_at": "2026-10-01T11:43:22.179538+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 841,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 864
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:6e8bae764712f1262b2471e1ae647ebbe2d092ea3019662f5b64a14b13c4a704",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855003,
+    "id": "chatcmpl-c9fzC6xnoQaFcFgwRGKcweGAd3KwSyyy",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 539.13,
+      "predicted_n": 23,
+      "predicted_per_second": 42.66132472687478,
+      "predicted_per_token_ms": 23.440434782608694,
+      "prompt_ms": 725.271,
+      "prompt_n": 763,
+      "prompt_per_second": 1052.0205550752755,
+      "prompt_per_token_ms": 0.9505517693315858
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 841,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 864
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"5744 Hollister Ave\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Japanese, Sushi Bars, Restaurants\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"17:0-21:30\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"17:0-21:30\\\",\\\"Thursday\\\":\\\"17:0-21:30\\\",\\\"Tuesday\\\":\\\"17:0-21:30\\\",\\\"Wednesday\\\":\\\"17:0-21:30\\\"},\\\"name\\\":\\\"Goleta Sushi House\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-13 15:53:13\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I love goleta sushi house! This little sushi place is located in old town goleta and it is super fresh and high quality. It is also less of an event than going downtown for sushi so it's more of like an everyday sushi place. I've been here a couple of times and the waiters are always attentive and kind. I would say it's definitely on the same level as Sun sushi!\\\"},{\\\"review_date\\\":\\\"2022-01-10 17:02:06\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Best sushi take out in Goleta! We love this little spot! They've got something for everyone and even the kiddos can find something.\\\"},{\\\"review_date\\\":\\\"2022-01-09 02:57:42\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Recently moved to Goleta and heard great things about this place. Did not disappoint. The sushi was delicious! Much better than other places in town that we've tried. To top it off, me and my husband had a wonderful time chatting with the lady that I believe may be the owner? She was so friendly. We always love supporting local businesses!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Goleta Sushi House is a highly-rated Japanese restaurant located in the heart of Old Town Goleta, CA. According to customer reviews, the sushi served here is fresh, high-quality, and comparable to that of more popular spots in the area. The restaurant has a cozy and casual atmosphere, making it suitable for everyday dining. The staff is known for their attentive and kind service, and the menu offers options for everyone, including children. Additionally, the restaurant offers takeout and outdoor seating, making it a versatile choice for diners. With a 4.0-star rating and glowing reviews, Goleta Sushi House is an excellent option for those seeking delicious sushi in a relaxed setting.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_admission",
+  "source_cluster_id": "sha256:4b1559bb14b518c74a756c153f8743357dbaad8d556bb88be8232b3e7975c344",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ]
+}

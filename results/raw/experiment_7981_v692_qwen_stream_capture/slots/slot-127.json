@@ -1,0 +1,100 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.1185604839702137,
+  "exclusion_reason": null,
+  "family_id": "sha256:15632a8c281a4d6330c46628f825efa5b085cac6aed35ce82b0b6762985ae685",
+  "input_tokens": 424,
+  "invocation_finished_at": "2026-10-01T11:44:09.367966+00:00",
+  "invocation_started_at": "2026-10-01T11:44:08.249404+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 1,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 424,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 448
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:9b19fb317e50db8ecc4ae93f3d28a180904eda0c8eddcb7c7a5736d0bd904752",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 1\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855049,
+    "id": "chatcmpl-SB8iMc1T4Y9Y6i6S0WxkY2f3tTxTTtpO",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.53,
+      "predicted_n": 24,
+      "predicted_per_second": 42.51324110321861,
+      "predicted_per_token_ms": 23.52208333333333,
+      "prompt_ms": 439.804,
+      "prompt_n": 346,
+      "prompt_per_second": 786.7140817273149,
+      "prompt_per_token_ms": 1.2711098265895953
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 424,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 448
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Literally, the thirteen stripes on the flag represent the thirteen original colonies. The fifty stars represent the fifty current states. Figuratively, the flag stands for freedom and democracy. It represents the unity of America, our common cause, and the hope for a better tomorrow.\\\\n\\\\npassage 2:The American U.S. Flag, stands for the United States Of America:D, Shown below are what the colors of the flag stands for:) Red - Hardiness and valor White - Purity and innocence\\\\n\\\\npassage 3:The stars represent the states in the union, currently ten rows of five stars equaling 50 states. even though America was splitting from mother England, the red white and blue colors represent an enduring tie to the colors of the United Kingdom's own red white and blue.\\\\n\\\\n\\\",\\\"question\\\":\\\"what do the colors of the u.s. flag represent\\\"}\", \"original_answer\": \"Based on the given passages, here is the answer to the question:\\n\\nThe colors of the U.S. flag represent:\\n\\n* Red: Hardiness and valor\\n* White: Purity and innocence\\n\\nThe passages mention that the colors of the flag represent freedom and democracy, but they do not explicitly state what these colors represent. Therefore, I cannot answer the question fully based on the given passages.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_admission",
+  "source_cluster_id": "sha256:fb69168af0420cf0d29ffab2231f0b98bb81bd604db5863cd5d2cc86da27b39a",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ]
+}

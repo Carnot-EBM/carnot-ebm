@@ -1,0 +1,99 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.111469075025525,
+  "exclusion_reason": null,
+  "family_id": "sha256:ec0acfd3ef970c6bf2ad6dbb94ac3162620930d6f5f28a8899581f3b21bd776d",
+  "input_tokens": 507,
+  "invocation_finished_at": "2026-10-01T11:44:08.229954+00:00",
+  "invocation_started_at": "2026-10-01T11:44:07.118482+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 507,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 528
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:9ab7ae7f9a80265d75759ffd727b08fdf892ecc6ed4ae77e8fbfefa47480d81c",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"unsupported_probability\": 0.0,\n\"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855048,
+    "id": "chatcmpl-HHLqHYOoS3T55inHil5g9C5RR02TtA1A",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 498.059,
+      "predicted_n": 21,
+      "predicted_per_second": 42.16367940344417,
+      "predicted_per_token_ms": 23.71709523809524,
+      "prompt_ms": 494.874,
+      "prompt_n": 429,
+      "prompt_per_second": 866.8873288958401,
+      "prompt_per_token_ms": 1.1535524475524477
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 507,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 528
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:It can come from having nothing to eat but rabbit or other very low fat animals. Whe \u2026 n the body gets too little fat you can go into a state where you will no longer process the food you do eat correctly. Once this happens you can have sever digestive problems that lead to diarrhea and dehydration.\\\\n\\\\npassage 2:What happens if you have too little fats? Most people think eating less fats will lead to weight loss. This is true, but too little fat in the diet can lead to weight loss and nutritional deficiencies.\\\\n\\\\npassage 3:Female athletes who have too little body fat often experience amenorrhea and loss of bone mass, which can lead to stress fractures and osteoporosis. The athlete's level of per\u2026formance also decreases.\\\\n\\\\n\\\",\\\"question\\\":\\\"what happens if you have too little body fat?\\\"}\", \"original_answer\": \"Based on the provided passages, here are some potential answers to the question \\\"What happens if you have too little body fat?\\\":\\n\\n* According to passage 1, if the body gets too little fat, it can lead to digestive problems such as diarrhea and dehydration.\\n* Passage 2 suggests that having too little fat in the diet can lead to weight loss and nutritional deficiencies.\\n* Passage 3 indicates that female athletes who have too little body fat may experience amenorrhea (loss of menstrual period), loss of bone mass, and decreased performance.\\n\\nTherefore, the possible answers to the question are:\\n\\n* Diarrhea and dehydration (based on passage 1)\\n* Weight loss and nutritional deficiencies (based on passage 2)\\n* Amenorrhea, loss of bone mass, and decreased performance (based on passage 3)\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_update",
+  "source_cluster_id": "sha256:815394fde63cdc4ab5028a83603117f1a038dcb7692e1bc5dc2d2192f997bc2d",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ]
+}

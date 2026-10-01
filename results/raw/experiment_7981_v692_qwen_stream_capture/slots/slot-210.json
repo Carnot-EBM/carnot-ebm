@@ -1,0 +1,108 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.3848852600203827,
+  "exclusion_reason": null,
+  "family_id": "sha256:3aa445c2483f77028ad006304866240921cd5fff69fd099a12e855d3ab2bb737",
+  "input_tokens": 821,
+  "invocation_finished_at": "2026-10-01T11:46:10.190338+00:00",
+  "invocation_started_at": "2026-10-01T11:46:08.805451+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 821,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 844
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:ed80e95986d2d9fefc0591d82c0a096f342ca6259d15d5b47f9ca58d21b5c400",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855170,
+    "id": "chatcmpl-UjuzXY08uzNFwbdj4DVF9KA2SGHXLnd6",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.479,
+      "predicted_n": 23,
+      "predicted_per_second": 42.55484486908834,
+      "predicted_per_token_ms": 23.49908695652174,
+      "prompt_ms": 725.105,
+      "prompt_n": 743,
+      "prompt_per_second": 1024.6791843939843,
+      "prompt_per_token_ms": 0.9759152086137282
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 821,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 844
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Charlotte, Louis, and Prince George all dive into the kitchen as Kate unveils important roles\\nDuring the October half-term, Princess Kate has been spending the last few weeks at home with her kids. She has already disclosed that one of their favorite activities to do together is cooking.\\nEven though Prince George, Princess Charlotte, and Prince Louis are not enrolled in school, they can still assist with food preparation for the family.\\nCurrently, the three are students at Lambrook School near Windsor, which is close to their family home Adelaide Cottage.\\nDuring a royal visit to Lavender Primary School in 2019, Kate engaged the kids in conversation about their favorite foods to prepare together, noting that her kids especially enjoyed getting a little messy.\\nCheesy spaghetti is a family specialty, and George, Charlotte, and Louis all play significant parts in the crucial noodle and sauce preparation process.\\nFollowing the visit, Ivy Learning Trust CEO Matthew Kleiner-Mann remarked, \\\"She was telling us how much her children love cooking and how they cook for her.\\\"\\n\\\"They recently prepared cheese-topped spaghetti. One mixes the flour, while the other adds the butter and milk. They also prepare salads and other things.\\\"\\nSince Kate mentioned that she and the kids also cultivate veggies in their garden, the Wales family now has access to healthy food.\\nThe family grows their own vegetables, including carrots, beans, and beetroots; Louis, the youngest, particularly enjoys beetroot despite its strong flavor, Kate revealed to Mary Berry in 2019.\\nThe Princess revealed to the renowned chef, \\\"We grow our own vegetables, we've got carrots, beans, beetroot's a massive favorite, Louis absolutely loves beetroot.\\\"\\nShe also made fun of the fact that her daughter \\\"loves her Charlotte potatoes\\\" by default, but olive is an intriguingly sophisticated favorite of the young monarch.\\nPizza cooked with Mary Berry's pizza dough is another delight that Kate makes with her children since she believes that cooking with them is a crucial aspect of their development.\\nAllowing her family to \\\"be creative and as independent as possible with it\\\" is something the Princess expressed her preference for.\\nAnother charming anecdote from Kate states \\\"Because all my cooking books are in the kitchen bookshelf right at his height,\\\" Mary was actually one of the first things Louis said.\\nShe continued: \\\"And children are really fascinated by faces, and your faces are all over your cooking books and he would say, 'That's Mary Berry', so he would definitely recognize you if he saw you today.\\\"\", \"original_answer\": \"Here is a summary of the article in 104 words or less:\\n\\nPrincess Kate has been spending her October half-term break at home with her kids, where they enjoy cooking together. The family grows their own vegetables, including carrots, beans, and beetroot, and Kate believes that cooking with her children is essential for their development. During a recent royal visit, Kate revealed that her kids enjoy making cheesy spaghetti, with Louis being particularly fond of beetroot. Kate also shared that her daughter, Charlotte, has a love for \\\"Charlotte potatoes.\\\"\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_admission",
+  "source_cluster_id": "sha256:1ed59997ebaf8e4b5da61be90219354cd2cec69e98d9789ae0c4dba4135f09b4",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ]
+}

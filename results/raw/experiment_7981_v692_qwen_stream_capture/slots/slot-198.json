@@ -1,0 +1,114 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.3129951529554091,
+  "exclusion_reason": null,
+  "family_id": "sha256:b80f7231e9600ff704d5e8352f6f22bf09422bb2e99325a670c19a00bde1f1c6",
+  "input_tokens": 703,
+  "invocation_finished_at": "2026-10-01T11:45:53.649402+00:00",
+  "invocation_started_at": "2026-10-01T11:45:52.336405+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 703,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 726
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:e19d591980b730694ad613ad67d74602b04e029d09beb59f5fd3a2fa26ea2def",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855153,
+    "id": "chatcmpl-mruSSK0WBjSbQ2NT2k6Su1Y42E1S9oaT",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 539.841,
+      "predicted_n": 23,
+      "predicted_per_second": 42.60513743861618,
+      "predicted_per_token_ms": 23.47134782608696,
+      "prompt_ms": 631.186,
+      "prompt_n": 625,
+      "prompt_per_second": 990.1994023948565,
+      "prompt_per_token_ms": 1.0098976
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 703,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 726
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"'Bold and the Beautiful' Spoilers: Fashion Show Showdown, Eric's Health Crisis Rocks The Forresters?\\nThe Bold and the Beautiful (B&B) spoilers for the week of October 23 tease that the fashion show battle heats up between Eric Forrester (John McCook) and Ridge Forrester (Thorsten Kaye). CBS released the weekly promo that shows the men preparing for the showdown, determined to let their buyers decide who has the best designs.\\nIn the midst of the fashion showdown, Eric is battling a mystery disease. He hasn't told his family. The only people who know about his health struggle are Donna Logan (Jennifer Gareis), RJ Forrester (Joshua Hoffman), his doctor, and Luna Nozawa (Lisa Yamada).\\nEric's doctor urged him to put aside the fashion show and take it easy. The doctor is worried that the stress will make Eric's condition worse. However, Eric refuses. He's determined to make his final collection his best work.\\nSoaps Spoilers reports that Katie Logan (Heather Tom) will learn about Eric's condition before the fashion show begins. She promises to keep quiet about it, urging him to tell his family after the fashion show.\\nLauren Fenmore (Tracey E Bregman) will appear alongside Esther Valentine (Kate Linder). They attend to see the newest designs in hopes of purchasing the latest fashion for Lauren's stores.\\nThe Bold and the Beautiful spoilers say that Eric's condition goes from bad to worse at the fashion show. He collapses at the fashion show, forcing Donna to come clean with his family about his grave condition.\\nB&B fans, do you think Eric has a terminal illness? Who will win the fashion showdown? Keep watching The Bold and the Beautiful, airing weekdays on CBS and streaming on Paramount Plus. Please share your thoughts with me in the comments section below. Remember to follow me to read more of my content.\", \"original_answer\": \"Sure! Here's the summary within 76 words:\\n\\nOn \\\"The Bold and the Beautiful,\\\" Eric Forrester (John McCook) faces a health crisis while preparing for a fashion show against Ridge Forrester (Thorsten Kaye). Despite his doctor's warnings, Eric refuses to drop out, but his condition worsens during the show, forcing Donna Logan (Jennifer Gareis) to reveal his secret to the family. The question remains if Eric has a terminal illness, and who will win the fashion showdown.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_update",
+  "source_cluster_id": "sha256:530c5d0824f3423e2481766a987e8bddc51db477c895dafaef45510bd0150215",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20
+  ]
+}

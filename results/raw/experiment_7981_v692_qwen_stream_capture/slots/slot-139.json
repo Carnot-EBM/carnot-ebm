@@ -1,0 +1,106 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.751956062973477,
+  "exclusion_reason": null,
+  "family_id": "sha256:edb5deb8bc18dbd50338b2c940755759ea608ea62b390440ec9724c530f86c89",
+  "input_tokens": 1208,
+  "invocation_finished_at": "2026-10-01T11:44:25.562225+00:00",
+  "invocation_started_at": "2026-10-01T11:44:23.810267+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1208,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1232
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:a46cea668cca06db9832f6754caa202ce1c655ba241a101251c51a19a41cb018",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855065,
+    "id": "chatcmpl-pCakHzcRSe9MdkX446DcS56jbEMywnig",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.157,
+      "predicted_n": 24,
+      "predicted_per_second": 42.46607579840646,
+      "predicted_per_token_ms": 23.548208333333335,
+      "prompt_ms": 1065.087,
+      "prompt_n": 1130,
+      "prompt_per_second": 1060.9461950056661,
+      "prompt_per_token_ms": 0.9425548672566372
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1208,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1232
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"2819 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":true,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":2.5,\\\"categories\\\":\\\"Restaurants, Nightlife, Hotels & Travel, Hotels, Italian, Event Planning & Services\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"0:0-0:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"0:0-0:0\\\",\\\"Sunday\\\":\\\"0:0-0:0\\\",\\\"Thursday\\\":\\\"0:0-0:0\\\",\\\"Tuesday\\\":\\\"0:0-0:0\\\",\\\"Wednesday\\\":\\\"0:0-0:0\\\"},\\\"name\\\":\\\"Lemon Tree Inn\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-12-31 00:35:08\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"On our first night at our freshly \\\\\\\"cleaned room\\\\\\\" we found a bath towel wadded up underneath our pillows on the bed. This means that the sheets and pillowcases were not changed since the last guest. \\\\n\\\\nIt was late and we weren't in the mood to call and wait for someone come and do their job at 10pm; we brought a can of Lysol and sprayed the pillows, sheets, and headboard liberally. We ARE in a COVID pandemic and most hotels are adhering to strict cleaning protocols however the Lemon Tree doesn't appear to be performing even basic cleaning and laundering between guests.\\\\n\\\\nThe headboard and dresser also had smears on them (hopefully not any sort of bodily fluid) and it looked like housekeeping made an attempt to wipe them down but didn't do a good job.\\\\n\\\\nTravelocity and Hotwire both state there's a 72 hour gap between guests at the Lemon Tree (COVID protocol) but this, of course cannot be true since the room was being \\\\\\\"cleaned\\\\\\\" when we arrived early.\\\\n\\\\nI've traveled extensively in Asia and abroad and am far from picky but this room was simply gross and more importantly, COVID protocols are not being following as simple laundering isn't happening between guests which becomes a serious safety issue.\\\"},{\\\"review_date\\\":\\\"2021-12-06 04:36:38\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"This hotel is absolutely  gorgeous. Located in the heart of Santa Barbara's state street. The property is surrounded by lemon trees as soon as you walk inside to check in there was a lovely aroma of grilled garlic butter! There's a restaurant and bar inside of this hotel with an outdoor lounging bar area with fire pits and games next to the pool. I believe almost if not all rooms are pool/courtyard views. The rooms are clean and contemporary with blow dryer in room safe microwave refrigerator toiletries if you forgot yours tourist magazines balcony or patios and seating . OK rooms are all non-smoking or you will be charged I believe $100 fine / they also place a temporary $150 cleaning fee but it's released upon check out.  One of the only places I like to stay when I go to Santa Barbara. Also Lyft drivers are also familiar with the property if you need transportation .\\\"},{\\\"review_date\\\":\\\"2021-10-26 22:43:02\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Don't let the lobby fool you, rooms were horrible, bed uncomfortable, it looked like it was another establishment and turned into a hotel/motel. There was a portable toilet in the bathroom it was creepy.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"The Lemon Tree Inn is a 2.5-star hotel located in the heart of Santa Barbara, CA. It offers a variety of amenities such as free WiFi, outdoor seating, and a restaurant and bar with a patio area featuring fire pits and games. The hotel has a mix of positive and negative reviews. Some guests have praised the hotel's location, cleanliness, and contemporary decor, while others have expressed disappointment with the quality of the beds and cleanliness of the rooms. One reviewer noted that the hotel did not follow proper COVID protocols, including not changing sheets and pillowcases between guests. The hotel's restaurant is popular among guests and locals alike, serving Italian cuisine and offering a relaxed atmosphere. Overall, the Lemon Tree Inn appears to be a budget-friendly option for travelers looking for a convenient and comfortable stay in Santa Barbara, but guests may want to consider the potential drawbacks before booking a room.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_update",
+  "source_cluster_id": "sha256:73c9b075487ed235ce016f4eab81283220b1cb180a3a57db25981235df4b4d3b",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ]
+}

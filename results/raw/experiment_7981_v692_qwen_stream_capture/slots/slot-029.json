@@ -1,0 +1,101 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.1658617350040004,
+  "exclusion_reason": null,
+  "family_id": "sha256:c231aaab1737332658e91b0126e32c2924e0610e8c7e3fe52c02a589e49f3e6d",
+  "input_tokens": 505,
+  "invocation_finished_at": "2026-10-01T11:41:56.002390+00:00",
+  "invocation_started_at": "2026-10-01T11:41:54.836526+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 1,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 505,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 529
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:257bb769e3a4d67a05cf062d19a3b2061c67c1323df588bd460679d716c04da2",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 1\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790854916,
+    "id": "chatcmpl-6Z904CNMx4hyZ03K6zYtBANXVKVnAJqt",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 562.575,
+      "predicted_n": 24,
+      "predicted_per_second": 42.66097853619517,
+      "predicted_per_token_ms": 23.440625,
+      "prompt_ms": 481.539,
+      "prompt_n": 427,
+      "prompt_per_second": 886.7402224949589,
+      "prompt_per_token_ms": 1.1277259953161591
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 505,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 529
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Properly stored fresh Chestnuts will feel hard as rocks if you squeeze them. Though our Chestnuts are quite sweet right out of the bag, due to our SECRET post harvest conditioning process, for best flavor you should dry them slightly. A unique aspect of Chestnuts is that they become sweeter as they dry.\\\\n\\\\npassage 2:Harvesting Chestnut Trees. After the chestnuts fall from the tree, watch for the spiny burs to split. Don\u2019t harvest chestnuts if the burs are still green and closed because the nuts inside will be unripe. Harvest the nuts every couple of days.\\\\n\\\\npassage 3:When to harvest chestnuts? Chestnuts don\u2019t ripen at the same time and chestnut harvest time can span as much as five weeks, although the nuts generally ripen in a 10- to 30-day span of time in late August and September. Allow the nuts to fall from the tree naturally.\\\\n\\\\n\\\",\\\"question\\\":\\\"how and when to harvest chestnuts\\\"}\", \"original_answer\": \"Based on the given passages, the optimal time to harvest chestnuts is when the spiny burs have split open and the nuts inside are ripe, which can be determined by checking if the nuts feel hard as rocks when squeezed. The exact timing can vary, but generally falls within a 10- to 30-day span in late August and September. It's recommended to harvest the nuts every couple of days to ensure the best flavor, as they become sweeter as they dry. Therefore, the answer is: Late August to September, every couple of days, after the burs have split open and the nuts feel hard.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "sha256:cb882cdb59be85d7294e1972f8aaa51ededf053b57e54ad4666db93097716fa3",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ]
+}

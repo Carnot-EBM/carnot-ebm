@@ -1,0 +1,105 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.20487175200833,
+  "exclusion_reason": null,
+  "family_id": "sha256:530bba0ea6095c71c41c6f0ce64768ecfffefd49fc6734f5f351ca350f09f58e",
+  "input_tokens": 523,
+  "invocation_finished_at": "2026-10-01T11:45:42.518115+00:00",
+  "invocation_started_at": "2026-10-01T11:45:41.313242+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 10,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 523,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 548
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:d8aff43bb90e0706298412daebd4a0ada29717d14779a1aba8171700980993f7",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 10\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855142,
+    "id": "chatcmpl-pAP6Y9gyhQYhXfE0BbW1VBG6q6TrRj7e",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 588.225,
+      "predicted_n": 25,
+      "predicted_per_second": 42.500743763015855,
+      "predicted_per_token_ms": 23.529,
+      "prompt_ms": 499.135,
+      "prompt_n": 445,
+      "prompt_per_second": 891.5423682971541,
+      "prompt_per_token_ms": 1.1216516853932583
+    },
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 523,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 548
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"A prosecutor has dismissed allegations that Argentine President Cristina Fernandez de Kirchner tried to cover up Iran's involvement in a 1994 bombing in Buenos Aires. The move by prosecutor Javier de Luca to drop the case could mean a definitive end to the accusations that have roiled the nation, according to Argentina's state-run Telam news agency. The case became of high interest globally after the original prosecutor who brought the allegations was found dead in January. Alberto Nisman was found dead days after making the accusations. His death sparked outrage and conspiracy theories aplenty. Nisman alleged that Argentina's government agreed not to go after Iranian suspects in the bombing in exchange for a favorable trade deal. The 1994 bombing of a Jewish community center in the Argentine capital is the deadliest terror attack in the country's history. Eighty-five people were killed, and hundreds were injured. A second prosecutor took the reins after Nisman's death and took the case to court in February. A judge dismissed the case, saying that Nisman's allegations did not hold up. Following that, the case went to prosecutor de Luca for a possible appeal. On Monday, de Luca announced that in his investigation he found that \\\"there was no crime here, either carried out or attempted,\\\" according to Telam.\\n\", \"original_answer\": \"Sure! Here's the summary within 53 words:\\n\\nArgentine President Cristina Fern\u00e1ndez de Kirchner was cleared of allegations she covered up Iran's role in the 1994 bombing of a Jewish center in Buenos Aires, which killed 85 people. Prosecutor Javier de Luca dropped the case, citing lack of evidence. The case had been controversial since the initial prosecutor, Alberto Nisman, was found dead days after accusing the government of a secret deal with Iran.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_admission",
+  "source_cluster_id": "sha256:4d138bb2a0db51ce32ecf8352d821657a025d047ba39905c2d905e0285b23d9e",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]
+}

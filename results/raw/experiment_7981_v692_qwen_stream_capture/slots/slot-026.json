@@ -1,0 +1,106 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.5958142570452765,
+  "exclusion_reason": null,
+  "family_id": "sha256:da3ef0fa3ad68ff042bd164f033dc7a8758a0ab3db9ba66fc7c4fb7741aa2d7f",
+  "input_tokens": 1025,
+  "invocation_finished_at": "2026-10-01T11:41:51.888676+00:00",
+  "invocation_started_at": "2026-10-01T11:41:50.292860+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1025,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1049
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:2254498a2eb57a9ff85f12b89783cef3c5db3564dceae219d56387f463f1d6cb",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790854911,
+    "id": "chatcmpl-dnNpOIaoZh8X62hgku2slujCMObowSJo",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 558.437,
+      "predicted_n": 24,
+      "predicted_per_second": 42.977094999077785,
+      "predicted_per_token_ms": 23.268208333333334,
+      "prompt_ms": 906.231,
+      "prompt_n": 947,
+      "prompt_per_second": 1044.987425943275,
+      "prompt_per_token_ms": 0.9569493136219641
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1025,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1049
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"7320 Hollister Ave, Ste 1\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Burgers, Cafes, Restaurants, Mexican, American (Traditional)\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"8:0-20:30\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"8:0-20:30\\\",\\\"Sunday\\\":\\\"8:0-20:30\\\",\\\"Thursday\\\":\\\"8:0-20:30\\\",\\\"Tuesday\\\":\\\"8:0-20:30\\\",\\\"Wednesday\\\":\\\"8:0-20:30\\\"},\\\"name\\\":\\\"Cal Taco\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-11-21 03:05:15\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Food is amazing great service usually BUT 30 mins ago had the worst experience a young lady took my phone order she was so rude I heard her cussing under her breath then I went to pick up my food order was wrong she fixed it but made me pay the original bill she rung up gave her a forty she gave me my change she was gonna reimbursed me but didn't know math for shit and argued with me I just said whatever got tipped off 6 dollars\\\"},{\\\"review_date\\\":\\\"2021-11-19 23:50:52\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Nothing fancy, but adobado burrito and tacos are on point! Decent price, big portions.\\\"},{\\\"review_date\\\":\\\"2021-11-04 01:55:53\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"If you like the spot in Carpinteria you'll like this place for burgers. Even though it has taco in its name people come here for the burgers. I like how they give a good amount of veggies and raw onions on the burger. You can chose to get a add your choice of American, cheddar, or Jack cheese. The burger is delicious. The fried here are fatter than McDonald's or other fast food so it has nice texture when you take your food to go back to SB. I like how the employee provided some suggestions when I asked what was good.  I was recommended carnitas nachos but I opted for chicken. I wish I grabbed some salsa from the salsa bar.... bit the nachos came with one sour cream and one guacamole container. The nachos were a little salty compared to what I normally eat but I'm the flavor was good and had a nice lemon/lime flavor to the chicken. If you come by...I recommend trying out the burgers and maybe a pitcher of beer- I would have ordered it, but don't think they do it to go.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Cal Taco is a casual restaurant located in Goleta, CA that serves a mix of Mexican and American cuisine. According to their menu, they are known for their burgers and tacos, but also offer other options such as nachos and quesadillas. They have a 4.0-star rating based on customer reviews, with many reviewers praising the quality and portion size of their food. However, there have been some reports of poor customer service, including a recent incident where a customer was treated disrespectfully by a staff member. Cal Taco offers both indoor and outdoor seating, takes reservations, and has WiFi available. They are open Monday through Sunday from 8:00 AM to 8:30 PM.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_update",
+  "source_cluster_id": "sha256:e88d5656282111e050733e44f69f0c67772754587f23b99987b602361aabd901",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ]
+}

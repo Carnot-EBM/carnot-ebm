@@ -1,0 +1,105 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.1777475060080178,
+  "exclusion_reason": null,
+  "family_id": "sha256:80a489e4da41cb879e83a54c61b9501c6cda93f1297528ac58446b78b056f21a",
+  "input_tokens": 522,
+  "invocation_finished_at": "2026-10-01T11:45:21.581268+00:00",
+  "invocation_started_at": "2026-10-01T11:45:20.403520+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 522,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 545
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:c59be14950d91fdbc1f62b7b5af9945c70b01d61d1dc7772b4954e2144454342",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855121,
+    "id": "chatcmpl-lr8k2MTMgXdaaQylQOOIgO3bWZPJF174",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 539.641,
+      "predicted_n": 23,
+      "predicted_per_second": 42.62092761669332,
+      "predicted_per_token_ms": 23.462652173913042,
+      "prompt_ms": 498.583,
+      "prompt_n": 444,
+      "prompt_per_second": 890.5237442913215,
+      "prompt_per_token_ms": 1.1229346846846848
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 522,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 545
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"A massive brawl involving two dozen people at a Queens, New York, casino was captured on video Friday night. The cell phone video shows a number of men throwing punches and even chairs into crowds of people. Stanchions can be seen flying and being used as weapons in the chaotic scene. The fight took place in the food court area of Resorts World Casino where approximately 300 people were still at the scene when police arrived, according to the New York Police Department. One witness told CNN affiliate WCBS the scene was \\\"chaotic\\\" and compared it to a World Wrestling Entertainment event. The brawl took place in front of Fat Tuesday, which opened at the food court Friday. Police said that there was a drink special advertised at the casino. Several thousand dollars' worth of damages was done to the casino, police said, and an officer was taken to the hospital for a hand injury. Three men were arrestted in connection to the brawl, according to police. Two of the men were given a summons for disorderly conduct and released, while the third remains in custody and has been charged with obstructing governmental administration, resisting arrest, and disorderly conduct. Police were not able to confirm the cause of the fight and the case is still under investigation, the NYPD said. CNN's Joe Sutton contributed to this report.\\n\", \"original_answer\": \"A massive brawl involving about two dozen people occurred at a casino in Queens, New York. Cellphone footage shows men throwing punches and chairs into crowded areas. The fight happened in the food court of Resorts World Casino in front of Fat Tuesday, which opened on Friday. Damage of several thousand dollars was done to the casino and an officer got injured. Three men have been arrested and charged with various offenses. The cause of the fight is still under investigation.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_update",
+  "source_cluster_id": "sha256:5947aa8a1d2bf782f8c25524ccab0e63213e80c7dd48cc0c6a34f3ca5a2ab7e1",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]
+}

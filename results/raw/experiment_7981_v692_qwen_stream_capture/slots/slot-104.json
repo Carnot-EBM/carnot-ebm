@@ -1,0 +1,106 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.2824073730153032,
+  "exclusion_reason": null,
+  "family_id": "sha256:a079a8464168c7ad01b232a764c15d8603b4a0a300620f571ac9547e7bcfe88f",
+  "input_tokens": 657,
+  "invocation_finished_at": "2026-10-01T11:43:39.271871+00:00",
+  "invocation_started_at": "2026-10-01T11:43:37.989462+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 5,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 657,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 681
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:7fd3265e4a7999eb47345786b454cb20848aef8cf5d0d15aceed82672a83d0b5",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 5\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855019,
+    "id": "chatcmpl-Y0rSJW1YUUG8XpC7fmZYomLngd66eOMr",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 563.839,
+      "predicted_n": 24,
+      "predicted_per_second": 42.565342234219344,
+      "predicted_per_token_ms": 23.493291666666668,
+      "prompt_ms": 599.275,
+      "prompt_n": 579,
+      "prompt_per_second": 966.167452338242,
+      "prompt_per_token_ms": 1.0350172711571675
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 657,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 681
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:First you begin by blanching or peeling the peaches. After all the skins are removed from the peaches you will want to cut the peaches in half, remove the pit and then slice to your desired chunks. I place them into a bowl as I go. After all the peaches are cut and ready, I do a quick rinse. The next step is the soak. This is the essential trick to keeping the peaches fresh and from turning brown when you freeze peaches. Place the peaches in a water mixture of 1 Tablespoon lemon juice for every 2 cups water. You don\u2019t need to let the peaches soak it in long.\\\\n\\\\npassage 2:The great thing about frozen peaches is that you can still use them like fresh peaches once you let them thaw. Or you can keep them frozen for delicious treats. Frozen peaches make great fruit smoothies with a fresh peach flavor. You can also use your frozen peach chunks as ice cream toppings, or in your yogurt.\\\\n\\\\npassage 3:Easily Freeze peaches without sugar for fresh tasting peaches. You can do this with any type of peach, but really the easiest and in my opinion the best tasting peaches are ripe Freestone peaches. The pits are easier to remove and it still leaves a great flavor behind.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to freeze peaches easy\\\"}\", \"original_answer\": \"Based on the provided passages, here's how to freeze peaches easily:\\n\\n1. Blanch or peel the peaches, cut them into chunks, and rinse them quickly (Passage 1).\\n2. Soak the peaches in a water mixture of 1 tablespoon lemon juice per 2 cups of water for a few minutes to prevent browning (Passage 2).\\n3. Easily freeze peaches without adding sugar for a fresh-tasting flavor, using ripe Freestone peaches which have easier-to-remove pits and better flavor retention (Passage 3).\\n\\nTherefore, the steps to freeze peaches easily are:\\n\\n1. Prepare the peaches by blanching or peeling, cutting, and rinsing them.\\n2. Soak the peaches in a lemon juice solution before freezing to prevent browning.\\n3. Easily freeze the peaches without adding sugar for a fresh taste.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_update",
+  "source_cluster_id": "sha256:8d111f8ef5879e08ba7cd8a4c498ffe0f885c12eb123d16566513b9219e3e1d2",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ]
+}

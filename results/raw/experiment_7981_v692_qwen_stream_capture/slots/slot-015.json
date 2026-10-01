@@ -1,0 +1,111 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.6487223879667,
+  "exclusion_reason": null,
+  "family_id": "sha256:9a08b774c69822bc46f39c96f5468cfb54066a02863e6d502f8a1b123596925b",
+  "input_tokens": 1098,
+  "invocation_finished_at": "2026-10-01T11:41:38.060649+00:00",
+  "invocation_started_at": "2026-10-01T11:41:36.411926+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.15,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1098,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1122
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:15558e311339f1afe9eb6e308a15e96d0b4ff0260c7ee54a624282ac9bffe53b",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.15,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790854898,
+    "id": "chatcmpl-ChxFSYZbbDvODPughkMeBgGJIOg84zzg",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 557.727,
+      "predicted_n": 24,
+      "predicted_per_second": 43.03180588352366,
+      "predicted_per_token_ms": 23.238625,
+      "prompt_ms": 939.632,
+      "prompt_n": 1020,
+      "prompt_per_second": 1085.531356956766,
+      "prompt_per_token_ms": 0.9212078431372549
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1098,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1122
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"418 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":true,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":2.0,\\\"categories\\\":\\\"Home & Garden, Home Decor, Restaurants, Shopping, Indian\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:30-21:0\\\",\\\"Monday\\\":\\\"11:30-21:0\\\",\\\"Saturday\\\":\\\"11:30-21:0\\\",\\\"Sunday\\\":\\\"11:30-21:0\\\",\\\"Thursday\\\":\\\"11:30-21:0\\\",\\\"Tuesday\\\":\\\"11:30-21:0\\\",\\\"Wednesday\\\":\\\"11:30-21:0\\\"},\\\"name\\\":\\\"India House\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2016-07-11 18:16:20\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Worst Place to eat food. Food is horrible and Service is even more horrible. Will not recommend to anybody to eat at this place. The person at the counter was very rude and not at all helpful. Overall worst experience!! DO NOT GO HERE!!\\\"},{\\\"review_date\\\":\\\"2016-07-05 16:31:42\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"As my wife and I were walking along State Street, we have stopped by this Indian Restaurant for a quick lunch.\\\\nThe seating areas were spacious including low tables with seat cushions ( be aware! not clean at all)\\\\nThe restaurant was not extremely clean or modern, but it was decorated with somewhat Indian wall coverings, carpets, pictures, and antique tables.\\\\nThe food was fantastic! Chicken tika masala, tandoori chicken, curry chicken, etc. There were many Indian dishes with dressings and they were well prepared and delicious.\\\\nThe lunch buffet was $9.99 per person and soda and drinks were extras.\\\\nThe server was attentive and okay but he was on the bluetooth phone all time while we were having lunch.\\\\nI would go back for a lunch buffet next time, and they are good food for the money.\\\"},{\\\"review_date\\\":\\\"2016-05-17 21:52:32\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"***REVIEW FOR STREET SHOP***\\\\n \\\\nThere was an awesome car show going on that Saturday and in the corner we found this amazing pop up shop. It invited you in with incents and beautiful Indian textiles. Upon walking in this homemade tent you can see wall to wall art. There was Indian imported rugs, clothing, metal ohm symbols, hand carved wooden jewelry boxes, handmade cloth posters and much more. The jewelry initially caught my eye they are very unique items.  Everything was in a rich coloring and beautiful taste. I stumbled upon a large cloth poster of Mother Lakshmi. It was bright in color and had beautiful beads on it. I knew instantly that I needed it! Not only was this a wonderful part run in but the owner was delightful.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"India House is a multi-category business located at 418 State St, Santa Barbara, CA. The categories include Home & Garden, Home Decor, Restaurants, Shopping, and Indian. The business offers outdoor seating, reservations, takeout, and good options for groups. The restaurant serves fantastic Indian food with various dishes available, including vegetarian options. The lunch buffet is priced at $9.99 per person and additional drinks are sold separately. The service is attentive but the server is often on the phone while serving customers. Customers have mixed reviews, with some praising the food and the unique pop-up shop, while others have expressed dissatisfaction with the quality of the food and the service. Overall, India House may be worth trying out for those interested in Indian cuisine and unique shopping experiences.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_admission",
+  "source_cluster_id": "sha256:0963bd2bd855eae0f160d5be012763cfa746536fec2866d337804273e14e111c",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17
+  ]
+}

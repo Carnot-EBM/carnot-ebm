@@ -88396,3 +88396,30 @@ and `python/carnot/reporting/evidence_features_custody_7980.py`, exposed by
 `scripts/experiments/experiment_7980_v692_evidence_features.py`.
 `tests/python/test_experiment_7980_v692_evidence_features.py` verifies
 custody, reservation, private publication and terminal failure handling.
+
+## REQ-REPORT-7981: Bounded stream and reserved Qwen capture
+
+Authenticate the exact Exp7980 public manifests and Exp7969 protocol bytes,
+producer dates, model revision and GGUF hash. Freeze validation before capture.
+Use the qualified owned CUDA runtime, idle lease and cleanup protocol. Keep
+stream and reserved readiness separate. A missing fresh panel cannot suppress
+a qualified stream. Failed external gates block only their branch. Failed owned
+validation disqualifies the primary and clears both readiness fields. Successful
+capture is a scientific null and makes no quality claim. The conductor owns
+ops and traceability reconciliation for this invocation.
+
+### SCENARIO-REPORT-7981-CUSTODY
+
+Publish one atomic primary with exact gate operands, current and resumed calls,
+timestamped raw replies, complete source requests and hash-bound nested sidecars.
+Cold replay and both artifact consumers must resolve these exact bytes. Private
+CLI routes must run outside the checkout without PYTHONPATH. Required checks
+include affected tests, E2E-015, E2E-019, private Exp7969 transport and cleanup,
+strict mypy, scoped Ruff, spec coverage and nonempty 100 percent new statement
+coverage. Preserve repository health failures separately.
+
+Implementation: `python/carnot/experiment_7981_v692_qwen_stream_capture.py`
+adapts the qualified Exp7969 runtime and validation routes. The direct entrypoint
+is `scripts/experiments/experiment_7981_v692_qwen_stream_capture.py`.
+`tests/python/test_experiment_7981_v692_qwen_stream_capture.py` verifies private
+publication, separate branch gates, token receipts and cold replay.

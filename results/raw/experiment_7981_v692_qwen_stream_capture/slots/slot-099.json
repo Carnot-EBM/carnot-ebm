@@ -1,0 +1,110 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.2615220149746165,
+  "exclusion_reason": null,
+  "family_id": "sha256:8dff96d1cae09f44ee0511288d95b7e5a4f88a4ff5a37d8821b54646bfd3ea11",
+  "input_tokens": 634,
+  "invocation_finished_at": "2026-10-01T11:43:31.795255+00:00",
+  "invocation_started_at": "2026-10-01T11:43:30.533733+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 634,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 658
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:76ed2b2a9112d1e09a35683e36701cbb9edc5a95f8f32da21df7e6cfc54cc400",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855011,
+    "id": "chatcmpl-gVb5EO3hY6qKI1SEQGYVBhF7qPywjjCi",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 563.095,
+      "predicted_n": 24,
+      "predicted_per_second": 42.62158250384038,
+      "predicted_per_token_ms": 23.46229166666667,
+      "prompt_ms": 582.665,
+      "prompt_n": 556,
+      "prompt_per_second": 954.2361391193912,
+      "prompt_per_token_ms": 1.047958633093525
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 634,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 658
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"(The Hollywood Reporter)Oscar-winning rapper-turned-actor Common has closed a deal to join the cast of \\\"Suicide Squad,\\\" Warner Bros.' all-star action movie featuring DC Entertainment super-villains. David Ayer is directing the feature, which already boasts actors Jared Leto as the Joker, Will Smith as Deadshot and Margot Robbie as Harley Quinn. Also in the lineup are Joel Kinnaman, Cara Delevingne, Viola David, Adam Beach, Ike Barinholtz, Adewale Akinnuoye-Agbaje and Scott Eastwood. There will also possibly be cameos of Jesse Eisenberg who plays Lex Luthor and Ben Affleck as Batman in \\\"Batman v Superman: Dawn of Justice,\\\" who are rumored to appear as Warners builds its own cinematic universe. Hollywood Reporter: 'Suicide Squad' is 'Dirty Dozen' with supervillains. The story tells of imprisoned villains recruited by a government agency to perform covert operations. Details for Common's role have not been revealed. Warners had no comment on the deal. The movie is in production in Toronto. Common is currently on screen with Warners' Liam Neeson thriller \\\"Run All Night\\\" and was part of the cast for acclaimed civil rights movie \\\"Selma.\\\" For the latter he won an Oscar for best original song, which he shared with John Legend. He is due to shoot Relativity's \\\"Hunter Killer\\\" with Gerard Butler in July. Hollywood Reporter: What happens when 'Star Wars' is just a war film? He is repped by CAA and Myman Greenspan. Warner Bros. and DC Entertainment are both units of Time Warner, as is CNN. \u00a92015 The Hollywood Reporter. All rights reserved.\\n\", \"original_answer\": \"Common, the Oscar-winning rapper-turned-actor, has closed a deal to join the cast of \\\"Suicide Squad,\\\" Warner Bros.' all-star action movie featuring DC Entertainment super-villains. The star-studded cast includes Jared Leto, Will Smith, Margot Robbie, among others, and may also include cameos of Jesse Eisenberg and Ben Affleck. Details for Common's role have not been revealed. The movie is currently in production in Toronto.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_update",
+  "source_cluster_id": "sha256:1e634a97d7fdf2a65b83b75ae99f12036f2ab69ef91f84691bb02675ccc74e3e",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+  ]
+}

@@ -1,0 +1,102 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.3193035420263186,
+  "exclusion_reason": null,
+  "family_id": "sha256:685e3d2bad83eff15355a7944d86b201f6c44ff17c4966de8c0cbe09084275e6",
+  "input_tokens": 769,
+  "invocation_finished_at": "2026-10-01T11:45:46.340207+00:00",
+  "invocation_started_at": "2026-10-01T11:45:45.020903+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 769,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 791
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:ddedaa53d1669fe5f4d64c40a8ce9d571b2c88b378407d1b8a78464e2068a363",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.95,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855146,
+    "id": "chatcmpl-gGuVkpyitGO0UASJJd6QoQA4vsKUYvO1",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 515.986,
+      "predicted_n": 22,
+      "predicted_per_second": 42.6368157275585,
+      "predicted_per_token_ms": 23.45390909090909,
+      "prompt_ms": 688.192,
+      "prompt_n": 691,
+      "prompt_per_second": 1004.0802566725565,
+      "prompt_per_token_ms": 0.9959363241678727
+    },
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 769,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 791
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"413 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":false,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Food, Specialty Food, Nightlife, Restaurants, Local Flavor, Ethnic Food, Beer, Wine & Spirits, Bars, Mexican\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:30-22:0\\\",\\\"Saturday\\\":\\\"11:30-22:0\\\",\\\"Sunday\\\":\\\"11:0-15:0\\\",\\\"Thursday\\\":\\\"11:30-21:0\\\"},\\\"name\\\":\\\"The Mex Authentic\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2018-03-04 04:48:58\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"What happened!?!? I moved back to Ohio and they close? It was some of the best Mexican fare in town and the only place left on lower State. Bummer\\\"},{\\\"review_date\\\":\\\"2017-05-03 04:54:01\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"This is the best Mexican restaurant in town. The service is always spot on and the food is outstanding. I highly recommend it.\\\"},{\\\"review_date\\\":\\\"2017-04-30 01:14:47\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Great customer service and great food. Our server was Giovanni and we couldn't have asked for anyone better! It was my first time here and he gave great recommendations. First time but definitely not  last.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"The Mex Authentic is a specialty food and nightlife establishment located at 413 State St in Santa Barbara, California. They are open for business from Thursday through Sunday from 11:30 AM to 9:00 PM, with extended hours on Friday and Saturday until midnight. The restaurant offers outdoor seating, takeout options, and is good for groups. However, there is no WiFi available and live music or events are not offered.\\n\\nAccording to customer reviews, The Mex Authentic serves authentic Mexican cuisine that is highly praised. The service is said to be top-notch, with servers providing excellent recommendations and ensuring a pleasant dining experience. While there is no parking garage on site, street parking is available and validated. Overall, The Mex Authentic is a popular choice for those seeking delicious Mexican food and attentive service in Santa Barbara.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "sha256:279c3fbb6e764bd5a69f35ca5d4c612d276d2a2821acf903f7c79b5c59871bcb",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ]
+}

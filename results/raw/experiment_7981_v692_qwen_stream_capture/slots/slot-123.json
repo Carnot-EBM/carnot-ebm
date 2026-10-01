@@ -1,0 +1,125 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 2.0310262870043516,
+  "exclusion_reason": null,
+  "family_id": "sha256:24c36ad306cd7e537ae2d55b9f0214b144b3336d75069227fbcd571843e22c22",
+  "input_tokens": 1615,
+  "invocation_finished_at": "2026-10-01T11:44:04.385610+00:00",
+  "invocation_started_at": "2026-10-01T11:44:02.354582+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1615,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1638
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:96da4d40a89d8cb1ad58aa605927ee7c2520ba42c51304e8585995479e9158a7",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855044,
+    "id": "chatcmpl-HcmLn60lXGEG6EKMkJCGHoXzyCDrg7iV",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 542.038,
+      "predicted_n": 23,
+      "predicted_per_second": 42.432449385467436,
+      "predicted_per_token_ms": 23.56686956521739,
+      "prompt_ms": 1354.896,
+      "prompt_n": 1537,
+      "prompt_per_second": 1134.4044118515371,
+      "prompt_per_token_ms": 0.881519843851659
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1615,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1638
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"(Billboard)The key to rock's longevity is it never defines itself into irrelevance. So while there were some loud, dirty guitars at the 2015 Rock and Roll Hall of Fame induction ceremony in Cleveland on Saturday night, there was as much recognition for rock's antecedents in soul and blues, speaking less to a particular taxonomy than a spirit that's beyond words. It's easy to talk of such spirit when Paul McCartney is there to honor Ringo Starr, and Yoko Ono is on hand as well. Speaking briefly backstage, Ono expressed feeling that it was wonderful for Starr to be honored, \\\"just sad John and George aren't here,\\\" referring to her late husband John Lennon and Beatles guitarist and fellow songwriter George Harrison. Starr was certainly happy to be there \u2014 after a long wait, he's the final Beatle to be inducted as a solo act. \\\"I've finally been invited, and I love it,\\\" said the 74-year-old drummer. \\\"I got lucky, and it was actually in Cleveland,\\\" he said to enormous applause. Fifty-one years earlier, Starr had been in town to play the very same Hall; he admitted backstage that he didn't remember the cops stopping the show during \\\"All My Loving\\\" and making the Beatles return to the dressing room for ten minutes until the fans could be calmed. Starr said in a backstage interview that he couldn't recall the incident specifically, but admitted that there had been a lot of shows in between. \\\"I'll remember this one,\\\" he promised. Others receiving Rock Hall honors included Paul Butterfield Blues Band, early soul act The 5 Royales, singer Bill Withers, punk rockers Green Day, Lou Reed, Joan Jett & the Blackhearts and Stevie Ray Vaughan. It was a night for the young to honor the old and perhaps prepare for a later visit. John Mayer hailed his longtime idol, the late Vaughan, in a heartfelt speech. John Legend came out to honor Bill Withers with a performance of \\\"Use Me\\\" backed by Stevie Wonder, who inducted Withers. The two then shared \\\"Lean on Me,\\\" until Legend went and pulled Withers to the front of the stage to join them. Beck, Yeah Yeah Yeahs, Bill Withers, Seymour Stein hit Rock Hall's weekend festivities. The 76-year old soul legend hasn't performed live in many years but had hinted in the months leading up to the induction ceremonies that he might sing once more. Withers sounded great, though he may have an even brighter future in stand-up. \\\"This has got to be the biggest AA meeting [in the] Western hemisphere,\\\" said Withers, alluding to an earlier moment in the show when Jimmie Vaughan confessed, \\\"I taught my brother guitar, and he taught me how to get sober.\\\" He called being inducted by Wonder, \\\"A lion holding the door for a kitty cat.\\\" The moment of relative levity was welcome after moving tributes paid to the late Lou Reed by Patti Smith and Reed's widow, music artist Laurie Anderson, who shared the three rules for life that they came up with: \\\"One: don't be afraid of anyone; Two: get a really good b------t detector and learn how to use it; Three: be really, really tender.\\\" Smith had to push back tears on at least three occasions. She recalled a night when they wound up in the same hotel and Reed invited her up. She found him in the tub dressed in black and she sat on the toilet and talked with him. Green Day was inducted by Fall Out Boy, who referenced the length of some of the speeches. Cracked Fall Out Boy frontman Patrick Stump: \\\"I feel like I'm in a line at the DMV.\\\" As one of the youngest acts, it's not surprising they gave one of the two most exciting performances of the evening. Rock Hall induction ceremony: Lou Reed 'would be amused,' says sister. The other belonged to Tom Morello, Doyle Bramhall II and Zac Brown with harmonica player Jason Ricci performing \\\"Born in Chicago\\\" in tribute to the Paul Butterfield Blues Band. Not only did Ricci slay, but Morello played a nasty scabrous solo that raised the hairs on your arm, it was so alive. Miley Cyrus inducted Joan Jett in her own inimitable way, recalling a time she walked in on Jett smoking pot and being so turned on by her strength, wisdom and soul that the young pop star wanted to have sex with the legendary rocker. Jett joined the Blackhearts and Foo Fighters' Dave Grohl for a mini-set that include such classics as \\\"Bad Reputation,\\\" the Runaways' \\\"Cherry Bomb\\\" and \\\"Crimson and Clover,\\\" the Tommy James & the Shondelles cover that Jett took to No. 1. It was that kind of a night, and it closed with a rousing version of the Beatles' \\\"I Want to Be Your Man,\\\" where just about everybody who could make it out on stage did, including a near-end guitar scrum/lead-off between Gary Clark Jr., Morello, Zac Brown and Yeah Yeah Yeahs' Nick Zinner. \u00a92015 Billboard. All Rights Reserved.\\n\", \"original_answer\": \"The 2015 Rock and Roll Hall of Fame induction ceremony took place in Cleveland and celebrated the longevity and spirit of rock music. The event honored musicians from various genres, including soul, blues, and punk rock. Paul McCartney was present to honor Ringo Starr, and Yoko Ono expressed sadness that John Lennon and George Harrison were not there to be honored as well. Starr, the final Beatle to be inducted as a solo act, expressed his happiness at finally being invited and performing in Cleveland once again. Other artists who received honors included the Paul Butterfield Blues Band, The 5 Royales, Bill Withers, Green Day, Lou Reed, Joan Jett & the Blackhearts, and Stevie Ray Vaughan. John Mayer paid tribute to the late Vaughan in a heartfelt speech, while John Legend performed a tribute to Withers with Stevie Wonder. Withers, who hadn't performed live in years, delivered a great performance and added humor to the event. The night also included moving tributes to Lou Reed by Patti Smith and Laurie Anderson, as well as an energetic performance by Green Day. Miley Cyrus inducted Joan Jett in her unique style and Jett joined the Blackhearts and Dave Grohl for a mini-set. The event closed with a performance of the Beatles' \\\"I Want to Be Your Man\\\" involving multiple musicians. Overall, the ceremony celebrated the rich history and diverse influences of rock music.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_admission",
+  "source_cluster_id": "sha256:8efbb5a2b495c02b7aaec36283dd1504694e161222f593c8636b98cef0f8bccb",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31
+  ]
+}

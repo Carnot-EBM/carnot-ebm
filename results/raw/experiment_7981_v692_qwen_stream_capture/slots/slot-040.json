@@ -1,0 +1,111 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.3652167069958523,
+  "exclusion_reason": null,
+  "family_id": "sha256:1a74e512ccb207cb809b6656a66761b977beb019cba8510bf3e33a66cf4e4c32",
+  "input_tokens": 837,
+  "invocation_finished_at": "2026-10-01T11:42:06.632529+00:00",
+  "invocation_started_at": "2026-10-01T11:42:05.267310+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 837,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 860
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:32365d33f9bcaadc6a0839a62b060d8302693bfc4b2ab04d8f7f2d575566a760",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790854926,
+    "id": "chatcmpl-qdhNwEKuos4DgGLAj9xDVK3fM3A4AqAj",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 534.834,
+      "predicted_n": 23,
+      "predicted_per_second": 43.003997502028675,
+      "predicted_per_token_ms": 23.253652173913043,
+      "prompt_ms": 712.352,
+      "prompt_n": 759,
+      "prompt_per_second": 1065.4844795831275,
+      "prompt_per_token_ms": 0.9385401844532278
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 837,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 860
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:1 In the Add New Account dialog box, to configure the new email account automatically, configure the following settings in the Email Account section under Auto Account Setup 2  : In the Your Name box, type your full name. 3  In the Email Address box, type your e-mail address. In the Password box, type the password that your ISP provided. 2  In the Retype Password box, retype the password, and then click Next to begin the Auto Account Setup process. 3  Outlook will then try to automatically configure your account. 4  Some ISPs require the full email address to be entered into the User Name field.\\\\n\\\\npassage 2:Open the Change/View menu. Double-click on the email account in order to access the settings screen. Check the My Server Requires Authentication box. Click through the Settings pop-up box into the Log On Using field and enter your Verizon email account name and password, as prompted.Click on the box marked OK..ouble-click on the option leading to your email account. (On most versions of Outlook Express, there will be a My Accounts tab, or a similarly-named option in the Mail menu.) Locate and click on the Servers tab. Find the box labelled SMTP.. Here, you will enter the name of the outgoing server Verizon uses.\\\\n\\\\npassage 3:Click on Mail to begin the setup of your Verizon email account. Double-click on the option leading to your email account. (On most versions of Outlook Express, there will be a My Accounts tab, or a similarly-named option in the Mail menu.) Locate and click on the Servers tab. Find the box labelled SMTP..Here, you will enter the name of the outgoing server Verizon uses.ouble-click on the option leading to your email account. (On most versions of Outlook Express, there will be a My Accounts tab, or a similarly-named option in the Mail menu.) Locate and click on the Servers tab. Find the box labelled SMTP.. Here, you will enter the name of the outgoing server Verizon uses.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to set up an email account on verizon\\\"}\", \"original_answer\": \"To set up an email account on Verizon, start with opening the Add New Account dialog box. Automatically configure the new email account by setting up the following in the Email Account section under Auto Account Setup: type your full name in the Your Name box, your email address in the Email Address box, and the password provided by your ISP in the Password box. Retype the password in the Retype Password box and click Next to begin the Auto Account Setup process. Outlook will try to automatically configure your account. Remember, some ISPs require the full email address to be entered into the User Name field. Then, open the Change/View menu and double-click on the email account to access the settings screen. Check the My Server Requires Authentication box. Enter your Verizon email account name and password in the Log On Using field in the Settings pop-up box and click OK. Find the Servers tab in the menu and click on it. Look for the box labelled SMTP and enter the name of the outgoing server Verizon uses.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_admission",
+  "source_cluster_id": "sha256:639fe83933abdcd444bb4fc9333c2f39f405d9f4b887b3b0f698f23d37da5cf6",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17
+  ]
+}

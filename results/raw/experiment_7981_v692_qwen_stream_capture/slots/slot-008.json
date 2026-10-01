@@ -1,0 +1,103 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.1347120070131496,
+  "exclusion_reason": null,
+  "family_id": "sha256:dc382ee2a07d65bb29ad8bcfacc92ab0919d2e4477e874c28adb04f433effcc7",
+  "input_tokens": 475,
+  "invocation_finished_at": "2026-10-01T11:41:28.261253+00:00",
+  "invocation_started_at": "2026-10-01T11:41:27.126541+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 475,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 498
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:0f3db8c5ed8e5d6e8a57a9454421dc436698b4bd8a7e69c19b33352d18025e09",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790854888,
+    "id": "chatcmpl-QoKSAWpTrozhnDtLrmvHHPZnhDXho0sm",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 531.166,
+      "predicted_n": 23,
+      "predicted_per_second": 43.300964293648306,
+      "predicted_per_token_ms": 23.09417391304348,
+      "prompt_ms": 473.914,
+      "prompt_n": 397,
+      "prompt_per_second": 837.7047312381573,
+      "prompt_per_token_ms": 1.1937380352644835
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 475,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 498
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"April 27 is celebrated as Freedom Day in South Africa, commemorating the country's first democratic elections in 1994 election which saw Nelson Mandela elected as president. The day is widely seen as marking the start of a free South Africa after the fall of apartheid, a system of racial segregation implemented by the white-minority government in South Africa for decades. This year's celebrations come against the backdrop of a spate of anti-immigrant attacks earlier in April in which a number of people lost their lives. Using the #FreedomDay hashtag, people across the country and beyond took to Twitter to celebrate this year's event, express their views and send out their wishes -- including the South African government. Indian Prime Minister Narendra Modi also hailed the people of South Africa and sent out a message of hope. Many South Africans used Twitter to denounce the recent violence... ... whilst others remembered iconic South African freedom fighter Nelson Mandela. Freedom Day didn't go unnoticed by Google, who've changed the doodle to honor the day. Here's a selection of some of other #FreedomDay tweets.\\n\", \"original_answer\": \"Sure! Here's the summary within 45 words:\\n\\nOn April 27th, South Africa celebrated Freedom Day, marking the country's first democratic elections in 1994 and the fall of apartheid. Celebrations were tempered by recent anti-immigrant attacks, but many expressed hope and remembered Nelson Mandela. The day was recognized by the South African government and international leaders, including Indian PM Narendra Modi. Google also honored the day with a special doodle.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "sha256:184ee61ac34d20cfd193051618d7e67f8c968361e27866791ec11bb51a55b827",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ]
+}

@@ -1,0 +1,106 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.5127452329616062,
+  "exclusion_reason": null,
+  "family_id": "sha256:0da6f77dae8fe27d55717fe4b54871af8ef421f7b2aefd161b399f0075ee30e7",
+  "input_tokens": 871,
+  "invocation_finished_at": "2026-10-01T11:42:51.660604+00:00",
+  "invocation_started_at": "2026-10-01T11:42:50.147858+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 871,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 895
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:586988cb1e974a6455364f557730203879e7c0b804b2903be6389e4094640f32",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790854971,
+    "id": "chatcmpl-8wZwFCha6YLsjKfD1AzJRaJNiMgS6eJ1",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 561.998,
+      "predicted_n": 24,
+      "predicted_per_second": 42.7047783088196,
+      "predicted_per_token_ms": 23.416583333333335,
+      "prompt_ms": 814.869,
+      "prompt_n": 793,
+      "prompt_per_second": 973.1625574172045,
+      "prompt_per_token_ms": 1.027577553593947
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 871,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 895
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"4600 Hwy 154\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":null},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Barbeque, Golf, Active Life, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":null,\\\"name\\\":\\\"Rancho San Marcos Golf Course\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2019-08-28 00:29:48\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Would be a 5 star review but.. when we got there, they inadvertently forget to tell us over the phone, that we would be playing the same 9  holes as they were aerating the back 9.  Too bad as we love this course and come every year.  That is the bad news, the good news, is the head professional, Josh Pollaro arranged to get us on Sand piper and it was perfect.  He was so professional, understood that we wanted to play  all 18 holes at Rancho so he  came up with a great idea , for us to play Sandpiper and he called to arrange a tee time asap so we had time to drive over and they got us right on. THANKS Josh, we will be back in October and thanks for being so kind, accommodating  and thinking of a great solution.   See you in October!!! We love Rancho San Marcos\\\"},{\\\"review_date\\\":\\\"2019-06-19 13:45:33\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Great day yesterday \\\\nStaff was very accommodating and friendly \\\\nCourse was great fun.\\\\nVery challenging for part time golfer like me but nonetheless had a great time\\\"},{\\\"review_date\\\":\\\"2019-05-09 23:32:19\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"My wife and I another couple played here 10 days ago. The course is in the best shape in years. A challenging course and well worth it. We need to play it more often then we do. The only negative is that there are no course Marshall's and at times the play can getting a little slow. I am not a fan of 5 hour rounds.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Based on the provided structured data, here is an objective overview of Rancho San Marcos Golf Course:\\n\\nRancho San Marcos Golf Course is a popular golf course located in Santa Barbara, California, offering a variety of amenities and activities for golf enthusiasts. With a 4.5-star rating and positive reviews from customers, this course stands out for its well-maintained greens and challenging layout. While some reviewers have noted that the course can get busy and slow play can occur, the staff is praised for being accommodating and friendly. Additionally, the course offers barbecue options and has categories such as restaurants, active life, and outdoor seating, making it a great destination for groups and families. Overall, Rancho San Marcos Golf Course appears to be a top choice for golfers in the area.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_update",
+  "source_cluster_id": "sha256:e2ea93446a95808669436196271c32628eeaacee936e468d912914b532cb2d7a",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ]
+}

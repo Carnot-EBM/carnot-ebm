@@ -1,0 +1,108 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.6111613789689727,
+  "exclusion_reason": null,
+  "family_id": "sha256:d6be627a7331ce28924d50ae8521861cec6b2c3c45a06281d6338049f0e4ed41",
+  "input_tokens": 1040,
+  "invocation_finished_at": "2026-10-01T11:44:13.886412+00:00",
+  "invocation_started_at": "2026-10-01T11:44:12.275248+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1040,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1063
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:9c654e0a5234e5c7ddcb770b26e4941af004939c1b6c01f6bad3e01bf7b578be",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855053,
+    "id": "chatcmpl-PQg9sPB93lQYYn1NeMpn1ivGntOHbhk8",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.289,
+      "predicted_n": 23,
+      "predicted_per_second": 42.49116460892425,
+      "predicted_per_token_ms": 23.534304347826087,
+      "prompt_ms": 937.103,
+      "prompt_n": 962,
+      "prompt_per_second": 1026.568050683863,
+      "prompt_per_token_ms": 0.9741195426195426
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1040,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1063
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Film critic Richard Corliss, whose populist passion for all genres of movies illuminated Time magazine's coverage of cinema for 35 years, died Thursday night in New York City. He was 71. Corliss died a week after suffering a major stroke, according to a tribute on Time's website by colleague Richard Zoglin, who called him \\\"perhaps the magazine's most quoted writer of all time.\\\" Unlike some critics, Corliss appreciated all kinds of movies -- from the arty drama of Ingmar Bergman to the epic fantasy of \\\"The Lord of the Rings.\\\" His all-TIME top 100 movies list, which he compiled with fellow Time critic Richard Schickel, contained everything from \\\"Pulp Fiction\\\" to \\\"Finding Nemo\\\" to Jackie Chan's \\\"Drunken Master II.\\\" \\\"He savored it all: the good, the bad, the indifferent. Except that he was indifferent to nothing,\\\" Zoglin wrote. \\\"To any fan or friend who would ask whether a new movie was 'worth seeing,' Corliss had a stock, succinct reply: 'Everything is worth seeing.' \\\" But Corliss was not afraid to puncture hype around big movies he found overrated, including \\\"Titanic\\\" (\\\"dead in the water\\\") and even -- blasphemy! -- \\\"Star Wars,\\\" about which he wrote, \\\"The movie's 'legs' will prove as vulnerable as C-3PO's.\\\" He also didn't care much for sentimental, uplifting movies that often become mainstream hits and win Oscars. \\\"There are movies whose feel-good sentiments and slick craft annoy me so deeply that I know they will become box-office successes or top prizewinners,\\\" he once wrote. \\\"I call this internal mechanism my Built-In Hit Detector.\\\" A graceful and prolific writer, Corliss reviewed more than 1,000 movies, penned many Time cover stories and authored four books on film, including \\\"Mom in the Movies: The Iconic Screen Mothers You Love (and a Few You Love to Hate),\\\" published just last year. (It was a partnership with Turner Classic Movies, which, like CNN, is owned by Turner Broadcasting.) Some credit him with coining the phrase \\\"drop-dead gorgeous\\\" to describe actress Michelle Pfeiffer in a review of her 1985 film, \\\"Into the Night.\\\" He also cleverly, and subtly, gave away the big plot spoiler of \\\"The Crying Game\\\" by spelling it out with the first letters of each paragraph of his review. Born in Philadelphia, Corliss moved to New York after college and began writing film reviews for a variety of publications before joining Time in 1980. He served as editor of Film Comment, the movie journal of the Film Society of Lincoln Center, for 20 years, was a frequent guest on Charlie Rose's talk show and made annual pilgrimages to film festivals in Cannes, Toronto and Venice. \\\"It's painful to try to find words, since Richard was such a master of them,\\\" Time editor Nancy Gibbs wrote in a note Friday to her staffers. \\\"They were his tools, his toys, to the point that it felt sometimes as though he had to write, like the rest of us breathe and eat and sleep. It's not clear that Richard ever slept, for the sheer expanse of his knowledge and writing defies the normal contours of professional life.\\\" He is survived by his wife, Mary, a noted film critic in her own right, whom he married in 1969. People we've lost in 2015.\\n\", \"original_answer\": \"Here is a summary of the article in 135 words:\\n\\nFilm critic Richard Corliss passed away at 71 after suffering a stroke. He spent 35 years reviewing films for Time magazine and was known for his passion for all types of movies. Corliss believed that every movie was worth watching, and he was not afraid to speak his mind about big budget hits and indie favorites alike. He authored four books on film and was a frequent guest on Charlie Rose's talk show. Despite his passing, his legacy lives on through his extensive body of work and his influence on the world of film criticism.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_update",
+  "source_cluster_id": "sha256:2e1d8092977ad2f73b09e0f81616ca436b489593c686a83e82f4a2f69201deb6",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ]
+}

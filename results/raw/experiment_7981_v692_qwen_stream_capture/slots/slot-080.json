@@ -1,0 +1,115 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.8847994030220434,
+  "exclusion_reason": null,
+  "family_id": "sha256:6f8d7e49ee33235e2539d6ef39e5d64b8668a24b2b7907dd0717c7bf101ed91f",
+  "input_tokens": 1388,
+  "invocation_finished_at": "2026-10-01T11:43:03.139856+00:00",
+  "invocation_started_at": "2026-10-01T11:43:01.255056+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1388,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1412
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:60711bcefa8f6bbf24223a26df9dcd94557b549ba646df925f5040c5f6020fdc",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790854983,
+    "id": "chatcmpl-iQ5Pb1T90gnMT2HTsvYh7DS7Hmgds40u",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 563.565,
+      "predicted_n": 24,
+      "predicted_per_second": 42.58603710308482,
+      "predicted_per_token_ms": 23.481875000000002,
+      "prompt_ms": 1193.162,
+      "prompt_n": 1310,
+      "prompt_per_second": 1097.9229978829362,
+      "prompt_per_token_ms": 0.9108106870229008
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1388,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1412
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"7000 Hollister Ave\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Salad, Sandwiches, Restaurants, Food, Juice Bars & Smoothies, Soup\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"7:0-20:0\\\",\\\"Monday\\\":\\\"7:0-20:0\\\",\\\"Saturday\\\":\\\"8:0-20:0\\\",\\\"Sunday\\\":\\\"8:0-20:0\\\",\\\"Thursday\\\":\\\"7:0-20:0\\\",\\\"Tuesday\\\":\\\"7:0-20:0\\\",\\\"Wednesday\\\":\\\"7:0-20:0\\\"},\\\"name\\\":\\\"Sup & Jus\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2020-08-29 15:41:46\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Oh man!!  Now this place is my favorite \\\\\\\"new find\\\\\\\"!!  I'm up in SB a few times a month for work and I have been hitting this place hard!!  Everything here is delicious: soups, sandwiches, et al!!  Delicious, healthy, locally-sourced food items.  I recommend this to anyone stopping by SB or Goleta, and definitely to the college kids in town over at UCSB, get out and support this local business!!  My kids are college age, and called me last week \\\\\\\"Dad, where's that place you were telling us about that has the great sandwiches?\\\\\\\"  I gave them the address and sent them over.  Enjoy kids!!\\\"},{\\\"review_date\\\":\\\"2020-01-22 06:19:11\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"I am not one to go on social media and bash a business, however I am addressing this issue and that I expected a response on and never received.\\\\n\\\\n1) Was not greeted in any manner what so ever, the young girl that 'helped' me was also a trainee as her name tag stated. \\\\n\\\\n2) When I asked if I could order a cold sandwich something with lettuce tomato and other sorts of toppings. I was pointed to a refrigerator door with pre-made 7/11 gas station sandwiches. \\\\n\\\\n3) I paid roughly $20 for the following items:\\\\nPictures are attached for your review. \\\\n\\\\n-medium size Thai chicken soup which had a piece of plastic in it.\\\\n- A gas station looking sandwich with disgusting mold on the tomato and lettuce that was so wilted and old. \\\\n- tropical green juice which seemed fine\\\\n\\\\n4) I used a 10% Axxess card discount which now i almost want to report this issue to them so they don't have people trying your establishment and being so disappointed.\\\\n\\\\n5) I wasted my entire lunch to go get these items from your establishment to return to work with still a hungry stomach. \\\\n\\\\nMy overall experience was poor and I absolutely expect a full refund in which your company has yet to address. I have given your company plenty of time to respond via email or telephone. You are clearly not the type of business I wish to support.\\\\n\\\\nTo all that are reading this: Don't waste your time. There are plenty of better 'sandwich shops' that are worth the money and the business.\\\"},{\\\"review_date\\\":\\\"2019-12-31 21:10:49\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"Sup and Jus is a concept restaurant located in a dog-leg space off of the Goleta, Hollister Village, signature restaurant Kyles Kitchen. \\\\nI really like the food at Sup and Jus. But I am uncomfortable in the physical space.  It is cold, all tile, glass and plastic.  Acoustics sound like a gym shower.  I can't stop feeling pity for the people who are working in this closed off and awkward space.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Sup & Jus is a restaurant located in Goleta, California. It serves salads, sandwiches, soups, juices, smoothies and offers outdoor seating. The restaurant has a rating of 4.0 stars out of 5.0 on Yelp and is open from Monday through Sunday. \\n\\nAccording to reviews, the restaurant offers a variety of healthy and delicious options, including vegetarian and gluten-free options. Customers have praised the quality of the food and the helpfulness of the staff. However, some customers have also noted that the restaurant is quite busy and can be difficult to navigate, especially during peak hours. \\n\\nOne customer in particular had a negative experience at the restaurant, reporting that they were not greeted properly and were given old and moldy food. They also reported issues with the cleanliness of the restaurant and expressed disappointment that they had wasted their time and money there. \\n\\nIn conclusion, Sup & Jus seems to be a popular restaurant among customers who appreciate their selection of healthy and flavorful dishes. While some customers have reported negative experiences, it appears that the restaurant takes customer feedback seriously and strives to improve its service and offerings.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_admission",
+  "source_cluster_id": "sha256:0f21db6d8d430ad38fd9bbea4e99c7735a2ba7e47621e83a23dbc95765f312bb",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21
+  ]
+}

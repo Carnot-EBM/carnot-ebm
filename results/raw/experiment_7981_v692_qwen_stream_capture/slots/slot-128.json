@@ -1,0 +1,102 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.2965089210192673,
+  "exclusion_reason": null,
+  "family_id": "sha256:2c91dc74cfed6861f98e3db7fd51662cf24ec8b33c35dea4f77695ac6568671e",
+  "input_tokens": 736,
+  "invocation_finished_at": "2026-10-01T11:44:10.679118+00:00",
+  "invocation_started_at": "2026-10-01T11:44:09.382608+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 736,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 758
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:9baf8cff4ae9c054c49c7c45915d2d6bd1dfc719ec8b65ff3fa75f0678533b24",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.95,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855050,
+    "id": "chatcmpl-5c4HHAaTSceAhlSeqAiUEWnFA6RFZ2uO",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 516.318,
+      "predicted_n": 22,
+      "predicted_per_second": 42.609399633559164,
+      "predicted_per_token_ms": 23.468999999999998,
+      "prompt_ms": 669.29,
+      "prompt_n": 658,
+      "prompt_per_second": 983.131378027462,
+      "prompt_per_token_ms": 1.0171580547112462
+    },
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 736,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 758
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"1187 Coast Village Rd\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":3.0,\\\"categories\\\":\\\"Pizza, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":null,\\\"name\\\":\\\"Giovanni's\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2019-01-08 15:17:24\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Delicious! I go once a week for the lunch special, slice (which is large) and a salad. Service is quick\\\"},{\\\"review_date\\\":\\\"2018-12-02 22:16:29\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"The pizza here is so yummy!\\\\nEveryone who worked here was very friendly and accommodating. We got the lunch special and itnwas a good deal. Pizza crust was perfect, just the right thickness soft and chewy, while still holding up. Seasoned with oregano, just the right amount of sauce too.\\\"},{\\\"review_date\\\":\\\"2018-09-01 04:35:00\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Jesus Christ! Where's the customer service! I don't want to be treated like royalty but I at least want to be acknowledged by employees. If I wanted to be referred to as a fat ass I would have rather it be said to my face...\\\\n\\\\n\\\\nPs food sucked.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Giovanni's is a popular pizza restaurant located in Santa Barbara, CA. With a 3.0-star rating and positive reviews, it's a great spot for a casual dining experience. The restaurant offers both indoor and outdoor seating, and takeout options are also available. Their menu includes a variety of pizza options, including a lunch special that is highly recommended by regulars. The atmosphere is cozy and welcoming, with friendly staff and a relaxed ambiance. The pizza crust is perfectly cooked, with the right balance of softness and chewiness, and the seasoning is generous without being overpowering. However, some customers have reported inconsistent service, with one reviewer feeling ignored by the staff. Overall, Giovanni's is a solid choice for delicious pizza and a casual meal out.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "sha256:3c7910c4786cac8a291af819ae47beeaf53bae33117d62842eed1d624d938432",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ]
+}

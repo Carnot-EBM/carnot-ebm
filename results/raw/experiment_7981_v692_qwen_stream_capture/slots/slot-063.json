@@ -1,0 +1,140 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.8912214819574729,
+  "exclusion_reason": null,
+  "family_id": "sha256:0080e6ceab8659bd69fea918f1a4602f01e4e4f74399e3f3274dfa04a779f070",
+  "input_tokens": 1440,
+  "invocation_finished_at": "2026-10-01T11:42:38.963834+00:00",
+  "invocation_started_at": "2026-10-01T11:42:37.072612+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1440,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1463
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:4a589112c30355283c5a3c1b06d93bea606f462ce20348002ed5756d711c992e",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790854958,
+    "id": "chatcmpl-WAYISFRJDbBp18PudMBweicsl63QlvjX",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 537.777,
+      "predicted_n": 23,
+      "predicted_per_second": 42.768656896817824,
+      "predicted_per_token_ms": 23.381608695652176,
+      "prompt_ms": 1216.713,
+      "prompt_n": 1362,
+      "prompt_per_second": 1119.4094252301077,
+      "prompt_per_token_ms": 0.8933281938325991
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1440,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1463
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"In her 40 years living in Rochelle, Illinois, Cathy Olson had never seen a tornado that big. \\\"I saw the top of the funnel cloud, and it was absolutely massive,\\\" she said. She watched the hulking gray twister grind past her town Thursday, tearing up its fringes. Farther north, in the rural Illinois hamlet of Fairdale, one person died as a twister shredded homes and ripped trees bare of leaves and most limbs. Only the thickest branches remained standing. It was the only death reported so far in two days of tornado touchdowns. Rochelle was fortunate. But in nearby Kirkland, debris was so thick on the roads, responders searching for trapped residents could not yet assess the damage or injuries, fire officials said. On Thursday, a video surfaced on YouTube of a massive twister barreling across an open field, barely missing farmhouses and barns. Images of the funnel turned up elsewhere on social media. Multiple tornadoes ripped through the rural Midwest on Thursday. A  large and dangerous twister tore across fields in Iowa. And a twister touched down 70 miles outside of St. Louis. Eight tornadoes were reported Wednesday in Oklahoma, Kansas and Missouri, the Storm Prediction Center said. But it appears residents have been fortunate enough to come away from the terrifying weather spectacle alive. Hail stones the size of tennis balls plummeted down on Ashton, Illinois. It could have been worse as severe tornado damage dotted a path not far from the dense populations of Chicago and Rockford -- the state's third largest city.  The tornado cut a 22-mile path through Ogle County, according to disaster management coordinator Tom Richter. North of Rochelle, a tornado took away a local favorite restaurant -- Grubsteakers.  \\\"It's kind of one of your little greasy spoon restaurants,\\\" said Eric Widick, who drove up in his truck to help out. \\\"We're a community. If one person is in need, we'll all be there for them.\\\" People were inside when the storm quashed Grubsteakers and turned over a semitruck parked outside. No one was killed or seriously injured,  Widick said. Although a patron who found shelter in a restroom was trapped inside for about half an hour. People had been eating at Grubsteakers for some 25 years and will miss it, Widick said. In Rochelle, the tornado flattened some of Olson's friends' homes. A safe distance away from it, at her mother's house, she had to think about her husband, Chet, who was reelected mayor of the town of about 10,000 people the day before. He'd have a job ahead of him. \\\"I have not been able to get a hold of him, Olson said, \\\"but I know he's in touch with the sheriff and is safe,\\\" she said. Sheriff Brian VanVickle told journalists late Thursday that the tornado had spared life and limb in Ogle County aside from some people whose injuries were easily treatable. The county lost 20 homes -- one of them was his own. Fifty to 100 houses had significant damage, he said. Only foundations remained of some homes, said storm chaser Dan Gottschalk. \\\"You can hear the hissing everywhere from where the structures used to be,\\\" he said. Lindsey Clark, a reporter from CNN affiliate WREX, said rescuers were pulling trapped people from a home in the Rochelle area. VanVickle was newly elected sheriff of Rochelle on Wednesday. On Thursday, the storm took his house and his sister-in-law's. \\\"I've got the clothes on my back,\\\" he said. But his family wasn't at home when it hit. \\\"My family was on the way to Louisville, dog was in the basement and she survived.\\\" It was the first tornado the sheriff had ever seen in his county. \\\"I've lived here all my life, am the fifth generation in the county.  My mom said this is the first time she's ever seen a tornado.\\\" He is thankful that the National Weather Service warned one could come. That saved lives, he believes. The service warned of a \\\"particularly dangerous situation.\\\" People across the Midwest should be on alert for severe weather. Tornado watches were set to run out early Friday. CNN's AnneClaire Stapleton, Catherine Shoichet, Greg Botelho, Dave Alsup, Steve Almasy, Jack Maddox and Sean Morris contributed to this report.\\n\", \"original_answer\": \"On Thursday, a series of tornadoes ripped through the rural midwest of America, with one person confirmed dead in Fairdale, Illinois; this was the only reported death in two days of tornado touchdowns. Debris was so thick on the roads in nearby Kirkland that emergency responders could not yet assess the damage or injuries, according to fire officials. A video of a massive tornado surfaced on YouTube, showing it barely missing farmhouses and barns. On Wednesday, eight tornadoes were reported in Oklahoma, Kansas and Missouri. Hailstones the size of tennis balls fell on Ashton, Illinois, and there was severe tornado damage on a path not far from the densely populated cities of Chicago and Rockford. One tornado cut a 22-mile path through Ogle County. Sheriff Brian VanVickle reported that, aside from some easily treatable injuries, the tornado had spared life in Ogle County, but had destroyed 20 homes, one of which was his own and caused significant damage to 50-100 houses.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_update",
+  "source_cluster_id": "sha256:a6685aa7e5a27b02394f4f8c92c4a55144b637e4958723562cd3ffe7682b79d2",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46
+  ]
+}

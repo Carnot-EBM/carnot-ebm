@@ -1,0 +1,103 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.401781213004142,
+  "exclusion_reason": null,
+  "family_id": "sha256:e14f427cf3fb7e3a48728c0d86abbd87a80be8035e0c730c0a8257d9cfa17415",
+  "input_tokens": 828,
+  "invocation_finished_at": "2026-10-01T11:43:41.900032+00:00",
+  "invocation_started_at": "2026-10-01T11:43:40.498249+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 2,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 828,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 852
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:825622e1fffe3346342558ca615d1da37c363e0c32ee17673a63ad01c4a32429",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 2\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855021,
+    "id": "chatcmpl-HSzTVAlfd9kHlqwEoU2GfmpRg6sVHx7T",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.158,
+      "predicted_n": 24,
+      "predicted_per_second": 42.54127389844689,
+      "predicted_per_token_ms": 23.506583333333335,
+      "prompt_ms": 725.604,
+      "prompt_n": 750,
+      "prompt_per_second": 1033.6216448641408,
+      "prompt_per_token_ms": 0.9674720000000001
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 828,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 852
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:The two-toed sloth is slightly bigger than the three-toed sloth, though they share many of the same features. They are about the size of a medium-sized dog at around 23 to 27 inches (58 to 68 cm) and 17.5 to 18.75 pounds (about 8 kilograms).he two-toed sloth is slightly bigger than the three-toed sloth, though they share many of the same features. They are about the size of a medium-sized dog at around 23 to 27 inches (58 to 68 cm) and 17.5 to 18.75 pounds (about 8 kilograms).\\\\n\\\\npassage 2:1 Two-toed and three-toed sloths were formerly placed in the same family but the two genera have profound behavioral and anatomical differences and are believed to come from two different fossil lineages. 2  They are now placed in separate families. 3  2-toed is larger, faster, and nocturnal. Long limbs \u2014 forelegs only slightly longer than hind legs (3-toed sloth's forelegs are 35% longer than hind legs). 2  Two-toed sloths have hands with two functioning fingers with sharp claws 76 - 102 mm (3 - 4 inches). 3  Three-toed sloths have three fingers on their hands. 4  Three claws on hind limbs.\\\\n\\\\npassage 3:1 Besides the fact that one has two toes on its forelimbs and the other three, they have different numbers of vertebrae (three-toed ones have nine; two-toed ones have six or seven). 2  Also, Three-toed sloths have a small tail and its forelegs are substantially longer than the rear ones.ifference Between Two and Three Toed Sloths: 1  Besides the fact that one has two toes on its forelimbs and the other three, they have different numbers of vertebrae (three-toed ones have nine; two-toed ones have six or seven).\\\\n\\\\n\\\",\\\"question\\\":\\\"what makes the two toed sloth different\\\"}\", \"original_answer\": \"Based on the given passages, the main difference between the two-toed sloth and the three-toed sloth is the number of toes on their forelimbs, with the two-toed sloth having two toes and the three-toed sloth having three toes. Additionally, the two-toed sloth is larger and faster than the three-toed sloth, and has long limbs with forelegs that are only slightly longer than their hind legs. The three-toed sloth, on the other hand, has a small tail and its forelegs are substantially longer than its hind legs.\\n\\nTherefore, the answer to the question \\\"What makes the two-toed sloth different\\\" is:\\n\\n* It has two toes on its forelimbs instead of three, like the three-toed sloth.\\n* It is larger and faster than the three-toed sloth.\\n* It has long limbs with forelegs that are only slightly longer than its hind legs.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_update",
+  "source_cluster_id": "sha256:f5a27f0541da7e66ed0c1723d8b8f4c3a2346c1f05de6c3098de903fde138dfa",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ]
+}

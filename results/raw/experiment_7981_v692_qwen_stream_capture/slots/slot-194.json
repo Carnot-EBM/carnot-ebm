@@ -1,0 +1,112 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.695595202036202,
+  "exclusion_reason": null,
+  "family_id": "sha256:b6fd36fa8f83a202a6e43bd7ba495d1485be247b06142b54dac58aa66cab66df",
+  "input_tokens": 1129,
+  "invocation_finished_at": "2026-10-01T11:45:48.054368+00:00",
+  "invocation_started_at": "2026-10-01T11:45:46.358772+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1129,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1153
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:dfbf089f53872242289fca5d9b6721948cf970795a7a2209ecd17f1179c4fe52",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855148,
+    "id": "chatcmpl-ZUNRnpwbYBdbwYeLrJrdzuPYj0D6HcX6",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.128,
+      "predicted_n": 24,
+      "predicted_per_second": 42.46825497940289,
+      "predicted_per_token_ms": 23.547,
+      "prompt_ms": 1011.748,
+      "prompt_n": 1051,
+      "prompt_per_second": 1038.7962219841304,
+      "prompt_per_token_ms": 0.9626527117031399
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1129,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1153
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"2711 De La Vina St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":true,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":false,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Dive Bars, Bars, Lounges, Nightlife, Pool Halls, Sports Bars\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"10:0-2:0\\\",\\\"Monday\\\":\\\"10:0-2:0\\\",\\\"Saturday\\\":\\\"10:0-2:0\\\",\\\"Sunday\\\":\\\"10:0-2:0\\\",\\\"Thursday\\\":\\\"10:0-2:0\\\",\\\"Tuesday\\\":\\\"10:0-2:0\\\",\\\"Wednesday\\\":\\\"10:0-2:0\\\"},\\\"name\\\":\\\"De La Vina Lounge\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-05-18 05:56:58\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Alice is a saint! Loved finding this gem in Santa Barbara. Enjoy the family vibes when you enter.\\\"},{\\\"review_date\\\":\\\"2021-05-12 05:17:30\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I really hate updating reviews.   First impressions, right??  But in the case of Jimboz, how could I not. I don't want to call myself a regular because honestly I have never been there at 10am for The Price Is Right and never make it more than once in a week.  But I will say I'm a huge fan!  I usually go on Tuesdays which is officially \\\\\\\"Ladies Night\\\\\\\".  But Alice is always working and treats me like her bestie!!! Nobody pours a Grand Mariner better than Alice.   What?  They do fancy???   Hell Yes!!  Premium tequilas, good Bourbon, they have it.... but most of all you feel at home, they have very welcoming regulars.   If someone is doing a food run, you will probably be included.   Isn't that what a neighborhood bar should be about??\\\"},{\\\"review_date\\\":\\\"2021-04-15 23:35:01\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Sometimes YOU \\\\\\\"get what YOU pay for\\\\\\\" & sometimes YOU get just WHAT you're looking for...!  Especially if it is that \\\\\\\"throwback\\\\\\\" friendly \\\\\\\"tavern\\\\\\\" of Ol'!  That The \\\\\\\"dufas hipsters\\\\\\\" like to refer as a \\\\\\\"dive bar\\\\\\\", because they have NO reference points in their own generation!\\\\n\\\\nAnyway if YOU are looking for a small, intimate NO FRILLS, friendly lil' place to \\\\\\\"toss back a few\\\\\\\" w/ your friends and/or solo THIS should be on your \\\\\\\"go to LIST\\\\\\\"...!!!\\\\n\\\\nPlenty of GOOD restaurants within in walking distance...\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Sure! Here's an objective overview of De La Vina Lounge based on the provided structured data in JSON format:\\n\\nDe La Vina Lounge is a dive bar located in Santa Barbara, California, offering a relaxed and intimate atmosphere with friendly service. The bar has a rating of 4.0 stars and is known for its family-friendly vibe and welcoming regulars. According to reviews, the bar offers premium tequilas and good bourbon, and the bartenders are knowledgeable and attentive. The bar also features pool tables and is a popular spot for locals, with regular events and activities such as trivia nights and live music. Customers praise the bar's laid-back atmosphere and the fact that it feels like a true neighborhood bar, with regulars who make visitors feel like part of the community. Some reviewers mention that the bar has a retro or throwback vibe, with one reviewer describing it as a \\\"tavern\\\" that is \\\"not fancy.\\\" Overall, De La Vina Lounge appears to be a popular spot for those looking for a casual, friendly bar experience in Santa Barbara.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_admission",
+  "source_cluster_id": "sha256:e3ef25ffaa3b788087487d35967f7cc4ad4808d796c203d22f4963956c21c8af",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18
+  ]
+}

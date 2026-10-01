@@ -1,0 +1,103 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.3894351640483364,
+  "exclusion_reason": null,
+  "family_id": "sha256:1a2a4e1e56f0b758daae91eea40080a91f4e1bc988c8eeb44d11910eaecc50f6",
+  "input_tokens": 750,
+  "invocation_finished_at": "2026-10-01T11:43:37.974695+00:00",
+  "invocation_started_at": "2026-10-01T11:43:36.585258+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 750,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 774
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:7dfdec2dc0a8b8c13460fbdc662d96a75a3538f5e17919cde17ee921b3286d76",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855017,
+    "id": "chatcmpl-4cs2LfJVhCrLMrgaHJQQypHcgFc5Qakg",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 570.44,
+      "predicted_n": 24,
+      "predicted_per_second": 42.07278591964098,
+      "predicted_per_token_ms": 23.768333333333334,
+      "prompt_ms": 670.924,
+      "prompt_n": 672,
+      "prompt_per_second": 1001.6037583988649,
+      "prompt_per_token_ms": 0.9983988095238094
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 750,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 774
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Gelish Soak Off Gel Nail Polish is a unique formula that lasts up to 21 days on natural nails and the application out performs other Soak Off Gel Polishes.Excellent coverage with quick and accurate cure times, and a easy removal process. Special designed color pigments create the ultimate in Soak Off Gel Polish.elish Soak Off Gel Nail Polish is a unique formula that lasts up to 21 days on natural nails and the application out performs other Soak Off Gel Polishes.\\\\n\\\\npassage 2:1 This helps break through the top coat to allow the remover to penetrate the layers of polish below. 2  Soak a cotton ball with the acetone remover and place it on one of the fingernails. 3  Wrap the finger with the cotton ball in foil, and squeeze it nice and tight so that the cotton ball stays in contact with the nail. Remove the foil from one finger. ( 2 You should be able to visibly see the polish coming loose from the edges of the nail.) Push the polish off of the nail using your orange stick or cuticle pusher. 3  Don\u2019t use anything too sharp or you could remove the top layer of your nail. 4  Repeat this step for each nail.\\\\n\\\\npassage 3:Gelish. Gelish\u00ae Soak-Off Gel Polish applies like polish and cures in a LED lamp in 30 seconds, or 2 minutes in traditional UV lamps.elish stays on nails for up to 3 weeks with no chipping or peeling, and soaks completely off in only 10 - 15 minutes. Gelish\u00ae Soak-Off Gel-Polish Application & Removal Gelish\u00ae Gel-Polish Application & Removal.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to soak off gel polish\\\"}\", \"original_answer\": \"To soak off gel polish, you can follow these steps:\\n\\n1. Gather materials: a bottle of acetone remover, cotton balls, aluminum foil, and an orange stick or cuticle pusher.\\n2. Place a cotton ball soaked with acetone remover onto one of your fingernails.\\n3. Wrap the finger with the cotton ball in foil and squeeze it tightly to keep it in contact with the nail.\\n4. Remove the foil from the finger and push the polish off the nail using the orange stick or cuticle pusher.\\n5. Repeat this step for each of your nails.\\n6. Allow the remaining polish to soak off naturally by leaving the nails in warm water and wrapping them with moisturizer.\\n7. Once all the polish has been removed, wash and dry your hands thoroughly.\\n\\nNote: It's important to follow these instructions carefully and avoid cutting the nails too short. If any polish remains on the nails after soaking, it may damage the skin beneath the nail.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_admission",
+  "source_cluster_id": "sha256:b600a7e3377cbbb4f4eff4a18a5dd619ed6e2296cbb9462be73febac6bd5b651",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ]
+}

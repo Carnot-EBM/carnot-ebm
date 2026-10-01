@@ -1,0 +1,109 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.3149054319947027,
+  "exclusion_reason": null,
+  "family_id": "sha256:d0872cf4d2975269f7f684c4d92ae353b258fb0b661041196f2a91663fda427f",
+  "input_tokens": 693,
+  "invocation_finished_at": "2026-10-01T11:46:05.896541+00:00",
+  "invocation_started_at": "2026-10-01T11:46:04.581634+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 1,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 693,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 717
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:e996d75bccb6ae2fbce7eb500d2be46e2e5ae617bd93e5edd11f62804993589a",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 1\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855165,
+    "id": "chatcmpl-Jkd4VyT483KkPNwRjdTti1jyn3sJW6vY",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.068,
+      "predicted_n": 24,
+      "predicted_per_second": 42.5480615812278,
+      "predicted_per_token_ms": 23.50283333333333,
+      "prompt_ms": 628.597,
+      "prompt_n": 615,
+      "prompt_per_second": 978.3692890675585,
+      "prompt_per_token_ms": 1.0221089430894308
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 693,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 717
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Ebersole Rocks. Ebersole Rocks has been in business since 1954. We are family run store and have always been located in Wichita Kansas. We specialize in Cabochons and Jewelry Mountings such as pendants, bracelets, belt buckles and bolo slides . Take advantage of our store liquidation today!\\\\n\\\\npassage 2:Place the hangers \u00bc-inch down from the top edge and 8 inches apart. Hang the finished belt buckle rack on the wall. Sit a belt buckle inside each frame. Place the belt buckle at an angle, leaning the back of the buckle against the back of the frame. The small lip on the front of each frame will prevent the buckle from sliding out of the holder. Adjust the size of the shadow box frames to accommodate the belt buckle size.\\\\n\\\\npassage 3:Back. 1  Display Case Wall Cabinet Shadow Box for Belt Buckle Collection, BC02-BL. 4.4 out of 5 stars 10. 2  3 Belt Buckle Display Case Wall Cabinet, with door to prevent Dust and Protect, BCLC01-MA. 3.0 out of 5 stars 2. 3  Belt Buckle Display Case. 3.0 out of 5 stars  2.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to mount & display belt buckles\\\"}\", \"original_answer\": \"Based on the given passages, here is how you can mount and display belt buckles:\\n\\n1. Use shadow box frames to create a belt buckle display rack.\\n2. Place the belt buckles at an angle, leaning the back of the buckle against the back of the frame.\\n3. Use a door to prevent dust and protect the belt buckles.\\n\\nHere are some specific product recommendations based on the passages:\\n\\n1. Ebersole Rocks offers cabochons and jewelry mountings, including belt buckles and bolo slides.\\n2. You can use shadow box frames to display your belt buckle collection, with adjustable sizes to accommodate different buckle sizes.\\n3. There are various options for displaying belt buckles, including cabinet display cases with doors to prevent dust and protect the buckles.\\n\\nHowever, the passages do not provide specific instructions on how to actually mount or display the belt buckles within the shadow box frames or display cases. Therefore, I am unable to provide more detailed guidance on this aspect of the question.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_update",
+  "source_cluster_id": "sha256:84b60a10bdb9b9c081a461c72dbc04fae6ab3ae95ef5cc23df6187c182203d9a",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ]
+}

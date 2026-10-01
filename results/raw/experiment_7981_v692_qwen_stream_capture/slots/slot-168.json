@@ -1,0 +1,104 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.5529206939972937,
+  "exclusion_reason": null,
+  "family_id": "sha256:86942de8adc2329f2427d2583c05ebae14ad4803da9725361f3325edda86b48a",
+  "input_tokens": 946,
+  "invocation_finished_at": "2026-10-01T11:45:09.564631+00:00",
+  "invocation_started_at": "2026-10-01T11:45:08.011710+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 946,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 970
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:bbd01cb10cd84378e7a0ae0eea95bf241663dfbd9453e13967fe65af1f9ecf1c",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855109,
+    "id": "chatcmpl-ZngXbyQS1FehnXbkUOOdFOwl9dOYyArx",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.743,
+      "predicted_n": 24,
+      "predicted_per_second": 42.49720669401834,
+      "predicted_per_token_ms": 23.530958333333334,
+      "prompt_ms": 873.807,
+      "prompt_n": 868,
+      "prompt_per_second": 993.3543677265117,
+      "prompt_per_token_ms": 1.0066900921658986
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 946,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 970
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"521 Firestone Rd\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Nightlife, Restaurants, Steakhouses, Bars, American (Traditional)\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"8:0-22:0\\\",\\\"Monday\\\":\\\"8:0-21:0\\\",\\\"Saturday\\\":\\\"7:0-22:0\\\",\\\"Sunday\\\":\\\"7:0-21:0\\\",\\\"Thursday\\\":\\\"8:0-21:0\\\",\\\"Tuesday\\\":\\\"8:0-21:0\\\",\\\"Wednesday\\\":\\\"8:0-21:0\\\"},\\\"name\\\":\\\"Flightline Restaurant\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2020-01-29 04:58:09\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"Very mediocre. Everything just seemed blah, pictures on menu just didn't look good. Getting nachos from a local sitdown restaurant in SB shouldn't be made with canned nacho cheese sauce. Place just had a weird vibe, not surprised it was struggling, it showed in the attitude of their employees and feel of the atmosphere.\\\"},{\\\"review_date\\\":\\\"2019-08-23 21:20:01\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"The food was good. (two stars here)\\\\nDid not offer us to choose where we want to be seated. (The place was virtually empty). (no star here)\\\\nThe waiter brought the wrong drink. (no start here)\\\\nExtremely slow service. (no stars here)\\\\n\\\\nThe total is two stars.\\\\n\\\\nThe following is not a complain it is just some facts:\\\\nOutside the place is noisy (from planes).\\\\nAs well some weird smells ( a mixture of oil and smoke).\\\"},{\\\"review_date\\\":\\\"2019-08-23 01:45:27\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Great apple pecan chicken salad, large more then you need. New name coming as flight line airport grill and now a update the city of SB is trying to get out of the lease as they signed a 22 year lease with High Sierra and now that they are selling and had the option to transfer the lease the city is backing out and wants the new business out. Poor city management.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Flightline Restaurant is a nightlife, restaurant, steakhouse, bar, and American traditional eatery located in Goleta, CA. According to customer reviews, the restaurant has a peculiar ambiance and provides mediocre service. While some customers have praised certain meals, such as the apple pecan chicken salad, others have complained about the quality of the cuisine and the service. Furthermore, some consumers have noted that the location has a strange vibe, and the personnel appears uninterested. The restaurant offers outdoor sitting, free Wi-Fi, and takeaway alternatives and is suitable for groups. It also has handicapped accessibility. Despite some favorable remarks, the restaurant gets a 3.5-star rating, indicating it needs help. Customers have expressed dissatisfaction with specific parts of their experience, such as the quality of the food, the service, and the overall ambiance.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "sha256:a33cfef1e2215aa7c92f74f746e241f70ad26d200567f38ff5adee187b1ac6ad",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ]
+}

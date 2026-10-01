@@ -1,0 +1,100 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.1716501920018345,
+  "exclusion_reason": null,
+  "family_id": "sha256:560f43b4bde8d76a26529d2c0fea39ab637e3bac69b22d2a01e77018b2e5719a",
+  "input_tokens": 582,
+  "invocation_finished_at": "2026-10-01T11:44:56.731191+00:00",
+  "invocation_started_at": "2026-10-01T11:44:55.559541+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 582,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 603
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:b51a9f88b5940a7b59eb971da9ca09b540e75a4a6ff0cc4d87acbb3911e93077",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855096,
+    "id": "chatcmpl-6TnkbOohKcsbU05jxB8QzpMBaCr29mTN",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 491.429,
+      "predicted_n": 21,
+      "predicted_per_second": 42.732520872801565,
+      "predicted_per_token_ms": 23.40138095238095,
+      "prompt_ms": 533.954,
+      "prompt_n": 504,
+      "prompt_per_second": 943.901534589122,
+      "prompt_per_token_ms": 1.0594325396825395
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 582,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 603
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"5114 Hollister Ave\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":null,\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":null},\\\"business_stars\\\":5.0,\\\"categories\\\":\\\"Nightlife, Cocktail Bars, Bars, Sports Bars\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":null,\\\"name\\\":\\\"Notown Tavern\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-12-19 22:34:38\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Great sit in town not anything like the Monty's of old. Friendly atmosphere and good value for a neighborhood bar.\\\"},{\\\"review_date\\\":\\\"2021-11-13 06:14:07\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Nicely renovated place, great prices and vibe.   Full bar with 2 pool tables.  Used to be Monty's next to now closed Woody's BBQ ( now The Timbers in Goleta). .\\\"},{\\\"review_date\\\":\\\"2021-11-05 03:47:51\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Jill is the best!   Love this place - great place, great prices and great vibe. \\\\n\\\\nGreat Mexican food next door and you can eat here!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Notown Tavern is a popular nightlife spot in Santa Barbara, California, offering a cozy and friendly atmosphere with good value and a full bar. Reviewers have praised the nicely renovated interior, low prices, and lively vibe. While it may not be as well-known as some other bars in the area, it has established itself as a go-to destination for a fun night out. The establishment is open late and offers a variety of amenities, including pool tables and good Mexican food nearby. Overall, Notown Tavern receives high marks from customers, earning a rating of 5.0 stars.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_update",
+  "source_cluster_id": "sha256:b829ffdb93b53781a34a5427c4ca932f441df25511fded7ad58d0bc80ba9951c",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ]
+}

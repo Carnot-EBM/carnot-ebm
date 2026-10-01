@@ -1,0 +1,110 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.2783429580158554,
+  "exclusion_reason": null,
+  "family_id": "sha256:90b6168c122e559d2ab43beda1fe8f2cc6bc0465fbb0916c17f0564b0863e666",
+  "input_tokens": 685,
+  "invocation_finished_at": "2026-10-01T11:45:41.296936+00:00",
+  "invocation_started_at": "2026-10-01T11:45:40.018591+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 685,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 708
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:d711d380d12fe862c30a2fb38909b58bb80e5c8393bc9bd8a4e31102b4bef7c5",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855141,
+    "id": "chatcmpl-K8Sliz8qVa4KXcTAJKnHWBe9TykEtFHV",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 539.861,
+      "predicted_n": 23,
+      "predicted_per_second": 42.603559064277654,
+      "predicted_per_token_ms": 23.472217391304348,
+      "prompt_ms": 620.248,
+      "prompt_n": 607,
+      "prompt_per_second": 978.6408017438185,
+      "prompt_per_token_ms": 1.0218253706754532
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 685,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 708
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Governor Hobbs' Secret Washington Trip to Talk about the Migrant Crisis\\nLast week, there was a lot of concern about what was going on with Arizona Governor Katie Hobbs. She suddenly put in a request that her state secretary was the acting governor.\\nThe media was concerned about what happened with Governor Hobbs as news broke that State Secretary Kimberly Yee was the acting governor.\\nNow that Governor Hobbs is back in office, news broke that she was meeting with Department of Homeland Security Secretary Alejandro Mayorkas. She discussed with him the migrant situation that Arizona was facing last Thursday, September 28.\\nShe returned that evening to meet with President Joe Biden who was visiting Arizona again.\\nBut while Governor Hobbs was in D.C., she wanted support as U.S. Customs and Border Protection was releasing about 100 to 200 migrants onto the streets of Arizonaaccording to NBC News.\\nGovernor Hobbs said according to The Center Square:\\n\\\"I shared how frustrated we were that that happened. They're pulling people away from their jobs to deal with the flow of migrants, and we had very little communication about it. He committed to doing better at the communication part, letting us know more ahead of time. We have assurances that they're working to fill positions, and that's what we need.\\\"\\nAfter Governor Hobbs came into office this year, she wanted to do things differently than her predecessor, Governor Doug Ducey.\\nWith the container wall down, she wanted to rely more on the Biden administration and Congress to get things done to help migrants who crossed the border. One thing she didn\u2019t change from Ducey\u2019s administration was sending migrants out of state.\\nThe only difference was that she sent migrants where they wanted to go. Mayor Hobbs gave migrants a choice.\\nDo you think Governor Hobbs is doing enough to curb the migrant crisis?\", \"original_answer\": \"Here is a summary of the news in 77 words:\\n\\nArizona Governor Katie Hobbs traveled to Washington D.C. to meet with Department of Homeland Security Secretary Alejandro Mayorkas to discuss the migrant crisis in Arizona. She expressed frustration with U.S. Customs and Border Protection releasing migrants onto the streets without proper communication. Mayorkas committed to improving communication and filling positions. Governor Hobbs has continued to send migrants out of state, but now gives them a choice of where they want to go. Some question if her efforts are enough to address the crisis.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "sha256:577483ff87e7f56c5eb3b4cf072eec7149453e794788ec8843f2d83072ac29a6",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+  ]
+}

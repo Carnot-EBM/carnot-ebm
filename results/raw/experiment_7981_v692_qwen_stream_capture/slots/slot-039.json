@@ -1,0 +1,94 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.2126911119557917,
+  "exclusion_reason": null,
+  "family_id": "sha256:1f45db862f9cf19bb5cf2bc1100b239b2a2bb2e1389494c6c637828a5e6956da",
+  "input_tokens": 541,
+  "invocation_finished_at": "2026-10-01T11:42:05.252136+00:00",
+  "invocation_started_at": "2026-10-01T11:42:04.039444+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 541,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 566
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:2fdf4d3415f58f8f462112f43a99a01a7e227db954db2b244ffd45fb958f5685",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790854925,
+    "id": "chatcmpl-VGAObz6GSJTwyqEezRYsevZEbYHNvtOF",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 581.912,
+      "predicted_n": 25,
+      "predicted_per_second": 42.96182240613701,
+      "predicted_per_token_ms": 23.276480000000003,
+      "prompt_ms": 513.361,
+      "prompt_n": 463,
+      "prompt_per_second": 901.8994430819638,
+      "prompt_per_token_ms": 1.1087710583153347
+    },
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 541,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 566
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:On a conventional 120-volt two pronged electrical outlet that accepts grounded plugs (two prongs plus the rounded center ground connector prong), your circuit will have three wires: 1  The white neutral wire-this wire is connected to the silver screw on the electrical receptacle, often labeled neutral or white.\\\\n\\\\npassage 2:Anon, the electrical circuit that powers an outlet plug or receptacle is connected, usually through building walls, ceilings, or floors, from the first receptacle in the particular series back to a fuse or circuit breaker connection in the electrical panel.\\\\n\\\\npassage 3:Boxes are intended to be installed so that the surface area of individual boxes does not exceed 16 square inches, and the aggregate surface area of the boxes does not exceed 100 square inches per 100 square feet of surface area.\\\\n\\\\n\\\",\\\"question\\\":\\\"details for installing electrical receptacles in a shaft wall\\\"}\", \"original_answer\": \"To install electrical receptacles in a shaft wall, the circuit will typically follow the same basic steps as installing any other electrical receptacle. The circuit will be powered by a power source such as a generator or solar panel, and it will be connected to the electrical receptacles through building walls, ceilings, or floors. The electrical receptacles will be wired with three wires: the white neutral wire, which is connected to the silver screw on the receptacle, often labeled \\\"neutral\\\" or \\\"white\\\"; the red hot wire, which is connected to the brass screw on the receptacle; and the black ground wire, which is connected to the green or bare copper ground screw on the receptacle. The boxes used for the electrical connections should follow industry standards and not exceed certain surface area limits. For example, individual boxes should not exceed 16 square inches, and the aggregate surface area of all boxes combined per 100 square feet of surface area should not exceed 100 square inches.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "sha256:20a8349c57f17f6bb12b0c4ed40cea32b29fe466a18cf374ab7816d15bf2e5df",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0
+  ]
+}

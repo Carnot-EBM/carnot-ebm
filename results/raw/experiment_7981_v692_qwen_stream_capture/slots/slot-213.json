@@ -1,0 +1,107 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.7159840399981476,
+  "exclusion_reason": null,
+  "family_id": "sha256:e3a6a815017449246b9e94f1634da2899624bb5fbeb352bc542c9d9e441a859e",
+  "input_tokens": 1118,
+  "invocation_finished_at": "2026-10-01T11:46:15.171468+00:00",
+  "invocation_started_at": "2026-10-01T11:46:13.455482+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1118,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1142
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:f1ee4e42e2a8d43261ed5f82f16b14483ec1b54b09a5ed7f23d4b7451ca526f1",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855175,
+    "id": "chatcmpl-JdqubSwWMr46d0KdcAPjYOaGwAJDbt2c",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.05,
+      "predicted_n": 24,
+      "predicted_per_second": 42.47411733474914,
+      "predicted_per_token_ms": 23.54375,
+      "prompt_ms": 1010.505,
+      "prompt_n": 1040,
+      "prompt_per_second": 1029.1883761089753,
+      "prompt_per_token_ms": 0.9716394230769231
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1118,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1142
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"126 E Canon Perdido St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Food, Restaurants, Delis, Event Planning & Services, Caterers, Sandwiches\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"10:30-15:0\\\",\\\"Monday\\\":\\\"10:30-15:0\\\",\\\"Saturday\\\":\\\"9:30-15:0\\\",\\\"Thursday\\\":\\\"10:30-15:0\\\",\\\"Tuesday\\\":\\\"10:30-15:0\\\",\\\"Wednesday\\\":\\\"10:30-15:0\\\"},\\\"name\\\":\\\"Three Pickles Subs and Sandwiches\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-12-15 22:39:52\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"I love pickles, so I definitely appreciate a pickles-forward sandwich shop. Three Pickles offers, true to its name, three varieties of pickles: spears, slices, and pepperoncini, all available gratis at a pickle bar, which is something I'd love to see wherever sandwiches are sold.\\\\n\\\\nWe met up with friends at the park the day before Thanksgiving and ordered sandwiches (and pickles) to pick up for a picnic lunch. Our friends ordered and we picked up, and both parts of the process seemed fast and easy enough.\\\\n\\\\nI ordered the house sub with Italian cold cuts. The \\\\\\\"sub our way\\\\\\\" came on a roll with diced tomato, onion, dill pickle, olive oil, oregano, mayo, choice of mustard, and choice of cheese, with a few optional add-ons. I picked dijon and provolone and added the pepperoncini and giardiniera (both free), as well as avocado. I got the regular size, which was smaller than I expected but plenty for one meal and about right for $9.50, though the $1.99 for the pitiable amount of avocado was a rip-off. The sandwich was good, if not especially exciting, and I enjoyed it with lots of pickled pepperoncini.\\\\n\\\\nI'd recommend Three Pickles if you're in the mood for a sandwich with lots of pickles. I am often in this mood, so I'll probably order from here again.\\\"},{\\\"review_date\\\":\\\"2021-12-03 20:39:41\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"The food's good but they way overcharge on DoorDash! $14.70 For a tiny sandwich and they didn't give me the pickle pack I ordered $3.50... never again.\\\"},{\\\"review_date\\\":\\\"2021-10-30 21:10:47\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Just looking for a quick sandwich late lunch. Went in around 2pm on a Saturday. Quick service, place looked very clean. Rubin sandwich was delicious! Would definitely go back.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Sure! Here's an objective overview of Three Pickles Subs and Sandwiches based on the provided structured data in JSON format:\\n\\nThree Pickles Subs and Sandwiches is a local restaurant in Santa Barbara, California that specializes in sandwiches and delis. With an average rating of 4.2 out of 5 stars based on three customer reviews, the restaurant offers a variety of pickles and sandwich options, including the popular house sub with Italian cold cuts, as well as outdoor seating and takeout services. Customers have praised the restaurant's quick service, cleanliness, and delicious sandwiches, with one reviewer specifically highlighting the abundance of pickles available. However, one customer noted that the prices on DoorDash were too high and another reviewer expressed disappointment with the small size of their sandwich. Overall, Three Pickles Subs and Sandwiches seems to be a solid option for those looking for tasty sandwiches and a casual dining experience in Santa Barbara.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_update",
+  "source_cluster_id": "sha256:98ae62de9f3d932239a853ec90e2b1d58bdc2f50dad9607b3741600769cefd2f",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ]
+}

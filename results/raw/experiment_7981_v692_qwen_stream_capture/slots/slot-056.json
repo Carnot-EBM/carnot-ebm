@@ -1,0 +1,106 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.219224666012451,
+  "exclusion_reason": null,
+  "family_id": "sha256:98aa9cf44d0ef0d1199a6a851f54270fc0545edf07194c514e0528387352da36",
+  "input_tokens": 545,
+  "invocation_finished_at": "2026-10-01T11:42:28.014828+00:00",
+  "invocation_started_at": "2026-10-01T11:42:26.795603+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 10,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 545,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 570
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:42c34072850890131d794de7b70731d981962671bdec27d9d064a1cc64a6a229",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 10\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790854948,
+    "id": "chatcmpl-eRE5AhH8dFQCKk0GBjb9bYLK8yU22q5L",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 584.467,
+      "predicted_n": 25,
+      "predicted_per_second": 42.774014615025315,
+      "predicted_per_token_ms": 23.37868,
+      "prompt_ms": 518.789,
+      "prompt_n": 467,
+      "prompt_per_second": 900.1732881768888,
+      "prompt_per_token_ms": 1.11089721627409
+    },
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 545,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 570
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:But these drugs don\u2019t work at all against viruses, such as those that cause colds or flu. Unfortunately, many antibiotics prescribed to people and to animals are unnecessary. And the overuse and misuse of antibiotics helps to create drug-resistant bacteria. Here\u2019s how that might happen. When used properly, antibiotics can help destroy disease-causing bacteria.\\\\n\\\\npassage 2:If an antibiotic is taken when it\u2019s not really needed, the patient risks suffering side effects without receiving any benefit from that medication. The overuse of antibiotics can cause a patient to develop an infection of the colon called Clostridium difficile (or C. diff for short). This infection can occur when the antibiotic kills all the good bacteria, along with the bad, and leaving only C. diff behind to cause an infection. Overuse of antibiotics can also lead to antibiotic resistance, perhaps the most worrisome consequence. When bacteria are exposed to antibiotics, they can develop mutations which cause the antibiotic to no longer work against those bacteria.\\\\n\\\\npassage 3:Antibiotics are medications that treat an infection caused by bacteria. They do not treat infections caused by a virus or fungus. The discovery of penicillin in the 1940\u2019s was a huge step forward for modern medicine, as doctors now have medications to treat infectious diseases that would otherwise have killed a patient.\\\\n\\\\n\\\",\\\"question\\\":\\\"what is the concern with overuse of antibiotics\\\"}\", \"original_answer\": \"The concern with overuse of antibiotics is that it can contribute to the development of drug-resistant bacteria. This happens when bacteria are exposed to antibiotics unnecessarily or inappropriately, leading to the development of mutations that render the antibiotics ineffective against those bacteria. Additionally, overuse of antibiotics can cause side effects and increase the risk of developing infections such as Clostridium difficile.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_admission",
+  "source_cluster_id": "sha256:5b96c877a9ecd79180c2a42e8f7bb064919b0604da4842e629ab5583f6322fee",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ]
+}

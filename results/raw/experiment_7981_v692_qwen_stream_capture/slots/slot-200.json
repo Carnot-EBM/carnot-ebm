@@ -1,0 +1,103 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.1810400219983421,
+  "exclusion_reason": null,
+  "family_id": "sha256:edb75becdf351c57c6da290facc95dbffae465cb48a624c08e9129f6f59d197f",
+  "input_tokens": 609,
+  "invocation_finished_at": "2026-10-01T11:45:54.845624+00:00",
+  "invocation_started_at": "2026-10-01T11:45:53.664581+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 609,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 630
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:e35c9cf858a8e84f1cce12c7ca44ad313a84b91797a8400891c19d34473017dd",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"unsupported_probability\": 0.0,\n\"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855154,
+    "id": "chatcmpl-YU2RQxq8Gk40rK7iA8QyhcIZ1ypXif4V",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 491.034,
+      "predicted_n": 21,
+      "predicted_per_second": 42.76689597868987,
+      "predicted_per_token_ms": 23.382571428571428,
+      "prompt_ms": 573.523,
+      "prompt_n": 531,
+      "prompt_per_second": 925.8565044470754,
+      "prompt_per_token_ms": 1.080080979284369
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 609,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 630
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Instructions. 1  Cut the cauliflower into large pieces: Cut the head of cauliflower into quarters, then trim out the inner core from each quarter. Break apart the cauliflower into large florets with your hands. 2  Transfer the cauliflower to a food processor: Transfer the cauliflower to a food processor.\\\\n\\\\npassage 2:Cauliflower Rice is a rice substitution that is so amazing, surprising delicious, very easy to make, low calorie, gluten free, and diabetic friendly. It can be eaten as a side alone or as a base for dishes like stir-fries or curries. My husband was actually pleasantly surprised how delicious it is.\\\\n\\\\npassage 3:Cooking cauliflower couscous: Cooking makes the cauliflower more tender and rice-like. Warm a tablespoon of olive oil or butter in a large skillet over medium heat. Stir in the couscous and sprinkle with a little salt. Cover the skillet and cook for 5 to 8 minutes, until the couscous is as tender as you like. Use or serve immediately, or refrigerate the couscous for up to a week.\\\\n\\\\n\\\",\\\"question\\\":\\\"how do you cook cauliflower\\\"}\", \"original_answer\": \"Based on the given passages, here's how you can cook cauliflower:\\n\\nPassage 1:\\n\\n1. Cut the cauliflower into large pieces by cutting the head into quarters, then trimming out the inner core from each quarter.\\n2. Break apart the cauliflower into large florets with your hands.\\n\\nPassage 2:\\n\\nYou can cook cauliflower as a rice substitute by transferring it to a food processor.\\n\\nPassage 3:\\n\\nTo cook cauliflower couscous, warm a tablespoon of olive oil or butter in a large skillet over medium heat. Stir in the couscous and sprinkle with a little salt. Cover the skillet and cook for 5 to 8 minutes, until the couscous is as tender as you like.\\n\\nTherefore, to cook cauliflower, you need to cut it into large pieces, break it apart into florets, and then cook it using one of the methods mentioned in Passage 2 or Passage 3.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_update",
+  "source_cluster_id": "sha256:def3d50253461b8817fcc093d8c325b9943af91bf310abd661675d14f34884f7",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ]
+}

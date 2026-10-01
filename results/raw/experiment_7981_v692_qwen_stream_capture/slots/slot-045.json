@@ -1,0 +1,111 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.591807023040019,
+  "exclusion_reason": null,
+  "family_id": "sha256:1299fecfce656320cb911ebdebfbea223d01dcf34a6a320aa1ef9ed8024f3ff4",
+  "input_tokens": 1004,
+  "invocation_finished_at": "2026-10-01T11:42:12.356887+00:00",
+  "invocation_started_at": "2026-10-01T11:42:10.765079+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1004,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1028
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:37ecbd24febfb1daa31c595e2610e7fa04190378677d74adea1373228ab9a3a5",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790854932,
+    "id": "chatcmpl-4SEI8xCRKs3WEoHDmYSqPIRZLVmxOLy0",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 566.637,
+      "predicted_n": 24,
+      "predicted_per_second": 42.35515859359696,
+      "predicted_per_token_ms": 23.609875,
+      "prompt_ms": 907.995,
+      "prompt_n": 926,
+      "prompt_per_second": 1019.8294043469402,
+      "prompt_per_token_ms": 0.9805561555075594
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1004,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1028
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"23 E Canon Perdido St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":true,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":true,\\\"validated\\\":false},\\\"Music\\\":true,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Wine Tasting Room, Jazz & Blues, Tapas Bars, Wineries, Food, Wine Bars, Champagne Bars, Music Venues, Arts & Entertainment, Restaurants, Bakeries, Bars, Nightlife\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"15:0-20:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"15:0-20:0\\\",\\\"Sunday\\\":\\\"12:0-20:0\\\",\\\"Thursday\\\":\\\"12:0-20:0\\\",\\\"Wednesday\\\":\\\"12:0-20:0\\\"},\\\"name\\\":\\\"Sevtap Winery Tasting Room\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-12-23 21:10:06\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I had the Clay Pot Shrimp W/ Chorizo. It was awesome.  It came with a beautiful fresh loaf of bread that you \\\\ncan buy separately.  I would courage you to try this place out.\\\"},{\\\"review_date\\\":\\\"2021-12-11 16:04:18\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Sevtap is great! They're in an awesome location with a convenient parking garage right nearby. They have options for indoor or outdoor seating. The staff are super helpful and gave us the option to try some wines before committing to a bottle to order. We opted for the Rh\u00f4ne Blend and it was so good! We also ordered the turnips to share and omg, so delicious! They brought out a bread basket that paired so well with the wine. Such a fun spot to meet up with people. I definitely recommend!\\\"},{\\\"review_date\\\":\\\"2021-12-06 00:43:22\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Great food and wonderful service. We've been to Spain and know authentic tapas, Sevtap has done a great, delicious job replicating and then adding their own spin to traditional tapas. The house wine is good too. Highly recommend. Ask for the owner, he's very friendly. We came from the Bay Area and had an early dinner with our kids and the owner was very hospitable. Come by and check it out!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Based on the provided structured data, here is an objective overview of Sevtap Winery Tasting Room:\\n\\nSevtap Winery Tasting Room is a popular destination in Santa Barbara, California, offering a unique blend of wine tasting, jazz music, and Spanish tapas. With a rating of 4.0 stars and a convivial atmosphere, this tasting room is a must-visit for wine enthusiasts and foodies alike. Located in the heart of downtown Santa Barbara, the tasting room offers ample parking options, including a convenient garage just steps away. Guests can enjoy a variety of wines by the glass or by the bottle, along with an array of delicious tapas made fresh daily. The tasting room is open seven days a week, with extended hours on weekends. Visitors rave about the friendly staff, excellent wine selection, and cozy atmosphere, making Sevtap Winery Tasting Room a standout destination in the area.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_update",
+  "source_cluster_id": "sha256:f63711fe894c049a5b037f2622973bc7335fe5f23a0210a7cde924c83fbacc4e",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17
+  ]
+}

@@ -1,0 +1,100 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.207190781016834,
+  "exclusion_reason": null,
+  "family_id": "sha256:2c9724f778f814231ca4d57a82cbd7923eaba165ad3185ea4e8ee7c61f4ccb0e",
+  "input_tokens": 558,
+  "invocation_finished_at": "2026-10-01T11:43:57.866482+00:00",
+  "invocation_started_at": "2026-10-01T11:43:56.659289+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 3,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 558,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 582
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:912a62f98f49ee9b0e45fb16bf84551f4e1a31d9c2bce2f691961c261f4356c2",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 3\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855037,
+    "id": "chatcmpl-quM5Ds5f5PakTo5QsVV6yW57Utz5zNjA",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 563.932,
+      "predicted_n": 24,
+      "predicted_per_second": 42.55832263464389,
+      "predicted_per_token_ms": 23.49716666666667,
+      "prompt_ms": 527.303,
+      "prompt_n": 480,
+      "prompt_per_second": 910.2925642372602,
+      "prompt_per_token_ms": 1.0985479166666667
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 558,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 582
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:The NCAA College World Series is final two rounds of the NCAA Division I baseball tournament.<br />Before the tournament begins, 16 sites (usually on the campuses of baseball teams that are certain to be selected to participate in the tournament) are selected to host Regional Tournaments.\\\\n\\\\npassage 2:This is a best-of-three series, with games on Monday, Tuesday, and (if necessary) Wednesday. The winner of this series is the College World Series Champion, aka National Champion. The College World Series and NCAA baseball tournament were not always formatted this way.\\\\n\\\\npassage 3:The College World Series can be broken down into two stages: the group stage and the finals. In the group stage, the eight teams are split into two bracket groups of four, which play a double elimination mini-tournament. This is the same format as the regional round that opened the tournament. The winner of each of the two groups advances to the finals, a best of three series to determine a national champion. Like in the regionals, winning the first two games of group play provides a massive advantage.\\\\n\\\\n\\\",\\\"question\\\":\\\"how college baseball world series is determined\\\"}\", \"original_answer\": \"Based on the given passages, here's how the college baseball world series is determined:\\n\\nThe NCAA College World Series is the final two rounds of the NCAA Division I baseball tournament. Eight teams participate in the tournament, which is held at two designated sites. The tournament is divided into two stages: the group stage and the finals.\\n\\nIn the group stage, the eight teams are split into two bracket groups of four, and each team plays a double-elimination mini-tournament. The winner of each group advances to the finals, which is a best-of-three series to determine the national champion.\\n\\nThe College World Series is a best-of-three series, with games played on Monday, Tuesday, and (if necessary) Wednesday. The winner of the series is crowned the national champion.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_update",
+  "source_cluster_id": "sha256:f08f4e3de1a8d104239cbca6a42ce2bfb43085cf8cd194ed2d15778a6d9f3922",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ]
+}

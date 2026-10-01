@@ -1,0 +1,106 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.3035675429855473,
+  "exclusion_reason": null,
+  "family_id": "sha256:73e3616865ebff3b3d14206c5894927b3e87177efecd43df1425826fff8a63c4",
+  "input_tokens": 663,
+  "invocation_finished_at": "2026-10-01T11:45:07.997109+00:00",
+  "invocation_started_at": "2026-10-01T11:45:06.693540+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 3,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 663,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 687
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:bae330def12a59de5f03ef9c7938e41dab0fb38eb4edcd2dd72d001cfb07566f",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 3\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855107,
+    "id": "chatcmpl-v7bhi3qd0hAZqKAPsrDyQqy5XHw0xibl",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.033,
+      "predicted_n": 24,
+      "predicted_per_second": 42.55070182063815,
+      "predicted_per_token_ms": 23.501375,
+      "prompt_ms": 609.094,
+      "prompt_n": 585,
+      "prompt_per_second": 960.442887304751,
+      "prompt_per_token_ms": 1.041186324786325
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 663,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 687
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:In a chemical peel, a chemical solution is applied to the skin and allowed to soak in. Over the next 1 to 14 days, depending on how deeply the chemical penetrated the skin, the skin peels off.This procedure destroys parts of the skin in a controlled way so that new skin can grow in its place. deep peel causes a deeper second-degree burn of the skin. Skin regrowth takes between 10 to 14 days after a deep peel. The skin remains extremely red for 3 weeks, up to 2 months for some people. Most people take about 2 weeks off from work.\\\\n\\\\npassage 2:Chemical Peel Basics. Your doctor can apply a chemical peel to several areas of your body, including your face, legs, arms, hands or chest, according to the American Academy of Dermatology.onsiderations. If your doctor recommends a TCA chemical peel, you may need to undergo more than one procedure to achieve the desired results, Brigham and Women's Hospital explains. If you undergo a phenol peel, your new skin may not be able to create normal levels of pigmentation.\\\\n\\\\npassage 3:Posted by Samantha Cook in Chemical Peel. ANSWER: How long it takes a chemical peel to heal depends on the type of chemical peel. More Info: Chemical peels are categorized into three subgroups, which is used depends on the severity of the skin issue.The stronger the chemical used in the procedure, the deeper the peel, and subsequently the longer the healing time.richloroacetic Acid Peel (TCA). The TCA peel causes a second degree burn on the epidermis and upper portion of the dermis, which means it will take longer to heal than a superficial peel. Following the procedure the skin will begin to crust and peel in the first 2-3 days.\\\\n\\\\n\\\",\\\"question\\\":\\\"how long does it take to heal from a chemical peel\\\"}\", \"original_answer\": \"The healing time after a chemical peel varies depending on the depth of the peel. For a deep peel, which causes a second-degree burn of the skin, skin regrowth takes between 10 to 14 days. However, the skin remains extremely red for 3 weeks, up to 2 months for some people. A shallower peel may begin to crust and peel in the first 2-3 days.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_update",
+  "source_cluster_id": "sha256:e038f36ee1410022e0e542b6304f3c4cf0e1df1c9ef8eb9c38cd3d6c740dd86d",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ]
+}

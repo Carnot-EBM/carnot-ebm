@@ -1,0 +1,102 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.2255700459936634,
+  "exclusion_reason": null,
+  "family_id": "sha256:3a1ab74fec786b504e8e9b7580a06db1cdbc79a73711f4128ea240c460dc68e7",
+  "input_tokens": 547,
+  "invocation_finished_at": "2026-10-01T11:45:03.844248+00:00",
+  "invocation_started_at": "2026-10-01T11:45:02.618677+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 547,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 571
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:b76f340ee9173c40779ed6782ce48fa4397e8204df1d6de495375572238c1788",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855103,
+    "id": "chatcmpl-m9JmbWRoKCLVYdEDIIqEW3ULEyUOY1Ec",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 563.753,
+      "predicted_n": 24,
+      "predicted_per_second": 42.57183553790401,
+      "predicted_per_token_ms": 23.489708333333336,
+      "prompt_ms": 525.331,
+      "prompt_n": 469,
+      "prompt_per_second": 892.7704628129693,
+      "prompt_per_token_ms": 1.1201087420042644
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 547,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 571
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Physical Differences. Crows and ravens differ physically from one another, their size being the most noticeable. Ravens are larger than crows, making them the largest perching birds. Crows have a smooth texture whereas the raven has a dense and shaggy plumage particularly around the throat. The bill of the raven is also heavier than the crow's bill. During flight, the spreading of the tail can distinguish the crow and raven apart. The tail of the crow spreads into a fan-like structure while the tail of the raven spreads into a wedge shape.\\\\n\\\\npassage 2:Difference between Crows and Ravens. Crows and ravens are birds of the Corvidae family that are mainly renowned for their intelligence in tool use, enemy identification, problem solving and mimicry.\\\\n\\\\npassage 3:Telling the birds apart if they are seen together is a simple matter, as the size difference between the species will be obvious. It is not always possible to determine whether a large, black corvid is an American crow or a common raven, but using different opportunities to try can be a great chance to sharpen your bird identification skills.\\\\n\\\\n\\\",\\\"question\\\":\\\"what is the difference between ravens and crows\\\"}\", \"original_answer\": \"Ravens and crows differ in several ways. Ravens are larger than crows, and are the largest perching birds. They also have a dense and shaggy plumage, particularly around the throat, while crows have a smooth texture. The raven's bill is heavier than the crow's. The tail of a crow spreads into a fan-like structure during flight, while the tail of a raven spreads into a wedge shape. Both species are known for their intelligence, including tool use, enemy identification, problem-solving, and mimicry. The size difference between the two is usually noticeable when they are seen together.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_admission",
+  "source_cluster_id": "sha256:9c4eeb201771f6cf3e0c8cc74bdfdca78919b287aab72f546a1835f39c33b423",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ]
+}

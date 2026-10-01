@@ -1,0 +1,110 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.2733799109701067,
+  "exclusion_reason": null,
+  "family_id": "sha256:1b27df4f3b67b3d3ee1b37f7d0cbc3babad19d586d606f1366a710ca721e595a",
+  "input_tokens": 706,
+  "invocation_finished_at": "2026-10-01T11:42:26.779228+00:00",
+  "invocation_started_at": "2026-10-01T11:42:25.505847+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 706,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 729
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:4286e4c61efc1dfa03356dfc02551aa9c157d2b5c7611b634e64b7ce0a54fe43",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790854946,
+    "id": "chatcmpl-HEQWcnzbS06U3RiTh3HAxD4SO3T553QD",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 536.257,
+      "predicted_n": 23,
+      "predicted_per_second": 42.889883022506005,
+      "predicted_per_token_ms": 23.315521739130432,
+      "prompt_ms": 622.318,
+      "prompt_n": 628,
+      "prompt_per_second": 1009.1303802878914,
+      "prompt_per_token_ms": 0.990952229299363
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 706,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 729
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:The symptoms most often associated with Parkinson's affect movement. These are often called motor symptoms. Parkinson's is a very individual condition, with each person experiencing different symptoms.However, there are other symptoms that aren't related to movement, such as pain and depression.These are known as non-motor symptoms. The symptoms that people with Parkinson's may get are listed below.It's important to remember that everyone's experience of Parkinson's is different. Not everyone will experience all of these symptoms.hese are known as non-motor symptoms. The symptoms that people with Parkinson's may get are listed below. It's important to remember that everyone's experience of Parkinson's is different. Not everyone will experience all of these symptoms.\\\\n\\\\npassage 2:Other common symptoms. Besides tremor, the most common symptoms include: 1  Stiff muscles (rigidity) and aching muscles. 2  One of the most common early signs of Parkinson's is a reduced arm swing on one side when you walk.3  This is caused by rigid muscles. 4  Rigidity can also affect the muscles of the legs, face, neck, or other parts of the body.he most common cause of non-Parkinson's tremor is essential tremor. It's a treatable condition that is often wrongly diagnosed as Parkinson's. Besides tremor, the most common symptoms include: 1  Stiff muscles (rigidity) and aching muscles.\\\\n\\\\npassage 3:Parkinson's disease symptoms and signs may vary from person to person. Early signs may be mild and may go unnoticed. Symptoms often begin on one side of your body and usually remain worse on that side, even after symptoms begin to affect both sides.Parkinson's signs and symptoms may include: 1  Tremor. 2  A tremor, or shaking, usually begins in a limb, often your hand or fingers.ymptoms often begin on one side of your body and usually remain worse on that side, even after symptoms begin to affect both sides. Parkinson's signs and symptoms may include: 1  Tremor.\\\\n\\\\n\\\",\\\"question\\\":\\\"what are the symptoms of parkinson's\\\"}\", \"original_answer\": \"Based on the given passages, the symptoms of Parkinson's disease include tremor, stiff muscles (rigidity), aching muscles, reduced arm swing on one side when walking, and symptoms usually beginning on one side of the body and gradually affecting both sides. Additionally, there may be non-motor symptoms such as pain and depression.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_update",
+  "source_cluster_id": "sha256:4fefa9d8b5a16193a5c0a5f81cf9194ff0c35b8857acfd3227b5eccd8d65e705",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+  ]
+}

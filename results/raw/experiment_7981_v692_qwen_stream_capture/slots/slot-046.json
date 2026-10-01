@@ -1,0 +1,107 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.4565789260086603,
+  "exclusion_reason": null,
+  "family_id": "sha256:a9652cb231ae6fe18b8accc10b4051fb0fd8b033fdc83cc28fe5ce2ea7fa414f",
+  "input_tokens": 917,
+  "invocation_finished_at": "2026-10-01T11:42:13.828764+00:00",
+  "invocation_started_at": "2026-10-01T11:42:12.372183+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 917,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 938
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:38440c7f7a57787b6ce8407e6f560486d802ca69cf9432278649f338c8d5a93d",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790854933,
+    "id": "chatcmpl-TSIKlWDUHCDP231Br7jWkMzC0uqqyGWS",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 487.893,
+      "predicted_n": 21,
+      "predicted_per_second": 43.04222442215814,
+      "predicted_per_token_ms": 23.232999999999997,
+      "prompt_ms": 833.106,
+      "prompt_n": 839,
+      "prompt_per_second": 1007.0747299863403,
+      "prompt_per_token_ms": 0.9929749702026222
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 917,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 938
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"5342 Hollister Ave\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":null},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Restaurants, Food, Delis, Bakeries\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"6:0-16:30\\\",\\\"Monday\\\":\\\"6:0-16:30\\\",\\\"Thursday\\\":\\\"6:0-16:30\\\",\\\"Tuesday\\\":\\\"6:0-16:30\\\",\\\"Wednesday\\\":\\\"6:0-16:30\\\"},\\\"name\\\":\\\"Mama's Bakery & Deli\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2017-04-14 17:12:21\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"Solid Banh Mi sandwiches at a decent price. It's not San Francisco, but it will have to do.it work ld be nice if their bread was crispier and if they had lemongrass pork\\\"},{\\\"review_date\\\":\\\"2017-03-24 23:17:39\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Really hard to spot out, but I'm glad I found it! I would've never expected this to be a business that served pho and banh mi if I just drove by it, but I'm glad curiosity got the best of me and I'd like to try this place more often. \\\\n\\\\nI ordered half a pork banh mi with everything on it and it was reminiscent of the Vietnamese spots in the east bay suburbs. My only complaint is their bread isn't as flaky and it's more soft and dense, but it does the job for a craving. They didn't skimp out on the pork which is good. \\\\n\\\\nThe lady running the counter was really nice and I got my sandwich way faster than I'd expect anywhere else in this area. Worth it!\\\"},{\\\"review_date\\\":\\\"2017-03-15 18:18:55\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Freshest sandwich in town. The bread is so soft and the ingredients are so fresh. Never greasy, light yet filling. So delicious! My favorite is the pastrami, it's the Wednesday special. If you like your sandwich with everything make sure you let them know or they won't put condiments on it. Must try!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"\\\"Mama's Bakery & Deli\\\" is a local business located at 5342 Hollister Ave, Santa Barbara, CA. It falls under the categories of Restaurants, Food, Delis, and Bakeries. The business operates from Monday to Friday, opening at 6 am and closing at 4:30 pm. The establishment provides street and lot parking but doesn't offer valet or validated parking. Although no information is provided about outdoor seating, WiFi, music, ambience, or suitability for groups, it does offer takeout service. With an overall rating of 4.0 stars, customer reviews highlight the deli's solid Banh Mi sandwiches and fast service. However, some reviews suggest that the bread could be crispier. A review also praises their fresh ingredients, light yet filling sandwiches, particularly the Wednesday special, Pastrami.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "sha256:ab76e66b8ac1bcdf48a3ae9f638d44ff6944eed2cb98903f237096abbf8dbae4",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ]
+}

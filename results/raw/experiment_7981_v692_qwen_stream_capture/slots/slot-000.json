@@ -1,0 +1,110 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.8888163820374757,
+  "exclusion_reason": null,
+  "family_id": "sha256:22620bb5395bf12240dbb5dca4dce01cb9afe31ef6567368b00ff3b641b53ce0",
+  "input_tokens": 1150,
+  "invocation_finished_at": "2026-10-01T11:41:18.779419+00:00",
+  "invocation_started_at": "2026-10-01T11:41:16.890601+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1150,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 1173
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:006e0eca8b98552c84fb79b9e98a7895178acf085dcb6fb245c9a5a2f9856bea",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790854878,
+    "id": "chatcmpl-bHezhld3tLVDd4tdR9nwRyqfdJvPAqPh",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 537.026,
+      "predicted_n": 23,
+      "predicted_per_second": 42.828466405723375,
+      "predicted_per_token_ms": 23.34895652173913,
+      "prompt_ms": 1332.847,
+      "prompt_n": 1150,
+      "prompt_per_second": 862.8147116660801,
+      "prompt_per_token_ms": 1.1589973913043479
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1150,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 1173
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"1005 Casitas Pass Rd\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Ice Cream & Frozen Yogurt, Juice Bars & Smoothies, Restaurants, Specialty Food, Food\\\",\\\"city\\\":\\\"Carpinteria\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"12:0-22:0\\\",\\\"Monday\\\":\\\"12:0-21:0\\\",\\\"Saturday\\\":\\\"11:0-22:0\\\",\\\"Sunday\\\":\\\"11:0-21:0\\\",\\\"Thursday\\\":\\\"12:0-21:0\\\",\\\"Tuesday\\\":\\\"12:0-21:0\\\",\\\"Wednesday\\\":\\\"12:0-21:0\\\"},\\\"name\\\":\\\"YoYumYum Frozen Yogurt\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-11-27 05:18:17\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"We were just in Carpinteria, and when I got home, I realized we didn't get frozen yogurt here!! I just noticed my Yelp friend gave this place a great review, and mentioned kind customer service. We have also recieved kind customer service here as well, and a delicious product. The yogurt here makes my brain and stomach feel happier...not kidding! I enjoy my FroYo with kiwi, strawberry and Oreo. Support this local business!! Enjoy \\\\n*If my brother's puppy is with us, he may get a small portion of the original flavor. He also loves it. His top three treats are:\\\\nFroYo\\\\nNacho Cheese \\\\nIce\\\\n(People and Puppy Approved)\\\"},{\\\"review_date\\\":\\\"2021-09-21 19:14:36\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"My bf & I were in Santa Barbara for the weekend.\\\\nThere's nothing more soothing after spending a hot afternoon at the beach than walking into a business that not only welcomes you as warmly as we were welcomed here but also provides scrumptious frozen yogurt. \\\\nI don't think the owner cared that I'm a stunning African American woman or that my bf is a hot Latino. We were treated like family.\\\"},{\\\"review_date\\\":\\\"2021-08-23 20:46:23\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"What a joy this place is! I mean you're going to have a good time anytime you go for frozen yogurt, but this beat out expectations. I was just delighted at the many flavor options and selection of toppings.\\\\n\\\\nThe best thing of all, though, was MK's amazing hospitality.   He made us feel so welcome and was very kind to my 10-year-old while at the same time being respectful and careful not to entice him and go past his mom's opinion on how much was allowed. \\\\n\\\\nWe played the game of guess the price (if you get it down to the penny, your yogurt is free!) and then my dog got a little snack on the house too!  A snack he really needed since we had just come over from the vet and have an ouchy on our foot.  \\\\n\\\\nThis was so great, we will be back soon!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Based on the provided structured data, here is an objective overview of YoYumYum Frozen Yogurt:\\n\\nYoYumYum Frozen Yogurt is a popular local business in Carpinteria, California, offering a variety of ice cream and frozen yogurt flavors, juices, and smoothies. The business has a rating of 4.0 stars and receives positive reviews from customers for its friendly and welcoming atmosphere, delicious products, and excellent customer service. Customers particularly appreciate the kindness and hospitality shown by the owner, MK, who goes above and beyond to make guests feel welcome and comfortable. The business offers free WiFi and allows takeout, making it a convenient option for both casual visits and special occasions. Additionally, the business offers a game of guessing the price of frozen yogurt, where if customers can correctly guess the price, their frozen yogurt is free. Overall, YoYumYum Frozen Yogurt is a beloved local establishment that serves high-quality frozen treats and provides a welcoming environment for customers of all ages and backgrounds.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_admission",
+  "source_cluster_id": "sha256:3a930262796a46990d2c2b13947c4af2bf7edef08a46d447f434aa179a017aa6",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+  ]
+}

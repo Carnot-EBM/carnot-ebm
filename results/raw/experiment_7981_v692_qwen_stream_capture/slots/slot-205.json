@@ -1,0 +1,109 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.6645640899660066,
+  "exclusion_reason": null,
+  "family_id": "sha256:f12f926a3b0eed153fd746a5eba9eb02f35598d26779bcf1a14c5bdbf8563b7c",
+  "input_tokens": 1065,
+  "invocation_finished_at": "2026-10-01T11:46:03.095988+00:00",
+  "invocation_started_at": "2026-10-01T11:46:01.431423+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1065,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1089
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:e810d811bbebe53f3e1df863e10cfb198b4b517379ef05cf4db7d830dc5e6e40",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855163,
+    "id": "chatcmpl-4KhZvlumgbzVL5iwNbdihLdlPIAEMm9D",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.959,
+      "predicted_n": 24,
+      "predicted_per_second": 42.480958795240014,
+      "predicted_per_token_ms": 23.53995833333333,
+      "prompt_ms": 960.905,
+      "prompt_n": 987,
+      "prompt_per_second": 1027.1566908279174,
+      "prompt_per_token_ms": 0.9735612968591691
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1065,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1089
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"4151 Foothill Rd Building A Main Fl, Bldg A\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":null,\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":false,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Cafes, Restaurants, Cafeteria\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"6:30-17:0\\\",\\\"Monday\\\":\\\"6:30-18:0\\\",\\\"Thursday\\\":\\\"6:30-18:0\\\",\\\"Tuesday\\\":\\\"6:30-18:0\\\",\\\"Wednesday\\\":\\\"6:30-18:0\\\"},\\\"name\\\":\\\"Cafe 154\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2019-08-22 16:05:29\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I came here for the Axxess deal: free first regular latte or drop coffee. First of all, way to use the Axxess card, Cafe 154! Many businesses are skimping out, but a full on free item with no purchase requirement is a great hook.\\\\n\\\\nI was planning on only getting the latte, but upon entering the cafe, I was confronted with a small case of high quality pastries. Immediately after I began gazing at the treats, a friendly woman came up and asked me if I had any questions about the pastries. I asked if she had any suggestions, and she smiled and sighed exaggeratedly as if to say what a hard choice it would be because they were all so good. She recommended the berry scone or the croissants. I was eyes a generously almond/powdered sugar encrusted croissant, and ordered that, along with a latte. The same woman asked if I'd like to add a syrup for the difference in price (deal was for only the regular latte). Normally I normally would decline, but this was \\\\\\\"homemade\\\\\\\" syrup, so I got the dark chocolate.\\\\n\\\\nBest latte and croissant I've had in Santa Barbara! The chocolate syrup was rich and perfectly sweet; the almond croissant was both heavily crusted and filled with almond paste, and not greasy like many croissants. So delicious!! I ended up paying $5 total\\\\n\\\\nGreat products, great staff, reasonable prices for a high quality cafe.\\\"},{\\\"review_date\\\":\\\"2018-12-30 18:23:01\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Great place, food is outstanding and Bulletproof Coffee prepared perfectly.  lovely outdoor seating and super friendly staff.  Someone with high standards is clearly in charge!\\\"},{\\\"review_date\\\":\\\"2018-10-05 19:48:19\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"They serve coffee using Green Star coffee beans! They sell sandwiches, salads, smoothies and coffee drinks at reasonable prices. Got an iced latte for only $2.89 and the espresso is strong and flavorful!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Cafe 154 is a restaurant located in Santa Barbara, California. It offers a variety of cafeteria services, including coffee, sandwiches, salads, smoothies, and coffee drinks. The cafe has a casual ambiance and features outdoor seating. Customers can enjoy their meals while taking in the beautiful views of the surrounding area. The cafe is known for its excellent food quality and friendly service. One customer praised the cafe for offering a free first regular latte or drop coffee with the use of the Axxess card, which is a popular loyalty program used by many locals. Another customer was impressed with the quality of the pastries and the helpfulness of the staff. Overall, Cafe 154 is a great option for those looking for a satisfying meal or a refreshing drink in a relaxed setting.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "sha256:e3fc95bd889d3d111783bc76d7ab6171ae8b514b23a8ea15a2c63e32f2324bbd",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ]
+}

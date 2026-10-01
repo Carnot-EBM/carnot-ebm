@@ -1,0 +1,107 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.4543639030307531,
+  "exclusion_reason": null,
+  "family_id": "sha256:811313f6cbeb39bf4a1f73e6310f2289043d3b66e46cb509172881291de8c1cb",
+  "input_tokens": 882,
+  "invocation_finished_at": "2026-10-01T11:41:50.278862+00:00",
+  "invocation_started_at": "2026-10-01T11:41:48.824496+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 882,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 905
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:21f19bb0db1944b2f0ca857bb007bbe3ff2318e4ad81c4113556e582312f953f",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790854910,
+    "id": "chatcmpl-1k8v8No1wnhzENKt0UIORIGPdp9WCGBX",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 534.06,
+      "predicted_n": 23,
+      "predicted_per_second": 43.06632213608958,
+      "predicted_per_token_ms": 23.22,
+      "prompt_ms": 801.971,
+      "prompt_n": 804,
+      "prompt_per_second": 1002.5300166714258,
+      "prompt_per_token_ms": 0.9974763681592039
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 882,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 905
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"601 Paseo Nuevo\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":true,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":false,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Restaurants, American (Traditional), Lounges, Nightlife, Bars, Burgers, American (New)\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-0:0\\\",\\\"Monday\\\":\\\"11:0-23:0\\\",\\\"Saturday\\\":\\\"11:0-0:0\\\",\\\"Sunday\\\":\\\"11:0-23:0\\\",\\\"Thursday\\\":\\\"11:0-23:0\\\",\\\"Tuesday\\\":\\\"11:0-23:0\\\",\\\"Wednesday\\\":\\\"11:0-23:0\\\"},\\\"name\\\":\\\"Eureka!\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-10 00:01:43\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Great atmosphere on a Sunday. Amazing food as well. Brought my wife and 2 boys and we all enjoyed this play. Our server, Max was incredible. Great service. Thanks Eureka and Max for the phenomenon hospitality! You'll see us soon once again!\\\"},{\\\"review_date\\\":\\\"2022-01-05 03:23:31\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Great food and sensational service from Lizbeth.  Great burger and fabulous house salad. Loved half off wine Tuesday!\\\"},{\\\"review_date\\\":\\\"2021-12-31 18:47:35\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"The burgers are insane! Get in, have one! Don't order well done, get a medium rare one... drinks are awesome. Service is great. Loved it, will return\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Eureka! is a restaurant located in Santa Barbara, California. It belongs to several categories including Restaurants, American (Traditional), Lounges, Nightlife, Bars, Burgers, and American (New). The restaurant is open seven days a week from 11:00 AM to 11:00 PM. Customers can park their vehicles on the street or in the garage, but valet parking is not available. Wi-Fi is available for free at Eureka!\\n\\nBased on customer reviews, the restaurant has a high rating of 4.0 stars out of five. Several customers have praised the restaurant's atmosphere, food quality, and service. In particular, many customers have complimented the taste and presentation of the burgers, while some have also enjoyed the house salads. Service from staff such as Max and Lizbeth has been described as exceptional. Prices for burgers are reasonable, and the restaurant offers discounts on wine on Tuesdays. Overall, Eureka! appears to be a popular choice for those seeking a casual dining experience with good food and friendly service.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_update",
+  "source_cluster_id": "sha256:95178c0c6775577f500efda658d2aca480ebe8d290d5f4bce4753b97b103bb1f",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ]
+}

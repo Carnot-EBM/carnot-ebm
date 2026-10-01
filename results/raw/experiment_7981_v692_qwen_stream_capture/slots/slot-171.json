@@ -1,0 +1,109 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.5682422930258326,
+  "exclusion_reason": null,
+  "family_id": "sha256:90d000e544ad13b64475ce3e4257297421ab180e0bae2ca5d61f8e7bf45d9786",
+  "input_tokens": 1062,
+  "invocation_finished_at": "2026-10-01T11:45:13.816724+00:00",
+  "invocation_started_at": "2026-10-01T11:45:12.248481+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 1062,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1083
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:c05545c97433f4aa9a5bdbe0e9ce75309cd916af3e7803599969f1ab786a9644",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855113,
+    "id": "chatcmpl-crbb0YYje1BmV7U3R5UbQ2iC7cXMpsmh",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 492.509,
+      "predicted_n": 21,
+      "predicted_per_second": 42.63881472216751,
+      "predicted_per_token_ms": 23.452809523809524,
+      "prompt_ms": 959.511,
+      "prompt_n": 984,
+      "prompt_per_second": 1025.52237546,
+      "prompt_per_token_ms": 0.9751128048780487
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 1062,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1083
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"1212 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":true,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":true,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":false,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Restaurants, Bars, American (New), Nightlife, Wine Bars\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"16:0-2:0\\\",\\\"Monday\\\":\\\"16:0-2:0\\\",\\\"Saturday\\\":\\\"16:0-2:0\\\",\\\"Sunday\\\":\\\"16:0-2:0\\\",\\\"Thursday\\\":\\\"16:0-2:0\\\",\\\"Tuesday\\\":\\\"16:0-2:0\\\",\\\"Wednesday\\\":\\\"16:0-2:0\\\"},\\\"name\\\":\\\"The Marquee\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2014-11-17 23:08:33\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"-CLOSED-\\\\n\\\\nI loved coming here for a crafty cocktail. Small, intimate, cozy, & friendly all describe the Marquee well. The mixologists made up great concoctions to sip while people watching. I will miss this spot. Hoping the next place lives up to the high expectations set.\\\"},{\\\"review_date\\\":\\\"2014-11-13 14:44:33\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"CLOSED-\\\\n\\\\nI loved coming here for a crafty cocktail. Small, intimate, cozy, & friendly all describe the Marquee well. The mixologists made up great concoctions to sip while people watching. I will miss this spot. Hoping the next place lives up to expectations...\\\"},{\\\"review_date\\\":\\\"2014-10-08 00:11:00\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"After a great dinner at Opal, the gfs and I stumbled upon this place during our gno weekend and decided to stop by since they were touted as a wine bar.\\\\n\\\\nI have to say this is kind of a lie. They serve wine, I guess if that makes them a wine bar ... great? But they are actually more into their cocktails and drinks. This place is next door to a theater so you will find a theme of theaters and plays in their drink names and descriptions.\\\\n\\\\nThe bartenders are fun, but catch them early since they get a little messy as the night wears on. We were wrongly charged, quite a few times, and despite sitting at the bar it was hard to get service or our orders. They're fun people to hang out with though ... I suppose?\\\\n\\\\nThe wines here are ok, so don't come here if you want wine, but it's a great place for a cozy date on State St.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"The Marquee, located at 1212 State St, Santa Barbara, CA, is a versatile establishment that falls under the categories of Restaurants, Bars, American (New), Nightlife, and Wine Bars. Open daily from 4 pm-2 am, it offers a cozy and intimate atmosphere, perfect for group gatherings. However, it does not provide outdoor seating, Wi-Fi, and take-out options. While the establishment has a garage and street parking, valet service is not available. The Marquee is well-known for its crafty cocktails, with a team of mixologists who create unique concoctions. Despite being touted as a wine bar, the business leans more into cocktails and drinks, offering a range of options named after theaters and plays. The Marquee holds an overall business star rating of 4.0. The place is now closed, but customers remember it fondly and hope that the next establishment lives up to its high expectations.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "sha256:3c5569c0b86d47f67a226a43e6b641ff4ea3e23a83a8b7037b5616c31fe17d04",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ]
+}

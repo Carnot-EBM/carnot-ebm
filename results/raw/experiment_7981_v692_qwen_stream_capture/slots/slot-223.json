@@ -1,0 +1,123 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.698559973970987,
+  "exclusion_reason": null,
+  "family_id": "sha256:f2d2193392d52fbb4024cc135e6f2bd1dc72046d5525c534b8835c3ce22d8959",
+  "input_tokens": 1149,
+  "invocation_finished_at": "2026-10-01T11:46:29.406402+00:00",
+  "invocation_started_at": "2026-10-01T11:46:27.707841+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1149,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1172
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:fdab444c82416f21d564589dd509c1e08915b8860541743b73bc52e9d6967799",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855189,
+    "id": "chatcmpl-bMKjJMkmF2HvuJT6jezumslMGAatCrIU",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.042,
+      "predicted_n": 23,
+      "predicted_per_second": 42.51056295075058,
+      "predicted_per_token_ms": 23.523565217391305,
+      "prompt_ms": 1025.654,
+      "prompt_n": 1071,
+      "prompt_per_second": 1044.2117907208474,
+      "prompt_per_token_ms": 0.9576601307189543
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1149,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1172
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Cynthia Lennon, who married John Lennon when he was a struggling musician and was there when he rose to fame with the Beatles, died Wednesday, according to a post on the website of her son, Julian. She was 75. \\\"Cynthia Lennon passed away today at her home in Mallorca, Spain, following a short but brave battle with cancer.  Her son Julian Lennon was at her bedside throughout,\\\" his website says.  \\\"The family are thankful for your prayers. Please respect their privacy at this difficult time.\\\" John and Cynthia Lennon were married for six years, from 1962 to 1968. The pair met at art school, where Cynthia studied to be an illustrator and John practiced painting -- in between concerts with a band that would become the Beatles. \\\"When we were at art college, I think he was more interested in the music than he was in the art,\\\" she told ClassicBands.com. Cynthia Lennon, born Cynthia Powell in 1939, was a stabilizing force for the young John, who lost his mother when he was a teenager and was raised by his Aunt Mimi. \\\"John was always insecure,\\\" she said in a 2005 interview, having lost his mother at a young age. But his humor -- and his wildness -- were attractive, she told ClassicBands.com. \\\"He was a rebel. He was outrageous. That was something I hadn't experienced before the age that I was, which was about 16 or 17. I'd had quite a normal, straightforward life,\\\" she said. \\\"I was just instantly attracted to him.\\\" The two married in 1962, just as the Beatles were making their rise. Their son, Julian, was born April 8, 1963. Lennon's sometimes-brittle personality and his overwhelming fame became a challenge for Cynthia. During her pregnancy, \\\"I was not supposed to be known or heard about. In the wisdom, or lack of wisdom, anything to do with somebody becoming famous, male, was not supposed to be married or have (a) girlfriend.\\\" She was threatened by fans and occasionally in danger of being left behind in the band's whirlwind; when the group traveled to Bangor, Wales, to meet with the Maharishi in 1967, Cynthia was caught in a scrum and couldn't make the train in time. She was also there on the 1965 night George Harrison, Patti Boyd and Lennon were dosed with LSD -- an experience she disliked -- and traveled to India with the band in early 1968. The couple divorced in 1968, by which time John was seeing Yoko Ono. Cynthia Lennon married three more times after John and wrote two books about her marriage to the Beatle, \\\"A Twist of Lennon\\\" and \\\"John.\\\" She had no contact with the surviving members of the band until meeting up at the 2006 Las Vegas premiere of \\\"The Beatles Love.\\\" For all the difficulties and disappointments -- she described Julian, for whom she wrote \\\"John,\\\" as \\\"very scarred by life\\\" -- she acknowledged that the whirlwind could also be enthralling. \\\"The whole situation changed my life completely. God knows where I would've been ended up. I probably would've been a schoolteacher with about three or four children in a boring situation,\\\" she told ClassicBands.com. \\\"I've had the most amazing life, a wonderful life.\\\" She is survived by her son. Her fourth husband, Noel Charles, died in 2013. People we've lost in 2015. CNN's Josh Levs contributed to this story.\\n\", \"original_answer\": \"Cynthia Lennon, the first wife of John Lennon, passed away at the age of 75 after battling cancer. She was married to John Lennon from 1962 to 1968 and they had a son, Julian Lennon, together. Cynthia was a stabilizing force for John, who had lost his mother at a young age. However, their marriage faced challenges due to John's overwhelming fame and his relationship with Yoko Ono. Cynthia went on to write two books about her marriage to John and had no contact with the surviving members of the Beatles until 2006. Despite the difficulties, Cynthia described her life with John as amazing and wonderful. She is survived by her son, Julian.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "calibration_replay",
+  "source_cluster_id": "sha256:c9ceb6f76bbf58b146e6a93a96e19a43327f6e6fa13ca441f197c04beab66946",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29
+  ]
+}

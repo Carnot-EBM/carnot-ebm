@@ -1,0 +1,111 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.5436271849903278,
+  "exclusion_reason": null,
+  "family_id": "sha256:dd03bbb244aef68381b6b0421e09da3a5fe38dedb9ad1840df339fbe9dd5ff8f",
+  "input_tokens": 945,
+  "invocation_finished_at": "2026-10-01T11:42:43.263545+00:00",
+  "invocation_started_at": "2026-10-01T11:42:41.719917+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 945,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 969
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:50215509e8fcb742cf272fa6bf19938e2c435a9c01cf62d50b2650707810c9b7",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790854963,
+    "id": "chatcmpl-WZR3pnQRjzvItzHxSralVNcmvlYNq8xF",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 561.565,
+      "predicted_n": 24,
+      "predicted_per_second": 42.73770623169178,
+      "predicted_per_token_ms": 23.39854166666667,
+      "prompt_ms": 864.186,
+      "prompt_n": 867,
+      "prompt_per_second": 1003.256243447591,
+      "prompt_per_token_ms": 0.9967543252595156
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 945,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 969
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"699 Linden Ave\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":null,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Chicken Wings, Restaurants, Beer, Wine & Spirits, Sandwiches, Food, Pizza, Italian\\\",\\\"city\\\":\\\"Carpinteria\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-0:0\\\",\\\"Monday\\\":\\\"11:0-23:0\\\",\\\"Saturday\\\":\\\"11:0-0:0\\\",\\\"Sunday\\\":\\\"11:0-23:0\\\",\\\"Thursday\\\":\\\"11:0-23:0\\\",\\\"Tuesday\\\":\\\"11:0-23:0\\\",\\\"Wednesday\\\":\\\"11:0-23:0\\\"},\\\"name\\\":\\\"PizzaMan Dan's\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-12-06 06:13:00\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"As a 35 year carp/Santa Barbara local... there used to be only ONE place worth ordering GOOD pizza From. 564-1111, you've now been replaced on my speed dial with easy internet access ordering, and PayPal accepting Pizza Man Dan's. Plus ... (CONTROVERSY) ... pizza man Dan's has better ranch dressing. I never thought I'd say that about any place... also, their pizza tastes like pizza. If I wanted a frozen pizza... I'd just buy one and make it myself. Pizza Man Dan's is worth the delivery fee. Their toppings are fresh and their cheese seems to be actual cheese that follows the laws of physics/chemistry when warm. It melts. Pizza Man Dans has replaced the old, trust 564-111.\\\"},{\\\"review_date\\\":\\\"2021-10-07 02:42:18\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Terrible customer service despite making our pizza wrong. Second time here, will not be back.\\\"},{\\\"review_date\\\":\\\"2021-10-01 19:05:47\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I am a food snob...But I LOVE their pizza!  My fave is the vegetarian - thin crust, fresh veggies, not too greasy.... Highly recommend.  Best in town!!!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Sure! Here's an objective overview of PizzaMan Dan's based on the provided structured data:\\n\\nPizzaMan Dan's is a restaurant located in Carpinteria, CA that serves Chicken Wings, Restaurants, Beer, Wine & Spirits, Sandwiches, Food, Pizza, and Italian cuisine. They have a rating of 4.0 stars based on 3 reviews and are open Monday through Sunday from 11am to 2:30am. They offer free WiFi, outdoor seating, takeout, and reservations. Customers praise their pizza, fresh toppings, and convenient online ordering with PayPal payment options. However, one reviewer had a negative experience with customer service. Overall, PizzaMan Dan's is a popular spot for pizza lovers and groups, with a cozy and casual atmosphere.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "sha256:d9750ac21add07c08e160b3e728b38c2af2956a9cab515bb55cee4b11afe2d7f",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17
+  ]
+}

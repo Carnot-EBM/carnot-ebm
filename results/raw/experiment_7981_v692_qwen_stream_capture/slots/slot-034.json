@@ -1,0 +1,112 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.7502497910172679,
+  "exclusion_reason": null,
+  "family_id": "sha256:41268341f3d2d20634fea5efe61fd38ec4ddd0e5d9b11b165b59b17e51c01105",
+  "input_tokens": 1247,
+  "invocation_finished_at": "2026-10-01T11:41:58.944705+00:00",
+  "invocation_started_at": "2026-10-01T11:41:57.194453+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1247,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1270
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:2a547b3b86cd8374e6a38d325028f7f36b6d7225aee5911f2fcdabcde765988a",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790854918,
+    "id": "chatcmpl-n1dgH5NdnbEPcAMU19RUdoKpTZtCS9V8",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 538.99,
+      "predicted_n": 23,
+      "predicted_per_second": 42.6724057960259,
+      "predicted_per_token_ms": 23.434347826086956,
+      "prompt_ms": 1080.731,
+      "prompt_n": 1169,
+      "prompt_per_second": 1081.6752734954396,
+      "prompt_per_token_ms": 0.924491873396065
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1247,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1270
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"250 A Storke Rd\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":true,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Food, Restaurants, Cafes, Coffee Roasteries, Coffee & Tea\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"6:30-16:0\\\",\\\"Monday\\\":\\\"6:30-16:0\\\",\\\"Saturday\\\":\\\"7:0-16:0\\\",\\\"Sunday\\\":\\\"7:0-16:0\\\",\\\"Thursday\\\":\\\"6:30-16:0\\\",\\\"Tuesday\\\":\\\"6:30-16:0\\\",\\\"Wednesday\\\":\\\"6:30-16:0\\\"},\\\"name\\\":\\\"Dune Coffee Roasters - Storke\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-12-08 16:16:40\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Pretentious over priced coffee shop that has lackluster quality, staff, or ambiance. I'm all about paying a premium for a great cup of coffee... but this place is just an overpriced Dunkin' Donuts. Ambiance is drab, coffee is drab... and they charge 20% more for a non-dairy milk. Even the \\\\\\\"corporate\\\\\\\" Starbucks is ending the extra charge on plant based milks.\\\\n\\\\nThey're all about the aesthetic of being \\\\\\\"Santa Barbara, and environmentally friendly\\\\\\\"... but they're just greenwashing Luddite's. Get with the times - stop charging for plant based milks and invest in some cool attire. Caje is such a better local coffee shop group in the SB area\\\"},{\\\"review_date\\\":\\\"2021-11-03 21:54:05\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I visit Dune several times a week, and I think the only complaint I can think of is that there are no outlets. Besides that, everything is perfect. \\\\n\\\\nThe coffee is excellent - I've tried cappuccinos, matcha, iced lattes, and hot lattes and they're all really wonderful. The quality of alternative milks is really good (they use Califia Farms) and the espresso is always strong and flavorful. I absolutely love their matcha -- I believe it's Mizuba and when you order it with honey and cinnamon it's delightful.\\\\n\\\\nI've also tried the croissants and the toasts and they're all super yummy. The cinnamon sugar one is probably my favorite.\\\\n\\\\nThe baristas here are some of the kindest people I have ever met. They are so genuine and warm, and I love seeing them when I order.\\\\n\\\\nThere is plenty of seating, always great music, WiFi, and just a really relaxing and cozy vibe.\\\"},{\\\"review_date\\\":\\\"2021-10-02 21:32:09\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"I stopped by dune coffee roasters while I was waiting for my clothes to dry at the laundromat. The service was good and quick as there were not too many people when I went. They have a cute little outdoor patio with tables and a good amount of seating inside. I ordered a iced vanilla latte. It tasted good and refreshing, however, I wish it tasted a little sweeter and more vanilla.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Dune Coffee Roasters - Storke is a coffee shop located at 250 A Storke Rd in Goleta, California. The business offers food, restaurants, cafes, coffee roasteries, and coffee & tea. It operates from Monday to Sunday, with hours ranging from 6:30 am to 4 pm on weekdays and 7 am to 4 pm on weekends. The shop provides free WiFi, takeout options, and good seating options, making it ideal for working remotely or socializing with friends. Dune Coffee Roasters - Storke is known for its high-quality coffee, which is made from alternative milks using Califia Farms products. The shop also offers a range of delicious baked goods, including croissants and toasts, with the cinnamon sugar one being a popular choice among customers. Additionally, the shop's atmosphere is relaxed and cozy, with outdoor seating and a trendy ambiance that appeals to younger customers. Overall, Dune Coffee Roasters - Storke is a local coffee shop that offers quality coffee, good food, and a pleasant atmosphere for customers to enjoy their coffee experience.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_update",
+  "source_cluster_id": "sha256:058aff55590c1d562bb11812cfb7683b6d7e60658a1fe3ba815b419d431785c5",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18
+  ]
+}

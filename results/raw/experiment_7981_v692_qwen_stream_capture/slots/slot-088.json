@@ -1,0 +1,109 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.3611124869785272,
+  "exclusion_reason": null,
+  "family_id": "sha256:ce6c675ab5f728b653e9c3b0ef585800386a5b11b6738d9a704204fd5f586f93",
+  "input_tokens": 779,
+  "invocation_finished_at": "2026-10-01T11:43:16.873967+00:00",
+  "invocation_started_at": "2026-10-01T11:43:15.512853+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 779,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 802
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:6750debae3d2f961641e07ef868874446684e4cc792f02e425908f304d0ba7a5",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790854996,
+    "id": "chatcmpl-xiYThVPBB21U2c74GvZQa5d6AVwaJTtm",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 538.896,
+      "predicted_n": 23,
+      "predicted_per_second": 42.67984917312432,
+      "predicted_per_token_ms": 23.430260869565217,
+      "prompt_ms": 688.23,
+      "prompt_n": 701,
+      "prompt_per_second": 1018.5548435842668,
+      "prompt_per_token_ms": 0.9817831669044222
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 779,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 802
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Avoid Junk And Fatty Foods: In order to lose tummy fat without exercising, you need to burn more calories. To burn one pound of stomach fat in a month, you need to lose 500 calories per day. Avoid eating junk and fatty foods.Instead, go for high fiber foods that take longer to digest. This will keep you satiated and will keep your metabolism in perfect shape.void Junk And Fatty Foods: In order to lose tummy fat without exercising, you need to burn more calories. To burn one pound of stomach fat in a month, you need to lose 500 calories per day. Avoid eating junk and fatty foods.\\\\n\\\\npassage 2:Weight loss programs usually require you to modify your total calorie intake. Counting calories and being aware of how much you eat can help you lose weight. In general, you'll want to cut out about 500 - 750 calories daily to lose about 1-2 pounds weekly.f you are not exercising to burn calories, you must trim them from your diet in order to lose weight. Writing out a meal plan can help you plan out all your meals and snacks and make sure they fit into your pre-determined calorie range.\\\\n\\\\npassage 3:It\u2019s all about filling your body as much as you can with the absolute best nutrients possible. To lose weight without exercise, eat different amount of calories each day to confuse your metabolic system. This in turn will burn the excess fat in your body and will allow you to lose up to 9 pounds every 11 days.It sounds simple but requires a proper diet plan for execution.o exercise weight loss tips. 1  Eat lot of fruits-Fruits are a rich source of fibre. 2  Fibre makes you feel fuller for longer and helps your digestive system. 3  It simply reduces your cravings for processed sweet foods. 4  Drink Water-Drink a glass of water before every meal. 5  This will reduce your appetite.\\\\n\\\\n\\\",\\\"question\\\":\\\"tips to reduce weight without excercise\\\"}\", \"original_answer\": \"To reduce weight without exercise, one must focus on dietary changes. Avoiding junk and fatty foods is essential because these foods are high in calories. Instead, opt for high fiber foods that take longer to digest and keep you feeling full for longer. Counting calories and being aware of how much you eat can help with weight loss. A reduction of about 500 - 750 calories daily can lead to a weight loss of about 1-2 pounds weekly. Consuming different amounts of calories each day can confuse your metabolic system, aiding in burning excess fat. Including a lot of fruits in your diet can also be beneficial as they are a rich source of fiber and can reduce cravings for processed sweet foods. Finally, drinking a glass of water before every meal can reduce your appetite.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_update",
+  "source_cluster_id": "sha256:bd7a8be33b687dece4353338b30086785d8e095f8b3772e2c8079859ea74622e",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ]
+}

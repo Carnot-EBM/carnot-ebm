@@ -1,0 +1,114 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.495509703992866,
+  "exclusion_reason": null,
+  "family_id": "sha256:2eaec1ac091f73053bb1efd100239d1784ed5d051e93d141e67a2bad6d70aff9",
+  "input_tokens": 910,
+  "invocation_finished_at": "2026-10-01T11:41:53.399780+00:00",
+  "invocation_started_at": "2026-10-01T11:41:51.904270+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 910,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 933
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:225a5568bd3c8da6ab56524caf12f4e3c808ec9cd9d46ccba412e6852f6910be",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790854913,
+    "id": "chatcmpl-G9IN7wOipnGDUOqvNXBVA9SCt9WrG5aa",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 534.344,
+      "predicted_n": 23,
+      "predicted_per_second": 43.04343269504289,
+      "predicted_per_token_ms": 23.232347826086958,
+      "prompt_ms": 826.894,
+      "prompt_n": 832,
+      "prompt_per_second": 1006.1749148016554,
+      "prompt_per_token_ms": 0.9938629807692307
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 910,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 933
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Arnold Schwarzenegger Opens Up About His Relationship with Maria Shriver, New Action Hero Series\\nArnold Schwarzenegger, the former governor of California and beloved Hollywood action star, recently provided a candid glimpse into various facets of his life. This revealing conversation touched on his evolving relationship with his ex-wife, Maria Shriver, his latest venture into the world of action hero series, and his civic endeavors, particularly his efforts to combat the menace of potholes in Los Angeles.\\nSchwarzenegger and Shriver officially divorced two years ago, marking a significant turning point in their relationship. However, they have entered a new phase, particularly as they embrace their roles as grandparents to their daughter Katherine's two children. Schwarzenegger made it clear that their connection never truly severed, and their separation was not characterized by animosity or conflict, but rather by his own acknowledged mistakes.\\nDuring this conversation, centered around the promotion of his book, Schwarzenegger offered insight into the ongoing communication between him and Shriver, specifically concerning their family. Despite their divorce, which transpired in 2011 following Schwarzenegger's admission of fathering a child with their housekeeper, Mildred Baena, they have remained in regular contact. Schwarzenegger shared details of attending counseling sessions with Shriver, where he disclosed his paternity of Joseph Baena. He candidly acknowledged the immense pain and devastation his revelation caused for Shriver and their family.\\nHowever, their unwavering commitment to their children's well-being has remained steadfast. Schwarzenegger emphasized that they continue to discuss family matters, including holidays, birthdays, and other significant events. He expressed his enduring love for Shriver, affirming that their relationship, while different in nature now, will endure indefinitely.\\nIn his personal life, Schwarzenegger has moved forward and is presently in a relationship with Heather Milligan, a physical therapist. This partnership, which began in 2013, has been a source of joy and companionship for the actor. Schwarzenegger spoke highly of Milligan, praising her independence, work ethic, and determination. He openly shared his deep affection for her and their shared interests, highlighting the positive aspects of their relationship.\\nBeyond his personal life, Schwarzenegger remains actively engaged in his professional pursuits. He is currently immersed in a new action hero series, a project that aligns seamlessly with his enduring passion for the entertainment industry. Additionally, Schwarzenegger has taken on a civic duty close to home by addressing the pervasive issue of potholes in Los Angeles.\\nDespite the inevitable highs and lows in his personal journey, Arnold Schwarzenegger continues to navigate the delicate balance between his professional commitments and his responsibilities as a father and grandfather with characteristic grace and resilience. His willingness to share his experiences and lessons learned serves as an inspiration to many.\", \"original_answer\": \"Arnold Schwarzenegger has opened up about his amicable relationship with ex-wife Maria Shriver and his current relationship with Heather Milligan. Despite their divorce two years ago, Schwarzenegger and Shriver remain in regular contact due to their roles as grandparents and their commitment to their children. Schwarzenegger acknowledged his past mistakes, including fathering a child with their housekeeper, but emphasised his enduring love for Shriver. He also praised his current partner Milligan for her independence and work ethic. Outside of his personal life, Schwarzenegger is engaged in a new action hero series and is combating the issue of potholes in Los Angeles.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_update",
+  "source_cluster_id": "sha256:67b88a41803146f9ec49325bdeed6c662e4cd6bf2ddd8327523ed584ead0fcbd",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20
+  ]
+}

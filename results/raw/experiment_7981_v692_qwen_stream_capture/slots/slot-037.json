@@ -1,0 +1,103 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.1440790540073067,
+  "exclusion_reason": null,
+  "family_id": "sha256:14b1babbd052c25d730f3fca4434c132d4a1a4c0edeb8a0f0df90b5599fc18bd",
+  "input_tokens": 469,
+  "invocation_finished_at": "2026-10-01T11:42:02.743872+00:00",
+  "invocation_started_at": "2026-10-01T11:42:01.599791+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 469,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 492
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:2bb54b638fdaddee07dba006b15a777a34a5b1d4dad28aaf873a0e63f4452c5b",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790854922,
+    "id": "chatcmpl-jCYALzMPxq8lyom9H3D6J138VwbI9Toz",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 537.443,
+      "predicted_n": 23,
+      "predicted_per_second": 42.79523595990645,
+      "predicted_per_token_ms": 23.36708695652174,
+      "prompt_ms": 477.594,
+      "prompt_n": 391,
+      "prompt_per_second": 818.68700193051,
+      "prompt_per_token_ms": 1.221468030690537
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 469,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 492
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"A SkyWest Airlines flight made an emergency landing in Buffalo, New York, on Wednesday after a passenger lost consciousness, officials said. The passenger received medical attention before being released, according to Marissa Snow, spokeswoman for SkyWest. She said the airliner expects to accommodate the 75 passengers on another aircraft to their original destination -- Hartford, Connecticut -- later Wednesday afternoon. The Federal Aviation Administration initially reported a pressurization problem and said it would investigate. Snow said there was no indication of any pressurization issues, and the FAA later issued a statement that did not reference a pressurization problem. SkyWest also said there was no problem with the plane's door, which some media initially reported. Flight 5622 was originally scheduled to fly from Chicago to Hartford. The plane descended 28,000 feet in three minutes. \\\"It would feel like a roller coaster -- when you're coming over the top and you're going down,\\\" CNN aviation analyst Mary Schiavo said, describing how such a descent would feel. \\\"You know that these pilots knew they were in a very grave and very serious situation.\\\"\\n\", \"original_answer\": \"A SkyWest Airlines flight made an emergency landing in Buffalo, New York, after a passenger lost consciousness. The plane descended 28,000 feet in three minutes. The Federal Aviation Administration initially reported a pressurization problem and said it would investigate. However, it later issued a statement that did not reference a pressurization problem. The passenger received medical attention before being released.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_admission",
+  "source_cluster_id": "sha256:7d0673c2f11b8b710753ceaab217b4adc9c81fa28e4e91a68c444cf7d4f7f312",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ]
+}

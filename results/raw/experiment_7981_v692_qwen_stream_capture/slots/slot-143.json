@@ -1,0 +1,102 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.277491083019413,
+  "exclusion_reason": null,
+  "family_id": "sha256:43eeaf960243175135714df8c8e2adb2edcbdb9fcf88d8f4719fd115417e05ce",
+  "input_tokens": 662,
+  "invocation_finished_at": "2026-10-01T11:44:32.057917+00:00",
+  "invocation_started_at": "2026-10-01T11:44:30.780424+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 662,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 685
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:a832dffe1ae0772014c054ba55d8822592dbe4ffdd0e05cc3f693b133627aa31",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855072,
+    "id": "chatcmpl-OxMeTn4enEkEbjJOgDBPPFdKb3wRMl76",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 539.841,
+      "predicted_n": 23,
+      "predicted_per_second": 42.60513743861618,
+      "predicted_per_token_ms": 23.47134782608696,
+      "prompt_ms": 607.165,
+      "prompt_n": 584,
+      "prompt_per_second": 961.8472738053083,
+      "prompt_per_token_ms": 1.039666095890411
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 662,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 685
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Democrat Posts Surprising Numbers in Republican Stronghold\\nAs Democrats look to try and control the board in the 2024 election, one party member is looking to pull off a major upset in the Republican stronghold of Mississippi, where the race for governor is seeing big dollars and a closer race than what some may have expected.\\nNow, Democrat Brandon Presley, the cousin of the late King of Rock n' Roll, is bringing in sizeable fundraising numbers in his attempt to flip the governor's seat blue for the first time in around two decades.\\nDemocrat Brings in Big Bucks in Mississippi\\nDemocrat Brandon Presley reported a huge fundraising boost in the third quarter, according to new filings, as he has now outraised his Republican opponent over the course of the year.\\nPresley now has raised around $7.9 million this year, pumping in a significant amount of money after starting with only $725,000 in his coffers to begin the campaign.\\nIn comparison, Governor Tate Reeves has raised around $5.1 million so far this year. The incumbent Republican had a sizeable headstart over Presley to begin the year, however, starting with almost $7.9 million in his war chest.\\nReeves was quick to question the money that Presley has brought in so far, pointing to big donations from the Democratic Governors Association, which has dropped a whopping $3 million into the race so far in favor of their candidate.\\n\u201cAsk yourself: why are they dropping historic money on Mississippi to flip it blue?\u201d Reeves said on social media. \u201cIt\u2019s because they know Brandon Presley will govern like a liberal democrat.\u201d\\nHowever, the big money boost from one of the top contributors to Democratic candidates around the country appears to signal the party's belief that they could successfully target Reeves in the upcoming 2024 election, potentially flipping the governor's position blue for the first time in almost 20 years.\", \"original_answer\": \"Democrat Brandon Presley is running a surprisingly competitive race for governor in the Republican stronghold of Mississippi, raising significant funds in his bid to flip the seat blue for the first time in nearly two decades. Presley has reportedly raised around $7.9 million this year, outpacing incumbent Republican Governor Tate Reeves, who has raised about $5.1 million. The Democratic Governors Association has also contributed $3 million to the race, signaling the party's belief in a potential upset in the 2024 election.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_admission",
+  "source_cluster_id": "sha256:b86231f891ab325f4332f9740bdb58d5ea9d68a0dadb9d64e7399dc7f96a3abf",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ]
+}

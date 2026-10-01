@@ -1,0 +1,105 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.2082731630071066,
+  "exclusion_reason": null,
+  "family_id": "sha256:9c0678b324760b63d271c67548d55dff2ac18873b5a87ddbc400966a38db804f",
+  "input_tokens": 524,
+  "invocation_finished_at": "2026-10-01T11:43:46.452974+00:00",
+  "invocation_started_at": "2026-10-01T11:43:45.244700+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 3,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 524,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 548
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:8532960f28664f0ebfa5a2e062b1e177fe27ec732dcf7cb1e94aa4259f6ad83b",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 3\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855026,
+    "id": "chatcmpl-Htn1JuZUVRYnYrjVvHgU1ErG8SbiCkCH",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.117,
+      "predicted_n": 24,
+      "predicted_per_second": 42.54436579645712,
+      "predicted_per_token_ms": 23.504875,
+      "prompt_ms": 498.569,
+      "prompt_n": 446,
+      "prompt_per_second": 894.5602313822158,
+      "prompt_per_token_ms": 1.1178677130044843
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 524,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 548
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Compression fittings are to be used on stationary connections only... If you look critically at compression fittings, one thing is apparent... they are designed to inhibit the movement of the pipe outward from the fitting. However, they do a poor job preventing the pipe from turning within the fitting. To visualize this, take the example of the connection for a refrigerator icemaker.\\\\n\\\\npassage 2:That\u2019s a big no-no. If you need to replace the fitting, you must ensure that all the components of the replacement are new. Otherwise, you can expect the connection to leak sooner than you expect it to. We hope that you learned how does compression fitting work and why it\u2019s important in plumbing.\\\\n\\\\npassage 3:Compression fittings work by the compression of an \u2018olive\u2019 between two tapered surfaces and the pipe itself. The two surfaces are the body of the fitting (be it a valve, connector or any other type) and the nut. Using a spanner and a pair of grips the nut is tightened. This exerts pressure on the olive and bites it onto the pipe. Compression fittings work well if the pipe is clean and cut properly.\\\\n\\\\n\\\",\\\"question\\\":\\\"how do compression fittings work\\\"}\", \"original_answer\": \"Compression fittings work by using an 'olive' to create a seal between two tapered surfaces and the pipe. The olive is compressed between the body of the fitting and the nut, which is tightened using a spanner and grips. This pressure on the olive creates a tight seal around the pipe. Compression fittings are designed to prevent the pipe from moving outward from the fitting, but may not effectively prevent the pipe from turning within the fitting. It is important to use new components when replacing a compression fitting to avoid leaks.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_update",
+  "source_cluster_id": "sha256:7620b23ab1046e90a0d84120e5bf8c941d3489bb41b82e3b3fd15656762cd387",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]
+}

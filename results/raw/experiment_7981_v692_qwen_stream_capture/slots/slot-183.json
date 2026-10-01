@@ -1,0 +1,116 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.7863261849852279,
+  "exclusion_reason": null,
+  "family_id": "sha256:6c1c4a2317f9b673eae98309ba3f9a4f44c9e3fc355205f70379bc6c88adeea2",
+  "input_tokens": 1224,
+  "invocation_finished_at": "2026-10-01T11:45:32.967988+00:00",
+  "invocation_started_at": "2026-10-01T11:45:31.181661+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1224,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1248
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:cf80c52a6194b5a41c7db5800cefab13e7323b9b4c1c279d1d4129e793e365cd",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855132,
+    "id": "chatcmpl-oRJdfqKXmB83bYAg6dQR5O3YJwWrTPuo",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.336,
+      "predicted_n": 24,
+      "predicted_per_second": 42.452629940424806,
+      "predicted_per_token_ms": 23.555666666666667,
+      "prompt_ms": 1075.492,
+      "prompt_n": 1146,
+      "prompt_per_second": 1065.5588326087038,
+      "prompt_per_token_ms": 0.9384746945898778
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1224,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1248
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"121 E Yanonali St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":5.0,\\\"categories\\\":\\\"Restaurants, Sandwiches, Breakfast & Brunch, Bakeries, Food, Salad\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"9:30-14:30\\\",\\\"Monday\\\":\\\"9:30-14:30\\\",\\\"Thursday\\\":\\\"9:30-14:30\\\",\\\"Tuesday\\\":\\\"9:30-14:30\\\",\\\"Wednesday\\\":\\\"9:30-14:30\\\"},\\\"name\\\":\\\"L's Kitchen\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2015-12-18 21:53:09\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Delicious!  We had the Caprese sandwich  a vegetarian sandwich and a turkey and bacon sandwich.   All three were amazing.   Delicious grilled veggies with goat cheese on my vegetarian were a perfect combination.   We'll definitely be back.   Thanks again Yelp for steering us in the right direction.\\\"},{\\\"review_date\\\":\\\"2015-11-22 16:50:12\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Went to L's because we're staying close and the 5 stars.  We went over and ordered a couple burritos and sat in the patio area on the side of the building, by the parking lot for the neighboring businesses.  They set the patio up for us and the kitchen wasn't quite set up so we waited a minute. \\\\n  The burritos were excellent.  My wife got the #1 Ranchero, I got it with chorizo ($1 up charge).  Hers came with salsa rojo, mine came with verde- both good. \\\\n    While we were sitting there we realized that one of the parking spaces in the lot next to our seats had a piano in it!  Okay...\\\\n    Then a guy pulls into the lot on a motorcycle, hops off, lights up a cigarette, takes off his leather jacket and sits down and starts playing!  I guess that's why this is the Funk Zone!\\\\n    I go to take our plates back in and see on the door that it was opening time.  We had showed up half an hour before opening time!  That's why the kitchen and patio weren't set up!  I can't believe they served us.  I thanked everyone profusely and walked out to the sound of live piano music.  Great breakfast experience!\\\"},{\\\"review_date\\\":\\\"2014-12-31 23:36:55\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"The food and service here are great. I recommend this to anyone who is looking for great food. It is very affordable and tasty. It's a must if you are in the area. Thanks for a great time L.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Sure! Here's an objective overview of L's Kitchen based on the provided structured data:\\n\\nL's Kitchen is a highly-rated restaurant located in the Funk Zone area of Santa Barbara, California. The restaurant serves a variety of cuisines, including Sandwiches, Breakfast & Brunch, Bakeries, and Food. According to customer reviews, the restaurant offers delicious and affordable meals, with a focus on quality ingredients and attentive service.\\n\\nOne reviewer praised the Caprese sandwich, which features fresh tomatoes, mozzarella cheese, and basil on a crusty bread roll. Another reviewer enjoyed the vegetarian sandwich, which included grilled vegetables and goat cheese. The restaurant also offers meat options, such as turkey and bacon sandwiches, and has a variety of sides, including salads and burritos.\\n\\nCustomers appreciate the cozy outdoor seating area and the welcoming ambiance of the restaurant. One reviewer noted that the patio area is pet-friendly, making it a great spot for families or individuals with furry friends. Additionally, the restaurant offers takeout and delivery options for convenience.\\n\\nAccording to the provided structured data, L's Kitchen is open from 9:30am to 2:30pm, Monday through Friday, and has a rating of 5.0 stars based on three customer reviews. The reviews praise the restaurant's food, service, and atmosphere, making it a top choice for locals and visitors alike.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_admission",
+  "source_cluster_id": "sha256:7617ce0d71d9573ea3d3096b84f6e88f42959a154af69bd0e6e2a6a01dc1366e",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22
+  ]
+}

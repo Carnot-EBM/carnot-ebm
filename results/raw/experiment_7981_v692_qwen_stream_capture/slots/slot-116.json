@@ -1,0 +1,108 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.272961601964198,
+  "exclusion_reason": null,
+  "family_id": "sha256:ec0bdb3d45b6e5acfcc186556f7ab3c7c0a1c18f2e5e852a677419322a59fdb0",
+  "input_tokens": 654,
+  "invocation_finished_at": "2026-10-01T11:43:55.308216+00:00",
+  "invocation_started_at": "2026-10-01T11:43:54.035254+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 654,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 677
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:8bd609d4701edce4900c9ae2ae04550291090672e404cbeec0c432926e555965",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855035,
+    "id": "chatcmpl-anGJkeNXOBI3RdNw9FJ0hbwoOgEi9qfo",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.167,
+      "predicted_n": 23,
+      "predicted_per_second": 42.57942451130854,
+      "predicted_per_token_ms": 23.485521739130437,
+      "prompt_ms": 598.299,
+      "prompt_n": 576,
+      "prompt_per_second": 962.729337672301,
+      "prompt_per_token_ms": 1.0387135416666666
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 654,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 677
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Commas and periods are the most frequently used punctuation marks. Commas customarily indicate a brief pause; they're not as final as periods. Rule 1. Use commas to separate words and word groups in a simple series of three or more items. Example: My estate goes to my husband, son, daughter-in-law, and nephew. Note: When the last comma in a series comes before and or or (after daughter-in-law in the above example), it is known as the Oxford comma.\\\\n\\\\npassage 2:Quick Guide to Commas. 1. Use commas to separate independent clauses when they are joined by any of these seven coordinating conjunctions: and, but, for, or, nor, so, yet. 2. Use commas after introductory a) clauses, b) phrases, or c) words that come before the main clause.\\\\n\\\\npassage 3:Rule 2. Use a comma to separate two adjectives when the order of the adjectives is interchangeable. Example: He is a strong, healthy man. We could also say healthy, strong man. Example: We stayed at an expensive summer resort. We would not say summer expensive resort, so no comma.\\\\n\\\\n\\\",\\\"question\\\":\\\"when to use a comma\\\"}\", \"original_answer\": \"Sure! Here's my answer based on the given passages:\\n\\nWhen to use a comma:\\n\\nAccording to passage 1, use a comma to separate words and word groups in a simple series of three or more items, such as: My estate goes to my husband, son, daughter-in-law, and nephew. Additionally, use a comma before the conjunction (and, or, but) in a list of three or more items.\\n\\nPassage 2 provides further guidance on using commas to separate independent clauses joined by coordinating conjunctions, such as: Use commas after introductory clauses, phrases, or words that come before the main clause.\\n\\nPassage 3 suggests using a comma to separate two adjectives when the order of the adjectives is interchangeable, like in the example: He is a strong, healthy man.\\n\\nSo, to summarize: use a comma to separate items in a list, separate independent clauses joined by coordinating conjunctions, and separate two adjectives when the order is interchangeable.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_admission",
+  "source_cluster_id": "sha256:2009649c35bc5c5cf2c8b3e3cecc24f8d369108b69d86c06d35c12e8e5ca4492",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ]
+}

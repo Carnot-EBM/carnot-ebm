@@ -1,0 +1,112 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.3362714889808558,
+  "exclusion_reason": null,
+  "family_id": "sha256:f9ea087ee24ac31e80482101c7b3245faf5134790423bd1aaeb3331e87e56849",
+  "input_tokens": 802,
+  "invocation_finished_at": "2026-10-01T11:41:32.191341+00:00",
+  "invocation_started_at": "2026-10-01T11:41:30.855068+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 802,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 825
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:10994000fbbf3103e00dfc955d7b93abd7e17c4438138022314401ec46e8088b",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790854892,
+    "id": "chatcmpl-GivinoZTR5zxkKl35XzYxuDSbG8Bf238",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 533.328,
+      "predicted_n": 23,
+      "predicted_per_second": 43.125431254312545,
+      "predicted_per_token_ms": 23.188173913043478,
+      "prompt_ms": 684.785,
+      "prompt_n": 724,
+      "prompt_per_second": 1057.26614922932,
+      "prompt_per_token_ms": 0.945835635359116
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 802,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 825
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Figure: Example of the HP Update Settings window. If you want HP Update to automatically check for updates, click Automatically check the web for updates. Only notify me when an update is available. If you want to schedule updates, click Every, and then select the desired frequency from the drop-down list.elect your operating system, and then follow these steps to open HP Update and check for updates. Open HP Update. Windows 8. Press the Windows () + Q keys, type HP Update into the Search field, and then click HP Update from the list of results.\\\\n\\\\npassage 2:Step 1 To update the printer drivers, first confirm the model of your printer. You can usually find the name or number on the printer itself, or in the 'Devices and Printers' panel that you opened earlier.Step 2 Go to your printer manufacturer's Website; in our example, we're going to HP.com.Click Support & Drivers, select the Download drivers and software (and firmware) button, and type the name and number of your printer into the search bar. Click the Go button.Step 3 In the next section, select your operating system version to get the latest correct driver.lick Support & Drivers, select the Download drivers and software (and firmware) button, and type the name and number of your printer into the search bar. Click the Go button. Step 3 In the next section, select your operating system version to get the latest correct driver.\\\\n\\\\npassage 3:Instructions. Go to the website of your printer's manufacturer. Type in the model number of your printer into the search box along with firmware and hit Enter.. For example if your printer's model name is 5600D, type in 5600D firmware.. The newest firmware for your computer should be listed in the search results.nstructions. Go to the website of your printer's manufacturer. Type in the model number of your printer into the search box along with firmware and hit Enter.. For example if your printer's model name is 5600D, type in 5600D firmware.. The newest firmware for your computer should be listed in the search results.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to upgrade firmware of hp printer\\\"}\", \"original_answer\": \"To upgrade the firmware of your HP printer, first identify the model of your printer. You can usually find this on the printer itself or in the 'Devices and Printers' panel. Go to the HP website and click on 'Support & Drivers', then select the 'Download drivers and software (and firmware)' button. Type the name and number of your printer into the search bar and click 'Go'. In the next section, select your operating system version to get the latest correct driver. Alternatively, you can set HP Update to automatically check for updates. To do this, open HP Update, click 'Automatically check the web for updates' and set the desired frequency of checks.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_update",
+  "source_cluster_id": "sha256:00b3e030f2a508dbd89c4e105fd01dc9451eaf6ed056f66a3840e873826497c8",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18
+  ]
+}

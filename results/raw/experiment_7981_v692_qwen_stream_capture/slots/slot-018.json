@@ -1,0 +1,100 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.3453729439643212,
+  "exclusion_reason": null,
+  "family_id": "sha256:3c8fd988f430ec1cd25811c1d38fa958a591e5df72498effd8e6f47b276f96f3",
+  "input_tokens": 760,
+  "invocation_finished_at": "2026-10-01T11:41:40.816373+00:00",
+  "invocation_started_at": "2026-10-01T11:41:39.470998+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 760,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 784
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:1751f73ef1a2f94580a4621105182cc0e00beb0bd93d31648c329748573c2141",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790854900,
+    "id": "chatcmpl-CNTQamnlzifMJ9TozrXoEF6YEdqieqqV",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 563.75,
+      "predicted_n": 24,
+      "predicted_per_second": 42.57206208425721,
+      "predicted_per_token_ms": 23.489583333333332,
+      "prompt_ms": 665.785,
+      "prompt_n": 682,
+      "prompt_per_second": 1024.3547091027885,
+      "prompt_per_token_ms": 0.976224340175953
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 760,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 784
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"4991 Carpinteria Ave\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Restaurants, Coffee & Tea, Gluten-Free, Juice Bars & Smoothies, Food\\\",\\\"city\\\":\\\"Carpinteria\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"7:0-16:0\\\",\\\"Monday\\\":\\\"7:0-16:0\\\",\\\"Saturday\\\":\\\"7:0-16:0\\\",\\\"Sunday\\\":\\\"8:0-16:0\\\",\\\"Thursday\\\":\\\"7:0-16:0\\\",\\\"Tuesday\\\":\\\"7:0-16:0\\\",\\\"Wednesday\\\":\\\"7:0-16:0\\\"},\\\"name\\\":\\\"Juice N Things\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-12-05 23:12:16\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Great place - coffee is delicious and low/no sugar is the default.  Muffins and carrot cake also fantastic - low sugar, GF etc.  Well worth checking out!\\\"},{\\\"review_date\\\":\\\"2021-11-23 22:17:33\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Regarding the \\\\\\\"N Things\\\\\\\" I dig their coffee! I was given the option of two beans for my Cap, who offers  that anymore? Attentive and friendly service (also hard to find these days). The keto pumpkin muffin was deelish.\\\"},{\\\"review_date\\\":\\\"2021-11-06 23:23:56\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Love this new coffee shop where the previous Coffee Bean used to be. I am a fan of their UNSWEETENED Chai Tea because I can add my level of sweetness.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Juice N Things is a popular restaurant located in Carpinteria, California, known for its delicious coffee, juices, and gluten-free options. According to customer reviews, the coffee is exceptional, with the option to choose from two different beans for your cup. The service is attentive and friendly, making customers feel welcome and valued. The menu offers a variety of gluten-free and low-sugar options, including muffins and carrot cake that are highly recommended by patrons. Additionally, the establishment provides free Wi-Fi, outdoor seating, and accepts reservations. The ambiance is cozy and inviting, making it an excellent spot for groups or individuals looking for a relaxing atmosphere. With an average rating of 4.0 stars, Juice N Things is well-liked by its patrons and considered a hidden gem in the area.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "calibration_replay",
+  "source_cluster_id": "sha256:7979cd495923da374a84174cdc349d4c140cb58f0ca07287f9a9d3f82d6c449c",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ]
+}

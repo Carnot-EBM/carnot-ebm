@@ -1,0 +1,110 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.4227548760245554,
+  "exclusion_reason": null,
+  "family_id": "sha256:62b7316e810017b02ecb6d2cb772b23ce659cb05b27841d34824a91600923b74",
+  "input_tokens": 779,
+  "invocation_finished_at": "2026-10-01T11:43:43.336731+00:00",
+  "invocation_started_at": "2026-10-01T11:43:41.913975+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": 13,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 26,
+      "prompt_tokens": 779,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 805
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:84c53ada7d70742ae280dcd7abc31588149827e7b872184fe5439cff52c702d8",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": 13\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855023,
+    "id": "chatcmpl-5YC4u7YBTGA6qRUSgD4DDLqlFV3bN0At",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 612.888,
+      "predicted_n": 26,
+      "predicted_per_second": 42.42210648601375,
+      "predicted_per_token_ms": 23.572615384615386,
+      "prompt_ms": 692.195,
+      "prompt_n": 701,
+      "prompt_per_second": 1012.7204039324179,
+      "prompt_per_token_ms": 0.9874393723252497
+    },
+    "usage": {
+      "completion_tokens": 26,
+      "prompt_tokens": 779,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 805
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Air Sacs of a Bird. The air sacs of birds extend into the humerus (the bone between the shoulder and elbow), the femur (the thigh bone), the vertebrae and even the skull. Birds do not have a diaphragm; instead, air is moved in and out of the respiratory system. through pressure changes in the air sacs.hen the bird inspires the second time, the air moves to the cranial air sacs. On the second expiration, the air moves out of the cranial air sacs, through the syrinx. into the trachea, through the larynx, and finally through the nasal cavity and out of the. nostrils. Hope this is clear as mud.\\\\n\\\\npassage 2:Birds are equipped with nine respiratory air sacs to supplement  their smaller lungs. Birds have a higher metabolic rate, so they  need higher amounts of oxygen. The air sac \u2026 s enable birds to  ventilate their lungs by allowing a unidirectional flow of air  through the lungs.Put simply, this means that air moving through  the bird's lungs has a higher oxygen content, to deliver more  oxygen directly to the blood.he air sac \u2026 s enable birds to  ventilate their lungs by allowing a unidirectional flow of air  through the lungs. Put simply, this means that air moving through  the bird's lungs has a higher oxygen content, to deliver more  oxygen directly to the blood.\\\\n\\\\npassage 3:The air sacs of birds extend into the humerus (the bone between the shoulder and elbow), the femur (the thigh bone), the vertebrae and even the skull. Birds do not have a diaphragm; instead, air is moved in and out of the respiratory system through pressure changes in the air sacs.Muscles in the chest cause the sternum to be pushed outward. This creates a negative pressure in the air sacs, causing air to enter the respiratory system.espiration in birds is much different than in mammals. Birds have a larynx, but it is not used to make sounds. Instead, an organ termed the syrinx serves as the voice box.. Birds have lungs, but they also have air sacs. Depending upon the species, the bird has seven or nine air sacs.\\\\n\\\\n\\\",\\\"question\\\":\\\"what are the functions of a birds air sacs\\\"}\", \"original_answer\": \"Based on the given passages, it can be concluded that the functions of birds' air sacs are:\\n\\n* To provide supplementation for the lungs by allowing a unidirectional flow of air through the lungs.\\n* To enable birds to ventilate their lungs by creating a negative pressure in the air sacs, causing air to enter the respiratory system.\\n* To enable the delivery of high-oxygen content air to the bloodstream.\\n* To serve as a voice box, allowing birds to produce vocalizations.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "sha256:85e038ea8152a33039d2c782570ef4675ea1d99630c9ef2d0e7d6a89773eb6dc",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+  ]
+}

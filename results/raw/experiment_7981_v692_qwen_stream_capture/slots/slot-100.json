@@ -1,0 +1,107 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.4826449630199932,
+  "exclusion_reason": null,
+  "family_id": "sha256:e21f72e00f75e6793bb3ad0193d12d7559be3aaea11afa485663bbbad04b6e88",
+  "input_tokens": 978,
+  "invocation_finished_at": "2026-10-01T11:43:33.292826+00:00",
+  "invocation_started_at": "2026-10-01T11:43:31.810179+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 978,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 999
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:78a1b3fbc93c8beed773bc7ef938c66b634bd2134c7e92ab256989b673fc17f3",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855013,
+    "id": "chatcmpl-UW6fARfizibncKY0Dipnc2fecYHh5tYv",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 491.418,
+      "predicted_n": 21,
+      "predicted_per_second": 42.733477406200016,
+      "predicted_per_token_ms": 23.40085714285714,
+      "prompt_ms": 878.779,
+      "prompt_n": 900,
+      "prompt_per_second": 1024.1482784636412,
+      "prompt_per_token_ms": 0.9764211111111111
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 978,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 999
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"5724 Hollister\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":null,\\\"lot\\\":true,\\\"street\\\":null,\\\"valet\\\":false,\\\"validated\\\":null},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":3.0,\\\"categories\\\":\\\"Fast Food, Restaurants, Burgers\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"10:30-23:0\\\",\\\"Monday\\\":\\\"10:30-23:0\\\",\\\"Saturday\\\":\\\"10:30-23:0\\\",\\\"Sunday\\\":\\\"10:30-22:0\\\",\\\"Thursday\\\":\\\"10:30-23:0\\\",\\\"Tuesday\\\":\\\"10:30-23:0\\\",\\\"Wednesday\\\":\\\"10:30-23:0\\\"},\\\"name\\\":\\\"Wendy's\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-11-21 20:14:36\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Pull in for some breaky, lo and behold they've got breakfast bisquit sandwiches for a buck each. I don't know how long they can stay open with prices like that!\\\\nBTW...The sandwiches were great.\\\"},{\\\"review_date\\\":\\\"2021-06-16 04:15:13\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"This place sucks on foenem grave sum lil girl that looks like wendys girl cuz she has red hair her name tag said Jaime she was rude to me because I couldn't speak English cuz I speak Portuguese my friend help me type this. But I never returning here with my slatts  on gang.\\\"},{\\\"review_date\\\":\\\"2021-04-02 04:30:57\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Placed an online order to he picked up in the lobby.  The app said lobby was open until 9pm.  I tried to go in at 8:50 PM.  Doors were locked.  Parked in front of the signs for online orders and checked in.  Waited for 20 minutes and nobody came out.  I decided to pull up to the drive thru window to let them know I had an online order.  The girl seemed puzzled and asked the other worker about it.  Other worker said \\\\\\\"all\u00ed est\u00e1\\\\\\\" meaning it is right there.  Who knows how long I would have had to wait if I wouldn't have drove up to the window.  Food's temperature was on the cold side.  Not very good service.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Wendy's is a fast food restaurant located at 5724 Hollister, Goleta, CA offering a variety of burgers. They are open from 10:30 to 23:00 from Monday to Saturday, and until 22:00 on Sundays. The restaurant provides a parking lot for customers but does not offer valet, garage, or street parking. Wendy's does not offer reservations, outdoor seating, or WiFi. The ambiance is not particularly distinctive and the restaurant is not suited for music. They offer takeout and are suitable for groups. The business has an average rating of 3.0 stars. Customer reviews are mixed, with positive comments about their breakfast biscuit sandwiches but negative feedback about service, particularly for customers who placed online orders and non-English speakers.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_admission",
+  "source_cluster_id": "sha256:ae31ada2e6da75f30d726157db20e63f91a22ae70c79e5408342bc5723fc862b",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ]
+}

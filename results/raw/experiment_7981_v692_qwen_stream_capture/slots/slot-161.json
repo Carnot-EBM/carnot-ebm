@@ -1,0 +1,103 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.4115741130081005,
+  "exclusion_reason": null,
+  "family_id": "sha256:cc4c4c27463fd3e0b7278eccfd08d126667cf26fed5c242f0baa09e34ba801d5",
+  "input_tokens": 822,
+  "invocation_finished_at": "2026-10-01T11:44:59.601069+00:00",
+  "invocation_started_at": "2026-10-01T11:44:58.189494+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 822,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 846
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:b587031d13491528109ce51317525281810cf2925889fa9d66097ee7fde02255",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855099,
+    "id": "chatcmpl-zpvJBWm9NIPFncf6nJgdpaqMbcKJonje",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.301,
+      "predicted_n": 24,
+      "predicted_per_second": 42.53049347777161,
+      "predicted_per_token_ms": 23.512541666666667,
+      "prompt_ms": 725.809,
+      "prompt_n": 744,
+      "prompt_per_second": 1025.0630675563407,
+      "prompt_per_token_ms": 0.9755497311827956
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 822,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 846
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"5392 Hollister Ave\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":null},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Food, Restaurants, Bakeries\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"7:30-18:0\\\",\\\"Saturday\\\":\\\"10:0-17:30\\\",\\\"Thursday\\\":\\\"7:30-18:0\\\",\\\"Tuesday\\\":\\\"7:30-18:0\\\",\\\"Wednesday\\\":\\\"7:30-18:0\\\"},\\\"name\\\":\\\"Simply Pies\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2015-07-30 20:56:42\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"We used Simply Pies for our wedding this July.  The pies are delicious, clearly the best around town, and for what they are, appropriately priced.  I am under the impression that the store is currently undergoing some ownership/management changes, which may make large event planning go a bit smoother.  Despite extraordinarily friendly service, over the course of the last many months of wedding planning, Simply Pies was at times unorganized and difficult to reach.  Overall, we would have appreciated more guidance.  That being said, don't get me wrong, I would use them again because 1) Pies are better than cake, 2) Simply Pies are better than other pies.\\\"},{\\\"review_date\\\":\\\"2015-07-02 04:42:31\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Love the quiche, and the candied pecans  Great local businesses with excellent service and high quality offerings!\\\"},{\\\"review_date\\\":\\\"2015-05-10 00:48:38\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Just bought berry and apple pies, 2 beef, 2 chicken and 2 veggie pies and ohhhh my god this is heaven on earth! I highly recommend simply pies. Its so great to support local businesses and the owner is so kind!  This is a true gem and is a MUST try! 1000 stars!!!!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Simply Pies is a local food establishment located in Goleta, California, offering a range of delicious pies, including savory options like beef and chicken, as well as sweet options like berry and apple. The business has received positive reviews for its high-quality offerings and excellent customer service. One reviewer praised the pies as the best in town, while another noted that the business is currently undergoing changes but still offers friendly service. A third reviewer raved about the quiche and candied pecans, highlighting the business's commitment to using locally sourced ingredients. With a rating of 4.0 out of 5 stars, Simply Pies appears to be a popular choice among locals and visitors alike.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_admission",
+  "source_cluster_id": "sha256:a05e50e702dc76e520ce17fb49fd202a1d54d0b75b07367ef2fd32d479405408",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ]
+}

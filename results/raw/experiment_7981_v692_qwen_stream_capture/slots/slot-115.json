@@ -1,0 +1,111 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.5913077360019088,
+  "exclusion_reason": null,
+  "family_id": "sha256:75de7f5e1c6d6a117f945843740be84c757c47cd1bdd001696390ede9a880cc8",
+  "input_tokens": 1025,
+  "invocation_finished_at": "2026-10-01T11:43:54.021301+00:00",
+  "invocation_started_at": "2026-10-01T11:43:52.429992+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1025,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1048
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:8af7effd15f8ff9d9c9f698763afdd3f65ef815627408b9a28b206652ec60f63",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855034,
+    "id": "chatcmpl-noYM0cEwe6vsSjheMPA93p3xlWT5AmrU",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.675,
+      "predicted_n": 23,
+      "predicted_per_second": 42.539418319692984,
+      "predicted_per_token_ms": 23.507608695652173,
+      "prompt_ms": 929.774,
+      "prompt_n": 947,
+      "prompt_per_second": 1018.5270829255281,
+      "prompt_per_token_ms": 0.9818099260823654
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1025,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1048
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"432 E Haley St\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Organic Stores, Breakfast & Brunch, Live/Raw Food, Juice Bars & Smoothies, Food, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"7:30-17:30\\\",\\\"Monday\\\":\\\"7:30-17:30\\\",\\\"Saturday\\\":\\\"9:0-16:0\\\",\\\"Thursday\\\":\\\"7:30-17:30\\\",\\\"Tuesday\\\":\\\"7:30-17:30\\\",\\\"Wednesday\\\":\\\"7:30-17:30\\\"},\\\"name\\\":\\\"AH Juice Organics\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-08 21:58:19\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Caution! friendly and good food but...  No one is masked or rubber gloved preparing or serving food. And this is at the height of the pandemic \\\\\\\"viral blizzard\\\\\\\".  I asked how they could do that, not follow guidelines at this time. The young man said \\\\\\\"we just stay healthy\\\\\\\".  Uh, don't you understand symptomless transmission?  Don't you know you can easily infect others? You are serving food! You are fine to say it's OK to walk around outside firing a loaded gun. \\\\n\\\\nHesitatingly paid my to-go order and won't be back.\\\"},{\\\"review_date\\\":\\\"2021-12-25 17:42:47\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"We stopped here for organic coffee but wow they have a lot of items! We will be back to try more stuff!\\\"},{\\\"review_date\\\":\\\"2021-12-17 22:14:34\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"I've been to Ah Juice a few times in the past and enjoyed my food. I was very disappointed to see that this business is not using masks despite a current public health order requiring masks. No staff members were masked and there was no attempt to require masks of customers who were standing in line indoors. It's one thing to decide not to wear a mask when visiting friends, but it's totally different when you are operating a business dealing with the public. Do they also think it's not necessary to follow public health requirements that restaurant employees wash their hands after going to the bathroom or handling raw meat? For a place that supposedly serves healthy food, they have sent a clear message that their preferences are more important than their customers' and employees' health. I won't be returning.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"AH Juice Organics, located at 432 E Haley St in Santa Barbara, CA, operates as an organic store and restaurant specializing in breakfast and brunch, live/raw food, and a range of juices and smoothies. The business operates from 7:30 am to 5:30 pm from Monday to Friday and from 9:00 am to 4:00 pm on Saturdays. AH Juice Organics offer few amenities such as free WiFi, outdoor seating, and takeout option. However, no information is provided about music, ambience, or whether it's suitable for groups. They have an overall rating of 3.5 stars. Customer reviews reveal mixed reactions, with praises for a wide range of items on the menu and commendation for good food. However, there are concerns about the lack of adherence to pandemic guidelines, particularly the non-use of masks by the staff, which has led to some customers stating they won't return.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_admission",
+  "source_cluster_id": "sha256:16019fb9dceced7a82f5a50ddc9dd380b09c9f9a90a7bffcfa188fc9f5bd13be",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17
+  ]
+}

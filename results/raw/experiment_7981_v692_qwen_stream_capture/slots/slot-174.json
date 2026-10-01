@@ -1,0 +1,114 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.7669518039911054,
+  "exclusion_reason": null,
+  "family_id": "sha256:8d2880ea32ce8d5403deb5b3367621327ef0c13d28b9d4ca96655bff31900c56",
+  "input_tokens": 1203,
+  "invocation_finished_at": "2026-10-01T11:45:18.872920+00:00",
+  "invocation_started_at": "2026-10-01T11:45:17.105966+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1203,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1227
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:c205b0bc626a6b10e2b234da5af8070165e658e781062f6d2b24a798dbfdac00",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855118,
+    "id": "chatcmpl-EHGNAykQqhcNuq9TdC4tMiv0dIASa6pD",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.27,
+      "predicted_n": 24,
+      "predicted_per_second": 42.457586640012735,
+      "predicted_per_token_ms": 23.552916666666665,
+      "prompt_ms": 1064.557,
+      "prompt_n": 1125,
+      "prompt_per_second": 1056.7776079627488,
+      "prompt_per_token_ms": 0.9462728888888889
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1203,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1227
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"2000 De La Vina St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Restaurants, American (Traditional)\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"10:0-21:30\\\",\\\"Monday\\\":\\\"10:0-21:30\\\",\\\"Saturday\\\":\\\"9:0-21:30\\\",\\\"Sunday\\\":\\\"9:0-21:30\\\",\\\"Thursday\\\":\\\"10:0-21:30\\\",\\\"Tuesday\\\":\\\"10:0-21:30\\\",\\\"Wednesday\\\":\\\"10:0-21:30\\\"},\\\"name\\\":\\\"Derf's Cafe\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-11 23:16:25\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I used to live one block from this neighborhood fixture. Back for a visit. My wife has a severe gluten allergy (epi-pen) not just a fad. Server was awesome explaining kitchen was not gluten free but since they were slow that day (new year's eve), she'd ask the cook to wipe down the grill. Food was great. Wine was outstanding. Service was exceptional. Thanks!!! Can't find my receipt. Otherwise I'd give a shout out to the server too (she has allergies and empathized).\\\"},{\\\"review_date\\\":\\\"2021-11-25 20:42:33\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"My first time at this restaurant was about a month ago, we waited for about 15 minutes before she / waitress took our order, this was during the week for lunch, so were like well it happens sometimes but I was there this pass week and the same waitress was there and we waited 20 minutes, she keep on saying give a minute and I'll take you order. We just left the restaurant because that's not acceptable, this is very bad customer service.\\\"},{\\\"review_date\\\":\\\"2021-11-14 01:48:33\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"I've driven by this place on the corner many times and always see people eating on the porch out front. We decided to give it a try on a 90 degree day, and unfortunately the umbrellas didn't cover enough of the patio and there was no AC inside so that made the experience a bit un-pleasurable. The staff was rushed and didn't pay much attention to us. But the food was good! Not high quality but tasty. Nothing special but satisfying. \\\\n\\\\nI had the veggie sandwich, to switch things up from my usual go tos and was very pleased. The onion rings were light and crispy too! Those were a hit around the table! Everyone enjoyed their food so we walked away feel good. Wish I had picked a place that could have impressed a bit more.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Sure! Here's an objective overview of Derf's Cafe based on the provided structured data in JSON format:\\n\\nDerf's Cafe is a popular American (Traditional) restaurant located in the heart of Santa Barbara, CA. With a rating of 3.5 stars and over 100 reviews, this cozy eatery offers a casual dining experience with both indoor and outdoor seating. The restaurant has a validated parking lot and accepts reservations, but does not offer WiFi or takeout.\\n\\nThe menu features a variety of classic American dishes, including sandwiches, salads, and entrees. The restaurant is open seven days a week from 10am to 9pm, with extended hours on Friday and Saturday.\\n\\nAccording to recent customer reviews, the service at Derf's Cafe is attentive and friendly, with one reviewer praising the server for accommodating their wife's severe gluten allergy. However, another reviewer experienced long wait times and poor customer service during their visits.\\n\\nThe ambiance of Derf's Cafe is described as casual and comfortable, with outdoor seating available. While some reviewers found the restaurant to be overpriced, others appreciated the value and quality of the food. Overall, Derf's Cafe appears to be a solid choice for those looking for a reliable, comforting meal in a relaxed setting.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_update",
+  "source_cluster_id": "sha256:1c6937a510661e0ab63dea52449e395ff2fdfa94be515fdc2c288e855c1225b5",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20
+  ]
+}

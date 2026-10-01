@@ -1,0 +1,112 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.314628847001586,
+  "exclusion_reason": null,
+  "family_id": "sha256:161b12e28a3630d34629c4e391a8e35a5ba0c99d7e35073747f5322db9a7bc42",
+  "input_tokens": 742,
+  "invocation_finished_at": "2026-10-01T11:42:41.704875+00:00",
+  "invocation_started_at": "2026-10-01T11:42:40.390243+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 742,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 765
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:4e777e14adb835b2063136dcaef5f12a7a1ae070f7b6a131f8e476cabc46b430",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790854961,
+    "id": "chatcmpl-vWB2Fu2hfCxOHtywpcaGr6qK7Z8HRpat",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 536.551,
+      "predicted_n": 23,
+      "predicted_per_second": 42.86638176054093,
+      "predicted_per_token_ms": 23.328304347826087,
+      "prompt_ms": 660.728,
+      "prompt_n": 664,
+      "prompt_per_second": 1004.9521134264025,
+      "prompt_per_token_ms": 0.9950722891566265
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 742,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 765
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Caught up in a rip current while snorkeling at Finn's Beach in Bali, Roxy Walsh was holding on to some rocks when she spotted something special. Engraved with the words, \\\"Darling Joe, Happy 70th Birthday 2009. Love Jenny,\\\" the antique ring lodged in the rocks clearly meant something to both Joe and Jenny. But there were no other clues (besides the fact that the words were written in English) as to where the couple might live. When she returned home to Palm Beach, Australia, Walsh was determined to reunite the ring with its owner. She went to the 5,000 members of her company's Facebook page, Kids in Adelaide, to reunite Joe and Jenny with the ring. She also created a \\\"Find Joe and Jenny\\\" page to track them down. \\\"Hi all. It's Roxy here. This is a reaaaallyy long shot but would love some SHARE love on this post to help find Joe. Found this gold ring snorkeling at Finns Beach in Bali today. It's got a family crest on it, and engraved with the message 'Darling Joe, Happy 70th Birthday 2009. Love Jenny' How amazing would it be to find him! Please click share.\\\" The post got shared all over the world. Nine months earlier, Joe Langley had been snorkeling in the same spot in Bali when he lost the ring, which his wife, Jenny, had purchased an antique store and had engraved for his birthday. \\\"I went for a swim, got caught in a rip, decided the rip was going to take me and finished up on the rocks,\\\" Langley told Sunshine Coast Daily. \\\"In clawing my way over the rocks, the ring pulled off my finger.\\\" The Langleys' 19-year-old granddaughter saw the Facebook post April 9 and made the connection. It turns out that the Langleys are fellow Australians, living in the town of Noosa, just three hours from where Walsh lives in Palm Beach. Walsh had the ring professionally cleaned before she met the happy Langleys in Noosa to return it.\\n\", \"original_answer\": \"Roxy Walsh found an antique ring while snorkeling in Bali, engraved with a message from \\\"Jenny\\\" to \\\"Joe\\\". Determined to find the owners, Walsh used social media to spread the word. The ring turned out to belong to Joe Langley, who had lost it while snorkeling in the same spot nine months earlier. Langley\u2019s granddaughter saw the post and made the connection. The Langleys, who live in Noosa, Australia, were then able to meet Walsh and retrieve the ring.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_admission",
+  "source_cluster_id": "sha256:2d0adfdca53f9ffdf5ef9b422055e87a637724f0dcff953d3e20338adba03e39",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18
+  ]
+}

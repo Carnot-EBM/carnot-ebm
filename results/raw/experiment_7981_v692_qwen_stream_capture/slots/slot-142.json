@@ -1,0 +1,120 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.4877857330138795,
+  "exclusion_reason": null,
+  "family_id": "sha256:9e8baa7d35431d9c903de9d80f695db699551e8108577c723b436c8b68985b5a",
+  "input_tokens": 855,
+  "invocation_finished_at": "2026-10-01T11:44:30.764984+00:00",
+  "invocation_started_at": "2026-10-01T11:44:29.277196+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 855,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 878
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:a58caf9c372577fd32d0bec21cebd24bf311e7ce67b58f248ded066931769c20",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855070,
+    "id": "chatcmpl-V4oJnZlNtbZitmaReIBQp0Uv1M9WzARv",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 539.543,
+      "predicted_n": 23,
+      "predicted_per_second": 42.628669077348796,
+      "predicted_per_token_ms": 23.458391304347828,
+      "prompt_ms": 817.291,
+      "prompt_n": 777,
+      "prompt_per_second": 950.7017696267303,
+      "prompt_per_token_ms": 1.0518545688545688
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 855,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 878
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:How to Hard Boil Eggs perfectly every time! Visit http://foodwishes.com, to get the ingredients and more info, and watch over 600 free video recipes.Thanks and enjoy! 1  TV-Y. 2  Food Wishes Recipes. 3  3. 4  8. 5  2:21. 6  Chef John.ow to Hard Boil Eggs perfectly every time! Visit http://foodwishes.com, to get the ingredients and more info, and watch over 600 free video recipes. Thanks and enjoy! 1  TV-Y. 2  Food Wishes Recipes. 3  3. 4  8. 5  2:21.\\\\n\\\\npassage 2:Instructions. 1  Put the eggs in a pan of cold water: Place 6 cold eggs in a saucepan and fill with cold water, covering the eggs by an inch. 2  Bring the water to a rolling boil: Set the pan over high heat and bring the water to a boil, uncovered.3  Turn off the heat and cover the pan.nstructions. 1  Put the eggs in a pan of cold water: Place 6 cold eggs in a saucepan and fill with cold water, covering the eggs by an inch. 2  Bring the water to a rolling boil: Set the pan over high heat and bring the water to a boil, uncovered. 3  The water should come to a full, rolling boil.\\\\n\\\\npassage 3:1 Make sure the eggs are covered by 2 inches of water. 2  When the water reaches a rolling boil, let them slow boil 12 minutes; remove from heat. 3  Stop the cooking process by adding ice to to the water. 4  Slightly shortening the recommended length of boiling time leaves the eggs done, but without drying the yolks. Make sure the eggs are covered by 2 inches of water. 2  When the water reaches a rolling boil, let them slow boil 12 minutes; remove from heat. 3  Stop the cooking process by adding ice to to the water. 4  Slightly shortening the recommended length of boiling time leaves the eggs done, but without drying the yolks.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to hard boil eggs youtube\\\"}\", \"original_answer\": \"Based on the given passages, here is how to hard boil eggs:\\n\\n1. Place the eggs in a pan of cold water, making sure they are covered by at least 2 inches of water.\\n2. Bring the water to a rolling boil over high heat.\\n3. Once the water has reached a full, rolling boil, let the eggs slow boil for 12 minutes.\\n4. Remove the eggs from the heat and stop the cooking process by adding ice to the water.\\n\\nNote: Slightly shortening the recommended length of boiling time can help prevent drying out the yolks.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "sha256:63c7c401d847e0ec63893d0ba0d93559982f060b8165bc4488ae6f35a5bec715",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26
+  ]
+}

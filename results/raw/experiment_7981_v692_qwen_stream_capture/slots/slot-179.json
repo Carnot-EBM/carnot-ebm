@@ -1,0 +1,119 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.6913734010304324,
+  "exclusion_reason": null,
+  "family_id": "sha256:8bc64c8575e94e5853916abee7442a248288640eb2550bda0ac860fdd9377917",
+  "input_tokens": 1107,
+  "invocation_finished_at": "2026-10-01T11:45:26.366922+00:00",
+  "invocation_started_at": "2026-10-01T11:45:24.675547+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1107,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1131
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:ca0fb8b7e4577494977846c06f258e3a7df95c12a4d4ce5997ca37d8d1739cba",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855126,
+    "id": "chatcmpl-iV407x1lfSlxSR3WTMaj5TsxB8SdjDK1",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.11,
+      "predicted_n": 24,
+      "predicted_per_second": 42.46960768699899,
+      "predicted_per_token_ms": 23.54625,
+      "prompt_ms": 992.123,
+      "prompt_n": 1029,
+      "prompt_per_second": 1037.169786407532,
+      "prompt_per_token_ms": 0.9641622934888241
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1107,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1131
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"1431 San Andres St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":null},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Bars, Dive Bars, Nightlife\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":null,\\\"name\\\":\\\"Palmieri's Cocktail Lounge\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2013-05-23 19:22:53\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Dive Bar. It's just what you expect from a dive bar. A little dirty. A little funky. The pool table runs on quarters with soft rails. The bathroom is best avoided but satisfactory. The bartenders are friendly. The patrons are also friendly, and the drinks are stiff.\\\"},{\\\"review_date\\\":\\\"2013-03-22 03:40:51\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"This is dive bar heaven for me. Friendly welcoming staff, friendly welcoming patrons, rockin jukebox and pool table, surrounded by some bitchin old architecture. The interior looks like it's right out of the 1920's.\\\\n\\\\nThis is a fantastic working man's bar. If you gotta get up at 6 in the morning to go work your ass off all day just so you can do it all again the next day, you are among friends here. Really, whatever you do, your among friends here.\\\\n\\\\nIf Carlos is here it's a whole nother level of fun. Get him a can of PBR or put a couple bucks in the jukebox for him and it's Showtime   -  \\\\\\\"Can'top Carlos\\\\\\\". Love that guy! Love this place!\\\\n\\\\nGood pizza joint next door that delivers too. The complete package.\\\"},{\\\"review_date\\\":\\\"2013-02-25 23:58:51\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Really fun place with excellent drinks and even better company!  More of a neighborhood bar then a dive for sure.  Jukebox has a great selection.  Bartender was awesome...got us a great hookup with a cowboy party bus driver so we didn't have to wait for 2 cabs & that guy was awesome!  Pizza delivery next door was ideal & yummy.  Heard the taco truck across street was really good, often with a line before they even open..next time!  Fresh sour mix made daily for margaritas was the BOMB!   Would definitely recommend this place to go especially since its off the beaten path.  Really nice guys were hanging out here and they were fun but respectful of our girls group.  They definitely deserve more cute girls in there..so get in there ladies!  We will be back!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Sure! Here's an objective overview of Palmieri's Cocktail Lounge based on the provided structured data:\\n\\nPalmieri's Cocktail Lounge is a popular dive bar located in Santa Barbara, CA. With a rating of 4.5 stars out of 5, this bar offers a classic dive bar experience with friendly bartenders, welcoming patrons, and a lively atmosphere. The bar features a pool table, jukebox, and a small menu of pub grub. The bathrooms may be a bit rough around the edges, but they are satisfactory. The ambiance is casual and laid-back, with a romantic and intimate vibe. The reviews suggest that this bar is a great spot for locals and those looking for a no-frills drinking experience. One reviewer even described it as \\\"dive bar heaven.\\\" Overall, Palmieri's Cocktail Lounge seems like a great spot to grab a drink and socialize with friendly folks in a relaxed setting.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_admission",
+  "source_cluster_id": "sha256:397ffd5d367901b82d0a28947b937996033882bf3b92a86e0e1e8f6d5e1c8292",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25
+  ]
+}

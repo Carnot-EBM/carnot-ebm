@@ -1,0 +1,98 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.231873785960488,
+  "exclusion_reason": null,
+  "family_id": "sha256:927138a48543743ca3b379d5c6bbeadbabb8b6240425eb5835d95f8d7cfd52f5",
+  "input_tokens": 614,
+  "invocation_finished_at": "2026-10-01T11:45:12.231732+00:00",
+  "invocation_started_at": "2026-10-01T11:45:10.999856+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 614,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 637
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:bfb45023a844137fbbd6d73601eae42c548c6632a55cf789534a4a3c96358687",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855112,
+    "id": "chatcmpl-AKFoX6YDnLlLnxHuAw8LCRAAxS0Vv7U9",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 539.777,
+      "predicted_n": 23,
+      "predicted_per_second": 42.61018902250373,
+      "predicted_per_token_ms": 23.468565217391305,
+      "prompt_ms": 573.857,
+      "prompt_n": 536,
+      "prompt_per_second": 934.0306034430181,
+      "prompt_per_token_ms": 1.0706287313432836
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 614,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 637
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Best Answer: There are some basic sub-fields under Civil Engineering that can help explain what civil engineers do. Transportation Engineering--Railroads, Roads, Traffic, highway & transportation planning, multimodal transport, intelligent vehicles.\\\\n\\\\npassage 2:What Civil Engineers Do. Civil engineers conceive, design, build, supervise, operate, construct, and maintain infrastructure projects and systems in the public and private sector, including roads, buildings, airports, tunnels, dams, bridges, and systems for water supply and sewage treatment. Work Environment\\\\n\\\\npassage 3:Civil engineers typically do the following: 1  Analyze long range plans, survey reports, maps, and other data in order to plan projects. 2  Consider construction costs, government regulations, potential environmental hazards, and other factors in planning the stages of, and risk analysis for, a project.\\\\n\\\\n\\\",\\\"question\\\":\\\"what does a civil engineer do exactly?\\\"}\", \"original_answer\": \"Based on the provided passages, here is what a civil engineer does:\\n\\nPassage 1 mentions that civil engineers work in various subfields, including transportation engineering, which involves designing and building roads, highways, railroads, traffic systems, and multimodal transportation systems.\\n\\nPassage 2 provides a more comprehensive definition of what civil engineers do. They are responsible for conceiving, designing, building, supervising, operating, constructing, and maintaining infrastructure projects and systems in both the public and private sectors. This includes roads, buildings, airports, tunnels, dams, bridges, and water supply and sewage treatment systems.\\n\\nPassage 3 provides more details on the tasks that civil engineers typically perform. These include analyzing long-range plans, surveys, maps, and other data to plan projects, considering construction costs, government regulations, potential environmental hazards, and other factors when planning and risk assessment for a project.\\n\\nBased on these passages, it can be concluded that civil engineers play a critical role in designing, building, and maintaining various infrastructure projects and systems, including transportation systems, buildings, water supply systems, and waste management systems. They are involved in every stage of a project, from planning and design to construction and maintenance, and must consider a wide range of factors to ensure the safety, efficiency, and sustainability of the project.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_update",
+  "source_cluster_id": "sha256:e16782d8559e60789cff02c38d4e9c850d1fb396a28d37aa8f52a2ca4fa81fa4",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ]
+}

@@ -47439,3 +47439,33 @@ existing alignment, exact annotation join and sealed Gibbs predictor.
 `tests/python/test_evidence_features_7980.py` verifies public fields,
 complete deduplicated windows, deterministic reservation and inert slots.
 Private CLI tests verify cold extraction after changed evaluator metadata.
+
+## REQ-VERIFY-7981: Fixed full-source delayed-feedback judgments
+
+Freeze calibration_replay32, online_update96, online_admission64 and retention32
+from Exp7980. Append the fixed reserved96 only when fresh_panel_ready_score=1.
+Never capture fit, tune, policy_design or old evaluation. Keep complete inputs,
+the Exp7969 prompt and grammar, seed69058, temperature0, 6000 input tokens and
+96 output tokens. Bound load to300s, calls to120s and measured work to3000s.
+Require the pinned Q4_K_M current model and a measured10s floor. Never inspect
+evaluator labels during generation. Resume only exact model, protocol and public
+byte identity, with original invocation timestamps and no uncertain-call retry.
+
+### SCENARIO-VERIFY-7981-BRANCHES
+
+Stream readiness requires at least64 online_update,48 online_admission,24
+calibration_replay and24 retention independent usable sources. Reserved readiness
+requires at least64 of its fixed96 sources, without replacements or class-label
+access. Retain excluded, failed and censored slots. A valid branch permits a null
+overall verdict when its sibling is unavailable. No valid branch means blocked.
+
+### SCENARIO-VERIFY-7981-RESUME
+
+Reject changed identities and public labels. Retain failed and interrupted calls
+without retry. Preserve timestamps on reuse and count current and resumed calls
+separately. Overlong complete inputs escalate and remain excluded rows.
+
+Implementation: `python/carnot/verify/qwen_stream_capture_7981.py` reuses the
+historical full-source request and parser. `tests/python/test_qwen_stream_capture_7981.py`
+verifies independent branch floors, public-field isolation, complete input
+admission, failed calls and timestamp-preserving checkpoint reuse.

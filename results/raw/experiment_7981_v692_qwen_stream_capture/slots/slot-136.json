@@ -1,0 +1,103 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.170187061012257,
+  "exclusion_reason": null,
+  "family_id": "sha256:80a8a3a92fbf2276c7cdf9c0b31e7deda5b576761ca24c4a4eeed8af0a21eacb",
+  "input_tokens": 531,
+  "invocation_finished_at": "2026-10-01T11:44:20.562457+00:00",
+  "invocation_started_at": "2026-10-01T11:44:19.392268+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 531,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 554
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:a01bb895658ff0a400835fb69c5624fe3c37604ba0216661ac0c3580b69e47c3",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855060,
+    "id": "chatcmpl-aLlkBlItCzkxtGqc3OSRqrXTMelTnrRT",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.031,
+      "predicted_n": 23,
+      "predicted_per_second": 42.59014760263763,
+      "predicted_per_token_ms": 23.47960869565217,
+      "prompt_ms": 522.001,
+      "prompt_n": 453,
+      "prompt_per_second": 867.8144294742731,
+      "prompt_per_token_ms": 1.1523200883002207
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 531,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 554
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:An introduction to figs. Figs are the fruit of the ficus tree, which is part of the mulberry family (Moraceae). Figs have a unique, sweet taste, soft and chewy texture and are littered with slightly crunchy, edible seeds. Fresh figs are delicate and perishable, so are often dried to preserve.\\\\n\\\\npassage 2:Although considered a fruit, the fig is actually a flower that is inverted into itself. The seeds are drupes, or the real fruit. Figs are the only fruit to fully ripen and semi-dry on the tree. For many years the fig has been used as a coffee substitute. The fruit contains a proteolytic enzyme that is considered as an aid to digestion and is used by the pharmaceutical industry.\\\\n\\\\npassage 3:Figs contribute a variety of nutrients that promote good health. Figs, one of the oldest fruits known, are native to the Mediterranean and parts of Asia. This delicate and highly perishable fruit does not withstand shipping well and is most commonly available dried in areas where it isn't grown.\\\\n\\\\n\\\",\\\"question\\\":\\\"how are figs\\\"}\", \"original_answer\": \"Sure! Here's how I would answer the question based on the provided passages:\\n\\nQ: How are figs?\\n\\nA: According to Passage 1, fresh figs are delicate and perishable, so they are often dried to preserve them. Passage 2 reveals that figs are actually inverted flowers with a soft and chewy texture and slightly crunchy seeds. Additionally, figs are rich in nutrients and have been used as a digestive aid for many years. However, since there is no information in the passages about the flavor or smell of figs, I am unable to provide more details on this aspect.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_update",
+  "source_cluster_id": "sha256:d8232c6bdfa12f6abb7156b63fe03135d711cfbaf1e63b8abab01a6614ba2352",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ]
+}

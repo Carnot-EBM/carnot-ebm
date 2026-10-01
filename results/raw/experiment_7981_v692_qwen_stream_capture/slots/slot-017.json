@@ -1,0 +1,73 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 0.0,
+  "exclusion_reason": "answer_units_over_budget",
+  "family_id": "sha256:063688dc89b62b8261b11e44f518be896102fb4932f2733b12681eb2c2de4f5d",
+  "input_tokens": null,
+  "invocation_finished_at": null,
+  "invocation_started_at": null,
+  "parsed": {
+    "citation_valid": false,
+    "completed": false,
+    "finish_reason": null,
+    "probability": null,
+    "schema_valid": false,
+    "source_sentence_id": null,
+    "status": "invalid_envelope",
+    "syntax_valid": false,
+    "usage": {}
+  },
+  "public_eligible": false,
+  "public_hash": "sha256:16e4bc59263e628440df48aedd1540815b3b880af97da5b7dac3fa24268a869c",
+  "raw_response": {},
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:US dollar balance. All Second Life\u00ae accounts have both a Linden dollar balance and a US dollar balance. You can see both balances in the Linden Dollar Summary on your Account page at secondlife.com. \ufeff. When you have a new Second Life account, your US dollar balance is $0.You can increase your US dollar balance by selling L$ on the LindeX. In rare circumstances, you might also receive a US$ credit from Linden Lab.ou can see both balances in the Linden Dollar Summary on your Account page at secondlife.com. \ufeff. When you have a new Second Life account, your US dollar balance is $0. You can increase your US dollar balance by selling L$ on the LindeX.\\\\n\\\\npassage 2:\u201cHappiness is not a matter of intensity but of balance, order, rhythm and harmony.\u201d ~Thomas Merton. As a Libra, my sign is the scale, which signifies balance. I\u2019m not sure how much my \u201csignage\u201d plays into my desire to live a balanced life, but I do know that the more balanced I feel, the more free I feel.ocusing on the external \u201chows\u201d will just spin you in circles. 1) \u201cTo me, it means that you have a handle on the the various elements in your life and don\u2019t feel that your heart or mind are being pulled too hard in any direction. \u201d. Balance means you\u2019re free from having to control or handle anything.\\\\n\\\\npassage 3:When I said that my life is out of balance I meant that I do not have a standard balanced life. I do not divide my life into equal areas and I am not trying to do it all at the same time. Let me tell you what life balance is to me. Life balance is inner peace and happiness.Life balance is the understanding that my life is full and yet I have plenty of room to bring something new into it. Life balance is a happy family that I have and smiles on the faces of my girls.Life balance is taking care of my body without forgetting my soul.Life balance is walking outside and seeing the beauty around me that inspires me day after day. do not divide my life into equal areas and I am not trying to do it all at the same time. Let me tell you what life balance is to me. Life balance is inner peace and happiness. Life balance is the understanding that my life is full and yet I have plenty of room to bring something new into it.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to get balance in my life\\\"}\", \"original_answer\": \"Based on the given passages, it appears that achieving balance in life involves finding a sense of harmony and stability within oneself and one's surroundings. This can be achieved by focusing on the things that bring inner peace and happiness, such as taking care of one's body and soul, spending time with loved ones, and appreciating the beauty in nature. It also involves recognizing when one's life is out of balance and making conscious choices to correct it.\\n\\nHere are some steps that can help achieve balance in life:\\n\\n1. Identify areas in your life that are causing imbalance and address them.\\n2. Prioritize self-care and make time for activities that bring joy and relaxation.\\n3. Set boundaries and learn to say no to things that drain energy and cause stress.\\n4. Cultivate healthy relationships with family, friends, and colleagues.\\n5. Practice mindfulness and gratitude to appreciate the present moment and find peace in the midst of chaos.\\n6. Take breaks and allow yourself time to rest and recharge.\\n7. Focus on personal growth and development to create a sense of purpose and fulfillment.\\n8. Find ways to give back to others and contribute to the community.\\n9. Embrace change and adapt to new situations with flexibility and openness.\\n10. Practice forgiveness and let go of negative emotions that can weigh you down.\\n\\nRemember, achieving balance in life is a continuous process that requires effort, patience, and self-awareness. By taking small steps towards balance, you can create a more harmonious and fulfilling life.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 0,
+  "role": "online_admission",
+  "source_cluster_id": "sha256:f614a14e82bde3921803002d7c61f00dd0129ee81dc38de37beef9846fe0a7d3",
+  "started": false,
+  "status": "excluded",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21
+  ]
+}

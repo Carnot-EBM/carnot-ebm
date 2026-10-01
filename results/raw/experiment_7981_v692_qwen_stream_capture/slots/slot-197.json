@@ -1,0 +1,119 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.6684709680266678,
+  "exclusion_reason": null,
+  "family_id": "sha256:60ee8371e36fbf523960fd15f18989928a393df01998488c647418629d3a0d8e",
+  "input_tokens": 1200,
+  "invocation_finished_at": "2026-10-01T11:45:52.322026+00:00",
+  "invocation_started_at": "2026-10-01T11:45:50.653554+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 1200,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1221
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:e0e498a039dbc70e87edb1465835628a42be304404ec3442f83fc4c89ee6091e",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855152,
+    "id": "chatcmpl-QGvjYU6k6T5g0lEczjtEkxHdIa4dNL1z",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 492.314,
+      "predicted_n": 21,
+      "predicted_per_second": 42.65570347379924,
+      "predicted_per_token_ms": 23.44352380952381,
+      "prompt_ms": 1057.857,
+      "prompt_n": 1122,
+      "prompt_per_second": 1060.6348495117961,
+      "prompt_per_token_ms": 0.942831550802139
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 1200,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1221
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"120 Gray Ave\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":null,\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":null},\\\"business_stars\\\":5.0,\\\"categories\\\":\\\"Tours, Bar Crawl, Nightlife, Event Planning & Services, Party Bike Rentals, Hotels & Travel\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"10:0-22:0\\\",\\\"Monday\\\":\\\"10:0-22:0\\\",\\\"Saturday\\\":\\\"10:0-22:0\\\",\\\"Sunday\\\":\\\"10:0-22:0\\\",\\\"Thursday\\\":\\\"10:0-22:0\\\",\\\"Tuesday\\\":\\\"10:0-22:0\\\",\\\"Wednesday\\\":\\\"10:0-22:0\\\"},\\\"name\\\":\\\"Social Cycle\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-05-24 13:08:01\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Truly a unique experience. Had the best time. \\\\n\\\\nI've never seen anything quite like Social Cycle. It resembles a trolley with a group of people sitting inwards on a circular bar table. The above is correct, but those table-sitters are also pedaling their hearts out to fuel said trolley. \\\\n\\\\nWe had used Social Cycle for a friend's birthday party. I recall the pricing per person being fairly reasonable, and well-justified for the overall experience. The cycle travels through the Funk Zone and is quite the attraction for nearby pedestrians and restaurant-goers. \\\\n\\\\nOur guide was upbeat and fun. He really made the experience an enjoyable one. Note that everyone in the party must be willing to pedal the entire time (it's really not difficult at all). We had one lady in our party who would occasionally take breaks and the cycle would noticeably slow down. Pedal, pedal, pedal!\\\\n\\\\nThe layout of the cycle was ideal as everyone in the party was essentially facing each other. We were able to converse and laugh together without having to turn our necks. Many memories were made that day. I'd absolutely rent this awesome cycle again.\\\"},{\\\"review_date\\\":\\\"2020-11-08 05:36:58\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Our group had an amazing time with social cycle and our guide Max! Pedaling was much tougher than we anticipated but we made the most of it with a group of 15. The radio on the bike was great and we were able to play our own music. There was also some storage for our personal items. \\\\n\\\\nThe only downside was that it felt a little unorganized, as in the places we stopped didn't know that our large group was planning to stop there. We were also told we would get discounts at our stops but we did not receive any discounts.\\\\n\\\\nOverall this is a great choice for large group events!!\\\"},{\\\"review_date\\\":\\\"2020-08-31 03:13:22\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Social cycle was super fun. All of the bars we went to were great recommendations. Our driver, Rob, made our trip fun and had the music blasting. \\\\n\\\\nOnly complaint is, I wish we had more time on the bike! Didn't seem like we rode very far around SB and the time flew by. I'd definitely do this again with a big group!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Social Cycle is a tour business located in Santa Barbara, CA that offers tours, nightlife, event planning services, hotel & travel options, party bike rentals and more. The business is open from Monday to Sunday from 10:00 am to 10:00 pm and has an average rating of 5 stars. In terms of the customer reviews, they describe the experience as unique and fun, with a trolley-like seating arrangement where participants have to pedal their own way around. The company offers affordable prices, with good value justification for the overall experience. Social Cycle has also received positive feedback for their friendly guide and good group dining experience. However, there have been occasional complaints about organization and communication with certain locations along the route. Overall, Social Cycle seems like a great option for groups looking for a fun and memorable experience in Santa Barbara.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_admission",
+  "source_cluster_id": "sha256:b5ad6e8bedad3842cf95689ff1a9e243f01f2bfc4b36303e540747551e7c627b",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25
+  ]
+}

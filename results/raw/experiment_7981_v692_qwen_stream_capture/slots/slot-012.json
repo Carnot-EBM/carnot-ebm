@@ -1,0 +1,107 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.1712264489615336,
+  "exclusion_reason": null,
+  "family_id": "sha256:f5e3d56119519ffc74d1edd9bf2bd837862048b477dab9bd7b0cc68f8abda008",
+  "input_tokens": 584,
+  "invocation_finished_at": "2026-10-01T11:41:33.378274+00:00",
+  "invocation_started_at": "2026-10-01T11:41:32.207046+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 584,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 607
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:118aaa19ff21db527b99a9b6d5689eb1a96674320e95625560495e33cdb59639",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790854893,
+    "id": "chatcmpl-cchy5Let4nhzi3fOIIXjXcvy29ydTQGS",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 532.507,
+      "predicted_n": 23,
+      "predicted_per_second": 43.19192048179649,
+      "predicted_per_token_ms": 23.152478260869565,
+      "prompt_ms": 518.942,
+      "prompt_n": 506,
+      "prompt_per_second": 975.0607967749768,
+      "prompt_per_token_ms": 1.0255770750988142
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 584,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 607
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Breakfast in France is usually a light affair, with the beverage (usually coffee) being just as important as the food. Some typical French breakfast choices:  1 Tartines, which is toast with jam, is a typical French breakfast loved for its simplicity and the sweet flavor that goes well with coffee.\\\\n\\\\npassage 2:South-West France: In the south-west of France the emphasis is on rich foods. The main specialities are duck, foie gras, prunes, oysters, mushrooms and truffles. And of course a nice rich red Bordeaux wine to go with it.\\\\n\\\\npassage 3:French regional cuisines use locally grown vegetables, such as: 1  Potatoes. 2  haricot verts (A type of French green bean). 3  Carrots. 4  leeks. 5  Turnips. 6  Aubergine (eggplant). 7  Courgette (zucchini). 8  Mushrooms, oyster mushrooms, cepes (c\u00e8pes). 9  Porcini. 10  Truffle.  shallots\\\\n\\\\n\\\",\\\"question\\\":\\\"types of food in france\\\"}\", \"original_answer\": \"Based on the given passages, here are some types of food commonly found in France:\\n\\n1. Tartines (toast with jam) for breakfast.\\n2. Rich foods like duck, foie gras, prunes, oysters, mushrooms, and truffles in South-West France.\\n3. Locally grown vegetables such as potatoes, haricot verts (green beans), carrots, leeks, turnips, aubergine (eggplant), courgette (zucchini), mushrooms, oyster mushrooms, cepes (c\u00e8pes), porcini, and truffle.\\n\\nNote that the passages do not mention other types of food commonly consumed in France, such as cheese, bread, charcuterie (cold cuts), and pastries.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_admission",
+  "source_cluster_id": "sha256:e2e44d9e9168e170aa82eea89899b25e5ab4740e21ddd26ca94f4aedc650184a",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ]
+}

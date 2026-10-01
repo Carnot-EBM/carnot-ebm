@@ -1,0 +1,61 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 0.0,
+  "exclusion_reason": "answer_units_over_budget",
+  "family_id": "sha256:32c6faedff9748c360b5b3e93d85acd51d0c7c39a14a550fff1763e2ef3b69bb",
+  "input_tokens": null,
+  "invocation_finished_at": null,
+  "invocation_started_at": null,
+  "parsed": {
+    "citation_valid": false,
+    "completed": false,
+    "finish_reason": null,
+    "probability": null,
+    "schema_valid": false,
+    "source_sentence_id": null,
+    "status": "invalid_envelope",
+    "syntax_valid": false,
+    "usage": {}
+  },
+  "public_eligible": false,
+  "public_hash": "sha256:27ec636e8c842e58c05779cda87c9383ac9c46f24c5d6f69769255d0e0f9c1c5",
+  "raw_response": {},
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"4444 Hollister Ave\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":true,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":null},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Nightlife, Bars\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":null,\\\"name\\\":\\\"The Creekside Bar\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2015-01-29 23:45:00\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"So much fun!!! Awesome atmosphere and outside scenery. Cool locals who dance their pants off, moderately cheap drinks, and killer bonfire pits. I'm here visiting from Michigan, and was so glad I stopped in this bar.\\\"},{\\\"review_date\\\":\\\"2014-12-27 05:59:20\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"Great location, friendly staff, worst drinks I've ever had. I ordered a vodka cranberry and got cup of vodka with a splash our cranberry. I continued to order a screwdriver (can't mess that up) and got a cup of vodka with a splash of orange juice (it was cloudy) and on a separate occasion the first (and only) drink I ordered was made wrong while my husband's Jack and coke was all Jack with a splash of coke. Once I got my Bacardi mango (made correctly) it was alright, however the staff could use a lot more training.\\\"},{\\\"review_date\\\":\\\"2014-06-04 11:35:45\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"I came here for a beer with my dad and brother on a Tuesday night and quite enjoyed myself. It's fairly typical for a dive as far as atmosphere, amenities (yay pool table!), and drink selection goes, but it also seems to have a lot going on depending on the night you come. The bartender was a cool and helpful guy who didn't make me feel like a failure for my inexperience with beer. I'll definitely be back next time I'm in the area!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"The Creekside Bar is located at 4444 Hollister Ave in Santa Barbara, California. It operates within the categories of Nightlife and Bars. The bar does not have any hours specified in the JSON format. The attributes section indicates that there is no parking available, either on-site or nearby. There is no Wi-Fi service available at the bar. The restaurant reservation feature is not supported, and outdoor seating is available. The bar has a rating of 4.0 out of 5.0 stars, based on three customer reviews. \\nThe first review left by a customer named \\\"Happy Traveler\\\" had a rating of 5.0 out of 5.0 stars. They were very happy with their experience at the bar, praising the atmosphere and outdoor scenery. They also commented on the cool locals and affordable drinks.\\nThe second review left by a customer named \\\"Disappointed\\\" gave the bar a rating of 2.0 out of 5.0 stars. They were unhappy with the quality of the drinks, stating that their orders were not made correctly. However, they did mention that the staff was friendly.\\nThe third review left by a customer named \\\"Enjoyable Dive\\\" rated the bar 4.0 out of 5.0 stars. They had a good time at the bar, commenting on the pool table and the variety of beer options available. They also praised the helpfulness of the bartender. Overall, the reviews suggest that The Creekside Bar has a laid-back and enjoyable atmosphere, with a good selection of drinks and activities to do.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 0,
+  "role": "online_update",
+  "source_cluster_id": "sha256:8c06a9be85ee8ebad640cf7d2a04f3baf6b34f0eaf6a697da3d8ee92df965a51",
+  "started": false,
+  "status": "excluded",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ]
+}

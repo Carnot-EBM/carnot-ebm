@@ -1,0 +1,110 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.3629092350020073,
+  "exclusion_reason": null,
+  "family_id": "sha256:4e003a7b0c71fee5ea625d9406c8c109dcc2238013e416b2aafd092f4c33d3b1",
+  "input_tokens": 776,
+  "invocation_finished_at": "2026-10-01T11:46:08.789428+00:00",
+  "invocation_started_at": "2026-10-01T11:46:07.426517+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 776,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 799
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:ea235f8c0d78bc559561201956e9d0d0de8e70380d46c4094344f2146e047d3f",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855168,
+    "id": "chatcmpl-iP8VrffThZsfFiZgoXuzUdy00ldlUBN1",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.166,
+      "predicted_n": 23,
+      "predicted_per_second": 42.5795033378628,
+      "predicted_per_token_ms": 23.485478260869566,
+      "prompt_ms": 691.0,
+      "prompt_n": 698,
+      "prompt_per_second": 1010.1302460202604,
+      "prompt_per_token_ms": 0.9899713467048711
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 776,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 799
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Nancy Branch & 3 Others Disappeared During Trip In 1992\\nA weekend in Santa Barbara, California, is the backdrop for a mystery that has haunted authorities for decades. It was on December 6, 1992, that 29-year-old Stanford University graduate Nancy Branch was making her way home back to Palo Alto, California, with her fianc\u00e9 Kevin Clarke (31) and newlyweds Alan Stewart (29) and Amy Haxton Stewart (31). Amy, a University of California, Los Angeles graduate, had reportedly married Alan only six weeks prior. The pair had plans of honeymooning in South Africa one month later.\\nThe Circumstances\\nThe foursome of friends made their way to the Santa Barbara Airport to return to Palo Alto so that one of the couples could purchase their Christmas tree. They boarded a single-engine Piper Archer airplane, and according to The Charley Project, the last time there was communication from the plane was eight minutes later.\\nThe pilot didn't alert anyone that there were problems with the aircraft, although the weather was described as \\\"treacherous.\\\" The plane never arrived in Palo Alto, and while there were searches conducted by professionals near and far, there was no indication that the plane had any sort of accident. \\\"Investigators received a tip that it had crashed somewhere near the Big Basin area of California, but no evidence was discovered,\\\" TCP writes. It's believed that everyone on board is deceased, but they've remained missing persons because this mystery hasn't uncovered remains of either the persons involved or the aircraft.\\nFor context, the drive from Santa Barbara to Palo Alto is about five and a half hours.\\nWhat To Know\\nAt the time of her disappearance, Nancy was 5 feet 3 inches tall and 120 pounds. She has brown hair and brown eyes. There wasn't much else included in the National Missing & Unidentified Persons System database.\\nAnyone with information about this case is urged to contact the Menlo Park Police Department at (650) 330-6343 or their local authorities. The agency case number is 92-4968.\\nPlease share this story about Nancy Branch to reignite the investigation into the disappearance of these four people. She is our sister, and her life matters.\", \"original_answer\": \"29-year-old Stanford University graduate Nancy Branch, her fianc\u00e9 Kevin Clarke (31), and newlyweds Alan Stewart (29) and Amy Haxton Stewart (31) have been missing since December 6, 1992. The group were returning to Palo Alto from Santa Barbara when their plane, a single-engine Piper Archer, disappeared. There was no distress call from the pilot, and despite tips and searches, no evidence of a crash has been found. The Menlo Park Police Department is urging anyone with information to come forward.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_update",
+  "source_cluster_id": "sha256:aef5d9f9ff2cb6fd7ae173dc4a6c3edf185ec9fb7acd488a51686d6172c79a15",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+  ]
+}

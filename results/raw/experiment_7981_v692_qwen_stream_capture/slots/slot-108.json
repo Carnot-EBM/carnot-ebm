@@ -1,0 +1,117 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.8748678950360045,
+  "exclusion_reason": null,
+  "family_id": "sha256:7bd504239db24d3f27e3cafb13783298457ada2ceaed8dfef9d6a5bf9b7e4440",
+  "input_tokens": 1470,
+  "invocation_finished_at": "2026-10-01T11:43:45.226843+00:00",
+  "invocation_started_at": "2026-10-01T11:43:43.351973+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 1470,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1491
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:84ea5d7a92a9cc7aa3ae6a658dfe3fc0ea7ce70237294ebb90ff5fec0953ce3a",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855025,
+    "id": "chatcmpl-FNAUkwcsW3kwvzml4EeVo4B4Z2vM7XVG",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 492.738,
+      "predicted_n": 21,
+      "predicted_per_second": 42.61899833177064,
+      "predicted_per_token_ms": 23.463714285714286,
+      "prompt_ms": 1254.576,
+      "prompt_n": 1392,
+      "prompt_per_second": 1109.538202548112,
+      "prompt_per_token_ms": 0.9012758620689655
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 1470,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1491
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"205 W Canon Perdido St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":true,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":\\\"{dj: False, live: False, jkebox: False, video: False, backgrond_msic: False, karaoke: None, no_msic: False}\\\",\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Restaurants, American (New), Barbeque, Food, Sandwiches, Wine Bars, Diners, Bars, Specialty Food, American (Traditional), Nightlife\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"17:0-21:30\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"17:0-21:30\\\",\\\"Sunday\\\":\\\"17:0-21:0\\\",\\\"Thursday\\\":\\\"17:0-21:0\\\",\\\"Wednesday\\\":\\\"17:0-21:0\\\"},\\\"name\\\":\\\"Barbare\u00f1o\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-13 04:36:51\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"CHEFS KISS.. When I was a line cook, on my day off I would drive the hour from ojai to SB to experience the fantastic service and mouthwatering food at Barbare\u00f1o. Their menu reflects their thoughtful and playful takes on local food history and culture. Everything I've ever ordered here has been a home run and clean plate club situation. I always tell people how perfectly salty their desserts are- that's what I'm talking about with the balance on the tongue. Taking my family out for a special bday dinner here was such a high point in a year where we mostly cooked at home. This is a rare restaurant that is worth experiencing because the layers of flavor and time in each dish would be difficult to recreate at home. Also notably serious beer and cider menu. The only picture I have of their food is a seasonal dessert from 2017- stone fruit sorbet with fried soba. Memorable. Gotta get back here soon.\\\"},{\\\"review_date\\\":\\\"2021-11-30 02:59:21\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"This place lived up to all the hype! We came while on vacation for dinner. Cozy on the inside and the food is eclectic and plated beautifully. The taste even better than the aforementioned two qualities. We had the Grilled Avocado and Lamb Especial for appetizers, both superb specially the ponzu sauce they hit the avocado with.  For the mains we did a local sea bass in a black garlic sauce and then the trip tip bbq both excellent, fish was perfectly flaky.  All of this said I think their dessert was the best part of the whole meal. We had the hive and honey which was the most unique mix of flavors. They serve it with a panna cotta and a slew of fruits and other honey. It was beautiful to look at but better to eat and might be the best dessert I've ever had. Only thing I wish they had was liquor as it's a beer and wine only but you come here for the food and for that, five stars!\\\"},{\\\"review_date\\\":\\\"2021-11-11 04:40:46\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"Overall, the food was average at best along with the service.\\\\nOrdered catch of the day which was yellow fin rock fish. Had very little flavor, was cool when served and was over priced at $35.00. Nothing comes with it so you have to order a side which was suppose to be grilled veggies but was also not very good and served cold.\\\\nGrilled Avocado was not actually grilled but served cold with way to much sauce.\\\\nBest part was the bread which took forever to get. \\\\nWaiter was average and lost interest when we told him the app was not that great.\\\\nThe patio was very nice and overall atmosphere is good.\\\\nSave your money and go some where else.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Barbare\u00f1o is a local restaurant located at 205 W Canon Perdido St in Santa Barbara, CA. It offers a variety of cuisines such as American (New), Barbeque, Sandwiches, and more. The restaurant has a diverse menu that reflects their thoughtful and playful takes on local food history and culture. Customers have praised the fantastic service and mouthwatering food at Barbare\u00f1o, with many describing their dining experience as a home run.\\n\\nThe restaurant has received a high rating of 4.5 stars from customers. The dishes are known for their layers of flavor and time put into each preparation, making them difficult to recreate at home. Additionally, the perfectly salty desserts are a standout, providing a balanced and enjoyable experience for diners.\\n\\nBarbare\u00f1o offers outdoor seating and takes reservations, making it a great option for groups and special occasions. The ambiance is described as classy and intimate, creating a pleasant dining atmosphere. Customers also appreciate the serious beer and cider menu available at the restaurant.\\n\\nWhile the majority of reviews are positive, there was one customer who had a less satisfactory experience. They found the food to be average at best and criticized the service. However, the overall atmosphere and patio were noted as positive aspects of the restaurant.\\n\\nOverall, Barbare\u00f1o is a local business in Santa Barbara that offers a diverse menu with flavorful dishes and excellent service, making it a popular choice for locals and visitors alike.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_admission",
+  "source_cluster_id": "sha256:1bc2ad2bb29b85db488a9de5c6d34d4ba1cbf13f3933ce94985b32a9ceefc444",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23
+  ]
+}

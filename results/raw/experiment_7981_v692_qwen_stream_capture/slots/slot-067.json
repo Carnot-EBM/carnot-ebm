@@ -1,0 +1,112 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.6291623990400694,
+  "exclusion_reason": null,
+  "family_id": "sha256:6e81d9cfea8c0e93c4c3869cb3de89e1bbf9ebf69777545cf60cf2de34cb3bea",
+  "input_tokens": 1104,
+  "invocation_finished_at": "2026-10-01T11:42:44.908147+00:00",
+  "invocation_started_at": "2026-10-01T11:42:43.278984+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1104,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1127
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:50711aab324da518e7c3416415e4ba8e85cf86e6bf95a74bdcccfa9e2d6b399d",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790854964,
+    "id": "chatcmpl-0Zi2MrR9z2eksogZq77rbn9aM8WMjVx9",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 538.5,
+      "predicted_n": 23,
+      "predicted_per_second": 42.71123491179201,
+      "predicted_per_token_ms": 23.41304347826087,
+      "prompt_ms": 959.409,
+      "prompt_n": 1026,
+      "prompt_per_second": 1069.4083545182502,
+      "prompt_per_token_ms": 0.9350964912280701
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1104,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1127
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"955 Embarcadero Del Mar\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":null,\\\"street\\\":null,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":2.5,\\\"categories\\\":\\\"Pizza, Restaurants, Chicken Wings, Sandwiches\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"10:30-1:0\\\",\\\"Monday\\\":\\\"10:30-1:0\\\",\\\"Saturday\\\":\\\"10:30-1:0\\\",\\\"Sunday\\\":\\\"10:30-1:0\\\",\\\"Thursday\\\":\\\"10:30-1:0\\\",\\\"Tuesday\\\":\\\"10:30-1:0\\\",\\\"Wednesday\\\":\\\"10:30-1:0\\\"},\\\"name\\\":\\\"Domino's Pizza\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-11-09 03:32:32\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"OK hear me out. Yes, they couldn't find my address, yes, they gave me the wrong order...at first. But they were kind, apologetic, and were quick to correct the mistake, crediting my entire order. We live in hard times, where there is a shortage of staff literally everywhere. Expect that errors will happen EVERYWHERE. The difference in your experience ordering Dominos or anywhere else right now is the attitude you choose to have. You have the opportunity to be kind no matter what, and in choosing to be kind, you get to bless the short-staffed crew trying to help you, and you in turn will be blessed! I could have had a bad attitude. I chose not to. My pizza and pasta and breadsticks were delicious. Shout out to Wilbur, Raul, and the crew for handling a huge volume of orders, with very little staff, but with great attitudes, and delivery with a smile.\\\"},{\\\"review_date\\\":\\\"2021-09-17 07:51:17\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"I've ordered from this place several times, And each time, it's taken over an hour for delivery (with initial ETA being closer to 30 minutes); not only that, but the app says it's been delivered after about 30 minutes, with no other updates after. When I called them about this, they basically said it's up to the driver's discretion. This means that when the food finally arrives, it's usually cold. In addition, last time, they charged me for a ranch dipping sauce, but forgot to include it in the order. I'm over this place.\\\"},{\\\"review_date\\\":\\\"2021-07-18 22:18:51\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"Got half pepperoni and half multiple toppings because my toddler is a picky eater. They put all of the toppings on one side. This pizza looks like it's been sitting out for a week. Tracker said order complete but the order was not delivered for about 20 mins after. Missing one of the toppings as well.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Domino's Pizza located at 955 Embarcadero Del Mar, Goleta, CA, specialises in pizza, sandwiches, chicken wings, and other restaurant fare. The establishment offers outdoor seating and is good for groups, but does not take reservations. It operates every day from 10:30 am to 1:00 am. Unfortunately, it has received an average rating of 2.5 stars. Customers have reported issues with delivery times, incorrect orders, and missing items. However, some customers have also appreciated the staff's kindness and their efforts to correct mistakes. The business does not offer WiFi, and their ambiance is noted as casual. Parking options are limited as they do not have a garage, street parking, validated parking, a parking lot, or valet service.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_admission",
+  "source_cluster_id": "sha256:e30a468e4a78374b27c921fa77a87759a09576096167446c19af18844fea62e0",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18
+  ]
+}

@@ -1,0 +1,102 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.208962476986926,
+  "exclusion_reason": null,
+  "family_id": "sha256:4683d60ee66a98c03d2cf5f5d210b75ef1402ea267aabf10098dce5638c27d6b",
+  "input_tokens": 567,
+  "invocation_finished_at": "2026-10-01T11:43:27.579951+00:00",
+  "invocation_started_at": "2026-10-01T11:43:26.370987+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 567,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 591
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:720ca1f7ff3587592451c0ae64b463e18d3817a120d0ecdea3dbd5b7c8eb89cc",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855007,
+    "id": "chatcmpl-jHekuvu9mt5WiN6HBTijTIIdktsmJYrA",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 562.935,
+      "predicted_n": 24,
+      "predicted_per_second": 42.63369660795652,
+      "predicted_per_token_ms": 23.455624999999998,
+      "prompt_ms": 528.256,
+      "prompt_n": 489,
+      "prompt_per_second": 925.6875454325176,
+      "prompt_per_token_ms": 1.0802781186094068
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 567,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 591
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:The Kindle Voyage has the best screen, with a 300 pixels-per-inch resolution. The more pixels smooshed into an inch of screen, the better everything looks. The Kindle Paperwhite smooshes 212 pixels into an inch; the standard Kindle smooshes 167 pixels into an inch.\\\\n\\\\npassage 2:Screen: The Kindle Voyage has a higher resolution screen (1448\u00d71072 vs 1024\u00d7758 for the Paperwhite). The pixel per inch difference is 300 vs 212. This equates to darker text on the Kindle Voyage, and makes fine details and text appear slightly clearer and sharper. Both use the newer Carta screen tech.\\\\n\\\\npassage 3:Price: One of the biggest differences between the two is the price. The Kindle Voyage starts at $199 for the model with ads, and it goes all the way up to $289 for 3G and no ads. The Kindle Paperwhite starts at $119 with ads and $139 without. Then it\u2019s $70 more for each 3G model.\\\\n\\\\n\\\",\\\"question\\\":\\\"what's the difference between kindle paperwhite kindle voyager\\\"}\", \"original_answer\": \"Based on the given passages, the main difference between the Kindle Paperwhite and Kindle Voyager is the screen resolution. The Kindle Voyage has a higher resolution screen (1448x1072) compared to the Kindle Paperwhite (1024x758), resulting in darker text and clearer details. Additionally, the Kindle Voyage also has 3G connectivity available for some models, while the Kindle Paperwhite does not. The price point is another significant difference, with the Kindle Voyage starting at $199 and going up to $289, while the Kindle Paperwhite starts at $119 with ads and $139 without ads.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "sha256:c7d5ce83dddf10e6b044726dbc46b105066d34b2ed5c4cbb0be426bf3ca3bde1",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ]
+}

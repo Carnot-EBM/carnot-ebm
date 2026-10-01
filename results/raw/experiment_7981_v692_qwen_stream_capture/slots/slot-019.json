@@ -1,0 +1,110 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.3821411230019294,
+  "exclusion_reason": null,
+  "family_id": "sha256:ca2d31d420edd1534facb1e02ad2a732f5e93d9464531b43a7f89b9859c84fff",
+  "input_tokens": 834,
+  "invocation_finished_at": "2026-10-01T11:41:42.216294+00:00",
+  "invocation_started_at": "2026-10-01T11:41:40.834151+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 1,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 834,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 858
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:197a6075375edd08514fc4a07404b71c5c479909d2fd9842be08f92b9d90dba8",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 1\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790854902,
+    "id": "chatcmpl-u8QRG02qP4hvpIa0GGTsjBVH7o9YeeCX",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 558.291,
+      "predicted_n": 24,
+      "predicted_per_second": 42.988334040849665,
+      "predicted_per_token_ms": 23.262125,
+      "prompt_ms": 707.117,
+      "prompt_n": 756,
+      "prompt_per_second": 1069.1300025314058,
+      "prompt_per_token_ms": 0.935339947089947
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 834,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 858
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:How to grow Spring onions for propagating: As with scallions there is not enough of a bulb to be able to save and store for planting the next season. True spring onions don't usually form bunches, so they aren't perennial. They are biennial, growing a flower and seeding the second year.So let a plant or two go to seed and use the seed for your next crop.To onion lovers and growers here's where there is a difference. A green onion or bunching onion has gained the hint of a bulb with maturity; a scallion has no bulb and a spring onion has a small bulb.reen Onions or Bunching Onions. Green onions have long, green, delicate stalks and small, very slender, white bulbs. The bulb of a green onion is slightly defined. Green onions come out of the ground early in their lives... in fact you can sow them very early spring and usually pick them late spring 7 weeks later.\\\\n\\\\npassage 2:To successfully grow green onions in a greenhouse, water frequently and keep the soil moist. Green onions may grow successfully in a greenhouse, but raising sweet and dry onions inside may be a waste of space and energy.Green onions grow fast in a cool, coastal climate or a climate-controlled greenhouse. It takes 100 or more days to produce a sweet or dry onion, filling a greenhouse for months.. Check the temperature of the greenhouse. Green onions are a cool-season crop that grow best when the temperature ranges from 55 to 75 degrees Fahrenheit. Sweet and dry onions thrive at this temperature before the bulbs form.\\\\n\\\\npassage 3:Harvest green onions when the plants are at least 6 inches tall and 1/2 inch to 1 inch in diameter. In a greenhouse, gardeners usually harvest green onions about 30 days after planting sets or 40 to 50 days from planting seed.. Check the temperature of the greenhouse. Green onions are a cool-season crop that grow best when the temperature ranges from 55 to 75 degrees Fahrenheit. Sweet and dry onions thrive at this temperature before the bulbs form.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to grow spring onions in greenhouse\\\"}\", \"original_answer\": \"Based on the given passages, here's how to grow spring onions in a greenhouse:\\n\\n1. Sow the seeds of green onions or bunching onions in a greenhouse with a temperature range of 55-75\u00b0F (13-24\u00b0C).\\n2. Keep the soil consistently moist, but not waterlogged.\\n3. Harvest the green onions when they reach 6 inches in height and 1/2 to 1 inch in diameter, usually 30-40 days after planting sets or 40-50 days from planting seeds.\\n\\nIt's important to note that sweet and dry onions take longer to mature, around 100 days, and may not be suitable for growth in a greenhouse due to the extended time required. Green onions, on the other hand, grow faster and can be harvested sooner, making them a better choice for greenhouse cultivation.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_update",
+  "source_cluster_id": "sha256:73b1a6c17f0b4e10f1d2d5f62e085c3bab01265d8b6f79afa1bc2c547e8286f3",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+  ]
+}

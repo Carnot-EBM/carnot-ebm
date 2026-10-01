@@ -1,0 +1,110 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.5853765400242992,
+  "exclusion_reason": null,
+  "family_id": "sha256:fef7269147efcac900e7ce497e43984817397c885436ce938cca34cea180b5aa",
+  "input_tokens": 997,
+  "invocation_finished_at": "2026-10-01T11:42:53.260000+00:00",
+  "invocation_started_at": "2026-10-01T11:42:51.674622+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 997,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1020
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:59f7363aa612c154ae556884578c8b9f1d6bc4817d1704c45ad050b7c0f5bb69",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790854973,
+    "id": "chatcmpl-IVeYW1BJ3vXORAhLgh6TIqEKoc1q1bdZ",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 537.839,
+      "predicted_n": 23,
+      "predicted_per_second": 42.76372669144483,
+      "predicted_per_token_ms": 23.384304347826088,
+      "prompt_ms": 916.466,
+      "prompt_n": 919,
+      "prompt_per_second": 1002.7649689131948,
+      "prompt_per_token_ms": 0.9972426550598477
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 997,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1020
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"830 N Milpas St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":null,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":null,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Restaurants, Chinese, Vegetarian\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"16:30-20:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"16:30-20:0\\\",\\\"Sunday\\\":\\\"16:30-20:0\\\",\\\"Thursday\\\":\\\"16:30-20:0\\\",\\\"Wednesday\\\":\\\"16:30-20:0\\\"},\\\"name\\\":\\\"Shang Hai\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-11-28 23:28:06\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Delicious food.  Had the Kung Pao tofu and the Tofu with Eggplant.  We'll-cooked, tasty, and large portions.\\\"},{\\\"review_date\\\":\\\"2021-11-27 02:57:14\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Finally found a really awesome Chinese place in Santa Barbara!!\\\\n\\\\nIt seems the best are always these small unassuming storefronts with not much more than an open sign. \\\\n\\\\nWe ordered to go by phone and told them we wanted it ready for a pickup time of about 45 minutes. They were super friendly, the food was piping hot exactly on time.\\\\n\\\\nThe food tasted great!! Large portions, lots of options and reasonable price! My girlfriend was also happy about the abundant vegetarian options. We will definitely be getting takeout here again soon! \\\\n\\\\np.s. the plain fried rice is... *really* plain lol\\\"},{\\\"review_date\\\":\\\"2021-10-07 02:57:40\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"I'm obsessed with any Chinese food I can find in SB. Like obsessed since it isn't as easy as you would think to come by. I've had a few items to go from Shang Hai and every time it is quick, hot, and easy to order and pick up. My favorite is the Hot and Sour soup when I'm not feeling 100%. It comes a large to-go bowl so sit by the TV, curl up, and slurp away. The hot is both peppery and heat, but not too much to overwhelm the senses. Yum yum.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Shang Hai is a highly-rated Chinese restaurant located at 830 N Milpas St, Santa Barbara, CA. It offers a variety of vegetarian options and is known for its large portions and delicious food, as noted by recent reviews. Some of the popular dishes include Kung Pao tofu and Tofu with Eggplant. Shang Hai operates from 4:30 PM to 8 PM, Wednesday to Sunday, and offers takeout services which customers find to be quick and efficient. However, it does not provide WiFi or outdoor seating. The restaurant does not take reservations but is good for groups. Parking is available on the street and in a lot, but there's no garage or valet service. The ambiance is casual, making it a comfortable place to enjoy a meal. The business has an impressive average rating of 4.5 stars.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_admission",
+  "source_cluster_id": "sha256:7d7ab36b55bda14f27e0a9fba116bc6e4c851a16b7944093e690634444a59752",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+  ]
+}

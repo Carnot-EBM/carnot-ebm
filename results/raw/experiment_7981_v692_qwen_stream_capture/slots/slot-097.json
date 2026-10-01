@@ -1,0 +1,123 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.6557465249788947,
+  "exclusion_reason": null,
+  "family_id": "sha256:c3cd7bc948c9f55fc91b106d0819f515f387814228a753e65de406a83ed732ed",
+  "input_tokens": 1037,
+  "invocation_finished_at": "2026-10-01T11:43:29.250943+00:00",
+  "invocation_started_at": "2026-10-01T11:43:27.595195+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": 26,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 26,
+      "prompt_tokens": 1037,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1063
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:729c833b119ed2eb62766aefdd564051ce123c01d5ddda807bf0c5b480ef2c04",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": 26\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855009,
+    "id": "chatcmpl-ytzNZvf8L4wHde79gX2yFKMHNPs5YVq1",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 612.411,
+      "predicted_n": 26,
+      "predicted_per_second": 42.4551485848556,
+      "predicted_per_token_ms": 23.55426923076923,
+      "prompt_ms": 929.996,
+      "prompt_n": 959,
+      "prompt_per_second": 1031.1872309128212,
+      "prompt_per_token_ms": 0.9697559958289885
+    },
+    "usage": {
+      "completion_tokens": 26,
+      "prompt_tokens": 1037,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1063
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"ESPN suspended reporter Britt McHenry for a week after a video of her berating a towing company employee surfaced Thursday. The sports network announced her suspension on Twitter. McHenry posted an apology on Twitter, saying she allowed her emotions to get away from her during a stressful situation at a Virginia business. \\\"I ... said some insulting and regrettable things.\\\" \\\"As frustrated as I was, I should always choose to be respectful and take the high road. I am so sorry for my actions and will learn from this mistake,\\\" she wrote. On the roughly one-minute long video that was captured by a surveillance camera, McHenry says to an employee at a register: \\\"I'm in the news, sweetheart. I will (expletive) sue this place.\\\" The employee tells McHenry she's being recorded, but it doesn't stop her from continuing her rant. \\\"That's why I have a degree and you don't,\\\" she says. \\\"I wouldn't work at a scumbag place like this. Makes my skin crawl even being here.\\\" Later McHenry says, \\\"maybe if I was missing some teeth they would hire me, huh?\\\" The employee apparently says something about McHenry's hair and the color of her roots. McHenry sasses back, saying, \\\"Oh, like yours, 'cause they look so stunning, 'cause I'm on television and you're in a (expletive) trailer, honey. Lose some weight, baby girl.\\\" CNN reached out to the Arlington towing company for comment but didn't hear immediately back. The edited video was first posted on the website LiveLeak, which said the incident occurred April 5. The video inspired the Twitter hashtag #firebrittmchenry. The reporter is one of several ESPN on-air talents to be suspended in the past 12 months. In February,  anchor Keith Olbermann was not on the air for most of a week after a Twitter spat that the anchor had with fans of Penn State University. Bill Simmons was suspended in September for three weeks for calling NFL Commissioner Roger Goodell a liar. Commentator Stephen A. Smith was suspended in July for a week for widely criticized remarks about domestic abuse that referred to possible \\\"provocation\\\" by victims. How McHenry could have responded. McHenry is based in Washington and the incident happened across the Potomac River in Arlington. McHenry  joined ESPN in 2014. At the time of her hiring, ESPN's senior vice president and director of news, Vince Doria, praised her knack for getting interviews with major sports celebrities. \\\"In a relatively short time, Britt has established a reputation for strong, aggressive reporting in the D.C. area, and an ability to land big interviews,\\\" said Doria. \\\"Her presence there will be a great benefit to ESPN's newsgathering and, as with all of our bureau reporters, she will be assigned to high-profile stories around the country.\\\" Before ESPN, she was with WJLA in Washington. McHenry joined the station in 2008 and the sports staff in 2010. She went to Stetson as an undergraduate and Northwestern for graduate studies in journalism. Opinion: Who's worse: Britt McHenry, or us?\\n\", \"original_answer\": \"ESPN suspended reporter Britt McHenry for a week after a video of her berating a towing company employee surfaced online. McHenry posted an apology on Twitter, admitting she spoke \\\"insulting and regrettable things\\\" during a stressful situation at a Virginia business. The sports network announced her suspension on Twitter. The edited video was first posted on the website LiveLeak and inspired the Twitter hashtag #firebrittmchenry. McHenry is one of several ESPN on-air talents to be suspended in the past year. This incident occurred across the Potomac River in Arlington, where McHenry is based, and happened while she was working for WJLA in Washington before joining ESPN.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_admission",
+  "source_cluster_id": "sha256:57bee227f6d51186c36245cb83a753c9ad1405f6ed7c9d1ae0f5a21a633ef0bc",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29
+  ]
+}
