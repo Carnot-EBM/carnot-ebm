@@ -1,0 +1,121 @@
+................F                                                        [100%]
+=================================== FAILURES ===================================
+__________ test_frozen_commands_real_expected_exit_and_parent_failure __________
+
+tmp_path = PosixPath('/tmp/carnot-7972-custody-_lk86v_q/pytest/test_frozen_commands_real_expe0')
+
+    def test_frozen_commands_real_expected_exit_and_parent_failure(tmp_path):
+        raw, scratch = tmp_path / "raw", tmp_path / "scratch"
+        scratch.mkdir()
+        manifest = e.freeze_commands(raw, scratch)
+        assert manifest["coverage_includes"] == e.INCLUDE
+        assert all(c["deadline_s"] <= 300 for c in manifest["commands"])
+        spec = dict(
+            name="expected_failure",
+            argv=[str(e.ROOT / ".venv/bin/python"), "-c", "print('rejected');raise SystemExit(1)"],
+            deadline_s=10,
+            required=True,
+            expected_exit=1,
+            reason="rejected",
+        )
+        receipts = e.execute_commands(dict(commands=[spec]), raw, scratch)
+        assert receipts[0]["passed"] and receipts[0]["exit_code"] == 1
+        output = tmp_path / "parent" / (e.NAME + ".json")
+    
+        def incomplete_coverage(manifest, raw, workspace):
+            atomic_json(
+                workspace / "coverage.json",
+                dict(files={e.OWNED[0]: dict(summary=dict(num_statements=1, missing_lines=1))}),
+            )
+            return receipts
+    
+        with patch.object(e, "execute_commands", side_effect=incomplete_coverage):
+>           assert e.main(["--root", str(tmp_path / "absent"), "--output", str(output)]) == 0
+E           AssertionError: assert 1 == 0
+E            +  where 1 = <function main at 0x7f23d04a8900>(['--root', '/tmp/carnot-7972-custody-_lk86v_q/pytest/test_frozen_commands_real_expe0/absent', '--output', '/tmp/carnot-7972-custody-_lk86v_q/pytest/test_frozen_commands_real_expe0/parent/experiment_7972_v691_qwen_energy_calibration.json'])
+E            +    where <function main at 0x7f23d04a8900> = e.main
+
+tests/python/test_experiment_7972_v691_qwen_energy_calibration.py:238: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp7303-validation] before_subprocess expected_failure elapsed_s=0.000 unit=1/1
+[exp7303-validation:expected_failure] rejected
+[exp7303-validation] after_subprocess expected_failure elapsed_s=0.011 exit=1 unit=1/1
+[exp7972] phase=start elapsed_s=0.000
+[exp7972] phase=authenticate elapsed_s=0.000
+[exp7972] phase=fit_and_seal elapsed_s=0.010
+[exp7972] phase=measured_candidate elapsed_s=0.010
+[exp7972] phase=before_validation_benchmark elapsed_s=0.013
+[exp7972] phase=after_validation_benchmark elapsed_s=0.014
+[exp7972] phase=terminal_publication elapsed_s=0.014
+[exp7303-validation] before_subprocess adversarial elapsed_s=0.000 unit=1/2
+[exp7303-validation:adversarial] {
+[exp7303-validation:adversarial]   "reports": [
+[exp7303-validation:adversarial]     {
+[exp7303-validation:adversarial]       "artifact": "/tmp/carnot-7972-custody-_lk86v_q/pytest/test_frozen_commands_real_expe0/parent/raw/experiment_7972_v691_qwen_energy_calibration/terminal_candidate.json",
+[exp7303-validation:adversarial]       "loaded": true,
+[exp7303-validation:adversarial]       "exp_id": 7972,
+[exp7303-validation:adversarial]       "title": "",
+[exp7303-validation:adversarial]       "honest_verdict": "complete_disqualified_required_validation",
+[exp7303-validation:adversarial]       "flag_count": 2,
+[exp7303-validation:adversarial]       "max_severity": 2,
+[exp7303-validation:adversarial]       "flags": [
+[exp7303-validation:adversarial]         {
+[exp7303-validation:adversarial]           "kind": "SUBSTRATE_HAS_NO_DURATION_FLOOR",
+[exp7303-validation:adversarial]           "severity": "warn",
+[exp7303-validation:adversarial]           "detail": "inference_substrate='blocked_no_run' matches no duration-floor recognizer, so duration_s=0.014270883984863758 was NOT checked against any floor. A declaration is an affirmative claim about what ran; an unrecognized one is unverified, not verified. Add a recognizer plus floor for this substrate, or correct the declaration to an existing one."
+[exp7303-validation:adversarial]         },
+[exp7303-validation:adversarial]         {
+[exp7303-validation:adversarial]           "kind": "SUBSTRATE_CLASS_MISMATCH",
+[exp7303-validation:adversarial]           "severity": "critical",
+[exp7303-validation:adversarial]           "detail": "inference_substrate_class=blocked_no_run says nothing ran, but honest_verdict='complete_disqualified_required_validation' is not a blocked_* verdict. A blocked class must pair with a blocked verdict."
+[exp7303-validation:adversarial]         }
+[exp7303-validation:adversarial]       ],
+[exp7303-validation:adversarial]       "gate_version": "197e0a5eacacb09ce6607ae8bdfd507498082857f0d02ec2003a62c251b69a24"
+[exp7303-validation:adversarial]     }
+[exp7303-validation:adversarial]   ],
+[exp7303-validation:adversarial]   "flagged_count": 1
+[exp7303-validation:adversarial] }
+[exp7303-validation] after_subprocess adversarial elapsed_s=0.523 exit=1 unit=1/2
+[exp7303-validation] before_subprocess strict_rows elapsed_s=0.000 unit=2/2
+[exp7303-validation:strict_rows] 
+[exp7303-validation:strict_rows] verdict-row-consistency: checked 0, skipped 1 (no per-unit rows), unreadable 0.
+[exp7303-validation:strict_rows]   NOTE: most artifacts carry no per-unit row container, so their headline claims are not falsifiable from the artifact alone. That is a reporting-shape gap in those experiments, not a clean bill of health from this tool.
+[exp7303-validation] after_subprocess strict_rows elapsed_s=0.022 exit=0 unit=2/2
+[exp7303-validation] before_subprocess adversarial elapsed_s=0.000 unit=1/2
+[exp7303-validation:adversarial] {
+[exp7303-validation:adversarial]   "reports": [
+[exp7303-validation:adversarial]     {
+[exp7303-validation:adversarial]       "artifact": "/tmp/carnot-7972-custody-_lk86v_q/pytest/test_frozen_commands_real_expe0/parent/raw/experiment_7972_v691_qwen_energy_calibration/terminal_candidate.json",
+[exp7303-validation:adversarial]       "loaded": true,
+[exp7303-validation:adversarial]       "exp_id": 7972,
+[exp7303-validation:adversarial]       "title": "",
+[exp7303-validation:adversarial]       "honest_verdict": "complete_disqualified_terminal_validation",
+[exp7303-validation:adversarial]       "flag_count": 2,
+[exp7303-validation:adversarial]       "max_severity": 2,
+[exp7303-validation:adversarial]       "flags": [
+[exp7303-validation:adversarial]         {
+[exp7303-validation:adversarial]           "kind": "SUBSTRATE_HAS_NO_DURATION_FLOOR",
+[exp7303-validation:adversarial]           "severity": "warn",
+[exp7303-validation:adversarial]           "detail": "inference_substrate='blocked_no_run' matches no duration-floor recognizer, so duration_s=0.014270883984863758 was NOT checked against any floor. A declaration is an affirmative claim about what ran; an unrecognized one is unverified, not verified. Add a recognizer plus floor for this substrate, or correct the declaration to an existing one."
+[exp7303-validation:adversarial]         },
+[exp7303-validation:adversarial]         {
+[exp7303-validation:adversarial]           "kind": "SUBSTRATE_CLASS_MISMATCH",
+[exp7303-validation:adversarial]           "severity": "critical",
+[exp7303-validation:adversarial]           "detail": "inference_substrate_class=blocked_no_run says nothing ran, but honest_verdict='complete_disqualified_terminal_validation' is not a blocked_* verdict. A blocked class must pair with a blocked verdict."
+[exp7303-validation:adversarial]         }
+[exp7303-validation:adversarial]       ],
+[exp7303-validation:adversarial]       "gate_version": "197e0a5eacacb09ce6607ae8bdfd507498082857f0d02ec2003a62c251b69a24"
+[exp7303-validation:adversarial]     }
+[exp7303-validation:adversarial]   ],
+[exp7303-validation:adversarial]   "flagged_count": 1
+[exp7303-validation:adversarial] }
+[exp7303-validation] after_subprocess adversarial elapsed_s=0.559 exit=1 unit=1/2
+[exp7303-validation] before_subprocess strict_rows elapsed_s=0.000 unit=2/2
+[exp7303-validation:strict_rows] 
+[exp7303-validation:strict_rows] verdict-row-consistency: checked 0, skipped 1 (no per-unit rows), unreadable 0.
+[exp7303-validation:strict_rows]   NOTE: most artifacts carry no per-unit row container, so their headline claims are not falsifiable from the artifact alone. That is a reporting-shape gap in those experiments, not a clean bill of health from this tool.
+[exp7303-validation] after_subprocess strict_rows elapsed_s=0.027 exit=0 unit=2/2
+[exp7972] rejected=ValueError:candidate_rejected
+=========================== short test summary info ============================
+FAILED tests/python/test_experiment_7972_v691_qwen_energy_calibration.py::test_frozen_commands_real_expected_exit_and_parent_failure
+1 failed, 16 passed in 12.14s

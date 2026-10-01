@@ -1,0 +1,376 @@
+{
+  "affected_files": [
+    "python/carnot/experiment_7972_v691_qwen_energy_calibration.py",
+    "python/carnot/verify/qwen_energy_calibration_7972.py",
+    "scripts/experiments/experiment_7972_v691_qwen_energy_calibration.py"
+  ],
+  "code_config_hashes": [
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7972_v691_qwen_energy_calibration.py",
+      "sha256": "sha256:7297d014d0d59fed69d59ff6a76cbbdd9d2cc0e534dd5ed45342830892a7ad38"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/qwen_energy_calibration_7972.py",
+      "sha256": "sha256:f25a4a0ab92935ea448076dd1d5360b4c0b158da440f5140cc8795412548af3d"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7972_v691_qwen_energy_calibration.py",
+      "sha256": "sha256:5c6a835830e5c14d75589a14d8b9e42042ddd66fd0fb79f36ed6e3ee8b68266c"
+    }
+  ],
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--parallel-mode",
+        "--data-file=/tmp/carnot-7972-preflight-aj3u1nyv/.coverage",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7972_v691_qwen_energy_calibration.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/qwen_energy_calibration_7972.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7972_v691_qwen_energy_calibration.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-7972-preflight-aj3u1nyv/pytest",
+        "tests/python/test_qwen_energy_calibration_7972.py",
+        "tests/python/test_experiment_7972_v691_qwen_energy_calibration.py",
+        "tests/python/test_source_boundary_7852.py",
+        "tests/python/test_experiment_7942_v689_sentence_labels.py",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_current_work_receipt.py",
+        "tests/python/test_experiment_7303_v642_validation_scope.py",
+        "tests/python/test_response_role_targets_7968.py",
+        "tests/python/test_qwen_response_risk_7958.py",
+        "tests/python/test_qwen_calibration_capture_7969.py",
+        "-q"
+      ],
+      "deadline_s": 300,
+      "expected_exit": 0,
+      "name": "unit_consumers_e2e015_019",
+      "reason": null,
+      "required": true
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--parallel-mode",
+        "--data-file=/tmp/carnot-7972-preflight-aj3u1nyv/.coverage",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7972_v691_qwen_energy_calibration.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/qwen_energy_calibration_7972.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7972_v691_qwen_energy_calibration.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7972_v691_qwen_energy_calibration.py",
+        "--validation-worker",
+        "--fixture-input",
+        "/tmp/carnot-7972-preflight-aj3u1nyv/input.json",
+        "--output",
+        "/tmp/carnot-7972-preflight-aj3u1nyv/success/experiment_7972_v691_qwen_energy_calibration.json"
+      ],
+      "deadline_s": 300,
+      "expected_exit": 0,
+      "name": "fitting_cli",
+      "reason": null,
+      "required": true
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--parallel-mode",
+        "--data-file=/tmp/carnot-7972-preflight-aj3u1nyv/.coverage",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7972_v691_qwen_energy_calibration.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/qwen_energy_calibration_7972.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7972_v691_qwen_energy_calibration.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7972_v691_qwen_energy_calibration.py",
+        "--validation-worker",
+        "--cold-replay",
+        "/tmp/carnot-7972-preflight-aj3u1nyv/success/experiment_7972_v691_qwen_energy_calibration.json"
+      ],
+      "deadline_s": 300,
+      "expected_exit": 0,
+      "name": "cold_fixture_cli",
+      "reason": null,
+      "required": true
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--parallel-mode",
+        "--data-file=/tmp/carnot-7972-preflight-aj3u1nyv/.coverage",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7972_v691_qwen_energy_calibration.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/qwen_energy_calibration_7972.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7972_v691_qwen_energy_calibration.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7972_v691_qwen_energy_calibration.py",
+        "--validation-worker",
+        "--root",
+        "/tmp/carnot-7972-preflight-aj3u1nyv/absent",
+        "--output",
+        "/tmp/carnot-7972-preflight-aj3u1nyv/blocked/experiment_7972_v691_qwen_energy_calibration.json"
+      ],
+      "deadline_s": 300,
+      "expected_exit": 0,
+      "name": "blocked_cli",
+      "reason": null,
+      "required": true
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--parallel-mode",
+        "--data-file=/tmp/carnot-7972-preflight-aj3u1nyv/.coverage",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7972_v691_qwen_energy_calibration.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/qwen_energy_calibration_7972.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7972_v691_qwen_energy_calibration.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7972_v691_qwen_energy_calibration.py",
+        "--validation-worker",
+        "--fixture-input",
+        "/tmp/carnot-7972-preflight-aj3u1nyv/bad.json",
+        "--output",
+        "/tmp/carnot-7972-preflight-aj3u1nyv/invalid/experiment_7972_v691_qwen_energy_calibration.json"
+      ],
+      "deadline_s": 300,
+      "expected_exit": 1,
+      "name": "invalid_input_cli",
+      "reason": "role_roster",
+      "required": true
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--parallel-mode",
+        "--data-file=/tmp/carnot-7972-preflight-aj3u1nyv/.coverage",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7972_v691_qwen_energy_calibration.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/qwen_energy_calibration_7972.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7972_v691_qwen_energy_calibration.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7972_v691_qwen_energy_calibration.py",
+        "--validation-worker",
+        "--date",
+        "20260930"
+      ],
+      "deadline_s": 300,
+      "expected_exit": 2,
+      "name": "invalid_date_cli",
+      "reason": "invalid choice",
+      "required": true
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--parallel-mode",
+        "--data-file=/tmp/carnot-7972-preflight-aj3u1nyv/.coverage",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7972_v691_qwen_energy_calibration.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/qwen_energy_calibration_7972.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7972_v691_qwen_energy_calibration.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7972_v691_qwen_energy_calibration.py",
+        "--validation-worker",
+        "--cold-replay",
+        "results/raw/experiment_7972_v691_qwen_energy_calibration/preflight/measured_candidate.json"
+      ],
+      "deadline_s": 300,
+      "expected_exit": 0,
+      "name": "cold_parameters_cli",
+      "reason": null,
+      "required": true
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--parallel-mode",
+        "--data-file=/tmp/carnot-7972-preflight-aj3u1nyv/.coverage",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7972_v691_qwen_energy_calibration.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/qwen_energy_calibration_7972.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7972_v691_qwen_energy_calibration.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7972_v691_qwen_energy_calibration.py",
+        "--validation-worker",
+        "--terminal-recheck",
+        "results/raw/experiment_7972_v691_qwen_energy_calibration/preflight/measured_candidate.json"
+      ],
+      "deadline_s": 300,
+      "expected_exit": 0,
+      "name": "terminal_recheck_cli",
+      "reason": null,
+      "required": true
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--keep",
+        "--data-file=/tmp/carnot-7972-preflight-aj3u1nyv/.coverage",
+        "/tmp/carnot-7972-preflight-aj3u1nyv"
+      ],
+      "deadline_s": 300,
+      "expected_exit": 0,
+      "name": "coverage_combine",
+      "reason": null,
+      "required": true
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "json",
+        "--data-file=/tmp/carnot-7972-preflight-aj3u1nyv/.coverage",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7972_v691_qwen_energy_calibration.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/qwen_energy_calibration_7972.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7972_v691_qwen_energy_calibration.py",
+        "-o",
+        "/tmp/carnot-7972-preflight-aj3u1nyv/coverage.json"
+      ],
+      "deadline_s": 300,
+      "expected_exit": 0,
+      "name": "coverage_json",
+      "reason": null,
+      "required": true
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/carnot-7972-preflight-aj3u1nyv/.coverage",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7972_v691_qwen_energy_calibration.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/qwen_energy_calibration_7972.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7972_v691_qwen_energy_calibration.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "deadline_s": 300,
+      "expected_exit": 0,
+      "name": "coverage_report",
+      "reason": null,
+      "required": true
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_7972_v691_qwen_energy_calibration.py",
+        "python/carnot/verify/qwen_energy_calibration_7972.py",
+        "scripts/experiments/experiment_7972_v691_qwen_energy_calibration.py",
+        "tests/python/test_qwen_energy_calibration_7972.py",
+        "tests/python/test_experiment_7972_v691_qwen_energy_calibration.py"
+      ],
+      "deadline_s": 300,
+      "expected_exit": 0,
+      "name": "ruff_check",
+      "reason": null,
+      "required": true
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_7972_v691_qwen_energy_calibration.py",
+        "python/carnot/verify/qwen_energy_calibration_7972.py",
+        "scripts/experiments/experiment_7972_v691_qwen_energy_calibration.py",
+        "tests/python/test_qwen_energy_calibration_7972.py",
+        "tests/python/test_experiment_7972_v691_qwen_energy_calibration.py"
+      ],
+      "deadline_s": 300,
+      "expected_exit": 0,
+      "name": "ruff_format",
+      "reason": null,
+      "required": true
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "python/carnot/experiment_7972_v691_qwen_energy_calibration.py",
+        "python/carnot/verify/qwen_energy_calibration_7972.py"
+      ],
+      "deadline_s": 300,
+      "expected_exit": 0,
+      "name": "strict_mypy",
+      "reason": null,
+      "required": true
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_qwen_energy_calibration_7972.py",
+        "tests/python/test_experiment_7972_v691_qwen_energy_calibration.py",
+        "tests/python/test_source_boundary_7852.py",
+        "tests/python/test_experiment_7942_v689_sentence_labels.py",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_current_work_receipt.py",
+        "tests/python/test_experiment_7303_v642_validation_scope.py",
+        "tests/python/test_response_role_targets_7968.py",
+        "tests/python/test_qwen_response_risk_7958.py",
+        "tests/python/test_qwen_calibration_capture_7969.py"
+      ],
+      "deadline_s": 300,
+      "expected_exit": 0,
+      "name": "spec_coverage",
+      "reason": null,
+      "required": true
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-7972-preflight-aj3u1nyv/full-suite"
+      ],
+      "deadline_s": 300,
+      "expected_exit": 0,
+      "name": "repository_health_full_suite",
+      "reason": null,
+      "required": false
+    }
+  ],
+  "config": {
+    "bootstrap_draws": 10000,
+    "controls": [
+      "raw_qwen",
+      "platt",
+      "isotonic"
+    ],
+    "l2": 0.001,
+    "learning_rate": 0.01,
+    "loss": {
+      "accept": "5y",
+      "escalate": 0.25,
+      "reject": "1-y"
+    },
+    "optimizer": "Adam",
+    "primary": "gibbs",
+    "seeds": [
+      69101,
+      69102,
+      69103
+    ],
+    "steps": 200,
+    "target_automation": 0.5,
+    "temperatures": [
+      0.25,
+      0.29730177875068026,
+      0.3535533905932738,
+      0.42044820762685725,
+      0.5,
+      0.5946035575013605,
+      0.7071067811865475,
+      0.8408964152537145,
+      1.0,
+      1.189207115002721,
+      1.4142135623730951,
+      1.6817928305074292,
+      1.9999999999999998,
+      2.378414230005442,
+      2.82842712474619,
+      3.363585661014858,
+      4.0
+    ]
+  },
+  "coverage_includes": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7972_v691_qwen_energy_calibration.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/qwen_energy_calibration_7972.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7972_v691_qwen_energy_calibration.py",
+  "full_suite_policy": "One real run; repository health stays separate from owned required checks.",
+  "pytest_basetemp": "/tmp/carnot-7972-preflight-aj3u1nyv/pytest",
+  "scratch_root": "/tmp/carnot-7972-preflight-aj3u1nyv",
+  "test_paths": [
+    "tests/python/test_qwen_energy_calibration_7972.py",
+    "tests/python/test_experiment_7972_v691_qwen_energy_calibration.py",
+    "tests/python/test_source_boundary_7852.py",
+    "tests/python/test_experiment_7942_v689_sentence_labels.py",
+    "tests/python/test_primary_publication_7928.py",
+    "tests/python/test_current_work_receipt.py",
+    "tests/python/test_experiment_7303_v642_validation_scope.py",
+    "tests/python/test_response_role_targets_7968.py",
+    "tests/python/test_qwen_response_risk_7958.py",
+    "tests/python/test_qwen_calibration_capture_7969.py"
+  ]
+}

@@ -88065,3 +88065,32 @@ Private fixture, blocked, failure and cold-replay routes exercise publication
 and custody. The primary is `results/experiment_7969_v691_qwen_calibration_capture.json`;
 its validation receipts and final-hash sidecars determine capture readiness.
 The conductor retains responsibility for ops and traceability reconciliation.
+# REQ-REPORT-7972: Publish checked response calibration evidence
+
+Implementation: `python/carnot/experiment_7972_v691_qwen_energy_calibration.py`
+and `scripts/experiments/experiment_7972_v691_qwen_energy_calibration.py`.
+Custody tests: `tests/python/test_experiment_7972_v691_qwen_energy_calibration.py`.
+
+Publish one primary results/experiment_7972_v691_qwen_energy_calibration.json
+for 20261001, milestone 2026.10.691. Record actual host CPU head fitting,
+verifier_ensemble_against_cached_candidates, no_model_load, MODEL_SPECS=[],
+and zero current pretrained model calls. Historical Qwen is input provenance.
+External missing, retired, hash-drifted or gate-blocked inputs are terminal
+complete_blocked_* with every failed operand. Readiness is validity, not benefit.
+Preserve prior verdicts, exposed_development and the September 28 corrigendum.
+
+### SCENARIO-REPORT-7972-1: Private validation and cold replay
+
+Freeze changed files, transitive consumers, argv, exits/reasons, deadlines and
+identical coverage includes before outcomes. Use unique temporary scratch
+outside checkout/results with one publication directory per scenario. Archive
+immutable child logs and measured coverage receipts under task raw. Run focused
+units, E2E-015/019, actual fitting CLI success/blocked/failure, cold parameter
+replay, scoped Ruff/strict mypy/spec coverage and one full-suite health command.
+Require nonempty 100% added-module and CLI statements; preserve failed receipts.
+Cold-reduce claims from primitive rows and sealed parameters. Verify original
+reply hashes before/after. Run both terminal validators on final bytes, recheck
+after verdict changes, publish atomically, bind sidecars to final hash, and
+verify both live consumers despite a newer nested sidecar. Failed owned required
+checks disqualify with readiness zero. The conductor owns ops and traceability
+reconciliation. Generator weights, defaults and external publication stay fixed.

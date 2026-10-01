@@ -47342,3 +47342,46 @@ The fixed role roster, unchanged full-source prompt, public hash order,
 strict parser, eight-slot checkpoints and matching checkpoint resume are
 covered by `tests/python/test_qwen_calibration_capture_7969.py`.
 Scientific accuracy and decision benefit remain unmeasured in this capture.
+# REQ-VERIFY-7972: Calibrate one fixed response judgment
+
+Implementation: `python/carnot/verify/qwen_energy_calibration_7972.py`.
+Gradient, fitting and reducer tests: `tests/python/test_qwen_energy_calibration_7972.py`.
+
+Exp7972 uses only the scalar unsupported_probability q from authenticated
+Exp7969 fit/tune replies and unchanged Exp7958 full_source evaluation replies.
+Human targets come from Exp7968 roles and historical Exp7955 complete responses.
+No source ID, span, role, text or evaluation label enters a predictor.
+Authenticate each producer's own date, exact role/request hashes, renderer,
+GGUF hash, grammar, temperature, seed and token limits. Reject protocol drift.
+
+Freeze raw_qwen, Platt on logit(clip(q,1e-4,1-1e-4)), fit-only isotonic,
+Gibbs conditional E(q,y) with one width-8 tanh layer, and a descriptive
+eight-coefficient cubic spline with clamped knots 0/.2/.4/.6/.8/1.
+Gibbs probabilities use the energy difference. Spline E0=0 and E1=-spline(q).
+Fit BCE plus L2=1e-3, full-batch 200 gradient steps at .01, with initialization
+seeds 69101/69102/69103. Both energy heads receive the same seventeen
+geometrically spaced tune-only temperatures from .25 to 4. Standard Platt
+and isotonic controls receive no temperature search. Count all parameter
+updates, including regularization. Require real changed parameters.
+
+### SCENARIO-VERIFY-7972-1: Seal before evaluation
+
+Require 128 independent valid fit clusters with 16 per class, and 32 tune
+clusters with four per class. Insufficient support is complete_null_* with
+readiness zero. Seal heads, then design descriptive policies using only
+policy_design labels at target automation .50, then seal policies before
+evaluation access. Role restrictions and exact hashes remain enforced.
+
+### SCENARIO-VERIFY-7972-2: Reduce same-information decisions
+
+Use losses accept=5y, reject=1-y, escalate=.25, with ties escalating.
+Invalid replies always escalate, including in intended-action denominators.
+Probability metrics identify valid-pair denominators. Average initialization
+seeds within original source clusters before 10000 paired bootstrap draws
+and sign randomization tests. Holm-correct six Gibbs cost/Brier comparisons
+against raw_qwen, Platt and isotonic. Benefit requires cost gain >=.02,
+positive cost/Brier lower bounds and adjusted p<.05 against all three,
+automation >=.20 and no extra false accepts. Require 32 evaluation clusters
+and eight per class. The spline cannot replace the registered primary.
+Risk-coverage thresholds are fixed before evaluation; no conformal guarantee.
+Synthetic distortion recovery is circular_positive, separate from human science.
