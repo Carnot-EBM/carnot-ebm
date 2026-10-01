@@ -88791,3 +88791,32 @@ Implementation: `python/carnot/experiment_7993_v693_capture_custody.py`,
 `tests/python/test_capture_custody_7993.py` and
 `tests/python/test_experiment_7993_v693_capture_custody.py` cover authenticated
 reduction, scope classification, private publication, failures and cold replay.
+
+## REQ-REPORT-7994: Publish the V693 development cohort
+
+Authenticate exact Exp7980 producer bytes and original public manifests.
+Declare zero current pretrained calls and no fitted heads. Freeze configuration
+and validation commands before measurement. Publish one checked Exp7994 primary
+with public/evaluator role hashes, primitive rows, exposure limitations, frozen
+feedback schedule, measured timing and actual validation receipts. Readiness
+requires every role manifest and passing owned checks, regardless of class
+balance. Missing external inputs terminate blocked with exact gate operands;
+owned failures disqualify with readiness zero. A complete preparation makes no
+benefit claim and uses complete_null. Synthetic controls are protocol evidence.
+
+### SCENARIO-REPORT-7994-VALIDATION
+
+Run private real CLI success, blocked and external cold replay; direct consumers;
+E2E-015/019; strict mypy; scoped Ruff; explicit test spec coverage; nonempty
+100 percent new statement coverage; and one full Python suite as separate
+repository health. Preserve broad historical failures. Check actual candidate
+bytes with unchanged adversarial and strict row validators. Both conductor
+readers must select the exact primary. The conductor owns ops and traceability
+reconciliation for this invocation.
+
+Implementation: `python/carnot/experiment_7994_v693_development_cohort.py`,
+`python/carnot/verify/development_cohort_7994.py`, and the script-path CLI.
+Verification: `tests/python/test_development_cohort_7994.py` and
+`tests/python/test_experiment_7994_v693_development_cohort.py` exercise private
+publication, chronology, custody, metadata invariance and terminal checks.
+The published primary retains the current invocation's validation receipts.

@@ -47655,3 +47655,34 @@ or changing a validator. Current validation failures SHALL clear readiness.
 Implementation: `python/carnot/reporting/capture_custody_7993.py`; verification
 is in `tests/python/test_capture_custody_7993.py`. The unchanged provenance
 classifier and terminal validators retain the original live-count rejection.
+
+## REQ-VERIFY-7994: Seal bounded source-disjoint development evidence
+
+Select at most 384 official TRAIN normalized complete-source groups using
+SHA256 with salt `V693-development`. Exclude all original 640 source groups,
+exact and normalized duplicates, and explicitly recorded historical evaluation
+identities. Select the lowest stable response ID before annotations. Never
+decode official TEST records. Retain invalid boundaries and shortfalls without
+replacement. Freeze public bytes, eight existing lexical features, IDs, roles
+and ordering before a separate evaluator process opens selected annotations.
+
+### SCENARIO-VERIFY-7994-ISOLATION
+
+Public feature bytes remain identical after evaluator metadata and label
+permutations. Only the evaluator derives complete-response y from validated
+original spans. Offset or lineage errors remain unavailable, never negatives.
+Role IDs, human labels and historical model names never enter features.
+
+### SCENARIO-VERIFY-7994-CHRONOLOGY
+
+Roles contain the first 64 calibration groups, next 256 stream groups and
+last 64 retention groups. Freeze 256 stream slots and reveal at slot plus 20.
+Unavailable slots do not compress chronology. Calibration fitting may access
+only calibration labels. Retention access requires an independent audit seal.
+Future-label access and duplicate-role mutations must fail.
+
+Implementation: `python/carnot/verify/development_cohort_7994.py` reuses the
+existing complete-source features and exact original annotation join.
+Verification: `tests/python/test_development_cohort_7994.py` and the Exp7994
+private CLI tests cover source duplicates, metadata permutations, invalid spans,
+empty responses, future feedback denial and retention audit authorization.
