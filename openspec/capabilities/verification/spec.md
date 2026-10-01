@@ -1,3 +1,5 @@
+
+
 # Verification Capability Specification
 
 ## REQ-VERIFY-7968: Isolate complete-response calibration roles
@@ -47591,3 +47593,23 @@ zero; imported fitted heads SHALL remain separate trained_head_specs.
 Private cold replay SHALL reject altered board receipts, operation mappings,
 readiness and aggregate bounds. Disqualification requires failed owned check
 receipts. Immutable logs SHALL be archived only after supervised children exit.
+## V692 capstone validation boundary (2026-10-01)
+
+### REQ-VERIFY-7991-V692
+
+Freeze required commands before reduction. Keep the pytest artifact guard
+enabled and all mutable fixtures in private scratch outside the checkout.
+Require affected unit and consumer tests, private E2E-018 authority routes,
+real capstone success and blocked cold replay, nonempty 100 percent new
+statement coverage, scoped Ruff check and format, strict mypy and spec coverage
+on actual test paths. Preserve unrelated full-suite failures as historical
+diagnostics. Archive receipts only after supervised children exit. Progress
+messages and child heartbeats shall remain at most sixty seconds apart.
+
+### SCENARIO-VERIFY-7991-TERMINAL
+
+A failed owned required check sets verdict_class=disqualified, science_ready
+false and capstone_execution_ready_score=0. Final-byte adversarial verification
+and strict row lint travel with the primary through a hash-bound nested
+sidecar. A scientific null may be ready after all owned checks; a blocked
+result remains ready zero even when validation passes and paper_ready is true.

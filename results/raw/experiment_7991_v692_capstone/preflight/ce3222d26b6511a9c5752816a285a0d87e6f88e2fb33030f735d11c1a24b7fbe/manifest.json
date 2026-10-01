@@ -1,0 +1,189 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/publication_gate.py",
+        "--json"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "name": "publication_gate"
+    },
+    {
+      "argv": [
+        "/usr/bin/env",
+        "CARNOT_7991_COVERAGE_DIR=/tmp/carnot-7991-science-probe",
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--parallel-mode",
+        "--data-file=/tmp/carnot-7991-science-probe/owned.coverage",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v692_capstone.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v692_capstone_reduction.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v692_capstone_validation.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7991_v692_capstone.py",
+        "-m",
+        "pytest",
+        "tests/python/test_experiment_7991_v692_capstone.py",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "--basetemp=/tmp/carnot-7991-science-probe/unit"
+      ],
+      "classification": "required",
+      "deadline_s": 300,
+      "expected_exit": 0,
+      "name": "owned_unit_and_real_private_cli"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python/test_experiment_7979_v692_contract_methods.py",
+        "tests/python/test_experiment_7891_v685_authority_lifecycle.py",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_conductor_gates.py",
+        "tests/python/test_in_process_doc_reconcile.py",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "--basetemp=/tmp/carnot-7991-science-probe/consumers"
+      ],
+      "classification": "required",
+      "deadline_s": 300,
+      "expected_exit": 0,
+      "name": "affected_consumers_e2e018"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--data-file=/tmp/carnot-7991-science-probe/combined.coverage",
+        "/tmp/carnot-7991-science-probe"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "name": "coverage_combine"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "json",
+        "--data-file=/tmp/carnot-7991-science-probe/combined.coverage",
+        "-o",
+        "/tmp/carnot-7991-science-probe/coverage.json"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "name": "coverage_json"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/carnot-7991-science-probe/combined.coverage",
+        "--fail-under=100"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "name": "changed_statement_coverage"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/reporting/v692_capstone.py",
+        "python/carnot/reporting/v692_capstone_reduction.py",
+        "python/carnot/reporting/v692_capstone_validation.py",
+        "scripts/experiments/experiment_7991_v692_capstone.py",
+        "tests/python/test_experiment_7991_v692_capstone.py"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "name": "ruff_check"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/reporting/v692_capstone.py",
+        "python/carnot/reporting/v692_capstone_reduction.py",
+        "python/carnot/reporting/v692_capstone_validation.py",
+        "scripts/experiments/experiment_7991_v692_capstone.py",
+        "tests/python/test_experiment_7991_v692_capstone.py"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "name": "ruff_format"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "--follow-imports=silent",
+        "python/carnot/reporting/v692_capstone.py",
+        "python/carnot/reporting/v692_capstone_reduction.py",
+        "python/carnot/reporting/v692_capstone_validation.py",
+        "scripts/experiments/experiment_7991_v692_capstone.py"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "name": "strict_mypy"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7991_v692_capstone.py",
+        "tests/python/test_experiment_7979_v692_contract_methods.py",
+        "tests/python/test_experiment_7891_v685_authority_lifecycle.py",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_conductor_gates.py",
+        "tests/python/test_in_process_doc_reconcile.py"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "name": "spec_coverage"
+    }
+  ],
+  "coverage_includes": [
+    "python/carnot/reporting/v692_capstone.py",
+    "python/carnot/reporting/v692_capstone_reduction.py",
+    "python/carnot/reporting/v692_capstone_validation.py",
+    "scripts/experiments/experiment_7991_v692_capstone.py"
+  ],
+  "dependency_hashes": {
+    "python/carnot/reporting/v692_capstone.py": "sha256:dfc269d4485cbfbb5a29a6d01a6b8e63b7817830f8e32e1f4fccc6eb34bb9c34",
+    "python/carnot/reporting/v692_capstone_reduction.py": "sha256:ed45173489e5b2971daf8555f6cf9fece08f157bf4326cc6db0b62ce66a1e341",
+    "python/carnot/reporting/v692_capstone_validation.py": "sha256:a532ca746c527b99cd85b73d63bad32ced1047cc70c7d4b968b107e54397ac39",
+    "scripts/experiments/experiment_7991_v692_capstone.py": "sha256:ddf83a426b8e0b72284f3ae56038f35f476f64841d7f880d43d7239315bb4fd9",
+    "tests/python/test_conductor_gates.py": "sha256:a5a22b1908237000a737920d22c36a9df38e14e92996956e96f1864411b3b409",
+    "tests/python/test_experiment_7891_v685_authority_lifecycle.py": "sha256:2d67e9cb874659e87788a9202b9d513c6b13e7edb2387e624a6c6dfea35dd157",
+    "tests/python/test_experiment_7979_v692_contract_methods.py": "sha256:ac80b6f2924037147846c214cf14684567dfce7e0709452c00540120bf7a9ae0",
+    "tests/python/test_experiment_7991_v692_capstone.py": "sha256:e9b4d86c0289836caf62b81b1a2522432bda8f84d2de2436b8181a35bd96dc8a",
+    "tests/python/test_in_process_doc_reconcile.py": "sha256:e03f78297c5bcca800e8d034c5528759de084f7a053d7003221a06686edb1c67",
+    "tests/python/test_primary_publication_7928.py": "sha256:80b0f1f21b9267801da0ac7dfb9c225690f90ca5cfb9d378c2ce5357a5e95b9d"
+  },
+  "execution_date": "20261001",
+  "full_suite_policy": "retained historical diagnostic receipts; no unchanged rerun",
+  "legitimate_blocked_cold_replay_expected_exit": 0,
+  "negative_wrapper_expected_exit": 0,
+  "required_negative_routes": [
+    "missing_upstream",
+    "authority_drift",
+    "malformed_rows",
+    "aggregate_drift"
+  ],
+  "scratch_root": "/tmp/carnot-7991-science-probe"
+}

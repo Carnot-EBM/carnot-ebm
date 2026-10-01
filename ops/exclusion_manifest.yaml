@@ -91,6 +91,28 @@ retired_experiments:
   completed_milestone: 2026.04.68
   reason: "discriminative JEPA OOD failure \u2014 retired via exp887 gate"
 retired_extras:
+- id: v692_exact_supervisor_prerequisite_repeat
+  experiment_scope: >-
+    Unchanged exposed-development supervisor inventory with no authenticated
+    recovered redirect outcome after the same prerequisite disqualification.
+  reason: >-
+    Exp7988 repeats Exp7975's complete_disqualified_supervisor_delta_prerequisites
+    under retire_if_same_verdict=true. Retire only this failed inventory scope.
+    A new authenticated event frontier or repaired qualification reopens it.
+    Multivariate service measurement has different arms from scalar service;
+    their shared null verdict does not retire that changed service scope.
+  experiment_ids:
+  - exp7975-arc-supervisor-delta
+  - exp7988-arc-supervisor-delta
+  source_artifact_hashes:
+    results/experiment_7975_v691_arc_supervisor_delta.json: sha256:a28af99cf2de2a4ba93348d7c2fb3ce18879a46a468fb02961f407180fc48a4f
+    results/experiment_7988_v692_arc_supervisor_delta.json: sha256:de4200e7be3dd874d52c633d6a5489380aa2993862158fed419dfaa691a9e8b3
+  retired_milestone: 2026.10.692
+  retired_by_artifact: results/experiment_7991_v692_capstone.json
+  retire_if_same_verdict: true
+  next_reopen_condition: Authenticated new redirect outcome bytes and complete owned qualification.
+  blocked_patterns:
+  - repeat the exact unchanged Exp7975 and Exp7988 failed supervisor inventory without new event or qualification evidence
 - id: arc-induce-completion-budget-raise
   reason: >-
     RETIRED AS A LEVER, 2026-07-31, honouring the retire_if_same_verdict:true this

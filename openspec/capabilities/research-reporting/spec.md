@@ -1,3 +1,5 @@
+
+
 # Research Reporting Capability Specification
 
 ## REQ-REPORT-7968: Publish authenticated response-role views
@@ -88641,3 +88643,57 @@ An invalid required source chain SHALL stop before fitted-head replay. A
 private validation timeout SHALL remain preserved with its original deadline,
 exit and log hash. A later bounded attempt SHALL record changed code and its
 own command plan; it SHALL NOT erase or relabel the failed attempt.
+## V692 independent capstone (2026-10-01)
+
+### REQ-REPORT-7991-V692
+
+Exp7991 shall bind exactly thirteen ordered Exp7979–Exp7991 dispositions to
+the current design and frozen YAML. Read declared primaries and conductor
+dispatch receipts separately. Authenticate byte hashes, roles, each producer's
+own invocation dates, readiness operands and checkpoint references. Preserve
+all historical failures. Administrative qualification supplies no science gate.
+
+Reduce original source counts and cached predictions, costs, calibration,
+causal label reads, restart equality, retention, service spans and conditional
+hardware bounds from primitive rows or qualified checkpoint readers. Unknown
+labels stay outside scored denominators. Seeds do not increase independent
+sources. Unavailable learning and reserved-data branches stay unavailable.
+Distinguish exposure-audited reserved sources from exposed development data.
+
+Decide FR-12/FR-06, FR-11 and FR-05/FR-08/NFR-01 separately. Preserve explicit
+continue, retire and reopen conditions. Only an exact unchanged terminal
+verdict with authenticated prior bytes and retire_if_same_verdict=true may
+retire that declared scope. Record source hashes in the exclusion manifest.
+
+Missing external science yields complete_blocked and readiness zero. Completed
+valid science without independent benefit yields complete_null. Failed owned
+validation yields complete_disqualified and readiness zero. Keep publication
+G1–G4, paper_ready and unmet_gates unchanged and separate from science_ready.
+Publish one atomic primary, nested receipts, a frozen validation manifest and
+measured timings. Current pretrained-model loads and calls are zero.
+
+### SCENARIO-REPORT-7991-DISPOSITIONS
+
+Given qualified feature and fit nulls, missing reserved and learning primaries,
+and a disqualified stream producer, retain thirteen dispositions and precise
+failed gate operands. The fit branch remains available without the stream
+branch or administrative audit. The capstone is terminal blocked, not partial.
+
+### SCENARIO-REPORT-7991-REDUCTION
+
+Given repeated seeds on the same source and an unknown label, reconstruct
+probability and action costs with source means and one unknown-label rule.
+Reject malformed rows, changed checkpoint bytes, unequal paired sources,
+unreleased label reads and changed restart identity. Report missing branches
+as unavailable rather than zero measurements.
+
+### SCENARIO-REPORT-7991-REPLAY
+
+Cold replay outside the checkout without PYTHONPATH reproduces complete null
+and legitimate blocked results. Missing upstream, changed frozen authority,
+malformed rows and aggregate drift exit one. An expected-negative wrapper
+asserts child exit one and itself exits zero. Both existing consumers resolve
+the final primary bytes despite newer nested sidecars.
+
+Implementation and verification are scoped to the new capstone modules, CLI
+and actual tests. The conductor owns ops and traceability reconciliation.
