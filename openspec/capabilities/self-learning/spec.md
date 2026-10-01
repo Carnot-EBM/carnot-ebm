@@ -29966,3 +29966,27 @@ idempotence, sparse/dense parity, controls and corrupt checkpoint rejection.
 The separate shuffle diagnostic samples only selected labels whose origin is no
 later than the currently due receipt. It records the sampled origin explicitly;
 reversing a complete stream is forbidden because that exposes future labels.
+
+## REQ-SELF-7999: Independent finite replay learning audit
+
+Independently reconstruct Exp7998 acquisition, delayed feedback, sparse data
+gradients and unweighted L2 decay without importing its acceptance or benefit
+functions. Compare targeted IPW with frozen, uniform IPW and targeted unweighted
+on one-based slots 41–256. Average acquisition seeds within each source first.
+Require 160 eligible groups, 20 per class and eight complete disjoint 20-slot
+blocks. Use 10000 paired moving-block draws of length 20, Holm correction of
+three cost tests, cost gain >=.02, positive lower bounds, adjusted p<.05,
+no extra false accepts and Brier degradation upper bound <=.01. Lengths 10 and
+40 are diagnostics. Adaptive development intervals have no population coverage
+guarantee. Generalized benefit remains zero.
+
+### SCENARIO-SELF-7999-RETENTION
+
+Freeze final heads and retention predictions before opening reserved targets.
+Retention never trains or tunes. Require 48 eligible sources and eight per class,
+and cost degradation upper bound <=.01 against the initial head. Report Brier,
+false accepts and durable updates that change later natural predictions. A working
+circular positive control is mandatory; absent selectable natural headroom makes
+the natural null inconclusive.
+
+Implementation: `python/carnot/verify/learning_causal_audit_7999.py` computes source-averaged contrasts and sealed retention checks. `tests/python/test_learning_causal_audit_7999.py` exercises support, controls and coefficient reconstruction.

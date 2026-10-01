@@ -47776,3 +47776,20 @@ use identical selected past labels. No pretrained model is invoked.
 Implementation: `python/carnot/verify/selective_feedback_7998.py` implements
 selected due-label updates and independent dense parity. Its matching unit tests
 trace to REQ-SELF-7998 and REQ-VERIFY-7998.
+
+## REQ-VERIFY-7999: Independent row and crash reconstruction
+
+Reconstruct source identity, propensities, source-keyed draws, due times, sparse
+updates, costs and Brier from primitive records. Compare reconstructed gradients
+with coefficient changes in saved states. Reject leaked future targets,
+missing updates, forged propensities and changed group IDs. Crash immediately
+before and after atomic slot-128 commit for each primary arm; independently
+restore weights, RNG, pending and seen IDs and compare later predictions with
+uninterrupted replay. Preserve raw receipts and historical producer bytes.
+
+### SCENARIO-VERIFY-7999-MUTATION
+
+Private producer fixtures and mutated rows test the separate reducer. Cold replay
+rejects drift even if an attacker recomputes a local shard hash.
+
+Implementation: `python/carnot/verify/learning_causal_audit_7999.py` owns the separate primitive reducer and atomic recovery. `tests/python/test_learning_causal_audit_7999.py` rejects the four registered mutations and corrupt saved gradients.

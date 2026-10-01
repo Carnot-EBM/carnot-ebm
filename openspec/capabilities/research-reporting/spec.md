@@ -88938,3 +88938,26 @@ After an owned fix, regenerate owned receipts. A prior full-suite attempt may be
 retained by its exact log hash, command, exit status, producer date and immutable
 configuration receipt. Audit that reference with a real CLI command and label
 it historical; never count it as a current passing check or run the suite twice.
+
+## REQ-REPORT-7999: Causal audit terminal publication
+
+Freeze configuration, code and validation commands before measurements. Load no
+pretrained model; declare small reconstructed heads separately. Authenticate
+Exp7994/7995/7998 and producer shards by immutable bytes with their producer dates.
+Missing prerequisite operands are contract errors; present failing prerequisites
+produce complete_blocked with exact gates. Owned failures disqualify and zero
+readiness; a valid scientific null can be ready. Preserve full-suite health
+failures separately. Require real private CLI success, blocked and cold paths,
+nonempty 100 percent owned-statement coverage, direct consumers, E2E-019, scoped
+Ruff, strict mypy and explicit spec coverage. Validate actual final bytes with
+unchanged adversarial and strict row validators and both conductor readers.
+Publish only checked bytes and retain validator sidecars. The conductor owns
+ops/status, ops/changelog and BMAD reconciliation for this task.
+
+### SCENARIO-REPORT-7999-CLI
+
+Private outputs retain the artifact guard. Logs, exit codes and coverage
+denominators bind to the current invocation. No finite development replay may
+set generalized_learning_benefit_score above zero.
+
+Implementation: `python/carnot/experiment_7999_v693_learning_causal_audit.py` and its script own the terminal artifact. `python/carnot/reporting/learning_audit_validation_7999.py` freezes supervised commands. `tests/python/test_experiment_7999_v693_learning_causal_audit.py` covers real private CLI success, blocking and cold replay.
