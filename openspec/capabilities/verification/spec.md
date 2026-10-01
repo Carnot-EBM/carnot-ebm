@@ -47469,3 +47469,36 @@ Implementation: `python/carnot/verify/qwen_stream_capture_7981.py` reuses the
 historical full-source request and parser. `tests/python/test_qwen_stream_capture_7981.py`
 verifies independent branch floors, public-field isolation, complete input
 admission, failed calls and timestamp-preserving checkpoint reuse.
+
+## REQ-VERIFY-7982: Matched source-aware binary heads
+
+Join original Exp7980 fit, tune and policy rosters to authenticated Exp7969 q.
+Use clipped logit(q) and eight public features, normalized with fit-only means
+and scales. Require 128 fit groups with 16 per class and 32 tune groups with
+4 per class. Reject role overlap, hidden predictor fields and unknown-label
+substitution. Open only fit and tune targets in this experiment.
+
+### SCENARIO-VERIFY-7982-FITTING
+
+Fit an eight-unit tanh conditional energy on x plus binary y and normalize
+exactly over both labels. Compare identical inputs with linear logistic,
+quadratic logistic and a sixteen-unit sigmoid MLP. Use seeds 69201/69202/69203,
+200 Adam steps, learning rate .01, L2 .001 and the same 17 temperatures from
+.25 to 4 selected on tune Brier. Verify analytical gradients by central finite
+differences and exact sigmoid(E0-E1) parity within 1e-12. Average seeds before
+comparison; seeds do not multiply independent sources. Export all qualified
+checkpoints and measured optimizer work, including a descriptive additive
+cubic spline residual with fixed fit-quantile knots and coefficient touches.
+
+### SCENARIO-VERIFY-7982-SEALS
+
+Seal checkpoints and predictions before any policy or evaluation target access.
+Retain frozen Exp7972 scalar heads as descriptive controls. Synthetic separable
+and shuffled-label fixtures are circular wiring checks. Small fit gains cannot
+change the primary arm or hyperparameters. This is a bounded architecture and
+training comparison, with no foundation-model or normalization-benefit claim.
+
+Implementation: `python/carnot/verify/multivariate_energy_7982.py` reuses
+Exp7972 numerical primitives and its analytical binary-energy gradient pattern.
+`tests/python/test_multivariate_energy_7982.py` checks every coefficient,
+normalization, fit-only scaling, seed means, null inputs and circular fixtures.

@@ -88423,3 +88423,31 @@ adapts the qualified Exp7969 runtime and validation routes. The direct entrypoin
 is `scripts/experiments/experiment_7981_v692_qwen_stream_capture.py`.
 `tests/python/test_experiment_7981_v692_qwen_stream_capture.py` verifies private
 publication, separate branch gates, token receipts and cold replay.
+
+## REQ-REPORT-7982: Reproducible multivariate conditional energy fitting
+
+Authenticate the exact Exp7980 feature and original role bytes, Exp7969 cached
+judgments and Exp7972 scalar checkpoints. Bind producer dates separately from
+the current 20261001 invocation. Do not depend on Exp7967 or Exp7970. Freeze
+required validation before fitting and publish one atomic Exp7982 primary with
+nested checkpoints, predictions and immutable command receipts. Zero current
+pretrained model calls are allowed. Failed external gates block; failed owned
+validation disqualifies and clears energy_fit_ready_score. Readiness measures
+reproducible fitting, never decision advantage; Exp7983 owns decision evidence.
+The conductor owns ops and traceability reconciliation for this invocation.
+
+### SCENARIO-REPORT-7982-CUSTODY
+
+Missing or changed inputs record exact path, hash, field, operator, expected
+and observed operands. Cold replay outside the checkout without PYTHONPATH
+must reconstruct predictions and reject changed seals. Both live consumers
+must select the declared primary. Run affected tests, E2E-015 and E2E-019,
+scoped Ruff, strict mypy, actual-test spec coverage and nonempty 100 percent
+new statement coverage including private CLI routes. Preserve historical and
+repository health failures independently of the owned validation gate.
+
+Implementation: `python/carnot/experiment_7982_v692_multivariate_energy.py`
+and `python/carnot/reporting/multivariate_validation_7982.py`, exposed through
+`scripts/experiments/experiment_7982_v692_multivariate_energy.py`.
+`tests/python/test_experiment_7982_v692_multivariate_energy.py` covers private
+fitting, frozen scalar controls, cold replay, exact gates and failure disposition.
