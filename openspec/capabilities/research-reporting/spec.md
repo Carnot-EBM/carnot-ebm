@@ -88357,3 +88357,42 @@ Implementation: `python/carnot/reporting/v692_contract_methods.py` and
 `tests/python/test_experiment_7979_v692_contract_methods.py` checks current
 authority, exact historical custody, negative CLI exits and private publication.
 The primary's frozen manifest and terminal sidecar retain observed qualification.
+
+## V692 public evidence features (2026-10-01)
+
+### REQ-REPORT-7980
+
+Authenticate Exp7968, Exp7969, Exp7958 and Exp7972 directly by exact bytes,
+producer identity, invocation date and readiness. Preserve all 640 original
+slots and eight roles. Publish one atomic Exp7980 primary with nested public
+and evaluator sidecars, separate q, measured timing and zero model calls.
+Freeze the validation command manifest before measurement. Failed external
+gates block; failed owned checks disqualify and clear both readiness fields.
+Record repository-wide health separately. The conductor owns ops and
+traceability reconciliation for this invocation.
+
+### SCENARIO-REPORT-7980-CUSTODY
+
+Missing inputs name path, hash, field, operator, expected and observed values.
+Historical invocation dates remain distinct from the current run. Cold replay
+rejects changed public, feature, roster, selection or source bytes. Both live
+artifact readers select the declared primary. Private CLI routes work outside
+the checkout with no PYTHONPATH. Required checks include E2E-015, E2E-019,
+strict mypy, scoped Ruff, actual-test spec coverage, adversarial verification,
+strict row consistency and nonempty 100 percent new statement coverage.
+
+### SCENARIO-REPORT-7980-RESERVATION
+
+Reserve up to 96 official TRAIN normalized source groups by the fixed
+seed69280 hash order and one hashed response ID before label or quality access.
+Freeze all searched history paths, hashes, exclusions and exact shortfall.
+Never replace a slot after eligibility or labels. Keep fresh labels sealed for
+Exp7983 after its policy seal. Declare reserved development evidence and no
+model-pretraining noncontamination promise. Incomplete history custody clears
+fresh readiness independently of original feature readiness.
+
+Implementation: `python/carnot/experiment_7980_v692_evidence_features.py`
+and `python/carnot/reporting/evidence_features_custody_7980.py`, exposed by
+`scripts/experiments/experiment_7980_v692_evidence_features.py`.
+`tests/python/test_experiment_7980_v692_evidence_features.py` verifies
+custody, reservation, private publication and terminal failure handling.

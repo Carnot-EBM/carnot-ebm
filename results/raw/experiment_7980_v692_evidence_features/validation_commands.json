@@ -1,0 +1,187 @@
+{
+  "artifact_guard_enabled": true,
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "run",
+        "--rcfile=/tmp/carnot-7980-fbi6wkod/coverage.ini",
+        "-m",
+        "pytest",
+        "-n0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "--basetemp=/tmp/carnot-7980-fbi6wkod/pytest",
+        "tests/python/test_evidence_features_7980.py",
+        "tests/python/test_experiment_7980_v692_evidence_features.py"
+      ],
+      "name": "changed_statement_coverage",
+      "scope": "owned",
+      "timeout_s": 600
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "--basetemp=/tmp/carnot-7980-fbi6wkod/pytest",
+        "tests/python/test_response_role_targets_7968.py",
+        "tests/python/test_response_targets_7955.py",
+        "tests/python/test_source_projection_7838.py",
+        "tests/python/test_primary_publication_7928.py"
+      ],
+      "name": "affected_consumers",
+      "scope": "owned",
+      "timeout_s": 300
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "--basetemp=/tmp/carnot-7980-fbi6wkod/pytest",
+        "tests/python/test_source_boundary_7852.py",
+        "tests/python/test_experiment_7942_v689_sentence_labels.py"
+      ],
+      "name": "E2E_015_019",
+      "scope": "owned",
+      "timeout_s": 300
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "combine",
+        "--rcfile=/tmp/carnot-7980-fbi6wkod/coverage.ini"
+      ],
+      "name": "coverage_combine",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "json",
+        "--rcfile=/tmp/carnot-7980-fbi6wkod/coverage.ini",
+        "-o",
+        "/tmp/carnot-7980-fbi6wkod/coverage.json"
+      ],
+      "name": "coverage_json",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "report",
+        "--rcfile=/tmp/carnot-7980-fbi6wkod/coverage.ini",
+        "--fail-under=100",
+        "--show-missing"
+      ],
+      "name": "coverage_100_percent",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_7980_v692_evidence_features.py",
+        "python/carnot/verify/evidence_features_7980.py",
+        "python/carnot/reporting/evidence_features_custody_7980.py",
+        "scripts/experiments/experiment_7980_v692_evidence_features.py",
+        "tests/python/test_evidence_features_7980.py",
+        "tests/python/test_experiment_7980_v692_evidence_features.py"
+      ],
+      "name": "ruff_check",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_7980_v692_evidence_features.py",
+        "python/carnot/verify/evidence_features_7980.py",
+        "python/carnot/reporting/evidence_features_custody_7980.py",
+        "scripts/experiments/experiment_7980_v692_evidence_features.py",
+        "tests/python/test_evidence_features_7980.py",
+        "tests/python/test_experiment_7980_v692_evidence_features.py"
+      ],
+      "name": "ruff_format",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "--follow-imports=silent",
+        "python/carnot/experiment_7980_v692_evidence_features.py",
+        "python/carnot/verify/evidence_features_7980.py",
+        "python/carnot/reporting/evidence_features_custody_7980.py"
+      ],
+      "name": "strict_mypy",
+      "scope": "owned",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_evidence_features_7980.py",
+        "tests/python/test_experiment_7980_v692_evidence_features.py",
+        "tests/python/test_response_role_targets_7968.py",
+        "tests/python/test_response_targets_7955.py",
+        "tests/python/test_source_projection_7838.py",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_source_boundary_7852.py",
+        "tests/python/test_experiment_7942_v689_sentence_labels.py"
+      ],
+      "name": "scoped_spec_coverage",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q"
+      ],
+      "name": "repository_health",
+      "scope": "repository_health",
+      "timeout_s": 600
+    }
+  ],
+  "coverage_config": "/tmp/carnot-7980-fbi6wkod/coverage.ini",
+  "coverage_includes": [
+    "python/carnot/experiment_7980_v692_evidence_features.py",
+    "python/carnot/verify/evidence_features_7980.py",
+    "python/carnot/reporting/evidence_features_custody_7980.py",
+    "scripts/experiments/experiment_7980_v692_evidence_features.py"
+  ],
+  "coverage_json": "/tmp/carnot-7980-fbi6wkod/coverage.json",
+  "frozen_before_science": true,
+  "terminal_checks": [
+    "external_cold_replay_without_PYTHONPATH",
+    "adversarial_verify_--json",
+    "verdict_row_consistency_--strict",
+    "both_live_primary_readers"
+  ]
+}

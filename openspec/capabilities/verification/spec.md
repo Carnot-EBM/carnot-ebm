@@ -47403,3 +47403,39 @@ path, hash, field, operator, expected and observed operands.
 Implementation: the V692 contract methods module freezes current scoring and
 delayed feedback methods. Its private custody and CLI tests reference this
 requirement. Imported historical failures retain their original verdicts.
+
+## V692 lexical evidence boundary (2026-10-01)
+
+### REQ-VERIFY-7980
+
+A public-only subprocess accepts only opaque family IDs and exact original
+source/answer bytes. Reuse source_alignment.pair_features on deduplicated
+complete source windows and complete answer sentences. Export mean and maximum
+of overlap, negation mismatch, numeric mismatch and uncovered fraction.
+Empty and over-budget inputs abstain; lexical signals are not certificates.
+Group by source ID and normalized bytes and reject cross-role duplicates.
+Keep labels, quality, roles and annotation metadata out of feature inputs.
+Use the existing exact-byte response annotation join for reserved evaluator
+rows, in a separate process after roster and feature seals; only that process
+may inspect reserved annotations. Predictor routes cannot open evaluator files.
+
+### SCENARIO-VERIFY-7980-FEATURES
+
+Cold public extraction remains byte identical when evaluator labels, roles
+and annotations change. Label-bearing public fields fail closed. Missing q
+stays null. Deduplicated windows do not multiply independent sources.
+
+### SCENARIO-VERIFY-7980-PREDICATES
+
+Freeze 16 unary slots: each feature above its fit-role quartile25 or quartile75
+using linear interpolation. Preserve constant or duplicate slots as inert.
+Use only fit labels and sealed Exp7972 Gibbs predictions to rank absolute
+covariance with signed residual y minus mean Gibbs probability. Choose eight
+nonconstant, fit-truth-vector-distinct conjunctions of active unary slots;
+break ties lexicographically and preserve vacancies. Save all selection traces.
+
+Implementation: `python/carnot/verify/evidence_features_7980.py` reuses the
+existing alignment, exact annotation join and sealed Gibbs predictor.
+`tests/python/test_evidence_features_7980.py` verifies public fields,
+complete deduplicated windows, deterministic reservation and inert slots.
+Private CLI tests verify cold extraction after changed evaluator metadata.
