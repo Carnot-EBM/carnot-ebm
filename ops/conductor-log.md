@@ -19241,3 +19241,5 @@ code |
 | 2026-10-01 01:19 UTC | Compare evidence fragility and confidence on indep | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7956-energy-fit, exp7956-energy-fit, exp7956-energy-fit) |
 | 2026-10-01 01:19 UTC | Measure causal constraint acquisition with delayed | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7956-energy-fit, exp7956-energy-fit, exp7956-energy-fit) |
 | 2026-10-01 01:19 UTC | Test issued-state confidence updates on the same l | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7960-causal-acquisition, exp7960-causal-acquisition, exp7960-causal-acquisition) |
+| 2026-10-01 01:34 UTC | Assess new live ARC supervisor outcomes for genera | OK | 92 passed, 1 warning in 8.92s |
+| 2026-10-01 01:36 UTC | Measure complete verification service and durable | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7956-energy-fit, exp7956-energy-fit, exp7956-energy-fit) |
