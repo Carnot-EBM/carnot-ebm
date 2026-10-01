@@ -29919,3 +29919,15 @@ any new-cohort target access. Demonstrate CPU update locality and numerical
 parity. Readiness is a mechanism result; natural stream improvement and retention
 remain unmeasured. Sigmoid equivalence is an identity control and cannot count as
 an energy-method win.
+
+## REQ-SELF-7997: Static evaluation does not gate adaptation
+
+Frozen development decisions do not gate the online learner. Calibration
+selects temperatures only. No coefficients change and no retention targets
+are opened. This evaluation does not claim globally fresh observations.
+
+Implementation: `scripts/experiments/experiment_7997_v693_typed_development_decisions.py`
+uses a label-free predictor and separate reporting evaluator.
+`tests/python/test_typed_development_7997.py` and
+`tests/python/test_experiment_7997_v693_typed_development_decisions.py`
+verify the frozen decision and custody requirements.

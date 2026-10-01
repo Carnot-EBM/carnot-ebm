@@ -47736,3 +47736,31 @@ boundaries, saturated inputs and save/load predictions must agree. Report every
 seed's loss increases, state bytes and measured CPU work. Synthetic separable
 holdout is a circular positive control with headroom; it is not natural evidence.
 No FPGA speed or normalization advantage follows from this mechanism.
+
+## REQ-VERIFY-7997: Frozen typed decisions on development sources
+
+Use sealed sparse, logistic, MLP, scalar and raw-q arms without coefficient
+refitting. Select one temperature per arm from 0.5/1/2 by calibration Brier;
+ties prefer 1, then 0.5, then 2. Primary comparisons use seed 17.
+Unsupported content is y=1. Costs are accept=5*y, reject=1-y, escalate=.25.
+Accept below .05, reject above .75, and escalate at ties or failed predictions.
+Retain one source/arm/seed row, failed known targets and unknown cost bounds
+[0,5]. Independent sources, never seeds, determine support and uncertainty.
+Use 10000 paired source-group bootstrap and sign-resampling draws. Require
+192 eligible groups and 20 per class. Holm-adjust the two primary cost tests.
+Benefit requires gain >=.02, positive 95% lower bounds and adjusted p<.05
+against both controls, no extra false accepts, automation >=.50 and Brier
+degradation upper bound <=.01. AUROC and reliability are descriptive.
+
+### SCENARIO-VERIFY-7997-GATES
+
+Known-benefit and no-headroom circular oracle fixtures run before natural data.
+Verify independently reduced totals, disjoint source roles, unchanged heads,
+censored bounds and sigmoid identity. A powered null closes this static method
+in this scope; an underpowered null does not refute it.
+
+Implementation: `scripts/experiments/experiment_7997_v693_typed_development_decisions.py`
+uses a label-free predictor and separate reporting evaluator.
+`tests/python/test_typed_development_7997.py` and
+`tests/python/test_experiment_7997_v693_typed_development_decisions.py`
+verify the frozen decision and custody requirements.

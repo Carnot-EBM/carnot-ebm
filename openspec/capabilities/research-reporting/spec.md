@@ -88872,3 +88872,39 @@ status. Validate actual candidate bytes with adversarial_verify and strict row
 consistency, then check both conductor readers against the exact primary.
 Retain final-byte validator logs in a sidecar. The conductor owns ops/status,
 ops/changelog and BMAD traceability reconciliation for this invocation.
+
+## REQ-REPORT-7997: Frozen development decision custody
+
+Authenticate exact Exp7994, Exp7995 and Exp7996 producer bytes and readiness.
+Freeze task configuration, code hashes and validation commands before measurement.
+Seal imported heads and all calibration probability candidates before calibration
+target access. Seal policies and every intended stream prediction before stream
+target access. Keep targets outside the predictor package. Never open retention
+targets. Report source-disjoint development scope with unknown wider exposure.
+Missing external prerequisites are terminal blocked with exact operands.
+Owned check failures are disqualified with readiness zero. Full-suite health
+failures stay diagnostic. Nonempty changed-statement coverage must reach 100%.
+Validate private candidate bytes with unchanged adversarial and strict row
+validators. Both conductor readers must select the exact checked primary.
+The conductor owns ops and traceability reconciliation.
+
+### SCENARIO-REPORT-7997-CUSTODY
+
+Private real CLI success, blocked and external-CWD cold replay retain the
+artifact guard. Replay rejects changed rows, targets, policies or checkpoints.
+E2E-019, direct consumers, scoped Ruff, strict mypy and explicit-path spec
+coverage have actual receipts. Immutable producer dates and imported fields
+remain distinct from current zero pretrained calls.
+
+Implementation: `scripts/experiments/experiment_7997_v693_typed_development_decisions.py`
+uses a label-free predictor and separate reporting evaluator.
+`tests/python/test_typed_development_7997.py` and
+`tests/python/test_experiment_7997_v693_typed_development_decisions.py`
+verify the frozen decision and custody requirements.
+
+### SCENARIO-REPORT-7997-PRIOR-EXPOSURE
+
+A prior stream-target read before prediction sealing is an owned custody
+failure. Preserve its receipt and run a frozen negative custody check.
+Later correct replay cannot erase this failure or restore readiness.
+Normalize authenticated generated responses to completed predictor inputs.
