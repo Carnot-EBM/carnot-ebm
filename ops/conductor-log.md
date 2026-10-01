@@ -19282,3 +19282,4 @@ code |
 | 2026-10-01 18:19 UTC | Freeze thirteen tasks with immutable producer evid | OK | 92 passed, 1 warning in 148.74s (0:02:28) |
 | 2026-10-01 18:50 UTC | Recover authenticated stream rows with explicit in | OK | 110 passed, 1 warning in 36.35s |
 | 2026-10-01 19:39 UTC | Seal a source-disjoint development cohort and feed | OK | 87 passed, 1 warning in 30.02s |
+| 2026-10-01 20:27 UTC | Capture bounded Qwen judgments with owned call rec | OK | 98 passed, 1 warning in 22.65s |
