@@ -87856,3 +87856,42 @@ the qualified reader and frozen checks. The current-date argument retains the
 historical reader default. The explicit test file covers authority mismatch,
 empty and current-date ledgers, private replay, failed validation and uniqueness.
 No live policy, conductor, production default or historical determination changes.
+## REQ-REPORT-7964: Preserve V689 custody and bound compatible workload costs
+
+Exp7964 SHALL authenticate the frozen Exp7951 primary and terminal receipt once.
+Reuse exact historical receipt hashes and three board rows. Failed required
+custody SHALL produce complete_blocked_* with exact operands and unknown scope.
+Only results/experiment_7963_v690_service_cost.json can supply optional work.
+Require eligible verdict, readiness one, no adversarial flag, owned checks,
+authenticated spans and integer byte counts. Missing optional data preserves
+historical readiness. KV260 stays quadratic Ising with k_max<=5. PolarFire stays
+Linux CPU only. GateMate keeps 0xffffffff. NPU and TSU stay unqualified.
+No device operation or model load runs. Future KV260 access requires SSH kria.
+Preserve the September 28 oracle-distinct corrigendum and historical failures.
+
+### SCENARIO-REPORT-7964-CUSTODY
+
+Missing, malformed or changed primary, terminal, board scope or raw receipts
+produce typed blocked rows and unknown placement. Cold replay succeeds for
+the actual blocked artifact. Optional service absence never closes custody.
+
+### SCENARIO-REPORT-7964-WORKLOAD
+
+Map projection, features, head forward, energy, typed policy, storage and
+serialization from exact measured rows. Reject malformed spans and bytes.
+Neural heads never imply Ising scope. Compatible f uses 1/(1-f+f/100) and
+1/(1-f). At f=0 bounds equal one. At f=1 modeled gain is 100 and ideal is
+unbounded with null numeric value. Missing times give null. Gains are estimates.
+
+### SCENARIO-REPORT-7964-VALIDATION
+
+Freeze dependencies, explicit tests, commands, deadlines, exits, reasons and
+identical coverage includes before results. Require nonempty 100 percent new
+module and CLI statement coverage. Private routes keep separate directories.
+Publisher uniqueness and both actual readers select checked primary bytes
+after nested sidecars gain newer mtimes. Run affected tests, Ruff, strict mypy,
+explicit spec coverage and both E2E-016 routes dated 20260929. Current date is
+20261001. Run full Python tests once as bounded repository health. Historical
+health never becomes a current pass. Owned failures disqualify readiness.
+Cold-reduce claims and bind both terminal validators to atomically published
+final bytes. Conductor owns ops and traceability reconciliation.
