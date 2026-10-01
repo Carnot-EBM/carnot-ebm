@@ -88697,3 +88697,66 @@ the final primary bytes despite newer nested sidecars.
 
 Implementation and verification are scoped to the new capstone modules, CLI
 and actual tests. The conductor owns ops and traceability reconciliation.
+
+## V693 immutable administrative contract (2026-10-01)
+
+### REQ-REPORT-7992-V693
+
+Freeze thirteen Exp7992–Exp8004 contracts using the existing parameterized
+Markdown, machine JSON and YAML readers and the full task digest. Matching
+active authority remains valid after staging is consumed. Snapshot producer
+primaries, completed V692 authority and four dispatch-block receipts at
+invocation; preserve their dates, failures and reported original code hashes.
+Mutable checkout code is a separate observation, never original producer proof.
+Freeze every prospective method from complete prompts, including source roles,
+costs, feedback, tuning, seeds, support floors and bounded development exposure.
+This zero-model administrative audit is circular evidence and no universal
+science prerequisite. Publication G1–G4 and repository health stay separate.
+
+### SCENARIO-REPORT-7992-AUTHORITY
+
+Accept activated V693 with missing staging. Reject each private mutation of
+count, order, ID, title, phase, deliverable, model, substrate, gate upstream,
+gate field, prompt and prior-failure retirement flag. Missing required external
+custody is complete blocked with exact operands; failed owned checks disqualify.
+
+### SCENARIO-REPORT-7992-VALIDATION
+
+Write tests first and reproduce the historical wrong-ID replay rejection.
+Require private real CLI success, blocked, invalid input, cold replay,
+expected-negative child exit one, publication failure and E2E-018 routes.
+Freeze actual commands before execution, require nonempty 100 percent new
+statement coverage, scoped Ruff, strict mypy and explicit test spec coverage.
+Retain actual full-suite failure as diagnostic. Check candidate bytes with both
+unchanged validators and artifact readers, publish only those checked bytes,
+and retain immutable code snapshots and a hash-bound validation sidecar.
+Implementation: `python/carnot/reporting/v693_contract_methods.py`,
+`v693_contract_validation.py` and the Exp7992 script. Private tests in
+`tests/python/test_experiment_7992_v693_contract_methods.py` exercise the
+specified routes. The live design currently lacks its exact task table,
+machine contract and canonical digest; current authority remains blocked.
+The producer records actual qualification in its manifest and byte-bound
+sidecar. The conductor owns ops and traceability reconciliation.
+
+### SCENARIO-REPORT-7992-FROZEN-FIXTURE
+
+Private V693 validation uses the saved invocation's immutable active YAML
+fixture, independent of mutable live roadmaps and consumed staging. Build its
+explicitly circular design from those same fixture tasks. Later malformed
+roadmaps or changed prompts must not alter the private oracle. Live malformed
+YAML remains blocked with an exact operand and original-byte snapshots; it
+must never borrow fixture authority or abort before writing a replayable result.
+Repair escaped live flow mappings as block YAML while preserving the complete
+task digest, failure history, gates and prompts. Keep the roadmap edited and
+retain all V693 implementation work; no file restoration qualifies as repair.
+
+Implementation: the saved invocation fixture in `tests/fixtures/v693/` replaces
+mutable-roadmap copying in private preparation. The V693 assessment and runner
+preserve malformed live YAML as a blocked, replayable observation. Original
+test functions remain unchanged; three additional cases cover fixture isolation
+and malformed-live publication. The conductor-equivalent suite passes 92 tests,
+and combined unit/CLI statement coverage is 260/260 across the two V693 modules
+and CLI. Scoped Ruff, strict mypy and test-to-spec traceability pass.
+All 14 required frozen checks pass after the retained failed consumer attempt
+and its successful recheck, including E2E-018. Repository-wide health remains
+separate: its actual 180-second diagnostic reached the deadline with failures.

@@ -2,6 +2,29 @@
 
 **Last Updated:** 2026-10-01
 
+## 2026-10-01 — Exp7992 test repair
+
+Private V693 validation now reads its saved invocation fixture instead of the
+mutable active roadmap. Malformed live YAML retains its original snapshot and
+publishes a blocked result that passes cold replay. Damaged live flow mappings
+are expressed as valid block YAML, preserving every current task value and
+prompt edit. All original test/helper functions remain unchanged.
+
+The conductor-equivalent subset passes 92 tests (one existing warning), and
+roadmap/gate/fix-erasure consumers pass 116 tests. Combined unit and real CLI
+coverage reaches 260/260 statements across the two V693 modules and CLI. Ruff,
+formatting, strict mypy and scoped spec traceability pass. Repository-wide spec
+traceability retains 1,142 unrelated gaps. Validation evidence and the earlier
+failed consumer receipt remain in `/tmp/carnot7992-fixgate-brqr737a/`.
+`scripts/research_conductor.py` is byte-identical to HEAD; historical primary
+artifacts remain preserved.
+All 14 required frozen checks pass after the recorded consumer recheck,
+including E2E-018 (18 tests). The repository-wide diagnostic reached its
+180-second deadline with failures and is retained as failed health. Final
+reconciliation passes documentation freshness and reports only the existing
+1,142 repository-wide spec-traceability gaps. Durable verification evidence is
+in `results/raw/experiment_7992_v693_contract_methods/fixgate-validation/`.
+
 ## 2026-10-01 — Exp7975 health-receipt planning repaired
 
 The frozen validation plan retains an explicit repository-health entry when

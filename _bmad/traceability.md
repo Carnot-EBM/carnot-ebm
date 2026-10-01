@@ -1,6 +1,24 @@
 # Carnot — Traceability Matrix
 
 **Last Updated:** 2026-10-01
+**Operational Note:** REQ-REPORT-7992-V693, REQ-VERIFY-7992-V693 and
+SCENARIO-REPORT-7992-FROZEN-FIXTURE map to the V693 contract methods/validation
+modules, Exp7992 CLI, immutable `tests/fixtures/v693/active.yaml.gz`, and
+`tests/python/test_experiment_7992_v693_contract_methods.py`. Private authority
+no longer follows mutable live roadmaps; malformed live YAML is preserved and
+publishes a replayable blocked result. The active roadmap's damaged flow
+mappings are serialized as valid block YAML with all current task values intact.
+All nine original test/helper functions have identical ASTs. The conductor
+subset passes 92 tests (one existing warning), roadmap/gate/fix-erasure consumers
+pass 116 tests, and combined V693 module/CLI coverage is 260/260 statements.
+Scoped Ruff, strict mypy and spec traceability pass. Repository-wide spec
+traceability still reports 1,142 unrelated missing references. Validation logs
+and the original failed consumer attempt are retained in
+`/tmp/carnot7992-fixgate-brqr737a/`; `scripts/research_conductor.py` is unchanged.
+All 14 required frozen checks pass after consumer repair, including E2E-018.
+The repository-wide diagnostic reached its 180-second deadline with failures;
+reconciliation reports only the existing global traceability gaps. Durable
+evidence: `results/raw/experiment_7992_v693_contract_methods/fixgate-validation/`.
 **Operational Note:** REQ-REPORT-7942, SCENARIO-REPORT-7942-DIRECT-CLI and
 SCENARIO-REPORT-7942-COVERAGE-WORKSPACE map the direct script-path bootstrap and
 private coverage workspace to `python/carnot/experiment_7942_v689_sentence_labels.py`,

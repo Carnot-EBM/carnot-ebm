@@ -47613,3 +47613,25 @@ false and capstone_execution_ready_score=0. Final-byte adversarial verification
 and strict row lint travel with the primary through a hash-bound nested
 sidecar. A scientific null may be ready after all owned checks; a blocked
 result remains ready zero even when validation passes and paper_ready is true.
+
+## V693 producer custody (2026-10-01)
+
+### REQ-VERIFY-7992-V693
+
+Historical failed verdicts, code identities, dates and dispatch skips remain
+immutable evidence. Verify saved snapshots rather than comparing historical
+code hashes to mutable checkout files. New invocation snapshots bind current
+code, commands and exact published bytes; owned failure sets readiness zero.
+
+### SCENARIO-VERIFY-7992-CUSTODY
+
+A changed primitive summary or frozen source fails cold replay. A later
+manifest or capability append cannot change the original producer identity.
+Absent original historical code bytes are explicitly unavailable, never
+reconstructed from current code and never a universal science gate.
+
+2026-10-01 repair verification: SCENARIO-REPORT-7992-FROZEN-FIXTURE separates
+private oracle bytes from live authority. Invalid live YAML is snapshotted
+unchanged and publishes readiness zero with an exact `authority_yaml` operand;
+cold replay succeeds for that blocked result. Existing custody assertions are
+unchanged. Combined V693 module and CLI statement coverage is 260/260.
