@@ -19235,3 +19235,5 @@ code |
 | 2026-10-01 00:35 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::offline_arc_methodology_descriptor age-week 2: OPEN 19 da |
 | 2026-10-01 00:43 UTC | Rebuild full-response support targets from origina | OK | 99 passed, 1 warning in 22.51s |
 | 2026-10-01 00:45 UTC | OPERATOR-ATTENTION: WRONG_MODEL_LOADED | WARN | host: pid 265278 serves 'Ternary-Bonsai-2-27B-PTQ1_0.gguf', live pin is 'Qwen3.8 |
+| 2026-10-01 00:45 UTC | Fit calibrated source energies after complete exec | GATE_BLOCK | gate-unsat(final): 3 of 4 gate(s) failed; first failure: exp7954-training-coverage.training_coverage_ready_score (actual=0 == expected=1) |
+| 2026-10-01 00:47 UTC | Measure calibrated decisions against equal-informa | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7956-energy-fit, exp7956-energy-fit, exp7956-energy-fit) |
