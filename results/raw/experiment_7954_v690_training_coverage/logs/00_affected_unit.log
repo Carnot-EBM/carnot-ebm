@@ -1,0 +1,893 @@
+F.........................FF.....FFFFFF................................. [ 32%]
+........................................................................ [ 65%]
+.....................................................................FFF [ 98%]
+F...                                                                     [100%]
+=================================== FAILURES ===================================
+__________________________ test_real_exception_routes __________________________
+
+tmp_path = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7954_v690_training_coverage/attempts/unit/test_real_exception_routes0')
+
+    def test_real_exception_routes(tmp_path: Path) -> None:
+        """SCENARIO-VERIFY-7954-EXCEPTIONS: enter each handler through the actual script."""
+        prefix = [str(core.ROOT / ".venv/bin/python")]
+        if os.environ.get("CARNOT7954_COVERAGE_FILE"):
+            prefix += [
+                "-m",
+                "coverage",
+                "run",
+                "--parallel-mode",
+                f"--data-file={os.environ['CARNOT7954_COVERAGE_FILE']}",
+                f"--include={core.INCLUDES}",
+            ]
+        for category, contents, reason in (
+            ("ValueError", "{", "Expecting property name"),
+            ("OSError", None, "No such file or directory"),
+            ("KeyError", "{}", "terminal_validation_sidecar_path"),
+        ):
+            directory = tmp_path / category
+            directory.mkdir()
+            replay = directory / "experiment_7943_bad.json"
+            if contents is not None:
+                replay.write_text(contents)
+            output = directory / "experiment_7943_success.json"
+            spec = CommandSpec(
+                category,
+                tuple(
+                    prefix
+                    + [
+                        fit.CLI,
+                        "--date",
+                        "20260930",
+                        "--cold-replay",
+                        str(replay),
+                        "--output",
+                        str(output),
+                    ]
+                ),
+                "required",
+                60,
+            )
+            row = run_commands(core.ROOT, [spec], log_dir=directory / "logs", heartbeat_s=30)[0]
+>           assert row["exit_code"] == 2 and not row["timed_out"], row["output_tail"]
+E           AssertionError: [exp7943] phase=start event=flushed completed=0 elapsed_s=0.000
+E             [exp7943] phase=failure event=Expecting property name enclosed in double quotes: line 1 column 2 (char 1) completed=0 elapsed_s=0.002
+E             Traceback (most recent call last):
+E               File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/cmdline.py", line 1043, in do_run
+E                 runner.run()
+E               File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/execfile.py", line 213, in run
+E                 exec(code, main_mod.__dict__)
+E               File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7943_v689_energy_fit.py", line 57, in <module>
+E                 raise SystemExit(main())
+E             SystemExit: 2
+E             
+E             During handling of the above exception, another exception occurred:
+E             
+E             Traceback (most recent call last):
+E               File "<frozen runpy>", line 198, in _run_module_as_main
+E               File "<frozen runpy>", line 88, in _run_code
+E               File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/__main__.py", line 12, in <module>
+E                 sys.exit(main())
+E                          ^^^^^^
+E               File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/cmdline.py", line 1164, in main
+E                 status = CoverageScript().command_line(argv)
+E                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E               File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/cmdline.py", line 853, in command_line
+E                 return self.do_run(options, args)
+E                        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E               File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/cmdline.py", line 1050, in do_run
+E                 self.coverage.save()
+E               File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/control.py", line 856, in save
+E                 data.write()
+E               File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/sqldata.py", line 902, in write
+E                 os.rename(current_filename, self._filename)
+E               File "/tmp/carnot-child-results-guard-fn050bo8/sitecustomize.py", line 76, in moved
+E                 return real(src, dest if dest is not None else dst, *args, **kwargs)
+E                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E             OSError: [Errno 18] Invalid cross-device link: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7954_v690_training_coverage/.coverage.icbfl1.pid255094.XrfBPhax' -> '/tmp/carnot-pytest-artifacts-dafhgau8/raw/experiment_7954_v690_training_coverage/.coverage.icbfl1.pid255094.XrfBPhax.H5j7HWPzBxFh'
+E             
+E           assert (1 == 2)
+
+tests/python/test_training_coverage_7954.py:60: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp7303-validation] before_subprocess ValueError elapsed_s=0.000 unit=1/1
+[exp7303-validation:ValueError] [exp7943] phase=start event=flushed completed=0 elapsed_s=0.000
+[exp7303-validation:ValueError] [exp7943] phase=failure event=Expecting property name enclosed in double quotes: line 1 column 2 (char 1) completed=0 elapsed_s=0.002
+[exp7303-validation:ValueError] Traceback (most recent call last):
+[exp7303-validation:ValueError]   File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/cmdline.py", line 1043, in do_run
+[exp7303-validation:ValueError]     runner.run()
+[exp7303-validation:ValueError]   File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/execfile.py", line 213, in run
+[exp7303-validation:ValueError]     exec(code, main_mod.__dict__)
+[exp7303-validation:ValueError]   File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7943_v689_energy_fit.py", line 57, in <module>
+[exp7303-validation:ValueError]     raise SystemExit(main())
+[exp7303-validation:ValueError] SystemExit: 2
+[exp7303-validation:ValueError] 
+[exp7303-validation:ValueError] During handling of the above exception, another exception occurred:
+[exp7303-validation:ValueError] 
+[exp7303-validation:ValueError] Traceback (most recent call last):
+[exp7303-validation:ValueError]   File "<frozen runpy>", line 198, in _run_module_as_main
+[exp7303-validation:ValueError]   File "<frozen runpy>", line 88, in _run_code
+[exp7303-validation:ValueError]   File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/__main__.py", line 12, in <module>
+[exp7303-validation:ValueError]     sys.exit(main())
+[exp7303-validation:ValueError]              ^^^^^^
+[exp7303-validation:ValueError]   File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/cmdline.py", line 1164, in main
+[exp7303-validation:ValueError]     status = CoverageScript().command_line(argv)
+[exp7303-validation:ValueError]              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[exp7303-validation:ValueError]   File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/cmdline.py", line 853, in command_line
+[exp7303-validation:ValueError]     return self.do_run(options, args)
+[exp7303-validation:ValueError]            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+[exp7303-validation:ValueError]   File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/cmdline.py", line 1050, in do_run
+[exp7303-validation:ValueError]     self.coverage.save()
+[exp7303-validation:ValueError]   File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/control.py", line 856, in save
+[exp7303-validation:ValueError]     data.write()
+[exp7303-validation:ValueError]   File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/sqldata.py", line 902, in write
+[exp7303-validation:ValueError]     os.rename(current_filename, self._filename)
+[exp7303-validation:ValueError]   File "/tmp/carnot-child-results-guard-fn050bo8/sitecustomize.py", line 76, in moved
+[exp7303-validation:ValueError]     return real(src, dest if dest is not None else dst, *args, **kwargs)
+[exp7303-validation:ValueError]            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[exp7303-validation:ValueError] OSError: [Errno 18] Invalid cross-device link: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7954_v690_training_coverage/.coverage.icbfl1.pid255094.XrfBPhax' -> '/tmp/carnot-pytest-artifacts-dafhgau8/raw/experiment_7954_v690_training_coverage/.coverage.icbfl1.pid255094.XrfBPhax.H5j7HWPzBxFh'
+[exp7303-validation] after_subprocess ValueError elapsed_s=2.490 exit=1 unit=1/1
+___________________________ test_real_fixture_routes ___________________________
+
+tmp_path = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7954_v690_training_coverage/attempts/unit/test_real_fixture_routes0')
+
+    def test_real_fixture_routes(tmp_path: Path) -> None:
+        """SCENARIO-VERIFY-7943-REPLAY: fresh fit, cold reconstruction and tamper rejection."""
+        output = tmp_path / "success/experiment_7943_fixture.json"
+>       child(tmp_path, "success", "--fixture", "--output", str(output), "--assert-ready")
+
+tests/python/test_energy_fit_7943.py:156: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+tmp_path = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7954_v690_training_coverage/attempts/unit/test_real_fixture_routes0')
+name = 'success', expected = 0
+args = ('--fixture', '--output', '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7954_v690_training_coverage/attempts/unit/test_real_fixture_routes0/success/experiment_7943_fixture.json', '--assert-ready')
+prefix = ['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-m', 'coverage', 'run', '--parallel-mode', '--data-f...nke/carnot/results/raw/experiment_7954_v690_training_coverage/attempts/unit/test_frozen_scope0/private/.coverage', ...]
+command = CommandSpec(name='success', argv=('/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-m', 'coverage', 'r...nit/test_real_fixture_routes0/success/experiment_7943_fixture.json', '--assert-ready'), scope='required', timeout_s=90)
+
+    def child(tmp_path: Path, name: str, *args: str, expected: int = 0) -> dict:
+        """Save real exits and logs so fixture success requires actual numerical fitting."""
+        prefix = [sys.executable]
+        if os.environ.get("CARNOT7943_COVERAGE_FILE"):
+            prefix += [
+                "-m",
+                "coverage",
+                "run",
+                "--parallel-mode",
+                f"--data-file={os.environ['CARNOT7943_COVERAGE_FILE']}",
+                f"--include={core.INCLUDES}",
+            ]
+        command = CommandSpec(
+            name, tuple(prefix + [core.CLI, "--date", "20260930", *args]), "required", 90
+        )
+        row = run_commands(core.ROOT, [command], log_dir=tmp_path / "logs" / name, heartbeat_s=30)[0]
+>       assert row["exit_code"] == expected, row["output_tail"]
+E       AssertionError: [exp7943] phase=start event=flushed completed=0 elapsed_s=0.000
+E         [exp7943] phase=failure event=[Errno 2] No such file or directory: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7954_v690_training_coverage/attempts/unit/test_real_fixture_routes0/success/raw/experiment_7943_fixture/fixture_input/public_shards.jsonl' completed=0 elapsed_s=0.088
+E         Traceback (most recent call last):
+E           File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/cmdline.py", line 1043, in do_run
+E             runner.run()
+E           File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/execfile.py", line 213, in run
+E             exec(code, main_mod.__dict__)
+E           File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7943_v689_energy_fit.py", line 57, in <module>
+E             raise SystemExit(main())
+E         SystemExit: 2
+E         
+E         During handling of the above exception, another exception occurred:
+E         
+E         Traceback (most recent call last):
+E           File "<frozen runpy>", line 198, in _run_module_as_main
+E           File "<frozen runpy>", line 88, in _run_code
+E           File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/__main__.py", line 12, in <module>
+E             sys.exit(main())
+E                      ^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/cmdline.py", line 1164, in main
+E             status = CoverageScript().command_line(argv)
+E                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/cmdline.py", line 853, in command_line
+E             return self.do_run(options, args)
+E                    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/cmdline.py", line 1050, in do_run
+E             self.coverage.save()
+E           File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/control.py", line 856, in save
+E             data.write()
+E           File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/sqldata.py", line 902, in write
+E             os.rename(current_filename, self._filename)
+E           File "/tmp/carnot-child-results-guard-fn050bo8/sitecustomize.py", line 76, in moved
+E             return real(src, dest if dest is not None else dst, *args, **kwargs)
+E                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E         OSError: [Errno 18] Invalid cross-device link: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7954_v690_training_coverage/attempts/unit/test_frozen_scope0/private/.coverage.icbfl1.pid255151.XVlADvax' -> '/tmp/carnot-pytest-artifacts-dafhgau8/raw/experiment_7954_v690_training_coverage/attempts/unit/test_frozen_scope0/private/.coverage.icbfl1.pid255151.XVlADvax.HkPxDL3jCugh'
+E         
+E       assert 1 == 0
+
+tests/python/test_energy_fit_7943.py:149: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp7303-validation] before_subprocess success elapsed_s=0.000 unit=1/1
+[exp7303-validation:success] [exp7943] phase=start event=flushed completed=0 elapsed_s=0.000
+[exp7303-validation:success] [exp7943] phase=failure event=[Errno 2] No such file or directory: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7954_v690_training_coverage/attempts/unit/test_real_fixture_routes0/success/raw/experiment_7943_fixture/fixture_input/public_shards.jsonl' completed=0 elapsed_s=0.088
+[exp7303-validation:success] Traceback (most recent call last):
+[exp7303-validation:success]   File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/cmdline.py", line 1043, in do_run
+[exp7303-validation:success]     runner.run()
+[exp7303-validation:success]   File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/execfile.py", line 213, in run
+[exp7303-validation:success]     exec(code, main_mod.__dict__)
+[exp7303-validation:success]   File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7943_v689_energy_fit.py", line 57, in <module>
+[exp7303-validation:success]     raise SystemExit(main())
+[exp7303-validation:success] SystemExit: 2
+[exp7303-validation:success] 
+[exp7303-validation:success] During handling of the above exception, another exception occurred:
+[exp7303-validation:success] 
+[exp7303-validation:success] Traceback (most recent call last):
+[exp7303-validation:success]   File "<frozen runpy>", line 198, in _run_module_as_main
+[exp7303-validation:success]   File "<frozen runpy>", line 88, in _run_code
+[exp7303-validation:success]   File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/__main__.py", line 12, in <module>
+[exp7303-validation:success]     sys.exit(main())
+[exp7303-validation:success]              ^^^^^^
+[exp7303-validation:success]   File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/cmdline.py", line 1164, in main
+[exp7303-validation:success]     status = CoverageScript().command_line(argv)
+[exp7303-validation:success]              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[exp7303-validation:success]   File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/cmdline.py", line 853, in command_line
+[exp7303-validation:success]     return self.do_run(options, args)
+[exp7303-validation:success]            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+[exp7303-validation:success]   File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/cmdline.py", line 1050, in do_run
+[exp7303-validation:success]     self.coverage.save()
+[exp7303-validation:success]   File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/control.py", line 856, in save
+[exp7303-validation:success]     data.write()
+[exp7303-validation:success]   File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/sqldata.py", line 902, in write
+[exp7303-validation:success]     os.rename(current_filename, self._filename)
+[exp7303-validation:success]   File "/tmp/carnot-child-results-guard-fn050bo8/sitecustomize.py", line 76, in moved
+[exp7303-validation:success]     return real(src, dest if dest is not None else dst, *args, **kwargs)
+[exp7303-validation:success]            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[exp7303-validation:success] OSError: [Errno 18] Invalid cross-device link: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7954_v690_training_coverage/attempts/unit/test_frozen_scope0/private/.coverage.icbfl1.pid255151.XVlADvax' -> '/tmp/carnot-pytest-artifacts-dafhgau8/raw/experiment_7954_v690_training_coverage/attempts/unit/test_frozen_scope0/private/.coverage.icbfl1.pid255151.XVlADvax.HkPxDL3jCugh'
+[exp7303-validation] after_subprocess success elapsed_s=2.555 exit=1 unit=1/1
+___________________________ test_real_blocked_routes ___________________________
+
+tmp_path = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7954_v690_training_coverage/attempts/unit/test_real_blocked_routes0')
+
+    def test_real_blocked_routes(tmp_path: Path) -> None:
+        """SCENARIO-REPORT-7943-TERMINAL: every publication scenario uses its own directory."""
+        output = tmp_path / "blocked/experiment_7943_fixture.json"
+>       child(
+            tmp_path,
+            "blocked",
+            "--fixture",
+            "--publication",
+            str(tmp_path / "missing.json"),
+            "--output",
+            str(output),
+        )
+
+tests/python/test_energy_fit_7943.py:173: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+tmp_path = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7954_v690_training_coverage/attempts/unit/test_real_blocked_routes0')
+name = 'blocked', expected = 0
+args = ('--fixture', '--publication', '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7954_v690_training_...w/experiment_7954_v690_training_coverage/attempts/unit/test_real_blocked_routes0/blocked/experiment_7943_fixture.json')
+prefix = ['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-m', 'coverage', 'run', '--parallel-mode', '--data-f...nke/carnot/results/raw/experiment_7954_v690_training_coverage/attempts/unit/test_frozen_scope0/private/.coverage', ...]
+command = CommandSpec(name='blocked', argv=('/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-m', 'coverage', 'r...overage/attempts/unit/test_real_blocked_routes0/blocked/experiment_7943_fixture.json'), scope='required', timeout_s=90)
+
+    def child(tmp_path: Path, name: str, *args: str, expected: int = 0) -> dict:
+        """Save real exits and logs so fixture success requires actual numerical fitting."""
+        prefix = [sys.executable]
+        if os.environ.get("CARNOT7943_COVERAGE_FILE"):
+            prefix += [
+                "-m",
+                "coverage",
+                "run",
+                "--parallel-mode",
+                f"--data-file={os.environ['CARNOT7943_COVERAGE_FILE']}",
+                f"--include={core.INCLUDES}",
+            ]
+        command = CommandSpec(
+            name, tuple(prefix + [core.CLI, "--date", "20260930", *args]), "required", 90
+        )
+        row = run_commands(core.ROOT, [command], log_dir=tmp_path / "logs" / name, heartbeat_s=30)[0]
+>       assert row["exit_code"] == expected, row["output_tail"]
+E       AssertionError: [exp7943] phase=start event=flushed completed=0 elapsed_s=0.000
+E         [exp7943] phase=preconditions event=source evidence blocked completed=0 elapsed_s=0.157
+E         [exp7943] phase=failure event=[Errno 18] Invalid cross-device link: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7954_v690_training_coverage/attempts/unit/test_real_blocked_routes0/blocked/raw/experiment_7943_fixture/.candidate.json.tmp-255214' -> '/tmp/carnot-pytest-artifacts-dafhgau8/raw/experiment_7954_v690_training_coverage/attempts/unit/test_real_blocked_routes0/blocked/raw/experiment_7943_fixture/candidate.json' completed=0 elapsed_s=0.160
+E         Traceback (most recent call last):
+E           File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/cmdline.py", line 1043, in do_run
+E             runner.run()
+E           File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/execfile.py", line 213, in run
+E             exec(code, main_mod.__dict__)
+E           File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7943_v689_energy_fit.py", line 57, in <module>
+E             raise SystemExit(main())
+E         SystemExit: 2
+E         
+E         During handling of the above exception, another exception occurred:
+E         
+E         Traceback (most recent call last):
+E           File "<frozen runpy>", line 198, in _run_module_as_main
+E           File "<frozen runpy>", line 88, in _run_code
+E           File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/__main__.py", line 12, in <module>
+E             sys.exit(main())
+E                      ^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/cmdline.py", line 1164, in main
+E             status = CoverageScript().command_line(argv)
+E                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/cmdline.py", line 853, in command_line
+E             return self.do_run(options, args)
+E                    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/cmdline.py", line 1050, in do_run
+E             self.coverage.save()
+E           File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/control.py", line 856, in save
+E             data.write()
+E           File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/sqldata.py", line 902, in write
+E             os.rename(current_filename, self._filename)
+E           File "/tmp/carnot-child-results-guard-fn050bo8/sitecustomize.py", line 76, in moved
+E             return real(src, dest if dest is not None else dst, *args, **kwargs)
+E                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E         OSError: [Errno 18] Invalid cross-device link: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7954_v690_training_coverage/attempts/unit/test_frozen_scope0/private/.coverage.icbfl1.pid255214.XRMmRZJx' -> '/tmp/carnot-pytest-artifacts-dafhgau8/raw/experiment_7954_v690_training_coverage/attempts/unit/test_frozen_scope0/private/.coverage.icbfl1.pid255214.XRMmRZJx.HhhrjZkrheMh'
+E         
+E       assert 1 == 0
+
+tests/python/test_energy_fit_7943.py:149: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp7303-validation] before_subprocess blocked elapsed_s=0.000 unit=1/1
+[exp7303-validation:blocked] [exp7943] phase=start event=flushed completed=0 elapsed_s=0.000
+[exp7303-validation:blocked] [exp7943] phase=preconditions event=source evidence blocked completed=0 elapsed_s=0.157
+[exp7303-validation:blocked] [exp7943] phase=failure event=[Errno 18] Invalid cross-device link: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7954_v690_training_coverage/attempts/unit/test_real_blocked_routes0/blocked/raw/experiment_7943_fixture/.candidate.json.tmp-255214' -> '/tmp/carnot-pytest-artifacts-dafhgau8/raw/experiment_7954_v690_training_coverage/attempts/unit/test_real_blocked_routes0/blocked/raw/experiment_7943_fixture/candidate.json' completed=0 elapsed_s=0.160
+[exp7303-validation:blocked] Traceback (most recent call last):
+[exp7303-validation:blocked]   File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/cmdline.py", line 1043, in do_run
+[exp7303-validation:blocked]     runner.run()
+[exp7303-validation:blocked]   File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/execfile.py", line 213, in run
+[exp7303-validation:blocked]     exec(code, main_mod.__dict__)
+[exp7303-validation:blocked]   File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7943_v689_energy_fit.py", line 57, in <module>
+[exp7303-validation:blocked]     raise SystemExit(main())
+[exp7303-validation:blocked] SystemExit: 2
+[exp7303-validation:blocked] 
+[exp7303-validation:blocked] During handling of the above exception, another exception occurred:
+[exp7303-validation:blocked] 
+[exp7303-validation:blocked] Traceback (most recent call last):
+[exp7303-validation:blocked]   File "<frozen runpy>", line 198, in _run_module_as_main
+[exp7303-validation:blocked]   File "<frozen runpy>", line 88, in _run_code
+[exp7303-validation:blocked]   File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/__main__.py", line 12, in <module>
+[exp7303-validation:blocked]     sys.exit(main())
+[exp7303-validation:blocked]              ^^^^^^
+[exp7303-validation:blocked]   File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/cmdline.py", line 1164, in main
+[exp7303-validation:blocked]     status = CoverageScript().command_line(argv)
+[exp7303-validation:blocked]              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[exp7303-validation:blocked]   File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/cmdline.py", line 853, in command_line
+[exp7303-validation:blocked]     return self.do_run(options, args)
+[exp7303-validation:blocked]            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+[exp7303-validation:blocked]   File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/cmdline.py", line 1050, in do_run
+[exp7303-validation:blocked]     self.coverage.save()
+[exp7303-validation:blocked]   File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/control.py", line 856, in save
+[exp7303-validation:blocked]     data.write()
+[exp7303-validation:blocked]   File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/coverage/sqldata.py", line 902, in write
+[exp7303-validation:blocked]     os.rename(current_filename, self._filename)
+[exp7303-validation:blocked]   File "/tmp/carnot-child-results-guard-fn050bo8/sitecustomize.py", line 76, in moved
+[exp7303-validation:blocked]     return real(src, dest if dest is not None else dst, *args, **kwargs)
+[exp7303-validation:blocked]            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[exp7303-validation:blocked] OSError: [Errno 18] Invalid cross-device link: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7954_v690_training_coverage/attempts/unit/test_frozen_scope0/private/.coverage.icbfl1.pid255214.XRMmRZJx' -> '/tmp/carnot-pytest-artifacts-dafhgau8/raw/experiment_7954_v690_training_coverage/attempts/unit/test_frozen_scope0/private/.coverage.icbfl1.pid255214.XRMmRZJx.HhhrjZkrheMh'
+[exp7303-validation] after_subprocess blocked elapsed_s=2.643 exit=1 unit=1/1
+_________________________ test_blocked_routes[missing] _________________________
+
+tmp_path = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7954_v690_training_coverage/attempts/unit/test_blocked_routes_missing_0')
+mode = 'missing'
+
+    @pytest.mark.parametrize("mode", ["missing", "malformed", "hash"])
+    def test_blocked_routes(tmp_path: Path, mode: str) -> None:
+        """SCENARIO-REPORT-7941-ROUTES: blocked success and required failure are separate."""
+        runtime = tmp_path / "runtime.json"
+        if mode == "malformed":
+            runtime.write_text("{")
+        elif mode == "hash":
+            value = json.loads(run.RUNTIME.read_text())
+            value["changed"] = True
+            atomic_json(runtime, value)
+        output = tmp_path / "blocked" / "experiment_7941_blocked.json"
+>       child(tmp_path, mode, "--runtime", str(runtime), "--output", str(output), "--fixture")
+
+tests/python/test_training_publication_7941.py:42: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+tmp_path = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7954_v690_training_coverage/attempts/unit/test_blocked_routes_missing_0')
+name = 'missing', expected = 0
+args = ('--runtime', '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7954_v690_training_coverage/attempts..._v690_training_coverage/attempts/unit/test_blocked_routes_missing_0/blocked/experiment_7941_blocked.json', '--fixture')
+prefix = ['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python']
+command = CommandSpec(name='missing', argv=('/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', 'scripts/experiments...unit/test_blocked_routes_missing_0/blocked/experiment_7941_blocked.json', '--fixture'), scope='required', timeout_s=90)
+
+    def child(tmp_path: Path, name: str, *args: str, expected: int = 0) -> dict:
+        """Retain real child exits and logs so missing inputs cannot stand in for a fit."""
+        prefix = [sys.executable]
+        if os.environ.get("CARNOT7941_COVERAGE"):
+            prefix += ["-m", "coverage", "run", "--parallel-mode", f"--include={run.INCLUDES}"]
+        command = CommandSpec(
+            name, tuple(prefix + [run.CLI, "--date", "20260930", *args]), "required", 90
+        )
+        row = run_commands(run.ROOT, [command], log_dir=tmp_path / "logs" / name, heartbeat_s=30)[0]
+>       assert row["exit_code"] == expected, row["output_tail"]
+E       AssertionError: [exp7941] phase=start completed=0 elapsed_s=0.000
+E         [exp7941] phase=authenticate completed=0 elapsed_s=0.001
+E         [exp7941] phase=source evidence blocked completed=0 elapsed_s=0.001
+E         [exp7941] phase=rejected [Errno 18] Invalid cross-device link: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7954_v690_training_coverage/attempts/unit/test_blocked_routes_missing_0/blocked/raw/experiment_7941_blocked/.candidate.json.tmp-255269' -> '/tmp/carnot-pytest-artifacts-dafhgau8/raw/experiment_7954_v690_training_coverage/attempts/unit/test_blocked_routes_missing_0/blocked/raw/experiment_7941_blocked/candidate.json' completed=0 elapsed_s=0.002
+E         
+E       assert 2 == 0
+
+tests/python/test_training_publication_7941.py:27: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp7303-validation] before_subprocess missing elapsed_s=0.000 unit=1/1
+[exp7303-validation:missing] [exp7941] phase=start completed=0 elapsed_s=0.000
+[exp7303-validation:missing] [exp7941] phase=authenticate completed=0 elapsed_s=0.001
+[exp7303-validation:missing] [exp7941] phase=source evidence blocked completed=0 elapsed_s=0.001
+[exp7303-validation:missing] [exp7941] phase=rejected [Errno 18] Invalid cross-device link: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7954_v690_training_coverage/attempts/unit/test_blocked_routes_missing_0/blocked/raw/experiment_7941_blocked/.candidate.json.tmp-255269' -> '/tmp/carnot-pytest-artifacts-dafhgau8/raw/experiment_7954_v690_training_coverage/attempts/unit/test_blocked_routes_missing_0/blocked/raw/experiment_7941_blocked/candidate.json' completed=0 elapsed_s=0.002
+[exp7303-validation] after_subprocess missing elapsed_s=1.466 exit=2 unit=1/1
+________________________ test_blocked_routes[malformed] ________________________
+
+tmp_path = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7954_v690_training_coverage/attempts/unit/test_blocked_routes_malformed_0')
+mode = 'malformed'
+
+    @pytest.mark.parametrize("mode", ["missing", "malformed", "hash"])
+    def test_blocked_routes(tmp_path: Path, mode: str) -> None:
+        """SCENARIO-REPORT-7941-ROUTES: blocked success and required failure are separate."""
+        runtime = tmp_path / "runtime.json"
+        if mode == "malformed":
+            runtime.write_text("{")
+        elif mode == "hash":
+            value = json.loads(run.RUNTIME.read_text())
+            value["changed"] = True
+            atomic_json(runtime, value)
+        output = tmp_path / "blocked" / "experiment_7941_blocked.json"
+>       child(tmp_path, mode, "--runtime", str(runtime), "--output", str(output), "--fixture")
+
+tests/python/test_training_publication_7941.py:42: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+tmp_path = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7954_v690_training_coverage/attempts/unit/test_blocked_routes_malformed_0')
+name = 'malformed', expected = 0
+args = ('--runtime', '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7954_v690_training_coverage/attempts...690_training_coverage/attempts/unit/test_blocked_routes_malformed_0/blocked/experiment_7941_blocked.json', '--fixture')
+prefix = ['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python']
+command = CommandSpec(name='malformed', argv=('/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', 'scripts/experimen...it/test_blocked_routes_malformed_0/blocked/experiment_7941_blocked.json', '--fixture'), scope='required', timeout_s=90)
+
+    def child(tmp_path: Path, name: str, *args: str, expected: int = 0) -> dict:
+        """Retain real child exits and logs so missing inputs cannot stand in for a fit."""
+        prefix = [sys.executable]
+        if os.environ.get("CARNOT7941_COVERAGE"):
+            prefix += ["-m", "coverage", "run", "--parallel-mode", f"--include={run.INCLUDES}"]
+        command = CommandSpec(
+            name, tuple(prefix + [run.CLI, "--date", "20260930", *args]), "required", 90
+        )
+        row = run_commands(run.ROOT, [command], log_dir=tmp_path / "logs" / name, heartbeat_s=30)[0]
+>       assert row["exit_code"] == expected, row["output_tail"]
+E       AssertionError: [exp7941] phase=start completed=0 elapsed_s=0.000
+E         [exp7941] phase=authenticate completed=0 elapsed_s=0.001
+E         [exp7941] phase=source evidence blocked completed=0 elapsed_s=0.001
+E         [exp7941] phase=rejected [Errno 18] Invalid cross-device link: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7954_v690_training_coverage/attempts/unit/test_blocked_routes_malformed_0/blocked/raw/experiment_7941_blocked/.candidate.json.tmp-255318' -> '/tmp/carnot-pytest-artifacts-dafhgau8/raw/experiment_7954_v690_training_coverage/attempts/unit/test_blocked_routes_malformed_0/blocked/raw/experiment_7941_blocked/candidate.json' completed=0 elapsed_s=0.002
+E         
+E       assert 2 == 0
+
+tests/python/test_training_publication_7941.py:27: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp7303-validation] before_subprocess malformed elapsed_s=0.000 unit=1/1
+[exp7303-validation:malformed] [exp7941] phase=start completed=0 elapsed_s=0.000
+[exp7303-validation:malformed] [exp7941] phase=authenticate completed=0 elapsed_s=0.001
+[exp7303-validation:malformed] [exp7941] phase=source evidence blocked completed=0 elapsed_s=0.001
+[exp7303-validation:malformed] [exp7941] phase=rejected [Errno 18] Invalid cross-device link: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7954_v690_training_coverage/attempts/unit/test_blocked_routes_malformed_0/blocked/raw/experiment_7941_blocked/.candidate.json.tmp-255318' -> '/tmp/carnot-pytest-artifacts-dafhgau8/raw/experiment_7954_v690_training_coverage/attempts/unit/test_blocked_routes_malformed_0/blocked/raw/experiment_7941_blocked/candidate.json' completed=0 elapsed_s=0.002
+[exp7303-validation] after_subprocess malformed elapsed_s=1.419 exit=2 unit=1/1
+__________________________ test_blocked_routes[hash] ___________________________
+
+tmp_path = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7954_v690_training_coverage/attempts/unit/test_blocked_routes_hash_0')
+mode = 'hash'
+
+    @pytest.mark.parametrize("mode", ["missing", "malformed", "hash"])
+    def test_blocked_routes(tmp_path: Path, mode: str) -> None:
+        """SCENARIO-REPORT-7941-ROUTES: blocked success and required failure are separate."""
+        runtime = tmp_path / "runtime.json"
+        if mode == "malformed":
+            runtime.write_text("{")
+        elif mode == "hash":
+            value = json.loads(run.RUNTIME.read_text())
+            value["changed"] = True
+            atomic_json(runtime, value)
+        output = tmp_path / "blocked" / "experiment_7941_blocked.json"
+>       child(tmp_path, mode, "--runtime", str(runtime), "--output", str(output), "--fixture")
+
+tests/python/test_training_publication_7941.py:42: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+tmp_path = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7954_v690_training_coverage/attempts/unit/test_blocked_routes_hash_0')
+name = 'hash', expected = 0
+args = ('--runtime', '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7954_v690_training_coverage/attempts...954_v690_training_coverage/attempts/unit/test_blocked_routes_hash_0/blocked/experiment_7941_blocked.json', '--fixture')
+prefix = ['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python']
+command = CommandSpec(name='hash', argv=('/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', 'scripts/experiments/ex...ts/unit/test_blocked_routes_hash_0/blocked/experiment_7941_blocked.json', '--fixture'), scope='required', timeout_s=90)
+
+    def child(tmp_path: Path, name: str, *args: str, expected: int = 0) -> dict:
+        """Retain real child exits and logs so missing inputs cannot stand in for a fit."""
+        prefix = [sys.executable]
+        if os.environ.get("CARNOT7941_COVERAGE"):
+            prefix += ["-m", "coverage", "run", "--parallel-mode", f"--include={run.INCLUDES}"]
+        command = CommandSpec(
+            name, tuple(prefix + [run.CLI, "--date", "20260930", *args]), "required", 90
+        )
+        row = run_commands(run.ROOT, [command], log_dir=tmp_path / "logs" / name, heartbeat_s=30)[0]
+>       assert row["exit_code"] == expected, row["output_tail"]
+E       AssertionError: [exp7941] phase=start completed=0 elapsed_s=0.000
+E         [exp7941] phase=authenticate completed=0 elapsed_s=0.001
+E         [exp7941] phase=source evidence blocked completed=0 elapsed_s=0.002
+E         [exp7941] phase=rejected [Errno 18] Invalid cross-device link: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7954_v690_training_coverage/attempts/unit/test_blocked_routes_hash_0/blocked/raw/experiment_7941_blocked/.candidate.json.tmp-255367' -> '/tmp/carnot-pytest-artifacts-dafhgau8/raw/experiment_7954_v690_training_coverage/attempts/unit/test_blocked_routes_hash_0/blocked/raw/experiment_7941_blocked/candidate.json' completed=0 elapsed_s=0.002
+E         
+E       assert 2 == 0
+
+tests/python/test_training_publication_7941.py:27: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp7303-validation] before_subprocess hash elapsed_s=0.000 unit=1/1
+[exp7303-validation:hash] [exp7941] phase=start completed=0 elapsed_s=0.000
+[exp7303-validation:hash] [exp7941] phase=authenticate completed=0 elapsed_s=0.001
+[exp7303-validation:hash] [exp7941] phase=source evidence blocked completed=0 elapsed_s=0.002
+[exp7303-validation:hash] [exp7941] phase=rejected [Errno 18] Invalid cross-device link: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7954_v690_training_coverage/attempts/unit/test_blocked_routes_hash_0/blocked/raw/experiment_7941_blocked/.candidate.json.tmp-255367' -> '/tmp/carnot-pytest-artifacts-dafhgau8/raw/experiment_7954_v690_training_coverage/attempts/unit/test_blocked_routes_hash_0/blocked/raw/experiment_7941_blocked/candidate.json' completed=0 elapsed_s=0.002
+[exp7303-validation] after_subprocess hash elapsed_s=1.480 exit=2 unit=1/1
+____________________ test_fixture_replay_and_final_recheck _____________________
+
+tmp_path = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7954_v690_training_coverage/attempts/unit/test_fixture_replay_and_final_0')
+
+    def test_fixture_replay_and_final_recheck(tmp_path: Path) -> None:
+        """SCENARIO-VERIFY-7941-CUSTODY: real fit, selected hash and cold predictions agree."""
+        output = tmp_path / "fixture" / "experiment_7941_fixture.json"
+>       child(tmp_path, "fixture", "--fixture", "--output", str(output), "--assert-ready")
+
+tests/python/test_training_publication_7941.py:66: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+tmp_path = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7954_v690_training_coverage/attempts/unit/test_fixture_replay_and_final_0')
+name = 'fixture', expected = 0
+args = ('--fixture', '--output', '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7954_v690_training_coverage/attempts/unit/test_fixture_replay_and_final_0/fixture/experiment_7941_fixture.json', '--assert-ready')
+prefix = ['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python']
+command = CommandSpec(name='fixture', argv=('/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', 'scripts/experiments...st_fixture_replay_and_final_0/fixture/experiment_7941_fixture.json', '--assert-ready'), scope='required', timeout_s=90)
+
+    def child(tmp_path: Path, name: str, *args: str, expected: int = 0) -> dict:
+        """Retain real child exits and logs so missing inputs cannot stand in for a fit."""
+        prefix = [sys.executable]
+        if os.environ.get("CARNOT7941_COVERAGE"):
+            prefix += ["-m", "coverage", "run", "--parallel-mode", f"--include={run.INCLUDES}"]
+        command = CommandSpec(
+            name, tuple(prefix + [run.CLI, "--date", "20260930", *args]), "required", 90
+        )
+        row = run_commands(run.ROOT, [command], log_dir=tmp_path / "logs" / name, heartbeat_s=30)[0]
+>       assert row["exit_code"] == expected, row["output_tail"]
+E       AssertionError: [exp7941] phase=start completed=0 elapsed_s=0.000
+E         [exp7941] phase=authenticate completed=0 elapsed_s=0.001
+E         [exp7941] phase=rejected [Errno 2] No such file or directory: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7954_v690_training_coverage/attempts/unit/test_fixture_replay_and_final_0/fixture/raw/experiment_7941_fixture/fixture_input/public_shards.jsonl' completed=0 elapsed_s=0.003
+E         
+E       assert 2 == 0
+
+tests/python/test_training_publication_7941.py:27: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp7303-validation] before_subprocess fixture elapsed_s=0.000 unit=1/1
+[exp7303-validation:fixture] [exp7941] phase=start completed=0 elapsed_s=0.000
+[exp7303-validation:fixture] [exp7941] phase=authenticate completed=0 elapsed_s=0.001
+[exp7303-validation:fixture] [exp7941] phase=rejected [Errno 2] No such file or directory: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7954_v690_training_coverage/attempts/unit/test_fixture_replay_and_final_0/fixture/raw/experiment_7941_fixture/fixture_input/public_shards.jsonl' completed=0 elapsed_s=0.003
+[exp7303-validation] after_subprocess fixture elapsed_s=1.529 exit=2 unit=1/1
+____________ test_publication_faults[conflict-conflicting_primary] _____________
+
+tmp_path = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7954_v690_training_coverage/attempts/unit/test_publication_faults_confli0')
+fault = 'conflict', reason = 'conflicting_primary'
+
+    @pytest.mark.parametrize(
+        "fault,reason", [("conflict", "conflicting_primary"), ("reject", "candidate_rejected")]
+    )
+    def test_publication_faults(tmp_path: Path, fault: str, reason: str) -> None:
+        """SCENARIO-REPORT-7941-ROUTES: publication faults stay owned failures."""
+        output = tmp_path / fault / "experiment_7941_fixture.json"
+        row = child(
+            tmp_path,
+            fault,
+            "--fixture",
+            "--output",
+            str(output),
+            "--publication-fault",
+            fault,
+            expected=2,
+        )
+>       assert reason in row["output_tail"]
+E       assert 'conflicting_primary' in "[exp7941] phase=start completed=0 elapsed_s=0.000\n[exp7941] phase=authenticate completed=0 elapsed_s=0.001\n[exp7941...n_faults_confli0/conflict/raw/experiment_7941_fixture/fixture_input/public_shards.jsonl' completed=0 elapsed_s=0.003\n"
+
+tests/python/test_training_publication_7941.py:99: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp7303-validation] before_subprocess conflict elapsed_s=0.000 unit=1/1
+[exp7303-validation:conflict] [exp7941] phase=start completed=0 elapsed_s=0.000
+[exp7303-validation:conflict] [exp7941] phase=authenticate completed=0 elapsed_s=0.001
+[exp7303-validation:conflict] [exp7941] phase=rejected [Errno 2] No such file or directory: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7954_v690_training_coverage/attempts/unit/test_publication_faults_confli0/conflict/raw/experiment_7941_fixture/fixture_input/public_shards.jsonl' completed=0 elapsed_s=0.003
+[exp7303-validation] after_subprocess conflict elapsed_s=1.429 exit=2 unit=1/1
+______________ test_publication_faults[reject-candidate_rejected] ______________
+
+tmp_path = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7954_v690_training_coverage/attempts/unit/test_publication_faults_reject0')
+fault = 'reject', reason = 'candidate_rejected'
+
+    @pytest.mark.parametrize(
+        "fault,reason", [("conflict", "conflicting_primary"), ("reject", "candidate_rejected")]
+    )
+    def test_publication_faults(tmp_path: Path, fault: str, reason: str) -> None:
+        """SCENARIO-REPORT-7941-ROUTES: publication faults stay owned failures."""
+        output = tmp_path / fault / "experiment_7941_fixture.json"
+        row = child(
+            tmp_path,
+            fault,
+            "--fixture",
+            "--output",
+            str(output),
+            "--publication-fault",
+            fault,
+            expected=2,
+        )
+>       assert reason in row["output_tail"]
+E       assert 'candidate_rejected' in "[exp7941] phase=start completed=0 elapsed_s=0.000\n[exp7941] phase=authenticate completed=0 elapsed_s=0.001\n[exp7941...ion_faults_reject0/reject/raw/experiment_7941_fixture/fixture_input/public_shards.jsonl' completed=0 elapsed_s=0.003\n"
+
+tests/python/test_training_publication_7941.py:99: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp7303-validation] before_subprocess reject elapsed_s=0.000 unit=1/1
+[exp7303-validation:reject] [exp7941] phase=start completed=0 elapsed_s=0.000
+[exp7303-validation:reject] [exp7941] phase=authenticate completed=0 elapsed_s=0.001
+[exp7303-validation:reject] [exp7941] phase=rejected [Errno 2] No such file or directory: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7954_v690_training_coverage/attempts/unit/test_publication_faults_reject0/reject/raw/experiment_7941_fixture/fixture_input/public_shards.jsonl' completed=0 elapsed_s=0.003
+[exp7303-validation] after_subprocess reject elapsed_s=1.485 exit=2 unit=1/1
+___________ test_current_cli_resume_replay_and_checkpoint_rejection ____________
+
+tmp_path = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7954_v690_training_coverage/attempts/unit/test_current_cli_resume_replay0')
+
+    def test_current_cli_resume_replay_and_checkpoint_rejection(tmp_path: Path) -> None:
+        """SCENARIO-VERIFY-7916-CHECKPOINT: only identical current authority permits reuse."""
+        upstream = prior.make_fixture(tmp_path / "input")
+        output, raw = tmp_path / "fixture.json", tmp_path / "raw"
+        args = [
+            "--fixture",
+            "--upstream",
+            str(upstream),
+            "--output",
+            str(output),
+            "--raw-root",
+            str(raw),
+        ]
+>       invoke(tmp_path, *args)
+
+tests/python/test_training_qualification_7916.py:86: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+tmp_path = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7954_v690_training_coverage/attempts/unit/test_current_cli_resume_replay0')
+expected = 0
+args = ('--fixture', '--upstream', '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7954_v690_training_cov.../experiment_7954_v690_training_coverage/attempts/unit/test_current_cli_resume_replay0/fixture.json', '--raw-root', ...)
+command = ['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7916_v687_training_qualification.py', '--date', '20260930', '--fixture', ...]
+child = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c...experiment_7954_v690_training_coverage/attempts/unit/test_current_cli_resume_replay0/raw/checkpoint_identity.json\'\n')
+
+    def invoke(tmp_path: Path, *args: str, expected: int = 0) -> None:
+        """Collect real script coverage so importing a CLI cannot qualify its branches."""
+        command = [sys.executable, "-u"]
+        if os.environ.get("CARNOT7916_COVERAGE"):
+            command += ["-m", "coverage", "run", "--parallel-mode", "--include=" + current.INCLUDES]
+        command += [str(ROOT / current.CLI), "--date", "20260930", *args]
+        child = subprocess.run(command, cwd=ROOT, capture_output=True, text=True, timeout=90)
+>       assert child.returncode == expected, child.stdout + child.stderr
+E       AssertionError: [exp7916] phase=start_flushed completed=0
+E         [exp7916] phase=resolve_inputs elapsed_s=0.001 completed=0
+E         Traceback (most recent call last):
+E           File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7916_v687_training_qualification.py", line 93, in <module>
+E             raise SystemExit(main())
+E                              ^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7916_v687_training_qualification.py", line 51, in main
+E             result = q.fit_score(
+E                      ^^^^^^^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/training_qualification_7904.py", line 259, in fit_score
+E             atomic_json(raw / "checkpoint_identity.json", current)
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/current_work_receipt.py", line 68, in atomic_json
+E             temporary.replace(path)
+E           File "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1376, in replace
+E             os.replace(self, target)
+E           File "/tmp/carnot-child-results-guard-fn050bo8/sitecustomize.py", line 76, in moved
+E             return real(src, dest if dest is not None else dst, *args, **kwargs)
+E                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E         OSError: [Errno 18] Invalid cross-device link: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7954_v690_training_coverage/attempts/unit/test_current_cli_resume_replay0/raw/.checkpoint_identity.json.tmp-255705' -> '/tmp/carnot-pytest-artifacts-dafhgau8/raw/experiment_7954_v690_training_coverage/attempts/unit/test_current_cli_resume_replay0/raw/checkpoint_identity.json'
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c...experiment_7954_v690_training_coverage/attempts/unit/test_current_cli_resume_replay0/raw/checkpoint_identity.json\'\n').returncode
+
+tests/python/test_training_qualification_7916.py:26: AssertionError
+____________________ test_current_cli_missing_source[True] _____________________
+
+tmp_path = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7954_v690_training_coverage/attempts/unit/test_current_cli_missing_sourc0')
+fixture = True
+
+    @pytest.mark.parametrize("fixture", [True, False])
+    def test_current_cli_missing_source(tmp_path: Path, fixture: bool) -> None:
+        """SCENARIO-VERIFY-7916-CHECKPOINT: absent external evidence is a terminal block."""
+        output = tmp_path / "blocked.json"
+        args = ["--fixture"] if fixture else []
+>       invoke(
+            tmp_path,
+            *args,
+            "--upstream",
+            str(tmp_path / "absent.json"),
+            "--output",
+            str(output),
+            "--raw-root",
+            str(tmp_path / "raw"),
+            expected=2,
+        )
+
+tests/python/test_training_qualification_7916.py:115: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+tmp_path = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7954_v690_training_coverage/attempts/unit/test_current_cli_missing_sourc0')
+expected = 2
+args = ('--fixture', '--upstream', '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7954_v690_training_cov.../experiment_7954_v690_training_coverage/attempts/unit/test_current_cli_missing_sourc0/blocked.json', '--raw-root', ...)
+command = ['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7916_v687_training_qualification.py', '--date', '20260930', '--fixture', ...]
+child = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c.../experiment_7954_v690_training_coverage/attempts/unit/test_current_cli_missing_sourc0/raw/terminal_candidate.json\'\n')
+
+    def invoke(tmp_path: Path, *args: str, expected: int = 0) -> None:
+        """Collect real script coverage so importing a CLI cannot qualify its branches."""
+        command = [sys.executable, "-u"]
+        if os.environ.get("CARNOT7916_COVERAGE"):
+            command += ["-m", "coverage", "run", "--parallel-mode", "--include=" + current.INCLUDES]
+        command += [str(ROOT / current.CLI), "--date", "20260930", *args]
+        child = subprocess.run(command, cwd=ROOT, capture_output=True, text=True, timeout=90)
+>       assert child.returncode == expected, child.stdout + child.stderr
+E       AssertionError: [exp7916] phase=start_flushed completed=0
+E         [exp7916] phase=resolve_inputs elapsed_s=0.001 completed=0
+E         Traceback (most recent call last):
+E           File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7916_v687_training_qualification.py", line 93, in <module>
+E             raise SystemExit(main())
+E                              ^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7916_v687_training_qualification.py", line 89, in main
+E             return 0 if q.publish(result, args.output, args.raw_root, args.terminal_recheck) else 2
+E                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/training_qualification_7916.py", line 186, in publish
+E             return bool(original_publish(result, output, raw, recheck))
+E                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/training_qualification_7904.py", line 459, in publish
+E             atomic_json(candidate, result)
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/current_work_receipt.py", line 68, in atomic_json
+E             temporary.replace(path)
+E           File "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1376, in replace
+E             os.replace(self, target)
+E           File "/tmp/carnot-child-results-guard-fn050bo8/sitecustomize.py", line 76, in moved
+E             return real(src, dest if dest is not None else dst, *args, **kwargs)
+E                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E         OSError: [Errno 18] Invalid cross-device link: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7954_v690_training_coverage/attempts/unit/test_current_cli_missing_sourc0/raw/.terminal_candidate.json.tmp-255755' -> '/tmp/carnot-pytest-artifacts-dafhgau8/raw/experiment_7954_v690_training_coverage/attempts/unit/test_current_cli_missing_sourc0/raw/terminal_candidate.json'
+E         
+E       assert 1 == 2
+E        +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c.../experiment_7954_v690_training_coverage/attempts/unit/test_current_cli_missing_sourc0/raw/terminal_candidate.json\'\n').returncode
+
+tests/python/test_training_qualification_7916.py:26: AssertionError
+____________________ test_current_cli_missing_source[False] ____________________
+
+tmp_path = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7954_v690_training_coverage/attempts/unit/test_current_cli_missing_sourc1')
+fixture = False
+
+    @pytest.mark.parametrize("fixture", [True, False])
+    def test_current_cli_missing_source(tmp_path: Path, fixture: bool) -> None:
+        """SCENARIO-VERIFY-7916-CHECKPOINT: absent external evidence is a terminal block."""
+        output = tmp_path / "blocked.json"
+        args = ["--fixture"] if fixture else []
+>       invoke(
+            tmp_path,
+            *args,
+            "--upstream",
+            str(tmp_path / "absent.json"),
+            "--output",
+            str(output),
+            "--raw-root",
+            str(tmp_path / "raw"),
+            expected=2,
+        )
+
+tests/python/test_training_qualification_7916.py:115: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+tmp_path = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7954_v690_training_coverage/attempts/unit/test_current_cli_missing_sourc1')
+expected = 2
+args = ('--upstream', '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7954_v690_training_coverage/attempt...ianblenke/carnot/results/raw/experiment_7954_v690_training_coverage/attempts/unit/test_current_cli_missing_sourc1/raw')
+command = ['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7916_v687_training_qualification.py', '--date', '20260930', '--upstream', ...]
+child = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c.../experiment_7954_v690_training_coverage/attempts/unit/test_current_cli_missing_sourc1/raw/terminal_candidate.json\'\n')
+
+    def invoke(tmp_path: Path, *args: str, expected: int = 0) -> None:
+        """Collect real script coverage so importing a CLI cannot qualify its branches."""
+        command = [sys.executable, "-u"]
+        if os.environ.get("CARNOT7916_COVERAGE"):
+            command += ["-m", "coverage", "run", "--parallel-mode", "--include=" + current.INCLUDES]
+        command += [str(ROOT / current.CLI), "--date", "20260930", *args]
+        child = subprocess.run(command, cwd=ROOT, capture_output=True, text=True, timeout=90)
+>       assert child.returncode == expected, child.stdout + child.stderr
+E       AssertionError: [exp7916] phase=start_flushed completed=0
+E         Traceback (most recent call last):
+E           File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7916_v687_training_qualification.py", line 93, in <module>
+E             raise SystemExit(main())
+E                              ^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7916_v687_training_qualification.py", line 89, in main
+E             return 0 if q.publish(result, args.output, args.raw_root, args.terminal_recheck) else 2
+E                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/training_qualification_7916.py", line 186, in publish
+E             return bool(original_publish(result, output, raw, recheck))
+E                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/training_qualification_7904.py", line 459, in publish
+E             atomic_json(candidate, result)
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/current_work_receipt.py", line 68, in atomic_json
+E             temporary.replace(path)
+E           File "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1376, in replace
+E             os.replace(self, target)
+E           File "/tmp/carnot-child-results-guard-fn050bo8/sitecustomize.py", line 76, in moved
+E             return real(src, dest if dest is not None else dst, *args, **kwargs)
+E                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E         OSError: [Errno 18] Invalid cross-device link: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7954_v690_training_coverage/attempts/unit/test_current_cli_missing_sourc1/raw/.terminal_candidate.json.tmp-255807' -> '/tmp/carnot-pytest-artifacts-dafhgau8/raw/experiment_7954_v690_training_coverage/attempts/unit/test_current_cli_missing_sourc1/raw/terminal_candidate.json'
+E         
+E       assert 1 == 2
+E        +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c.../experiment_7954_v690_training_coverage/attempts/unit/test_current_cli_missing_sourc1/raw/terminal_candidate.json\'\n').returncode
+
+tests/python/test_training_qualification_7916.py:26: AssertionError
+__________ test_current_cli_owned_timeout_and_second_terminal_failure __________
+
+tmp_path = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7954_v690_training_coverage/attempts/unit/test_current_cli_owned_timeout0')
+
+    def test_current_cli_owned_timeout_and_second_terminal_failure(tmp_path: Path) -> None:
+        """SCENARIO-VERIFY-7916-CHECKPOINT: owned failures cannot claim runtime readiness."""
+        upstream = prior.make_fixture(tmp_path / "input")
+        bad_reader = tmp_path / "bad-reader.py"
+        bad_reader.write_text("raise SystemExit(1)\n")
+        for flag, value in (("--fit-deadline-s", "0"), ("--terminal-recheck", str(bad_reader))):
+            output = tmp_path / f"{flag[2:]}.json"
+>           invoke(
+                tmp_path,
+                "--fixture",
+                "--upstream",
+                str(upstream),
+                "--output",
+                str(output),
+                "--raw-root",
+                str(tmp_path / flag[2:]),
+                flag,
+                value,
+                expected=2,
+            )
+
+tests/python/test_training_qualification_7916.py:138: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+tmp_path = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7954_v690_training_coverage/attempts/unit/test_current_cli_owned_timeout0')
+expected = 2
+args = ('--fixture', '--upstream', '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7954_v690_training_cov...ment_7954_v690_training_coverage/attempts/unit/test_current_cli_owned_timeout0/fit-deadline-s.json', '--raw-root', ...)
+command = ['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7916_v687_training_qualification.py', '--date', '20260930', '--fixture', ...]
+child = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c...7954_v690_training_coverage/attempts/unit/test_current_cli_owned_timeout0/fit-deadline-s/checkpoint_identity.json\'\n')
+
+    def invoke(tmp_path: Path, *args: str, expected: int = 0) -> None:
+        """Collect real script coverage so importing a CLI cannot qualify its branches."""
+        command = [sys.executable, "-u"]
+        if os.environ.get("CARNOT7916_COVERAGE"):
+            command += ["-m", "coverage", "run", "--parallel-mode", "--include=" + current.INCLUDES]
+        command += [str(ROOT / current.CLI), "--date", "20260930", *args]
+        child = subprocess.run(command, cwd=ROOT, capture_output=True, text=True, timeout=90)
+>       assert child.returncode == expected, child.stdout + child.stderr
+E       AssertionError: [exp7916] phase=start_flushed completed=0
+E         [exp7916] phase=resolve_inputs elapsed_s=0.001 completed=0
+E         Traceback (most recent call last):
+E           File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7916_v687_training_qualification.py", line 93, in <module>
+E             raise SystemExit(main())
+E                              ^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7916_v687_training_qualification.py", line 51, in main
+E             result = q.fit_score(
+E                      ^^^^^^^^^^^^
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/training_qualification_7904.py", line 259, in fit_score
+E             atomic_json(raw / "checkpoint_identity.json", current)
+E           File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/current_work_receipt.py", line 68, in atomic_json
+E             temporary.replace(path)
+E           File "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py", line 1376, in replace
+E             os.replace(self, target)
+E           File "/tmp/carnot-child-results-guard-fn050bo8/sitecustomize.py", line 76, in moved
+E             return real(src, dest if dest is not None else dst, *args, **kwargs)
+E                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E         OSError: [Errno 18] Invalid cross-device link: '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7954_v690_training_coverage/attempts/unit/test_current_cli_owned_timeout0/fit-deadline-s/.checkpoint_identity.json.tmp-255855' -> '/tmp/carnot-pytest-artifacts-dafhgau8/raw/experiment_7954_v690_training_coverage/attempts/unit/test_current_cli_owned_timeout0/fit-deadline-s/checkpoint_identity.json'
+E         
+E       assert 1 == 2
+E        +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c...7954_v690_training_coverage/attempts/unit/test_current_cli_owned_timeout0/fit-deadline-s/checkpoint_identity.json\'\n').returncode
+
+tests/python/test_training_qualification_7916.py:26: AssertionError
+=========================== short test summary info ============================
+FAILED tests/python/test_training_coverage_7954.py::test_real_exception_routes
+FAILED tests/python/test_energy_fit_7943.py::test_real_fixture_routes - Asser...
+FAILED tests/python/test_energy_fit_7943.py::test_real_blocked_routes - Asser...
+FAILED tests/python/test_training_publication_7941.py::test_blocked_routes[missing]
+FAILED tests/python/test_training_publication_7941.py::test_blocked_routes[malformed]
+FAILED tests/python/test_training_publication_7941.py::test_blocked_routes[hash]
+FAILED tests/python/test_training_publication_7941.py::test_fixture_replay_and_final_recheck
+FAILED tests/python/test_training_publication_7941.py::test_publication_faults[conflict-conflicting_primary]
+FAILED tests/python/test_training_publication_7941.py::test_publication_faults[reject-candidate_rejected]
+FAILED tests/python/test_training_qualification_7916.py::test_current_cli_resume_replay_and_checkpoint_rejection
+FAILED tests/python/test_training_qualification_7916.py::test_current_cli_missing_source[True]
+FAILED tests/python/test_training_qualification_7916.py::test_current_cli_missing_source[False]
+FAILED tests/python/test_training_qualification_7916.py::test_current_cli_owned_timeout_and_second_terminal_failure
+13 failed, 207 passed in 55.82s

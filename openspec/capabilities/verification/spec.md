@@ -47162,3 +47162,34 @@ The parameterized Exp7943 CLI owns fresh checkpoint and prediction identity.
 Tests in test_energy_fit_7943.py check custody, real private routes, cold
 reconstruction, reader binding and failed required checks. Historical numerical
 modules and V688 determinations remain unchanged.
+
+## REQ-VERIFY-7954: Qualify fitting exceptions before natural execution
+
+Exp7954 SHALL authenticate Exp7941 and Exp7916 directly and qualify the unchanged
+Exp7943 fitting boundary without fitting natural data. Real script-path malformed
+JSON, absent replay paths and missing-key artifacts SHALL exit 2, print a flushed
+failure reason and publish no scientific success. All caught exception categories
+SHALL have current receipts. Readiness requires a real private numerical fixture,
+blocked and expected failure routes, cold replay, terminal readers, nonempty 100%
+statement coverage and every required owned check. Historical scores and results
+remain unchanged; fixture agreement is circular_positive with zero independent samples.
+
+### SCENARIO-VERIFY-7954-EXCEPTIONS
+
+ValueError, OSError and KeyError enter the actual Exp7943 CLI handler. Removing
+the exception test from a private copied test file SHALL make its coverage check
+fail. The reusable runner binds exact argv, includes, deadlines and transitive hashes
+before fixture fitting. New wrappers SHALL qualify all their statements too.
+
+### SCENARIO-VERIFY-7954-READINESS
+
+Absent external prerequisites produce complete_blocked_* with exact gate operands.
+Owned failures produce complete_disqualified_* and zero training_coverage_ready_score,
+prefit_coverage_ready_score and runtime_ready_score. Current Exp7941 runtime_ready_score
+is authoritative; historical training_runtime_ready_score=0 is preserved.
+
+Implementation: `training_coverage_7954.py` authenticates the existing primaries,
+freezes real CLI routes and reduces current coverage and fixture receipts.
+`test_training_coverage_7954.py` checks each exception category, external blocks,
+owned failures, unchanged historical scores and cold primitive reconstruction.
+The current producer's terminal evidence is `experiment_7954_v690_training_coverage.json`.

@@ -1,0 +1,47 @@
+{
+  "primary_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7954_v690_training_coverage/routes/blocked/experiment_7943_fixture.json",
+  "primary_sha256": "sha256:bc367da9e80cbb06853f798dc5ea7820b0c5c56aa7d72bd92c4b61e06a142024",
+  "report": {
+    "candidate_sha256": "sha256:bc367da9e80cbb06853f798dc5ea7820b0c5c56aa7d72bd92c4b61e06a142024",
+    "flagged_adversarial": false,
+    "passed": true,
+    "receipts": [
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7954_v690_training_coverage/routes/blocked/raw/experiment_7943_fixture/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+          "--json",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7954_v690_training_coverage/routes/blocked/raw/experiment_7943_fixture/terminal_candidate.json"
+        ],
+        "duration_s": 0.6513598969904706,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_7954_v690_training_coverage/routes/blocked/raw/experiment_7943_fixture/terminal_logs/bc367da9e80cbb06853f798dc5ea7820b0c5c56aa7d72bd92c4b61e06a142024/00_adversarial.log",
+        "log_sha256": "sha256:092211eb718ad59b820d2e9829af14619001d6e57642d5a249615d3e0349162b",
+        "name": "adversarial",
+        "output_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7954_v690_training_coverage/routes/blocked/raw/experiment_7943_fixture/terminal_candidate.json\",\n      \"loaded\": true,\n      \"exp_id\": 7943,\n      \"title\": \"\",\n      \"honest_verdict\": \"complete_blocked_source_eligibility\",\n      \"flag_count\": 0,\n      \"max_severity\": -1,\n      \"flags\": [],\n      \"gate_version\": \"197e0a5eacacb09ce6607ae8bdfd507498082857f0d02ec2003a62c251b69a24\"\n    }\n  ],\n  \"flagged_count\": 0\n}\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7954_v690_training_coverage/routes/blocked/raw/experiment_7943_fixture/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py",
+          "--strict",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7954_v690_training_coverage/routes/blocked/raw/experiment_7943_fixture/terminal_candidate.json"
+        ],
+        "duration_s": 0.03412682702764869,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_7954_v690_training_coverage/routes/blocked/raw/experiment_7943_fixture/terminal_logs/bc367da9e80cbb06853f798dc5ea7820b0c5c56aa7d72bd92c4b61e06a142024/01_row_consistency.log",
+        "log_sha256": "sha256:2a5acc7f6565e1cba7cebf220383f1fb8b6afbbc1ef9c87af7959b982029deda",
+        "name": "row_consistency",
+        "output_tail": "\nverdict-row-consistency: checked 0, skipped 1 (no per-unit rows), unreadable 0.\n  NOTE: most artifacts carry no per-unit row container, so their headline claims are not falsifiable from the artifact alone. That is a reporting-shape gap in those experiments, not a clean bill of health from this tool.\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      }
+    ]
+  }
+}

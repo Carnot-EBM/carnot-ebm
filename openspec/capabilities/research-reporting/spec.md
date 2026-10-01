@@ -87742,3 +87742,27 @@ V690 implementation: task-owned authority, methods, validation and parameterized
 Exp7953 CLI. Private regressions preserve V685 lifecycle assertions and reproduce
 both V689 authority failures. Exact current verification receipts and measured
 statement counts are published below results/raw/experiment_7953_v690_contract_methods/.
+
+## REQ-REPORT-7954: Bind exception coverage and terminal publication
+
+Exp7954 SHALL freeze explicit tests, consumers, coverage includes and executable
+hashes. Private negative, blocked, success and replay scenarios use distinct
+publication directories. Preserve conflicting_primary rejection for two siblings.
+Combined unit and actual CLI coverage SHALL reach exactly 100% with nonzero counts.
+Run private E2E-015 and both E2E-016 routes with historical date 20260929, scoped
+Ruff, strict mypy and explicit-file spec coverage. Preserve historical health
+receipts as historical. No natural fitting, model load or external publication occurs.
+
+### SCENARIO-REPORT-7954-TERMINAL
+
+Reduce readiness from primitive logs, counts, fixture checkpoints and reader hashes.
+Publish one experiment_7954_*.json primary after both terminal validators inspect
+its final bytes. Newer nested sidecars SHALL leave both actual consumers selecting
+the primary path/hash. Cold replay rejects altered logs, sources or denominator.
+Save a reusable callable receipt and validation manifest; all sidecars bind final bytes.
+
+Implementation: the small Exp7954 CLI uses parameterized private outputs. Its
+runner preserves publisher uniqueness, checks both actual readers and binds
+terminal reports to final bytes. A private deleted-test control clears prior
+CLI coverage while retaining other measured files. Ops and traceability updates
+belong to the separate conductor reconciliation requested for this task.
