@@ -1,0 +1,106 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.4860810019308701,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:63fd35609667707ed3533a73b59e427c0a32faed0980a4421d5d0215d4612f61",
+  "input_tokens": 931,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 931,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 952
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:09472eb3f2d696c392f267c388d43c15e1942b7d57b0be9af8782e95368e6489",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886275,
+    "id": "chatcmpl-8DJOTqv3Yd3EnTM5B2fm6DeMvjQFuFTf",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 493.051,
+      "predicted_n": 21,
+      "predicted_per_second": 42.59194282133086,
+      "predicted_per_token_ms": 23.47861904761905,
+      "prompt_ms": 874.009,
+      "prompt_n": 853,
+      "prompt_per_second": 975.9624900887748,
+      "prompt_per_token_ms": 1.0246295427901524
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 931,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 952
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"1250 Coast Village Rd\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":true,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":false,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Food, Restaurants, Desserts, Wine Bars, Bars, Italian, Nightlife\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"17:30-21:0\\\",\\\"Saturday\\\":\\\"17:30-21:0\\\",\\\"Sunday\\\":\\\"17:30-21:0\\\",\\\"Thursday\\\":\\\"17:30-21:0\\\",\\\"Tuesday\\\":\\\"17:30-21:0\\\",\\\"Wednesday\\\":\\\"17:30-21:0\\\"},\\\"name\\\":\\\"Trattoria Mollie\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2019-08-31 21:09:02\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Mollie is engaged with the customers and I have seen her every time we come in. The seafood is excellent, the spinach ravioli is excellent, as is the salad and bread. Good service and good wine recommendations. I miss the location in Montecito, but the location in Santa Barbara is nice as well...\\\"},{\\\"review_date\\\":\\\"2019-07-25 19:12:46\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Excellent Mollie's has relocated to 1218 State Street in Santa Barbara.  Can't wait to check out the new location!  Phone number is the same.\\\"},{\\\"review_date\\\":\\\"2019-07-21 14:52:18\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"By far the best Italian food around!  Mollie is a caring and gifted chef.  If you are not eating here you are definitely missing out!  Favorites: spinach soup it is amazing and you will not find this soup (the way she makes it anywhere else!), pasta with crabmeat served on the shell, (a special dish served on occasions maybe you will be one of the lucky ones to try) the strawberry, arugula and parmigiano cheese salad, the grilled branzino and the turkey meatballs!!! So happy she reopened in Santa Barbara from her Montecito location!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Trattoria Mollie is an Italian restaurant located at 1250 Coast Village Rd, Santa Barbara, CA, known for its food, desserts, and wine bar. It is open from 17:30 to 21:00 from Tuesday through Sunday. The restaurant offers free WiFi, outdoor seating, and is suitable for groups, but does not have live music. The ambiance is described as romantic and classy. The restaurant has a 3.5-star rating. Customers commend the excellent seafood, spinach ravioli, salad, and bread. They also appreciate the good service, wine recommendations, and Mollie's personal engagement. Other noted favorites include the spinach soup, pasta with crabmeat, strawberry arugula and parmigiano cheese salad, grilled branzino, and turkey meatballs. The restaurant has relocated from Montecito to Santa Barbara.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "667f932dd70629a9e7098012ff1da471dd9a6d459ce6a5cdf79b8db92861d9cf",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ]
+}

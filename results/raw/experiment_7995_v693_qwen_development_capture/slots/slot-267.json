@@ -1,0 +1,103 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.1718397520016879,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:60c710a5972b8e4bad542d0413ab22188c073be5a421d2030ea95fdff1d86fb9",
+  "input_tokens": 524,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 524,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 547
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:f1793df583eacdd41d2670e5ad61c8b4a748e15e56c98ab881be729ca5f3f177",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886219,
+    "id": "chatcmpl-Cjx6CaAql38sQqzFIsr6ybh2Y5zSJEW4",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.672,
+      "predicted_n": 23,
+      "predicted_per_second": 42.46112038281469,
+      "predicted_per_token_ms": 23.55095652173913,
+      "prompt_ms": 500.684,
+      "prompt_n": 446,
+      "prompt_per_second": 890.7814110297113,
+      "prompt_per_token_ms": 1.122609865470852
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 524,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 547
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:1 Linear Bus: If all network nodes are connected to a combine transmission medium that has two endpoints the Bus is Linear. 2  Distributed Bus: If all network nodes are connected to a combine transmission medium that has more than two endpoints created by branching the main section of the transmitting medium.\\\\n\\\\npassage 2:This type of network is also difficult to troubleshoot. For these reasons, this type of topology is not used for large networks, such as those covering an entire building. Star. In star topology, each computer is connected to a central hub using a point-to-point connection\\\\n\\\\npassage 3:Mesh topology introduces the concept of routes. Unlike each of the previous topologies, messages sent on a mesh network can take any of several possible paths from source to destination. (Recall that even in a ring, although two cable paths exist, messages can only travel in one direction.) Some WANs, most notably the Internet, employ mesh routing.\\\\n\\\\n\\\",\\\"question\\\":\\\"meaning of each types of topology network\\\"}\", \"original_answer\": \"Linear Bus topology is a type of network where all nodes are connected to a single transmission medium with two endpoints. Distributed Bus topology is similar to Linear Bus topology, but in this case, the transmission medium has more than two endpoints created by branching the main section of the transmitting medium. \\n\\nStar topology is another type of network where each computer is connected to a central hub using a point-to-point connection. This type of network is not usually used for large networks, such as those covering an entire building, due to difficulty in troubleshooting.\\n\\nMesh topology introduces the concept of routes, where messages sent on a mesh network can take any of several possible paths from source to destination. Some Wide Area Networks (WANs), most notably the Internet, employ mesh routing.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "56ca1e3d47c79a0365f5fc591eef27de3fc923c80ab0721f1d8ce5ac1211e984",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ]
+}

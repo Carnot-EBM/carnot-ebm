@@ -1,0 +1,104 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.1770107040647417,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:c352308f430b29c2337deed3715c2029fd8e92ce21c296dc51cebcccbb3b4109",
+  "input_tokens": 521,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 1,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 521,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 545
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:b462ec3f6c8ec917ea0a97f3d03c8f7fa5408ce43ae890f61ce10bc7bc4e8f91",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 1\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885959,
+    "id": "chatcmpl-y3QRs63VmrfMiNyvbEvWpIkiY9aRwvz7",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.03,
+      "predicted_n": 24,
+      "predicted_per_second": 42.475620763499286,
+      "predicted_per_token_ms": 23.542916666666667,
+      "prompt_ms": 498.967,
+      "prompt_n": 443,
+      "prompt_per_second": 887.8342655927146,
+      "prompt_per_token_ms": 1.126336343115124
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 521,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 545
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Now here\u2019s the bad news: You may not be doing enough to lower your risk of high blood pressure, which raises your odds of coronary heart disease or stroke. That\u2019s because more than 75 percent of the sodium in the average American diet comes from salt added to processed foods. In other words, we often don\u2019t even know we\u2019re eating it. And while cutting table salt is wise, it may only be putting a tiny dent in your sodium total.\\\\n\\\\npassage 2:One source of sea salt is brine, with the salt being produced through evaporation. Table salt can also be produced from rock salt, in which case evaporation is not necessary for processing. The salt crystals are processed to remove any impurities that may be present and allowed to recrystallize.\\\\n\\\\npassage 3:During processing, the salt may be iodized, meaning that iodine is added, and it can also be treated with anticaking agents to prevent it from clumping. Ad. Iodized salt is sold in many regions to ensure that people get an adequate dietary supply of iodine, a necessary nutrient.\\\\n\\\\n\\\",\\\"question\\\":\\\"how is table salt processed\\\"}\", \"original_answer\": \"Table salt can be produced from either sea salt or rock salt. If it's from sea salt, the salt is produced through evaporation. If it's from rock salt, evaporation is not required for processing. The salt crystals are processed to remove any impurities that may be present and then allowed to recrystallize. During processing, iodine may be added to the salt, a process known as iodization, to ensure people get an adequate dietary supply of this necessary nutrient. The salt can also be treated with anticaking agents to prevent it from clumping.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "ea42b5d0af10f257004460ef7d24b91fac3c7d3c1a6af512311811c1793f1d48",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ]
+}

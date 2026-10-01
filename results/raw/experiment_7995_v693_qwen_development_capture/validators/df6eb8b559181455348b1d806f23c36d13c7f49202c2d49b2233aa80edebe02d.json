@@ -1,0 +1,47 @@
+{
+  "primary_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7995_v693_qwen_development_capture.json",
+  "primary_sha256": "sha256:df6eb8b559181455348b1d806f23c36d13c7f49202c2d49b2233aa80edebe02d",
+  "report": {
+    "passed": true,
+    "receipts": [
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py --json /tmp/carnot-7995-vv810c9j/experiment_7995_v693_qwen_development_capture.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "scripts/adversarial_verify.py",
+          "--json",
+          "/tmp/carnot-7995-vv810c9j/experiment_7995_v693_qwen_development_capture.json"
+        ],
+        "duration_s": 1.2476540440693498,
+        "exit_code": 0,
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7995_v693_qwen_development_capture/terminal_logs/00_adversarial.log",
+        "log_sha256": "sha256:d0474154f6f2b15a8589158505a5ec255c84f8dea6604a3820daa2ae6b5fddd6",
+        "name": "adversarial",
+        "output_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/tmp/carnot-7995-vv810c9j/experiment_7995_v693_qwen_development_capture.json\",\n      \"loaded\": true,\n      \"exp_id\": 7995,\n      \"title\": \"\",\n      \"honest_verdict\": \"complete_null_qwen_development_capture\",\n      \"flag_count\": 0,\n      \"max_severity\": -1,\n      \"flags\": [],\n      \"gate_version\": \"197e0a5eacacb09ce6607ae8bdfd507498082857f0d02ec2003a62c251b69a24\"\n    }\n  ],\n  \"flagged_count\": 0\n}\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/verdict_row_consistency_lint.py --strict /tmp/carnot-7995-vv810c9j/experiment_7995_v693_qwen_development_capture.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "scripts/verdict_row_consistency_lint.py",
+          "--strict",
+          "/tmp/carnot-7995-vv810c9j/experiment_7995_v693_qwen_development_capture.json"
+        ],
+        "duration_s": 0.06868808891158551,
+        "exit_code": 0,
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7995_v693_qwen_development_capture/terminal_logs/01_strict_rows.log",
+        "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+        "name": "strict_rows",
+        "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      }
+    ]
+  }
+}

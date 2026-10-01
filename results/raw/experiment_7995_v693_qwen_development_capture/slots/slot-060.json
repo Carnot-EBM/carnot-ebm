@@ -1,0 +1,109 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.1688029979122803,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:d807f5b56d67f8b32d816ae537f80b939af5847d632964e050b794a1d881edcf",
+  "input_tokens": 512,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 512,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 535
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:14bbc7fa9bcfb625bb178691eb9758b5c6cfb2553ac3bbebcb76a916d5f4a593",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885919,
+    "id": "chatcmpl-AcSDFqvWYa6MSqO9P1cIRaiA6hv1W5ne",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 538.815,
+      "predicted_n": 23,
+      "predicted_per_second": 42.68626523018104,
+      "predicted_per_token_ms": 23.426739130434786,
+      "prompt_ms": 494.617,
+      "prompt_n": 434,
+      "prompt_per_second": 877.4465899878088,
+      "prompt_per_token_ms": 1.1396705069124424
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 512,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 535
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"A 32-year-old Massachusetts man is facing murder charges, authorities said Wednesday, four days after another man's remains were found in a duffel bag. The Middlesex District Attorney's Office said that Carlos Colina, 32, will be arraigned the morning of April 14 for murder in connection with the remains discovered Saturday in Cambridge. Earlier this week, Colina was arraigned on charges of assault and battery causing serious bodily injury and improper disposal of a body. A Middlesex County judge then revoked bail for Colina in another case he's involved in, for alleged assault and battery. The victim in that case is different from the one whose remains were found in recent days. Police were notified Saturday morning about a suspicious item along a walkway in Cambridge. Officers arrived at the scene, opened a duffel bag and found human remains. After that discovery, police say, a surveillance video led them to an apartment building, where more body parts were discovered in a common area. That location is near the Cambridge Police Department headquarters. The remains at both locations belonged to the same victim, identified Monday as Jonathan Camilien, 26. Camilien and Colina knew each other, according to authorities. \\\"This was a gruesome discovery,\\\" District Attorney Marian Ryan said. CNN's Kevin Conlon contributed to this report.\\n\", \"original_answer\": \"Carlos Colina, 32, is facing murder charges after a man's remains were found in a duffel bag in Cambridge, Massachusetts. Colina was earlier charged with assault and battery causing serious bodily injury and improper disposal of a body. The victim was identified as 26-year-old Jonathan Camilien, who Colina reportedly knew.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "calibration",
+  "source_cluster_id": "d32b4859632f5ddaa9646ee887e24579fafd15353b6ee7a0d1d629efda71b822",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ]
+}

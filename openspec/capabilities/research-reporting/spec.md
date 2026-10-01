@@ -88820,3 +88820,32 @@ Verification: `tests/python/test_development_cohort_7994.py` and
 `tests/python/test_experiment_7994_v693_development_cohort.py` exercise private
 publication, chronology, custody, metadata invariance and terminal checks.
 The published primary retains the current invocation's validation receipts.
+
+## REQ-REPORT-7995: Own current development capture provenance
+
+Exp7995 SHALL authenticate the sealed Exp7994 public roster and Exp7969
+full-source protocol without requiring Exp7993 recovery. Freeze code, inputs,
+decoder and validation commands before measurement. One owned invocation ledger
+SHALL record load and generation starts before transport and terminal outcomes
+immediately. Current counters SHALL be reconstructed from that ledger and raw
+rows. Historical references SHALL contain path, producer date, hash and imported
+fields, without nested current-count dictionaries. Preserve original call
+receipts and producer code independently of later validation changes.
+
+### SCENARIO-REPORT-7995-CUSTODY
+
+The final serializer and unchanged adversarial provenance classifier SHALL
+accept a private four-call transcript. Zero-call blocked, interrupted, resumed
+and mixed-scope tests SHALL reject duplicate or uncertain retries. Private CLI
+success, blocked and cold replay, E2E-015, provenance mutations, scoped Ruff,
+strict mypy and explicit-path spec coverage SHALL have actual command receipts.
+New statements SHALL have nonempty 100 percent coverage. Required owned failures
+disqualify every readiness field. Full-suite health failures remain diagnostics.
+Check exact final bytes with both validators and both conductor readers before
+atomic publication. The conductor owns ops and traceability reconciliation.
+
+Implementation: `python/carnot/experiment_7995_v693_qwen_development_capture.py`
+and its script-path CLI freeze the original code and call receipt subtree.
+`tests/python/test_experiment_7995_v693_qwen_development_capture.py` checks
+private CLI publication, blocked inputs, cold replay, load outcomes, required
+validation failures, original receipt mutations and both artifact readers.

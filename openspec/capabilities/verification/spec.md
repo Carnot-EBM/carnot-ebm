@@ -47686,3 +47686,29 @@ existing complete-source features and exact original annotation join.
 Verification: `tests/python/test_development_cohort_7994.py` and the Exp7994
 private CLI tests cover source duplicates, metadata permutations, invalid spans,
 empty responses, future feedback denial and retention audit authorization.
+
+## REQ-VERIFY-7995: Bound independent development judgments
+
+Use only the sealed public calibration (64), stream (256), and retention (64)
+slots. Reuse Exp7969's full-source prompt, grammar, seed and decoder. Own a free
+CUDA lease and the exact cached unsloth/Qwen3.8-27B-GGUF Q4_K_M revision through
+llama.cpp with its embedded tokenizer. Authenticate server model, CUDA offload,
+PID identity and before/resident/after memory; stop only owned processes.
+Attempt at most 384 calls, 96 output and 6000 input tokens each, with 120-second
+call, 300-second load and 3000-second measured-work caps and a 10-second floor.
+No retry, replacement, CPU fallback or duration padding is allowed.
+
+### SCENARIO-VERIFY-7995-READINESS
+
+Every intended slot remains accounted for, including excluded, failed and
+censored responses. Authenticated complete capture with passing owned checks
+may be ready even with censoring. Independent usable role gates are 48
+calibration, 224 stream and 48 retention sources. Missing roles remain zero.
+These support gates make no class-balance, accuracy or benefit claim. Missing
+external prerequisites block with exact operands; failed owned checks
+disqualify; complete valid capture is null.
+
+Implementation: `python/carnot/verify/qwen_development_capture_7995.py` freezes
+public requests, checkpoints started calls, binds raw bytes to owned receipts
+and reduces independent role support. Its matching Python tests exercise
+interruption, no retry, censoring, token admission, overlap and byte mutations.

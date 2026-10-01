@@ -1,0 +1,111 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.5766599189955741,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:6883f2f16aeb901603db218032299d00a7dbec4c55668d9ac9c20f9aed4d52dd",
+  "input_tokens": 979,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 979,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1002
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:84336920e372142adbdb91c2b165743b51c5cc51732a4b573af5376763972c1c",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886021,
+    "id": "chatcmpl-1UI3UYEGcMc72QV3N93SyWKUWqdirb94",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.49,
+      "predicted_n": 23,
+      "predicted_per_second": 42.475391973997674,
+      "predicted_per_token_ms": 23.54304347826087,
+      "prompt_ms": 923.102,
+      "prompt_n": 901,
+      "prompt_per_second": 976.0568171231349,
+      "prompt_per_token_ms": 1.0245305216426193
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 979,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1002
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"628 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":true,\\\"lot\\\":false,\\\"street\\\":null,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":false,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":null},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Cocktail Bars, Bars, Nightlife\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"16:0-1:0\\\",\\\"Monday\\\":\\\"15:30-22:30\\\",\\\"Saturday\\\":\\\"16:0-1:0\\\",\\\"Sunday\\\":\\\"14:0-22:0\\\",\\\"Thursday\\\":\\\"15:30-22:30\\\",\\\"Tuesday\\\":\\\"15:30-22:30\\\",\\\"Wednesday\\\":\\\"15:30-22:30\\\"},\\\"name\\\":\\\"Glass House-Cocktail Garden\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2020-03-28 21:58:39\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Loved all the cocktails I tried here! This place was pretty much completely outdoors, so dress warm if it's cold out.  But each grouping of seats had some source of heat to keep you warm.  The seating was a fun mix of eclectic chairs and couches.  They also allowed all 3 of the dogs we had with us to come inside the bar area and hang out while we enjoyed our drinks.  I tried one or two with mezcal in them and thought they were lovely.  The rest of the group tried other various drinks and each were equally as good as the rest.  I really appreciated the aesthetic of all the craft cocktails and the chill vibes.\\\"},{\\\"review_date\\\":\\\"2020-03-15 19:59:28\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"Good atmosphere. Fun, hip decor. However the service is awful. Waited for 10 minutes at bar without being acknowledged   Much room for improvement. I can see why the place isn't that packed on a Friday night. Hope they do fix the issues because the place is fun\\\"},{\\\"review_date\\\":\\\"2020-03-06 14:35:50\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"This place is unassuming from the street but so so awesome once inside! We loved every single drink we ordered. The decor was so cute and the fire pits and heaters made it super comfy in the winter.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Glass House-Cocktail Garden is a cocktail bar located at 628 State St, Santa Barbara, CA. It operates from 3:30 pm to 10:30 pm from Monday to Thursday, 4:00 pm to 1:00 am on Friday and Saturday, and 2:00 pm to 10:00 pm on Sunday. This place is renowned for its classy ambience and the business has an overall rating of 4.5 stars. Customers praise the bar for its craft cocktails, outdoor seating, and dog-friendly policies. The bar is noted for its eclectic mix of chairs and couches. However, there has been criticism regarding the service, with some customers having to wait for long periods without acknowledgement. Despite this, many reviewers describe the atmosphere as fun and hip, with a decor that is both inviting and comfortable. The bar has garage parking, accepts reservations, and is also suitable for groups.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "b84700f86cb22e2e7b66a86c63abe67eb2c0de3c4414fad1f6a039ad8af88b01",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ]
+}

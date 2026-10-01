@@ -1,0 +1,104 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.165012379991822,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:f86afa839a6d3817870501f36c5e01be9a4ff244f15657b5b3911aea2a037999",
+  "input_tokens": 470,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 470,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 494
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:a59f943cd35550579703ac896976846c56fbc9f6a493c96f14ce9ec3ee60a0cf",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886246,
+    "id": "chatcmpl-wD4YaCkzBaDc4kVnC8dfo5SQVR1ubZgL",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.658,
+      "predicted_n": 24,
+      "predicted_per_second": 42.50360395141838,
+      "predicted_per_token_ms": 23.527416666666667,
+      "prompt_ms": 488.718,
+      "prompt_n": 392,
+      "prompt_per_second": 802.0985517210333,
+      "prompt_per_token_ms": 1.2467295918367347
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 470,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 494
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:This is our most popular G1 practice test. Based on the official Ontario Driver\u2019s handbook, it tests your knowledge of the road signs and rules, fines and speed limits. We use the same scoring system as the DriveTest centers across the province, so there will be no surprises when you go there.\\\\n\\\\npassage 2:#1 G1 Test Preparation Resource in Ontario! With our collection of free Ontario G1 practice tests you will pass on your 1st try! Ontario G1 Test Preparation at your fingertips! Our state-of-the-art practice tests have been carefully prepared to give you just that: confidence.\\\\n\\\\npassage 3:Free practice quiz for Ontario drivers. This easy to follow quiz is specifically designed to help you practice for your Ontario G1 Test and written road knowledge test. It is important to note that this quiz is for practice purposes only, and our site cannot guarantee you will pass the actual G1 test.\\\\n\\\\n\\\",\\\"question\\\":\\\"tips i should study in prearation to write the tests for my G1 drivers test\\\"}\", \"original_answer\": \"Based on the passages, you should prepare for your G1 driver's test by taking practice tests, which are based on the official Ontario Driver's handbook. These tests will help you learn about road signs and rules, fines, and speed limits. It is also recommended to use resources like the #1 G1 Test Preparation Resource in Ontario. Remember, these tests are for practice purposes and passing them does not guarantee you will pass the actual G1 test.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "76391361113d6df96369033dd748964eef8bba591ee89ad089e60e10dd9bd3f3",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ]
+}

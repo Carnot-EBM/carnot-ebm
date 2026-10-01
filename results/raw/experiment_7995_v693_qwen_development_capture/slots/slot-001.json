@@ -1,0 +1,116 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.3453342079883441,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:83c7a542cb2725d6976c03427a1764425b9746e6c2a0c95772c9ce5f9de9ec03",
+  "input_tokens": 803,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 803,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 826
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:112401b4f97ec9081ee4c6c906029cffd9ffded0327b441e84e2e71c4103f9b9",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885833,
+    "id": "chatcmpl-Lh5uLpqRv6nou7DbfjkHlx15FDG9ds2T",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 533.425,
+      "predicted_n": 23,
+      "predicted_per_second": 43.11758916436238,
+      "predicted_per_token_ms": 23.192391304347826,
+      "prompt_ms": 687.607,
+      "prompt_n": 725,
+      "prompt_per_second": 1054.3813544655595,
+      "prompt_per_token_ms": 0.948423448275862
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 803,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 826
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Remember, the less you touch your screen the better. Lightly wipe the screen with a dry and clean microfiber cloth. Microfiber is a miracle of modern technology; put it to good use. No paper towels, no kitchen towels, no household rags; only microfiber should touch your screen.ow to Safely Clean Your Screen. Now that we\u2019ve made you terrified of Windex and rags (as, on behalf of your beautiful widescreen monitor, you should be), it\u2019s time to get down to the business of properly cleaning your screens.\\\\n\\\\npassage 2:Instructions. Add 1 part isopropyl alcohol and 1 part distilled water to an empty spray bottle. Close the bottle and shake it to combine the ingredients. Turn off the laptop. It&#039;s easier to see the dust and smudges when the screen is dark. Spray a lint-free cloth with the homemade cleaning solution or LCD cleaner.Wipe the laptop screen thoroughly with the cloth to remove any dust or fingerprints. Clean in one direction to prevent streaks.lose the bottle and shake it to combine the ingredients. Turn off the laptop. It&#039;s easier to see the dust and smudges when the screen is dark. Spray a lint-free cloth with the homemade cleaning solution or LCD cleaner.\\\\n\\\\npassage 3:1 The microfiber clothes are washable, soft and safe to use on your screens. 2  To clean the edges of your LCD screen use a clean cotton ball or swab. 3  ALWAYS clean your screen powered off! ( 4 I know I said this above, but it is important enough to reiterate.). DO NOT touch your LCD screen, because it will shorten the lifespan of your screen. 2  NEVER use a window or abrasive cleaner on your TV screen as it can cause the screen to yellow and also damage it. 3  If a spot does not come off, do NOT rub harder, because you can kill some of your pixels and ruin your screen.\\\\n\\\\n\\\",\\\"question\\\":\\\"safely clean your computer screen\\\"}\", \"original_answer\": \"To clean your computer screen safely, first make sure the screen is powered off as it's easier to see dust and smudges on a dark screen. Use a clean and dry microfiber cloth, which is safe for your screens, to lightly wipe the screen. Avoid touching the LCD screen as it can shorten the lifespan. If there are stubborn spots, do not rub harder as this could damage the screen. For a deeper clean, you can make a solution of 1 part isopropyl alcohol and 1 part distilled water, spray it on a lint-free cloth, and use it to wipe the screen. Always clean in one direction to prevent streaks. Never use window or abrasive cleaners as they can damage and yellow the screen. Clean the edges of your LCD screen with a clean cotton ball or swab.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "calibration",
+  "source_cluster_id": "010a9223fede82e05e04df44826b1f4f467edb9db410c045723c463191dfacbf",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ]
+}

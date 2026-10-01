@@ -1,0 +1,135 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 2.111354216001928,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:dced360ce33c57e6783156f633e3bf290290aa50a3b931e2532511aa6d831fe4",
+  "input_tokens": 1711,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1711,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1734
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:af18fafb95920fbfbc2d5778c0ee10b733bc0568bae263fac82e5def871a7524",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886258,
+    "id": "chatcmpl-FW3ED9nfelxqV36YWBs9LVY2XGjHPag3",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 542.537,
+      "predicted_n": 23,
+      "predicted_per_second": 42.393422015457006,
+      "predicted_per_token_ms": 23.588565217391306,
+      "prompt_ms": 1443.397,
+      "prompt_n": 1633,
+      "prompt_per_second": 1131.3588707749843,
+      "prompt_per_token_ms": 0.8838928352725045
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1711,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1734
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"10 Winchester Canyon Rd\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":null,\\\"romantic\\\":null,\\\"touristy\\\":false,\\\"trendy\\\":null,\\\"upscale\\\":null},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":null,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":null},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Restaurants, American (Traditional), Barbeque, Steakhouses, Sandwiches\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-21:0\\\",\\\"Saturday\\\":\\\"11:0-21:0\\\",\\\"Sunday\\\":\\\"11:0-21:0\\\",\\\"Thursday\\\":\\\"11:0-21:0\\\",\\\"Tuesday\\\":\\\"11:0-21:0\\\",\\\"Wednesday\\\":\\\"11:0-21:0\\\"},\\\"name\\\":\\\"Timber's Roadhouse\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-10 05:44:20\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I was originally put off by some of the slagging reviews posted about this place but whatever was happening back then it seems to have been completely resolved by this past Sunday evening :-) The Timbers Roadhouse had it all going on when we visited for dinner. The place was about 3/4 full when we arrived ( and that's pretty good because it's a huge space. We were seated promptly in the main dining room but also had the option of sitting in the spacious bar area which sports a long bar and several TVs. Our server knew the menu well and answered several questions regarding different dishes on offer. The wine list is solid both by the glass and bottles but they could probably use a few more beers on tap. As it was they had the basics with a couple of local breweries represented ( just FYI not everyone loves IPA's ) Food wise, the menu is stacked. There are several burgers as well as some other sandwich style dishes as well as full dinner plates such as ribs, steaks, seafood and salads. There are also a couple of surprising items such as Duck Confit! and oxtail Mac-n-cheese. Well we went for the the Timbers burger ( all burgers are a blend of chuck, brisket and short rib meat) and the Duck!  Burger was excellent, great flavor and texture and done mid rare just as requested, would definitely order one again. The surprise of the night was the amazing duck confit!  Super tender with great flavor and falling off the bone and the mushroom reduction was delicious. Subbed out the mashed potatoes for extra vegetables and they were a great keto switch. I think they're really doing things right out here in the Goodland and it's nice to see this place up and running again. We'll definitely be back :-) they've got a great back patio as well when the weather warms up:-)\\\"},{\\\"review_date\\\":\\\"2022-01-08 21:41:16\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"For years this restaurant has stood dark and empty like the restaurant in The Goonies. I am delighted to report that not only is it open, it is thriving!  The service was excellent and the food was fantastic!  Everything that was ordered at my table was wonderfully presented and delicious. Their wine menu had some impressive choices. The bar area looked warm and inviting with tv screens playing sports. The huge fireplace in the dining room added a warm and cozy touch. I would highly recommend it!\\\"},{\\\"review_date\\\":\\\"2022-01-08 21:15:47\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Well worth driving through the corner gas station to get to Timber's!  Good food, friendly service and cool architectural features. \\\\n\\\\n$22 prime rib French dip sandwich with perfect creamed horseradish and savory au jus is a winner. Perfect crispy steak fries too. \\\\n\\\\n$18 Timber's 1/2 pound burger is full of flavor. Blend of chuck, brisket and short rib with tomato-bacon jam. Nice brioche buns! \\\\n\\\\nCheesecake is good and generous in size but $10 is overpriced in my opinion. \\\\n\\\\nLunch menu features soup ($7-8), salads ($6-16), sandwiches ($15-18), fish and chips ($16), ribs ($28-34), and burgers ($15-18). Vegan Beyond Burger is $15. \\\\n\\\\nDinner menu is extensive with salmon ($32), duck leg ($38), filet ($44), BBQ chicken ($22), vegan lasagna ($26), and other items priced like a fine dining establishment, which is the feel you get in Timbers dining room.  \\\\n\\\\nNice reno job on the building, which has a long history. Awesome rock fireplace in the dining room. \\\\n\\\\nHuge outdoor patio perfect for games (they have a lot) and happy hour (from 2-5 pm), or for lunch or casual dinner.  Bar is a bit loud but hey, it's a bar!  Bar seating can be little tight, which is more of an issue for us during Covid so we opted to sit outside. \\\\n\\\\nTimbers will definitely be a regular stop for us when in the area.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"\\\"Timber's Roadhouse\\\" is a popular restaurant located at 10 Winchester Canyon Rd, Goleta, CA. This establishment focuses on traditional American cuisine, offering a variety of dishes including barbeque, sandwiches, and steaks. Open from Tuesday to Sunday, 11 am to 9 pm, the restaurant offers both indoor and outdoor seating. It accepts reservations and is suitable for groups. Street parking is available. \\n\\nBased on customer reviews, the restaurant is highly regarded for its quality food, friendly service, and inviting atmosphere. Patrons have praised the menu's variety, which includes burgers, ribs, seafood, salads, and surprising items like Duck Confit and oxtail Mac-n-cheese. The burgers, made from a blend of chuck, brisket, and short rib meat, are particularly recommended. The restaurant also has a commendable wine list and a bar area with TVs. The establishment's ambiance is elevated by architectural features like a large fireplace in the dining room and a spacious outdoor patio. \\n\\nTimber's Roadhouse has an average rating of 4.0 stars, reflecting a generally positive customer experience.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "e3602d59bce2f1fdfc383c15a37e85247ccd38fdd821c222594f7c11b21edccc",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38
+  ]
+}

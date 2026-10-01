@@ -1,0 +1,101 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.3031036680331454,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:675948664dbfde0c101dfcaa665d3af449119633b1106caa4e0fc70209b6bdfe",
+  "input_tokens": 789,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 789,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 810
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:c6bd3d35bdba472ed7d99dc5000241b490a3a4a60fc0ac51fadd1cdd2e0bdb99",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885904,
+    "id": "chatcmpl-TaQNGPnPTPh1X5BwVujjLP3Mig7TO2C6",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 490.309,
+      "predicted_n": 21,
+      "predicted_per_second": 42.830133650412286,
+      "predicted_per_token_ms": 23.34804761904762,
+      "prompt_ms": 701.084,
+      "prompt_n": 711,
+      "prompt_per_second": 1014.1438115832055,
+      "prompt_per_token_ms": 0.9860534458509141
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 789,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 810
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"3855 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":null},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Food, Beer, Wine & Spirits, Specialty Food, Delis, Grocery, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"6:0-22:0\\\",\\\"Monday\\\":\\\"6:0-22:0\\\",\\\"Saturday\\\":\\\"8:0-21:0\\\",\\\"Sunday\\\":\\\"6:0-22:0\\\",\\\"Thursday\\\":\\\"6:0-20:0\\\",\\\"Tuesday\\\":\\\"6:0-23:0\\\",\\\"Wednesday\\\":\\\"6:0-23:0\\\"},\\\"name\\\":\\\"Bristol Farms - Santa Barbara\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-19 02:37:16\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Great quality of food, etc.\\\\n\\\\nHowever, when they first opened their sushi was the best, now the quality of their sushi has lowered a lot.. from great to ok.\\\\n\\\\nThere's some staff who take their job seriously and some who just don't care about selling great food of great quality.\\\\n\\\\nThey must fix their sushi quality to the way it used to be.\\\"},{\\\"review_date\\\":\\\"2022-01-17 05:38:03\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Great high quality Grocery store! From the bakery section, sushi bar, and the Poke bar...then the deli! It's a beautiful grocery store with all you could imagine!\\\"},{\\\"review_date\\\":\\\"2022-01-12 22:01:17\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Always clean and friendly place to shop. I shop here for a lot of my meat and vegetables.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Bristol Farms - Santa Barbara is a grocery store located at 3855 State St, Santa Barbara, CA. Open seven days a week, it offers an array of food, beer, wine, spirits, specialty food, deli items, and also operates as a restaurant. The business is praised for its quality food, cleanliness, and friendly staff. Customers particularly enjoy their bakery, sushi, and poke bar, as well as their deli. However, some reviews note that the quality of their sushi has declined. The store provides lot parking and is described as classy, although it does not offer outdoor seating, WiFi or music. It has an average rating of 3.5 stars.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "calibration",
+  "source_cluster_id": "10a49a706bc687324aef803161fc403db30fbd6c777ca379dd6b62e7ce76e572",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ]
+}

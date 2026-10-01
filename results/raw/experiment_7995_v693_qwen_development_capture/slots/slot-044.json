@@ -1,0 +1,106 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.2107953958911821,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:4cf94005bd586dec5a9dd7952b8a44db4a36f5cf10194a356624b4d2e0e8aaf3",
+  "input_tokens": 640,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 1,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 640,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 662
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:6c63558523ea86a78fcfe420978cde007aaa101ee369fea3bce02d2769a46195",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"unsupported_probability\": 0.0,\n\"source_sentence_id\": 1\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885894,
+    "id": "chatcmpl-OVM8Bx9J8QPGdtt4SI4hhxITVoMVMYIm",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 512.945,
+      "predicted_n": 22,
+      "predicted_per_second": 42.8895885523789,
+      "predicted_per_token_ms": 23.31568181818182,
+      "prompt_ms": 585.161,
+      "prompt_n": 562,
+      "prompt_per_second": 960.4194401198987,
+      "prompt_per_token_ms": 1.041211743772242
+    },
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 640,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 662
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:This tutorial explores the function of the nephron, in particular: Filtration, Reabsorption, Secretion and Excretion. This video explains the solutes involved and how they are processed by the nephron.his tutorial explores the function of the nephron, in particular: Filtration, Reabsorption, Secretion and Excretion. This video explains the solutes involved and how they are processed by the nephron.\\\\n\\\\npassage 2:Kidney Reabsorption. Once inside the lumen of the nephron, small molecules, such as ions, glucose and amino acids, get reabsorbed from the filtrate: 1  Specialized proteins called transporters are located on the membranes of the various cells of the nephron.2  These transporters grab the small molecules from the filtrate as it flows by them.y the end of the stream, most of the fish have been caught. This is what happens as the filtrate travels through the nephron. Two major factors affect the reabsorption process: 1  Concentration of small molecules in the filtrate-the higher the concentration, the more molecules can be reabsorbed.\\\\n\\\\npassage 3:Each nephron is made of a tubule and is responsible for \u2018cleaning\u2019 the blood by removing urea [urea: A nitrogenous waste product resulting from the breakdown of proteins. It is excreted in urine.] and excess water and mineral ions.How the kidney works.This process takes place in stages:ach nephron is made of a tubule and is responsible for \u2018cleaning\u2019 the blood by removing urea [urea: A nitrogenous waste product resulting from the breakdown of proteins. It is excreted in urine.] and excess water and mineral ions. How the kidney works. This process takes place in stages:\\\\n\\\\n\\\",\\\"question\\\":\\\"What is the purpose of reabsorption in the nephron\\\"}\", \"original_answer\": \"The purpose of reabsorption in the nephron is to take back in small molecules such as ions, glucose, and amino acids from the filtrate. This is facilitated by specialized proteins called transporters located on the membranes of the cells of the nephron. The process helps in 'cleaning' the blood by removing waste products like urea and excess water and mineral ions.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "calibration",
+  "source_cluster_id": "f13076f6eed6a26ed5c117bbdf629d906dcbdcbde4e229a0f0e5abae340af6b5",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ]
+}

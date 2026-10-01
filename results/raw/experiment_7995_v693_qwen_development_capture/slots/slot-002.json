@@ -1,0 +1,119 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.792796259978786,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:1a7c46f0874fbebfb9244127deb3e9ff9bf690fafaded0e14125074a980ae6f2",
+  "input_tokens": 1340,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1340,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1363
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:c80d6893dbfe146a016391be57f4f81ccc2018d22531f6325d6fcfa5c177d8f4",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885835,
+    "id": "chatcmpl-kLRziKUX5ejWKDq2miDWMCWgguR1G3lQ",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 534.108,
+      "predicted_n": 23,
+      "predicted_per_second": 43.062451788776805,
+      "predicted_per_token_ms": 23.222086956521736,
+      "prompt_ms": 1127.133,
+      "prompt_n": 1262,
+      "prompt_per_second": 1119.6549120645034,
+      "prompt_per_token_ms": 0.8931323296354993
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1340,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1363
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"6551 Trigo Rd\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Restaurants, Cafes, Bagels, Food\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"6:30-14:0\\\",\\\"Monday\\\":\\\"6:30-14:0\\\",\\\"Saturday\\\":\\\"6:30-14:0\\\",\\\"Sunday\\\":\\\"6:30-14:0\\\",\\\"Thursday\\\":\\\"6:30-14:0\\\",\\\"Tuesday\\\":\\\"6:30-14:0\\\",\\\"Wednesday\\\":\\\"6:30-14:0\\\"},\\\"name\\\":\\\"Bagel Cafe\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-04 01:37:53\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Took a stop in Isla Vista and was craving bagels. The wait was maybe 7-10 minutes before ordering but so worth it. This place had such a wide selection of bagel sandwiches that it was hard to settle with the Earth, Wind, and Fire Bagel Sandwich. It was AMAZING! One was enough to share for two people. I was able to choose which bagel I wanted and ended with the Galaxy bagel! The siracha added a nice touch. Would love to return here.\\\"},{\\\"review_date\\\":\\\"2021-12-23 17:50:50\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"Forgot to put bacon on bagel. I'm now very sad. Use this as a cautionary tale and do a bacon check before you leave! #Check4Bacon\\\"},{\\\"review_date\\\":\\\"2021-12-14 20:45:50\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"The owner really needs to hire new people or train his employees enough to know that they're at work and not in class. 12/14/2021 I order two bagels & two hot chocolates for pickup. We get there about 3 minutes before estimated pick up, as we walk in there is a blonde white girl with a bag on her shoulder who glanced at us and went right back on her phone. We ask if our order is ready which we didnt expect it to be but still asked, and she grabs my two bagels each wrapped in one wrapper and placed on a random counter and my two hot chocolates the same. I nicely ask if they can rewarm them since they were left out for God knows how long, with the purse on her shoulder still she continues to work and make sandwhiches. After warming up the hot chocolates she slams it on the counter, i say thank you and she rolls her eyes and walks away. I'm outside drinking some of the hot chocolate in the nice rainy weather enjoying my time and I hear some elementary school style gossip going on inside of the business. The employees are hurdled up as the girl is telling them \\\\\\\"oh they couldve warmed it up themselves \\\\\\\" and continued not only gossiping about a customer right infront of them but also trying to state that we as customers should be doing her job?? I then nicely go in and let her know to next time wait for the customers to leave and then talk about them and right away she starts going off telling me i dont give a **** i dont care you can warm your own **** up and ended it up with a nice F U. As a business owner myself this is just embarrasing for the owner and knowing owners check their yelp reviews i know you'll see this. Extremely unproffesional and rude behavior and the county needs to go check on this business, employees watching tiktoks while customers are inside, slamming drinks and gossiping, working while having a purse on your shoulder. That absolutely flabbergasted me like seriously hire workers not jokes and clowns. Great bagels though !!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Bagel Cafe, located at 6551 Trigo Rd in Goleta, CA, is a popular local business known for its wide selection of bagels and sandwiches. Open daily from 6:30 am to 2:00 pm, it is categorized under Restaurants, Cafes, Bagels, and Food. While the cafe does not offer Wi-Fi or music, it does provide outdoor seating and is suitable for groups. There is no valet or street parking, but a parking lot is available. The cafe has a casual ambiance and does not accept reservations. Judging by the customer reviews, the quality of the bagels and sandwiches is highly rated, with particular praise for the Earth, Wind, and Fire Bagel Sandwich. However, there are mixed comments about the service, with some customers reporting poor customer service and issues with order accuracy. Despite these concerns, the Bagel Cafe has an overall rating of 4 stars.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "calibration",
+  "source_cluster_id": "68941f3fc2905f610b6c474b9e76a33d36445ff0ee8591f5a089b7633a1f0e7d",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22
+  ]
+}

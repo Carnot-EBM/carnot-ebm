@@ -1,0 +1,115 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.6291256539989263,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:cc0b4556972a9d0ab83a720d000e9d266e7bacb446853f124d71a411693b7b5f",
+  "input_tokens": 1122,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 1122,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1143
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:7c5013813d487d18ca926f00322b6fbba1e2d4474c447697bf3a8c30cd38a0e5",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886139,
+    "id": "chatcmpl-9gvr73OFnA5pxzGT0Wta2d3pS0AY9RVH",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 493.746,
+      "predicted_n": 21,
+      "predicted_per_second": 42.53199013257829,
+      "predicted_per_token_ms": 23.511714285714284,
+      "prompt_ms": 1017.818,
+      "prompt_n": 1044,
+      "prompt_per_second": 1025.7236558991883,
+      "prompt_per_token_ms": 0.9749214559386973
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 1122,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1143
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"175 N Fairview Ave\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":2.0,\\\"categories\\\":\\\"Delis, Drugstores, Restaurants, Food, Shopping, Grocery, Bakeries\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"6:0-0:0\\\",\\\"Monday\\\":\\\"6:0-0:0\\\",\\\"Saturday\\\":\\\"6:0-0:0\\\",\\\"Sunday\\\":\\\"6:0-0:0\\\",\\\"Thursday\\\":\\\"6:0-0:0\\\",\\\"Tuesday\\\":\\\"6:0-0:0\\\",\\\"Wednesday\\\":\\\"6:0-0:0\\\"},\\\"name\\\":\\\"Haggen Food & Pharmacy\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2015-11-02 06:05:33\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Went in after the change from Vons for some whole wheat flour and was surprised that the flour was over $8 for 5 pounds. Next time I went to Smart and final and the King Arthur flour is $3.99 regular price. I live in Goleta so next time I went back to Haggens to compare and they had the King Arthur flour for $6.49 with 20% off which is still $5.15. I have been shopping in the same store since the Safeway opened in the 60's but I am done now with this kind of price increase.\\\"},{\\\"review_date\\\":\\\"2015-10-26 10:12:53\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"I decided to give this Haggen location a chance. I walked into an mostly empty store. I notice some items that have been marked down in the deli due to product expiring the same day. I take it up to the register. The store manager was at the register. She refused to honor the discount on the packaging and said it was a mistake. Haggen, you can keep your expired food!\\\"},{\\\"review_date\\\":\\\"2015-10-22 07:50:28\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Really? I know you're going out of business Haggen but you expect me to pack my own groceries now? \\\\n\\\\nNow, even though I am an educated professional on a 6+ figure salary, I am not above stuffing some groceries in a shopping bag. It's obviously not difficult. However, if you want me to do your job for you, you've got to be nice to me. Last time I was in the store the portly middle aged man just threw my groceries onto the conveyer belt and left them to pile up at the end. He never acknowledged my existence except to grunt the total to me. \\\\n\\\\nYou can either pack my damn groceries or I walk out next time. Not sorry you'll soon be out of a job if that's the level of \\\\\\\"service\\\\\\\" you provide. Pfft.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Haggen Food & Pharmacy is a grocery store located in Goleta, CA at 175 N Fairview Ave. The store offers a range of products in various categories including delis, drugstores, restaurants, food, shopping, grocery, and bakeries. The store is open seven days a week from 6:00am to midnight. It offers restaurants reservations, takeout, outdoor seating, and group dining, but does not provide wifi or music. The ambiance is not particularly distinctive, with no particular style or atmosphere highlighted. However, customer reviews suggest there are issues with the store's pricing and customer service. Some customers found their product pricing to be too high, with one customer noting a significant price increase on flour. Other customers have had negative experiences with the staff, including instances where discounts weren't honored and poor customer service at the checkout. Overall, the business has a 2-star rating.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "8e8360d41c336a47ed5d7ea9fd389aab372271eec19d5dd5b35465ae1c31a7c1",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18
+  ]
+}

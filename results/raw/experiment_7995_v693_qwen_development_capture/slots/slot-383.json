@@ -1,0 +1,115 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.584608149016276,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:e4579db9b4756a627495ecbe52fe1a6b0f98b8e7105d432b8c5b8c67d24853d7",
+  "input_tokens": 1026,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1026,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1049
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:53d2b08917d3ce88cb063de571f7edb68cd5da797717b19343dab5f6b6014d99",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886391,
+    "id": "chatcmpl-sPRKTabQYj2Genv7MQVNygzoEGd8KYER",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.078,
+      "predicted_n": 23,
+      "predicted_per_second": 42.507734559527464,
+      "predicted_per_token_ms": 23.525130434782607,
+      "prompt_ms": 932.623,
+      "prompt_n": 948,
+      "prompt_per_second": 1016.487905616739,
+      "prompt_per_token_ms": 0.9837795358649789
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1026,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1049
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"5112 Hollister Ave\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":null,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":3.0,\\\"categories\\\":\\\"Restaurants, Barbeque\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-20:0\\\",\\\"Monday\\\":\\\"11:0-20:0\\\",\\\"Saturday\\\":\\\"11:0-20:0\\\",\\\"Sunday\\\":\\\"11:0-20:0\\\",\\\"Thursday\\\":\\\"11:0-20:0\\\",\\\"Tuesday\\\":\\\"11:0-20:0\\\",\\\"Wednesday\\\":\\\"11:0-20:0\\\"},\\\"name\\\":\\\"Woody's BBQ\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-10-13 19:50:19\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Closed, after 39 years!  RIP Woody's. Bodacious!\\\\n\\\\nAlways a fun eclectic atmosphere and great energy and bountiful comfort food . I'll miss Woody's. And I'm vegetarian! Yummy fries. \\\\n\\\\nA lot of history. I used to go to the location on Montecito Street. They were always at festivals, too. \\\\n\\\\nDo you remember when the Goleta location was Flapper Alley? The old logo is still on the windows. \\\\n\\\\nThe owners are opening a new restaurant at the old Timbers location\\\"},{\\\"review_date\\\":\\\"2021-10-10 19:53:31\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Been coming here more than a decade, found out it's closing down. Offerings are slim, but swing by and get it while you can!\\\"},{\\\"review_date\\\":\\\"2021-08-26 19:47:15\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"We need last minute small catering (15 people) planned for a corporate summer event and found Woody's here on yelp. I was a little hesitant because some of the reviews, but I am so glad we went with Woody's. Kim was extremely helpful in planning our event even with only 2 days lead time. She was efficient, friendly, and made sure we had what was needed for our small event. Food was delivered timely and it was hot and delicious. The tri-tip and ribs were a hit and there was tons of food provided (and leftovers) for what we chose. I would definitely choose Woody's for both a casual get together or another corporate event.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"\\\"Woody's BBQ\\\" is a well-loved local barbeque restaurant located at 5112 Hollister Ave, Santa Barbara, CA. It is known for its fun, eclectic atmosphere, great energy, and bountiful comfort food. Despite the lack of Wi-Fi, the restaurant offers outdoor seating and is good for groups. The restaurant does not accept reservations and operates on a casual ambiance. It offers ample parking in its lot and also provides a takeout service. The restaurant is open from 11:00 to 20:00 from Monday to Sunday. Despite some mixed reviews, customers have praised the quality of the food, particularly the fries, tri-tip, and ribs. However, the restaurant, which had been operational for 39 years, has recently closed. In its place, the owners are set to open a new restaurant at the old Timbers location.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "5b12a463995fa943fccc3818f8e3e29a192d3767ffdaa63aa3d2a8473cbd4acc",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18
+  ]
+}

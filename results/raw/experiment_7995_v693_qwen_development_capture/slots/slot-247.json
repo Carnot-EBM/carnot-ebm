@@ -1,0 +1,110 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.2510832470143214,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:46547b76f049141f3619f2ef6d4ec7234330b6b41b095159def6e323e8f7d46a",
+  "input_tokens": 616,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 616,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 639
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:481661f191f74d15a4ab8a2d980fad832adac1c153f2056689606323a73aa24d",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886191,
+    "id": "chatcmpl-jlfznJGMgADx6y6aerA0O0ukWzWieXmx",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.01,
+      "predicted_n": 23,
+      "predicted_per_second": 42.5130773922848,
+      "predicted_per_token_ms": 23.522173913043478,
+      "prompt_ms": 577.338,
+      "prompt_n": 538,
+      "prompt_per_second": 931.8631373649406,
+      "prompt_per_token_ms": 1.0731189591078065
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 616,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 639
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Here is my version of Laundry for Dummies in Seven Easy Steps: 1  Teach the kids to separate their clothes into different groups. The most basic groups are lights and darks, while those can be broken down even further into bright colors, reds, etc. 2  Teach them that washing in cold water is right for colors and hot water is needs for whites. Get them to separate sheets and towels from clothes and to wash and dry them separately. Explain why it's necessary to wash the laundry in different groups.\\\\n\\\\npassage 2:Simply make a cup of soap nut 'tea' by soaking 4 or 5 bagged soap nuts in a cup of very hot water for approximately 3 minutes. Pour both the soap nuts liquid and bag in wash. Remove from washer at end of the wash to dry (leave soap nuts in bag). Re-use 3 to 5 times. Soap nuts are no longer effective when they thin, turn soft, mushy and very light tan or gray.\\\\n\\\\npassage 3:Intro: How to Do Your Own Laundry (basic) Time to complete: Approximately 45 mins. You need: a. Dirty clothes b. Any liquid laundry detergent c. A washing machine (connected to power and water) d. The desire ...\\\\n\\\\n\\\",\\\"question\\\":\\\"how to do laundry directions\\\"}\", \"original_answer\": \"First, separate your clothes into different groups such as lights and darks. These can be further broken down into bright colors, reds, etc. Also separate sheets and towels from clothes and wash and dry them separately. Once separated, you can wash them using soap nuts or any liquid laundry detergent. If you're using soap nuts, make a cup of soap nut 'tea' by soaking 4 or 5 bagged soap nuts in a cup of very hot water for approximately 3 minutes. Pour both the soap nuts liquid and bag in wash. Remove from washer at end of the wash to dry. You can re-use the soap nuts 3 to 5 times. Remember, washing in cold water is right for colors and hot water is needed for whites.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "c952fc35d705cd4019c02e830491800fe33b878bae32e2ae5b169a185624f2a4",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ]
+}

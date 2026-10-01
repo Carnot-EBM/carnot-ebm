@@ -1,0 +1,107 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.3111618160037324,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:76f8ce592c22b478da54361fe2bcd591f910d85c923c48003d18f757de14b578",
+  "input_tokens": 698,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 3,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 698,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 722
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:6acc2aebba54f0a56a07e92cf5d653978d60302c49a1be0095d6437bef1e1f7d",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 3\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885981,
+    "id": "chatcmpl-6UO2YbWLFFnZsM7mXFYlMqxCSWB77Isg",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.923,
+      "predicted_n": 24,
+      "predicted_per_second": 42.48366591553185,
+      "predicted_per_token_ms": 23.538458333333335,
+      "prompt_ms": 630.521,
+      "prompt_n": 620,
+      "prompt_per_second": 983.3137992231822,
+      "prompt_per_token_ms": 1.0169693548387095
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 698,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 722
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Teachers refer to rimes as phonograms or word families when they teach them, even though phonogram is a misnomer; by definition, a phonogram is a letter or group of letters that represent a single sound. Two of the rimes, -aw and-ay, represent single sounds, but the other 35 don\u2019t.ne-syllable words and syllables in longer words can be divided into two parts, the onset and the rime: The onset is the consonant sound, if any, that precedes the vowel, and the rime is the vowel and any consonant sounds that follow it.\\\\n\\\\npassage 2:Definition of PHONOGRAM. 1. : a character or symbol used to represent a word, syllable, or phoneme. 2.: a succession of orthographic letters that occurs with the same phonetic value in several words (as the ight of bright, fight, and flight).. : a character or symbol used to represent a word, syllable, or phoneme.\\\\n\\\\npassage 3:A phonogram is a letter (or series of letters) that stands for a sound, syllable, syllable part (rime), or series of sounds. Phonograms are often referred to as word families. The words sunk, chunk, and trunk belong to the same word family because they contain the ending-unk.In these three words the ending-unk is a phonogram; it is also the rime. A relatively small number of phonograms can be used to generate a large number of words.Wylie and Durrell (1970) point out that nearly 500 primary-grade words can be derived from 37 \u201crhyming\u201d phonograms.honograms are often referred to as word families. The words sunk, chunk, and trunk belong to the same word family because they contain the ending-unk. In these three words the ending-unk is a phonogram; it is also the rime.\\\\n\\\\n\\\",\\\"question\\\":\\\"what is phonogram words\\\"}\", \"original_answer\": \"Phonogram words are words that contain a letter or group of letters representing a sound, syllable, or series of sounds. These are often referred to as word families. For example, the words sunk, chunk, and trunk belong to the same word family because they contain the ending-unk, which is a phonogram. A phonogram can also be a character or symbol used to represent a word, syllable, or phoneme. A relatively small number of phonograms can generate a large number of words.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "8665db7718e9b57641683f0c44e4c3b708a445694c623a2dc59fd1175ffd3e9b",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ]
+}

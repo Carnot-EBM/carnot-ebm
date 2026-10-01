@@ -1,0 +1,133 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.8127389500150457,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:8ec8b434ec21ae75625601ff9d650bbaa6ac3f1df8a7d28d712a52d7e6a31a15",
+  "input_tokens": 1329,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1329,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1352
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:55c5b76eba36f2454fa61e7a8735f35ecbac221e576e0a342c501e5e057ff2b7",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886280,
+    "id": "chatcmpl-gcajFTN3W7iGBzMat1IPCmN6Dgzy9LfG",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 542.342,
+      "predicted_n": 23,
+      "predicted_per_second": 42.40866464334313,
+      "predicted_per_token_ms": 23.58008695652174,
+      "prompt_ms": 1152.559,
+      "prompt_n": 1251,
+      "prompt_per_second": 1085.4108119410807,
+      "prompt_per_token_ms": 0.9213101518784972
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1329,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1352
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"3325 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":null,\\\"street\\\":null,\\\"valet\\\":false,\\\"validated\\\":null},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":null},\\\"business_stars\\\":3.0,\\\"categories\\\":\\\"Delis, Restaurants, Fast Food, Sandwiches\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"10:0-18:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"10:0-21:0\\\",\\\"Sunday\\\":\\\"10:0-15:0\\\",\\\"Thursday\\\":\\\"10:0-18:0\\\",\\\"Tuesday\\\":\\\"10:0-18:0\\\",\\\"Wednesday\\\":\\\"10:0-21:0\\\"},\\\"name\\\":\\\"Jersey Mike's Subs\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-10-09 01:17:02\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"Seriously are you guys in business or not ?  No one ever answer phone and orders take so long if you waiting on them to be made so ... I try to call ahead esp when I've a large order. But no one answer ever. \\\\nI'm not gonna blame the kids who work there bc ... they're kids but what is up with the manager/ owner. \\\\nI mean read your reviews and get your business together. Or if you can really afford to not care about the money you make ... we'll then keep at it\\\\n\\\\nSo just waited in line for 15 mins to place the order. God knows how long it will take to make. \\\\nI would say that no one ever answers the phone bc your too busy / understaffed... but actually I've sat in car before outside and called with only employees in shop and .... Still no one picks up the call.\\\\n It's simple order prevention. Why answer the phone when it means you'll have to make stuff ... Especially if you're just getting paid by the hour whether your busy or not. \\\\nHey why not just sell the place if you don't care about the success $$ or quality of service. I'm sure there are plenty of others who would love to maximize the business\\\"},{\\\"review_date\\\":\\\"2021-08-30 02:27:02\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"This is by far the worst Jersey mikes I have ever been to. The service is terrible. They are constantly messing up my order and it takes forever to get your food. I will not be coming again and I hope you won't make the same mistake I did.\\\"},{\\\"review_date\\\":\\\"2021-08-05 22:23:05\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"The Turkey Applewood sandwich/sub was delicious. Unfortunately, their standards and service were very unsatisfactory. I couldn't continuing eating there. I was disgusted by their service. I was new and they knew I was new, but they didn't care whatsoever.\\\\n\\\\nFirst, I was disappointed the regular size sandwich wasn't cut in 1/2. I've never experienced it not being cut without having to ask. Anyway, the 3 size sandwiches were displayed with each of them cut. I asked for the sandwich to be cut after I took it out of the packaging. They refused. They said it's considered a special request/order.\\\\n\\\\nIf you're looking for customer service, they don't offer it, such as, how a sandwich store should be: don't expect any of the below:\\\\n'Hi! Welcome to our store. What sub would you like? Would you like it cut in 1/2? Would you like any condiments? Would you like a drink? Would you like chips? Would you like anything else? Is there anything else we can help you with?'\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Jersey Mike's Subs is a fast food restaurant specializing in sandwiches and deli items, located at 3325 State St, Santa Barbara, CA. The restaurant is open every day, with varying hours from 10:00 a.m. to as late as 9:00 p.m. While the establishment offers takeout and is suitable for groups, it does not offer outdoor seating, Wi-Fi, or music, and does not validate parking. Customer reviews indicate dissatisfaction with the service, often citing long wait times for orders, poor phone service, and subpar treatment from staff. The restaurant's overall rating is 3 stars. Despite some positive comments about the food, the lack of customer service appears to be a significant issue at this location.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "552abd728b2107d33390b24566bd9565e73fafcc462538d9714562fc92352afc",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36
+  ]
+}

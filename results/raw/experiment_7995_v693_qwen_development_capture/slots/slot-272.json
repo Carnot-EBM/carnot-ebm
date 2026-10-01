@@ -1,0 +1,122 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.6541075569111854,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:acfccc4e065ef0f4e74ca535a7b7674fb82503bd80ac9214300989314a8ad20f",
+  "input_tokens": 1089,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1089,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1112
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:8d133b2a99ba361fe666a223fa6f6618e836e76a63b8e0eec9244253f0eed90e",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886228,
+    "id": "chatcmpl-AeGOEDlTzpwXBgQ2sqiU20Y1UigzA0fT",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 542.249,
+      "predicted_n": 23,
+      "predicted_per_second": 42.415938065353735,
+      "predicted_per_token_ms": 23.57604347826087,
+      "prompt_ms": 970.826,
+      "prompt_n": 1011,
+      "prompt_per_second": 1041.381256785459,
+      "prompt_per_token_ms": 0.9602631058358062
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1089,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1112
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"London (CNN)Congolese immigrant Tarsis Mboma Thale has a small business selling T-shirts in Johannesburg, South Africa. Thale's job normally requires him to walk the streets of the city he has called home for the past few years. But at the moment, he says, this is not an option. Because he is simply too afraid. The reason is a wave of anti-immigrant violence that has swept the country in recent days, leaving several dead as authorities scrambled to detain those responsible and prevent further bloodshed. The cause of this surge in violence is murky, with some blaming alleged inflammatory comments about foreign nationals from the Zulu king, local media reported, others saying a labor dispute between locals and foreigners back in March turned nasty. Unemployment in impoverished areas has also been a factor. The violence has caused thousands of immigrants to seek refuge at police stations and shelters. Thale fears he'll be attacked if he goes to work. \\\"I'm scared to go to town because I do not know when these people can attack and it's stressful for me,\\\" he told CNN. \\\"We're close to month end -- how am I going to pay the rent and feed my wife?\\\" CNN spoke to several immigrants living and working in South Africa about the crisis, which has caused South African President Jacob Zuma to postpone an overseas visit and left authorities scrambling to prevent further clashes. On Tuesday the country's Defense Minister said South Africa would deploy troops to areas where police spread too thin in order to halt the attacks. Zimbabwe immigrant Stanley Ndlovu says he is so frightened he dare not venture outside, not even to go to the local mall. He works in Johannesburg as a cleaner and gardener, and also runs a small tuck shop where workers can buy food and basic supplies at his place of work. It's a role he hears many South Africans say should belong to them alone. He feels the South African government has been far too slow to respond to the violence, which has erupted intermittently in various cities over the past few years. \\\"To stop violence they need to arrest and sentence the perpetrators,\\\" he says. Meanwhile, Eric Kalonji left the Democratic Republic of Congo and arrived in the South African capital in 2012, working as a waiter until the restaurant he worked at closed in January. Now devoting himself to his studies in New Zealand, he feels that the situation in South Africa is more complex than a simple case of \\\"us versus them.\\\" He believes the blame lies heavily on what he calls the government's failure to provide its people with jobs and education. \\\"This xenophobia thing is the result of a deeper malaise (in) South Africans\\\" he says. \\\"A better policy from the government should be empowering the people with wider access to education so that they will qualify for the jobs that they say they deserve.\\\" OPINION: Labeling South Africa turmoil 'xenophobia' scapegoats poor blacks. Kodwo Amissah Benyi, a hotel receptionist originally from Ghana, now lives in the town of Louis Trichardt in South Africa's Limpopo province. He's far from the worst of the violence, but still close enough to follow the news with alarm. \\\"I fear it may spread because I don't know what may spark unrest,\\\" he said. However he praised the government's response to the attacks. \\\"The government is in crisis mode and Pretoria (the South African government) is responding well by verbally condemning the attacks and showing force on the ground,\\\" he said.\\n\", \"original_answer\": \"Anti-immigrant violence in South Africa is on the rise, causing thousands of immigrants to seek refuge in police stations and shelters. The cause of the violence is unclear, with some blaming inflammatory comments about foreign nationals from the Zulu king and others attributing it to a labour dispute between locals and foreigners in March. Unemployment in impoverished areas is also believed to be a factor. Immigrants who make their living in South Africa are afraid to go to work for fear of being attacked. The violence has led to South African President Jacob Zuma postponing an overseas trip and the country's Defense Minister deploying troops to areas where violence is rampant. Immigrants feel the government has been slow to respond and that more arrests and sentences for perpetrators of violence are needed.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "ee2382d404c3ed456d824f10a2c7a431bbfb7bd9007fd1b974a42ef42efd400a",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25
+  ]
+}

@@ -1,0 +1,150 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.9421123838983476,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:7f90fde1a2e6208dbd2477a32bdf25e8e3c169180a97e70f61f09402e1b4ad99",
+  "input_tokens": 1465,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1465,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1488
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:639504a732d495bc014d0544c417bfdb3a735b770264f710ed9782ddd850d84c",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886230,
+    "id": "chatcmpl-iDvyH7vrtQnvUA3sTiEg8oilwGdLeFjM",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 542.475,
+      "predicted_n": 23,
+      "predicted_per_second": 42.39826720125351,
+      "predicted_per_token_ms": 23.585869565217394,
+      "prompt_ms": 1261.273,
+      "prompt_n": 1387,
+      "prompt_per_second": 1099.6826222395946,
+      "prompt_per_token_ms": 0.9093532804614275
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1465,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1488
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Panic. Tears. Fear. All those feelings and more permeated cities, villages and camps around Nepal on Saturday, after a massive 7.8 magnitude earthquake struck around midday. Hours later, after a wave of relentless aftershocks, many people still were too scared to go back inside any buildings. Others crowded around rubble, including men and women racing to rescue those trapped. And then there are the hundreds already confirmed dead, not to mention the hundreds more who suffered injuries. Below are some accounts from witnesses in the mountainous Asian nation, in their own words. Fast Facts: Earthquakes. Anderson, an American who was in Nepal for trekking and meditation, was in his hotel room when the quake struck. \\\"I went outside five minutes after the major tremors stopped. I went to a parking lot nearby for one hour or so, then walked down the main road,\\\" he said. He took a series of photos on the main road between Thamal and Durbar Squares, that he shared via CNN iReport. Kumar posted a photo of people in his neighborhood sheltering in a makeshift tent after the quake. He sent updates via Twitter about what he was seeing in the Lalitpur District of Kathmandu. \\\"It's getting dark, no power and no water supply in Lalitpur area, but people are helping each other with food and other items. \\\"Almost everyone staying outside home...Hard time for small kids & older people. \\\"People are very worried & are planning to stay out on the street overnight, but they lack sufficient food & water.\\\" Joshi is a UNICEF communication officer who was on the ground at the time of the quake. \\\"The shake was like nothing I have experienced in my 57 years. It was strong and it shook for a long time.\\\" Old monuments and temples fell, Joshi wrote of his experience. There were fears that other buildings would collapse. \\\"When I went out in the evening, I saw many people preparing to camp out in the main open parade ground in the middle of the street. Relatives were crying in the main government hospital where the dead were being lined up in front of the hospital building. \\\"My family is traumatised. We are 5 generations living under one roof -- from a 100 year old grandmother to my 16 month old granddaughter. Strong aftershocks are keeping most of us up!\\\" \\\"Some of the historical sites are completely devastated. \\\"Most of the people -- a lot of the people -- are walking through the city. They're confused and scared. A lot of people are crying. \\\"They're out with their pets and their families and a lot of locals are volunteering in rescue operations. \\\"In several parts of Kathmandu, a lot of people seem trapped under the rubble. Locals are trying to rescue these people because they can still hear them.\\\" Are you in Nepal or have loved ones affected? Please share with us if you are in a safe place. \\\"We are scared and waiting for the tremors to end. We are all sitting outside because there is more news of another quake. \\\"There is no power and families are listening to the FM radio inside their cars. News of multiple building collapses. \\\"I've seen many cracked walls and roads and buildings. \\\"The Dharahara was packed with people a while ago. There are police everywhere trying to move rubble to make space on the roads for ambulances. Everyone is very scared. \\\" \\\"I see many cracked buildings and people are panicked and all running down to the streets. \\\"The main landmark in Kathmandu is a spire, Dharahara, and it has fallen down, it is about 140 feet high in the center city. \\\"Another aftershock is hitting now, it is really strong. \\\"Airplanes are circling now overhead and helicopters are flying and not clear if the airport is open.  We hear it is damaged.\\\" How are earthquakes measured? \\\"Many historic buildings have collapsed in the city. \\\"In all my years I have never seen such a big earthquake here. \\\"There are sometimes small shaking, sometimes bigger but this is the worst and my home has been cracked and it is a relatively strong house.\\\" \\\"Around where I am, people are in open spaces. There have been several aftershocks, I think they're all waiting, hoping they know what to do. \\\"You can see glass walls, portions of buildings and cracks in the building. People are confused. they're staying out in the open.\\\" Can wild animals help us predict earthquakes? CNN's Mariano Castillo, Henry Hanks and Greg Botelho contributed to this report.\\n\", \"original_answer\": \"A 7.8 magnitude earthquake hit Nepal on Saturday, causing panic and fear as cities, villages and camps were affected. The quake was followed by another strong aftershock, and many people were too scared to go back inside any buildings. Rescue operations began quickly with locals volunteering to help those trapped in the rubble. So far hundreds of people have already been confirmed dead, and many more have suffered injuries. The earthquake and its aftershocks have also caused significant structural damage to buildings and infrastructure, including the collapse of historic buildings and landmarks. There are widespread power outages and water supply issues, and many people are planning to stay out on the street overnight due to fear of further aftershocks. The situation is particularly difficult for the elderly and for young children, and there are concerns about a lack of sufficient food and water. The earthquake is the worst to hit the region in many years.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "239dae46dd8c7cb59ed01afa507a5560a08191ef61861d201d0668d13c7f771a",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51,
+    52,
+    53
+  ]
+}

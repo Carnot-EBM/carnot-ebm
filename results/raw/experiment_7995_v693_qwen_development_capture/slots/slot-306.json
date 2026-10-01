@@ -1,0 +1,104 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.21301346400287,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:42e7c3d73a4ffb486f0d1c56a64a34a9a5ddf82ee6cbb5ad55fd8c1b1e5a2400",
+  "input_tokens": 631,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 1,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 631,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 653
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:d9accb2613652d5ee03977b8d5a04f141c5bc4e7a040a3649cda45d081719ff5",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"unsupported_probability\": 0.0,\n\"source_sentence_id\": 1\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886278,
+    "id": "chatcmpl-zmOsWvm5P8C42N9ubXzSQwNfxIyhRAfY",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 516.828,
+      "predicted_n": 22,
+      "predicted_per_second": 42.56735316198039,
+      "predicted_per_token_ms": 23.492181818181816,
+      "prompt_ms": 587.963,
+      "prompt_n": 553,
+      "prompt_per_second": 940.5353738245435,
+      "prompt_per_token_ms": 1.0632242314647378
+    },
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 631,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 653
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Phosphorus is the most abundant mineral found in the body, next to  calcium. Almost 85 percent of the phosphorus in the body is located  in the teeth and bones. Phosphorus i \u2026 s also found in cells and  tissues throughout the body.hosphorus is an essential mineral that is usually found in nature combined with oxygen as phosphate.\\\\n\\\\npassage 2:Next to calcium, phosphorus is the most abundant mineral in the body. These 2 important nutrients work closely together to build strong bones and teeth. About 85% of the body's phosphorus is in bones and teeth.Phosphorous is also present in smaller amounts in cells and tissues throughout the body.Phosphorus helps filter out waste in the kidneys and plays an essential role in how the body stores and uses energy. It also helps reduce muscle pain after a hard workout.hen there is more phosphorus than calcium in the body, the body will use calcium stored in bones. This can cause osteoporosis (brittle bones) and lead to gum and teeth problems. A balance of dietary calcium and phosphorus can lower the risk of osteoporosis.\\\\n\\\\npassage 3:Most of the phosphate in the human body is in bone, but phosphate-containing molecules (phospholipids) are also important components of cell membranes and lipoprotein particles, such as HDL and LDL (good and bad cholesterols, respectively).hosphorus is an essential mineral that is usually found in nature combined with oxygen as phosphate.\\\\n\\\\n\\\",\\\"question\\\":\\\"what does phosphorus do to the human body\\\"}\", \"original_answer\": \"Phosphorus is the second most abundant mineral in the human body, with about 85% of it found in the bones and teeth. It works closely with calcium to build strong bones and teeth. In addition to this, phosphorus is found in cells and tissues throughout the body, and plays a crucial role in filtering out waste in the kidneys and in how the body stores and uses energy. It also helps to reduce muscle pain after intense physical activity. However, an imbalance of phosphorus and calcium in the body can lead to health problems such as osteoporosis, as well as gum and teeth issues. Therefore, maintaining a balanced dietary intake of calcium and phosphorus is important.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "7977e64416a95fc8a3578141cadcddfc3940aed0fa9773b3a7a94152cba2bbaa",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ]
+}

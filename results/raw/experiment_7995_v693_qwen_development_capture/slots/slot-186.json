@@ -1,0 +1,107 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.4329221290536225,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:720ebe25080088cda5fe187a22fbd646321a76a49be41e54a132fcb25b74b660",
+  "input_tokens": 860,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 860,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 881
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:f4c36eae6e11851ff59cfa8ee171a12a20507f2c2ffe90fa69bec3ecbb3f79f2",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886102,
+    "id": "chatcmpl-3GsYnHdwYBrYCXE74hcwJeCyciBW56mq",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 492.876,
+      "predicted_n": 21,
+      "predicted_per_second": 42.607065468799455,
+      "predicted_per_token_ms": 23.470285714285712,
+      "prompt_ms": 822.021,
+      "prompt_n": 782,
+      "prompt_per_second": 951.3138958737064,
+      "prompt_per_token_ms": 1.0511777493606138
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 860,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 881
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"298 Pine Ave\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Restaurants, Mexican\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-22:0\\\",\\\"Monday\\\":\\\"11:0-21:0\\\",\\\"Saturday\\\":\\\"9:0-21:0\\\",\\\"Sunday\\\":\\\"9:0-21:0\\\",\\\"Thursday\\\":\\\"11:0-21:0\\\",\\\"Tuesday\\\":\\\"11:0-21:0\\\",\\\"Wednesday\\\":\\\"11:0-21:0\\\"},\\\"name\\\":\\\"La Hacienda\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2016-05-16 06:05:32\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"This place has good mexican food ive tried their sopes and their great last time i went i ordered aguachiles and it was horrible I recommend this place although dont order aguachiles\\\"},{\\\"review_date\\\":\\\"2016-02-02 22:30:44\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"I've enjoyed a good mexican meal and margarita here. The place was hopping on a Saturday evening with Karaoke for the Goleta locals. I brought my daughter and she was able to sing, too. Brian has a great selection of music and it was fun to be out on the patio enjoying a beer while watching people get up and sing. The patio has heaters and good seating. Karaoke was very popular so we had to leave before our next shot at the mic.  I will come back for more!\\\"},{\\\"review_date\\\":\\\"2016-01-28 03:05:38\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Most authentic Mexican food I've had in SB! The tortillas were handmade & the salsa was to die for. The food was super delicious, and the venue itself was cozy. Definitely coming back and taking my family when they come to visit me. Definitely recommend!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Located at 298 Pine Ave, Goleta, CA, 'La Hacienda' is a Mexican restaurant that is open every day of the week, with extended hours on Fridays. The restaurant offers on-lot parking, accepts reservations, and provides free Wi-Fi. It also has outdoor seating and is suitable for group dining. However, do note that the ambiance is casual. Based on customer reviews, the Mexican food at La Hacienda is highly recommended, with special mention of their handmade tortillas, salsa, and sopes. The restaurant also seems to attract a lively crowd on Saturdays with karaoke for the locals. However, one customer advised against ordering the aguachiles. The restaurant has an average rating of 4.0 stars.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "e2923173b920ba3e8a77c5c4c955ccc072e7087f1f51c09be3d5836fc88e0103",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ]
+}

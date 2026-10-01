@@ -1,0 +1,48 @@
+{
+  "candidate": {
+    "path": "/tmp/carnot-7995-vv810c9j/transcript/candidate.json",
+    "sha256": "sha256:f76aae53b1eeca2dcf335d71ce87adefb781eade836e0fbc4e99f425886b7370"
+  },
+  "classifier": {
+    "declared_substrate": "live_llm_inference",
+    "external_evidence": [],
+    "has_compute_markers": true,
+    "live_evidence": [
+      {
+        "field": "generation_calls_attempted",
+        "path": "model_invocation_counts.generation_calls_attempted",
+        "scope": "current_task",
+        "signal": "invocation_count",
+        "value": 4
+      },
+      {
+        "field": "generation_calls_completed",
+        "path": "model_invocation_counts.generation_calls_completed",
+        "scope": "current_task",
+        "signal": "invocation_count",
+        "value": 4
+      },
+      {
+        "field": "model_loads_attempted",
+        "path": "model_invocation_counts.model_loads_attempted",
+        "scope": "nested_unattributed",
+        "signal": "invocation_count",
+        "value": 1
+      },
+      {
+        "field": "model_loads_completed",
+        "path": "model_invocation_counts.model_loads_completed",
+        "scope": "nested_unattributed",
+        "signal": "invocation_count",
+        "value": 1
+      }
+    ],
+    "negative_evidence": [],
+    "reason": "live_substrate_claim",
+    "state": "live_inference",
+    "substrate_kind": "live_model",
+    "substrate_source": "top_level_inference_substrate"
+  },
+  "passed": true,
+  "scope": "private_scripted_transport"
+}

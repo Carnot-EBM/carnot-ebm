@@ -1,0 +1,111 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.2357466759858653,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:5dc93b2459d4283e973a254d8b832cb909069f29ae7a801671b074284526d42b",
+  "input_tokens": 623,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 623,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 646
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:f2875f2206917e01abc0de80294098ab406055ce6dd680ae8bd374dd3546e5e1",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886120,
+    "id": "chatcmpl-Icgo7cMBlhudp7MREcRQD4GMC7KrjNBQ",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.848,
+      "predicted_n": 23,
+      "predicted_per_second": 42.52581131852203,
+      "predicted_per_token_ms": 23.515130434782606,
+      "prompt_ms": 582.909,
+      "prompt_n": 545,
+      "prompt_per_second": 934.9658351475101,
+      "prompt_per_token_ms": 1.0695577981651376
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 623,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 646
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"GameStop Horror: Employee Faces Charges for Stabbing Customer During Argument\\nA seemingly routine visit to a GameStop store in Potomac Mills, Virginia, took a shocking turn when an employee allegedly stabbed a customer during an argument. The incident left both the victim and the accused facing dire consequences, shaking the community and raising questions about in-store safety.\\nThe incident unfolded when an argument between a GameStop employee and a customer escalated to a horrifying level. The employee, identified as a D.C. resident, Courtney, reportedly stabbed the customer during the dispute. The victim suffered a non-life-threatening injury and was promptly provided with first aid by officers before being transported to an area hospital for further treatment.\\nLaw enforcement swiftly arrived on the scene and took Courtney into custody without further incident. Thankfully, there were no additional injuries reported during the incident.\\nThe seriousness of the alleged crime led to police charging Courtney with aggravated malicious wounding. The specifics of any bond arrangements were not immediately available at the time of reporting, leaving questions about Courtney's legal status unanswered.\\nThis incident underscores the importance of maintaining a safe and respectful environment for both employees and customers in public spaces, such as retail stores. The GameStop incident serves as a reminder that disagreements can sometimes escalate to levels of violence, and the importance of maintaining composure and finding non-violent ways to resolve conflicts. It also highlights the essential role of law enforcement in promptly responding to such incidents to protect the safety of the public.\\nAs the legal process unfolds, the Potomac Mills community will be closely following this case, hoping for justice and measures to ensure the safety of all individuals in public spaces. This incident reminds us that maintaining respectful and safe interactions is crucial in our day-to-day lives, and violence should never be an option for dispute resolution.\", \"original_answer\": \"A GameStop employee in Potomac Mills, Virginia, allegedly stabbed a customer during an argument. The customer, who sustained non-life-threatening injuries, was treated at the scene before being taken to a local hospital. The employee, identified as Courtney, was charged with aggravated malicious wounding and was taken into custody. The incident has raised concerns about safety in retail stores and highlights the importance of non-violent conflict resolution.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "b4a386e4ff21ddc343d5d540305a10bcbb014495cd1861b7d09f0be45134f53b",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ]
+}

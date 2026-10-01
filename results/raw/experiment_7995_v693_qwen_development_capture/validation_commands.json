@@ -1,0 +1,160 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "run",
+        "--rcfile=/tmp/carnot-7995-vv810c9j/coverage.ini",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_qwen_development_capture_7995.py",
+        "tests/python/test_experiment_7995_v693_qwen_development_capture.py"
+      ],
+      "name": "focused_and_cli",
+      "scope": "owned",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "combine",
+        "--rcfile=/tmp/carnot-7995-vv810c9j/coverage.ini",
+        "/tmp/carnot-7995-vv810c9j"
+      ],
+      "name": "coverage_combine",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "json",
+        "--rcfile=/tmp/carnot-7995-vv810c9j/coverage.ini",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7995_v693_qwen_development_capture.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/qwen_development_capture_7995.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7995_v693_qwen_development_capture.py",
+        "--fail-under=100",
+        "-o",
+        "/tmp/carnot-7995-vv810c9j/coverage.json"
+      ],
+      "name": "coverage_report",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_source_boundary_7852.py",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_current_work_receipt.py",
+        "tests/python/test_qwen_calibration_capture_7969.py"
+      ],
+      "name": "e2e_015_consumers",
+      "scope": "owned",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "ruff",
+        "check",
+        "python/carnot/experiment_7995_v693_qwen_development_capture.py",
+        "python/carnot/verify/qwen_development_capture_7995.py",
+        "scripts/experiments/experiment_7995_v693_qwen_development_capture.py",
+        "tests/python/test_qwen_development_capture_7995.py",
+        "tests/python/test_experiment_7995_v693_qwen_development_capture.py"
+      ],
+      "name": "ruff",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_7995_v693_qwen_development_capture.py",
+        "python/carnot/verify/qwen_development_capture_7995.py",
+        "scripts/experiments/experiment_7995_v693_qwen_development_capture.py",
+        "tests/python/test_qwen_development_capture_7995.py",
+        "tests/python/test_experiment_7995_v693_qwen_development_capture.py"
+      ],
+      "name": "ruff_format",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "mypy",
+        "--strict",
+        "python/carnot/experiment_7995_v693_qwen_development_capture.py",
+        "python/carnot/verify/qwen_development_capture_7995.py",
+        "scripts/experiments/experiment_7995_v693_qwen_development_capture.py"
+      ],
+      "name": "mypy",
+      "scope": "owned",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_qwen_development_capture_7995.py",
+        "tests/python/test_experiment_7995_v693_qwen_development_capture.py"
+      ],
+      "name": "spec_coverage",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "pytest",
+        "tests/python",
+        "-q"
+      ],
+      "name": "repository_health",
+      "scope": "repository_health",
+      "timeout_s": 900
+    }
+  ],
+  "config": {
+    "bootstrap_draws": 10000,
+    "call_limit": 384,
+    "call_timeout_s": 120,
+    "duration_floor_s": 10,
+    "grammar_sha256": "sha256:21b7f15c0cdb5db56065de0f5ab60db2f316f883c9bcef6a0ce806eda13f600a",
+    "input_tokens": 6000,
+    "intended_families": 384,
+    "load_timeout_s": 300,
+    "max_tokens": 96,
+    "measured_work_cap_s": 3000,
+    "output_tokens": 36864,
+    "seed": 69058,
+    "temperature": 0
+  }
+}

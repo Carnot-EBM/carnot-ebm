@@ -1,0 +1,110 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.2663790049264207,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:0400f8fdbd362f68b16e52099ae397537d2a32ea8f071be2f250ad73efed53d3",
+  "input_tokens": 626,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 626,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 650
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:8d9bf14aeabf644507aac3fca4f36bfb15eca5d5fbc8b68933d042412b0c5dd3",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886383,
+    "id": "chatcmpl-GXrDYYc5PwUBiwRr03Slq3Tz5LZCTfgn",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.512,
+      "predicted_n": 24,
+      "predicted_per_second": 42.43941773118873,
+      "predicted_per_token_ms": 23.563,
+      "prompt_ms": 583.517,
+      "prompt_n": 548,
+      "prompt_per_second": 939.1328787336101,
+      "prompt_per_token_ms": 1.0648120437956206
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 626,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 650
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Drop a little of the candy into cold water to cool. If the candy forms a liquid thread that does not ball up, it is in the thread stage. This stage produces a type of sugar syrup but it is not yet candy. When your candy is in the thread stage, expect the temperature to be around 230 to 235 Fahrenheit. Drop some candy into cold water. If the candy forms a soft, flexible ball it is at a temperature of 235-240 degrees Fahrenheit or at the soft ball stage.\\\\n\\\\npassage 2:Candies such as fudge and fondant are done when they are at the soft ball stage. Drop a little bit of the candy into cold water. If it forms into a firm ball, it is in the firm ball stage. This stage is at a temperature of about 245 to 250 degrees Fahrenheit. Caramels and other similar candies are cooked to the firm-ball stage.\\\\n\\\\npassage 3:It would never survive for long. The problem is that the universe operates according to certain laws. Unless you're using some netherworldly magic, then Gor-zee-rah is made of the same shit as everything else. Which means that we have conventional weapons in our military that can blow it to pieces.\u2020 The it moves too quickly trope is horse-shit. Any creature that size would not (square-...\\\\n\\\\n\\\",\\\"question\\\":\\\"how to tell the temperature of water with a candy thermometer\\\"}\", \"original_answer\": \"To tell the temperature of water with a candy thermometer, you can use the process of dropping a bit of candy into the water and observing the reaction. If the candy forms a liquid thread that doesn't ball up, it is in the thread stage which corresponds to a temperature of about 230-235 degrees Fahrenheit. If the candy forms a soft, flexible ball, the temperature is around 235-240 degrees Fahrenheit or at the soft ball stage. If the candy forms into a firm ball, the temperature is about 245 to 250 degrees Fahrenheit, corresponding to the firm ball stage.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "a075647e91be110d8441234aa6f53631a57f8aad24f1e65348922f0ec678bfd1",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ]
+}

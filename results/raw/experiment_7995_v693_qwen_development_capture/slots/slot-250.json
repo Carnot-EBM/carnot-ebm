@@ -1,0 +1,124 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.6309726340696216,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:5cec95a891c53cd887da8ba1c944ecbe739b06e21f313591a96ea447852e1dce",
+  "input_tokens": 1097,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1097,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1120
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:593899e718f19bad2431eb411affbe9fa207cb0c22940834627d0c52b43a3cf6",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886195,
+    "id": "chatcmpl-ZUaLveP8w51eCEz7YlWNYwFfLnYWUHqT",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 542.178,
+      "predicted_n": 23,
+      "predicted_per_second": 42.42149257254997,
+      "predicted_per_token_ms": 23.57295652173913,
+      "prompt_ms": 972.611,
+      "prompt_n": 1019,
+      "prompt_per_second": 1047.6953273199667,
+      "prompt_per_token_ms": 0.9544759568204122
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1097,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1120
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Think it's hard to redeem your miles for an airline award ticket? It depends on which airline rewards program you've chosen, which route you're flying and when you book your ticket, according to a new Consumer Reports study of 70 million passenger trips over the past two years. The magazine collected statistics comparing award-seat availability for the five biggest U.S. airlines on domestic routes. The top performer was Southwest Airlines, which offered the most award tickets, 11.9 million, and the highest percentage of award tickets -- 11.5% of 103.1 million total passenger seats. \\\"The high number of award tickets is directly related to Southwest's unique combination of 'Every Seat is an Award Seat,' no blackout dates, points that don't expire, and a route map that reaches more than 90 different destinations in the U.S. and beyond, making us the largest domestic carrier in the U.S.,\\\" Southwest spokesperson Thais Conway Hanson told CNN. \\\"Unlike other carriers, we also don't charge fees for close-in bookings or penalize you for canceling your trip if something else comes up.\\\" At the bottom of the list was JetBlue, which offered the lowest percentage of award seats and the fewest number of award tickets of the five biggest U.S. airlines: 892,000 one-way passenger tickets, or 4.5% of its total 19.7 million U.S. seats. (JetBlue only operates in 10 of the top 25 markets included in the study.) Many JetBlue customers fly the airline only once or twice per year, making it hard to accumulate miles, an airline spokesman told the magazine. By not allowing miles to expire anymore, the airline says customers will be able to eventually redeem them. Delta Air Lines came in second place with 5.6 million U.S. award seats; United Airlines ranked third with 5 million U.S. award tickets; and American Airlines was fourth with 3.5 million U.S. award seats. What are the world's safest airlines? Remember that award tickets aren't actually free. The cost of miles is built into everything you buy that's earning you miles, and the airlines profit from you not using your miles at all. So it behooves consumers to book award travel carefully. On average, nearly 10% of passengers on the five airlines analyzed by Consumer Reports flew on domestic award tickets, but some of them weren't getting the best value for their miles. While many U.S. fliers redeemed miles on American Airlines flights from Los Angeles to San Francisco, the cheapest average fare on that route was just over $100 -- not worth the 12,500 to 30,000 miles needed for an award ticket, Consumer Reports says. Better to use them on American Airlines' route between New York and San Francisco or Delta's route between Chicago and Los Angeles, which are generally more expensive than that Los Angeles-San Francisco route, according to Consumer Reports' calculations. While award-seat availability is important, it may not matter as much as passengers' overall satisfaction with an airline. Southwest had the highest customer satisfaction score (86), followed by JetBlue (85), Delta (70), American (66) and United (63). And don't forget the fees. Southwest doesn't charge any fees, while other airlines tack on fees for checking bags, booking by phone, changing plans and more.\\n\", \"original_answer\": \"A new Consumer Reports study has found that Southwest Airlines offers the most tickets for airline rewards programmes, with 11.9 million tickets available, or 11.5% of 103.1 million total passenger seats. Conversely, JetBlue was found to be the least generous of the five biggest US airlines, offering 892,000 one-way passenger tickets, or 4.5% of its total 19.7 million US seats. Southwest's generous offering is due to its 'Every Seat is an Award Seat' policy, no blackout dates, and points that do not expire, according to a spokesperson. The study also found that passengers using airline rewards programmes should be careful to get the best value for their miles.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "dbc03f3a8e11d5a316b730863bcb667898cf76b880ed42ff2c6e354f337b196d",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27
+  ]
+}

@@ -1,0 +1,107 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.336154056014493,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:628ddd9f2598d07a211fa4d727d98d6188f7fbea65f0650a2831dd4406e0a8a0",
+  "input_tokens": 797,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 797,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 818
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:5f0a3c45d5f592678f4c9080ffa7bf414b15c54f8eb31b92a57af70fba6e1e22",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886103,
+    "id": "chatcmpl-SRIpK9NlhnUyxR53KE0tIycfEAr7P8vI",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 493.0,
+      "predicted_n": 21,
+      "predicted_per_second": 42.59634888438134,
+      "predicted_per_token_ms": 23.476190476190474,
+      "prompt_ms": 710.916,
+      "prompt_n": 719,
+      "prompt_per_second": 1011.3712449853427,
+      "prompt_per_token_ms": 0.9887566063977747
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 797,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 818
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"5599 Hollister Ave\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":null,\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":null},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Mexican, Restaurants, Food Trucks, Food\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-14:0\\\",\\\"Thursday\\\":\\\"11:30-14:0\\\",\\\"Tuesday\\\":\\\"11:30-18:0\\\",\\\"Wednesday\\\":\\\"11:30-18:0\\\"},\\\"name\\\":\\\"Santa Barbara Food Connection\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-10-29 20:21:39\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"I have eaten at Food Connection 3 times. The first couple experiences were great. The food was tasty and left me craving more! But last night I ate the pastor nachos and my boyfriend had the pastor burrito, and unfortunately we are both trying to recover from food poisoning. We both had pleasant experiences the first couple times, but now I don't think I can look at this food truck the same way again.\\\"},{\\\"review_date\\\":\\\"2021-08-21 23:07:36\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"My coworkers and I stopped by here for lunch only to find the truck window closed. However, as we were leaving the owner walked up and offered to cook us something despite being closed for the day. We all ended up ordering a variety of mulitas - it was my first time trying them and they were delicious (a bit like a quesadilla but with small tortillas sandwiching the fillings); the meats and salsas were all on point. Mostly I appreciated the kindness and hospitality we received here!\\\"},{\\\"review_date\\\":\\\"2021-03-20 20:51:18\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"This food is amazing! We stopped 2 days in a row and ordered different items... Everything we ordered from tacos to the burgers was excellent!! BBQ burger & birria tacos!!!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Santa Barbara Food Connection is a Mexican food truck located at 5599 Hollister Ave, Goleta, CA. The business is known for its tacos, burritos, and other Mexican dishes. It operates mainly in the afternoons on Tuesday, Wednesday, Thursday, and Friday. The business has an average rating of 4.5 stars. While most customers have had positive experiences with the food and service, including one incident where the owner offered to cook for customers despite being closed, there has been a reported case of potential food poisoning. The truck offers takeout but does not provide outdoor seating or Wi-Fi. There is no information provided on parking, restaurant reservations, suitability for groups, music, or ambiance.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "ac11d75fcc6cbee46f145a54c893763a741e57dd48146c581737479ce86e7bcb",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ]
+}

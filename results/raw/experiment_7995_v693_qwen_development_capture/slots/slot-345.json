@@ -1,0 +1,108 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.2185873959679157,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:9a42202960efd22913fd59553bf8d5978550304387226bede6e5745d980ddbcd",
+  "input_tokens": 571,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 3,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 571,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 595
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:b49bcdc7823980ab3da60e7b34aab65d15eb20f53defaa7c41c33c8c37184673",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 3\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886336,
+    "id": "chatcmpl-VThKguzN0YkpfHgZXAxRGTnYipRUTx3v",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.448,
+      "predicted_n": 24,
+      "predicted_per_second": 42.44422121928099,
+      "predicted_per_token_ms": 23.560333333333332,
+      "prompt_ms": 534.101,
+      "prompt_n": 493,
+      "prompt_per_second": 923.0463901022465,
+      "prompt_per_token_ms": 1.083369168356998
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 571,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 595
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Be sure to use the GI Bill Comparison Tool to research schools and employers based on affordability and value under the Post-9/11 GI Bill. If you are eligible for the Post-9/11 GI Bill, the Montgomery GI Bill \u2013 Active Duty, or Reserve Educational Assistance Program, you must choose which benefit to receive.\\\\n\\\\npassage 2:Survivors & Dependents Educational Assistance (DEA). The following guide will help you determine if you are eligible and how to apply for the the Dept. of Veterans Affairs DEA program. The Survivor's and Dependents' Educational Assistance (DEA) program provides education and training opportunities to eligible dependents of certain veterans. The program offers up to 45 months of education benefits. These benefits may be used for degree and certificate programs, apprenticeship, and on-the-job training. If you are a spouse, you may take a correspondence course. Remedial, deficiency, and refresher courses may be approved under certain circumstances. 2015-2016 DEA Payment Rates-these rates are effective October 1, 2015.\\\\n\\\\npassage 3:Step 2 :\u20acWait for VA to process your application and notify you of our decision concerning your eligibility for education assistance. Step 1: Mail the completed form to the VA Regional Processing Office in the region of that school's physical address. Check below for the post office box address for these offices.\\\\n\\\\n\\\",\\\"question\\\":\\\"how do i apply for survivors dependents educational assistance\\\"}\", \"original_answer\": \"To apply for the Survivors & Dependents Educational Assistance (DEA), you need to check your eligibility and apply for the Dept. of Veterans Affairs DEA program. After you have completed the application form, mail it to the VA Regional Processing Office in the region of the school's physical address. Then, wait for VA to process your application and notify you about the decision regarding your eligibility for education assistance.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "24c50348bef2600019a20fa0ec6a8b24f6e22789d6183a1fd2d61c3e222031be",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]
+}
