@@ -1,0 +1,107 @@
+"""Diagnostic: why did every induction call truncate at 512 tokens?"""
+
+import glob
+import json
+import os
+import sys
+import time
+import urllib.request
+
+os.environ["CUDA_VISIBLE_DEVICES"] = "1"
+ROOT = "/home/ianblenke/github.com/ianblenke/carnot/.claude/worktrees/agent-a105c5c227281f0a9"
+SCRATCH = "/tmp/claude-1000/-home-ianblenke-github-com-ianblenke-carnot/ad0c053d-41df-446e-99d6-d71368a47030/scratchpad"
+sys.path.insert(0, ROOT)
+sys.path.insert(0, ROOT + "/python")
+arm = sys.argv[1]
+which = sys.argv[2].split(",")
+import scripts.experiments.experiment_bonsai2_arc_candidate_eval as H
+
+key = {"A": "A_stock_standard", "B": "B_fork_standard", "C": "C_fork_ternary"}[arm]
+cfg = H.ARMS[key]
+os.environ["CARNOT_LLAMA_SERVER"] = str(cfg["server"])
+os.environ["CARNOT_ARC_LLAMA_SERVER_PARALLEL"] = "1"
+os.environ["CARNOT_ARC_INDUCE_N_CTX"] = "32768"
+H.INDUCE_N_CTX = 32768
+p = H._make_proposer(key)
+
+
+def log(m):
+    print(f"[diag {time.strftime('%H:%M:%S')}] {m}", flush=True)
+
+
+t0 = time.time()
+ok = p._ensure_server()
+log(f"server ok={ok} in {time.time() - t0:.0f}s port={p.port}")
+pr = sorted(
+    glob.glob(
+        ROOT
+        + "/results/raw/experiment_bonsai2_arc_candidate_eval/empty_engine_store/cd82__seed-7491001/unseen_runtime_game/attempts/.evidence-staging/*/prompt.raw"
+    )
+)[0]
+prompt = open(pr).read()
+log(f"prompt chars={len(prompt)}")
+from carnot.agentic.arc_executable_world_model import _L2_CODEONLY_DIRECTIVE
+
+url = p._url()
+
+
+def post(path, payload, timeout=1500):
+    req = urllib.request.Request(
+        url + path, data=json.dumps(payload).encode(), headers={"Content-Type": "application/json"}
+    )
+    t = time.time()
+    with urllib.request.urlopen(req, timeout=timeout) as r:
+        d = json.load(r)
+    return d, time.time() - t
+
+
+def summarize(name, d, dt):
+    if "choices" in d:
+        c = d["choices"][0]
+        m = c["message"]
+        rc = m.get("reasoning_content") or ""
+        ct = m.get("content") or ""
+        log(
+            f"{name}: {dt:.1f}s finish={c.get('finish_reason')} usage={d.get('usage')} "
+            f"reasoning_chars={len(rc)} content_chars={len(ct)} "
+            f"tps={d.get('timings', {}).get('predicted_per_second')}"
+        )
+        log(f"  content_head={ct[:300]!r}")
+        log(f"  reasoning_head={rc[:200]!r} tail={rc[-200:]!r}")
+    else:
+        ct = d.get("content", "")
+        tm = d.get("timings", {})
+        log(
+            f"{name}: {dt:.1f}s stop_type={d.get('stop_type')} predicted_n={tm.get('predicted_n')} "
+            f"tps={tm.get('predicted_per_second')} prompt_n={tm.get('prompt_n')} content_chars={len(ct)}"
+        )
+        log(f"  content_head={ct[:300]!r} tail={ct[-200:]!r}")
+    json.dump(d, open(f"{SCRATCH}/diag_{arm}_{name}.json", "w"))
+
+
+base = {"temperature": 0.2, "cache_prompt": True, "seed": 7491001}
+msgs = [{"role": "user", "content": prompt}]
+for w in which:
+    log(f"start {w}")
+    if w == "D1":
+        d, dt = post("/v1/chat/completions", {**base, "messages": msgs, "max_tokens": 512})
+        summarize("D1_chat_default_512", d, dt)
+    elif w == "D2":
+        d, dt = post(
+            "/v1/chat/completions",
+            {**base, "messages": msgs, "max_tokens": 4096,
+             "chat_template_kwargs": {"enable_thinking": False}},
+        )
+        summarize("D2_chat_nothink_4096", d, dt)
+    elif w == "D3":
+        d, dt = post(
+            "/completion",
+            {**base, "prompt": _L2_CODEONLY_DIRECTIVE + prompt + "\n```python\n",
+             "n_predict": 4096, "stop": ["```"]},
+        )
+        summarize("D3_raw_codeonly_4096", d, dt)
+    elif w == "D4":
+        d, dt = post("/v1/chat/completions", {**base, "messages": msgs, "max_tokens": 12000})
+        summarize("D4_chat_default_12000", d, dt)
+p.stop()
+log("done")

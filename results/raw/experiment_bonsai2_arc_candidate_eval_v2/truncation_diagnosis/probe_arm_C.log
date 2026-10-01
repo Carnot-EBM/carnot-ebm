@@ -1,0 +1,6 @@
+[diag 22:08:23] server ok=True in 4s port=18921
+[diag 22:08:23] prompt chars=9185
+[diag 22:08:23] start D3
+[diag 22:08:29] D3_raw_codeonly_4096: 5.8s stop_type=word predicted_n=103 tps=57.13024688108059 prompt_n=5711 content_chars=316
+[diag 22:08:29]   content_head="import numpy as np\n\ndef engine(grid, action, data):\n    g = grid.copy()\n    H, W = g.shape\n    if action == 6:\n        if data is not None:\n            px, py = data['x'], data['y']\n            if 0 <= px < W and 0 <= py < H:\n                g[py, px] = 5\n    return g\n\ndef is_level_complete(grid):\n " tail="   if data is not None:\n            px, py = data['x'], data['y']\n            if 0 <= px < W and 0 <= py < H:\n                g[py, px] = 5\n    return g\n\ndef is_level_complete(grid):\n    return False\n"
+[diag 22:08:29] done
