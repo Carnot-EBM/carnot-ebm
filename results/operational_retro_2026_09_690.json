@@ -1,0 +1,59 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.690",
+  "generated_at": "2026-10-01T02:15:10Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 35.5,
+  "experiments_completed": 7,
+  "compute_bound_experiments_count": 7,
+  "slowest_experiments": [
+    {
+      "experiment": "Bind activation-aware authority and freeze current research methods",
+      "duration_minutes": 9.2,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Independently reduce thirteen outcomes and decide the three PRD gaps",
+      "duration_minutes": 7.38,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Measure bounded Qwen response support against human annotations",
+      "duration_minutes": 7.12,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Rebuild full-response support targets from original human spans",
+      "duration_minutes": 3.72,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Preserve board custody and bound compatible workload acceleration",
+      "duration_minutes": 3.05,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.09.690 recorded 7 completed experiments, all 7 classified as compute-bound, spanning 35.5 wall-time minutes (averaging 5 minutes per experiment) reconstructed from disk modification timestamps. The longest running task was 'Bind activation-aware authority and freeze current research methods' at 9.2 minutes, followed by 'Independently reduce thirteen outcomes and decide the three PRD gaps' at 7.38 minutes and 'Measure bounded Qwen response support against human annotations' at 7.12 minutes. Point-in-time monitor telemetry observed both RTX 3090 GPUs at 0% utilization with 4MB allocated, but active execution-window hardware traces were not captured, and the locked indicator gpu_idle_on_compute_bound_tasks is false.",
+  "bottlenecks_identified": [
+    "Wall-time execution was concentrated in the top three compute-bound tasks: 'Bind activation-aware authority and freeze current research methods' (9.2 minutes), 'Independently reduce thirteen outcomes and decide the three PRD gaps' (7.38 minutes), and 'Measure bounded Qwen response support against human annotations' (7.12 minutes), together accounting for 23.7 of 35.5 total wall-time minutes, while granular intra-task phase timings were not captured.",
+    "Milestone timing relied on disk-mtime fallback reconstruction following zero commits on the live git-log path, leaving phase-level stage attribution unmeasured.",
+    "Absence of continuous time-series accelerator telemetry across active execution windows leaves hardware processor-memory interactions and concurrency profiling unmeasured across compute-bound tasks."
+  ],
+  "improvements_suggested": [
+    "Instrument experiment runners with monotonic sub-phase timers to isolate latency across environment setup, model loading, compute passes, and artifact validation.",
+    "Deploy continuous, lightweight GPU sampling throughout task execution rather than relying solely on discrete monitor checkpoints.",
+    "Preserve and maintain failure_ledger pre-launch checks to ensure doomed reruns continue to be blocked in sub-second time without consuming compute budget.",
+    "Restrict DualGPURunner orchestration strictly to parallel executions involving two or more distinct models, avoiding overhead on single-model inference jobs.",
+    "Profile authority contract binding and capstone PRD gap reduction workflows to identify potential optimization or memoization opportunities."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add granular sub-phase execution timing to experiment runners to measure setup, compute, and artifact validation overhead.",
+    "Implement active-window GPU utilization and memory timeseries logging to assess hardware efficiency during compute-bound tasks.",
+    "Profile the longest-running authority binding and capstone reduction workflows to identify potential optimization or memoization opportunities."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Milestone 2026.09.690 completed 7 compute-bound experiments totaling 35.5 wall-time minutes, led by authority binding (9.2 minutes) and capstone outcome reduction (7.38 minutes). While the static GPU monitor reported both RTX 3090 GPUs at 0% utilization with 4MB allocated, the locked field sets gpu_idle_on_compute_bound_tasks to false and no active-execution telemetry exists. Estimated time savings remain at 0% pending empirical measurement of intra-task phases and continuous accelerator utilization."
+}

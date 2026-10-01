@@ -7147,3 +7147,11 @@ Operational evidence addendum: this entry supersedes earlier operational asserti
 - theme: Source energy fitting, contract task binding, and outcome reduction accounted for the majority of wall-time execution across an all-compute set lacking sub-phase telemetry
 - key result: honest operational negative — 7 compute-bound experiments completed in 86.0 wall-time minutes led by source energy fitting (39.91 min) and task binding (17.81 min), while available records lack intra-task stage breakdowns, continuous execution-window GPU telemetry, and multi-model dispatch opportunities
 - acceptance: no data available this milestone
+
+### Milestone 2026.09.690
+
+- exp_range: no data available this milestone
+- theme: Authority contract binding, outcome reduction, and bounded Qwen response support dominated wall time across an all-compute set lacking sub-phase telemetry
+- key result: honest operational negative — 7 compute-bound experiments completed in 35.5 wall-time minutes led by authority binding (9.2 min), outcome reduction (7.38 min), and bounded Qwen response support (7.12 min), while available records lack intra-task stage breakdowns, continuous execution-window GPU telemetry, and multi-model dispatch opportunities
+- acceptance: no data available this milestone
+
