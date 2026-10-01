@@ -88760,3 +88760,34 @@ and CLI. Scoped Ruff, strict mypy and test-to-spec traceability pass.
 All 14 required frozen checks pass after the retained failed consumer attempt
 and its successful recheck, including E2E-018. Repository-wide health remains
 separate: its actual 180-second diagnostic reached the deadline with failures.
+
+## REQ-REPORT-7993: Scoped historical stream custody (2026-10-01)
+
+Exp7993 SHALL reconstruct the 212 Exp7981 completions and retain all 12 excluded
+slots from immutable request, response, server and public/label producer bytes.
+Current MODEL_SPECS and fitted heads SHALL be empty and current pretrained
+invocations SHALL be zero. Historical calls SHALL have explicit typed scope.
+The original disqualified primary and contradictory candidate SHALL stay intact.
+Readiness SHALL be one only after complete custody and all required owned checks.
+Missing external custody SHALL be complete_blocked with exact gate operands;
+failed owned checks SHALL be complete_disqualified with readiness zero.
+This audit SHALL make no benefit claim and SHALL not clear Exp7981.
+
+### SCENARIO-REPORT-7993-CUSTODY
+
+Duplicate, missing or altered rows, labels, receipts, request bytes, counts or
+roles SHALL fail closed. Independent cold replay SHALL reconstruct rows and
+counts from external files. Private real CLI success, blocked and replay routes,
+E2E-015, direct consumers, scoped Ruff, strict mypy, explicit spec coverage and
+nonempty 100 percent new statement coverage SHALL have actual receipts.
+The full Python suite SHALL run once as a separate repository-health diagnostic.
+Final candidate bytes SHALL pass both unchanged validators and both conductor
+readers before publication. Validation commands and code hashes SHALL freeze
+before reconstruction. Ops reconciliation is reserved for the conductor.
+
+Implementation: `python/carnot/experiment_7993_v693_capture_custody.py`,
+`python/carnot/reporting/capture_custody_7993.py`, and `validation_7993.py`, with
+`scripts/experiments/experiment_7993_v693_capture_custody.py` as the real CLI.
+`tests/python/test_capture_custody_7993.py` and
+`tests/python/test_experiment_7993_v693_capture_custody.py` cover authenticated
+reduction, scope classification, private publication, failures and cold replay.

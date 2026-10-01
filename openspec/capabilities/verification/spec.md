@@ -47635,3 +47635,23 @@ private oracle bytes from live authority. Invalid live YAML is snapshotted
 unchanged and publishes readiness zero with an exact `authority_yaml` operand;
 cold replay succeeds for that blocked result. Existing custody assertions are
 unchanged. Combined V693 module and CLI statement coverage is 260/260.
+
+## REQ-VERIFY-7993: Invocation scope and authenticated reduction
+
+Cached reduction, blocked zero-call work, resume-only work, genuine owned live
+call evidence and mixed historical/current evidence SHALL use the actual
+adversarial provenance classifier. Contradictory declared live counts SHALL
+continue to fail. Historical counters SHALL never become current invocation
+claims. Every recovered probability SHALL bind complete source/answer bytes,
+original role, human-label file, request and response hashes, server identity,
+completion times, GGUF identity and token totals. Cold replay SHALL reject drift.
+
+### SCENARIO-VERIFY-7993-SCOPE
+
+The original candidate's unscoped resumed zero counters SHALL remain observable.
+The new audit SHALL cite this exact contradiction without deleting its evidence
+or changing a validator. Current validation failures SHALL clear readiness.
+
+Implementation: `python/carnot/reporting/capture_custody_7993.py`; verification
+is in `tests/python/test_capture_custody_7993.py`. The unchanged provenance
+classifier and terminal validators retain the original live-count rejection.
