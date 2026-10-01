@@ -21230,3 +21230,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-10-01: Train a local spline energy head for incremental updates (⚠️ Research Finding) — honest_verdict=complete_null_sparse_training; results/experiment_7996_v693_sparse_energy_training.json
 - 2026-10-01: Measure frozen typed decisions on the new development stream (⚠️ Research Finding) — honest_verdict=complete_disqualified_typed_development_decisions; results/experiment_7997_v693_typed_development_decisions.json
 - 2026-10-01: Learn sparse energy updates from randomized delayed feedback (⚠️ Research Finding) — honest_verdict=complete_null_selective_feedback_learning; results/experiment_7998_v693_selective_feedback_learning.json
+- 2026-10-01: Independently audit later benefit retention and recovery (⚠️ Research Finding) — honest_verdict=complete_null_learning_causal_audit; results/experiment_7999_v693_learning_causal_audit.json
