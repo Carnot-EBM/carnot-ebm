@@ -21186,3 +21186,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-10-01: Bind thirteen tasks across UTC rollover and freeze research methods (⚠️ Research Finding) — honest_verdict=complete_circular_positive_contract_methods; results/experiment_7966_v691_contract_methods.json
 - 2026-10-01: Qualify fitting with private scratch and the artifact guard enabled (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_checks; results/experiment_7967_v691_private_training_qualification.json
 - 2026-10-01: Qualify complete-response labels for disjoint calibration roles (⚠️ Research Finding) — honest_verdict=complete_null_response_role_transport; results/experiment_7968_v691_response_role_targets.json
+- 2026-10-01: Capture bounded Qwen judgments for fitting and calibration (⚠️ Research Finding) — honest_verdict=complete_null_qwen_calibration_capture; results/experiment_7969_v691_qwen_calibration_capture.json
