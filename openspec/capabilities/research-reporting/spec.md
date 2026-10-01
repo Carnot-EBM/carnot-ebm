@@ -87811,3 +87811,48 @@ bytes. Both real readers SHALL select the primary after newer nested sidecars.
 Owned failures disqualify and clear readiness. Current run date is 20261001;
 September 28 oracle-distinct correction and historical determinations remain.
 Ops/status/traceability reconciliation belongs to the conductor for this task.
+
+## REQ-REPORT-7962: Advance only the authenticated V689 supervisor frontier
+
+Exp7962 SHALL pin Exp7949 primary, receipt inventory, seen hashes, null verdict,
+readiness and adversarial flag. Registry levels SHALL be checked before scanning.
+Reuse the callable receipt reader with current date 20261001. Read each original
+candidate once and stop science within 120 seconds when there are no new events.
+Identity and event sequence determine novelty; calendar dates do not establish it.
+Live events require E3AgentPolicy/make_carnot_agent provenance and outcome fields.
+Preserve policy defaults, historical failures and the September 28 oracle-distinct
+corrigendum. Aggregation claims zero models, device executions and new level solves.
+
+### SCENARIO-REPORT-7962-FRONTIER: Null and failed custody are terminal
+
+An authenticated empty delta emits complete_null_no_new_supervisor_outcomes with
+verdict_class=null and arc_evidence_ready_score=1. Changed or absent authority
+emits complete_blocked_* with exact expected and observed operands. No unchanged
+external prerequisite is retried. New events keep game, seed, arm and outcomes.
+No arm policy changes are applied. Retirement needs twenty new firings across
+five games, zero helped events, and exact upper confidence bounds. Priority
+proposals require held-out evidence and a separately registered follow-up.
+
+### SCENARIO-REPORT-7962-CLI: Private routes preserve evidence custody
+
+Success, blocked, negative, replay and terminal routes use separate directories.
+Fixtures are circular_positive mechanics. Cold replay rejects derived-claim drift.
+E2E-017 runs reused reader tests and actual private reducer CLI calls. Historical
+E2E-016 fixture and replay retain --date 20260929; execution date is 20261001.
+
+### SCENARIO-REPORT-7962-SEAL: Validate exact terminal bytes and readers
+
+Freeze affected files, consumers, dependencies, commands, expected exits and
+failure reasons, deadlines and identical coverage includes before reduction.
+Require nonempty 100 percent added statement coverage, scoped Ruff, strict mypy
+and explicit-file spec coverage. Keep repository health separate from required
+checks. Required failures disqualify readiness. Both terminal validators inspect
+final bytes after verdict changes. Atomically publish one unique top-level
+primary; newer nested sidecars cannot change gate or document reader path/hash.
+The conductor owns ops/status, ops/changelog and traceability reconciliation.
+
+Implementation: arc_supervisor_v690_delta.py and the Exp7962 CLI parameterize
+the qualified reader and frozen checks. The current-date argument retains the
+historical reader default. The explicit test file covers authority mismatch,
+empty and current-date ledgers, private replay, failed validation and uniqueness.
+No live policy, conductor, production default or historical determination changes.

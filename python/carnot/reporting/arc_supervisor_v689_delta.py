@@ -129,7 +129,12 @@ def replay(value: dict[str, Any]) -> list[str]:
 
 
 def scan(
-    root: Path, producers: list[Path], checked: dict[str, Any], private: Path
+    root: Path,
+    producers: list[Path],
+    checked: dict[str, Any],
+    private: Path,
+    *,
+    current_date: str = "20260930",
 ) -> dict[str, Any]:
     """Read candidate originals once, then use the existing reader on frozen copies."""
     started = time.monotonic()
@@ -193,7 +198,7 @@ def scan(
         snapshots.append(copy_producer)
         producer_by_copy[str(copy_producer)] = (str(producer), digest)
         progress(started, "scan", index + 1)
-    inspected = reader.inspect(snapshot, snapshots, seen, "20260930", "20260930", {})
+    inspected = reader.inspect(snapshot, snapshots, seen, "20260930", current_date, {})
     original_by_copy = {v: k for k, v in copied.items()}
     for row in inspected["rows"]:
         row["producer_path"], row["producer_sha256"] = producer_by_copy[row["producer_path"]]
