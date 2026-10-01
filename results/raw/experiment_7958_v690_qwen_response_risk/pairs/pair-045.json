@@ -1,0 +1,204 @@
+{
+  "config_hash": "sha256:17d509539abd34d125a7b8f21f47e2064e0f59d5eac351ba74cf8a90a0b6d5a9",
+  "public_hash": "sha256:f51b31ac98c4a3c511e2d8b8c9d630a93143f489ec50f69905214b69edcdef06",
+  "rows": [
+    {
+      "arm": "full_source",
+      "duration_s": 1.5779613539925776,
+      "family_id": "sha256:23b38d278fb4d5212b97cf131b227923f91ee7404124d9fba5eedff612bab502",
+      "input_tokens": 1042,
+      "order": 0,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 0.0,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 1042,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 1065
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817098,
+        "id": "chatcmpl-797dKoiwxHap63HGAbvPiao0Ea0KmUPA",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 543.088,
+          "predicted_n": 23,
+          "predicted_per_second": 42.350410983118756,
+          "predicted_per_token_ms": 23.612521739130433,
+          "prompt_ms": 936.756,
+          "prompt_n": 964,
+          "prompt_per_second": 1029.0833472110132,
+          "prompt_per_token_ms": 0.9717385892116183
+        },
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 1042,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 1065
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"{\\\"address\\\":\\\"140 S Hope Ave, Ste A102\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":null,\\\"divey\\\":null,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":null,\\\"touristy\\\":false,\\\"trendy\\\":null,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Food, Restaurants, Middle Eastern, Cafes, Bakeries\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"10:0-20:0\\\",\\\"Monday\\\":\\\"10:0-20:0\\\",\\\"Saturday\\\":\\\"10:0-20:0\\\",\\\"Sunday\\\":\\\"10:0-20:0\\\",\\\"Thursday\\\":\\\"10:0-20:0\\\",\\\"Tuesday\\\":\\\"10:0-20:0\\\",\\\"Wednesday\\\":\\\"10:0-20:0\\\"},\\\"name\\\":\\\"Mr B Restaurant & Cafe\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-12-24 17:06:33\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"One of the best restaurants and Mediterranean food I've ever had!! They are very clean and the employees there are very nice and good energy as well as the owner.. I'm definitely going back. DEFINITELY RECOMMEND!!\\\"},{\\\"review_date\\\":\\\"2021-12-24 16:31:23\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Honestly i cant describe this place. It is one of my favorite stops in SB. The shawarma Sandwich taste sooo good and the hummus is the best. Alo the fried chicken was something else. Crispy and Halal. The staff are so friendly and the vibes are super. Will definitely come back. This place is super awesome.\\\"},{\\\"review_date\\\":\\\"2021-12-24 15:02:14\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"We were excited to try this place out, but we're extremely disappointed. The service was slow, it seemed like there were only two people working. The silverware was not very clean. The ambiance was awkward, very quiet, like a doctors office lobby. The beef schwarma sandwich was not good at all. The meat had no flavor, couldn't taste any seasonings. It was also wrapped in a tortilla. A tortilla??! While the menu says \\\\\\\"flat bread.\\\\\\\" I was hoping that at least the baklava would be good, but it was so dry. The hummus that came with the schwarma wasn't that great, either. The Turkish coffee was decent though. Would not recommend and will not come back. 1 star for being ambitious enough to open a new restaurant in town.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Mr B Restaurant & Cafe, located at 140 S Hope Ave, Ste A102 in Santa Barbara, CA, is a Middle Eastern restaurant and cafe open every day from 10 am to 8 pm. The restaurant is known for its Mediterranean food and also serves as a bakery. It offers amenities like free WiFi, outdoor seating, and is good for groups. The cafe also offers takeout services and has a parking lot. However, it does not offer valet, garage, or street parking. The ambiance is casual, not hipster or upscale. The restaurant has an overall rating of 4.0 stars, with customers praising the quality of food, particularly the shawarma and hummus. The staff has also been noted to be friendly. However, one reviewer expressed disappointment with the service, cleanliness, and some of the food offerings.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22], \"source_evidence_erased\": false}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:2e67bc4ab3d056788a47a8c258f98d431c671bc17c664ddf3144d2ff07cd5075",
+      "started": true,
+      "status": "generated",
+      "visible_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22
+      ]
+    },
+    {
+      "arm": "source_erased",
+      "duration_s": 1.0516754699638113,
+      "family_id": "sha256:23b38d278fb4d5212b97cf131b227923f91ee7404124d9fba5eedff612bab502",
+      "input_tokens": 304,
+      "order": 1,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 1.0,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 304,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 327
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 1.0,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817099,
+        "id": "chatcmpl-8dGn0KdehCbo440cW6txCesfu4cWRhh9",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 541.322,
+          "predicted_n": 23,
+          "predicted_per_second": 42.48857426818049,
+          "predicted_per_token_ms": 23.535739130434784,
+          "prompt_ms": 282.414,
+          "prompt_n": 226,
+          "prompt_per_second": 800.2436139851425,
+          "prompt_per_token_ms": 1.2496194690265485
+        },
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 304,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 327
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"\", \"original_answer\": \"Mr B Restaurant & Cafe, located at 140 S Hope Ave, Ste A102 in Santa Barbara, CA, is a Middle Eastern restaurant and cafe open every day from 10 am to 8 pm. The restaurant is known for its Mediterranean food and also serves as a bakery. It offers amenities like free WiFi, outdoor seating, and is good for groups. The cafe also offers takeout services and has a parking lot. However, it does not offer valet, garage, or street parking. The ambiance is casual, not hipster or upscale. The restaurant has an overall rating of 4.0 stars, with customers praising the quality of food, particularly the shawarma and hummus. The staff has also been noted to be friendly. However, one reviewer expressed disappointment with the service, cleanliness, and some of the food offerings.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [], \"source_evidence_erased\": true}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:2e67bc4ab3d056788a47a8c258f98d431c671bc17c664ddf3144d2ff07cd5075",
+      "started": true,
+      "status": "generated",
+      "visible_ids": []
+    }
+  ]
+}

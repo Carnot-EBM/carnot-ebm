@@ -1,0 +1,194 @@
+{
+  "config_hash": "sha256:17d509539abd34d125a7b8f21f47e2064e0f59d5eac351ba74cf8a90a0b6d5a9",
+  "public_hash": "sha256:1d4dbab25700c9593a40cee6e8ee99907e4cbbf072253919a85dcce6aaf07b90",
+  "rows": [
+    {
+      "arm": "full_source",
+      "duration_s": 1.1725285720312968,
+      "family_id": "sha256:a7df6c9fc0d117611e1318d3fae96d3941477a7b15647d91d0123298428cc01c",
+      "input_tokens": 590,
+      "order": 0,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 0.0,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 590,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 613
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817015,
+        "id": "chatcmpl-HkP2GkGWIC2n7cRs1zjys5nNXzXSxbig",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 536.078,
+          "predicted_n": 23,
+          "predicted_per_second": 42.90420423893538,
+          "predicted_per_token_ms": 23.307739130434783,
+          "prompt_ms": 525.454,
+          "prompt_n": 512,
+          "prompt_per_second": 974.3954751510123,
+          "prompt_per_token_ms": 1.02627734375
+        },
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 590,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 613
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:If you'd like to see red blood cells, you'll need to learn how to do a Blood Smear. Everything is simple except pricking your finger! Level: Adult supervision (Perhaps for a blood donation too, unless someone has a boo-boo!). Materials: Slide, cover slip, needle, matches or lighter. First sterilize the needle with a flame.\\\\n\\\\npassage 2:Blood can carry diseases that can be transferred from person to person. One should always avoid coming into contact with another person's blood. If it is unavoidable, one should wear rubber gloves. Put a drop of blood toward one end of a slide.\\\\n\\\\npassage 3:How to Make a Blood Smear STEP ONE: Place clean glass slide on a flat surface. Add one small drop of blood to one end. STEP TWO: Take another clean slide, and holding at an angle of about 45 deg, touch the blood with one end of the slide so the blood runs along the edge of the slide by capillary action. Push carefully along the length of the first slide to produce a thin smear of blood. STEP THREE: Make 2 smears, allow to air dry, and label clearly. Once dried place in the provided slide transport containers.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to prepare blood slide\\\"}\", \"original_answer\": \"To prepare a blood slide, first sterilize a needle with a flame. Place a clean glass slide on a flat surface and add a small drop of blood to one end. Then, take another clean slide and holding it at an angle of about 45 degrees, touch the blood with one end of the slide so that the blood runs along the edge of the slide by capillary action. Push carefully along the length of the first slide to produce a thin smear of blood. Make two smears, allow them to air dry and label clearly. Once dried, place them in the provided slide transport containers. Always avoid coming into contact with another person's blood and if it is unavoidable, wear rubber gloves.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], \"source_evidence_erased\": false}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:35ee1e42bba1eba48148b4412d642330f641fa74f2f116ca094064747e6cb50f",
+      "started": true,
+      "status": "generated",
+      "visible_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ]
+    },
+    {
+      "arm": "source_erased",
+      "duration_s": 0.9916958520188928,
+      "family_id": "sha256:a7df6c9fc0d117611e1318d3fae96d3941477a7b15647d91d0123298428cc01c",
+      "input_tokens": 270,
+      "order": 1,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 1.0,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 270,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 293
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 1.0,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817016,
+        "id": "chatcmpl-4lKtayX5rrdQ40rU0R8uqPPZJX81EjnA",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 535.521,
+          "predicted_n": 23,
+          "predicted_per_second": 42.94882927093429,
+          "predicted_per_token_ms": 23.283521739130432,
+          "prompt_ms": 256.765,
+          "prompt_n": 192,
+          "prompt_per_second": 747.7654664771289,
+          "prompt_per_token_ms": 1.3373177083333332
+        },
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 270,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 293
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"\", \"original_answer\": \"To prepare a blood slide, first sterilize a needle with a flame. Place a clean glass slide on a flat surface and add a small drop of blood to one end. Then, take another clean slide and holding it at an angle of about 45 degrees, touch the blood with one end of the slide so that the blood runs along the edge of the slide by capillary action. Push carefully along the length of the first slide to produce a thin smear of blood. Make two smears, allow them to air dry and label clearly. Once dried, place them in the provided slide transport containers. Always avoid coming into contact with another person's blood and if it is unavoidable, wear rubber gloves.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [], \"source_evidence_erased\": true}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:35ee1e42bba1eba48148b4412d642330f641fa74f2f116ca094064747e6cb50f",
+      "started": true,
+      "status": "generated",
+      "visible_ids": []
+    }
+  ]
+}

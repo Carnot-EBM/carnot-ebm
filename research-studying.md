@@ -6313,3 +6313,26 @@ qualify. Defer Kona training without a reproducible local recipe. Keep hardware
 speedups modeled until local host, transfer and readout costs are measured.
 Preserve the review's citation-access and stale trend limits; no new external
 research request or scientific outcome is claimed by this ingestion.
+
+## 2026-09-30 — Exp7953 V690 methods INGESTED
+
+Ingest the recorded V690 review from research-references.md before results.
+Adapt EAEV source erasure and span alignment to complete-response human targets.
+Any original unsupported span, including implicit_true, marks the complete response.
+Verify Unicode offsets and text. Incomplete annotations remain exclusions.
+Fixed grammar measures formatting separately from accuracy against human labels.
+Preserve 640 intended families, historical exclusions and exposed development status.
+
+Freeze nine energy arms, typed losses accept=5p, reject=1-p and escalate=.25,
+with ties escalating. Use confidence abs(2p-1). Release labels at tick+20,
+pin read state, seal predictions and commit between queries. Delayed ACI compares
+issued alpha with current alpha on the same fixed trajectory at total delays
+21, 24 and 36. These controls do not inherit a coverage theorem.
+
+Defer KAN retention claims until retained accuracy and sparse update costs qualify.
+Hardware cost includes host work, preprocessing, transfer, readout and durable
+updates. Vendor sparsity estimates do not establish local acceleration.
+The recorded Semantic Scholar requests returned HTTP 429. OpenReview forums
+had browser challenges. This ingestion makes no new request or complete citation
+census claim. Preserve the September 28 oracle-distinct correction: the gap is
+open. This administrative contract never becomes a universal science pre-gate.

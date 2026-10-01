@@ -1,0 +1,194 @@
+{
+  "config_hash": "sha256:17d509539abd34d125a7b8f21f47e2064e0f59d5eac351ba74cf8a90a0b6d5a9",
+  "public_hash": "sha256:798de950f4ccedd2729a8a1f3046c59051e2d4df5fa2df040046c7f1ccc4c3a4",
+  "rows": [
+    {
+      "arm": "source_erased",
+      "duration_s": 0.7501792050315998,
+      "family_id": "sha256:aa23cf956ecc377072134f5396389c6e40aa381d56b6d24836974e592a4cd0fc",
+      "input_tokens": 263,
+      "order": 0,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 0.0,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 17,
+          "prompt_tokens": 263,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 280
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\"unsupported_probability\": 0.0, \"source_sentence_id\": null}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817064,
+        "id": "chatcmpl-GvSqA1lAs33ymB46GBzP0Dv11MUijduc",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 394.121,
+          "predicted_n": 17,
+          "predicted_per_second": 43.13396139764184,
+          "predicted_per_token_ms": 23.183588235294117,
+          "prompt_ms": 258.612,
+          "prompt_n": 185,
+          "prompt_per_second": 715.3573693409431,
+          "prompt_per_token_ms": 1.397902702702703
+        },
+        "usage": {
+          "completion_tokens": 17,
+          "prompt_tokens": 263,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 280
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"\", \"original_answer\": \"Mediterra Market and Cafe is a Mediterranean restaurant located at 5575 Hollister Ave in Goleta, CA. It offers outdoor seating and free WiFi. The restaurant does not take reservations and does not have a dress code or live music. The ambiance is described as casual and trendy. The business has four stars out of five based on customer reviews, with many praising the quality of the food and the excellent customer service. One reviewer noted that the meat portions on the combo plate were small, while another praised the homemade pita bread and the friendly staff. Overall, Mediterra Market and Cafe appears to be a popular choice for Mediterranean cuisine in Goleta.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [], \"source_evidence_erased\": true}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:f2270ee3ce0ff8cf42cf81b200eba676160094c333a24630237250d69a8238b6",
+      "started": true,
+      "status": "generated",
+      "visible_ids": []
+    },
+    {
+      "arm": "full_source",
+      "duration_s": 1.3549077209900133,
+      "family_id": "sha256:aa23cf956ecc377072134f5396389c6e40aa381d56b6d24836974e592a4cd0fc",
+      "input_tokens": 760,
+      "order": 1,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 0.95,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 24,
+          "prompt_tokens": 760,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 784
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817065,
+        "id": "chatcmpl-0lsUVWNkaDy3gQgGtNLQoyqnPdFQ8cWu",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 570.363,
+          "predicted_n": 24,
+          "predicted_per_second": 42.07846581913623,
+          "predicted_per_token_ms": 23.765125,
+          "prompt_ms": 681.975,
+          "prompt_n": 682,
+          "prompt_per_second": 1000.0366582352725,
+          "prompt_per_token_ms": 0.9999633431085044
+        },
+        "usage": {
+          "completion_tokens": 24,
+          "prompt_tokens": 760,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 784
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"{\\\"address\\\":\\\"5575 Hollister Ave\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":false,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Mediterranean, Restaurants, Greek\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":null,\\\"name\\\":\\\"Mediterra Market and Cafe\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2013-08-19 18:52:35\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"I love this place.  Customer Service is excellent, everything out of the kitchen looks and tastes homemade.  Very cool, european atmosphere indoors.  Outdoors is really just the parking lot but the owners are very accommodating.\\\"},{\\\"review_date\\\":\\\"2013-07-19 19:19:22\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"i got the combo plate and it was not a very good value. the food is decent, but they are very stingy with their meat on this plate. its ok if youre really craving mediterranean, but otherwise i wouldnt go there due to the meat portions.\\\"},{\\\"review_date\\\":\\\"2013-07-11 00:02:00\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I feel really lucky to have found this place. Its in a location that is easily overlooked. I've been searching for good Mediterranean food and I finally found it. The man that works here is so friendly and awesome. The gyro and falafel are great. And I'm pretty sure the pita bread is homemade. Its delicious! I will be back again and again.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Mediterra Market and Cafe is a Mediterranean restaurant located at 5575 Hollister Ave in Goleta, CA. It offers outdoor seating and free WiFi. The restaurant does not take reservations and does not have a dress code or live music. The ambiance is described as casual and trendy. The business has four stars out of five based on customer reviews, with many praising the quality of the food and the excellent customer service. One reviewer noted that the meat portions on the combo plate were small, while another praised the homemade pita bread and the friendly staff. Overall, Mediterra Market and Cafe appears to be a popular choice for Mediterranean cuisine in Goleta.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], \"source_evidence_erased\": false}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:f2270ee3ce0ff8cf42cf81b200eba676160094c333a24630237250d69a8238b6",
+      "started": true,
+      "status": "generated",
+      "visible_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ]
+    }
+  ]
+}

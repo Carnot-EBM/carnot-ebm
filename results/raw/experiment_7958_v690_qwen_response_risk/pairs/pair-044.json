@@ -1,0 +1,218 @@
+{
+  "config_hash": "sha256:17d509539abd34d125a7b8f21f47e2064e0f59d5eac351ba74cf8a90a0b6d5a9",
+  "public_hash": "sha256:d9370dc99ebf774ec3fe4d9ec67b276deb3d6ed962b03e370317cf411dd24192",
+  "rows": [
+    {
+      "arm": "full_source",
+      "duration_s": 1.8651487460010685,
+      "family_id": "sha256:af28acd18de16b7854f4fcef58431c483841059e7feab16220b35598c141e1ac",
+      "input_tokens": 1287,
+      "order": 0,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 0.0,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 1287,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 1310
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817095,
+        "id": "chatcmpl-k5Cq0DV9bELw78pg4FlWLyQiNalbqzWT",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 543.455,
+          "predicted_n": 23,
+          "predicted_per_second": 42.321811373526785,
+          "predicted_per_token_ms": 23.628478260869567,
+          "prompt_ms": 1132.732,
+          "prompt_n": 1209,
+          "prompt_per_second": 1067.331019164286,
+          "prompt_per_token_ms": 0.9369164598842018
+        },
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 1287,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 1310
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"The number of new HIV infections in a rural Indiana county has grown, according to the Centers for Disease Control and Prevention. The institute is working with state health leaders to control the \\\"severe outbreak,\\\" which has spread among users of a prescription opioid called Opana. The outbreak has been ongoing since mid-December. As of Friday, 142 people have tested positive for HIV, with 136 confirmed cases and six more with preliminary positive test results, all in rural Scott and Jackson counties. This is a huge number of cases for an area that has a population of only a few thousand people. The CDC and state health leaders held a news conference Friday to talk about the new numbers and about the growing threat of the spread of disease from IV drug use, especially in isolated rural areas that have sparse health resources. Scott County, the epicenter of the outbreak, has only one doctor who deals with infectious disease, but the doctor is not an HIV specialist, the State Department of Health said. Since the rampant HIV outbreak was first noticed in mid-December, the state has tried to flood the area with additional resources. Indiana declared a public health emergency in that county in March. Indiana University has sent health volunteers to provide a clinic, open once a week to help treat people and test them for HIV. These workers are also going door to door to try to educate the population about the danger of sharing needles. So far, 33 patients have visited the temporary clinic, which is starting to see patients return to seek treatment. It's no coincidence that many of the cases of the newly infected there are younger people \\\"who weren't around in the '80s and '90s when HIV was at its peak,\\\" Dr. Jonathan Mermin said. In the 1980s, doctors were seeing an average of 35,000 new HIV infections among IV drug users, and that figure has been down 90% nationally, he said. So people aren't as aware about the danger of sharing needles. Mermin is the director of the National Center for HIV/AIDS, Viral Hepatitis, STD, and TB Prevention. Education will be key, he emphasized. Indiana Gov. Mike Pence also signed a 30-day executive order that allows for a needle exchange. It was set to expire Friday, but he extended the order another 30 days Tuesday. Needle exchanges have been scientifically shown to reduce new infections. The state is also offering job services to people in the area. Dr. Joan Duwve, the chief medical consultant with the Indiana State Department of Health, spoke at length about how communities all along the Ohio River in her state and in Kentucky and West Virginia have seen a huge problem with prescription drug abuse, particularly in areas where there \\\"is not a lot to do.\\\" Many family members, across generations, live in the same house and will use the drugs together as \\\"a community activity,\\\" Duwve said. And this has led to more needle sharing, which spreads infection. She said this has been a problem for these areas for at least a decade. Another reason this infection has spread so rapidly is the nature of the drug itself. Opana, as the prescription opioid is known, needs to be injected more than once a day. Duwve said residents have reported injecting it four to 10 times a day to stay under its influence. When people start to feel the drug wear off after about four hours, they begin to feel sick and go into withdrawal. Often they'll turn to an injecting partner in the same house who will share their needle and their drug to give the person relief from these symptoms. The other problem with this drug is that it requires a larger-gauge needle that exposes users to more blood, which increases the risk of infection. Health leaders worry about the spread of HIV and other diseases such as hepatitis C around the country as the number of illegal prescription drug users has grown. There has been a 150% increase in hepatitis C between 2010 and 2013, the majority of the increase believed to be from injection drug abusers, the CDC said. \\\"The situation in Indiana should serve as a warning not to let our guard down,\\\" Mermin said. \\\"This is a powerful reminder\\\" that HIV and other infectious diseases \\\"can gain ground at any time, unless you remain vigilant.\\\"\\n\", \"original_answer\": \"Sure! Here's the summary within 183 words:\\n\\nA severe HIV outbreak has been reported in rural Indiana, with 142 cases confirmed and six more with preliminary positive test results. The outbreak is linked to the use of the prescription opioid Opana, which has spread among users through shared needles. Health leaders are concerned about the rapid spread of the disease and the lack of resources in the rural area. Indiana has declared a public health emergency and is providing additional resources, including a temporary clinic and education efforts. The outbreak highlights the ongoing danger of infectious diseases, particularly in isolated areas with limited health resources.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36], \"source_evidence_erased\": false}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:3613f094b99f11b8dddba268901aad87cb387de5c6a5990509b981a5b2c464d8",
+      "started": true,
+      "status": "generated",
+      "visible_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36
+      ]
+    },
+    {
+      "arm": "source_erased",
+      "duration_s": 1.0317980779800564,
+      "family_id": "sha256:af28acd18de16b7854f4fcef58431c483841059e7feab16220b35598c141e1ac",
+      "input_tokens": 255,
+      "order": 1,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 1.0,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 255,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 278
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 1.0,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817096,
+        "id": "chatcmpl-Cet6mrhAWMlqJ8Md7OarRTcGqH3raFlR",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 545.721,
+          "predicted_n": 23,
+          "predicted_per_second": 42.1460783074135,
+          "predicted_per_token_ms": 23.727,
+          "prompt_ms": 260.683,
+          "prompt_n": 177,
+          "prompt_per_second": 678.9855878595843,
+          "prompt_per_token_ms": 1.4727853107344633
+        },
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 255,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 278
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"\", \"original_answer\": \"Sure! Here's the summary within 183 words:\\n\\nA severe HIV outbreak has been reported in rural Indiana, with 142 cases confirmed and six more with preliminary positive test results. The outbreak is linked to the use of the prescription opioid Opana, which has spread among users through shared needles. Health leaders are concerned about the rapid spread of the disease and the lack of resources in the rural area. Indiana has declared a public health emergency and is providing additional resources, including a temporary clinic and education efforts. The outbreak highlights the ongoing danger of infectious diseases, particularly in isolated areas with limited health resources.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [], \"source_evidence_erased\": true}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:3613f094b99f11b8dddba268901aad87cb387de5c6a5990509b981a5b2c464d8",
+      "started": true,
+      "status": "generated",
+      "visible_ids": []
+    }
+  ]
+}

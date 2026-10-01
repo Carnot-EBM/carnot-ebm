@@ -1,0 +1,194 @@
+{
+  "config_hash": "sha256:17d509539abd34d125a7b8f21f47e2064e0f59d5eac351ba74cf8a90a0b6d5a9",
+  "public_hash": "sha256:4cc7d7f7296fd23846a7301c9b6af117abbad40ff48ec3eac275d1f84d42229e",
+  "rows": [
+    {
+      "arm": "full_source",
+      "duration_s": 1.2449701279983856,
+      "family_id": "sha256:dc188a47d2d2deb0d1c023d17c6349550031a243b6292ce0d94aa1680cb7d6be",
+      "input_tokens": 565,
+      "order": 0,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 0.95,
+        "schema_valid": true,
+        "source_sentence_id": 10,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 26,
+          "prompt_tokens": 565,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 591
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": 10\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817130,
+        "id": "chatcmpl-XUmDRmed5ph54rtwWgaQn4nbBaDeRQd6",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 614.94,
+          "predicted_n": 26,
+          "predicted_per_second": 42.28054769571015,
+          "predicted_per_token_ms": 23.651538461538465,
+          "prompt_ms": 531.368,
+          "prompt_n": 487,
+          "prompt_per_second": 916.5023110160942,
+          "prompt_per_token_ms": 1.0911047227926078
+        },
+        "usage": {
+          "completion_tokens": 26,
+          "prompt_tokens": 565,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 591
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"Hip-hop star Nelly has been arrested on drug charges in Tennessee after a state trooper pulled over the private bus in which he was traveling, authorities said. The 40-year-old rapper from St. Louis, who shot to fame 15 years ago with the track \\\"Country Grammar,\\\" has been charged with felony possession of drugs, simple possession of marijuana and possession of drug paraphernalia, the Tennessee Department of Safety and Homeland Security said. The state trooper stopped the bus carrying Nelly and five other people on Interstate 40 in Putnam County on Saturday because it wasn't displaying U.S. Department of Transportation and International Fuel Tax Association stickers, according to Tennessee authorities. The trooper was about to conduct an inspection of the bus, a Prevost motor coach, when he \\\"noticed an odor of marijuana emitting from the vehicle,\\\" authorities said in a statement. Two troopers then searched the bus, finding \\\"five colored crystal-type rocks that tested positive for methamphetamine, as well as a small amount of marijuana and other drug paraphernalia,\\\" the statement said. The search also turned up several handguns and 100 small Ziploc bags, which the statement said are commonly used for selling drugs. The guns included a gold-plated .50-caliber Desert Eagle pistol, a .45-caliber Taurus pistol and a .500 Smith & Wesson magnum. Nelly, whose real name is Cornell Haynes, was taken to the Putnam County Jail along with another passenger. He later posted bond and left the jail, the Putnam County Sheriff's Office said. CNN couldn't immediately reach Nelly's representatives for comment Saturday. CNN's Janet DiGiacomo contributed to this report.\\n\", \"original_answer\": \"Rapper Nelly was arrested on drug charges in Tennessee after a state trooper smelled marijuana while inspecting his tour bus. He was charged with felony drug possession and other offenses. Five other people were also arrested.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], \"source_evidence_erased\": false}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:4fc2fa6fffe2101cf24af480483e72172fe44edabac10fc43c905563a9c93326",
+      "started": true,
+      "status": "generated",
+      "visible_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ]
+    },
+    {
+      "arm": "source_erased",
+      "duration_s": 0.9549068040214479,
+      "family_id": "sha256:dc188a47d2d2deb0d1c023d17c6349550031a243b6292ce0d94aa1680cb7d6be",
+      "input_tokens": 171,
+      "order": 1,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 1.0,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 171,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 194
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 1.0,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817131,
+        "id": "chatcmpl-pY2MSiyBM7kKankfuwKDghRY4HV9nhFP",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 540.884,
+          "predicted_n": 23,
+          "predicted_per_second": 42.52298089793745,
+          "predicted_per_token_ms": 23.516695652173915,
+          "prompt_ms": 190.802,
+          "prompt_n": 93,
+          "prompt_per_second": 487.4162744625319,
+          "prompt_per_token_ms": 2.0516344086021503
+        },
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 171,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 194
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"\", \"original_answer\": \"Rapper Nelly was arrested on drug charges in Tennessee after a state trooper smelled marijuana while inspecting his tour bus. He was charged with felony drug possession and other offenses. Five other people were also arrested.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [], \"source_evidence_erased\": true}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:4fc2fa6fffe2101cf24af480483e72172fe44edabac10fc43c905563a9c93326",
+      "started": true,
+      "status": "generated",
+      "visible_ids": []
+    }
+  ]
+}

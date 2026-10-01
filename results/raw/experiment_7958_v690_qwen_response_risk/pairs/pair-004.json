@@ -1,0 +1,190 @@
+{
+  "config_hash": "sha256:17d509539abd34d125a7b8f21f47e2064e0f59d5eac351ba74cf8a90a0b6d5a9",
+  "public_hash": "sha256:ec17b5642ec2c31641ec8944a4184cd47209c4b0b7c1f7b60a220d12190054ba",
+  "rows": [
+    {
+      "arm": "source_erased",
+      "duration_s": 0.9707917210180312,
+      "family_id": "sha256:62614d3b41c668a8baf0a8393786484580b2921d81914ad28902dcf155052ce9",
+      "input_tokens": 293,
+      "order": 0,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 1.0,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 293,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 316
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 1.0,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790816990,
+        "id": "chatcmpl-dwNCZh0zZSela6FSoSB8bs4J26BYYZEG",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 534.958,
+          "predicted_n": 23,
+          "predicted_per_second": 42.99402943782503,
+          "predicted_per_token_ms": 23.259043478260867,
+          "prompt_ms": 272.228,
+          "prompt_n": 215,
+          "prompt_per_second": 789.7791557077155,
+          "prompt_per_token_ms": 1.2661767441860465
+        },
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 293,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 316
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"\", \"original_answer\": \"Kaptain's Firehouse BBQ, located at 6543 Pardall Rd, Isla Vista, CA, is a local restaurant offering food delivery services. They specialize in American and Barbeque cuisines, including chicken wings and sandwiches. The restaurant operates from 11:30 to 21:30 every day. While they don't offer WiFi or reservations, they do feature outdoor seating and takeout services. However, the place may not be suitable for groups. Street parking is available, and the ambience is casual. The business has a 3.5-star rating. While some customers have praised their mac n cheese, pulled pork, bbq sauce, and tater tots, others have noted inconsistent quality of food and service, including a lack of ribs and poor customer service.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [], \"source_evidence_erased\": true}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:872e0fdfb746c692d8a862c0d81189122de223390e5f130a5e6511f6a163cae7",
+      "started": true,
+      "status": "generated",
+      "visible_ids": []
+    },
+    {
+      "arm": "full_source",
+      "duration_s": 1.4201053970027715,
+      "family_id": "sha256:62614d3b41c668a8baf0a8393786484580b2921d81914ad28902dcf155052ce9",
+      "input_tokens": 908,
+      "order": 1,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 0.0,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 21,
+          "prompt_tokens": 908,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 929
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790816992,
+        "id": "chatcmpl-VN10gppj6v18JVSrQDCcgNbYRFYKiqDD",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 488.869,
+          "predicted_n": 21,
+          "predicted_per_second": 42.95629299464683,
+          "predicted_per_token_ms": 23.279476190476192,
+          "prompt_ms": 825.05,
+          "prompt_n": 830,
+          "prompt_per_second": 1005.9996363856736,
+          "prompt_per_token_ms": 0.9940361445783132
+        },
+        "usage": {
+          "completion_tokens": 21,
+          "prompt_tokens": 908,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 929
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"{\\\"address\\\":\\\"6543 Pardall Rd\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":false,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Food Delivery Services, Chicken Wings, Restaurants, Sandwiches, Food, American (New), Barbeque\\\",\\\"city\\\":\\\"Isla Vista\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:30-21:30\\\",\\\"Monday\\\":\\\"11:30-21:30\\\",\\\"Saturday\\\":\\\"11:30-21:30\\\",\\\"Sunday\\\":\\\"11:30-21:30\\\",\\\"Thursday\\\":\\\"11:30-21:30\\\",\\\"Tuesday\\\":\\\"11:30-21:30\\\",\\\"Wednesday\\\":\\\"11:30-21:30\\\"},\\\"name\\\":\\\"Kaptain's Firehouse BBQ\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2018-11-08 17:11:36\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"I've never in my life been angry enough to yell at a stranger than I was when I ordered from here one day. And I'm super shy and quiet, so that should say a lot about the customer service. Their food was my favorite until I experienced the worst customer service from a girl who worked their. So I was sad because ofc I wouldn't support them again after that. But oh well.\\\"},{\\\"review_date\\\":\\\"2017-12-03 00:13:26\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"animal mac- mac n cheese, pulled pork, bbq sauce, and tater tots. the guy hooked it up F A T so blessed this is so good\\\"},{\\\"review_date\\\":\\\"2017-10-15 14:38:40\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"Updating my review to inform readers that I have returned here now at least 4 more times and sometimes my food has been less than great. Also, the last 3 times they didn't have any ribs. I also think that the quality of food you get depends on who's working. I will try again but if they give me stories and crappy food I will not go back ever again.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Kaptain's Firehouse BBQ, located at 6543 Pardall Rd, Isla Vista, CA, is a local restaurant offering food delivery services. They specialize in American and Barbeque cuisines, including chicken wings and sandwiches. The restaurant operates from 11:30 to 21:30 every day. While they don't offer WiFi or reservations, they do feature outdoor seating and takeout services. However, the place may not be suitable for groups. Street parking is available, and the ambience is casual. The business has a 3.5-star rating. While some customers have praised their mac n cheese, pulled pork, bbq sauce, and tater tots, others have noted inconsistent quality of food and service, including a lack of ribs and poor customer service.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8], \"source_evidence_erased\": false}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:872e0fdfb746c692d8a862c0d81189122de223390e5f130a5e6511f6a163cae7",
+      "started": true,
+      "status": "generated",
+      "visible_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    }
+  ]
+}

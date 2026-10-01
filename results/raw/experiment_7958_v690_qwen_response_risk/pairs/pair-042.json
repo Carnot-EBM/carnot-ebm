@@ -1,0 +1,195 @@
+{
+  "config_hash": "sha256:17d509539abd34d125a7b8f21f47e2064e0f59d5eac351ba74cf8a90a0b6d5a9",
+  "public_hash": "sha256:9a39ee48a8021219d937ccc3aa7e408356723bbfc0f4bc44f7855ee8d04b8d64",
+  "rows": [
+    {
+      "arm": "source_erased",
+      "duration_s": 1.1370757519616745,
+      "family_id": "sha256:5a6ee3d7e3f6756ca150d441eb39b57bdbe36096da66e17496ba91b18f934f2c",
+      "input_tokens": 391,
+      "order": 0,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 1.0,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 391,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 414
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 1.0,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817088,
+        "id": "chatcmpl-SwbjowrpIpoTINWX7NeHoUO2pZK55Wte",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 540.674,
+          "predicted_n": 23,
+          "predicted_per_second": 42.53949699819115,
+          "predicted_per_token_ms": 23.507565217391303,
+          "prompt_ms": 414.634,
+          "prompt_n": 313,
+          "prompt_per_second": 754.8826193703362,
+          "prompt_per_token_ms": 1.3247092651757189
+        },
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 391,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 414
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"\", \"original_answer\": \"Sure! Here's my answer based on the given passages:\\n\\nThe main difference between SMS (Short Message Service) and MMS (Multimedia Messaging Service) is that SMS is limited to sending text-only messages, while MMS allows for sending multimedia content such as images, videos, and audio files, in addition to text.\\n\\nAccording to passage 1, SMS messages are limited to 160 characters and can be split into multiple parts if they are longer. MMS messages, on the other hand, can carry a larger size of content, including pictures, videos, and audio files, with a maximum size of 300KB.\\n\\nPassage 2 explains that SMS is a premium service offered by mobile companies, while passage 3 highlights the differences between SMS and MMS, stating that SMS only allows for text, while MMS allows for multimedia content.\\n\\nTherefore, the key differences between SMS and MMS are:\\n\\n* SMS is limited to text-only messages, while MMS allows for multimedia content.\\n* SMS messages are limited to 160 characters and can be split into multiple parts, while MMS messages can carry a larger size of content.\\n\\nI hope this helps! Let me know if you have any further questions.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [], \"source_evidence_erased\": true}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:4aaa835fd4f288a922f40a28c14c8f3472b9038559f9e1a3e2f2c1bff9e7b9f6",
+      "started": true,
+      "status": "generated",
+      "visible_ids": []
+    },
+    {
+      "arm": "full_source",
+      "duration_s": 1.4538464869838208,
+      "family_id": "sha256:5a6ee3d7e3f6756ca150d441eb39b57bdbe36096da66e17496ba91b18f934f2c",
+      "input_tokens": 866,
+      "order": 1,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 0.0,
+        "schema_valid": true,
+        "source_sentence_id": 0,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 22,
+          "prompt_tokens": 866,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 888
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": 0\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817090,
+        "id": "chatcmpl-xSK8pYTOTRnmBaNz96whJMTikMJfdYKB",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 516.788,
+          "predicted_n": 22,
+          "predicted_per_second": 42.57064792526142,
+          "predicted_per_token_ms": 23.490363636363636,
+          "prompt_ms": 823.374,
+          "prompt_n": 788,
+          "prompt_per_second": 957.0377495524513,
+          "prompt_per_token_ms": 1.0448908629441624
+        },
+        "usage": {
+          "completion_tokens": 22,
+          "prompt_tokens": 866,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 888
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:SMS stands for Short Message Service and is also commonly referred to as a text message. With a SMS, you can send a message of up to 160 characters to another device. Longer messages will automatically be split up into several parts.Most cell phones support this type of text messaging.MMS: MMS stands for Multimedia Messaging Service and this type of text messaging is an evolution of the SMS.With a MMS, you can send a message including pictures, video, or audio content to another device. It is most commonly used to send a photo taken with a camera phone to another phone.ith a SMS, you can send a message of up to 160 characters to another device. Longer messages will automatically be split up into several parts. Most cell phones support this type of text messaging. MMS: MMS stands for Multimedia Messaging Service and this type of text messaging is an evolution of the SMS.\\\\n\\\\npassage 2:SMS vs MMS. SMS or short messaging service/texting was the first premium service offered by mobile companies apart from making phone calls. It is necessarily restricted to sending text-only messages from one mobile phone to another via the service provider\u2019s special service offered for SMS.MS vs MMS. SMS or short messaging service/texting was the first premium service offered by mobile companies apart from making phone calls. It is necessarily restricted to sending text-only messages from one mobile phone to another via the service provider\u2019s special service offered for SMS.\\\\n\\\\npassage 3:SMS only allows you to send text. MMS allows you to send pictures, sounds, videos, text, or any combination of the four.MMS message can carry a larger size of content up to 300KB in extensions of WAV, JPEG, Gif etc. You can find more information about it on the link below.MS only allows you to send text. MMS allows you to send pictures, sounds, videos, text, or any combination of the four.\\\\n\\\\n\\\",\\\"question\\\":\\\"what is the difference between sms and mms\\\"}\", \"original_answer\": \"Sure! Here's my answer based on the given passages:\\n\\nThe main difference between SMS (Short Message Service) and MMS (Multimedia Messaging Service) is that SMS is limited to sending text-only messages, while MMS allows for sending multimedia content such as images, videos, and audio files, in addition to text.\\n\\nAccording to passage 1, SMS messages are limited to 160 characters and can be split into multiple parts if they are longer. MMS messages, on the other hand, can carry a larger size of content, including pictures, videos, and audio files, with a maximum size of 300KB.\\n\\nPassage 2 explains that SMS is a premium service offered by mobile companies, while passage 3 highlights the differences between SMS and MMS, stating that SMS only allows for text, while MMS allows for multimedia content.\\n\\nTherefore, the key differences between SMS and MMS are:\\n\\n* SMS is limited to text-only messages, while MMS allows for multimedia content.\\n* SMS messages are limited to 160 characters and can be split into multiple parts, while MMS messages can carry a larger size of content.\\n\\nI hope this helps! Let me know if you have any further questions.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], \"source_evidence_erased\": false}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:4aaa835fd4f288a922f40a28c14c8f3472b9038559f9e1a3e2f2c1bff9e7b9f6",
+      "started": true,
+      "status": "generated",
+      "visible_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ]
+    }
+  ]
+}

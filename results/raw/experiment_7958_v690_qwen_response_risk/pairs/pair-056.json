@@ -1,0 +1,199 @@
+{
+  "config_hash": "sha256:17d509539abd34d125a7b8f21f47e2064e0f59d5eac351ba74cf8a90a0b6d5a9",
+  "public_hash": "sha256:2278caf81f11c22f16ae6a54f0b022784319140798804c3f80fb94af59ad46c4",
+  "rows": [
+    {
+      "arm": "full_source",
+      "duration_s": 1.6985634039738216,
+      "family_id": "sha256:90fc2872613a18e889f8ba6de091311c25cda18c278a4bc98f9cb6adcb2c98a8",
+      "input_tokens": 1119,
+      "order": 0,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 0.95,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 24,
+          "prompt_tokens": 1119,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 1143
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817126,
+        "id": "chatcmpl-D28DW0eEV72J5R3zOdXHarXaLnP5tjBk",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 567.301,
+          "predicted_n": 24,
+          "predicted_per_second": 42.305583808242886,
+          "predicted_per_token_ms": 23.637541666666667,
+          "prompt_ms": 1016.826,
+          "prompt_n": 1041,
+          "prompt_per_second": 1023.7739790288604,
+          "prompt_per_token_ms": 0.976778097982709
+        },
+        "usage": {
+          "completion_tokens": 24,
+          "prompt_tokens": 1119,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 1143
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"{\\\"address\\\":\\\"2220 Bath St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Mexican, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"7:0-21:0\\\",\\\"Monday\\\":\\\"7:0-21:0\\\",\\\"Saturday\\\":\\\"7:0-21:0\\\",\\\"Sunday\\\":\\\"7:0-21:0\\\",\\\"Thursday\\\":\\\"7:0-21:0\\\",\\\"Tuesday\\\":\\\"7:0-21:0\\\",\\\"Wednesday\\\":\\\"7:0-21:0\\\"},\\\"name\\\":\\\"Las Aves Cafe\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2017-12-09 00:49:10\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"We loved this place! We stayed at the hotel for a couple of days and had most of our meals here. The staff was great as well as the owner who is really a great guy. I don't understand the negative reviews but I guess that happens time to time.\\\"},{\\\"review_date\\\":\\\"2015-01-05 17:58:01\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"This place is really convenient if you're staying at the hotel in the same parking area. I ordered the ribeye and I gotta say the flavor is underwhelming  I guess I expected too much in that it would be steakhouse quality but it's not.  It's more like average coffee shop quality so I'm not impressed. The flavor also was lacking a bit as it's not seasoned all that well.\\\"},{\\\"review_date\\\":\\\"2014-11-28 21:48:31\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"I'm not sure how this place is getting good reviews. I'm staying at the hotel because my daughter is hospitalized at cottage. Having to spend Thanksgiving in the hospital really bites but we were with family. My husband didn't want to eat the hospital food so suggested the restaurant. They had a special menu as it was Thanksgiving. I ordered it to go to eat dinner with our daughter. When I got it back to the hospital room I couldn't be more disappointed. $20 plate of barely any food. I let my husband eat mine and I had what the hospital served which was half the price double the food and better quality. I mean there were literally 4 green beans and 3 carrot slices in each container. We will not be eating here ever again. What a rip off.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Sure! Here's an objective overview of Las Aves Cafe based on the provided structured data in JSON format:\\n\\nLas Aves Cafe is a Mexican restaurant located in Santa Barbara, California, with a rating of 3.5 out of 5 stars based on 3 customer reviews. The restaurant has a convenient location within a hotel complex and offers outdoor seating, takeout, and reservations. The menu features a variety of dishes, including breakfast options, salads, sandwiches, and entrees such as ribeye and chicken.\\n\\nAccording to the reviews, the staff is friendly and attentive, with one reviewer praising the owner's excellent service. However, some reviewers have been disappointed with the food quality, with one describing the flavors as \\\"underwhelming\\\" and another calling the portion size \\\"barely any food\\\" for the price. Another reviewer had a negative experience with the menu's Thanksgiving special, finding it to be overpriced and lacking in quantity.\\n\\nDespite these mixed reviews, Las Aves Cafe seems to be a popular choice among hotel guests and those looking for a casual, convenient dining option in the area. The restaurant's ambiance is described as \\\"casual\\\" and \\\"unpretentious,\\\" with no live music or upscale atmosphere. Overall, Las Aves Cafe appears to be a good option for those seeking a straightforward Mexican dining experience with friendly service and a variety of menu choices.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17], \"source_evidence_erased\": false}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:1a1634aeb5da8e384e49ef49762c9401c030d92bf6be5d5f92f5771e57ea7733",
+      "started": true,
+      "status": "generated",
+      "visible_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17
+      ]
+    },
+    {
+      "arm": "source_erased",
+      "duration_s": 1.1827641769777983,
+      "family_id": "sha256:90fc2872613a18e889f8ba6de091311c25cda18c278a4bc98f9cb6adcb2c98a8",
+      "input_tokens": 410,
+      "order": 1,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 1.0,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 410,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 433
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 1.0,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817127,
+        "id": "chatcmpl-ZKVzjNayg6jsgPcrEynMU8rTAYuvwsL3",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 541.607,
+          "predicted_n": 23,
+          "predicted_per_second": 42.46621627859315,
+          "predicted_per_token_ms": 23.548130434782607,
+          "prompt_ms": 419.74,
+          "prompt_n": 332,
+          "prompt_per_second": 790.9658359937104,
+          "prompt_per_token_ms": 1.264277108433735
+        },
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 410,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 433
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"\", \"original_answer\": \"Sure! Here's an objective overview of Las Aves Cafe based on the provided structured data in JSON format:\\n\\nLas Aves Cafe is a Mexican restaurant located in Santa Barbara, California, with a rating of 3.5 out of 5 stars based on 3 customer reviews. The restaurant has a convenient location within a hotel complex and offers outdoor seating, takeout, and reservations. The menu features a variety of dishes, including breakfast options, salads, sandwiches, and entrees such as ribeye and chicken.\\n\\nAccording to the reviews, the staff is friendly and attentive, with one reviewer praising the owner's excellent service. However, some reviewers have been disappointed with the food quality, with one describing the flavors as \\\"underwhelming\\\" and another calling the portion size \\\"barely any food\\\" for the price. Another reviewer had a negative experience with the menu's Thanksgiving special, finding it to be overpriced and lacking in quantity.\\n\\nDespite these mixed reviews, Las Aves Cafe seems to be a popular choice among hotel guests and those looking for a casual, convenient dining option in the area. The restaurant's ambiance is described as \\\"casual\\\" and \\\"unpretentious,\\\" with no live music or upscale atmosphere. Overall, Las Aves Cafe appears to be a good option for those seeking a straightforward Mexican dining experience with friendly service and a variety of menu choices.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [], \"source_evidence_erased\": true}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:1a1634aeb5da8e384e49ef49762c9401c030d92bf6be5d5f92f5771e57ea7733",
+      "started": true,
+      "status": "generated",
+      "visible_ids": []
+    }
+  ]
+}

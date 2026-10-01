@@ -1,434 +1,382 @@
-# Carnot Research Roadmap v690: Qualified Decisions and Causal Learning
+# Research Roadmap v691 — Calibrated source decisions and causal learning
 
-**Created:** 2026-09-30
-**Milestone:** 2026.09.690
-**Title:** Qualified source decisions, response-level evidence, and causal learning
-**Status:** Planned; staged, not activated
-**Supersedes:** completed execution of 2026.09.689, Exp7940–Exp7952
-**Preserved predecessor:** [V689 design](research-roadmap-v689-preserved-20260930.md)
-**Execution authority:** [research-roadmap-next.yaml](../../research-roadmap-next.yaml)
-**Planning requirement:** REQ-REPORT-PLAN-690.
+Milestone: **2026.10.691**. Planned 2026-10-01 UTC, following completed
+2026.09.690. October follows the actual UTC rollover; sequence 691 increments
+the completed milestone. Status: **planned, not activated**.
 
-This milestone contains **13 tasks, exp7953 through exp7965, in that order,
-across four phases**. Phase counts are 3, 3, 4 and 3. The table, machine
-contract and complete-task digest below bind the actual queued work.
-Planning does not execute experiments or activate the roadmap.
+This is a thirteen-task, four-phase contract: **Exp7966 through Exp7978**, in
+the order below. `research-roadmap-next.yaml` contains exactly these tasks.
+The active roadmap and conductor are unchanged. The superseded design is
+preserved in `research-roadmap-v690-preserved-20261001.md`.
 
-## What V689 proved
+## Research objective
 
-All thirteen dispatches ended. Seven declared primary artifacts exist; six
-science producers are absent after gates. The completion archive currently
-ends at V688. These findings use the V689 active task list, exact primaries,
-validation logs, coverage report and conductor records. Dispatch completion
-does not imply scientific success.
+Determine whether learned source energies yield useful calibrated actions,
+whether newly admitted constraints improve later decisions without forgetting,
+and what the complete service costs. A separately gated Qwen calibration branch
+provides another route to source-grounded decision evidence. A working audit,
+fitted head, or completed generation is not itself scientific benefit.
 
-| Experiment | Qualified observation | Consequence |
+The controlling priorities are `research-program.md`, PRD FR-12/FR-06, FR-11,
+FR-05/08/09/10 and NFR-01, and the September 28 oracle-distinct corrigendum.
+ARC live discovery and real hardware remain north stars. Their tasks audit new
+outcomes and existing custody. No generator-weight update is proposed.
+
+## What v690 established
+
+Completed scheduling did not mean completed science: seven declared primary
+artifacts exist for thirteen tasks. Six numerical/learning/service tasks lack
+their declared primaries. The Exp7956 conductor pre-gate record has a different
+path; it remains dispatch evidence rather than a scientific result.
+
+| Evidence | What it establishes | What remains unproved |
 |---|---|---|
-| Exp7940 | Required validation passed, but authority was blocked: task three had empty prior history and matching staging was absent | Fix the conditional lineage rule and distinguish observed activation from unknown historical staging. |
-| Exp7941 | Isolated publication and numerical fixture paths qualified; runtime_ready_score=1 | Reuse publication. Its other historical training_runtime_ready_score=0 is not the new gate. |
-| Exp7942 | Annotation transport passed; selected sentences contained only three positives versus eight required | Preserve this valid null. Evaluate the complete-response event using all original spans. |
-| Exp7943 | CLI routes, unit tests, typing, lint and scoped specs passed; late coverage failed at 99 percent | No eligible fit or downstream benefit. Exercise the exact exception handler before new fitting. |
-| Exp7944/45/46/47/48/50 | Six declared science producers absent | Decisions, Qwen risk, fragility, learning, delayed confidence and cost remain unanswered. |
-| Exp7949 | Authenticated inventory found no new live supervisor outcomes | Reuse the latest receipt frontier and stop cheaply when unchanged. |
-| Exp7951 | Typed missing-board evidence qualified; historical scope null | Reuse custody; new workload placement needs new measured costs. |
-| Exp7952 | Capstone mechanics qualified, science blocked | Preserve terminal blocked. Historical publication gates do not fill missing science. |
+| Exp7953 contract | Authority can be checked without fabricating consumed staging; fixture agreement is circular | Activation cannot be inferred from staging alone |
+| Exp7954 qualification | All measured owned statements covered; 13 affected tests and one E2E test failed | Executable readiness is zero despite coverage |
+| Exp7955 targets | Human spans yield 62 eligible evaluation source clusters: 19 positive, 43 negative | Sentence-only targets are insufficient; annotations are fallible and exposed |
+| Exp7958 Qwen | 128 bounded calls completed; full-source Brier 0.14810 versus erased-source 0.67742 | Cost-gain interval crosses zero; false accepts 5 versus 2, so no decision-benefit claim |
+| Exp7962 ARC | No new supervisor outcomes in its audited frontier | No generalization or new live solve |
+| Exp7964 hardware | Historical custody and capabilities are bounded | No new accelerated workload |
+| Exp7965 capstone | Missing science is terminal blocked | Same-run-date checks rejected honest upstream dates across midnight |
 
-The retained coverage report `/tmp/carnot7930-d16wrcnq/coverage.json` names
-exactly lines 51–53 in `scripts/experiments/experiment_7943_v689_energy_fit.py`:
-the caught `ValueError`, `OSError` and `KeyError` route. The durable failure
-receipt is `results/raw/experiment_7943_v689_energy_fit/logs/02_coverage_json.log`.
-The new qualification must recreate coverage from real CLI failures; it must
-not depend on that temporary report surviving or reduce the 100 percent gate.
+The qualification defect is mutable test work placed below protected
+`results/raw/`: artifact-guard redirection caused missing child fixture paths
+or cross-device rename failures. Exp7967 separates scratch from archived
+evidence using the existing Exp7942 temporary-directory pattern. It preserves
+the guard, assertions, failing receipts, and required checks.
 
-The authority issue is separate. `v685_authority_lifecycle.py` requires a
-nonempty prior list for every task, including new scope. V689 also requires a
-preserved staged snapshot that was never captured before activation. Inventing
-history cannot repair either defect. V690 tests observed active/document
-identity and records missing staging as unknown custody, while still rejecting
-any contradictory staged or preserved bytes.
+Exp7955 already joins all 640 role slots. Exp7968 exports authenticated role
+views instead of rebuilding annotations. Evaluation has been inspected and
+remains **exposed development evidence**. Exp7958's source-ablation contrast
+does not establish advantage against equal-information controls.
 
-Exp7892 remains the source boundary: 640 intended and historically 604 eligible
-families. Exp7943 recorded evaluation counts of 43 negatives and 19 positives
-among 62 eligible response families. These counts guide feasibility only.
-Exp7955 rebuilds its own targets from original annotations. Neither a new seed
-nor a new target turns these exposed development groups into a fresh holdout.
+## Three largest gaps to the PRD
 
-## Three biggest gaps against the PRD
+1. **Useful independent decisions (FR-12/FR-06).** No qualified learned-energy
+   advantage in action cost against matched classical controls. Exp7970–7972
+   test this with false-accept limits and source-cluster uncertainty.
+2. **Causal continuous self-learning (FR-11).** Durable writes do not establish
+   future benefit. Exp7973 admits constraints after delayed past feedback;
+   Exp7974 updates confidence from the state that issued each prediction.
+   Restart, no-write, shuffled-feedback and full-static controls test causality.
+3. **Qualified, measured deployment (FR-05/08/09/10, NFR-01).** Training checks
+   failed and full service costs were never measured. Exp7967 qualifies
+   execution; Exp7976 measures whole requests and durable commits; Exp7977
+   bounds hardware relevance using authenticated capabilities.
 
-1. **Useful verification decisions — FR-12 and FR-06.** Extraction and energy
-   machinery exist, but qualified source-sensitive decision benefit is still
-   missing. Train the small heads after complete executable qualification and
-   evaluate calibrated actions. Independently test the mandated Qwen model on
-   a human target that matches the whole response it is asked to judge.
-2. **Causal continuous learning — FR-11.** Durable writes must improve future
-   decisions before feedback and preserve previous competence. Compare real
-   admission with no-write and complete-static banks, then test delayed
-   confidence updates on the same sealed learning trajectory.
-3. **A measured deployment path — FR-05/08/09/10 and NFR-01.** Valid research
-   must survive actual entrypoints, artifact readers and complete service
-   costs. Resolve the specific validation defects and measure CPU work before
-   projecting Rust or hardware acceleration.
+## Literature incorporated before experiment design
 
-The September 28 oracle-distinct correction remains binding. This plan makes
-no prior gap-closure claim, trains no generator weights, reopens no retired
-external-text reranker and claims no duplicate ARC solves.
+The dated V691 review at the beginning of `research-references.md` records
+primary sources, limitations and all requested secondary checks. These are
+hypotheses to test locally, not transferred performance claims.
 
-## Literature recorded before design
-
-The [V690 review](../../research-references.md#v690-planning-review--2026-09-30-recorded-before-design)
-records all eight topics and six secondary sources. Semantic Scholar citation
-requests returned HTTP 429 for both requested papers. OpenReview forums had
-browser challenges; an indexed EBT PDF was available. The GitHub trending
-page was two weeks old. No complete citation census or current trend rank
-is claimed.
-
-| Source | Experiment adoption | Boundary |
+| Finding | Experiment consequence | Limit |
 |---|---|---|
-| [EAEV, September 2026](https://arxiv.org/abs/2609.08267) | Exp7958 source erasure and Exp7959 evidence sensitivity | Bounded adaptation; feature overlap and instability are not correctness certificates. |
-| [Span/evidence alignment, August 2026](https://arxiv.org/abs/2608.15804) | Exp7955 original spans to response target; Exp7958 independent labels | No replication of the authors' masked-token model. |
-| [EBT](https://arxiv.org/abs/2507.02092), [ARM–EBM](https://arxiv.org/abs/2512.15605) | Exp7956/57 normalized learned energy and calibrated action | Compatibility is not a ground-truth oracle. |
-| [DCCD, 2026](https://arxiv.org/abs/2603.03305) | Exp7958 fixes grammar while measuring semantic error | Another formatting comparison would not resolve accuracy. |
-| [Delayed ACI, September 2026](https://arxiv.org/abs/2609.07251) | Exp7961 compares issued-state and current-state updates | No automatic transfer of forecasting guarantees. |
-| [KAN forgetting, 2025](https://arxiv.org/abs/2511.12828) | Exp7960 measures retention and sparse update costs | Locality alone does not guarantee retained knowledge. |
-| [FPGA decomposition](https://arxiv.org/abs/2602.15985), [Z1T](https://extropic.ai/writing/z1t) | Exp7963/64 count host, memory, transfer and readout | Vendor estimates are not local board results. |
+| EBT [2507.02092](https://arxiv.org/abs/2507.02092); ARM-EBM [2512.15605](https://arxiv.org/abs/2512.15605) | Exp7970 conditional source energies; Exp7972 normalized two-state energy | Neither establishes independent verification or Carnot benefit |
+| Structured-decoding semantic gap [2609.23742](https://arxiv.org/abs/2609.23742) | Exp7969 validates schema and target semantics separately | Small-model findings do not certify the mandated 27B model |
+| BCEA [2606.16667](https://arxiv.org/abs/2606.16667) | Exp7969/7972 calibrate the complete source-conditioned protocol | Design principle, not transfer of a visual-acquisition guarantee |
+| Delayed ACI [2609.07251](https://arxiv.org/abs/2609.07251) | Exp7974 exact issued-state updates under delayed feedback | Small dependent windows do not establish formal coverage |
+| On-chip spline learning [2602.02056](https://arxiv.org/abs/2602.02056) | Exp7972 local cubic-spline control; Exp7977 compatibility assessment | CPU fitting is not an on-chip demonstration |
+| Hard constraints [2505.13858](https://arxiv.org/abs/2505.13858); EBCN [2605.00960](https://arxiv.org/abs/2605.00960) | Exp7970/7971 retain independent targets and matched controls | No verifier-as-oracle headline claims |
 
-Neural constraint solvers, KAC, pipelined Ising sampling and Kona remain useful
-references. Their inclusion does not justify another architecture sweep before
-the current source-decision question has qualified evidence.
+OpenReview, Extropic writing, Semantic Scholar, Hugging Face papers, GitHub
+trending and Logical Intelligence Kona were checked. ARM-EBM citation lookup
+returned nine records; EBT lookup was rate-limited. Trend pages were cached;
+Kona lacks a reproducible local recipe. Continual KAN, Ising/FPGA and thermal
+sampling findings are documented without reviving retired importance anchoring,
+four-expert reweighting, or unsupported device claims.
 
-## Architecture and dependency graph
+## Architecture
 
 ```mermaid
 flowchart TD
-  S[Exp7892 source custody] --> Q[7954 actual CLI and coverage qualification]
-  S --> L[7955 original spans to response labels]
-  Q --> E[7956 fresh small energy heads]
-  E --> D[7957 calibrated actions]
-  L --> G[7958 bounded Qwen source-support test]
-  E --> F[7959 separate-channel fragility]
-  E --> M[7960 delayed persistent constraint acquisition]
-  M --> C[7961 issued-state confidence replay]
-  E --> T[7963 complete service timing]
-  M -. optional durable costs .-> T
-  T -. optional measured placement .-> H[7964 board custody and fit]
-  A[7953 authority and source methods] --> R[7965 independent capstone]
-  O[7962 new live ARC supervisor outcomes] --> R
-  D --> R
-  G --> R
-  F --> R
-  C --> R
-  H --> R
-  T --> R
+  H[Source corpus and human response spans] --> R[7968 role exports]
+  Q[7967 private execution qualification] --> F[7970 source-energy fit]
+  H --> F
+  R --> C[7969 bounded Qwen fit and calibration capture]
+  C --> K[7972 energy and classical scalar calibration]
+  V[7958 frozen evaluation capture] --> K
+  R --> K
+  F --> D[7971 matched decisions]
+  F --> L[7973 delayed admission and durable replay]
+  L --> A[7974 issued-state confidence]
+  F -. available branch .-> S[7976 whole service costs]
+  K -. available branch .-> S
+  L -. optional durable costs .-> S
+  S -. optional bound .-> B[7977 board custody]
+  X[7975 new ARC receipts] --> Z[7978 independent capstone]
+  D --> Z
+  K --> Z
+  A --> Z
+  S --> Z
+  B --> Z
+  M[7966 authority and methods] -. audit .-> Z
 ```
 
-Independent branches do not wait for authority readiness or energy benefit.
-The YAML order is conductor execution order; no parallel execution is assumed.
+Qwen calibration consumes one fixed source-conditioned judgment. It does not
+rank candidate texts or revive retired PHASE D external reranking. The other
+branch uses established source features and predicates. Scalar calibration
+alone cannot establish Carnot's independent-verifier moat.
 
-## Phase 1: Qualify the actual boundaries — Exp7953–Exp7955
+## Phase 1 — Qualify execution and freeze independent input roles
 
-**Exp7953 — authority and methods.** Reproduce both V689 authority defects.
-Require complete failure history where scope matches; accept genuinely new
-scope without invented history. Separate staged-only, observed active and
-unknown consumed-staging states. Reject contradictory bytes and all twelve
-contract mutations. Ingest the source review and freeze methods. Its scope
-is task-owned authority; it does not change conductor activation semantics.
+**Exp7966** binds the thirteen-task visible table, machine contract and complete
+prompt digest; runs twelve contract mutations and rollover cases; distinguishes
+planning readiness, observed activation and unknown consumed-staging custody.
+It records a multi-paper methods map. It is not a universal science gate.
 
-**Exp7954 — fitting coverage.** Reuse qualified publication and numerical
-libraries. Exercise malformed JSON, missing replay paths and missing-key
-artifacts through the actual CLI. Preserve caught exceptions, expected exits,
-primary uniqueness and successful fixture numerical execution. Combine unit,
-success, blocked, failure, replay and terminal coverage before any natural fit.
-Require nonempty 100 percent coverage and current transitive hashes. Emit
-`training_coverage_ready_score` and `runtime_ready_score` at top level.
+**Exp7967** repairs the private execution adapter and qualifies the real fitting
+callable with unchanged assertions and artifact protection. Unit and eleven
+actual CLI routes share coverage includes and archive evidence only after
+children exit. Readiness requires successful affected checks and 100% owned
+module/CLI statement coverage, not coverage alone. Qualification budget: 1800s.
 
-**Exp7955 — response targets.** Reuse the qualified original-span join on all
-64 intended evaluation families. The target is any human-annotated unsupported
-span in the complete response, including `implicit_true` in the primary
-definition. Preserve every sentence and span for audit. Verify Unicode offsets,
-text and quality; incomplete annotations never become negatives. Preserve
-public eligibility, exclusions and source clusters without label-based
-replacement. At least 32 clusters and eight responses in each class are needed
-for `response_targets_ready_score=1`. Compare union labels with original
-response labels and report any discrepancy. Do not revise the sentence null.
+**Exp7968** exports role-specific full-response targets from the existing join:
+256 fit, 64 tune, 32 policy-design, 32 calibration-replay, 96 online-update,
+64 online-admission, 64 evaluation and 32 retention slots. Roles are disjoint
+by source cluster. Unsupported spans, including implicit-true/due-to-null
+cases, define the whole-response label. Missing annotations remain unknown.
+These are intended slots, not a promise of 640 eligible independent units.
 
-## Phase 2: Measure decisions against matched targets — Exp7956–Exp7958
+**Exp7969** captures only the 384 fit/tune/policy/calibration role slots using
+`unsloth/Qwen3.8-27B-GGUF`, the Exp7958 full-source protocol, temperature 0,
+seed 69058, input limit 6000 and 96 output tokens per item. Hard limits:
+384 calls, 36,864 output tokens and 3000s capture; checkpoints every eight
+units. Readiness requires at least 128 valid fit and 32 valid tune clusters.
+Targets remain sealed from the generation child. No evaluation regeneration.
 
-**Exp7956 — fresh energy fitting.** Gate on both Exp7954 readiness fields.
-Retain the 640-family allocation: fit 256, tune 64, policy design 32, calibration
-replay 32, online update 96, online admission 64, evaluation 64 and retention 32.
-Recompute public exclusions without replacements. Train nine arms with seeds
-67801/67802/67803: response_set, local_set, augmented_set, constrained_set,
-augmented_mlp, constrained_mlp, local_logistic, source_erased_constrained_set
-and complete_static_constrained_set. Keep width 16, at most 4096 parameters,
-learning rate .01 and 16 epochs; retain 132 base features and sixteen static
-conjunctions. Use complete-byte A singles/triples and B singles/pairs views,
-at most 128 windows and sixteen answer units.
+## Phase 2 — Measure decisions against same-information controls
 
-Constrained arms use symmetric Bernoulli KL/2 tolerance .01, alternate-view
-cross-entropy limit .70 and dual step .01 clipped to [0,10]. Match information
-and operation budgets to augmented controls. Unknown targets have zero loss
-and gradient. Tune temperature only on tune families over seventeen log-spaced
-values in [.25,4]. Seal 27 current checkpoints before evaluator labels.
-Current wrapper coverage must pass before fitting as well as at completion.
-Bound numerical work to 3000 seconds, leaving validation time inside the task
-cap. No historical checkpoint acquires current scientific eligibility.
+**Exp7970** executes the frozen nine-arm, three-seed source-energy plan only
+after Exp7967 qualifies it. Preserve 132 source features, 16 static predicates,
+width 16, at most 4096 parameters, learning rate .01, 16 epochs, symmetric
+Bernoulli KL tolerance .01, CE ceiling .70 and bounded dual updates. Freeze
+the 17-point temperature grid over [.25, 4]. Numerical budget: 3000s. Report
+actual parameter changes, constraint residuals, convergence and all failures.
 
-**Exp7957 — calibrated actions.** For unsupported probability p and label y,
-expected losses are accept=5p, reject=1-p, escalate=.25; actual losses are 5y,
-1-y and .25. Ties escalate. Compare constrained_set against augmented_set,
-constrained_mlp and local_logistic. Average seeds within family before 10,000
-paired source-cluster bootstrap draws and paired randomization. Holm-correct
-the six cost/Brier tests. Development benefit requires cost gain at least .02,
-positive lower intervals for cost and Brier against every control, adjusted
-p<.05 and automated coverage at least .20. Freeze equal-coverage abstention
-on policy-design families at target .50; realized differences above .05
-invalidate that comparison. Retain prevalence, length, erasure and source
-permutation controls. A valid null is an answer, not a failed execution.
+**Exp7971** compares constrained set energy with augmented set, constrained MLP
+and local logistic controls. With unsupported label y, action costs are
+accept=5y, reject=1-y, escalate=.25; ties escalate. Average seed predictions
+within source family before inference. Primary paired gains use 10,000
+source-cluster bootstrap samples and paired randomization, Holm-adjusting six
+cost/Brier comparisons. Require at least 32 clusters and eight per class.
+Benefit requires cost improvement >=.02, positive cost/Brier lower bounds and
+adjusted p<.05 against every named control, auto-decision coverage >=.20 and
+no extra false accepts. Policy-design fixes matched coverage at .50; evaluation
+coverage mismatch >.05 invalidates that comparison, not the whole measurement.
 
-**Exp7958 — Qwen response risk.** This branch depends only on Exp7955.
-Use `MODEL_SPECS=[unsloth/Qwen3.8-27B-GGUF]` with actual local CUDA inference,
-fixed weights and an owned lease. The class is `model_bounded_generation`
-(10-second floor). Query full response support under full versus erased source
-against the same original-source target. Keep the existing grammar, temperature
-zero, seed 69058, 96 output tokens, 6000 input tokens and public-hash arm order.
-At most 128 calls, 12,288 output tokens and 3000 seconds including load.
-No retries, truncation, parser repair or replacement are allowed.
+**Exp7972** fits five controls on the scalar Qwen unsupported probability:
+raw, Platt, isotonic, normalized conditional Gibbs energy with one width-8
+tanh hidden layer, and a cubic spline with eight coefficients and internal
+knots .2/.4/.6/.8. Source IDs, roles and labels are not inference features.
+Platt/Gibbs/spline use 200 full-batch CE steps, learning rate .01, L2=.001,
+seeds 69101/2/3. Isotonic fits training only; energy/spline temperature uses
+the frozen tune grid. Synthetic distortion is a separate circular control.
 
-Seal replies before evaluator labels. Invalid outputs escalate in all-intended
-cost; complete-pair Brier has its own denominator. Require 32 complete cluster
-pairs and eight examples per class for comparative inference. Benefit needs
-both Brier and cost gains at least .02, positive CI95 lower bounds, Holm-adjusted
-p<.05, coverage at least .20 and no extra false accepts. Keep annotation-type
-sensitivity descriptive. Formatting and source sensitivity alone do not prove
-correctness. The same exposed-development limit applies to all arms.
+Fit needs >=128 clusters and >=16 per class; tune >=32 and >=4 per class;
+evaluation >=32 and >=8 per class. Reuse only protocol-matched full-source
+Exp7958 evaluation outputs. Gibbs versus raw/Platt/isotonic is primary with
+six Holm-adjusted cost/Brier comparisons, the Exp7971 cost rule and no extra
+false accepts. Spline is descriptive; no post-hoc winner substitution. A win
+over raw alone is calibration benefit, not an energy-method advantage.
 
-## Phase 3: Robustness, learning and transfer — Exp7959–Exp7962
+## Phase 3 — Continuous self-learning and issued-state confidence
 
-**Exp7959 — fragility.** Use current constrained_set and local_logistic heads.
-Freeze feature groups [0:64], [64:128], [128,131] and [129,130]; replace removed
-coordinates with fit-only means. A greedy, four-step group-removal score uses
-the original modal class (p>=.5), with deterministic ties. Generate a separate
-stress channel: 32 masks at each missingness rate .25/.50, seed 68721. Pool
-rates and model seeds within family; brittleness means flip fraction >=.25.
-Compare removal-path, one-step, confidence and hash-random review at exactly
-20 percent of eligible families. Preserve masks and forward-call budgets.
-Bootstrap source families, not masks. The YAML fixes capture thresholds and
-three corrected tests. Predicting a model's own instability is at most
-`circular_positive`; natural-error association is descriptive only.
+**Exp7973** is the continuous-self-learning experiment (FR-11 Tier 1 + Tier 2).
+Sixteen initial predicates remain immutable; admit up to eight new predicates
+from delayed past feedback. Replay eight blocks of twelve update and eight
+admission slots, with a twenty-event label delay. Before each prediction,
+release only eligible earlier labels. Current, evaluation and retention labels
+are unavailable to update logic. Admission labels select candidates; they do
+not fit coefficients. A block cannot admit until its labels are actually due.
 
-**Exp7960 — continuous self-learning.** This is the required FR-11 experiment.
-Use eight logical blocks of twelve update and eight admission slots. Release
-labels at tick+20, process past releases before each prediction, and preserve
-excluded slots in logical time. Compare dynamic admission, frozen bank,
-complete-static sixteen-feature bank, no-write and shuffled-released-past-label
-controls. All trainable arms use the same .01 coefficient update rule.
-Admission labels select constraints but never train coefficients. Admit at most
-one of the sixteen immutable conjunctions per block and eight total, requiring
-admission Brier gain >=.01 and no added false accepts.
+Compare dynamic admission, frozen bank, complete-static bank, no-write and
+shuffled-past-label controls on the same stream. Freeze coefficient step .01;
+admission requires Brier improvement .01 and no extra false accepts. Crash
+after block four and require exact replay of state, pending feedback and future
+decisions against uninterrupted execution. Benefit requires a real durable
+commit that changes later decisions, cost gain >=.02 with positive lower bounds
+against full-static and no-write controls (Holm two), nonworse Brier, retention
+cost upper bound <=.01 and no extra false accepts. Minimum 32 future clusters,
+eight per class and sixteen retention clusters; 20-event block-bootstrap
+intervals preserve source grouping and are descriptive at this small scale.
 
-Pin state within each query and seal predictions before feedback. Keep initial
-and eight committed snapshots per arm/seed. Crash after block four; replay must
-reproduce queues, state and future decisions. No evaluation or retention label
-may train, admit or roll back. Benefit requires future cost gain >=.02 against
-both complete-static and no-write, positive lower intervals, Holm-adjusted
-p<.05, nonworse Brier, retention cost-increase upper bound <=.01 and no extra
-false accepts. An earlier committed write must change a later pre-feedback
-decision. Measure feature touches, state bytes and lookup/update/fsync costs.
-Sparse CPU updates and durable memory provide the immediate acceleration path.
+**Exp7974** holds Exp7973's probability trajectory fixed and compares frozen,
+rolling-32, scalar ACI and phase-aware ACI policies. Delays are 20+tau for
+tau=1/4/16, target coverage .90, step .01, initial alpha=.10. Update from the
+alpha that issued the prediction, not the latest alpha. Initial calibration
+uses only the designated role under the initial head. Nonconformity is 1-p_y;
+use ceil((n+1)(1-alpha)) order statistics with infinite endpoint handling.
+Singleton {0} accepts, {1} rejects; other sets escalate. Point Brier must be
+identical across policies. Require four complete 16-event windows; local-error
+gain >=.02 with positive descriptive lower bound, adjusted p<.05, no additional
+false accepts and mean set-size increase <=.10. Dependence limits the claim.
 
-**Exp7961 — delayed confidence.** Hold Exp7960 probabilities and bank trajectory
-fixed. Compare frozen split threshold, rolling released-only quantile, scalar
-ACI and phase-indexed ACI; target coverage .90, gamma .01, initial alpha .10.
-Extra delays 1/4/16 follow base delay 20, giving total delays 21/24/36. Phase
-updates use issued alpha; scalar updates use current alpha. Use identical
-released-only buffers of the last 32 families, initialized with initial-head
-calibration-replay scores. Never rescore old labels under future heads.
+**Exp7975** audits only new content-hashed live ARC supervisor receipts beyond
+Exp7962. Stop with a valid null after a bounded 120s scan if none exist. Count
+actual firings, helped outcomes and games, not log mentions. Any inherited
+level solve carries live-agent provenance and registry precheck. No live solve
+launch, per-game adapter, offline oracle or duplicated solved level is planned.
 
-For n scores, k=ceil((n+1)(1-alpha)): k<=0 gives minus infinity, k>n gives plus
-infinity, otherwise use the kth score. Alpha below zero gives the full set;
-above one gives the empty set. Singleton {0} accepts, {1} rejects, others
-escalate. Measure 16-event-window coverage, set size, false accepts and cost.
-Use descriptive block-bootstrap intervals and six corrected local-error tests.
-Benefit needs four complete windows, reduction >=.02, positive lower interval,
-adjusted p<.05, no extra false accepts and set-size increase <=.10. Point
-probabilities are identical; this does not test learning under changed delays.
+## Phase 4 — Service costs, hardware scope and scientific decisions
 
-**Exp7962 — ARC generalization.** Scan only beyond Exp7949's authenticated
-seen-receipt frontier. A 120-second scan with no new outcome-bearing events
-ends as a valid no-change null, satisfying the floor's empty-ledger rule.
-Reuse the reader. New evidence must come from the scored live wrapper with
-resolved-by-levelup outcomes and action counts. Observational success is not
-randomized benefit. A retirement recommendation needs twenty new firings
-across five games and zero helped events with uncertainty. No new game solve,
-model call, source inspection, per-game adapter or policy change is scheduled.
+**Exp7976** profiles whichever qualified branch is available: Exp7970 source
+energy or Exp7972 Qwen calibration. It intentionally has no conjunctive
+conductor gate; explicit internal OR checks emit branch readiness and reasons.
+Use up to 64 source families, one warmup and ten paired repetitions. Include
+request construction, feature work, scoring, serialization and storage; add
+Exp7973 durable commits only when available. Separate cached CPU calibration
+latency from end-to-end Qwen cost including actual generation receipts.
 
-## Phase 4: Deployment costs and independent decisions — Exp7963–Exp7965
+**Exp7977** preserves authenticated KV260, PolarFire and GateMate evidence,
+then maps any new compatible timing spans from Exp7976. A 100x component
+scenario plus transfer cost is an Amdahl bound, never measured acceleration.
+No board reprobe, hardware integration, procurement or unsupported KAN mapping.
 
-**Exp7963 — service cost.** Time constrained_set, augmented_set, constrained_mlp
-and local_logistic on 64 intended evaluation families, three seeds, one cold
-call and five paired warm repetitions. Match stored predictions. Use disjoint
-projection, windowing, scoring, calibration, dispatch and serialization spans.
-Attach qualified durable-learning costs optionally. Record bytes, memory and
-execution-window telemetry; later idle GPU snapshots cannot identify earlier
-bottlenecks. Report costs per processed/accepted family and caught error, with
-null for zero denominators. These timings do not invoke a pretrained model.
+**Exp7978** independently reduces all thirteen dispositions from primitive
+rows, separating science from dispatch stubs and administrative success. It
+authenticates each producer against its own invocation date/hash and tests
+honest midnight rollover versus tampering. Decide the three PRD gaps; report
+publication G1/G2/G3/G4 without changing their rules. Missing required science
+is terminal blocked; complete valid nulls are terminal. Record exact reopen
+conditions and evidence-bound retirement decisions.
 
-**Exp7964 — hardware continuity.** Reuse qualified Exp7951 custody and typed
-missing-scope handling. Preserve KV260 quadratic-Ising fabric at k_max<=5,
-PolarFire Linux CPU-only scope and GateMate's physical/JTAG 0xffffffff blocker.
-Use qualified Exp7963 measurements only for optional placement estimates.
-No device operations, flash, install or purchase are queued. A neural head is
-not automatically an Ising workload; host, transfer and readout costs matter.
-NPU and TSU remain unqualified. This one task retains all three board duties.
+## Execution dependencies and gate contract
 
-**Exp7965 — independent capstone.** Reduce exactly thirteen dispositions,
-including missing producers and the self row. Recompute primitive-row claims,
-annotation unions, dependence units, corrected tests, causal writes and issued
-states. Decide each PRD gap independently. Missing external science is terminal
-blocked, never retriable partial. Keep publication G1–G4, paper_ready and unmet
-gates under the existing definitions, separate from current science readiness.
+Conductor order is the exact table below. Structured edges require upstream
+readiness=1, `flagged_adversarial=false`, and verdict class in
+`positive`, `circular_positive`, `null`. No downstream task requires a
+scientific benefit flag. A valid null may still supply a useful measurement.
 
-## Gate contract
+```mermaid
+graph LR
+  E7967[7967] -->|training_execution_ready_score| E7970[7970]
+  E7968[7968] -->|response_roles_ready_score| E7969[7969]
+  E7968 -->|response_roles_ready_score| E7972[7972]
+  E7969 -->|qwen_capture_ready_score| E7972
+  E7970 -->|energy_fit_ready_score| E7971[7971]
+  E7970 -->|energy_fit_ready_score| E7973[7973]
+  E7973 -->|learning_measurement_ready_score| E7974[7974]
+  E7970 -. internal OR .-> E7976[7976]
+  E7972 -. internal OR .-> E7976
+  E7976 -. optional .-> E7977[7977]
+  ALL[All planned dispositions] -. unconditional audit .-> E7978[7978]
+```
 
-| Consumer | Required current producer fields | Optional evidence |
-|---|---|---|
-| Exp7956 | Exp7954.training_coverage_ready_score=1; runtime_ready_score=1 | None |
-| Exp7957 | Exp7956.energy_fit_ready_score=1 | None |
-| Exp7958 | Exp7955.response_targets_ready_score=1 | Independent of fitting |
-| Exp7959 | Exp7956.energy_fit_ready_score=1 | None |
-| Exp7960 | Exp7956.energy_fit_ready_score=1 | None |
-| Exp7961 | Exp7960.learning_measurement_ready_score=1 | None |
-| Exp7963 | Exp7956.energy_fit_ready_score=1 | Exp7960 durable costs |
-| Exp7964 | No science pre-gate | Exp7963 timings |
-| Exp7965 | No science pre-gate | All dispositions, including absences |
+Exp7966, 7967, 7968, 7975, 7976, 7977 and 7978 have no structured pre-gate.
+Every gate's exact field is declared in the producer's REQUIRED ARTIFACT FIELDS.
+Gate absence/None is a contract failure; a valid observed zero is an honest
+failed prerequisite. `gate_check_summary` records path/hash, field, operator,
+expected and observed values. External absence never triggers `partial` retries.
 
-Every structured producer gate also requires `flagged_adversarial=false` and
-verdict_class in positive, circular_positive or null. Each gate field is named
-identically in the producer's REQUIRED ARTIFACT FIELDS. A valid measured null
-may be ready. Readiness never asserts predictive benefit. Every blocked result
-records `gate_check_summary` with path/hash, producer, field, expected and
-observed value. Missing data and a genuine threshold failure remain distinct.
+## Hardware, models and runtime requirements
 
-## Hardware requirements and execution limits
+| Resource | Role and boundary |
+|---|---|
+| CPU, existing Python/JAX environment | Source-energy fitting, scalar calibration, replay, private tests, reduction and profiling |
+| Owned local CUDA allocation on existing 3090 capacity | Exp7969 only; Exp7958 demonstrated the Qwen model at about 16,730 MiB and 66/66 offloaded layers. Acquire a free lease; wait <=60s before blocked availability; never terminate another job |
+| Mandated GGUF | `unsloth/Qwen3.8-27B-GGUF`; preserve Exp7958 Q4_K_M revision `fe1e2a23d973adb629709749dc4f6756df66ef10` and file SHA-256 `7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169` when matching protocol |
+| KV260 | Historical authenticated quadratic Ising capability, kmax<=5; arbitrary learned energy or spline acceleration is unproved |
+| PolarFire | Linux CPU evidence only; no fabric acceleration claim |
+| GateMate | Existing physical/JTAG 0xffffffff blocker; reopen only with changed external evidence |
+| NPU / Extropic TSU / Kona | No qualified local execution path or required new hardware; literature context only |
 
-| Work | Owned hardware | Limits |
-|---|---|---|
-| Authority, labels, reductions | CPU, RAM and local disk | Private fixtures, no model load; stream corpus files |
-| Small energy training | CPU/JAX and existing runtime | 27 heads, <=4096 parameters each; 3000 seconds numerical work |
-| Qwen source-support study | One available RTX 3090 lease and cached GGUF | About 16 GB weights plus context; verify actual free VRAM; 128 bounded calls |
-| Online learning/confidence | CPU and durable memory | Sparse updates, pinned read states, recoverable queues and measured fsync |
-| Hardware feasibility | CPU plus authenticated board receipts | Zero current device operations; estimates only |
+Exp7969 declares `MODEL_SPECS: [unsloth/Qwen3.8-27B-GGUF]` and
+`model_bounded_generation` (10s floor), because each request has a fixed small
+token budget. Historical Exp7958 outputs in Exp7972 are cached evidence, not
+new LLM calls. All other tasks declare `MODEL_SPECS: []`, `no_model_load` and
+zero current pretrained-model calls. Learned small heads are recorded separately.
+No legacy small model contributes a headline result. Full generation's 60s
+floor and load-only's 2s floor do not apply to these planned calls.
 
-Two RTX 3090s provide 48 GB total, not one contiguous 48 GB device. Do not
-kill another owner's GPU process. A missing lease is a typed blocker.
-DualGPURunner is relevant only if multiple models actually run concurrently;
-this plan's single-model branch does not need it. Legacy small models are CPU
-smokes only. No headline model substitution is permitted.
+Two schema/execution tasks use Claude Opus, 100 turns (7966/7967). Formulaic
+role export uses Codex gpt-6.1-sol, 30 turns (7968). Other tasks retain routine
+Claude routing with explicit smaller audit budgets. No luna task is planned.
+No task calls for modifying `scripts/research_conductor.py`.
 
-The [hardware wishlist](../../research-hardware-wishlist.md) informs future
-investment. KV260's future access precondition is SSH to `kria`. PolarFire
-CPU dispatch does not qualify its fabric; GateMate needs changed physical
-evidence. NPU installation and TSU acquisition are not prerequisites. For a
-measured compatible kernel fraction f, report modeled service gains
-1/((1-f)+f/100) and ideal 1/(1-f). At f=0 both equal one; at f=1 the modeled
-gain is 100 and the ideal limit is explicitly unbounded. No measured 100x
-gain, joules or board speedup follows from this calculation.
+Each prompt has numbered steps requiring flushed output at every phase and
+before/after model load, generation, benchmark and subprocess. Long loops and
+owned children emit progress at most 60s apart; all gaps remain below 600s.
+Silence can terminate a task near 1200s; progress permits the 4800s hard cap.
+Tool waits stay <=60s. Files over about 200 lines are written across calls of
+at most 150 lines with a progress message between them. Never pad runtime.
 
-Every prompt includes numbered steps requiring flushed progress at phase
-boundaries and before and after model load, generation, benchmarks and
-subprocesses. Long loops and owned-child supervision emit progress at most
-60 seconds apart. Tool waits stay <=60 seconds; no output gap reaches 600
-seconds. Silence can reduce the budget to 1200 seconds; progress preserves
-access to the 4800-second cap. Never sleep to meet a substrate duration floor.
-Files over about 200 lines are written in several tool calls of at most 150
-lines, with a progress message between calls. Scratch work belongs in /tmp.
+## Acceptance, validity and retirement
 
-## Failure lineage, routing and stop rules
+All comparative tasks require primitive per-unit rows, paired arm membership,
+source IDs, predictions, targets, decisions, costs, censoring and denominators.
+Seeds/repetitions do not increase independent sample size. Fixed sample floors
+can produce valid underpowered nulls; missing upstreams produce blocked results.
+Accept positive claims only after independent reduction, adversarial review and
+strict row consistency on final published bytes. Failed owned required checks
+mean disqualified and readiness zero. Fixture equality is circular_positive.
 
-The YAML includes the complete four-field prior_failures records for matching
-scopes, each with retire_if_same_verdict=true. It uses fresh IDs and no retired
-upstream dependency or invented operator override. Changed premises are actual
-CLI exception coverage before fitting, activation-aware authority and a
-complete-response target. Successful V689 publication and board custody are
-reused rather than repaired again. No unchanged scientific null is advertised
-as new progress.
+Reused scopes carry full four-field `prior_failures` entries with
+`retire_if_same_verdict: true`. Missing v690 primaries use the observed conductor
+`GATE_BLOCK` disposition, not an invented producer verdict. Differences are
+specific: scratch ownership, existing-role exports, new calibration controls,
+released-feedback causality, available-branch service profiling or per-producer
+date authentication. No retired upstream is a new structured dependency.
+Unchanged terminal failures retire; a blocked capture does not license a small
+model substitution, and a null calibration does not license a new protocol.
 
-Authority, coverage coordination and hardware custody route to Claude Opus
-with 100 turns per this request. The deterministic annotation pipeline routes
-to Codex gpt-6.1-sol with 50 turns. Routine research retains the default
-Claude/Sonnet budget; the read-only ARC scan uses 20 turns and the reused
-capstone 30. There are no Luna tasks or concurrent agent assumptions.
+Qualification requires spec-first, tests-first implementation, affected units
+and consumers, nonempty 100% changed statement coverage including real private
+CLI routes, scoped Ruff/format, strict mypy and explicit-path spec coverage.
+Applicable E2Es: 015 source custody, 016 current-work fixture/replay, 017 ARC
+supervisor, 018 authority lifecycle and 019 response targets. Historical fixture
+dates remain fixed; each current producer records its actual UTC date. Archive
+immutable receipts after private children finish. One declared primary is
+published atomically; sidecars remain nested and bind to its terminal hash.
 
-If coverage still fails, retire the repeated failed scope and preserve gated
-absences; never launch an unqualified full fit. If response targets lack class
-capacity, skip model calls and preserve the natural cohort. A scientific null
-does not authorize an unchanged rerun. Missing external science gives a
-terminal blocked capstone. A partial verdict is reserved for unfinished owned
-work that another attempt could complete.
-
-## Validation and reconciliation
-
-Before staging is considered complete, compare task count, IDs, order, phases,
-deliverables, models, substrates, gates and full-task digest independently.
-Run existing roadmap schema, failure-lineage, exclusion, gate, priority, harness
-and ARC-floor readers. Verify every read-first path and current gate producer.
-Exercise twelve private contract mutations without altering repository guards.
-
-Run the relevant existing reader unit tests, scoped lint and spec coverage,
-plus private E2E-015/016/017/018/019. E2E-016 fixture and replay retain historical
-date 20260929. For E2E-018 use private CLI fixtures; the historical publishing
-command cannot publish against current authorities. This is a planning-only
-change. Runtime repairs and their 100 percent coverage checks remain future
-tasks, not accomplishments claimed here. Existing repository-wide health debt
-stays explicit; passing scoped checks does not mean the full suite passes.
-
-Append the planning requirement, traceability and ops records. Leave the active
-roadmap, conductor, historical results and implementation code unchanged.
+The plan does not promise publication, production rollout, generator retraining,
+hardware acceleration or fresh held-out generalization. Completion means all
+thirteen tasks have truthful dispositions and the three gaps have evidence-based
+answers, including null or blocked answers with exact reopening conditions.
 
 ## Exact task contract
 
-The following table and JSON contain exactly thirteen queued tasks. The digest
-binds every task field, including prompt, routing and failure lineage. It is
-SHA-256 of UTF-8 `json.dumps(tasks, sort_keys=True, separators=(",", ":"),
-ensure_ascii=False)`. Machine rows use the unchanged authority reader fields.
+The following table and machine block bind the same thirteen tasks in the
+staged YAML. The full-task hash also binds prompts, budgets, routing and prior
+failure history. Planning agreement is not observed activation.
 
-Canonical full-task SHA-256: `b47fcf5b7381f0117d319a43392b05c0d6b3f17299e5f8a10703b707183640f6`
+Canonical full-task SHA-256: `8e7c624bc03c11409aa48ba3e825288c34ae2649766a85557486e7473a37ee98`
 
 | Order | Task ID | Title | Phase | Deliverable |
 |---|---|---|---|---|
-| 1 | exp7953-contract-methods | Bind activation-aware authority and freeze current research methods | 1 | results/experiment_7953_v690_contract_methods.json |
-| 2 | exp7954-training-coverage | Qualify the fitting exception routes before numerical execution | 1 | results/experiment_7954_v690_training_coverage.json |
-| 3 | exp7955-response-targets | Rebuild full-response support targets from original human spans | 1 | results/experiment_7955_v690_response_targets.json |
-| 4 | exp7956-energy-fit | Fit calibrated source energies after complete executable qualification | 2 | results/experiment_7956_v690_energy_fit.json |
-| 5 | exp7957-decision-abstention | Measure calibrated decisions against equal-information controls | 2 | results/experiment_7957_v690_decision_abstention.json |
-| 6 | exp7958-qwen-response-risk | Measure bounded Qwen response support against human annotations | 2 | results/experiment_7958_v690_qwen_response_risk.json |
-| 7 | exp7959-evidence-fragility | Compare evidence fragility and confidence on independent stress masks | 3 | results/experiment_7959_v690_evidence_fragility.json |
-| 8 | exp7960-causal-acquisition | Measure causal constraint acquisition with delayed labels and restart | 3 | results/experiment_7960_v690_causal_acquisition.json |
-| 9 | exp7961-delayed-calibration | Test issued-state confidence updates on the same learning trajectory | 3 | results/experiment_7961_v690_delayed_calibration.json |
-| 10 | exp7962-arc-supervisor-delta | Assess new live ARC supervisor outcomes for generalization | 3 | results/experiment_7962_v690_arc_supervisor_delta.json |
-| 11 | exp7963-service-cost | Measure complete verification service and durable learning costs | 4 | results/experiment_7963_v690_service_cost.json |
-| 12 | exp7964-hardware-evidence | Preserve board custody and bound compatible workload acceleration | 4 | results/experiment_7964_v690_hardware_evidence.json |
-| 13 | exp7965-capstone | Independently reduce thirteen outcomes and decide the three PRD gaps | 4 | results/experiment_7965_v690_capstone.json |
+| 1 | exp7966-contract-methods | Bind thirteen tasks across UTC rollover and freeze research methods | 1 | results/experiment_7966_v691_contract_methods.json |
+| 2 | exp7967-private-training-qualification | Qualify fitting with private scratch and the artifact guard enabled | 1 | results/experiment_7967_v691_private_training_qualification.json |
+| 3 | exp7968-response-role-targets | Qualify complete-response labels for disjoint calibration roles | 1 | results/experiment_7968_v691_response_role_targets.json |
+| 4 | exp7969-qwen-calibration-capture | Capture bounded Qwen judgments for fitting and calibration | 1 | results/experiment_7969_v691_qwen_calibration_capture.json |
+| 5 | exp7970-energy-fit | Fit source energies through the qualified private execution path | 2 | results/experiment_7970_v691_energy_fit.json |
+| 6 | exp7971-decision-abstention | Measure source-energy decisions against equal-information controls | 2 | results/experiment_7971_v691_decision_abstention.json |
+| 7 | exp7972-qwen-energy-calibration | Train small response-energy calibrators against same-information controls | 2 | results/experiment_7972_v691_qwen_energy_calibration.json |
+| 8 | exp7973-causal-acquisition | Measure persistent constraint additions before delayed feedback | 3 | results/experiment_7973_v691_causal_acquisition.json |
+| 9 | exp7974-delayed-calibration | Test issued-state confidence updates on a sealed learning trajectory | 3 | results/experiment_7974_v691_delayed_calibration.json |
+| 10 | exp7975-arc-supervisor-delta | Assess new live ARC supervisor outcomes for transferable refinement | 3 | results/experiment_7975_v691_arc_supervisor_delta.json |
+| 11 | exp7976-service-cost | Measure complete decision-service cost for each qualified branch | 4 | results/experiment_7976_v691_service_cost.json |
+| 12 | exp7977-hardware-evidence | Preserve all board obligations and map current measured workload | 4 | results/experiment_7977_v691_hardware_evidence.json |
+| 13 | exp7978-capstone | Independently reduce thirteen outcomes and decide the three PRD gaps | 4 | results/experiment_7978_v691_capstone.json |
 
-<!-- V690_TASK_CONTRACT_START -->
+<!-- V691_TASK_CONTRACT_START -->
 ```json
 {
-  "milestone": "2026.09.690",
+  "milestone": "2026.10.691",
   "tasks": [
-    {"id": "exp7953-contract-methods", "title": "Bind activation-aware authority and freeze current research methods", "phase": 1, "deliverable": "results/experiment_7953_v690_contract_methods.json", "MODEL_SPECS": [], "inference_substrate_class": "no_model_load", "gated_on": []},
-    {"id": "exp7954-training-coverage", "title": "Qualify the fitting exception routes before numerical execution", "phase": 1, "deliverable": "results/experiment_7954_v690_training_coverage.json", "MODEL_SPECS": [], "inference_substrate_class": "no_model_load", "gated_on": []},
-    {"id": "exp7955-response-targets", "title": "Rebuild full-response support targets from original human spans", "phase": 1, "deliverable": "results/experiment_7955_v690_response_targets.json", "MODEL_SPECS": [], "inference_substrate_class": "no_model_load", "gated_on": []},
-    {"id": "exp7956-energy-fit", "title": "Fit calibrated source energies after complete executable qualification", "phase": 2, "deliverable": "results/experiment_7956_v690_energy_fit.json", "MODEL_SPECS": [], "inference_substrate_class": "no_model_load", "gated_on": [{"upstream": "exp7954-training-coverage", "artifact_field": "training_coverage_ready_score", "op": "==", "value": 1}, {"upstream": "exp7954-training-coverage", "artifact_field": "flagged_adversarial", "op": "==", "value": false}, {"upstream": "exp7954-training-coverage", "artifact_field": "verdict_class", "op": "in", "value": ["positive", "circular_positive", "null"]}, {"upstream": "exp7954-training-coverage", "artifact_field": "runtime_ready_score", "op": "==", "value": 1}]},
-    {"id": "exp7957-decision-abstention", "title": "Measure calibrated decisions against equal-information controls", "phase": 2, "deliverable": "results/experiment_7957_v690_decision_abstention.json", "MODEL_SPECS": [], "inference_substrate_class": "no_model_load", "gated_on": [{"upstream": "exp7956-energy-fit", "artifact_field": "energy_fit_ready_score", "op": "==", "value": 1}, {"upstream": "exp7956-energy-fit", "artifact_field": "flagged_adversarial", "op": "==", "value": false}, {"upstream": "exp7956-energy-fit", "artifact_field": "verdict_class", "op": "in", "value": ["positive", "circular_positive", "null"]}]},
-    {"id": "exp7958-qwen-response-risk", "title": "Measure bounded Qwen response support against human annotations", "phase": 2, "deliverable": "results/experiment_7958_v690_qwen_response_risk.json", "MODEL_SPECS": ["unsloth/Qwen3.8-27B-GGUF"], "inference_substrate_class": "model_bounded_generation", "gated_on": [{"upstream": "exp7955-response-targets", "artifact_field": "response_targets_ready_score", "op": "==", "value": 1}, {"upstream": "exp7955-response-targets", "artifact_field": "flagged_adversarial", "op": "==", "value": false}, {"upstream": "exp7955-response-targets", "artifact_field": "verdict_class", "op": "in", "value": ["positive", "circular_positive", "null"]}]},
-    {"id": "exp7959-evidence-fragility", "title": "Compare evidence fragility and confidence on independent stress masks", "phase": 3, "deliverable": "results/experiment_7959_v690_evidence_fragility.json", "MODEL_SPECS": [], "inference_substrate_class": "no_model_load", "gated_on": [{"upstream": "exp7956-energy-fit", "artifact_field": "energy_fit_ready_score", "op": "==", "value": 1}, {"upstream": "exp7956-energy-fit", "artifact_field": "flagged_adversarial", "op": "==", "value": false}, {"upstream": "exp7956-energy-fit", "artifact_field": "verdict_class", "op": "in", "value": ["positive", "circular_positive", "null"]}]},
-    {"id": "exp7960-causal-acquisition", "title": "Measure causal constraint acquisition with delayed labels and restart", "phase": 3, "deliverable": "results/experiment_7960_v690_causal_acquisition.json", "MODEL_SPECS": [], "inference_substrate_class": "no_model_load", "gated_on": [{"upstream": "exp7956-energy-fit", "artifact_field": "energy_fit_ready_score", "op": "==", "value": 1}, {"upstream": "exp7956-energy-fit", "artifact_field": "flagged_adversarial", "op": "==", "value": false}, {"upstream": "exp7956-energy-fit", "artifact_field": "verdict_class", "op": "in", "value": ["positive", "circular_positive", "null"]}]},
-    {"id": "exp7961-delayed-calibration", "title": "Test issued-state confidence updates on the same learning trajectory", "phase": 3, "deliverable": "results/experiment_7961_v690_delayed_calibration.json", "MODEL_SPECS": [], "inference_substrate_class": "no_model_load", "gated_on": [{"upstream": "exp7960-causal-acquisition", "artifact_field": "learning_measurement_ready_score", "op": "==", "value": 1}, {"upstream": "exp7960-causal-acquisition", "artifact_field": "flagged_adversarial", "op": "==", "value": false}, {"upstream": "exp7960-causal-acquisition", "artifact_field": "verdict_class", "op": "in", "value": ["positive", "circular_positive", "null"]}]},
-    {"id": "exp7962-arc-supervisor-delta", "title": "Assess new live ARC supervisor outcomes for generalization", "phase": 3, "deliverable": "results/experiment_7962_v690_arc_supervisor_delta.json", "MODEL_SPECS": [], "inference_substrate_class": "no_model_load", "gated_on": []},
-    {"id": "exp7963-service-cost", "title": "Measure complete verification service and durable learning costs", "phase": 4, "deliverable": "results/experiment_7963_v690_service_cost.json", "MODEL_SPECS": [], "inference_substrate_class": "no_model_load", "gated_on": [{"upstream": "exp7956-energy-fit", "artifact_field": "energy_fit_ready_score", "op": "==", "value": 1}, {"upstream": "exp7956-energy-fit", "artifact_field": "flagged_adversarial", "op": "==", "value": false}, {"upstream": "exp7956-energy-fit", "artifact_field": "verdict_class", "op": "in", "value": ["positive", "circular_positive", "null"]}]},
-    {"id": "exp7964-hardware-evidence", "title": "Preserve board custody and bound compatible workload acceleration", "phase": 4, "deliverable": "results/experiment_7964_v690_hardware_evidence.json", "MODEL_SPECS": [], "inference_substrate_class": "no_model_load", "gated_on": []},
-    {"id": "exp7965-capstone", "title": "Independently reduce thirteen outcomes and decide the three PRD gaps", "phase": 4, "deliverable": "results/experiment_7965_v690_capstone.json", "MODEL_SPECS": [], "inference_substrate_class": "no_model_load", "gated_on": []}
+    {"id": "exp7966-contract-methods", "title": "Bind thirteen tasks across UTC rollover and freeze research methods", "phase": 1, "deliverable": "results/experiment_7966_v691_contract_methods.json", "MODEL_SPECS": [], "inference_substrate_class": "no_model_load", "gated_on": []},
+    {"id": "exp7967-private-training-qualification", "title": "Qualify fitting with private scratch and the artifact guard enabled", "phase": 1, "deliverable": "results/experiment_7967_v691_private_training_qualification.json", "MODEL_SPECS": [], "inference_substrate_class": "no_model_load", "gated_on": []},
+    {"id": "exp7968-response-role-targets", "title": "Qualify complete-response labels for disjoint calibration roles", "phase": 1, "deliverable": "results/experiment_7968_v691_response_role_targets.json", "MODEL_SPECS": [], "inference_substrate_class": "no_model_load", "gated_on": []},
+    {"id": "exp7969-qwen-calibration-capture", "title": "Capture bounded Qwen judgments for fitting and calibration", "phase": 1, "deliverable": "results/experiment_7969_v691_qwen_calibration_capture.json", "MODEL_SPECS": ["unsloth/Qwen3.8-27B-GGUF"], "inference_substrate_class": "model_bounded_generation", "gated_on": [{"upstream": "exp7968-response-role-targets", "artifact_field": "response_roles_ready_score", "op": "==", "value": 1}, {"upstream": "exp7968-response-role-targets", "artifact_field": "flagged_adversarial", "op": "==", "value": false}, {"upstream": "exp7968-response-role-targets", "artifact_field": "verdict_class", "op": "in", "value": ["positive", "circular_positive", "null"]}]},
+    {"id": "exp7970-energy-fit", "title": "Fit source energies through the qualified private execution path", "phase": 2, "deliverable": "results/experiment_7970_v691_energy_fit.json", "MODEL_SPECS": [], "inference_substrate_class": "no_model_load", "gated_on": [{"upstream": "exp7967-private-training-qualification", "artifact_field": "training_execution_ready_score", "op": "==", "value": 1}, {"upstream": "exp7967-private-training-qualification", "artifact_field": "flagged_adversarial", "op": "==", "value": false}, {"upstream": "exp7967-private-training-qualification", "artifact_field": "verdict_class", "op": "in", "value": ["positive", "circular_positive", "null"]}]},
+    {"id": "exp7971-decision-abstention", "title": "Measure source-energy decisions against equal-information controls", "phase": 2, "deliverable": "results/experiment_7971_v691_decision_abstention.json", "MODEL_SPECS": [], "inference_substrate_class": "no_model_load", "gated_on": [{"upstream": "exp7970-energy-fit", "artifact_field": "energy_fit_ready_score", "op": "==", "value": 1}, {"upstream": "exp7970-energy-fit", "artifact_field": "flagged_adversarial", "op": "==", "value": false}, {"upstream": "exp7970-energy-fit", "artifact_field": "verdict_class", "op": "in", "value": ["positive", "circular_positive", "null"]}]},
+    {"id": "exp7972-qwen-energy-calibration", "title": "Train small response-energy calibrators against same-information controls", "phase": 2, "deliverable": "results/experiment_7972_v691_qwen_energy_calibration.json", "MODEL_SPECS": [], "inference_substrate_class": "no_model_load", "gated_on": [{"upstream": "exp7968-response-role-targets", "artifact_field": "response_roles_ready_score", "op": "==", "value": 1}, {"upstream": "exp7968-response-role-targets", "artifact_field": "flagged_adversarial", "op": "==", "value": false}, {"upstream": "exp7968-response-role-targets", "artifact_field": "verdict_class", "op": "in", "value": ["positive", "circular_positive", "null"]}, {"upstream": "exp7969-qwen-calibration-capture", "artifact_field": "qwen_capture_ready_score", "op": "==", "value": 1}, {"upstream": "exp7969-qwen-calibration-capture", "artifact_field": "flagged_adversarial", "op": "==", "value": false}, {"upstream": "exp7969-qwen-calibration-capture", "artifact_field": "verdict_class", "op": "in", "value": ["positive", "circular_positive", "null"]}]},
+    {"id": "exp7973-causal-acquisition", "title": "Measure persistent constraint additions before delayed feedback", "phase": 3, "deliverable": "results/experiment_7973_v691_causal_acquisition.json", "MODEL_SPECS": [], "inference_substrate_class": "no_model_load", "gated_on": [{"upstream": "exp7970-energy-fit", "artifact_field": "energy_fit_ready_score", "op": "==", "value": 1}, {"upstream": "exp7970-energy-fit", "artifact_field": "flagged_adversarial", "op": "==", "value": false}, {"upstream": "exp7970-energy-fit", "artifact_field": "verdict_class", "op": "in", "value": ["positive", "circular_positive", "null"]}]},
+    {"id": "exp7974-delayed-calibration", "title": "Test issued-state confidence updates on a sealed learning trajectory", "phase": 3, "deliverable": "results/experiment_7974_v691_delayed_calibration.json", "MODEL_SPECS": [], "inference_substrate_class": "no_model_load", "gated_on": [{"upstream": "exp7973-causal-acquisition", "artifact_field": "learning_measurement_ready_score", "op": "==", "value": 1}, {"upstream": "exp7973-causal-acquisition", "artifact_field": "flagged_adversarial", "op": "==", "value": false}, {"upstream": "exp7973-causal-acquisition", "artifact_field": "verdict_class", "op": "in", "value": ["positive", "circular_positive", "null"]}]},
+    {"id": "exp7975-arc-supervisor-delta", "title": "Assess new live ARC supervisor outcomes for transferable refinement", "phase": 3, "deliverable": "results/experiment_7975_v691_arc_supervisor_delta.json", "MODEL_SPECS": [], "inference_substrate_class": "no_model_load", "gated_on": []},
+    {"id": "exp7976-service-cost", "title": "Measure complete decision-service cost for each qualified branch", "phase": 4, "deliverable": "results/experiment_7976_v691_service_cost.json", "MODEL_SPECS": [], "inference_substrate_class": "no_model_load", "gated_on": []},
+    {"id": "exp7977-hardware-evidence", "title": "Preserve all board obligations and map current measured workload", "phase": 4, "deliverable": "results/experiment_7977_v691_hardware_evidence.json", "MODEL_SPECS": [], "inference_substrate_class": "no_model_load", "gated_on": []},
+    {"id": "exp7978-capstone", "title": "Independently reduce thirteen outcomes and decide the three PRD gaps", "phase": 4, "deliverable": "results/experiment_7978_v691_capstone.json", "MODEL_SPECS": [], "inference_substrate_class": "no_model_load", "gated_on": []}
   ]
 }
 ```
-<!-- V690_TASK_CONTRACT_END -->
+<!-- V691_TASK_CONTRACT_END -->

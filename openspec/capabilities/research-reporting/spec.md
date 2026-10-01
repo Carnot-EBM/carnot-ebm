@@ -87701,3 +87701,238 @@ annotation granularity and the historical three-positive sentence null.
 No new target or seed converts exposed source families into a fresh holdout.
 Use private E2E-015/016/017/018/019 and affected reader tests for the planning
 change. Runtime repairs, scientific results and hardware gains remain planned.
+
+## REQ-REPORT-7953-V690: Observe activation and freeze current methods
+
+Bind thirteen ordered tasks Exp7953 through Exp7965 to the V690 visible table,
+machine contract and full-task digest. Matching active/document identity confirms
+observed activation. Matching staging alone confirms planning readiness only.
+Absent consumed staging records unknown historical custody. Existing conflicting
+staging or preserved staging snapshots reject readiness. Do not reconstruct staging.
+Use unchanged failure-ledger and exclusion readers. Empty prior history is valid
+only without a required scope match. Required history has all four prior fields
+and retirement true. Keep reader receipts per task and reproduce both V689 failures.
+Authenticate Exp7892, Exp7916, Exp7917 and Exp7941 exact primaries. Freeze current
+code hashes independently of historical eligibility. Preserve 640 source families,
+exclusions and the September 28 oracle-distinct correction. No science pre-gate.
+
+### SCENARIO-REPORT-7953-AUTHORITY
+
+Test genuinely new empty history, required missing history, all four prior fields,
+consumed staging, staged-only authority, changed active prompts and contradictory
+snapshots. Retain twelve negative contract mutations and historical fixture dates.
+
+### SCENARIO-REPORT-7953-VALIDATION
+
+Freeze explicit command manifests before results. Run private E2E-015/016/018,
+with both Exp7868 calls dated 20260929. Current execution is 20260930. Require
+nonempty 100 percent added module and CLI statement coverage, scoped Ruff,
+strict mypy and explicit spec coverage. Keep full-suite health separate.
+
+### SCENARIO-REPORT-7953-PUBLICATION
+
+Each private CLI route owns a directory. Publish one checked top-level primary.
+Cold-reduce primitive rows, run adversarial and strict row validators, and bind
+sidecars to final bytes. Actual gate and document readers select the primary
+after nested sidecars get newer mtimes. Fixture agreement is circular_positive.
+External incompleteness is terminal blocked; owned check failures disqualify.
+Ops/status/traceability reconciliation belongs to the conductor for this task.
+
+# REQ-REPORT-7958: Publish bounded whole-response Qwen measurement
+
+Authenticate the declared Exp7955 primary and its readiness=1, eligible verdict,
+adversarial=false operands. Missing external custody or GPU lease is terminal
+blocked without repeated attempts. Use the authenticated cached mandated GGUF
+with an owned CUDA lease and measured offload. Bound load plus inference to
+3000 seconds; expose flushed phase and call progress with supervised heartbeats.
+Keep weights and defaults fixed, exposed development scope and GAP-ORACLE-DISTINCT
+open. Freeze files, consumers, argv, exits, failure reasons, deadlines and coverage
+includes before results. Keep private CLI routes separate and all sidecars below
+raw. Publish one checked primary atomically; both real readers select its hash
+after nested sidecars become newer. Required owned failures disqualify readiness.
+
+## SCENARIO-REPORT-7958-TERMINAL
+
+Tests cover blocked, fixture, live ownership, negative, cold-replay and terminal
+routes. Require nonempty 100% new-module/CLI statement coverage, scoped Ruff,
+strict mypy, explicit-test spec coverage, E2E-015/019, real CPU grammar transport,
+and E2E-016 fixture and replay with historical date 20260929. Current date is
+20261001. Cold reconstruction uses recorded raw replies and original annotations
+without another model invocation. Inspect adversarial and strict-row reports,
+bind final sidecars to final bytes, preserve historical failures and September 28
+oracle-distinct correction. The conductor owns ops/status/traceability updates.
+
+V690 implementation: task-owned authority, methods, validation and parameterized
+Exp7953 CLI. Private regressions preserve V685 lifecycle assertions and reproduce
+both V689 authority failures. Exact current verification receipts and measured
+statement counts are published below results/raw/experiment_7953_v690_contract_methods/.
+
+## REQ-REPORT-7954: Bind exception coverage and terminal publication
+
+Exp7954 SHALL freeze explicit tests, consumers, coverage includes and executable
+hashes. Private negative, blocked, success and replay scenarios use distinct
+publication directories. Preserve conflicting_primary rejection for two siblings.
+Combined unit and actual CLI coverage SHALL reach exactly 100% with nonzero counts.
+Run private E2E-015 and both E2E-016 routes with historical date 20260929, scoped
+Ruff, strict mypy and explicit-file spec coverage. Preserve historical health
+receipts as historical. No natural fitting, model load or external publication occurs.
+
+### SCENARIO-REPORT-7954-TERMINAL
+
+Reduce readiness from primitive logs, counts, fixture checkpoints and reader hashes.
+Publish one experiment_7954_*.json primary after both terminal validators inspect
+its final bytes. Newer nested sidecars SHALL leave both actual consumers selecting
+the primary path/hash. Cold replay rejects altered logs, sources or denominator.
+Save a reusable callable receipt and validation manifest; all sidecars bind final bytes.
+
+Implementation: the small Exp7954 CLI uses parameterized private outputs. Its
+runner preserves publisher uniqueness, checks both actual readers and binds
+terminal reports to final bytes. A private deleted-test control clears prior
+CLI coverage while retaining other measured files. Ops and traceability updates
+belong to the separate conductor reconciliation requested for this task.
+# REQ-REPORT-7955: Publish authenticated response targets
+
+Exp7955 SHALL authenticate pinned Exp7423 assets, Exp7892 shards and Exp7942
+history; record exact failed operands for terminal external blocks. Freeze
+affected files, consumers, argv, exits, reasons, deadlines and coverage includes
+before results. Publish one checked experiment_7955 primary and private route
+directories. Public and evaluator manifests have separate byte hashes. Cold
+reconstruction starts from original annotations. Running successfully qualifies
+transport only, with exposed development scope and no detector benefit claim.
+
+## SCENARIO-REPORT-7955-TERMINAL
+
+Run private E2E-015 and E2E-019, real fixture CLI, external-CWD cold replay,
+aggregate-tamper rejection and historical E2E-016 using date 20260929. Require
+nonempty 100% added-module/CLI statement coverage, scoped Ruff, strict mypy and
+explicit-file spec coverage. Preserve historical health and required failures.
+Run final adversarial and strict row validators, then bind sidecars to final
+bytes. Both real readers SHALL select the primary after newer nested sidecars.
+Owned failures disqualify and clear readiness. Current run date is 20261001;
+September 28 oracle-distinct correction and historical determinations remain.
+Ops/status/traceability reconciliation belongs to the conductor for this task.
+
+## REQ-REPORT-7962: Advance only the authenticated V689 supervisor frontier
+
+Exp7962 SHALL pin Exp7949 primary, receipt inventory, seen hashes, null verdict,
+readiness and adversarial flag. Registry levels SHALL be checked before scanning.
+Reuse the callable receipt reader with current date 20261001. Read each original
+candidate once and stop science within 120 seconds when there are no new events.
+Identity and event sequence determine novelty; calendar dates do not establish it.
+Live events require E3AgentPolicy/make_carnot_agent provenance and outcome fields.
+Preserve policy defaults, historical failures and the September 28 oracle-distinct
+corrigendum. Aggregation claims zero models, device executions and new level solves.
+
+### SCENARIO-REPORT-7962-FRONTIER: Null and failed custody are terminal
+
+An authenticated empty delta emits complete_null_no_new_supervisor_outcomes with
+verdict_class=null and arc_evidence_ready_score=1. Changed or absent authority
+emits complete_blocked_* with exact expected and observed operands. No unchanged
+external prerequisite is retried. New events keep game, seed, arm and outcomes.
+No arm policy changes are applied. Retirement needs twenty new firings across
+five games, zero helped events, and exact upper confidence bounds. Priority
+proposals require held-out evidence and a separately registered follow-up.
+
+### SCENARIO-REPORT-7962-CLI: Private routes preserve evidence custody
+
+Success, blocked, negative, replay and terminal routes use separate directories.
+Fixtures are circular_positive mechanics. Cold replay rejects derived-claim drift.
+E2E-017 runs reused reader tests and actual private reducer CLI calls. Historical
+E2E-016 fixture and replay retain --date 20260929; execution date is 20261001.
+
+### SCENARIO-REPORT-7962-SEAL: Validate exact terminal bytes and readers
+
+Freeze affected files, consumers, dependencies, commands, expected exits and
+failure reasons, deadlines and identical coverage includes before reduction.
+Require nonempty 100 percent added statement coverage, scoped Ruff, strict mypy
+and explicit-file spec coverage. Keep repository health separate from required
+checks. Required failures disqualify readiness. Both terminal validators inspect
+final bytes after verdict changes. Atomically publish one unique top-level
+primary; newer nested sidecars cannot change gate or document reader path/hash.
+The conductor owns ops/status, ops/changelog and traceability reconciliation.
+
+Implementation: arc_supervisor_v690_delta.py and the Exp7962 CLI parameterize
+the qualified reader and frozen checks. The current-date argument retains the
+historical reader default. The explicit test file covers authority mismatch,
+empty and current-date ledgers, private replay, failed validation and uniqueness.
+No live policy, conductor, production default or historical determination changes.
+## REQ-REPORT-7964: Preserve V689 custody and bound compatible workload costs
+
+Exp7964 SHALL authenticate the frozen Exp7951 primary and terminal receipt once.
+Reuse exact historical receipt hashes and three board rows. Failed required
+custody SHALL produce complete_blocked_* with exact operands and unknown scope.
+Only results/experiment_7963_v690_service_cost.json can supply optional work.
+Require eligible verdict, readiness one, no adversarial flag, owned checks,
+authenticated spans and integer byte counts. Missing optional data preserves
+historical readiness. KV260 stays quadratic Ising with k_max<=5. PolarFire stays
+Linux CPU only. GateMate keeps 0xffffffff. NPU and TSU stay unqualified.
+No device operation or model load runs. Future KV260 access requires SSH kria.
+Preserve the September 28 oracle-distinct corrigendum and historical failures.
+
+### SCENARIO-REPORT-7964-CUSTODY
+
+Missing, malformed or changed primary, terminal, board scope or raw receipts
+produce typed blocked rows and unknown placement. Cold replay succeeds for
+the actual blocked artifact. Optional service absence never closes custody.
+
+### SCENARIO-REPORT-7964-WORKLOAD
+
+Map projection, features, head forward, energy, typed policy, storage and
+serialization from exact measured rows. Reject malformed spans and bytes.
+Neural heads never imply Ising scope. Compatible f uses 1/(1-f+f/100) and
+1/(1-f). At f=0 bounds equal one. At f=1 modeled gain is 100 and ideal is
+unbounded with null numeric value. Missing times give null. Gains are estimates.
+
+### SCENARIO-REPORT-7964-VALIDATION
+
+Freeze dependencies, explicit tests, commands, deadlines, exits, reasons and
+identical coverage includes before results. Require nonempty 100 percent new
+module and CLI statement coverage. Private routes keep separate directories.
+Publisher uniqueness and both actual readers select checked primary bytes
+after nested sidecars gain newer mtimes. Run affected tests, Ruff, strict mypy,
+explicit spec coverage and both E2E-016 routes dated 20260929. Current date is
+20261001. Run full Python tests once as bounded repository health. Historical
+health never becomes a current pass. Owned failures disqualify readiness.
+Cold-reduce claims and bind both terminal validators to atomically published
+final bytes. Conductor owns ops and traceability reconciliation.
+
+## REQ-REPORT-7965-V690: Independently reduce thirteen current dispositions
+
+Exp7965 SHALL observe activation through the V690 authority reader. Bind the
+thirteen-task table, machine contract and full task digest to exact snapshots.
+Read twelve declared producer primaries once and reserve the self row. Keep
+conductor pre-gate receipts separate from missing scientific input. Reduce
+primitive metrics with qualified callable reducers. Rebuild the complete
+response target join against original corpus bytes. Preserve source groups,
+mask and seed denominators, causal order, future-label exclusions and nulls.
+External absence is complete_blocked, never partial. Own required failures
+disqualify readiness. Audit readiness one can coexist with science_ready=false.
+Keep three PRD decisions, exact lineage retirement and legitimate ARC scans.
+Publication G1-G4 remain separate. Preserve the September 28 corrigendum and
+DiffusionGemma pending. No models, device operations or roadmap activation run.
+
+### SCENARIO-REPORT-7965-CUSTODY
+
+Missing, pre-gated, retired, invalid and qualified producers retain their own
+path, hash, identity, roles and failed operands. Valid nulls can be eligible.
+Original human response labels stay separate from feasibility and model-self
+stress labels. Cold reduction rejects changed bytes, counts, claims and dates.
+
+### SCENARIO-REPORT-7965-QUALIFICATION
+
+Freeze exact affected files, consumer commands, deadlines, expected exits,
+reasons and coverage includes before results. Require explicit tests, Ruff,
+strict mypy and spec coverage. Combine unit and real private CLI success,
+blocked, negative, replay and terminal coverage with nonempty 100 percent new
+module and CLI statements. Keep repository health historical when no shared
+dependency changes. E2E-015/016/017/018 use private routes. Both E2E-016 calls
+use 20260929; current execution uses 20261001.
+
+### SCENARIO-REPORT-7965-PUBLICATION
+
+Each CLI scenario uses its own publication directory. One top-level primary
+is published atomically from checked bytes. Raw rows and validation sidecars
+stay nested. Both actual consumers select the same primary hash after nested
+sidecars acquire newer mtimes. Inspect adversarial and strict row reports on
+final bytes, including any changed verdict. Preserve historical failures.
+Conductor owns ops, changelog and traceability reconciliation.

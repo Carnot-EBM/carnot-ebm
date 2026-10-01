@@ -1,0 +1,19 @@
+.E.                                                                      [100%]
+==================================== ERRORS ====================================
+_______ ERROR at setup of test_real_cli_public_success_and_gate_failure ________
+
+self = PosixPath('/tmp/carnot7954-qualification/raw/experiment_7954_private/attempts/e2e015')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/tmp/carnot7954-qualification/raw/experiment_7954_private/attempts/e2e015'
+
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1311: FileNotFoundError
+=========================== short test summary info ============================
+ERROR tests/python/test_source_boundary_7852.py::test_real_cli_public_success_and_gate_failure
+2 passed, 1 error in 2.02s

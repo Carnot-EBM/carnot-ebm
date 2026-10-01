@@ -1,0 +1,203 @@
+{
+  "config_hash": "sha256:17d509539abd34d125a7b8f21f47e2064e0f59d5eac351ba74cf8a90a0b6d5a9",
+  "public_hash": "sha256:8ae669f0de27bf922c7b2c48ea4195fb74ac07cd2f434049705e5d7368432be0",
+  "rows": [
+    {
+      "arm": "source_erased",
+      "duration_s": 0.8842607390251942,
+      "family_id": "sha256:d9d28ea7e914644f3866f1f60a5abbb97368c6f5bc9c97d8196d12b232935f90",
+      "input_tokens": 189,
+      "order": 0,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 1.0,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 17,
+          "prompt_tokens": 189,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 206
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\"unsupported_probability\": 1.0, \"source_sentence_id\": null}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817073,
+        "id": "chatcmpl-nIeyjzqKLLvLpbxoffbtjIu4SoK0YJ9R",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 393.528,
+          "predicted_n": 17,
+          "predicted_per_second": 43.19895915919579,
+          "predicted_per_token_ms": 23.148705882352942,
+          "prompt_ms": 200.745,
+          "prompt_n": 111,
+          "prompt_per_second": 552.940297392214,
+          "prompt_per_token_ms": 1.8085135135135135
+        },
+        "usage": {
+          "completion_tokens": 17,
+          "prompt_tokens": 189,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 206
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"\", \"original_answer\": \"Your Snapchat account may be temporarily locked if you have used third-party apps to access Snapchat. The company does not guarantee your security when using these apps and may send you a warning message before locking your account. If you have been warned multiple times and continue using third-party apps, your account may remain locked.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [], \"source_evidence_erased\": true}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:bace33bf7bcfef996de6007e3416b67feb9901edabb572f96eec99c1735dde6e",
+      "started": true,
+      "status": "generated",
+      "visible_ids": []
+    },
+    {
+      "arm": "full_source",
+      "duration_s": 1.3006167110288516,
+      "family_id": "sha256:d9d28ea7e914644f3866f1f60a5abbb97368c6f5bc9c97d8196d12b232935f90",
+      "input_tokens": 721,
+      "order": 1,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 0.0,
+        "schema_valid": true,
+        "source_sentence_id": 1,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 24,
+          "prompt_tokens": 721,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 745
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 1\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817074,
+        "id": "chatcmpl-L2DL1lMxcZjY3uksTt65WIjZSvBiSjBv",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 564.825,
+          "predicted_n": 24,
+          "predicted_per_second": 42.49103704687292,
+          "predicted_per_token_ms": 23.534375,
+          "prompt_ms": 641.797,
+          "prompt_n": 643,
+          "prompt_per_second": 1001.8744244675496,
+          "prompt_per_token_ms": 0.9981290824261275
+        },
+        "usage": {
+          "completion_tokens": 24,
+          "prompt_tokens": 721,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 745
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:\u00b7 just now. Report Abuse. If you used third-party apps to get into snapchat and they warned you more them 4 times then yes your account is locked :(they warned me 3 times, I changed my password and it did unlock it but on the 4th time I tried and nothing.I'm still waiting though. nancy \u00b7 8 months ago. Thumbs up.eport Abuse. My snaps from people started not to download so I logged out I put my username and password in and it was saying I am using third party applications what is third party user and how do I get back into my account. nicole \u00b7 9 months ago. Thumbs up. 0. Thumbs down. 0. 1 comment. Loading ...\\\\n\\\\npassage 2:Snapchat cannot guarantee your security if you use these third party apps, so they may lock your Snapchat account. They will usually send you a message before they do so. However, if you have been locked out of your account and don\u2019t know why, using third party apps may be a reason.If you are using third party apps, at the moment the only thing you can do is to uninstall that app and wait for an official Snapchat app to appear for the Windows Phone.ome people have come back to an old account to find it\u2019s been locked. Others have received an email from Snapchat warning them about third party apps, before being locked out. Also see: How To Use Google Chrome Without Internet Connection. There are many reasons why people are getting locked out of Snapchat.\\\\n\\\\npassage 3:The Snapchat app is used on an iPhone. Snapchat allows users' messages to vanish after seconds. (Photo by Peter Macdiarmid/Getty Images) | Peter Macdiarmid via Getty Images. We've noticed that you're using a third-party application to access Snapchat, putting yourself (and possibly your friends) at risk.ast month, 200,000 private Snapchat photos were leaked via one of the photo messaging app's many third-party apps. Now, the company is taking steps to punish individuals who use those apps.\\\\n\\\\n\\\",\\\"question\\\":\\\"why is my snapchat temporarily locked\\\"}\", \"original_answer\": \"Your Snapchat account may be temporarily locked if you have used third-party apps to access Snapchat. The company does not guarantee your security when using these apps and may send you a warning message before locking your account. If you have been warned multiple times and continue using third-party apps, your account may remain locked.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21], \"source_evidence_erased\": false}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:bace33bf7bcfef996de6007e3416b67feb9901edabb572f96eec99c1735dde6e",
+      "started": true,
+      "status": "generated",
+      "visible_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21
+      ]
+    }
+  ]
+}

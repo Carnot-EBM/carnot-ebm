@@ -1,0 +1,185 @@
+{
+  "config_hash": "sha256:17d509539abd34d125a7b8f21f47e2064e0f59d5eac351ba74cf8a90a0b6d5a9",
+  "public_hash": "sha256:4ec34f3b9d71e2a941cf126c772ddacbd037c295b6d45e80df23d3735f0170a1",
+  "rows": [
+    {
+      "arm": "full_source",
+      "duration_s": 1.2368331070174463,
+      "family_id": "sha256:b0a222fcbb998d929cb2943ebde2579e0b4bb421ff38cb8cbb62be4d4797afdd",
+      "input_tokens": 719,
+      "order": 0,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 0.0,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 21,
+          "prompt_tokens": 719,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 740
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817132,
+        "id": "chatcmpl-V5tTlgtTLRI06CYm4048yI45f9m8BAV1",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 493.866,
+          "predicted_n": 21,
+          "predicted_per_second": 42.52165567178141,
+          "predicted_per_token_ms": 23.51742857142857,
+          "prompt_ms": 644.52,
+          "prompt_n": 641,
+          "prompt_per_second": 994.538571339912,
+          "prompt_per_token_ms": 1.0054914196567863
+        },
+        "usage": {
+          "completion_tokens": 21,
+          "prompt_tokens": 719,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 740
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"{\\\"address\\\":\\\"324 W Cabrillo Blvd\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":true,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Italian, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":null,\\\"name\\\":\\\"Emilios Ristorante & Bar\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2012-07-08 23:36:48\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I love Emilios and can't wait for them to re-open!  The goat cheese salad is amazing, as are the chicken and risotto, and the staff are so great.  Fine dining at its finest.\\\"},{\\\"review_date\\\":\\\"2012-04-22 21:52:13\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"This is the perfect spot for a special dinner out (even with children)! The food is excellent and the wait staff are so attentive and responsive.\\\"},{\\\"review_date\\\":\\\"2012-04-13 02:18:51\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"stopped in for dinner at the recommendation of a nearby inn.\\\\n\\\\na bit uptight for the beach but maybe i don't really know santa barbara?\\\\n\\\\nsalad was good.\\\\n\\\\nboar was very good.\\\\n\\\\nservice was good.\\\\n\\\\nthe mousse was really good.\\\\n\\\\nand the hostess who does not miss any of her workouts was nice too.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Emilios Ristorante & Bar is an Italian restaurant located at 324 W Cabrillo Blvd, Santa Barbara, CA. It has an average rating of 3.5 stars. According to customer reviews, the restaurant is renowned for its amazing goat cheese salad, chicken and risotto, and excellent service. The restaurant is also appreciated for its attentive and responsive staff. Customers also noted that Emilios is a perfect spot for a special dinner, even with children. The restaurant offers outdoor seating and takes reservations. Although it does not have WiFi or parking facilities, it allows street parking. The ambiance is not casual or trendy but is considered romantic. Emilios offers take-out service and is good for groups.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3], \"source_evidence_erased\": false}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:193fd2384a22d6d345b50c7ae4cc4097d7d39a96d7a9f9b30998926ef528e3e0",
+      "started": true,
+      "status": "generated",
+      "visible_ids": [
+        0,
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "arm": "source_erased",
+      "duration_s": 0.9957196819595993,
+      "family_id": "sha256:b0a222fcbb998d929cb2943ebde2579e0b4bb421ff38cb8cbb62be4d4797afdd",
+      "input_tokens": 270,
+      "order": 1,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 1.0,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 270,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 293
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 1.0,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817133,
+        "id": "chatcmpl-SOKsVAcrhCwJXDRajYJNdCxPd2Dh8tWH",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 542.031,
+          "predicted_n": 23,
+          "predicted_per_second": 42.43299737468891,
+          "predicted_per_token_ms": 23.566565217391304,
+          "prompt_ms": 262.426,
+          "prompt_n": 192,
+          "prompt_per_second": 731.6348227690854,
+          "prompt_per_token_ms": 1.3668020833333332
+        },
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 270,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 293
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"\", \"original_answer\": \"Emilios Ristorante & Bar is an Italian restaurant located at 324 W Cabrillo Blvd, Santa Barbara, CA. It has an average rating of 3.5 stars. According to customer reviews, the restaurant is renowned for its amazing goat cheese salad, chicken and risotto, and excellent service. The restaurant is also appreciated for its attentive and responsive staff. Customers also noted that Emilios is a perfect spot for a special dinner, even with children. The restaurant offers outdoor seating and takes reservations. Although it does not have WiFi or parking facilities, it allows street parking. The ambiance is not casual or trendy but is considered romantic. Emilios offers take-out service and is good for groups.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [], \"source_evidence_erased\": true}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:193fd2384a22d6d345b50c7ae4cc4097d7d39a96d7a9f9b30998926ef528e3e0",
+      "started": true,
+      "status": "generated",
+      "visible_ids": []
+    }
+  ]
+}

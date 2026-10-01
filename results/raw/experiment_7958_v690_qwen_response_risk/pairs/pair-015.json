@@ -1,0 +1,191 @@
+{
+  "config_hash": "sha256:17d509539abd34d125a7b8f21f47e2064e0f59d5eac351ba74cf8a90a0b6d5a9",
+  "public_hash": "sha256:52e12b7cee94dfd0b7d75101a80dab55fec6769f3f3fec16c7f2387f991f81c1",
+  "rows": [
+    {
+      "arm": "full_source",
+      "duration_s": 1.2811177829862572,
+      "family_id": "sha256:be1b60749bfb13cf3f76d7075315e974651ec0d373c871c11028a2c378e391a5",
+      "input_tokens": 745,
+      "order": 0,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 0.95,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 22,
+          "prompt_tokens": 745,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 767
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n \"unsupported_probability\": 0.95,\n \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817018,
+        "id": "chatcmpl-SgyzgqEY11Y9B9EFmZxPnesjnG9Z3Yjx",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 512.287,
+          "predicted_n": 22,
+          "predicted_per_second": 42.94467749523216,
+          "predicted_per_token_ms": 23.28577272727273,
+          "prompt_ms": 657.107,
+          "prompt_n": 667,
+          "prompt_per_second": 1015.0553867178405,
+          "prompt_per_token_ms": 0.985167916041979
+        },
+        "usage": {
+          "completion_tokens": 22,
+          "prompt_tokens": 745,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 767
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"{\\\"address\\\":\\\"231 S Magnolia Ave\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Food, Local Services, Farmers Market, Professional Services, American (New), Restaurants, Shopping\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"7:0-14:0\\\",\\\"Monday\\\":\\\"7:0-14:0\\\",\\\"Thursday\\\":\\\"7:0-14:0\\\",\\\"Tuesday\\\":\\\"7:0-14:0\\\",\\\"Wednesday\\\":\\\"7:0-14:0\\\"},\\\"name\\\":\\\"Goodland Kitchen\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2020-12-16 20:49:51\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"They are open for takeout, great lunch menu, good chorizo good chips, huge salads. Very friendly service!\\\"},{\\\"review_date\\\":\\\"2020-10-21 18:00:38\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"They just reopened!! Please come here and the market next door because I know this small business needs it! Amazing service and wonderful food :)\\\"},{\\\"review_date\\\":\\\"2019-08-29 17:31:36\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"This place used to serve interesting well-prepared food. Not any more. It's all humdrum standard food, heavy on the meat, with little innovation. The great lunch specials, still listed on the website, are gone. The bread on my BLT seemed old and just pulled from the whole wheat wonderbread bag. There was only one choice for soup and it was done for the day. Really, no reason ever to come here again.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Goodland Kitchen is a local restaurant located in Goleta, California, serving a variety of dishes including American New cuisine. With an overall rating of 3.5 stars, the business offers outdoor seating, takeout options, and good service. While some reviews praise the quality of their food, others have expressed disappointment with the lack of innovation in their menu and the quality of their bread. Despite this, Goodland Kitchen remains a popular spot for both locals and tourists, with many appreciating their friendly service.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], \"source_evidence_erased\": false}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:1348c39291ed28dd7a3d251c224fc0fec9fdde870e0ce7cde951fab752f9bf61",
+      "started": true,
+      "status": "generated",
+      "visible_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ]
+    },
+    {
+      "arm": "source_erased",
+      "duration_s": 0.9773476499831304,
+      "family_id": "sha256:be1b60749bfb13cf3f76d7075315e974651ec0d373c871c11028a2c378e391a5",
+      "input_tokens": 230,
+      "order": 1,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 1.0,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 230,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 253
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 1.0,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817019,
+        "id": "chatcmpl-ywQed23T6Nj3IQNImmETys00C7r4xBiz",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 534.395,
+          "predicted_n": 23,
+          "predicted_per_second": 43.03932484398245,
+          "predicted_per_token_ms": 23.234565217391303,
+          "prompt_ms": 235.534,
+          "prompt_n": 152,
+          "prompt_per_second": 645.3420737558059,
+          "prompt_per_token_ms": 1.549565789473684
+        },
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 230,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 253
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"\", \"original_answer\": \"Goodland Kitchen is a local restaurant located in Goleta, California, serving a variety of dishes including American New cuisine. With an overall rating of 3.5 stars, the business offers outdoor seating, takeout options, and good service. While some reviews praise the quality of their food, others have expressed disappointment with the lack of innovation in their menu and the quality of their bread. Despite this, Goodland Kitchen remains a popular spot for both locals and tourists, with many appreciating their friendly service.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [], \"source_evidence_erased\": true}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:1348c39291ed28dd7a3d251c224fc0fec9fdde870e0ce7cde951fab752f9bf61",
+      "started": true,
+      "status": "generated",
+      "visible_ids": []
+    }
+  ]
+}

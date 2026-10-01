@@ -1,0 +1,132 @@
+{
+  "config_hash": "sha256:17d509539abd34d125a7b8f21f47e2064e0f59d5eac351ba74cf8a90a0b6d5a9",
+  "public_hash": "sha256:338c4b34587d0ffb7eef197b9cea74db60339209a78d9e7dd8cfaf1a67698420",
+  "rows": [
+    {
+      "arm": "source_erased",
+      "duration_s": 4.998990334570408e-06,
+      "family_id": "12",
+      "input_tokens": 689,
+      "order": 0,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 0.5,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 20,
+          "prompt_tokens": 100
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "message": {
+              "content": "{\"unsupported_probability\":0.5,\"source_sentence_id\":null}"
+            }
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "usage": {
+          "completion_tokens": 20,
+          "prompt_tokens": 100
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"\", \"original_answer\": \"Complete answer.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [], \"source_evidence_erased\": true}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:ff87eabcd32b120ed668d429116540800bfa167ecf46169e64243c0bf7757de3",
+      "started": true,
+      "status": "generated",
+      "visible_ids": []
+    },
+    {
+      "arm": "full_source",
+      "duration_s": 3.035995177924633e-06,
+      "family_id": "12",
+      "input_tokens": 701,
+      "order": 1,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 0.5,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 20,
+          "prompt_tokens": 100
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "message": {
+              "content": "{\"unsupported_probability\":0.5,\"source_sentence_id\":null}"
+            }
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "usage": {
+          "completion_tokens": 20,
+          "prompt_tokens": 100
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"Source 12.\", \"original_answer\": \"Complete answer.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0], \"source_evidence_erased\": false}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:ff87eabcd32b120ed668d429116540800bfa167ecf46169e64243c0bf7757de3",
+      "started": true,
+      "status": "generated",
+      "visible_ids": [
+        0
+      ]
+    }
+  ]
+}

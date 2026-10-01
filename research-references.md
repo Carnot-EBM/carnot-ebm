@@ -49099,3 +49099,109 @@ sentences. The response-level evaluation pool recorded by Exp7943 contains
 development counts, not a fresh confirmatory sample. A response-level target
 must be independently rebuilt from original annotations; no result may borrow
 the disqualified fit's scientific authority.
+## V691 planning review — 2026-10-01 UTC (recorded before design)
+
+The next sequence is 691. The UTC month rolled over during V690, although the
+operator's local date is still September 30. This review checks 2025–2026
+research against current primary artifacts. Rechecked papers are not new
+discoveries. Author and vendor results below are not Carnot measurements.
+
+### Findings to carry into experiments
+
+- [Constrained Decoding Eliminates Structural Failures in Small LLMs but
+  Reveals a Scale-Dependent Semantic Gap](https://arxiv.org/abs/2609.23742),
+  September 20, 2026. The paper separates schema validity from content
+  accuracy. Its small-model study does not establish behavior on the mandated
+  Qwen 27B. It supports retaining separate syntax, probability and decision
+  gates. Carnot now has qualified full-response Qwen judgments; the next
+  question is calibrated decisions, rather than another grammar comparison.
+- [Look Again Before You Abstain: Budgeted Conformal Evidence Acquisition](https://arxiv.org/html/2606.16667v1),
+  June 15, 2026. Its visual study calibrates the complete deployed scoring
+  procedure, including evidence acquisition. This motivates binding the
+  prompt, source view, probability transformation and action rule together.
+  A text adaptation should fit calibration on the same full-source protocol
+  used at evaluation. It must compare with simple calibration controls and
+  measure false accepts. No visual acquisition result or finite-sample
+  guarantee transfers to Carnot's exposed development corpus.
+- [Adaptive Conformal Inference Under Delayed Feedback](https://arxiv.org/abs/2609.07251),
+  September 2026. Retain the proposed issued-state versus current-state
+  update comparison, with the original label-release schedule preserved.
+  Measure coverage and action cost on one fixed learning trajectory. Its
+  forecasting guarantees do not establish correctness on this text stream.
+- [Ultrafast On-chip Online Learning via Spline Locality in
+  Kolmogorov-Arnold Networks](https://arxiv.org/abs/2602.02056), February 2026.
+  Sparse spline updates motivate a small local energy calibration control
+  and accounting for touched coefficients, state bytes and complete service
+  cost. A CPU spline experiment does not reproduce the authors' FPGA result.
+- [KAN-CL](https://arxiv.org/abs/2605.12306), May 2026, and
+  [KAC](https://arxiv.org/abs/2503.21076), March 2025, motivate explicit
+  retention controls. The previously retired importance-anchor method stays
+  closed. Durable constraint addition remains distinct from reweighting.
+
+### Coverage of the requested topics
+
+| Topic | Primary sources checked | Decision |
+|---|---|---|
+| EBM verification and reasoning | [EBT](https://arxiv.org/abs/2507.02092), July 2025; [ARM–EBM v4](https://arxiv.org/abs/2512.15605), revised May 2026 | Normalize small conditional energies and test their decisions. Function-space equivalence and compatibility do not certify truth. |
+| Neural constraint satisfaction | [Hard linear constraints with decision rules](https://arxiv.org/abs/2505.13858), May 2025; [Energy-Based Constraint Networks](https://arxiv.org/abs/2605.00960), May 2026 | Keep encoded feasibility separate from natural-language extraction. No new solver sweep before qualified source decisions. |
+| Ising applications in ML | EBCN above; [THRML](https://github.com/extropic-ai/thrml) | Reuse structural energy and sampler interfaces. Do not assume a nonlinear calibration head is a quadratic Ising workload. |
+| Hallucination detection | BCEA and semantic-gap study above; [meta-cognitive hallucination audit](https://arxiv.org/abs/2505.13143), May 2025 | Preserve independent human labels and report harmful decisions as well as Brier score. Repeated self-checking is not an independent oracle. |
+| KANs | On-chip spline learning, KAN-CL and KAC above | Compare a bounded spline energy control at the same information budget; measure retention and update locality. |
+| Energy-guided and constrained generation | [Thinking Before Constraining](https://arxiv.org/abs/2601.07525), January 2026; [finite-automaton diffusion decoding](https://arxiv.org/abs/2607.07026), July 2026 | Defer new reasoning/decoding protocols while calibrating the existing full-source protocol. Formal output constraints do not supply semantic labels. |
+| Hardware sampling | [FPGA decomposition](https://arxiv.org/abs/2602.15985), February 2026; [Extropic Z1T](https://extropic.ai/writing/z1t) | Include preprocessing, transfer and readout in modeled acceleration. No authenticated TSU execution is available locally. |
+| Continual and online learning | Delayed ACI, on-chip splines and KAN-CL above | Keep feedback causal, state pinned per query, no-write controls and retention evaluation. |
+
+### Secondary-source checks and limits
+
+- **OpenReview:** searched NeurIPS, ICML and ICLR work. Read the indexed
+  [EBT ICLR 2026 paper](https://openreview.net/pdf/608231a168a72d241775e5d1d28a092f5532becb.pdf)
+  and [Energy Matching, NeurIPS 2025](https://openreview.net/pdf/62ec030c254ffe361caf735408232b71dcc9075f.pdf).
+  Energy Matching concerns generative scalar potentials, not a ready-made
+  factual verifier. ICML search results did not establish a relevant new
+  accepted method. Search-index noise is not reviewer consensus.
+- **Semantic Scholar:** bounded Graph API citation requests used both seed
+  IDs. EBT returned HTTP 429. ARM–EBM returned nine citing records with no
+  next-page marker. Followed [d-OPD](https://arxiv.org/abs/2609.35362) to the
+  primary abstract; its block-diffusion distillation is deferred because this
+  milestone keeps generator weights fixed. Index coverage is incomplete;
+  these requests are not a complete citation census.
+- **Hugging Face:** checked the [verification feed](https://huggingface.co/papers?q=verification).
+  It includes variable verification granularity and papers from several years.
+  Feed placement supplies neither a September publication date nor evidence
+  of a new state of the art.
+- **GitHub:** checked weekly Python and Rust trending pages. The browser
+  snapshots were two weeks old; no current relevant trend rank was verified.
+  Checked the author-maintained THRML and [KAC](https://github.com/Ethanhuhuhu/KAC)
+  repositories directly. Neither is a new local deployment receipt.
+- **Extropic:** checked the writing index, Z1T, and
+  [Torx/Thermalizers/Z1](https://extropic.ai/writing/from-one-to-one-billion).
+  Hybrid sampling remains relevant to workload placement; vendor efficiency
+  figures remain external estimates.
+- **Logical Intelligence:** checked [Kona 1.0](https://logicalintelligence.com/kona).
+  The page describes a constraint-enforcement engine. It does not expose a
+  reproducible local training recipe or weights for a fair comparison.
+
+### Local evidence that changes the next question
+
+The artifact summarizer and live adversarial recheck accepted the V690 primary
+records. Exp7954 covered every owned statement but failed required unit and
+E2E-015 commands: pytest scratch directories under protected `results/` caused
+child write redirection and cross-filesystem rename failures. New qualification
+must place mutable test and coverage work outside `results/`, keep the guard
+enabled, and archive logs only after children exit. This is a specific execution
+defect, not evidence against energy training.
+
+Exp7955 authenticated 62 complete evaluation responses, including 19 positive
+human labels. Exp7958 completed 128 bounded calls on the mandated Qwen model.
+Its full-source Brier score was 0.1481 versus 0.6774 with source erased, but
+its registered decision-benefit gate failed and it had five false accepts
+versus two. The source-erased comparison does not establish superiority over
+a same-information calibrated control. Fit new small decision heads on
+separate fit/tune role responses and keep these evaluation responses exposed
+development. Do not train on their now-known labels.
+
+Exp7965 also treated pre-midnight upstream run dates as a mismatch with its
+post-midnight date. A successor must authenticate each producer's actual
+invocation date and frozen hashes; a milestone can span UTC days. Historical
+fixture dates stay fixed. The active roadmap and historical results remain
+unchanged during planning.

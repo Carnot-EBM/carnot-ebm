@@ -1,0 +1,193 @@
+{
+  "config_hash": "sha256:17d509539abd34d125a7b8f21f47e2064e0f59d5eac351ba74cf8a90a0b6d5a9",
+  "public_hash": "sha256:89dcfd7bd7ee43e93e5c116fc61182ee0f9fd9c1182311512d8a376471f51ae6",
+  "rows": [
+    {
+      "arm": "source_erased",
+      "duration_s": 1.0211864699958824,
+      "family_id": "sha256:0c27a150d5b70d7e43e3dba75cce5982027068864a6d21696f328c6b19c3dade",
+      "input_tokens": 284,
+      "order": 0,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 1.0,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 284,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 307
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 1.0,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817051,
+        "id": "chatcmpl-wSHrQiywlt2GWcvVl8FSWR8yUfWZjsnS",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 537.609,
+          "predicted_n": 23,
+          "predicted_per_second": 42.782021878353966,
+          "predicted_per_token_ms": 23.37430434782609,
+          "prompt_ms": 275.759,
+          "prompt_n": 206,
+          "prompt_per_second": 747.029108750757,
+          "prompt_per_token_ms": 1.3386359223300972
+        },
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 284,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 307
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"\", \"original_answer\": \"Based on the provided structured data, Your Choice is a locally-owned Thai restaurant located in Santa Barbara, California. With a rating of 4.0 out of 5 stars, the restaurant offers a variety of dishes including Thai, Chinese, and American cuisine. Customers have praised the restaurant's quick and efficient service, delicious food, and friendly staff. One reviewer noted that the restaurant's take-out options are just as good as dining in, while another appreciated the restaurant's commitment to using fresh ingredients. However, some reviewers have experienced minor issues with their orders, such as spicy dishes, incorrect orders, and long delivery times. Despite these minor drawbacks, Your Choice has gained a loyal customer base and is highly recommended for those looking for a taste of authentic Thai cuisine in Santa Barbara.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [], \"source_evidence_erased\": true}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:b5fb14653cfcac6263f9e4d76d520b49eb64272e83a54e5c8b1b5833c5b7dc92",
+      "started": true,
+      "status": "generated",
+      "visible_ids": []
+    },
+    {
+      "arm": "full_source",
+      "duration_s": 1.5017545040464029,
+      "family_id": "sha256:0c27a150d5b70d7e43e3dba75cce5982027068864a6d21696f328c6b19c3dade",
+      "input_tokens": 899,
+      "order": 1,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 0.95,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 24,
+          "prompt_tokens": 899,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 923
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817052,
+        "id": "chatcmpl-ZHq52w385DItP6cJppob09GvfqJIL9nc",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 563.317,
+          "predicted_n": 24,
+          "predicted_per_second": 42.60478558254056,
+          "predicted_per_token_ms": 23.471541666666667,
+          "prompt_ms": 839.299,
+          "prompt_n": 821,
+          "prompt_per_second": 978.1972813026109,
+          "prompt_per_token_ms": 1.0222886723507918
+        },
+        "usage": {
+          "completion_tokens": 24,
+          "prompt_tokens": 899,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 923
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"{\\\"address\\\":\\\"3404 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Restaurants, Thai, Food, Chicken Wings, Ice Cream & Frozen Yogurt, Desserts\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"16:0-20:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"16:0-20:0\\\",\\\"Sunday\\\":\\\"16:0-20:0\\\",\\\"Thursday\\\":\\\"16:0-20:0\\\",\\\"Tuesday\\\":\\\"16:0-20:0\\\",\\\"Wednesday\\\":\\\"16:0-20:0\\\"},\\\"name\\\":\\\"Your Choice\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-15 14:27:29\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"We decided to do take-out one night. Had no idea how SB Thai would compare to home. We loved this place. Fast, efficient an quite pleasant.\\\\nIf they had used pork belly I wouldn't have know I wasn't at home. Delicious! Thanks\\\"},{\\\"review_date\\\":\\\"2021-12-13 23:18:44\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Just try it!  I hope the wonderful people and fantastic team that own it continue to pump out these absolutely fantastic dishes. Santa Barbara is lucky to have a restaurant such as this.\\\"},{\\\"review_date\\\":\\\"2021-11-14 16:13:01\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"The food ended up being pretty good here for the most part but there were a few issues. I ordered a mild green curry with shrimp, which actually ended up being pretty spicy. They also left the tails on the shrimp. We ordered delivery through Restaurant Connection which was the only delivery option, and it took 1.5 hours and a dish was forgotten (not sure whether the fault or the restaurant or the delivery service) but we did get a refund after calling. Our friends did really enjoy the pork belly fried rice but the drunken noodles had a very high ratio of vegetables to noodles.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Based on the provided structured data, Your Choice is a locally-owned Thai restaurant located in Santa Barbara, California. With a rating of 4.0 out of 5 stars, the restaurant offers a variety of dishes including Thai, Chinese, and American cuisine. Customers have praised the restaurant's quick and efficient service, delicious food, and friendly staff. One reviewer noted that the restaurant's take-out options are just as good as dining in, while another appreciated the restaurant's commitment to using fresh ingredients. However, some reviewers have experienced minor issues with their orders, such as spicy dishes, incorrect orders, and long delivery times. Despite these minor drawbacks, Your Choice has gained a loyal customer base and is highly recommended for those looking for a taste of authentic Thai cuisine in Santa Barbara.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"source_evidence_erased\": false}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:b5fb14653cfcac6263f9e4d76d520b49eb64272e83a54e5c8b1b5833c5b7dc92",
+      "started": true,
+      "status": "generated",
+      "visible_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ]
+    }
+  ]
+}

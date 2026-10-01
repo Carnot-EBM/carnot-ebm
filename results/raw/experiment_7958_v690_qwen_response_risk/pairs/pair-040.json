@@ -1,0 +1,190 @@
+{
+  "config_hash": "sha256:17d509539abd34d125a7b8f21f47e2064e0f59d5eac351ba74cf8a90a0b6d5a9",
+  "public_hash": "sha256:3dcd1659af3a54cfefdee0d12a6997b8bcb5bbe735419664d9bc31246c7ac1e7",
+  "rows": [
+    {
+      "arm": "source_erased",
+      "duration_s": 0.9303360049962066,
+      "family_id": "sha256:9432d478ff8ac91ed31aa85346796d595c617dbdf82688d2ede46b1d669ac0b1",
+      "input_tokens": 223,
+      "order": 0,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 1.0,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 223,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 246
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 1.0,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817083,
+        "id": "chatcmpl-ySVPDREssWLNn5s3YJP3QtMhyzQfRW0r",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 539.476,
+          "predicted_n": 23,
+          "predicted_per_second": 42.63396332737693,
+          "predicted_per_token_ms": 23.455478260869565,
+          "prompt_ms": 238.228,
+          "prompt_n": 145,
+          "prompt_per_second": 608.6606108433937,
+          "prompt_per_token_ms": 1.642951724137931
+        },
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 223,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 246
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"\", \"original_answer\": \"National Parks in the US are free for visitors on April 18 and 19 as part of National Park Week. This includes 128 parks that usually charge a fee. Activities include night-time astronomy parties, daytime Revolutionary War programs, Earth Day parties and family-friendly Junior Ranger activities. To find out more information and plan your visit, go to FindYourPark.com or www.nationalparkweek.org. Share your experiences using the hashtag #FindYourPark.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [], \"source_evidence_erased\": true}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:dd6693b77230f7ab1e16b3af691c3865d4a143d4198c32230161a7c0bedfdbd6",
+      "started": true,
+      "status": "generated",
+      "visible_ids": []
+    },
+    {
+      "arm": "full_source",
+      "duration_s": 1.1326194559806027,
+      "family_id": "sha256:9432d478ff8ac91ed31aa85346796d595c617dbdf82688d2ede46b1d669ac0b1",
+      "input_tokens": 457,
+      "order": 1,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 0.95,
+        "schema_valid": true,
+        "source_sentence_id": 2,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 25,
+          "prompt_tokens": 457,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 482
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": 2\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817084,
+        "id": "chatcmpl-T2CbtOqarfzm1VTTtn3vLIVYLHpBxUpb",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 587.773,
+          "predicted_n": 25,
+          "predicted_per_second": 42.53342702029525,
+          "predicted_per_token_ms": 23.510920000000002,
+          "prompt_ms": 447.005,
+          "prompt_n": 379,
+          "prompt_per_second": 847.8652364067517,
+          "prompt_per_token_ms": 1.1794327176781003
+        },
+        "usage": {
+          "completion_tokens": 25,
+          "prompt_tokens": 457,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 482
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"From the giant sequoias of Yosemite to the geysers of Yellowstone, the United States' national parks were made for you and me. And for Saturday and Sunday, they're also free. Though most of the National Park Service's 407 sites are free year-round, the 128 parks that charge a fee -- like Yellowstone and Yosemite -- will be free those two days. It's all part of National Park Week, happening April 18 through April 26, and it's hosted by the National Park Service and the National Park Foundation. Check out night-time astronomy parties, daytime Revolutionary War programs, Earth Day parties and family-friendly Junior Ranger activities at national park sites across the country. Not sure how to start? Go to FindYourPark.com to learn more about park sites near you. Go to www.nationalparkweek.org for more ideas on how to explore. Then the park service wants people to share their stories using the hashtag #FindYourPark and at FindYourPark.com.\\n\", \"original_answer\": \"National Parks in the US are free for visitors on April 18 and 19 as part of National Park Week. This includes 128 parks that usually charge a fee. Activities include night-time astronomy parties, daytime Revolutionary War programs, Earth Day parties and family-friendly Junior Ranger activities. To find out more information and plan your visit, go to FindYourPark.com or www.nationalparkweek.org. Share your experiences using the hashtag #FindYourPark.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8], \"source_evidence_erased\": false}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:dd6693b77230f7ab1e16b3af691c3865d4a143d4198c32230161a7c0bedfdbd6",
+      "started": true,
+      "status": "generated",
+      "visible_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    }
+  ]
+}

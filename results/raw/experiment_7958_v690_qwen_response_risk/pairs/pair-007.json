@@ -1,0 +1,196 @@
+{
+  "config_hash": "sha256:17d509539abd34d125a7b8f21f47e2064e0f59d5eac351ba74cf8a90a0b6d5a9",
+  "public_hash": "sha256:451db4e01143eefaa019d04e1bffbf35c8c158e0710cceec2669d7f77ee7dbff",
+  "rows": [
+    {
+      "arm": "full_source",
+      "duration_s": 1.6888000590261072,
+      "family_id": "sha256:a9d8596b4aaec28e46553564662e06ef2e1e10414559c0ac4035d060bf93c6f2",
+      "input_tokens": 1090,
+      "order": 0,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 0.0,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 1090,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 1113
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790816998,
+        "id": "chatcmpl-6IoG5e6zuRIEKJaium5z43wOqv7lBM3L",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 538.064,
+          "predicted_n": 23,
+          "predicted_per_second": 42.74584436052217,
+          "predicted_per_token_ms": 23.394086956521736,
+          "prompt_ms": 946.806,
+          "prompt_n": 1012,
+          "prompt_per_second": 1068.8567668561457,
+          "prompt_per_token_ms": 0.9355790513833993
+        },
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 1090,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 1113
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"{\\\"address\\\":\\\"315 Meigs Rd, Ste I\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Sandwiches, Restaurants, American (New)\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"10:0-21:0\\\",\\\"Monday\\\":\\\"10:0-21:0\\\",\\\"Saturday\\\":\\\"10:0-21:0\\\",\\\"Sunday\\\":\\\"10:0-19:30\\\",\\\"Thursday\\\":\\\"10:0-21:0\\\",\\\"Tuesday\\\":\\\"10:0-21:0\\\",\\\"Wednesday\\\":\\\"10:0-21:0\\\"},\\\"name\\\":\\\"Sam's To Go\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-03 00:05:08\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"This was our first time at Sams and it was delicious!! Excellent customer service, they were so sweet. We got the #11 Italian cold cuts, and the veggie sandwich #29 both were so good! The bread was so fresh and you could tell the ingredients were really quality! My daughter got the turkey sandwich and she is the pickiest eater and she loved it! Can't wait to go back\\\"},{\\\"review_date\\\":\\\"2021-12-10 03:34:00\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"The couple who runs the place are so nice and funny, and the sandwiches are delicious. It doesn't look fancy, but do yourself a favor and try it out. The Pastrami Avocado and Cheese was delicious. Warning, the medium size sandwich is BIG.\\\"},{\\\"review_date\\\":\\\"2021-11-28 21:43:45\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"I've been going to Sam's for the past several years while visiting beautiful Santa Barbara from the San Francisco Bay area. I've always enjoyed the sandwiches from Sam's. Unfortunately, my wife and I just finished eating their turkey sandwich and in all honesty, it' was just, Ok, more like disappointing...\\\\n\\\\nWe were disappointed because it appears the quality and taste of the sandwich has digressed to a \\\\\\\"point of no return\\\\\\\"... The sandwich was sloppily made, poorly wrapped, and importantly, the man behind the counter (usual guy) seems to have gotten cantankerous over time. He chastised me for not ordering both white and wheat bread sandwiches the way he wanted, getting perturbed for asking for olives in my sandwich and, he had a smart alec - bad attitude demeanor about him - poor customer service.\\\\n\\\\nSuffice it to say, we will not be going back to Sam's. There are too many good delis in the Cliffs Dr. area to be subjected to poor quality sandwiches and an unpleasant customer experience...\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"\\\"Sam's To Go\\\" is a well-rated sandwich restaurant located at 315 Meigs Rd, Ste I, Santa Barbara, CA. This restaurant specializes in American (New) cuisine and is open every day of the week. The establishment features outdoor seating and offers free WiFi. It provides takeout options and is suitable for group dining, though it does not accept reservations. Convenient lot parking is available, but garage, street, and valet parking are not. \\n\\nCustomer reviews highlight the excellent customer service and high-quality ingredients used in the sandwiches, with particular praise for the Italian cold cuts and veggie sandwich. However, some customers have expressed disappointment with the quality and taste of certain sandwiches, such as the turkey sandwich, along with some instances of perceived poor customer service. Despite some negative reviews, the overall star rating for \\\"Sam's To Go\\\" remains high at 4.5 stars.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], \"source_evidence_erased\": false}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:5e976e9762ffe1c643d6bec902b9a32d9ceabe0cfb893f9274054f2293db59a7",
+      "started": true,
+      "status": "generated",
+      "visible_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ]
+    },
+    {
+      "arm": "source_erased",
+      "duration_s": 1.1666315119946375,
+      "family_id": "sha256:a9d8596b4aaec28e46553564662e06ef2e1e10414559c0ac4035d060bf93c6f2",
+      "input_tokens": 311,
+      "order": 1,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 1.0,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 311,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 334
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 1.0,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790816999,
+        "id": "chatcmpl-FzxtmCgtu7OyMrH6H5guCtsU6prcqaWB",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 536.317,
+          "predicted_n": 23,
+          "predicted_per_second": 42.885084753979456,
+          "predicted_per_token_ms": 23.31813043478261,
+          "prompt_ms": 289.017,
+          "prompt_n": 233,
+          "prompt_per_second": 806.1809512935225,
+          "prompt_per_token_ms": 1.2404163090128755
+        },
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 311,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 334
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"\", \"original_answer\": \"\\\"Sam's To Go\\\" is a well-rated sandwich restaurant located at 315 Meigs Rd, Ste I, Santa Barbara, CA. This restaurant specializes in American (New) cuisine and is open every day of the week. The establishment features outdoor seating and offers free WiFi. It provides takeout options and is suitable for group dining, though it does not accept reservations. Convenient lot parking is available, but garage, street, and valet parking are not. \\n\\nCustomer reviews highlight the excellent customer service and high-quality ingredients used in the sandwiches, with particular praise for the Italian cold cuts and veggie sandwich. However, some customers have expressed disappointment with the quality and taste of certain sandwiches, such as the turkey sandwich, along with some instances of perceived poor customer service. Despite some negative reviews, the overall star rating for \\\"Sam's To Go\\\" remains high at 4.5 stars.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [], \"source_evidence_erased\": true}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:5e976e9762ffe1c643d6bec902b9a32d9ceabe0cfb893f9274054f2293db59a7",
+      "started": true,
+      "status": "generated",
+      "visible_ids": []
+    }
+  ]
+}

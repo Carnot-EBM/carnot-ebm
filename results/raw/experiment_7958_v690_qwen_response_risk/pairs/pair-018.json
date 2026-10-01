@@ -1,0 +1,194 @@
+{
+  "config_hash": "sha256:17d509539abd34d125a7b8f21f47e2064e0f59d5eac351ba74cf8a90a0b6d5a9",
+  "public_hash": "sha256:a925bc854a5a8e105bbe950f2686909b0489ec16d4a97bb4c7eb58050a42ec30",
+  "rows": [
+    {
+      "arm": "full_source",
+      "duration_s": 1.3890902699786238,
+      "family_id": "sha256:018e524d7333e7fe7ef54bfdeb6d9c98d1993a24bd9fe66e4dcaf418f440e165",
+      "input_tokens": 791,
+      "order": 0,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 0.95,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 24,
+          "prompt_tokens": 791,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 815
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817027,
+        "id": "chatcmpl-5qZOjBSB7Giavra9zJxu8VBWtJe0dvwX",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 565.553,
+          "predicted_n": 24,
+          "predicted_per_second": 42.43634106794589,
+          "predicted_per_token_ms": 23.564708333333332,
+          "prompt_ms": 695.716,
+          "prompt_n": 713,
+          "prompt_per_second": 1024.8434706115713,
+          "prompt_per_token_ms": 0.9757587657784011
+        },
+        "usage": {
+          "completion_tokens": 24,
+          "prompt_tokens": 791,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 815
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"Dolphins Trade Target: Chase Young\\nThe Miami Dolphins are coming off a controversial loss to the Philadelphia Eagles on Sunday night which saw two early-season Super Bowl contenders go head-to-head on national television.\\nThe Eagles defense (and the refs) stood tall in taking down the Dolphins, who saw a much improved play from their defense, but as the trade deadline approaches all NFL journalists, sports talk podcasts, and shows airing on national TV and every sports streaming platform are focused on which players will be switching teams.\\nThe Dolphins will have an influx of talent coming back to action in the coming weeks, such as Xavien Howard, Jalen Ramsey, Connor Williams, Terron Armstead, and De'Von Achane.\\nHowever, there are still some needs along the offensive line, and in areas of the defense, some of which can be addressed at the trade deadline.\\nChase Young\\nProbably not the first name that comes to mind when thinking of needs for the Dolphins, but the struggles of the defensive line in getting consistent pressure with their front four has been a talking point all season.\\nCBS Sports\u2019 Josina Anderson reports that \u201cseveral identifiable teams\u201d are prepared to pull off a trade for Young or Montez Sweat from the Commanders, and while it may seem unlikely that Young will land in Miami, it's certainly something that should be, at the very least, explored.\\nFirst, Emmanuel Ogbah has been ineffective this season, collecting just 2.5 sacks on the season, a far cry from the 9 sacks he had in both the 2020 and 2021 seasons (prior to injury).\\nTo be fair, the likes of Christian Wilkins have not played to their expected level, and the line as a whole has struggled.\\nTrading for Young, who is five years younger and has 5 sacks this season, would be a massive upgrade for the Dolphins.\\nIt must be mentioned that trading for Young would lead to an immediate need to sign him to a long-term extension. Miami is certainly going to have some serious questions and decisions to make regarding their cap situation in the future, but if they were willing to sign Indianapolis Colts running back Jonathan Taylor to a lucrative contract, they certainly could do so with Young, and perhaps it may be a bit cheaper.\\nBringing Young to a rush that includes Wilkins, Zach Sieler, Jaelen Phillips, and Bradley Chubb would certainly boost the line's potency as they prepare for a playoff push.\\nMiami has struggled generating sacks this season, so adding Young would go a long way into boosting that number, and helping other areas of the defense as well.\", \"original_answer\": \"The Miami Dolphins are considering trading for Washington Commanders defensive end Chase Young to bolster their struggling defensive line. Young has 5 sacks this season, while the Dolphins' current starting defensive ends have combined for only 7.5 sacks. Trading for Young would provide an immediate upgrade and give them more flexibility in extending his contract. However, it would also add to the team's already strained cap situation.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], \"source_evidence_erased\": false}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:becbe74f9b38f8829a05ecc1f3bafff7d8f25b510c9843b0f9e655f58d25dcd6",
+      "started": true,
+      "status": "generated",
+      "visible_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ]
+    },
+    {
+      "arm": "source_erased",
+      "duration_s": 0.9530994069646113,
+      "family_id": "sha256:018e524d7333e7fe7ef54bfdeb6d9c98d1993a24bd9fe66e4dcaf418f440e165",
+      "input_tokens": 208,
+      "order": 1,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 1.0,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 208,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 231
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 1.0,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817028,
+        "id": "chatcmpl-Czt6gsyqDJw3BdOOmtfWijwlLnXyejN8",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 536.122,
+          "predicted_n": 23,
+          "predicted_per_second": 42.900683053484094,
+          "predicted_per_token_ms": 23.30965217391304,
+          "prompt_ms": 209.29,
+          "prompt_n": 130,
+          "prompt_per_second": 621.1476898083998,
+          "prompt_per_token_ms": 1.6099230769230768
+        },
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 208,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 231
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"\", \"original_answer\": \"The Miami Dolphins are considering trading for Washington Commanders defensive end Chase Young to bolster their struggling defensive line. Young has 5 sacks this season, while the Dolphins' current starting defensive ends have combined for only 7.5 sacks. Trading for Young would provide an immediate upgrade and give them more flexibility in extending his contract. However, it would also add to the team's already strained cap situation.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [], \"source_evidence_erased\": true}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:becbe74f9b38f8829a05ecc1f3bafff7d8f25b510c9843b0f9e655f58d25dcd6",
+      "started": true,
+      "status": "generated",
+      "visible_ids": []
+    }
+  ]
+}

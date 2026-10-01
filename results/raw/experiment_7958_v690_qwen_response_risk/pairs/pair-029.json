@@ -1,0 +1,201 @@
+{
+  "config_hash": "sha256:17d509539abd34d125a7b8f21f47e2064e0f59d5eac351ba74cf8a90a0b6d5a9",
+  "public_hash": "sha256:4975027755a13644d221e14f6a1ef4e276e09ae7a208934ea800d90ba6ff2521",
+  "rows": [
+    {
+      "arm": "full_source",
+      "duration_s": 1.8917707959772088,
+      "family_id": "sha256:47ac8fe6c02b58cbeab73844951997ebfeed935324948cdd36e6dab7a13bb43e",
+      "input_tokens": 1327,
+      "order": 0,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 0.95,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 24,
+          "prompt_tokens": 1327,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 1351
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817054,
+        "id": "chatcmpl-9iXcfB1pM5a3uEo8P7Pb5BIYUvknHNfZ",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 564.39,
+          "predicted_n": 24,
+          "predicted_per_second": 42.523786743209484,
+          "predicted_per_token_ms": 23.51625,
+          "prompt_ms": 1141.045,
+          "prompt_n": 1249,
+          "prompt_per_second": 1094.61064199922,
+          "prompt_per_token_ms": 0.9135668534827863
+        },
+        "usage": {
+          "completion_tokens": 24,
+          "prompt_tokens": 1327,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 1351
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"{\\\"address\\\":\\\"1007 Casitas Pass Rd\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":false,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Sandwiches, Restaurants\\\",\\\"city\\\":\\\"Carpinteria\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"10:30-16:0\\\",\\\"Monday\\\":\\\"10:30-16:0\\\",\\\"Saturday\\\":\\\"10:30-16:0\\\",\\\"Thursday\\\":\\\"10:30-16:0\\\",\\\"Tuesday\\\":\\\"10:30-16:0\\\",\\\"Wednesday\\\":\\\"10:30-16:0\\\"},\\\"name\\\":\\\"Peebee & Jays\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-10-21 19:40:04\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Their sandwiches are fantastic, but don't opt for the cauliflower flatbread. They pack so much into these sandwiches that the flatbread can't handle it, so you're paying extra for a flimsier sandwich. I've also had trouble getting all my points for my weekly purchases. Their system is confusing, and they were unresponsive after multiple attempts to fix it. That said, their sandwiches are all great. Go for soft rolls with the Bacon Went on a Date and add turkey. So good.\\\"},{\\\"review_date\\\":\\\"2021-10-14 20:09:15\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"I got a lot pb with honey and a Nutella pb with marshmallow fluff they were pretty good the only real issue I had was that the crust was rubbery and hard to but into but over all it was super delicious\\\"},{\\\"review_date\\\":\\\"2021-10-13 20:20:58\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"I will never go back to this location again. The workers in general have a negative attitude and think the customers owe them a medal for showing up to work. I placed a pick up order and put on the special instructions for the Mayo and Mustard to be on the side. Well, I got my sandwich and it was drenched in Mayo, something I wanted to avoid. I called them and the employee told me they could remake it. I threw the sandwich away and about 15 mins later got a call and was told that I had to bring the sandwich back. I told them I already tossed it in the garbage then the employee put his manager on the line and she was so RUDE and said that I need to bring it back ( I wasn't about to dig through the trash) and I said that the employee never said anything about bringing the sandwich back in the first conversation and he should have said something and expect me to still have it. And she said very unprofessionally, \\\\\\\"well he didn't know.\\\\\\\" I told her that is a failure on the training and not the customer. She then said that next time I need to specifically write the word \\\\\\\"everything\\\\\\\" on the side instead of using commas as I did. This manager is absolutely disgusting and clearly has no basic customer service skills. \\\\n\\\\nThis isn't the first time my pick up order has been destroyed. But the way that \\\\\\\"manager\\\\\\\" spoke to me and handledis why I will NEVER go there again and will tell all my coworkers to stay away. \\\\n\\\\nTo the owner of this location: good Managers are hard to come by but you can absolutely do better then who was working on 10/13/21 @ 12:30 pm. She is horrible at her job and will continue to drive away customers with her terrible attitude.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Peebee & Jays is a sandwich shop located in Carpinteria, California, offering a variety of sandwiches, including vegetarian options, as well as salads and soups. The business has a casual atmosphere, with outdoor seating available. While the shop does not offer reservations or valet parking, there is a parking lot available. Wi-Fi is not available, but take-out and catering services are offered.\\n\\nReviews for Peebee & Jays have been generally positive, with many customers praising the quality and taste of the sandwiches. One reviewer particularly enjoyed the Bacon Went on a Date sandwich with the addition of turkey, and another reviewer enjoyed the PB&J with honey and marshmallow fluff. However, one reviewer had a negative experience with a pick-up order, where the sandwich was made incorrectly and the customer service was poor. The manager was described as rude and unprofessional, leading the reviewer to vow never to return to the shop again.\\n\\nOverall, Peebee & Jays seems to be a popular spot for sandwich lovers, with a relaxed atmosphere and tasty options. However, some customers may want to be aware of the potential for errors with pick-up orders and the possibility of unfriendly customer service.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19], \"source_evidence_erased\": false}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:527aaa62dea5e7bc3a82fc212e0cf5677896f315ad9cf92b4fe061dcfbffc3d8",
+      "started": true,
+      "status": "generated",
+      "visible_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ]
+    },
+    {
+      "arm": "source_erased",
+      "duration_s": 1.1811087740352377,
+      "family_id": "sha256:47ac8fe6c02b58cbeab73844951997ebfeed935324948cdd36e6dab7a13bb43e",
+      "input_tokens": 370,
+      "order": 1,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 1.0,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 370,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 393
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 1.0,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817055,
+        "id": "chatcmpl-GpU8mgDuOoyjOTBooPJc8uYJQg1YjJId",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 538.845,
+          "predicted_n": 23,
+          "predicted_per_second": 42.68388868784159,
+          "predicted_per_token_ms": 23.42804347826087,
+          "prompt_ms": 388.172,
+          "prompt_n": 292,
+          "prompt_per_second": 752.2438506641384,
+          "prompt_per_token_ms": 1.3293561643835616
+        },
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 370,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 393
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"\", \"original_answer\": \"Peebee & Jays is a sandwich shop located in Carpinteria, California, offering a variety of sandwiches, including vegetarian options, as well as salads and soups. The business has a casual atmosphere, with outdoor seating available. While the shop does not offer reservations or valet parking, there is a parking lot available. Wi-Fi is not available, but take-out and catering services are offered.\\n\\nReviews for Peebee & Jays have been generally positive, with many customers praising the quality and taste of the sandwiches. One reviewer particularly enjoyed the Bacon Went on a Date sandwich with the addition of turkey, and another reviewer enjoyed the PB&J with honey and marshmallow fluff. However, one reviewer had a negative experience with a pick-up order, where the sandwich was made incorrectly and the customer service was poor. The manager was described as rude and unprofessional, leading the reviewer to vow never to return to the shop again.\\n\\nOverall, Peebee & Jays seems to be a popular spot for sandwich lovers, with a relaxed atmosphere and tasty options. However, some customers may want to be aware of the potential for errors with pick-up orders and the possibility of unfriendly customer service.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [], \"source_evidence_erased\": true}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:527aaa62dea5e7bc3a82fc212e0cf5677896f315ad9cf92b4fe061dcfbffc3d8",
+      "started": true,
+      "status": "generated",
+      "visible_ids": []
+    }
+  ]
+}

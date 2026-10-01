@@ -9,16 +9,10 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 5 |
-| CANNOT_DETERMINE | 3 |
+| CHECKABLE | 3 |
+| CANNOT_DETERMINE | 5 |
 
-## experiment_7944_decision_abstention.json
-
-**CANNOT_DETERMINE**
-
-reviewer call failed
-
-## experiment_7945_qwen_sentence_risk.json
+## experiment_7953_v690_contract_methods.json
 
 **CHECKABLE**
 
@@ -34,19 +28,41 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7946_evidence_fragility.json
+## experiment_7954_v690_training_coverage.json
 
 **CANNOT_DETERMINE**
 
 reviewer call failed
 
-## experiment_7947_causal_acquisition.json
+## experiment_7955_v690_response_targets.json
 
 **CANNOT_DETERMINE**
 
 reviewer call failed
 
-## experiment_7949_v689_arc_supervisor_delta.json
+## experiment_7956_energy_fit.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The experiment was blocked prior to execution because upstream prerequisite exp7954-training-coverage failed three of its four gate checks.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7958_v690_qwen_response_risk.json
+
+**CANNOT_DETERMINE**
+
+reviewer call failed
+
+## experiment_7962_v690_arc_supervisor_delta.json
 
 **CHECKABLE**
 
@@ -62,50 +78,14 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7950_service_cost.json
+## experiment_7964_v690_hardware_evidence.json
 
-**CHECKABLE**
+**CANNOT_DETERMINE**
 
-## VERDICT
-CHECKABLE
+reviewer call failed
 
-## WHAT THE CLAIM IS
-The task was blocked at the conductor pre-gate because two upstream prerequisite gate checks on experiment exp7943 failed.
+## experiment_7965_v690_capstone.json
 
-## WHAT IS MISSING
-nothing
+**CANNOT_DETERMINE**
 
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7951_v689_hardware_evidence.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-no claim
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7952_v689_capstone.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The capstone decisions are blocked across all roadmap gap scopes due to unmet upstream preconditions and missing producer artifacts.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
+reviewer call failed

@@ -1,0 +1,212 @@
+{
+  "config_hash": "sha256:17d509539abd34d125a7b8f21f47e2064e0f59d5eac351ba74cf8a90a0b6d5a9",
+  "public_hash": "sha256:fb3728d5526f2d089c6287b9a47bf4325732c3d756bb8f9e3ecffb3e68bceef0",
+  "rows": [
+    {
+      "arm": "full_source",
+      "duration_s": 2.136115401983261,
+      "family_id": "sha256:11d5953abbf9eaa5f94e82465e56fccfb8a66f2c0a42cbb6069017333710482e",
+      "input_tokens": 1277,
+      "order": 0,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 0.95,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 24,
+          "prompt_tokens": 1277,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "total_tokens": 1301
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790816981,
+        "id": "chatcmpl-RFtAUti57LF0rwNBtPDKJtsh5SafCEJl",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 0,
+          "predicted_ms": 576.422,
+          "predicted_n": 24,
+          "predicted_per_second": 41.63616239491206,
+          "predicted_per_token_ms": 24.017583333333334,
+          "prompt_ms": 1539.58,
+          "prompt_n": 1277,
+          "prompt_per_second": 829.4469920367893,
+          "prompt_per_token_ms": 1.2056225528582616
+        },
+        "usage": {
+          "completion_tokens": 24,
+          "prompt_tokens": 1277,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "total_tokens": 1301
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"{\\\"address\\\":\\\"2819 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":\\\"{dj: False, live: False, jkebox: False, video: False, backgrond_msic: False, karaoke: False, no_msic: False}\\\",\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Hotels & Travel, Event Planning & Services, American (New), Italian, Hotels, Restaurants, Pizza, Breakfast & Brunch, Bars, Nightlife\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"8:30-21:30\\\",\\\"Monday\\\":\\\"8:30-21:30\\\",\\\"Saturday\\\":\\\"8:30-21:30\\\",\\\"Sunday\\\":\\\"8:30-21:30\\\",\\\"Thursday\\\":\\\"8:30-21:30\\\",\\\"Tuesday\\\":\\\"8:30-21:30\\\",\\\"Wednesday\\\":\\\"8:30-21:30\\\"},\\\"name\\\":\\\"Crocodile Restaurant & Bar\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-12-22 19:38:33\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Smelled nice, like bbq, when I was checking in lobby. Restaurant is right next to the lobby. Came in next morning for quick bite to eat. Ordered pancakes, eggs over easy, banana bread, coffee, and a shot of espresso. Coffee was nice and bold for those who love coffee! Espresso was a hearty portion size! Pancakes were thin and tasty, eggs were cooked just right! Dining room was spacious, clean, cozy, and ritzy! Staff was courteous and friendly! One thing only, they needed to refill hand sanitizer dispensers, but I carry my own spray wherever I go. Rooms are comfy, clean, and lots of lemon trees and greenery everywhere! Highly Recommended\\\"},{\\\"review_date\\\":\\\"2021-12-14 02:44:51\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"Great setting. We sat down at the bar and Monday night football was on with no volume. We asked the bartender if she could turn the volume up a little bit because we were the only ones in the bar. She said she wasn't sure. So a guy next to us said no we don't do that. After he left I asked who he was and she said he was a maintenance guy. So I guess the maintenance guy runs the bar? She lost the tip on that one. She was not a very good waitress she never asked us our food was she never asked us if we wanted another drink we always had to get her attention. My girlfriend had the shrimp and they were way over cooked not good at all. I had the filet stroganoff. I doubt the meat was fillet but the flavor was pretty good. We ordered clam chowder and it was not very flavorful I wouldn't order the clam chowder again. We also ordered a side salad and it was OK the vinaigrette dressing was really good. We ordered an extra order of garlic bread during our dinner and it took about 15 minutes so we sent it back. Overall I would never go back here. The service was very poor and very inexperienced. If I'm gonna spend $150 for dinner and drinks and no one else is in the place I want to TV turned on. The food was probably worth half of what we spent and the drinks were overpriced.\\\"},{\\\"review_date\\\":\\\"2021-11-28 18:55:56\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I worked late both nights that I stayed at this hotel and I know the restaurant closed at a certain time but I got there right in the nick of time and they never made me feel like I was holding him up. Alfredo and the other staff were very kind and accommodating!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Crocodile Restaurant & Bar is located at 2819 State Street in Santa Barbara, California. The restaurant serves American, Italian, pizza, breakfast & brunch, bars, nightlife, hotels, restaurants, and serves take-out. It has outdoor seating, offers Wi-Fi, and provides take-out services. Customers can also make reservations through the restaurant. The restaurant is known for its trendy ambiance and upscale atmosphere. However, some customers have reported issues with the service and food quality. The restaurant is rated 4 out of 5 stars overall.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30], \"source_evidence_erased\": false}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:c98d859aeaf47faf82898aaeb153fe4d749c7771ff084e72aa8b3e9611c9a953",
+      "started": true,
+      "status": "generated",
+      "visible_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30
+      ]
+    },
+    {
+      "arm": "source_erased",
+      "duration_s": 0.927519029006362,
+      "family_id": "sha256:11d5953abbf9eaa5f94e82465e56fccfb8a66f2c0a42cbb6069017333710482e",
+      "input_tokens": 238,
+      "order": 1,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 1.0,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 238,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 261
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 1.0,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790816982,
+        "id": "chatcmpl-6JbXanf2E7sGqALAs1KbvdRwjPGjWYld",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 542.134,
+          "predicted_n": 23,
+          "predicted_per_second": 42.424935532543614,
+          "predicted_per_token_ms": 23.57104347826087,
+          "prompt_ms": 235.382,
+          "prompt_n": 160,
+          "prompt_per_second": 679.7461148261124,
+          "prompt_per_token_ms": 1.4711375
+        },
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 238,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 261
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"\", \"original_answer\": \"Crocodile Restaurant & Bar is located at 2819 State Street in Santa Barbara, California. The restaurant serves American, Italian, pizza, breakfast & brunch, bars, nightlife, hotels, restaurants, and serves take-out. It has outdoor seating, offers Wi-Fi, and provides take-out services. Customers can also make reservations through the restaurant. The restaurant is known for its trendy ambiance and upscale atmosphere. However, some customers have reported issues with the service and food quality. The restaurant is rated 4 out of 5 stars overall.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [], \"source_evidence_erased\": true}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:c98d859aeaf47faf82898aaeb153fe4d749c7771ff084e72aa8b3e9611c9a953",
+      "started": true,
+      "status": "generated",
+      "visible_ids": []
+    }
+  ]
+}

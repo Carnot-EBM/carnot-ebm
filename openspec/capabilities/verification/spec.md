@@ -47162,3 +47162,86 @@ The parameterized Exp7943 CLI owns fresh checkpoint and prediction identity.
 Tests in test_energy_fit_7943.py check custody, real private routes, cold
 reconstruction, reader binding and failed required checks. Historical numerical
 modules and V688 determinations remain unchanged.
+
+## REQ-VERIFY-7954: Qualify fitting exceptions before natural execution
+
+Exp7954 SHALL authenticate Exp7941 and Exp7916 directly and qualify the unchanged
+Exp7943 fitting boundary without fitting natural data. Real script-path malformed
+JSON, absent replay paths and missing-key artifacts SHALL exit 2, print a flushed
+failure reason and publish no scientific success. All caught exception categories
+SHALL have current receipts. Readiness requires a real private numerical fixture,
+blocked and expected failure routes, cold replay, terminal readers, nonempty 100%
+statement coverage and every required owned check. Historical scores and results
+remain unchanged; fixture agreement is circular_positive with zero independent samples.
+
+### SCENARIO-VERIFY-7954-EXCEPTIONS
+
+ValueError, OSError and KeyError enter the actual Exp7943 CLI handler. Removing
+the exception test from a private copied test file SHALL make its coverage check
+fail. The reusable runner binds exact argv, includes, deadlines and transitive hashes
+before fixture fitting. New wrappers SHALL qualify all their statements too.
+
+### SCENARIO-VERIFY-7954-READINESS
+
+Absent external prerequisites produce complete_blocked_* with exact gate operands.
+Owned failures produce complete_disqualified_* and zero training_coverage_ready_score,
+prefit_coverage_ready_score and runtime_ready_score. Current Exp7941 runtime_ready_score
+is authoritative; historical training_runtime_ready_score=0 is preserved.
+
+Implementation: `training_coverage_7954.py` authenticates the existing primaries,
+freezes real CLI routes and reduces current coverage and fixture receipts.
+`test_training_coverage_7954.py` checks each exception category, external blocks,
+owned failures, unchanged historical scores and cold primitive reconstruction.
+The current producer's terminal evidence is `experiment_7954_v690_training_coverage.json`.
+# REQ-VERIFY-7955: Rebuild complete-response human support targets
+
+Exp7955 SHALL freeze original source and whole-response bytes and public window
+budgets before opening labels. Preserve all 64 intended Exp7892 evaluation slots,
+existing source clusters and exclusions. Select no sentence or family by label.
+Reuse Exp7942 exact character/text/UTF-8 span checks. The primary target is the
+union of every authenticated unsupported span, including implicit_true and
+due_to_null. No-span good-quality complete annotations give zero. Missing,
+ambiguous or malformed custody never gives zero. Retain every sentence and span.
+Compare the independently rebuilt union to the original response label and record
+disagreement. Implicit-true exclusion is descriptive sensitivity only. Exact
+6000-token Qwen admission belongs to the later pinned-tokenizer task before labels.
+
+## SCENARIO-VERIFY-7955-CUSTODY
+
+Test Unicode, overlap, sentence-boundary spans, zero spans, implicit_true,
+due_to_null, poor quality, missing annotations, duplicates and cross-role clusters.
+Evaluator label, ID, offset metadata and annotation order mutations SHALL preserve
+public inputs and eligibility. Malformed offsets SHALL fail annotation custody.
+
+## SCENARIO-VERIFY-7955-CAPACITY
+
+Readiness requires all owned checks, unambiguous custody, 64 retained slots,
+32 distinct eligible clusters and eight examples per response class. Undersized
+targets give complete_null_response_target_capacity and readiness zero. Keep the
+Exp7942 three-positive sentence null unchanged. No model is loaded or fitted.
+
+# REQ-VERIFY-7958: Measure complete-response Qwen support risk
+
+Freeze all 64 evaluation families from public bytes before evaluator access.
+Both full-source and erased-source arms ask whether the original complete answer
+has any span unsupported by its original source. Erasure changes information,
+not the event or label. Use the unchanged Exp7932 grammar and parser, seed 69058,
+temperature zero, 96 output tokens, 6000 input tokens, 128 calls and 12288 output
+tokens. Alternate arm order by public hash; no retries, repair or truncation.
+Seal each completed pair before opening labels. Unknown human targets remain
+excluded; invalid replies escalate in all-intended decision cost. Costs are
+accept=5p, reject=1-p, escalate=.25; actual costs use the same human y. Ties escalate.
+
+## SCENARIO-VERIFY-7958-QUERY
+
+Test complete UTF-8 preservation, label-free admission, equal call budgets,
+order, strict parser rejection, token/deadline censoring and pair checkpoints.
+
+## SCENARIO-VERIFY-7958-REDUCTION
+
+Require 32 complete source-cluster pairs and eight examples per class. Average
+within cluster; use 10000 paired bootstrap draws and paired sign randomization,
+with Holm correction for Brier and cost. Benefit requires both gains >=.02,
+both CI95 lower bounds >0, both adjusted p<.05, automation >=.20 and no extra
+false accepts. Otherwise publish a valid null or insufficient-data null.
+Implicit-true-excluded targets, annotation strata and sensitivity are descriptive.

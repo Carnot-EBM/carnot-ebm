@@ -1,0 +1,212 @@
+{
+  "config_hash": "sha256:17d509539abd34d125a7b8f21f47e2064e0f59d5eac351ba74cf8a90a0b6d5a9",
+  "public_hash": "sha256:c69774c23874c4b20b161e563f7f33be7d6983be7f4524b4c966f4d17a9c6808",
+  "rows": [
+    {
+      "arm": "full_source",
+      "duration_s": 1.837643795995973,
+      "family_id": "sha256:5f6b036dff841bf6d2fb2a32c35a35422a46b5220f78bcd187b19d4f67482b5d",
+      "input_tokens": 1354,
+      "order": 0,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 0.0,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 1354,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 1377
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817121,
+        "id": "chatcmpl-0xlmHm4YSTheKjbJgWAMUFlFJIqzBtiP",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 543.865,
+          "predicted_n": 23,
+          "predicted_per_second": 42.289906502532794,
+          "predicted_per_token_ms": 23.64630434782609,
+          "prompt_ms": 1171.444,
+          "prompt_n": 1276,
+          "prompt_per_second": 1089.2539464114375,
+          "prompt_per_token_ms": 0.9180595611285266
+        },
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 1354,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 1377
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"{\\\"address\\\":\\\"800 El Bosque Rd\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":null,\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":null},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Health Retreats, Venues & Event Spaces, Hotels & Travel, Restaurants, Event Planning & Services\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"8:0-23:0\\\",\\\"Monday\\\":\\\"8:0-23:0\\\",\\\"Saturday\\\":\\\"8:0-23:0\\\",\\\"Sunday\\\":\\\"8:0-23:0\\\",\\\"Thursday\\\":\\\"8:0-23:0\\\",\\\"Tuesday\\\":\\\"8:0-23:0\\\",\\\"Wednesday\\\":\\\"8:0-23:0\\\"},\\\"name\\\":\\\"La Casa De Maria\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2018-01-10 17:43:18\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I love this place. Would stay here forever, if I could. Accommodations are a little rustic, but that's part of the charm. Lovely place for self-discovery and contemplation.\\\"},{\\\"review_date\\\":\\\"2017-08-05 01:28:13\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"What a beautiful place and relaxing atmosphere. The accommodations are fairly comfortable, but it's the grounds that make this gem of a place special. (The food doesn't hurt either.) Get a massage from Vesalina if at all possible; it was the best I've ever had. Also, be sure to check out the gardens and chapels.\\\"},{\\\"review_date\\\":\\\"2017-04-15 17:16:29\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"i write this review for two reasons. 1) The welfare of future guests; 2) and because the issue has never been addressed by anyone at the facility since I packed my things, left a day before the end of my $piritual retreat, and proceeded to spend the very expensive day delousing everything I owned -- including detailing my car, fumigating/washing/drycleaning all my clothes that I didn't want to throw away -- before returning home to my girlfriend and the beautiful bed she bought a few months before..\\\\n\\\\nBedbugs. Repeat. Bedbugs, In my case, Room 12.  Infested. I slept in the shower stall the last night I was there because sadly this was not my first rodeo with bedbugs. Note: I am not thin-skinned when it comes to the outdoors. I have lived out of a tent for several summers in Alaska. I love hiking, camping, and grew up in a rural area in the midwest. In short, I am not spooked by a raccoon (or a bear for that matter) or run for cover if buzzed by a hornet. \\\\n\\\\nBut bedbugs?   (yeeeych) \\\\n\\\\nYes, those wonderful little traveling insects -- much like fleas -- that want to come home with you. The kind of bugs that bite and bite -- in my case, my neck and legs -- and seemingly can live beyond any pesticide or laundering. \\\\n\\\\nI would rather have mice running across my face than knowingly sleep in a bed(room) infested with bedbugs. \\\\n\\\\nTo be fair, the young man working the desk the night I \\\\\\\"captured\\\\\\\" one of the well-sized creatures in a plastic cup was sympathetic and saw about getting me another room the next morning.  I was so itchy and disappointed that I had to deal with the after effects of being bedbugged, I supplied all my contact info and left immediately. That is the last I have heard from Casa de la Maria despite 3 emails and 2 phone calls. (I was asking for cleaning restitution and the two nights I was in Room 12 comped to me and that was all.)\\\\n\\\\nThe grounds? Hey, it's Montecito/San Ysidro Ranch country. It's gorgeou$!  And makes Santa Barbara look like a suburb of Bakersfield...And the staff was friendly and mostly helpful. The fact that they booked a rather loud and demanding group of guests midway through a silent Buddhist retreat? Eh, I get it.  Co-exist, people.  Just not w/ bedbugs.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"La Casa De Maria is a health retreat, venue, and hotel located in Santa Barbara, California. The establishment offers a serene environment for self-discovery, contemplation, and relaxation. Guests appreciate the accommodations, even though they are described as \\\"a little rustic,\\\" and the beautiful grounds and gardens. The restaurant serves good food, and some guests have praised the quality of the massages offered by Vesalina. However, recent reviews have raised concerns about bedbug infestations in certain rooms, particularly Room 12. While the staff has been friendly and helpful, the management has not addressed these issues satisfactorily, according to some guests. Despite these criticisms, La Casa De Maria remains a popular choice for those seeking a peaceful escape in a beautiful setting.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30], \"source_evidence_erased\": false}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:8d3108550be04093d0cf958b213e03d72b21f2a71a649787fb0f46c8c558bf27",
+      "started": true,
+      "status": "generated",
+      "visible_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30
+      ]
+    },
+    {
+      "arm": "source_erased",
+      "duration_s": 1.0390304980101064,
+      "family_id": "sha256:5f6b036dff841bf6d2fb2a32c35a35422a46b5220f78bcd187b19d4f67482b5d",
+      "input_tokens": 280,
+      "order": 1,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 1.0,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 280,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 303
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 1.0,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817122,
+        "id": "chatcmpl-8ESUvsIUTL5mfwhHUxCPMFf0FrjqmHnd",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 540.393,
+          "predicted_n": 23,
+          "predicted_per_second": 42.56161719341294,
+          "predicted_per_token_ms": 23.49534782608696,
+          "prompt_ms": 277.142,
+          "prompt_n": 202,
+          "prompt_per_second": 728.8682336130937,
+          "prompt_per_token_ms": 1.371990099009901
+        },
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 280,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 303
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"\", \"original_answer\": \"La Casa De Maria is a health retreat, venue, and hotel located in Santa Barbara, California. The establishment offers a serene environment for self-discovery, contemplation, and relaxation. Guests appreciate the accommodations, even though they are described as \\\"a little rustic,\\\" and the beautiful grounds and gardens. The restaurant serves good food, and some guests have praised the quality of the massages offered by Vesalina. However, recent reviews have raised concerns about bedbug infestations in certain rooms, particularly Room 12. While the staff has been friendly and helpful, the management has not addressed these issues satisfactorily, according to some guests. Despite these criticisms, La Casa De Maria remains a popular choice for those seeking a peaceful escape in a beautiful setting.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [], \"source_evidence_erased\": true}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:8d3108550be04093d0cf958b213e03d72b21f2a71a649787fb0f46c8c558bf27",
+      "started": true,
+      "status": "generated",
+      "visible_ids": []
+    }
+  ]
+}

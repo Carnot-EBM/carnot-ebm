@@ -1,0 +1,195 @@
+{
+  "config_hash": "sha256:17d509539abd34d125a7b8f21f47e2064e0f59d5eac351ba74cf8a90a0b6d5a9",
+  "public_hash": "sha256:adb8ec7e681e039fc8a21794a5229660e7388a43a28bb5948eda4495b9997c8d",
+  "rows": [
+    {
+      "arm": "source_erased",
+      "duration_s": 0.9217761210165918,
+      "family_id": "sha256:e0ba43b18d0a339ea87cd872ebbb1169a4c1b8ed52fb1c44ae39ea67bf1d82e4",
+      "input_tokens": 208,
+      "order": 0,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 1.0,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 208,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 231
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 1.0,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817000,
+        "id": "chatcmpl-DwKSyYqjbku4GJ2E37dTKNV9ZBQMpbhN",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 535.712,
+          "predicted_n": 23,
+          "predicted_per_second": 42.93351651633714,
+          "predicted_per_token_ms": 23.291826086956522,
+          "prompt_ms": 207.821,
+          "prompt_n": 130,
+          "prompt_per_second": 625.5383238460021,
+          "prompt_per_token_ms": 1.598623076923077
+        },
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 208,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 231
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"\", \"original_answer\": \"To boil potatoes for easy peeling, bring a pot of water to a boil and score your potatoes all the way around the center. Place the potatoes in the pot and boil for about 15 minutes. When they are tender, transfer them to a bowl of ice water and swish them around for a few seconds until they are cool enough to handle. You can then easily remove the skin.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [], \"source_evidence_erased\": true}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:cba1f47d70532df1487a7b9dad15520cf8ab254c679b2a428390942d758b3fb5",
+      "started": true,
+      "status": "generated",
+      "visible_ids": []
+    },
+    {
+      "arm": "full_source",
+      "duration_s": 1.1904979149694555,
+      "family_id": "sha256:e0ba43b18d0a339ea87cd872ebbb1169a4c1b8ed52fb1c44ae39ea67bf1d82e4",
+      "input_tokens": 576,
+      "order": 1,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 0.0,
+        "schema_valid": true,
+        "source_sentence_id": 3,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 24,
+          "prompt_tokens": 576,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 600
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 3\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817001,
+        "id": "chatcmpl-tnlswKaUNpTMvT0r87qV37kLhNNPpPTL",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 560.914,
+          "predicted_n": 24,
+          "predicted_per_second": 42.787307858245654,
+          "predicted_per_token_ms": 23.371416666666665,
+          "prompt_ms": 521.956,
+          "prompt_n": 498,
+          "prompt_per_second": 954.1034110154878,
+          "prompt_per_token_ms": 1.0481044176706829
+        },
+        "usage": {
+          "completion_tokens": 24,
+          "prompt_tokens": 576,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 600
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Boil until tender, then transfer to an ice water bath. When cool, peel off skin. (15 minutes to cook, 5 seconds to peel each cooked potato) And now, an epic demonstration of How to Peel 2 Pounds of Potatoes in Under A Minute using a drill, (clean) toilet brush, bucket, and water hose. GAME. CHANGER.\\\\n\\\\npassage 2:This versatile medium-starch spud has a delicious, buttery flavor. It cooks up tender and holds its shape, but it also has just enough starch to contribute creaminess without making a potato salad mushy. Its skin can be tough and papery, so we recommend peeling them first.\\\\n\\\\npassage 3:Especially if you are peeling a crap load of potatoes. Here is the easiest way (or at least the easiest way I\u2019ve discovered) to peel a cooked potato. Step 1.) Bring a pot of water to a boil. Step 2.) With a knife, score your potatoes all the way around the center. Step 3.) Place your potatoes in the pot and boil for about 15 minutes or so. Step 4.) Prepare a bowl of ice water and place your potatoes in the water. Step 5.) Swish it around for a few seconds just enough so that it\u2019s cool enough to handle. Step 6.) Remove your potatoe from the water and remove the skin.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to boil potatoes for easy peeling\\\"}\", \"original_answer\": \"To boil potatoes for easy peeling, bring a pot of water to a boil and score your potatoes all the way around the center. Place the potatoes in the pot and boil for about 15 minutes. When they are tender, transfer them to a bowl of ice water and swish them around for a few seconds until they are cool enough to handle. You can then easily remove the skin.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], \"source_evidence_erased\": false}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:cba1f47d70532df1487a7b9dad15520cf8ab254c679b2a428390942d758b3fb5",
+      "started": true,
+      "status": "generated",
+      "visible_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ]
+    }
+  ]
+}

@@ -11,22 +11,10 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| NO_CLAIM | 4 |
-| CANNOT_DETERMINE | 4 |
+| NO_CLAIM | 1 |
+| CANNOT_DETERMINE | 7 |
 
-## experiment_7944_decision_abstention.json
-
-**CANNOT_DETERMINE**
-
-reviewer call failed: OpenAI Codex v0.156.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-6.1-sol
-provider: openai
-approval: never
-sandbox: workspace-write
-
-## experiment_7945_qwen_sentence_risk.json
+## experiment_7953_v690_contract_methods.json
 
 **CANNOT_DETERMINE**
 
@@ -38,7 +26,55 @@ provider: openai
 approval: never
 sandbox: workspace-write
 
-## experiment_7946_evidence_fragility.json
+## experiment_7954_v690_training_coverage.json
+
+**CANNOT_DETERMINE**
+
+reviewer call failed: OpenAI Codex v0.156.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-6.1-sol
+provider: openai
+approval: never
+sandbox: workspace-write
+
+## experiment_7955_v690_response_targets.json
+
+**CANNOT_DETERMINE**
+
+reviewer call failed: OpenAI Codex v0.156.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-6.1-sol
+provider: openai
+approval: never
+sandbox: workspace-write
+
+## experiment_7956_energy_fit.json
+
+**CANNOT_DETERMINE**
+
+reviewer call failed: OpenAI Codex v0.156.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-6.1-sol
+provider: openai
+approval: never
+sandbox: workspace-write
+
+## experiment_7958_v690_qwen_response_risk.json
+
+**CANNOT_DETERMINE**
+
+reviewer call failed: OpenAI Codex v0.156.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-6.1-sol
+provider: openai
+approval: never
+sandbox: workspace-write
+
+## experiment_7962_v690_arc_supervisor_delta.json
 
 **NO_CLAIM**
 
@@ -49,113 +85,25 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-None; the artifact makes no empirical or comparative claim. As a gate receipt, the record of a blocked run would only be falsified if the upstream artifact actually satisfied all gating criteria (`energy_fit_ready_score == 1` and `verdict_class` in `['positive', 'circular_positive', 'null']`).
+Because the artifact is an observational inventory and receipt manifest that explicitly disclaims any causal or independent benefit and reports no model invocations or level solves, there is no substantive empirical claim to refute. If interpreted narrowly as an assertion that no new supervisor outcomes exist beyond upstream experiment 7949, observing authenticated, non-duplicate supervisor outcome events in `new_event_rows` would refute that inventory state.
 
 ## WAS THAT CHECKED
-No; no experimental evaluation occurred because execution was blocked at `conductor_pre_gate`.
-
-## EVIDENCE
-`schema`: `blocked_gate_check_v1`
-`status`: `blocked`
-`honest_verdict`: `blocked_gate_check_failed`
-`duration_s`: `0.0`
-`blocked_at_layer`: `conductor_pre_gate`
-`gate_check_summary`: `gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp7943-energy-fit.energy_fit_ready_score (actual=0 == expected=1)`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7947_causal_acquisition.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-None; no empirical or comparative claim is made because the artifact is a gate check receipt recording that the experiment was blocked prior to execution.
-
-## WAS THAT CHECKED
-No; no experimental evaluation occurred because execution was blocked at the pre-gate check layer.
-
-## EVIDENCE
-`schema`
-`"blocked_gate_check_v1"`
-`status`
-`"blocked"`
-`honest_verdict`
-`"blocked_gate_check_failed"`
-`duration_s`
-`0.0`
-`blocked_at_layer`
-`"conductor_pre_gate"`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7949_v689_arc_supervisor_delta.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-The artifact is an observational inventory and reconciliation receipt that explicitly disclaims independent or causal benefit, contains zero rows, zero model invocations, and zero active experimental arms; consequently, there is no comparative hypothesis or performance claim to falsify. If treated strictly as an accounting receipt asserting that no new supervisor outcomes or level solves exist beyond authenticated upstream inventory, the appearance of novel unauthenticated outcome records in `new_event_rows`, non-zero `new_level_solves_claimed`, or mismatched checksums in `preconditions_checked` would refute that accounting.
-
-## WAS THAT CHECKED
-No comparative or causal effect was checked because no comparative evaluation or intervention was executed (`arm_outcomes` is empty and `model_invocation_counts` is 0). For the accounting inventory, reconciliation was checked in `preconditions_checked` and `receipt_inventory`, which validated upstream artifact checksums and confirmed zero new outcome rows.
+No comparative or empirical hypothesis was tested because no comparative claim was made. For delta tracking, yes: the artifact verified upstream hashes and seen receipts in `preconditions_checked` and recorded zero new event rows.
 
 ## EVIDENCE
 - `claim_scope`: `exposed_development; observational inventory without independent or causal benefit`
-- `arm_outcomes`: `{}`
-- `rows`: `[]`
-- `new_event_rows`: `[]`
-- `new_level_solves_claimed`: `0`
-- `model_invocation_counts`: `0`
 - `honest_verdict`: `complete_null_no_new_supervisor_outcomes`
 - `inference_substrate`: `aggregation_from_upstream_artifacts`
 - `inference_substrate_class`: `no_model_load`
+- `model_invocation_counts`: `0`
+- `new_level_solves_claimed`: `0`
 - `action`: `retain_no_change_terminal_inventory`
-- `receipt_inventory`: `Content hashes prevent retries from inventing new events.`
-- `solve_provenance`: `Only authenticated input events carry live discovery provenance; aggregation claims zero solves.`
-- `MODEL_SPECS`: `Bind executing producer custody and keep observational inventory distinct from benefit.`
+- `solve_provenance`: `Only authenticated input events have live discovery provenance; aggregation claims no solves.`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_7950_service_cost.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-None; the artifact is a gate-check receipt recording an upstream dependency failure and asserts no substantive or comparative claim.
-
-## WAS THAT CHECKED
-No; execution was blocked at `conductor_pre_gate` before any experiment or measurement was run.
-
-## EVIDENCE
-`schema`: `blocked_gate_check_v1`
-`status`: `blocked`
-`honest_verdict`: `blocked_gate_check_failed`
-`blocked_at_layer`: `conductor_pre_gate`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7951_v689_hardware_evidence.json
+## experiment_7964_v690_hardware_evidence.json
 
 **CANNOT_DETERMINE**
 
@@ -167,7 +115,7 @@ provider: openai
 approval: never
 sandbox: workspace-write
 
-## experiment_7952_v689_capstone.json
+## experiment_7965_v690_capstone.json
 
 **CANNOT_DETERMINE**
 

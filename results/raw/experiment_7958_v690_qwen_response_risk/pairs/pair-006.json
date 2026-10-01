@@ -1,0 +1,190 @@
+{
+  "config_hash": "sha256:17d509539abd34d125a7b8f21f47e2064e0f59d5eac351ba74cf8a90a0b6d5a9",
+  "public_hash": "sha256:3a3c4b742a363f8d311fddc20cd58fb02f4a3bfe23da93e7cd872997f6d13d1a",
+  "rows": [
+    {
+      "arm": "source_erased",
+      "duration_s": 0.8376357330125757,
+      "family_id": "sha256:0f0e721f9b72859cc7ced323697e180cbc6483124785a481598b7e6852a5c189",
+      "input_tokens": 187,
+      "order": 0,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 0.0,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 187,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 210
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790816995,
+        "id": "chatcmpl-Ese8JAgZW2Ti3ZdsoP1kQ78DSTGpoMA0",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 535.033,
+          "predicted_n": 23,
+          "predicted_per_second": 42.98800260918485,
+          "predicted_per_token_ms": 23.26230434782609,
+          "prompt_ms": 197.346,
+          "prompt_n": 109,
+          "prompt_per_second": 552.329411287789,
+          "prompt_per_token_ms": 1.81051376146789
+        },
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 187,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 210
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"\", \"original_answer\": \"Based on the given passages, it is not possible to file a lien on a semi as there is no mention of semis or any specific type of property in the passages. The passages only refer to a home and business property. Therefore, unable to answer the question based on the given passages.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [], \"source_evidence_erased\": true}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:56c84129b990951d56bb54cf6ffe208bd3f9502c4c3135417ce3981dbbf23216",
+      "started": true,
+      "status": "generated",
+      "visible_ids": []
+    },
+    {
+      "arm": "full_source",
+      "duration_s": 1.151526722998824,
+      "family_id": "sha256:0f0e721f9b72859cc7ced323697e180cbc6483124785a481598b7e6852a5c189",
+      "input_tokens": 521,
+      "order": 1,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 0.0,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 521,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 544
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790816996,
+        "id": "chatcmpl-fpK2GTYebSGsVMLZv1yUWo0VE53bGh8g",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 536.756,
+          "predicted_n": 23,
+          "predicted_per_second": 42.85001006043714,
+          "predicted_per_token_ms": 23.337217391304346,
+          "prompt_ms": 486.8,
+          "prompt_n": 443,
+          "prompt_per_second": 910.024650780608,
+          "prompt_per_token_ms": 1.0988713318284424
+        },
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 521,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 544
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:If I Have a Judgment Aganist Me Can the Creditor Attach Property I Transfer to My Spouse? A judgment creditor recently placed a lien on the home I reside in. About 2 1/2 years ago I signed a quit claim on the property so my husband could get a reversed mortgage as I was under 62 at the time. Can this creditor legally put this lien on the home even if my name is nowhere on the deed or title?\\\\n\\\\npassage 2:Court Filing. Before you can place a lien on business property, you must first have a court order -- a judgment -- directing the debtor to pay what is owed. After filing a claim with the court and submitting proof of the amounts owed to you, the business must answer and explain why the debt is not owed.\\\\n\\\\npassage 3:After processing, one (1) copy will be attached to the titling documentation along with a copy of the lien fee receipt. One (1) copy, along with a copy of the lien fee receipt, will be sent to OTC in the agents semi-monthly report. One (1) will be filed at the MLA\u2019s office. One (1) copy of the lien entry form, one (1) copy of the lien fee receipt and the four (4) part lien release form will be returned to the lien holder.\\\\n\\\\n\\\",\\\"question\\\":\\\"how do i file a lien on a semi\\\"}\", \"original_answer\": \"Based on the given passages, it is not possible to file a lien on a semi as there is no mention of semis or any specific type of property in the passages. The passages only refer to a home and business property. Therefore, unable to answer the question based on the given passages.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8], \"source_evidence_erased\": false}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:56c84129b990951d56bb54cf6ffe208bd3f9502c4c3135417ce3981dbbf23216",
+      "started": true,
+      "status": "generated",
+      "visible_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    }
+  ]
+}

@@ -2552,3 +2552,15 @@ decomposition,
 the gate summary, and all three board rows remain present.
 
 **Implementation status:** Implemented (Exp 7599)
+## REQ-HW-7964: Historical custody is separate from workload estimates
+
+Exp7964 retains the authenticated Exp7951 KV260, PolarFire and GateMate
+obligations. No device execution is scheduled. Missing scope stays unknown.
+Host timing and transfer bytes bound estimates only. Physical blockers stay
+unchanged without new authenticated physical evidence. SSH kria remains the
+precondition for future KV260 access. NPU and TSU remain unqualified.
+
+### SCENARIO-HW-7964-SCOPE
+
+Given authenticated history and absent optional service evidence, retain three
+board rows, zero current device executions and no hardware speedup claim.

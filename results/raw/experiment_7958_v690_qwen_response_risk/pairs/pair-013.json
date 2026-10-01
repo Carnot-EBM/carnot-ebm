@@ -1,0 +1,188 @@
+{
+  "config_hash": "sha256:17d509539abd34d125a7b8f21f47e2064e0f59d5eac351ba74cf8a90a0b6d5a9",
+  "public_hash": "sha256:e311087b0184d4951e22711cffc20cd4cab0241fb6f70f198fa66eb04353a4de",
+  "rows": [
+    {
+      "arm": "full_source",
+      "duration_s": 1.241812433989253,
+      "family_id": "sha256:f4111ad5d6657bc1768c49e86a43be3395abff627c1cf99f424d807fa2799f67",
+      "input_tokens": 518,
+      "order": 0,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 0.0,
+        "schema_valid": true,
+        "source_sentence_id": 5,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 24,
+          "prompt_tokens": 518,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 542
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 5\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817013,
+        "id": "chatcmpl-wOsWCC7GYkOo1bxpOwCNVyYrJwYep5O1",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 560.001,
+          "predicted_n": 24,
+          "predicted_per_second": 42.85706632666728,
+          "predicted_per_token_ms": 23.333375,
+          "prompt_ms": 487.137,
+          "prompt_n": 440,
+          "prompt_per_second": 903.2366664819137,
+          "prompt_per_token_ms": 1.1071295454545456
+        },
+        "usage": {
+          "completion_tokens": 24,
+          "prompt_tokens": 518,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 542
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Place a bunch of rubber bands around the middle of the watermelon. Be careful though as all that pressure from the outsite will start to explode the watermelon. Rubber bands are a great example of potential energy. Potential energy is energy that is stored up, not being used, just waiting to be unleashed.\\\\n\\\\npassage 2:It's a bad idea to try to recreate an exploding water melon. It's possible to recreate an explosion with a chemical procedure but this involves volatile gases and liquids. Ask your chemistry or science teacher - they may know how to do it and be willing to recreate the exploding water melon for your class!\\\\n\\\\npassage 3:The gas will try its best to escape the water melon but as it slowly increases due to the rotting in the water melon, the pressure will continue to increase. When the skin of the watermelon is no longer strong enough to hold the gas inside, it will explode, often spraying all nearby surfaces with rotten water melon.\\\\n\\\\n\\\",\\\"question\\\":\\\"what causes watermelons to explode\\\"}\", \"original_answer\": \"Based on the provided passages, the cause of watermelons to explode is not explicitly stated. However, it can be inferred that the buildup of gas inside the watermelon, caused by the rotting process, is the primary factor leading to the explosion. The passage suggests that the pressure inside the watermelon increases as the gas accumulates, eventually causing the skin to burst and releasing the gas in a sudden and forceful manner.\\n\\nTherefore, the answer to the question is:\\n\\nPassage 3 mentions that the gas inside the watermelon tries to escape through the skin, but since the skin is not strong enough to hold it, the gas builds up pressure until it explodes.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6], \"source_evidence_erased\": false}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:725c73035c867beea9e24ed2c33cd5f9dd7bb74ab7226ceab6d237ac3a8a23ab",
+      "started": true,
+      "status": "generated",
+      "visible_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ]
+    },
+    {
+      "arm": "source_erased",
+      "duration_s": 0.997736971010454,
+      "family_id": "sha256:f4111ad5d6657bc1768c49e86a43be3395abff627c1cf99f424d807fa2799f67",
+      "input_tokens": 267,
+      "order": 1,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 1.0,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 267,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 290
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 1.0,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817014,
+        "id": "chatcmpl-geNjJjklYssVNoLO9WIy7EI7awAMftuH",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 535.894,
+          "predicted_n": 23,
+          "predicted_per_second": 42.918935461117314,
+          "predicted_per_token_ms": 23.299739130434784,
+          "prompt_ms": 254.445,
+          "prompt_n": 189,
+          "prompt_per_second": 742.7931380062489,
+          "prompt_per_token_ms": 1.3462698412698413
+        },
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 267,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 290
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"\", \"original_answer\": \"Based on the provided passages, the cause of watermelons to explode is not explicitly stated. However, it can be inferred that the buildup of gas inside the watermelon, caused by the rotting process, is the primary factor leading to the explosion. The passage suggests that the pressure inside the watermelon increases as the gas accumulates, eventually causing the skin to burst and releasing the gas in a sudden and forceful manner.\\n\\nTherefore, the answer to the question is:\\n\\nPassage 3 mentions that the gas inside the watermelon tries to escape through the skin, but since the skin is not strong enough to hold it, the gas builds up pressure until it explodes.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [], \"source_evidence_erased\": true}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:725c73035c867beea9e24ed2c33cd5f9dd7bb74ab7226ceab6d237ac3a8a23ab",
+      "started": true,
+      "status": "generated",
+      "visible_ids": []
+    }
+  ]
+}

@@ -1,0 +1,190 @@
+{
+  "config_hash": "sha256:17d509539abd34d125a7b8f21f47e2064e0f59d5eac351ba74cf8a90a0b6d5a9",
+  "public_hash": "sha256:1579aad41c2b6112bde8c43751998249ce9f8cfc91966473eb829c0f174459cc",
+  "rows": [
+    {
+      "arm": "source_erased",
+      "duration_s": 0.9349516939837486,
+      "family_id": "sha256:75d9a6a51e4703e61ddc1635fd775f5d9b24c77e349ffbad8f2db978f6d83141",
+      "input_tokens": 287,
+      "order": 0,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 0.0,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 287,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 310
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817118,
+        "id": "chatcmpl-8f43ycZVAbU1SSjIsjMknY8fso5O0LBs",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 541.54,
+          "predicted_n": 23,
+          "predicted_per_second": 42.47147025150497,
+          "predicted_per_token_ms": 23.545217391304345,
+          "prompt_ms": 279.699,
+          "prompt_n": 209,
+          "prompt_per_second": 747.2318456626588,
+          "prompt_per_token_ms": 1.3382727272727273
+        },
+        "usage": {
+          "completion_tokens": 23,
+          "prompt_tokens": 287,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 310
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"\", \"original_answer\": \"Based on the provided passages, automotive technicians can get paid in different ways, including hourly and commission-based pay. The specific amount of pay varies by location, with the highest average pay in Alaska ($23.70 per hour or $49,400 per year) and the lowest average pay in Mississippi ($18.60 per hour or $38,900 per year). Additionally, some automotive technicians may earn more working in related industries such as aerospace products and parts manufacturing, which pays an average of $32 per hour or $66,300 per year. However, the passages do not provide specific information on how automotive technicians get paid or their typical salaries. Therefore, I am unable to answer the question based on the given passages.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [], \"source_evidence_erased\": true}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:04de2b0d55a4de772ede787792bbd1a2cf1552423d9a82f12342cc4a69e2efb4",
+      "started": true,
+      "status": "generated",
+      "visible_ids": []
+    },
+    {
+      "arm": "full_source",
+      "duration_s": 1.291857270989567,
+      "family_id": "sha256:75d9a6a51e4703e61ddc1635fd775f5d9b24c77e349ffbad8f2db978f6d83141",
+      "input_tokens": 687,
+      "order": 1,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 0.95,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 24,
+          "prompt_tokens": 687,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 711
+        }
+      },
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1790817119,
+        "id": "chatcmpl-UMR7EBNegqpUm64oFcAHYJzQTkKZ8m4W",
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 78,
+          "predicted_ms": 566.334,
+          "predicted_n": 24,
+          "predicted_per_second": 42.37781944930024,
+          "predicted_per_token_ms": 23.59725,
+          "prompt_ms": 622.827,
+          "prompt_n": 609,
+          "prompt_per_second": 977.7996136969015,
+          "prompt_per_token_ms": 1.022704433497537
+        },
+        "usage": {
+          "completion_tokens": 24,
+          "prompt_tokens": 687,
+          "prompt_tokens_details": {
+            "cached_tokens": 78
+          },
+          "total_tokens": 711
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:In short, whether mechanics and technicians are entitled to overtime wages depends on (a) where they work (auto dealer or repair shop), (b) how they are paid (commission or not), (c) how much they make (regular hourly rate and commissions), and (d) the state in which they work.d 1554, finding that certain automotive mechanics and technicians paid on a flat-rate or flag-rate are entitled to overtime under the FLSA.\\\\n\\\\npassage 2:Automotive technicians in Alaska have the highest average pay in regard to geography, at about $23.70 per hour or $49,400 per year. Techs in Connecticut, Maryland, Massachusetts and Washington D.C. average $20.50 to $21.50 per hour.otential. A small number of automotive technicians work in aerospace products and parts manufacturing, which is the highest-paying opportunity for these workers, indicates the BLS. Automotive techs in this industry earn about $32 per hour or $66,300 per year on average.\\\\n\\\\npassage 3:104 months ago. The amount of pay from company to company does not vary too much, but you do have a wide variety of compensation methods. There are various combinations of hourly and commission pay rates, which depending on what type of work you specialize in can vary your bottom line considerably.04 months ago. The amount of pay from company to company does not vary too much, but you do have a wide variety of compensation methods. There are various combinations of hourly and commission pay rates, which depending on what type of work you specialize in can vary your bottom line considerably.\\\\n\\\\n\\\",\\\"question\\\":\\\"how do automotive technicians get paid\\\"}\", \"original_answer\": \"Based on the provided passages, automotive technicians can get paid in different ways, including hourly and commission-based pay. The specific amount of pay varies by location, with the highest average pay in Alaska ($23.70 per hour or $49,400 per year) and the lowest average pay in Mississippi ($18.60 per hour or $38,900 per year). Additionally, some automotive technicians may earn more working in related industries such as aerospace products and parts manufacturing, which pays an average of $32 per hour or $66,300 per year. However, the passages do not provide specific information on how automotive technicians get paid or their typical salaries. Therefore, I am unable to answer the question based on the given passages.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8], \"source_evidence_erased\": false}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "seed": 69058,
+      "source_cluster_id": "sha256:04de2b0d55a4de772ede787792bbd1a2cf1552423d9a82f12342cc4a69e2efb4",
+      "started": true,
+      "status": "generated",
+      "visible_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    }
+  ]
+}
