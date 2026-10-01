@@ -88160,3 +88160,48 @@ and health-reuse assertions pass alongside the new execution regression.
 Validation measured 106 affected tests and 254/254 statements across the four
 affected module/CLI files; all 18 current frozen checks, E2E-016/017, scoped
 Ruff, strict mypy and spec coverage pass. Historical health remains failed.
+## REQ-REPORT-7976: Independent complete decision service timing
+
+Implementation: `python/carnot/reporting/service_cost_7976.py` and the Exp7976
+parameterized CLI measure the qualified Qwen branch independently. The source
+branch retains its blocked primary. The current owned validation passes 39
+tests, E2E-015, private CLI/replay, Ruff, strict mypy and explicit spec coverage.
+Combined unit and actual CLI coverage measures 356/356 statements. The frozen
+producer records full-suite health and terminal validators separately.
+
+Exp7976 SHALL authenticate Exp7970 and Exp7972 independently. Readiness one,
+an allowed positive/circular_positive/null class and an unflagged primary qualify
+each branch. Missing, retired, hash-drifted or blocked inputs retain exact failed
+operands. No qualified branch ends complete_blocked_no_qualified_service.
+The current source branch is unavailable; the qualified Qwen branch remains valid.
+
+### SCENARIO-REPORT-7976-1: Private complete requests
+
+Freeze up to 64 families and identical serialized request order before timing.
+Run one named warmup and ten paired repetitions with hash-alternated execution.
+Measure public-byte read, projection, head, normalization, typed policy,
+serialization and storage/fsync. Compare only equivalent inputs and decisions.
+Include invalid and rejected rows. Authenticate per-row upstream acquisition
+times separately; add those times to Qwen complete service estimates. Cached
+CPU scoring is not fresh inference. Optional absent learning costs stay unknown.
+
+### SCENARIO-REPORT-7976-2: Cold spans and hardware estimates
+
+Cold-reduce primitive timing boundaries and require exclusive sums within .01
+relative tolerance. Repetitions measure timing variability, not independent
+science samples. Nonlinear Gibbs heads are not quadratic Ising operations.
+Report concrete compatible operations, transfer bytes and Amdahl estimates,
+including zero/one and missing-operand cases. No measured hardware gain is claimed.
+
+### SCENARIO-REPORT-7976-3: Checked publication
+
+Freeze explicit commands, dependencies, expected exits, reasons, deadlines and
+coverage includes before results. Use unique temporary scratch outside the
+checkout for pytest, CLI scenarios, mutable replay and coverage. Run E2E-015,
+actual request/replay, scoped consumers, Ruff, strict mypy, explicit spec coverage
+and nonempty 100 percent changed-module/CLI coverage. Retain full-suite failures
+as repository health. Required owned failures disqualify and zero readiness.
+Cold-check claims, inspect both terminal validators and publish only checked
+bytes. Bind sidecars and both live readers to the final hash despite nested
+sidecars. Preserve the September 28 correction and exposed-development scope.
+The conductor owns ops/status/changelog/traceability reconciliation for this task.
