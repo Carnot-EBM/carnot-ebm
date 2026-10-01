@@ -88094,3 +88094,69 @@ after verdict changes, publish atomically, bind sidecars to final hash, and
 verify both live consumers despite a newer nested sidecar. Failed owned required
 checks disqualify with readiness zero. The conductor owns ops and traceability
 reconciliation. Generator weights, defaults and external publication stay fixed.
+## REQ-REPORT-7975: Advance the exact Exp7962 content frontier
+
+Exp7975 SHALL authenticate the Exp7962 primary and raw inventory by exact byte
+hash. It SHALL compare receipt_inventory and seen_receipt_hashes and precheck
+registry levels_reproduced before one scan capped at 120 seconds. Receipt
+content and event sequence define novelty. Producer dates retain their own
+invocation identity. An unchanged inventory SHALL end science with
+complete_null_no_new_supervisor_outcomes and no game or model execution.
+Missing, changed, retired or gate-blocked inputs SHALL produce complete_blocked
+with exact operands. Owned required failures SHALL disqualify and zero readiness.
+
+### SCENARIO-REPORT-7975-FRONTIER: Exact authority and no calendar cutoff
+
+Private authority fixtures SHALL check missing bytes, hash drift, readiness
+failure and inventory disagreement. An unseen same-day live E3AgentPolicy /
+make_carnot_agent receipt SHALL remain eligible. Repeated content SHALL receive
+no new credit. Per-game rows SHALL retain failures and censoring. Retirement
+advice SHALL require at least 20 new closed firings in five games, zero helped
+events and an exact one-sided 95 percent upper confidence bound. This audit
+SHALL leave production policy unchanged.
+
+### SCENARIO-REPORT-7975-CLI: Private bounded validation
+
+The producer SHALL reuse the callable receipt reader and command supervisor.
+Freeze exact argv, expected exits and reasons, includes, dependencies and
+deadlines before measurement. Allocate pytest basetemp, coverage and fixture
+outputs inside a unique TemporaryDirectory outside the checkout. Each CLI
+scenario SHALL use its own publication directory. E2E-017 SHALL exercise empty,
+missing, false-firing and replay routes. Historical Exp7868 calls SHALL retain
+20260929. Preserve historical failed receipts and record full-suite health
+separately. Cover all changed module and CLI statements with nonempty measured
+unit and actual CLI coverage. Run scoped Ruff, strict mypy and explicit spec
+coverage. Archive immutable logs and coverage after children exit.
+
+### SCENARIO-REPORT-7975-SEAL: Checked current identity and readers
+
+Current identity SHALL be exp7975, milestone 2026.10.691 and date 20261001.
+Record UTC boundaries separately from monotonic spans, current_device_execution_count
+and model_invocation_counts zero, empty model specs and host aggregation.
+Cold-reduce derived claims, verify exact terminal bytes with adversarial_verify
+and strict verdict row lint, and atomically publish one primary. Bind terminal
+sidecars and both existing reader selections to its final hash. Preserve the
+September 28 oracle correction, exposed-development limits and prior verdicts.
+The conductor owns ops/status/changelog/traceability reconciliation for this task.
+
+Implementation: arc_supervisor_v691_delta configures the existing V690 runner.
+The Exp7975 CLI reuses its private reducer and replay routes. Focused unit and
+actual CLI checks measured 100 percent statements across the four affected files.
+The frozen producer run records final E2E, terminal and repository-health receipts.
+
+### SCENARIO-REPORT-7975-HEALTH-REUSE: Preserve measured health in the frozen plan
+
+When an owned prior attempt supplies repository-health receipts, the frozen
+command plan SHALL retain an explicit repository_health entry for each reused
+receipt, with the prior receipt path and exact hash. Execution SHALL preserve
+the measured outcome and mark the receipt reused, without launching its command
+again or counting it among current child commands. A failed historical health
+receipt SHALL remain failed and SHALL NOT become a required-check failure.
+
+Implementation: the V691 planner keeps each reused health receipt in the frozen
+plan with its source hash. The V690 runner retains the original outcome and
+excludes reused commands from current child observations. The original planner
+and health-reuse assertions pass alongside the new execution regression.
+Validation measured 106 affected tests and 254/254 statements across the four
+affected module/CLI files; all 18 current frozen checks, E2E-016/017, scoped
+Ruff, strict mypy and spec coverage pass. Historical health remains failed.

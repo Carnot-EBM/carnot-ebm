@@ -3510,3 +3510,29 @@ validation and cold replay. Execution qualification stays zero because the
 blocked and expected-failure fixture primaries omit the readiness field their
 reader gates require. Global spec traceability retains 1,142 unrelated gaps;
 no full-suite or natural-training qualification follows from these receipts.
+
+
+## Exp7975 repository-health command-plan repair — 2026-10-01
+
+REQ-REPORT-7975 and SCENARIO-REPORT-7975-HEALTH-REUSE map to
+`python/carnot/reporting/arc_supervisor_v691_delta.py`,
+`python/carnot/reporting/arc_supervisor_v690_delta.py`,
+`scripts/experiments/experiment_7975_v691_arc_supervisor_delta.py`,
+`scripts/experiments/experiment_7962_v690_arc_supervisor_delta.py`, and
+`tests/python/test_arc_supervisor_delta_7975.py`.
+
+The planner retains explicit, hash-bound reused repository-health receipts.
+The runner preserves their measured outcomes without launching the saved
+commands or counting them as current child commands. A failed historical
+health measurement remains separate from required validation. All original
+planner and health-reuse assertions remain; an added regression verifies the
+frozen plan, unchanged failure outcome, and absence of a child launch.
+
+Verification: 106 affected/transitive tests, 147 core/conductor tests (one
+existing deprecation warning), all 18 current frozen validation checks, and
+E2E-016/017 pass. The four affected module/CLI files cover 254/254 statements.
+Scoped Ruff, formatting, strict mypy, and spec coverage pass. The ten
+REQ-CONDUCTOR-FIXGATE-1 tests pass; `scripts/research_conductor.py` remains
+byte-identical to HEAD. Historical full-suite health remains failed. Global
+spec traceability retains 1,142 pre-existing gaps. Evidence:
+`results/raw/experiment_7975_v691_arc_supervisor_delta/fixgate-validation/`.

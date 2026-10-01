@@ -1,0 +1,930 @@
+.........F..........F..                                                  [100%]
+=================================== FAILURES ===================================
+______________________________ test_execute[new] _______________________________
+
+output = PosixPath('/tmp/carnot-exp7975-453g6uin/unit_coverage/pytest/test_execute_new_0/results/experiment_7975_v691_arc_supervisor_delta.json')
+private = PosixPath('/tmp/carnot-exp7975-453g6uin/unit_coverage/pytest/private-new')
+scope = <module 'carnot.reporting.arc_supervisor_v691_delta' from '/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/arc_supervisor_v691_delta.py'>
+
+    def execute(output: Path, private: Path, scope: Any = None) -> int:
+        """End science at the delta, then seal only fully validated terminal bytes."""
+        scope = scope or sys.modules[__name__]
+        started = time.monotonic()
+        started_at = datetime.now(UTC).isoformat()
+        previous.progress(started, f"exp{scope.EXPERIMENT_ID}_authenticate")
+        checked = scope.inputs()
+        durable = output.parent / "raw" / output.stem
+        specs = scope.commands(private)
+        sources = validation.dependency_hashes(
+            scope.ROOT,
+            paths=[
+                *scope.ADDED,
+                scope.TEST,
+                *scope.CONSUMERS,
+                "scripts/adversarial_verify.py",
+                "scripts/verdict_row_consistency_lint.py",
+                "scripts/check_spec_coverage.py",
+            ],
+        )
+        sources.update(
+            {
+                str(p): sha256_file(p)
+                for p in (
+                    scope.PRIOR,
+                    scope.INVENTORY,
+                    scope.REGISTRY,
+                    scope.ROOT / "ops/exclusion_manifest.yaml",
+                    scope.ROOT / "openspec/capabilities/research-reporting/spec.md",
+                )
+                if p.is_file()
+            }
+        )
+        producers = [
+            p
+            for p in sorted((scope.ROOT / "results").glob("experiment_*arc*.json"))
+            if p not in {scope.PRIOR, output}
+            and p.name.split("_")[1].isdigit()
+            and 7831 < int(p.name.split("_")[1]) < scope.EXPERIMENT_ID
+        ]
+        manifest = durable / "validation_command_manifest.json"
+        atomic_json(
+            manifest,
+            dict(
+                commands=specs,
+                dependency_hashes=sources,
+                affected_files=[*scope.ADDED, scope.TEST],
+                transitive_consumers=scope.CONSUMERS,
+                coverage_includes=scope.ADDED,
+                coverage_include=scope.INCLUDE,
+                candidate_producers=[str(p) for p in producers],
+                preconditions=checked["checks"],
+                scan_cap_s=120,
+                heartbeat_s=30,
+                execution_date=scope.RUN_DATE,
+                historical_fixture_date="20260929",
+                applicable_e2e=["E2E-016", "E2E-017"],
+                terminal_checks=[
+                    dict(script=s, expected_exit=0, deadline_s=60)
+                    for s in (
+                        "scripts/adversarial_verify.py",
+                        "scripts/verdict_row_consistency_lint.py",
+                    )
+                ],
+            ),
+        )
+        sources[str(manifest)] = sha256_file(manifest)
+        previous.progress(started, f"exp{scope.EXPERIMENT_ID}_scope_frozen", len(sources))
+        delta = previous.scan(
+            scope.ROOT,
+            producers if not checked["failures"] else [],
+            checked,
+            private,
+            current_date=scope.RUN_DATE,
+        )
+        delta.update(
+            new_firing_count=len(delta["new_event_rows"]),
+            new_helped_count=sum(r["resolved_by_levelup"] is True for r in delta["new_event_rows"]),
+            live_path_receipts=delta["new_event_rows"],
+            seen_receipt_hashes=delta["receipt_inventory"],
+        )
+        gates = checked["failures"] + delta["scan_failures"]
+        science_end = time.monotonic() - started
+        previous.progress(
+            started, f"exp{scope.EXPERIMENT_ID}_science_terminal", delta["identity_filter_count"]
+        )
+        primitive_errors = replay(delta)
+        sources.update(delta["scan_source_hashes"])
+        inventory = durable / "receipt_inventory.json"
+        atomic_json(inventory, delta)
+        sources[str(inventory)] = sha256_file(inventory)
+        receipts = [previous.run(s, private, durable) for s in specs]
+        complete = validation.coverage_complete(private / "coverage.json", includes=scope.ADDED)
+        counts = (
+            json.loads((private / "coverage.json").read_text())["files"]
+            if (private / "coverage.json").is_file()
+            else {}
+        )
+        coverage_receipts = []
+        for path in sorted(private.glob("coverage.*")):
+            archived = durable / "coverage" / (path.name + "-" + sha256_file(path)[7:])
+            archived.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(path, archived)
+            coverage_receipts.append(dict(path=str(archived), sha256=sha256_file(archived)))
+        failed = [r for r in receipts if r["classification"] == "required" and not r["passed"]]
+        gates.extend(
+            previous.operand(
+                Path(r["log_path"]), "exit_code", r["expected_exit"], r["exit_code"], r["log_sha256"]
+            )
+            for r in failed
+        )
+        if not complete or primitive_errors:
+            gates.append(
+                previous.operand(
+                    output,
+                    "coverage_and_cold_reduction",
+                    [True, []],
+                    [complete, primitive_errors],
+                    None,
+                )
+            )
+        state = (
+            "disqualified"
+            if failed or not complete or primitive_errors
+            else "blocked"
+            if gates
+            else "null"
+        )
+        verdict = (
+            "complete_null_no_new_supervisor_outcomes"
+            if not delta["identity_filter_count"]
+            else "complete_null_no_transferable_refinement"
+        )
+        if state != "null":
+            verdict = "complete_" + state + "_supervisor_delta_prerequisites"
+        finished = time.monotonic() - started
+        value = dict(
+            delta,
+            experiment_id=scope.EXPERIMENT_ID,
+            experiment=scope.EXPERIMENT_ID,
+            task_id=f"exp{scope.EXPERIMENT_ID}-arc-supervisor-delta",
+            milestone=scope.MILESTONE,
+            run_date=scope.RUN_DATE,
+            execution_date=scope.RUN_DATE,
+            started_at=started_at,
+            finished_at=datetime.now(UTC).isoformat(),
+            status="complete",
+            schema="arc-supervisor-delta-v" + scope.MILESTONE.rsplit(".", 1)[1],
+            title="New live ARC supervisor outcome inventory",
+            honest_verdict=verdict,
+            verdict_class=state,
+            flagged_adversarial=False,
+            gate_check_summary=gates,
+            arc_evidence_ready_score=int(state == "null"),
+            acceptance_gate_results=dict(
+                validity=state == "null",
+                readiness=int(state == "null"),
+                probability_quality=None,
+                calibration=None,
+                decision_benefit=None,
+                retention=None,
+                efficiency=None,
+            ),
+            duration_s=finished,
+            phase_spans=[
+                dict(phase="authenticated_delta", start_s=0, end_s=science_end, duration_s=science_end),
+                dict(
+                    phase="owned_validation",
+                    start_s=science_end,
+                    end_s=finished,
+                    duration_s=finished - science_end,
+                ),
+            ],
+            random_seed=0,
+            reproducibility_checksum=canonical_hash(sources),
+            source_artifact_hashes=sources,
+            preconditions_checked=checked["checks"],
+            resolved_imports={
+                n: dict(path=str(Path(m.__file__).resolve()), role="exposed_development_dependency")
+                for n, m in tuple(sys.modules.items())
+                if getattr(m, "__file__", None)
+                and (n.startswith("carnot.") or n.startswith("scripts."))
+            },
+            validation_receipts=receipts,
+            validation_command_manifest_path=str(manifest),
+            observed_child_commands=[r["command_argv"] for r in receipts],
+            coverage_statement_counts={k: v["summary"] for k, v in counts.items()},
+            coverage_receipts=coverage_receipts,
+            scratch_root_receipt=dict(
+                path=str(private),
+                outside_checkout=not private.resolve().is_relative_to(scope.ROOT.resolve()),
+                allocation="TemporaryDirectory",
+                removed_after_exit=True,
+            ),
+            historical_required_failures=checked["prior"].get("historical_required_failures", []),
+            repository_health=dict(
+                current_pass_claimed=False,
+                affects_required_checks=False,
+                cited_upstream_id=scope.PRIOR_ID,
+                historical_receipts=checked["prior"].get("repository_health", {}),
+                checks=[r for r in receipts if r["classification"] == "repository_health"],
+            ),
+            primary_resolution_receipt=dict(
+                path=str(output), receipt_path=str(durable / "primary_resolution_receipt.json")
+            ),
+            terminal_validation_sidecar_path=str(durable / "terminal_reports.json"),
+            verifier_is_oracle=False,
+            claim_scope="exposed_development; observational inventory without independent or causal benefit",
+            fixture_claim_scope="circular_positive mechanics only",
+            methodology="Authenticate the seen frontier and cold-reduce only new live supervisor outcomes.",
+            inference_substrate="aggregation_from_upstream_artifacts",
+            inference_substrate_class="no_model_load",
+            execution_venue="host",
+            MODEL_SPECS=[],
+            model_specs=[],
+            target_model="none",
+            model_invocation_counts=0,
+            trained_head_specs=[],
+            current_device_execution_count=0,
+            solve_provenance=sorted({r["solve_provenance"] for r in delta["new_event_rows"]}),
+            new_level_solves_claimed=0,
+            registry_precheck=checked["registry_precheck"],
+            cited_upstream_artifacts=[
+                dict(
+                    experiment_id=scope.PRIOR_ID,
+                    path=str(p),
+                    sha256=scope.PINNED[str(p)],
+                    fields_imported=fields,
+                )
+                for p, fields in (
+                    (
+                        scope.PRIOR,
+                        [
+                            "receipt_inventory",
+                            "seen_receipt_hashes",
+                            "source_artifact_hashes",
+                            "historical_required_failures",
+                            "repository_health",
+                        ],
+                    ),
+                    (scope.INVENTORY, ["receipt_inventory", "seen_receipt_hashes"]),
+                )
+            ],
+            retire_if_same_verdict=dict(
+                prior_id=scope.PRIOR_ID,
+                same_verdict=state == "null",
+                action="retain_no_change_terminal_inventory",
+            ),
+            oracle_distinct_corrigendum=dict(
+                date="20260928",
+                preserved=True,
+                gap_oracle_distinct="open",
+                diffusion_gemma_gate="STILL-PENDING",
+                reference="ops/known-issues.md CORRIGENDUM 2026-09-28",
+            ),
+        )
+        value["field_principles"] = {
+            k: "Bind current producer custody; inherited observations do not establish benefit."
+            for k in value
+        }
+        value["field_principles"].update(
+            receipt_inventory="Content identity prevents a retry from inventing work.",
+            sample_size_budget="Redirects are units; games are independent groups.",
+            arc_evidence_ready_score="An authenticated empty inventory is valid evidence.",
+            acceptance_gate_results="Validity and readiness are distinct from scientific benefit.",
+            solve_provenance="Only authenticated input events have live discovery provenance; aggregation claims no solves.",
+            new_firing_count="Count distinct qualified redirects; a changed timestamp creates no event.",
+            new_helped_count="Count observed level-ups after redirects without assigning causal credit.",
+            live_path_receipts="Require authenticated E3AgentPolicy and make_carnot_agent outcome rows.",
+            scratch_root_receipt="Private mutable scratch cannot overwrite historical research results.",
+            coverage_receipts="Keep immutable measured coverage after owned children exit.",
+            started_at="UTC records producer start independently of the declared run date.",
+            finished_at="UTC records validation completion independently of monotonic work duration.",
+        )
+        last: dict[str, Any] = {}
+    
+        def validator(candidate: Path) -> dict[str, Any]:
+            last.clear()
+            last.update(previous.terminal(candidate, private, durable))
+            last["replay_errors"] = replay(json.loads(candidate.read_text()))
+            last["passed"] = last["passed"] and not last["replay_errors"]
+            return last
+    
+        try:
+>           published = publish_primary(output, value, validator)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+python/carnot/reporting/arc_supervisor_v690_delta.py:432: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+output = PosixPath('/tmp/carnot-exp7975-453g6uin/unit_coverage/pytest/test_execute_new_0/results/experiment_7975_v691_arc_supervisor_delta.json')
+value = {'MODEL_SPECS': [], 'acceptance_gate_results': {'calibration': None, 'decision_benefit': None, 'efficiency': None, 'probability_quality': None, ...}, 'arc_evidence_ready_score': 0, 'arm_outcomes': {}, ...}
+validator = <function execute.<locals>.validator at 0x7fc8db471760>
+
+    def publish_primary(
+        output: Path, value: Mapping[str, Any], validator: Callable[[Path], dict[str, Any]]
+    ) -> dict[str, Any]:
+        """Validate a locked candidate and replace only its checked bytes atomically.
+    
+        Validator reports use hash-specific paths so an older reader can detect a
+        replaced primary. Historical siblings cause rejection and remain untouched.
+        """
+        output = output.absolute()
+        validate_primary(value, output)
+        raw = output.parent / "raw" / output.stem
+        raw.mkdir(parents=True, exist_ok=True)
+        with (raw / "publication.lock").open("a") as lock:
+            fcntl.flock(lock, fcntl.LOCK_EX)
+            siblings = list(output.parent.glob(f"experiment_{value['experiment_id']}_*.json"))
+            if any(path != output for path in siblings):
+                raise ValueError("conflicting_primary")
+            if output.exists():
+                old = json.loads(output.read_text())
+                if (old.get("experiment_id"), old.get("task_id")) != (
+                    value["experiment_id"],
+                    value["task_id"],
+                ):
+                    raise ValueError("conflicting_identity")
+            candidate = raw / "terminal_candidate.json"
+            atomic_json(candidate, value)
+            digest = sha256_file(candidate)
+            report = validator(candidate)
+            if report.get("passed") is not True:
+>               raise ValueError("candidate_rejected")
+E               ValueError: candidate_rejected
+
+python/carnot/reporting/primary_publication.py:73: ValueError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = PosixPath('/tmp/carnot-exp7975-453g6uin/unit_coverage/pytest/test_execute_new_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fc8d9606150>
+state = 'new'
+
+    @pytest.mark.parametrize(
+        "state", ["null", "blocked", "failed", "coverage", "terminal", "new", "conflict"]
+    )
+    def test_execute(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, state: str) -> None:
+        authority(tmp_path, monkeypatch)
+    
+        def commands(private: Path) -> list[dict[str, Any]]:
+            atomic_json(
+                private / "coverage.json",
+                {
+                    "files": {
+                        n: {"summary": {"num_statements": 1, "covered_lines": 1}, "missing_lines": []}
+                        for n in task.ADDED
+                    }
+                },
+            )
+            return [
+                dict(
+                    name="unit",
+                    argv=["true"],
+                    expected_exit=0,
+                    expected_text=None,
+                    deadline_s=5,
+                    classification="required",
+                )
+            ]
+    
+        def run(spec: dict[str, Any], *_args: Any) -> dict[str, Any]:
+            passed = state != "failed"
+            return dict(
+                spec,
+                passed=passed,
+                exit_code=int(not passed),
+                command_argv=spec["argv"],
+                log_path="private.log",
+                log_sha256="sha256:private",
+            )
+    
+        calls = 0
+    
+        def terminal(*_args: Any) -> dict[str, Any]:
+            nonlocal calls
+            calls += 1
+            return dict(passed=state != "terminal" or calls > 1, reports=[], replay_errors=[])
+    
+        monkeypatch.setattr(task, "commands", commands)
+        monkeypatch.setattr(task.previous, "run", run)
+        monkeypatch.setattr(task.previous, "terminal", terminal)
+        monkeypatch.setattr(task.validation, "dependency_hashes", lambda *_args, **_kwargs: {})
+        if state == "blocked":
+            task.INVENTORY.unlink()
+        if state == "coverage":
+            monkeypatch.setattr(task.validation, "coverage_complete", lambda *_args, **_kwargs: False)
+        if state == "new":
+            original = task.previous.scan
+    
+            def changed(*args: Any, **kwargs: Any) -> dict[str, Any]:
+                value = original(*args, **kwargs)
+                value["identity_filter_count"] = 1
+                return value
+    
+            monkeypatch.setattr(task.previous, "scan", changed)
+        output = tmp_path / "results" / task.OUTPUT.name
+        private = tmp_path.parent / ("private-" + state)
+        if state == "conflict":
+            atomic_json(output.parent / "experiment_7975_conflict.json", {})
+            with pytest.raises(ValueError, match="conflicting_primary"):
+                task.execute(output, private)
+            return
+        expected = state if state in {"null", "blocked"} else "disqualified"
+>       assert task.execute(output, private) == int(expected != "null")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_arc_supervisor_delta_7975.py:207: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/arc_supervisor_v691_delta.py:102: in execute
+    return runner.execute(output, private, sys.modules[__name__])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+python/carnot/reporting/arc_supervisor_v690_delta.py:447: in execute
+    published = publish_primary(output, value, validator)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+output = PosixPath('/tmp/carnot-exp7975-453g6uin/unit_coverage/pytest/test_execute_new_0/results/experiment_7975_v691_arc_supervisor_delta.json')
+value = {'MODEL_SPECS': [], 'acceptance_gate_results': {'calibration': None, 'decision_benefit': None, 'efficiency': None, 'probability_quality': None, ...}, 'arc_evidence_ready_score': 0, 'arm_outcomes': {}, ...}
+validator = <function execute.<locals>.validator at 0x7fc8db471760>
+
+    def publish_primary(
+        output: Path, value: Mapping[str, Any], validator: Callable[[Path], dict[str, Any]]
+    ) -> dict[str, Any]:
+        """Validate a locked candidate and replace only its checked bytes atomically.
+    
+        Validator reports use hash-specific paths so an older reader can detect a
+        replaced primary. Historical siblings cause rejection and remain untouched.
+        """
+        output = output.absolute()
+        validate_primary(value, output)
+        raw = output.parent / "raw" / output.stem
+        raw.mkdir(parents=True, exist_ok=True)
+        with (raw / "publication.lock").open("a") as lock:
+            fcntl.flock(lock, fcntl.LOCK_EX)
+            siblings = list(output.parent.glob(f"experiment_{value['experiment_id']}_*.json"))
+            if any(path != output for path in siblings):
+                raise ValueError("conflicting_primary")
+            if output.exists():
+                old = json.loads(output.read_text())
+                if (old.get("experiment_id"), old.get("task_id")) != (
+                    value["experiment_id"],
+                    value["task_id"],
+                ):
+                    raise ValueError("conflicting_identity")
+            candidate = raw / "terminal_candidate.json"
+            atomic_json(candidate, value)
+            digest = sha256_file(candidate)
+            report = validator(candidate)
+            if report.get("passed") is not True:
+>               raise ValueError("candidate_rejected")
+E               ValueError: candidate_rejected
+
+python/carnot/reporting/primary_publication.py:73: ValueError
+----------------------------- Captured stdout call -----------------------------
+[exp7949] phase=exp7975_authenticate completed_units=0 elapsed_s=0.000
+[exp7949] phase=exp7975_scope_frozen completed_units=5 elapsed_s=0.002
+[exp7949] phase=exp7975_science_terminal completed_units=1 elapsed_s=0.002
+______________________________ test_execute[new] _______________________________
+
+output = PosixPath('/tmp/carnot-exp7975-453g6uin/unit_coverage/pytest/test_execute_new_1/results/experiment_7962_v690_arc_supervisor_delta.json')
+private = PosixPath('/tmp/carnot-exp7975-453g6uin/unit_coverage/pytest/test_execute_new_1/private')
+scope = <module 'carnot.reporting.arc_supervisor_v690_delta' from '/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/arc_supervisor_v690_delta.py'>
+
+    def execute(output: Path, private: Path, scope: Any = None) -> int:
+        """End science at the delta, then seal only fully validated terminal bytes."""
+        scope = scope or sys.modules[__name__]
+        started = time.monotonic()
+        started_at = datetime.now(UTC).isoformat()
+        previous.progress(started, f"exp{scope.EXPERIMENT_ID}_authenticate")
+        checked = scope.inputs()
+        durable = output.parent / "raw" / output.stem
+        specs = scope.commands(private)
+        sources = validation.dependency_hashes(
+            scope.ROOT,
+            paths=[
+                *scope.ADDED,
+                scope.TEST,
+                *scope.CONSUMERS,
+                "scripts/adversarial_verify.py",
+                "scripts/verdict_row_consistency_lint.py",
+                "scripts/check_spec_coverage.py",
+            ],
+        )
+        sources.update(
+            {
+                str(p): sha256_file(p)
+                for p in (
+                    scope.PRIOR,
+                    scope.INVENTORY,
+                    scope.REGISTRY,
+                    scope.ROOT / "ops/exclusion_manifest.yaml",
+                    scope.ROOT / "openspec/capabilities/research-reporting/spec.md",
+                )
+                if p.is_file()
+            }
+        )
+        producers = [
+            p
+            for p in sorted((scope.ROOT / "results").glob("experiment_*arc*.json"))
+            if p not in {scope.PRIOR, output}
+            and p.name.split("_")[1].isdigit()
+            and 7831 < int(p.name.split("_")[1]) < scope.EXPERIMENT_ID
+        ]
+        manifest = durable / "validation_command_manifest.json"
+        atomic_json(
+            manifest,
+            dict(
+                commands=specs,
+                dependency_hashes=sources,
+                affected_files=[*scope.ADDED, scope.TEST],
+                transitive_consumers=scope.CONSUMERS,
+                coverage_includes=scope.ADDED,
+                coverage_include=scope.INCLUDE,
+                candidate_producers=[str(p) for p in producers],
+                preconditions=checked["checks"],
+                scan_cap_s=120,
+                heartbeat_s=30,
+                execution_date=scope.RUN_DATE,
+                historical_fixture_date="20260929",
+                applicable_e2e=["E2E-016", "E2E-017"],
+                terminal_checks=[
+                    dict(script=s, expected_exit=0, deadline_s=60)
+                    for s in (
+                        "scripts/adversarial_verify.py",
+                        "scripts/verdict_row_consistency_lint.py",
+                    )
+                ],
+            ),
+        )
+        sources[str(manifest)] = sha256_file(manifest)
+        previous.progress(started, f"exp{scope.EXPERIMENT_ID}_scope_frozen", len(sources))
+        delta = previous.scan(
+            scope.ROOT,
+            producers if not checked["failures"] else [],
+            checked,
+            private,
+            current_date=scope.RUN_DATE,
+        )
+        delta.update(
+            new_firing_count=len(delta["new_event_rows"]),
+            new_helped_count=sum(r["resolved_by_levelup"] is True for r in delta["new_event_rows"]),
+            live_path_receipts=delta["new_event_rows"],
+            seen_receipt_hashes=delta["receipt_inventory"],
+        )
+        gates = checked["failures"] + delta["scan_failures"]
+        science_end = time.monotonic() - started
+        previous.progress(
+            started, f"exp{scope.EXPERIMENT_ID}_science_terminal", delta["identity_filter_count"]
+        )
+        primitive_errors = replay(delta)
+        sources.update(delta["scan_source_hashes"])
+        inventory = durable / "receipt_inventory.json"
+        atomic_json(inventory, delta)
+        sources[str(inventory)] = sha256_file(inventory)
+        receipts = [previous.run(s, private, durable) for s in specs]
+        complete = validation.coverage_complete(private / "coverage.json", includes=scope.ADDED)
+        counts = (
+            json.loads((private / "coverage.json").read_text())["files"]
+            if (private / "coverage.json").is_file()
+            else {}
+        )
+        coverage_receipts = []
+        for path in sorted(private.glob("coverage.*")):
+            archived = durable / "coverage" / (path.name + "-" + sha256_file(path)[7:])
+            archived.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(path, archived)
+            coverage_receipts.append(dict(path=str(archived), sha256=sha256_file(archived)))
+        failed = [r for r in receipts if r["classification"] == "required" and not r["passed"]]
+        gates.extend(
+            previous.operand(
+                Path(r["log_path"]), "exit_code", r["expected_exit"], r["exit_code"], r["log_sha256"]
+            )
+            for r in failed
+        )
+        if not complete or primitive_errors:
+            gates.append(
+                previous.operand(
+                    output,
+                    "coverage_and_cold_reduction",
+                    [True, []],
+                    [complete, primitive_errors],
+                    None,
+                )
+            )
+        state = (
+            "disqualified"
+            if failed or not complete or primitive_errors
+            else "blocked"
+            if gates
+            else "null"
+        )
+        verdict = (
+            "complete_null_no_new_supervisor_outcomes"
+            if not delta["identity_filter_count"]
+            else "complete_null_no_transferable_refinement"
+        )
+        if state != "null":
+            verdict = "complete_" + state + "_supervisor_delta_prerequisites"
+        finished = time.monotonic() - started
+        value = dict(
+            delta,
+            experiment_id=scope.EXPERIMENT_ID,
+            experiment=scope.EXPERIMENT_ID,
+            task_id=f"exp{scope.EXPERIMENT_ID}-arc-supervisor-delta",
+            milestone=scope.MILESTONE,
+            run_date=scope.RUN_DATE,
+            execution_date=scope.RUN_DATE,
+            started_at=started_at,
+            finished_at=datetime.now(UTC).isoformat(),
+            status="complete",
+            schema="arc-supervisor-delta-v" + scope.MILESTONE.rsplit(".", 1)[1],
+            title="New live ARC supervisor outcome inventory",
+            honest_verdict=verdict,
+            verdict_class=state,
+            flagged_adversarial=False,
+            gate_check_summary=gates,
+            arc_evidence_ready_score=int(state == "null"),
+            acceptance_gate_results=dict(
+                validity=state == "null",
+                readiness=int(state == "null"),
+                probability_quality=None,
+                calibration=None,
+                decision_benefit=None,
+                retention=None,
+                efficiency=None,
+            ),
+            duration_s=finished,
+            phase_spans=[
+                dict(phase="authenticated_delta", start_s=0, end_s=science_end, duration_s=science_end),
+                dict(
+                    phase="owned_validation",
+                    start_s=science_end,
+                    end_s=finished,
+                    duration_s=finished - science_end,
+                ),
+            ],
+            random_seed=0,
+            reproducibility_checksum=canonical_hash(sources),
+            source_artifact_hashes=sources,
+            preconditions_checked=checked["checks"],
+            resolved_imports={
+                n: dict(path=str(Path(m.__file__).resolve()), role="exposed_development_dependency")
+                for n, m in tuple(sys.modules.items())
+                if getattr(m, "__file__", None)
+                and (n.startswith("carnot.") or n.startswith("scripts."))
+            },
+            validation_receipts=receipts,
+            validation_command_manifest_path=str(manifest),
+            observed_child_commands=[r["command_argv"] for r in receipts],
+            coverage_statement_counts={k: v["summary"] for k, v in counts.items()},
+            coverage_receipts=coverage_receipts,
+            scratch_root_receipt=dict(
+                path=str(private),
+                outside_checkout=not private.resolve().is_relative_to(scope.ROOT.resolve()),
+                allocation="TemporaryDirectory",
+                removed_after_exit=True,
+            ),
+            historical_required_failures=checked["prior"].get("historical_required_failures", []),
+            repository_health=dict(
+                current_pass_claimed=False,
+                affects_required_checks=False,
+                cited_upstream_id=scope.PRIOR_ID,
+                historical_receipts=checked["prior"].get("repository_health", {}),
+                checks=[r for r in receipts if r["classification"] == "repository_health"],
+            ),
+            primary_resolution_receipt=dict(
+                path=str(output), receipt_path=str(durable / "primary_resolution_receipt.json")
+            ),
+            terminal_validation_sidecar_path=str(durable / "terminal_reports.json"),
+            verifier_is_oracle=False,
+            claim_scope="exposed_development; observational inventory without independent or causal benefit",
+            fixture_claim_scope="circular_positive mechanics only",
+            methodology="Authenticate the seen frontier and cold-reduce only new live supervisor outcomes.",
+            inference_substrate="aggregation_from_upstream_artifacts",
+            inference_substrate_class="no_model_load",
+            execution_venue="host",
+            MODEL_SPECS=[],
+            model_specs=[],
+            target_model="none",
+            model_invocation_counts=0,
+            trained_head_specs=[],
+            current_device_execution_count=0,
+            solve_provenance=sorted({r["solve_provenance"] for r in delta["new_event_rows"]}),
+            new_level_solves_claimed=0,
+            registry_precheck=checked["registry_precheck"],
+            cited_upstream_artifacts=[
+                dict(
+                    experiment_id=scope.PRIOR_ID,
+                    path=str(p),
+                    sha256=scope.PINNED[str(p)],
+                    fields_imported=fields,
+                )
+                for p, fields in (
+                    (
+                        scope.PRIOR,
+                        [
+                            "receipt_inventory",
+                            "seen_receipt_hashes",
+                            "source_artifact_hashes",
+                            "historical_required_failures",
+                            "repository_health",
+                        ],
+                    ),
+                    (scope.INVENTORY, ["receipt_inventory", "seen_receipt_hashes"]),
+                )
+            ],
+            retire_if_same_verdict=dict(
+                prior_id=scope.PRIOR_ID,
+                same_verdict=state == "null",
+                action="retain_no_change_terminal_inventory",
+            ),
+            oracle_distinct_corrigendum=dict(
+                date="20260928",
+                preserved=True,
+                gap_oracle_distinct="open",
+                diffusion_gemma_gate="STILL-PENDING",
+                reference="ops/known-issues.md CORRIGENDUM 2026-09-28",
+            ),
+        )
+        value["field_principles"] = {
+            k: "Bind current producer custody; inherited observations do not establish benefit."
+            for k in value
+        }
+        value["field_principles"].update(
+            receipt_inventory="Content identity prevents a retry from inventing work.",
+            sample_size_budget="Redirects are units; games are independent groups.",
+            arc_evidence_ready_score="An authenticated empty inventory is valid evidence.",
+            acceptance_gate_results="Validity and readiness are distinct from scientific benefit.",
+            solve_provenance="Only authenticated input events have live discovery provenance; aggregation claims no solves.",
+            new_firing_count="Count distinct qualified redirects; a changed timestamp creates no event.",
+            new_helped_count="Count observed level-ups after redirects without assigning causal credit.",
+            live_path_receipts="Require authenticated E3AgentPolicy and make_carnot_agent outcome rows.",
+            scratch_root_receipt="Private mutable scratch cannot overwrite historical research results.",
+            coverage_receipts="Keep immutable measured coverage after owned children exit.",
+            started_at="UTC records producer start independently of the declared run date.",
+            finished_at="UTC records validation completion independently of monotonic work duration.",
+        )
+        last: dict[str, Any] = {}
+    
+        def validator(candidate: Path) -> dict[str, Any]:
+            last.clear()
+            last.update(previous.terminal(candidate, private, durable))
+            last["replay_errors"] = replay(json.loads(candidate.read_text()))
+            last["passed"] = last["passed"] and not last["replay_errors"]
+            return last
+    
+        try:
+>           published = publish_primary(output, value, validator)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+python/carnot/reporting/arc_supervisor_v690_delta.py:432: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+output = PosixPath('/tmp/carnot-exp7975-453g6uin/unit_coverage/pytest/test_execute_new_1/results/experiment_7962_v690_arc_supervisor_delta.json')
+value = {'MODEL_SPECS': [], 'acceptance_gate_results': {'calibration': None, 'decision_benefit': None, 'efficiency': None, 'probability_quality': None, ...}, 'arc_evidence_ready_score': 0, 'arm_outcomes': {}, ...}
+validator = <function execute.<locals>.validator at 0x7fc8daf72f20>
+
+    def publish_primary(
+        output: Path, value: Mapping[str, Any], validator: Callable[[Path], dict[str, Any]]
+    ) -> dict[str, Any]:
+        """Validate a locked candidate and replace only its checked bytes atomically.
+    
+        Validator reports use hash-specific paths so an older reader can detect a
+        replaced primary. Historical siblings cause rejection and remain untouched.
+        """
+        output = output.absolute()
+        validate_primary(value, output)
+        raw = output.parent / "raw" / output.stem
+        raw.mkdir(parents=True, exist_ok=True)
+        with (raw / "publication.lock").open("a") as lock:
+            fcntl.flock(lock, fcntl.LOCK_EX)
+            siblings = list(output.parent.glob(f"experiment_{value['experiment_id']}_*.json"))
+            if any(path != output for path in siblings):
+                raise ValueError("conflicting_primary")
+            if output.exists():
+                old = json.loads(output.read_text())
+                if (old.get("experiment_id"), old.get("task_id")) != (
+                    value["experiment_id"],
+                    value["task_id"],
+                ):
+                    raise ValueError("conflicting_identity")
+            candidate = raw / "terminal_candidate.json"
+            atomic_json(candidate, value)
+            digest = sha256_file(candidate)
+            report = validator(candidate)
+            if report.get("passed") is not True:
+>               raise ValueError("candidate_rejected")
+E               ValueError: candidate_rejected
+
+python/carnot/reporting/primary_publication.py:73: ValueError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = PosixPath('/tmp/carnot-exp7975-453g6uin/unit_coverage/pytest/test_execute_new_1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fc8dafd65d0>
+state = 'new'
+
+    @pytest.mark.parametrize(
+        "state", ["null", "blocked", "failed", "coverage", "terminal", "new", "conflict"]
+    )
+    def test_execute(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, state: str) -> None:
+        authority(tmp_path, monkeypatch)
+    
+        def commands(private: Path) -> list[dict[str, Any]]:
+            atomic_json(
+                private / "coverage.json",
+                {
+                    "files": {
+                        n: {"summary": {"num_statements": 1, "covered_lines": 1}, "missing_lines": []}
+                        for n in task.ADDED
+                    }
+                },
+            )
+            return [
+                dict(
+                    name="unit",
+                    argv=["true"],
+                    expected_exit=0,
+                    expected_text=None,
+                    deadline_s=5,
+                    classification="required",
+                )
+            ]
+    
+        def run(spec: dict[str, Any], *_args: Any) -> dict[str, Any]:
+            passed = state != "failed"
+            return dict(
+                spec,
+                passed=passed,
+                exit_code=int(not passed),
+                command_argv=spec["argv"],
+                log_path="private.log",
+                log_sha256="sha256:private",
+            )
+    
+        calls = 0
+    
+        def terminal(*_args: Any) -> dict[str, Any]:
+            nonlocal calls
+            calls += 1
+            return dict(passed=state != "terminal" or calls > 1, reports=[], replay_errors=[])
+    
+        monkeypatch.setattr(task, "commands", commands)
+        monkeypatch.setattr(task.previous, "run", run)
+        monkeypatch.setattr(task.previous, "terminal", terminal)
+        monkeypatch.setattr(task.validation, "dependency_hashes", lambda *_args, **_kwargs: {})
+        if state == "blocked":
+            task.INVENTORY.unlink()
+        if state == "coverage":
+            monkeypatch.setattr(task.validation, "coverage_complete", lambda *_args, **_kwargs: False)
+        if state == "new":
+            original = task.previous.scan
+    
+            def changed(*args: Any, **kwargs: Any) -> dict[str, Any]:
+                value = original(*args, **kwargs)
+                value["identity_filter_count"] = 1
+                return value
+    
+            monkeypatch.setattr(task.previous, "scan", changed)
+        output = tmp_path / "results" / task.OUTPUT.name
+        if state == "conflict":
+            atomic_json(output.parent / "experiment_7962_conflict.json", {})
+            with pytest.raises(ValueError, match="conflicting_primary"):
+                task.execute(output, tmp_path / "private")
+            return
+        expected = state if state in {"null", "blocked"} else "disqualified"
+>       assert task.execute(output, tmp_path / "private") == int(expected != "null")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_arc_supervisor_delta_7962.py:187: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/arc_supervisor_v690_delta.py:447: in execute
+    published = publish_primary(output, value, validator)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+output = PosixPath('/tmp/carnot-exp7975-453g6uin/unit_coverage/pytest/test_execute_new_1/results/experiment_7962_v690_arc_supervisor_delta.json')
+value = {'MODEL_SPECS': [], 'acceptance_gate_results': {'calibration': None, 'decision_benefit': None, 'efficiency': None, 'probability_quality': None, ...}, 'arc_evidence_ready_score': 0, 'arm_outcomes': {}, ...}
+validator = <function execute.<locals>.validator at 0x7fc8daf72f20>
+
+    def publish_primary(
+        output: Path, value: Mapping[str, Any], validator: Callable[[Path], dict[str, Any]]
+    ) -> dict[str, Any]:
+        """Validate a locked candidate and replace only its checked bytes atomically.
+    
+        Validator reports use hash-specific paths so an older reader can detect a
+        replaced primary. Historical siblings cause rejection and remain untouched.
+        """
+        output = output.absolute()
+        validate_primary(value, output)
+        raw = output.parent / "raw" / output.stem
+        raw.mkdir(parents=True, exist_ok=True)
+        with (raw / "publication.lock").open("a") as lock:
+            fcntl.flock(lock, fcntl.LOCK_EX)
+            siblings = list(output.parent.glob(f"experiment_{value['experiment_id']}_*.json"))
+            if any(path != output for path in siblings):
+                raise ValueError("conflicting_primary")
+            if output.exists():
+                old = json.loads(output.read_text())
+                if (old.get("experiment_id"), old.get("task_id")) != (
+                    value["experiment_id"],
+                    value["task_id"],
+                ):
+                    raise ValueError("conflicting_identity")
+            candidate = raw / "terminal_candidate.json"
+            atomic_json(candidate, value)
+            digest = sha256_file(candidate)
+            report = validator(candidate)
+            if report.get("passed") is not True:
+>               raise ValueError("candidate_rejected")
+E               ValueError: candidate_rejected
+
+python/carnot/reporting/primary_publication.py:73: ValueError
+----------------------------- Captured stdout call -----------------------------
+[exp7949] phase=exp7962_authenticate completed_units=0 elapsed_s=0.000
+[exp7949] phase=exp7962_scope_frozen completed_units=4 elapsed_s=0.001
+[exp7949] phase=exp7962_science_terminal completed_units=1 elapsed_s=0.001
+=========================== short test summary info ============================
+FAILED tests/python/test_arc_supervisor_delta_7975.py::test_execute[new] - Va...
+FAILED tests/python/test_arc_supervisor_delta_7962.py::test_execute[new] - Va...
+2 failed, 21 passed in 3.60s

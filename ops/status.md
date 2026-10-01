@@ -2,6 +2,26 @@
 
 **Last Updated:** 2026-10-01
 
+## 2026-10-01 — Exp7975 health-receipt planning repaired
+
+The frozen validation plan retains an explicit repository-health entry when
+reusing an owned prior measurement. Execution preserves its failed outcome,
+records the receipt source hash, and excludes the reused command from current
+child observations. The saved full-suite diagnostic is retained without rerun.
+All original assertions and prior implementation changes remain intact.
+
+Verification: 106 affected/transitive tests and 147 core/conductor tests pass
+(one existing deprecation warning in the latter). All 18 current frozen checks
+pass, including E2E-016's 24-family fixture/replay and E2E-017's supervisor CLI
+routes. Unit and actual CLI coverage measure 254/254 statements across the four
+affected modules/CLIs. Scoped Ruff, formatting, strict mypy, and spec coverage
+pass. Evidence: `results/raw/experiment_7975_v691_arc_supervisor_delta/fixgate-validation/`.
+`scripts/research_conductor.py` is byte-identical to HEAD. Repository-wide spec
+traceability retains 1,142 pre-existing gaps; historical full-suite health
+remains a failed diagnostic, and these scoped checks do not claim a global pass.
+Final reconciliation passes documentation freshness and reports only the
+pre-existing repository-wide spec traceability gaps.
+
 ## 2026-10-01 — Exp7967 test repair verified
 
 Missing and malformed historical sources now publish blocked qualification

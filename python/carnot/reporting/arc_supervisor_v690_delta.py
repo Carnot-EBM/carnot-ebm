@@ -7,7 +7,9 @@ successful execution separate from scientific benefit and historical health.
 from __future__ import annotations
 
 import json
+from datetime import UTC, datetime
 from pathlib import Path
+import shutil
 import sys
 import time
 from typing import Any
@@ -35,23 +37,29 @@ TEST = "tests/python/test_arc_supervisor_delta_7962.py"
 ADDED = [MODULE, CLI, previous.MODULE]
 INCLUDE = ",".join("*/" + p for p in ADDED)
 CONSUMERS = [previous.TEST, *previous.CONSUMERS]
+EXPERIMENT_ID = 7962
+PRIOR_ID = 7949
+MILESTONE = "2026.09.690"
+RUN_DATE = "20261001"
+COVERAGE_TESTS = [previous.TEST]
 
 
-def inputs() -> dict[str, Any]:
+def inputs(scope: Any = None) -> dict[str, Any]:
     """Check exact bytes and scalar gates before the inventory can supply evidence."""
+    scope = scope or sys.modules[__name__]
     checks = [
         previous.operand(
             p,
             "sha256",
-            PINNED[str(p)],
+            scope.PINNED[str(p)],
             sha256_file(p) if p.is_file() else "missing",
             sha256_file(p) if p.is_file() else None,
         )
-        for p in (PRIOR, INVENTORY, REGISTRY)
+        for p in (scope.PRIOR, scope.INVENTORY, scope.REGISTRY)
     ]
     documents = [
         json.loads(p.read_text()) if checks[i]["expected"] == checks[i]["observed"] else {}
-        for i, p in enumerate((PRIOR, INVENTORY))
+        for i, p in enumerate((scope.PRIOR, scope.INVENTORY))
     ]
     prior, inventory = documents
     for key, expected in (
@@ -61,9 +69,13 @@ def inputs() -> dict[str, Any]:
         ("receipt_inventory", inventory.get("receipt_inventory")),
         ("seen_receipt_hashes", inventory.get("seen_receipt_hashes")),
     ):
-        checks.append(previous.operand(PRIOR, key, expected, prior.get(key), PINNED[str(PRIOR)]))
+        checks.append(
+            previous.operand(
+                scope.PRIOR, key, expected, prior.get(key), scope.PINNED[str(scope.PRIOR)]
+            )
+        )
     registry = (
-        yaml.safe_load(REGISTRY.read_text())
+        yaml.safe_load(scope.REGISTRY.read_text())
         if checks[2]["expected"] == checks[2]["observed"]
         else {}
     )
@@ -79,50 +91,75 @@ def inputs() -> dict[str, Any]:
     )
 
 
-def commands(private: Path) -> list[dict[str, Any]]:
+def commands(private: Path, scope: Any = None) -> list[dict[str, Any]]:
     """Parameterize existing CLI checks, retaining historical dates and failures."""
+    scope = scope or sys.modules[__name__]
     specs = previous.commands(private)
     replacements = {
-        previous.CLI: CLI,
-        previous.TEST: TEST,
-        "--include=" + previous.INCLUDE: "--include=" + INCLUDE,
-        previous.OUTPUT.name: OUTPUT.name,
+        previous.CLI: scope.CLI,
+        previous.TEST: scope.TEST,
+        "--include=" + previous.INCLUDE: "--include=" + scope.INCLUDE,
+        previous.OUTPUT.name: scope.OUTPUT.name,
     }
     for spec in specs:
         argv = []
         for arg in spec["argv"]:
             if arg.startswith("--include="):
-                arg = "--include=" + INCLUDE
+                arg = "--include=" + scope.INCLUDE
             else:
                 for old, new in replacements.items():
                     arg = arg.replace(old, new)
-            argv.append("20261001" if arg == "20260930" else arg)
+            argv.append(scope.RUN_DATE if arg == "20260930" else arg)
         spec["argv"] = argv
-        if spec["name"] == "affected_pytest":
-            spec["argv"].append(previous.TEST)
-        if spec["name"] == "unit_coverage":
-            spec["argv"].append(previous.TEST)
+        if spec["name"] in {"affected_pytest", "unit_coverage", "spec_coverage"}:
+            spec["argv"] = [a for a in spec["argv"] if not a.startswith("tests/python/")]
+            spec["argv"].extend(
+                [
+                    scope.TEST,
+                    *(scope.COVERAGE_TESTS if spec["name"] == "unit_coverage" else scope.CONSUMERS),
+                ]
+            )
+        if spec["name"] in {"affected_pytest", "unit_coverage", "full_python_suite"}:
+            spec["argv"].append(f"--basetemp={private / spec['name'] / 'pytest'}")
+            (private / spec["name"]).mkdir(parents=True, exist_ok=True)
         if spec["name"] in {"ruff_check", "ruff_format", "mypy"}:
-            spec["argv"] = [a for a in spec["argv"] if a not in {previous.MODULE, CLI, TEST}]
-            spec["argv"].extend(ADDED + ([] if spec["name"] == "mypy" else [TEST]))
+            spec["argv"] = [
+                a for a in spec["argv"] if a not in {previous.MODULE, scope.CLI, scope.TEST}
+            ]
+            spec["argv"].extend(scope.ADDED + ([] if spec["name"] == "mypy" else [scope.TEST]))
         if spec["name"] == "cli_negative":
             spec["argv"].extend(["--output", str(private / "negative/report.json")])
     return specs
 
 
-def execute(output: Path, private: Path) -> int:
+def replay(value: dict[str, Any]) -> list[str]:
+    """Recount new counters so a terminal summary cannot invent firings or help."""
+    errors = previous.replay(value)
+    expected = {
+        "new_firing_count": len(value["new_event_rows"]),
+        "new_helped_count": sum(r["resolved_by_levelup"] is True for r in value["new_event_rows"]),
+        "live_path_receipts": value["new_event_rows"],
+    }
+    return errors + [
+        key for key, observed in expected.items() if key in value and value[key] != observed
+    ]
+
+
+def execute(output: Path, private: Path, scope: Any = None) -> int:
     """End science at the delta, then seal only fully validated terminal bytes."""
+    scope = scope or sys.modules[__name__]
     started = time.monotonic()
-    previous.progress(started, "exp7962_authenticate")
-    checked = inputs()
+    started_at = datetime.now(UTC).isoformat()
+    previous.progress(started, f"exp{scope.EXPERIMENT_ID}_authenticate")
+    checked = scope.inputs()
     durable = output.parent / "raw" / output.stem
-    specs = commands(private)
+    specs = scope.commands(private)
     sources = validation.dependency_hashes(
-        ROOT,
+        scope.ROOT,
         paths=[
-            *ADDED,
-            TEST,
-            *CONSUMERS,
+            *scope.ADDED,
+            scope.TEST,
+            *scope.CONSUMERS,
             "scripts/adversarial_verify.py",
             "scripts/verdict_row_consistency_lint.py",
             "scripts/check_spec_coverage.py",
@@ -132,21 +169,22 @@ def execute(output: Path, private: Path) -> int:
         {
             str(p): sha256_file(p)
             for p in (
-                PRIOR,
-                INVENTORY,
-                REGISTRY,
-                ROOT / "ops/exclusion_manifest.yaml",
-                ROOT / "openspec/capabilities/research-reporting/spec.md",
+                scope.PRIOR,
+                scope.INVENTORY,
+                scope.REGISTRY,
+                scope.ROOT / "ops/exclusion_manifest.yaml",
+                scope.ROOT / "openspec/capabilities/research-reporting/spec.md",
             )
             if p.is_file()
         }
     )
+    sources.update(checked.get("additional_source_hashes", {}))
     producers = [
         p
-        for p in sorted((ROOT / "results").glob("experiment_*arc*.json"))
-        if p not in {PRIOR, output}
+        for p in sorted((scope.ROOT / "results").glob("experiment_*arc*.json"))
+        if p not in {scope.PRIOR, output}
         and p.name.split("_")[1].isdigit()
-        and 7831 < int(p.name.split("_")[1]) < 7962
+        and 7831 < int(p.name.split("_")[1]) < scope.EXPERIMENT_ID
     ]
     manifest = durable / "validation_command_manifest.json"
     atomic_json(
@@ -154,15 +192,15 @@ def execute(output: Path, private: Path) -> int:
         dict(
             commands=specs,
             dependency_hashes=sources,
-            affected_files=[*ADDED, TEST],
-            transitive_consumers=CONSUMERS,
-            coverage_includes=ADDED,
-            coverage_include=INCLUDE,
+            affected_files=[*scope.ADDED, scope.TEST],
+            transitive_consumers=scope.CONSUMERS,
+            coverage_includes=scope.ADDED,
+            coverage_include=scope.INCLUDE,
             candidate_producers=[str(p) for p in producers],
             preconditions=checked["checks"],
             scan_cap_s=120,
             heartbeat_s=30,
-            execution_date="20261001",
+            execution_date=scope.RUN_DATE,
             historical_fixture_date="20260929",
             applicable_e2e=["E2E-016", "E2E-017"],
             terminal_checks=[
@@ -175,29 +213,56 @@ def execute(output: Path, private: Path) -> int:
         ),
     )
     sources[str(manifest)] = sha256_file(manifest)
-    previous.progress(started, "exp7962_scope_frozen", len(sources))
+    previous.progress(started, f"exp{scope.EXPERIMENT_ID}_scope_frozen", len(sources))
     delta = previous.scan(
-        ROOT,
+        scope.ROOT,
         producers if not checked["failures"] else [],
         checked,
         private,
-        current_date="20261001",
+        current_date=scope.RUN_DATE,
+    )
+    delta.update(
+        new_firing_count=len(delta["new_event_rows"]),
+        new_helped_count=sum(r["resolved_by_levelup"] is True for r in delta["new_event_rows"]),
+        live_path_receipts=delta["new_event_rows"],
+        seen_receipt_hashes=delta["receipt_inventory"],
     )
     gates = checked["failures"] + delta["scan_failures"]
     science_end = time.monotonic() - started
-    previous.progress(started, "exp7962_science_terminal", delta["identity_filter_count"])
-    primitive_errors = previous.replay(delta)
+    previous.progress(
+        started, f"exp{scope.EXPERIMENT_ID}_science_terminal", delta["identity_filter_count"]
+    )
+    primitive_errors = replay(delta)
+    if primitive_errors:
+        delta.update(previous.reduce(delta["rows"]))
     sources.update(delta["scan_source_hashes"])
     inventory = durable / "receipt_inventory.json"
     atomic_json(inventory, delta)
     sources[str(inventory)] = sha256_file(inventory)
-    receipts = [previous.run(s, private, durable) for s in specs]
-    complete = validation.coverage_complete(private / "coverage.json", includes=ADDED)
+    receipts = [
+        dict(
+            s["reuse_receipt"],
+            reused=True,
+            classification=s["classification"],
+            reuse_source_path=s["reuse_source_path"],
+            reuse_source_sha256=s["reuse_source_sha256"],
+        )
+        if "reuse_receipt" in s
+        else previous.run(s, private, durable)
+        for s in specs
+    ]
+    complete = validation.coverage_complete(private / "coverage.json", includes=scope.ADDED)
     counts = (
         json.loads((private / "coverage.json").read_text())["files"]
         if (private / "coverage.json").is_file()
         else {}
     )
+    coverage_receipts = []
+    for path in sorted(private.glob("coverage.*")):
+        archived = durable / "coverage" / (path.name + "-" + sha256_file(path)[7:])
+        archived.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(path, archived)
+        coverage_receipts.append(dict(path=str(archived), sha256=sha256_file(archived)))
     failed = [r for r in receipts if r["classification"] == "required" and not r["passed"]]
     gates.extend(
         previous.operand(
@@ -232,13 +297,16 @@ def execute(output: Path, private: Path) -> int:
     finished = time.monotonic() - started
     value = dict(
         delta,
-        experiment_id=7962,
-        experiment=7962,
-        task_id="exp7962-arc-supervisor-delta",
-        milestone="2026.09.690",
-        run_date="20261001",
+        experiment_id=scope.EXPERIMENT_ID,
+        experiment=scope.EXPERIMENT_ID,
+        task_id=f"exp{scope.EXPERIMENT_ID}-arc-supervisor-delta",
+        milestone=scope.MILESTONE,
+        run_date=scope.RUN_DATE,
+        execution_date=scope.RUN_DATE,
+        started_at=started_at,
+        finished_at=datetime.now(UTC).isoformat(),
         status="complete",
-        schema="arc-supervisor-delta-v690",
+        schema="arc-supervisor-delta-v" + scope.MILESTONE.rsplit(".", 1)[1],
         title="New live ARC supervisor outcome inventory",
         honest_verdict=verdict,
         verdict_class=state,
@@ -276,15 +344,29 @@ def execute(output: Path, private: Path) -> int:
         },
         validation_receipts=receipts,
         validation_command_manifest_path=str(manifest),
-        observed_child_commands=[r["command_argv"] for r in receipts],
+        observed_child_commands=[r["command_argv"] for r in receipts if not r.get("reused")],
         coverage_statement_counts={k: v["summary"] for k, v in counts.items()},
+        coverage_receipts=coverage_receipts,
+        scratch_root_receipt=dict(
+            path=str(private),
+            outside_checkout=not private.resolve().is_relative_to(scope.ROOT.resolve()),
+            allocation="TemporaryDirectory",
+            removed_after_exit=True,
+        ),
         historical_required_failures=checked["prior"].get("historical_required_failures", []),
         repository_health=dict(
             current_pass_claimed=False,
             affects_required_checks=False,
-            cited_upstream_id=7949,
+            cited_upstream_id=scope.PRIOR_ID,
             historical_receipts=checked["prior"].get("repository_health", {}),
-            checks=[r for r in receipts if r["classification"] == "repository_health"],
+            checks=[
+                *checked.get("owned_repository_health", []),
+                *[
+                    r
+                    for r in receipts
+                    if r["classification"] == "repository_health" and not r.get("reused")
+                ],
+            ],
         ),
         primary_resolution_receipt=dict(
             path=str(output), receipt_path=str(durable / "primary_resolution_receipt.json")
@@ -307,10 +389,15 @@ def execute(output: Path, private: Path) -> int:
         new_level_solves_claimed=0,
         registry_precheck=checked["registry_precheck"],
         cited_upstream_artifacts=[
-            dict(experiment_id=7949, path=str(p), sha256=PINNED[str(p)], fields_imported=fields)
+            dict(
+                experiment_id=scope.PRIOR_ID,
+                path=str(p),
+                sha256=scope.PINNED[str(p)],
+                fields_imported=fields,
+            )
             for p, fields in (
                 (
-                    PRIOR,
+                    scope.PRIOR,
                     [
                         "receipt_inventory",
                         "seen_receipt_hashes",
@@ -319,11 +406,11 @@ def execute(output: Path, private: Path) -> int:
                         "repository_health",
                     ],
                 ),
-                (INVENTORY, ["receipt_inventory", "seen_receipt_hashes"]),
+                (scope.INVENTORY, ["receipt_inventory", "seen_receipt_hashes"]),
             )
         ],
         retire_if_same_verdict=dict(
-            prior_id=7949,
+            prior_id=scope.PRIOR_ID,
             same_verdict=state == "null",
             action="retain_no_change_terminal_inventory",
         ),
@@ -345,12 +432,21 @@ def execute(output: Path, private: Path) -> int:
         arc_evidence_ready_score="An authenticated empty inventory is valid evidence.",
         acceptance_gate_results="Validity and readiness are distinct from scientific benefit.",
         solve_provenance="Only authenticated input events have live discovery provenance; aggregation claims no solves.",
+        new_firing_count="Count distinct qualified redirects; a changed timestamp creates no event.",
+        new_helped_count="Count observed level-ups after redirects without assigning causal credit.",
+        live_path_receipts="Require authenticated E3AgentPolicy and make_carnot_agent outcome rows.",
+        scratch_root_receipt="Private mutable scratch cannot overwrite historical research results.",
+        coverage_receipts="Keep immutable measured coverage after owned children exit.",
+        started_at="UTC records producer start independently of the declared run date.",
+        finished_at="UTC records validation completion independently of monotonic work duration.",
     )
     last: dict[str, Any] = {}
 
     def validator(candidate: Path) -> dict[str, Any]:
         last.clear()
         last.update(previous.terminal(candidate, private, durable))
+        last["replay_errors"] = replay(json.loads(candidate.read_text()))
+        last["passed"] = last["passed"] and not last["replay_errors"]
         return last
 
     try:
@@ -362,18 +458,26 @@ def execute(output: Path, private: Path) -> int:
             honest_verdict="complete_disqualified_terminal_validation",
             verdict_class="disqualified",
             arc_evidence_ready_score=0,
+            flagged_adversarial=any(
+                row["name"] == "terminal_adversarial" and not row["passed"]
+                for row in last["reports"]
+            ),
         )
         value["acceptance_gate_results"].update(validity=False, readiness=0)
         value["gate_check_summary"].append(dict(check="terminal_validation", report=last.copy()))
         published = publish_primary(output, value, validator)
     atomic_json(durable / "terminal_reports.json", dict(published, report=last))
     atomic_json(durable / "newer_sidecar.json", dict(role="validator_sidecar"))
-    selected = reader_receipt(value["task_id"], output.parent, field="experiment_id", expected=7962)
+    selected = reader_receipt(
+        value["task_id"], output.parent, field="experiment_id", expected=scope.EXPERIMENT_ID
+    )
     assert (
         selected["passed"]
         and selected["gate_path"] == str(output)
         and selected["gate_sha256"] == sha256_file(output)
     )
     atomic_json(durable / "primary_resolution_receipt.json", selected)
-    previous.progress(started, "exp7962_published", delta["identity_filter_count"])
+    previous.progress(
+        started, f"exp{scope.EXPERIMENT_ID}_published", delta["identity_filter_count"]
+    )
     return int(value["verdict_class"] != "null")

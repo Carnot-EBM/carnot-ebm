@@ -8,16 +8,18 @@ import json
 from pathlib import Path
 import sys
 import tempfile
+from typing import Any
 
 from carnot.reporting import arc_supervisor_v690_delta as task
 from carnot.reporting.current_work_receipt import atomic_json
 
 
-def main(argv: list[str] | None = None) -> int:
+def main(argv: list[str] | None = None, scope: Any = None) -> int:
     """Keep fixture publication separate from live evidence and current authority."""
-    print("[exp7962] phase=start completed_units=0 elapsed_s=0", flush=True)
+    scope = scope or task
+    print(f"[exp{scope.EXPERIMENT_ID}] phase=start completed_units=0 elapsed_s=0", flush=True)
     parser = argparse.ArgumentParser()
-    parser.add_argument("--date", choices=["20261001"], default="20261001")
+    parser.add_argument("--date", choices=[scope.RUN_DATE], default=scope.RUN_DATE)
     parser.add_argument("--reduce-ledger", type=Path)
     parser.add_argument("--producer", type=Path, action="append")
     parser.add_argument("--cold-replay", type=Path)
@@ -26,17 +28,24 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     replay = args.cold_replay or args.terminal_recheck
     if replay:
-        errors = task.previous.replay(json.loads(replay.read_text()))
+        errors = scope.replay(json.loads(replay.read_text()))
         report = {"cold_replay_errors": errors}
         if args.output:
             atomic_json(args.output, report)
         print(json.dumps(report), flush=True)
         return int(bool(errors))
-    private = Path(tempfile.mkdtemp(prefix="carnot-exp7962-", dir="/tmp"))
+    with tempfile.TemporaryDirectory(
+        prefix=f"carnot-exp{scope.EXPERIMENT_ID}-", dir="/tmp"
+    ) as scratch:
+        return reduce_or_execute(args, parser, scope, Path(scratch))
+
+
+def reduce_or_execute(args: Any, parser: argparse.ArgumentParser, scope: Any, private: Path) -> int:
+    """Keep mutable child fixtures inside the owned temporary directory."""
     if args.reduce_ledger:
         if not args.producer or args.output is None:
             parser.error("--reduce-ledger requires --producer and --output")
-        value = task.previous.scan(
+        value = scope.previous.scan(
             args.reduce_ledger,
             args.producer,
             dict(prior={}, inventory={}),
@@ -55,7 +64,7 @@ def main(argv: list[str] | None = None) -> int:
         atomic_json(args.output, value)
         print(json.dumps({"honest_verdict": value["honest_verdict"]}), flush=True)
         return int(blocked)
-    return task.execute(args.output or task.OUTPUT, private)
+    return int(scope.execute(args.output or scope.OUTPUT, private))
 
 
 if __name__ == "__main__":
