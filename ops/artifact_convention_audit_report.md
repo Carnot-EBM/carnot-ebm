@@ -9,10 +9,22 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 4 |
-| CANNOT_DETERMINE | 4 |
+| CHECKABLE | 6 |
+| CANNOT_DETERMINE | 2 |
 
-## experiment_7968_v691_response_role_targets.json
+## experiment_7983_reserved_decisions.json
+
+**CANNOT_DETERMINE**
+
+reviewer call failed
+
+## experiment_7984_v692_evidence_ablation.json
+
+**CANNOT_DETERMINE**
+
+reviewer call failed
+
+## experiment_7985_delayed_acquisition.json
 
 **CHECKABLE**
 
@@ -28,7 +40,23 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7969_v691_qwen_calibration_capture.json
+## experiment_7987_issued_confidence.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The experiment was blocked at the conductor pre-gate stage because upstream dependency exp7981-qwen-stream-capture failed two gate criteria.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7988_v692_arc_supervisor_delta.json
 
 **CHECKABLE**
 
@@ -44,7 +72,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7970_energy_fit.json
+## experiment_7989_v692_service_cost.json
 
 **CHECKABLE**
 
@@ -52,21 +80,15 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment was blocked from executing because pre-execution qualification gates on upstream experiment 7967 failed.
+The artifact makes no comparative claim; it is a scaffolding receipt recording upstream branch readiness and dependency validation checks.
 
 ## WHAT IS MISSING
-nothing
+nothing. Evaluated present fields `acceptance_gate_results`, `branch_gate_check_summary`, `branch_readiness`, `acquisition_setup`, and `cited_upstream_artifacts`, which record complete per-check expected, observed, and pass/fail diagnostics.
 
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7972_v691_qwen_energy_calibration.json
-
-**CANNOT_DETERMINE**
-
-reviewer call failed
-
-## experiment_7975_v691_arc_supervisor_delta.json
+## experiment_7990_v692_hardware_evidence.json
 
 **CHECKABLE**
 
@@ -74,7 +96,7 @@ reviewer call failed
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment was disqualified at supervisor delta prerequisites due to gate check failures, with no causal benefit or new level solves claimed.
+Execution is blocked due to failed upstream custody or service checks (`honest_verdict`: "complete_blocked_required_custody_or_service"), with no hardware speedup claimed (`hardware_speedup_claimed`: false).
 
 ## WHAT IS MISSING
 nothing
@@ -82,20 +104,18 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7976_v691_service_cost.json
+## experiment_7991_v692_capstone.json
 
-**CANNOT_DETERMINE**
+**CHECKABLE**
 
-reviewer call failed
+## VERDICT
+CHECKABLE
 
-## experiment_7977_v691_hardware_evidence.json
+## WHAT THE CLAIM IS
+The capstone execution is blocked with zero readiness (`capstone_execution_ready_score`: 0) and failed acceptance gates due to multiple upstream check failures.
 
-**CANNOT_DETERMINE**
+## WHAT IS MISSING
+nothing
 
-reviewer call failed
-
-## experiment_7978_v691_capstone.json
-
-**CANNOT_DETERMINE**
-
-reviewer call failed
+## THE CHECK A READER CANNOT DO
+none

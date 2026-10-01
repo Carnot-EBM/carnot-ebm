@@ -1,3 +1,83 @@
+## 2026-10-01 — V693 planning research, recorded before design
+
+V692 qualified a multivariate fit and an evidence ablation. It did not qualify
+its Qwen stream artifact. The reserved panel had no selected sources. These
+facts favor audited capture reuse, a bounded development cohort, and selective
+feedback research. They do not support another identical lexical-feature fit.
+
+### Promising methods and limits
+
+- **Verify to Amplify: Improving Reasoning via Learned Chain-of-Thought
+  Verification**, [arXiv:2603.03538v5](https://arxiv.org/abs/2603.03538v5),
+  revised 2026-09-09. The authors study online verifier learning and the
+  asymmetric costs of accepting wrong steps and rejecting correct steps.
+  Their interactive-learning assumptions do not hold automatically for cached
+  response annotations. Test label acquisition and later decisions separately;
+  report offline replay as development evidence, without inheriting a theorem.
+- **Online Conformal Abstention for Factuality Control Under Adversarial Bandit
+  Feedback**, [arXiv:2506.14067v4](https://arxiv.org/abs/2506.14067v4),
+  revised 2026-05-05. ExAUL uses partial feedback and feedback unlocking.
+  Adapt the narrower idea of randomized feedback with recorded propensities.
+  Compare uncertainty-biased and uniform acquisition at equal expected budgets.
+  Keep an unweighted control on identical sampled labels. This adaptation is
+  not an ExAUL reproduction and does not inherit its FDR guarantee.
+- **Ultrafast On-Chip Online Learning via Spline Locality in
+  Kolmogorov-Arnold Networks**, [arXiv:2602.02056v4](https://arxiv.org/abs/2602.02056v4),
+  revised 2026-06-19. Compact spline support motivates a small additive energy
+  residual with sparse local updates. Measure coefficient touches, durable
+  writes, fixed-point error, and whole-service cost. External FPGA results are
+  not evidence of speed on Carnot's boards. This changes the learning mechanism;
+  it does not revive unchanged importance anchoring.
+- **Adaptive Conformal Inference Under Delayed Feedback: Coverage Guarantees
+  and a Delay-to-Memory Diagnostic**, [arXiv:2609.07251](https://arxiv.org/abs/2609.07251),
+  submitted 2026-09-07. The paper studies delayed ACI and interleaved sequences.
+  Test prediction-issuance state and pending-feedback persistence on a fixed
+  probability trajectory. Distinguish coverage diagnostics from label-budget
+  learning and from a deployment guarantee.
+
+### Broad primary-source scan
+
+| Topic | Checked source | Decision |
+|---|---|---|
+| Energy reasoning | [EBT, 2507.02092](https://arxiv.org/abs/2507.02092), [ICLR 2026 proceedings](https://proceedings.iclr.cc/paper_files/paper/2026/hash/e19a65fd53b6f9a88b354da98813465d-Abstract-Conference.html) | Keep small energy selectors; do not train a foundation model. |
+| ARM/EBM relation | [2512.15605v4](https://arxiv.org/abs/2512.15605v4), [ICML 2026 proceedings](https://proceedings.mlr.press/v306/blondel26a.html) | Algebraic equivalence is not independent correctness. Include a probability-equivalent classifier control. |
+| Neural constraints | [NSVIF, 2601.17789](https://arxiv.org/abs/2601.17789), [OpenReview submission](https://openreview.net/pdf?id=RZGs4OAH6g) | Formal checking cannot certify a wrong extraction. Keep source and label custody separate. |
+| Hallucination detection | [Spilled Energy, 2602.18671](https://arxiv.org/abs/2602.18671), [NeuroActiSep, 2609.14448](https://arxiv.org/abs/2609.14448) | Useful comparators for later internal-signal research; no renewed activation-as-correctness claim. |
+| Grounding scope | [Beyond Document Grounding, 2607.00895](https://arxiv.org/abs/2607.00895) | Keep tool/code evidence expansion on the watch list; finish the response-support experiment first. |
+| Guided decoding | [ETS, 2601.21484v3](https://arxiv.org/abs/2601.21484v3), revised 2026-05-19 | Delay steering until the verifier has a qualified benefit. |
+| Ising hardware | [Higher-Order Neuromorphic Ising Machines, 2506.19964](https://arxiv.org/abs/2506.19964) | Higher-order annealing is not a drop-in spline-update accelerator. Require operation compatibility and host costs. |
+| Continual KAN | [KAN-CL, 2605.12306](https://arxiv.org/abs/2605.12306), [KAC, 2503.21076](https://arxiv.org/abs/2503.21076) | Retain forgetting controls; do not repeat the retired importance-anchor experiment. |
+
+### Secondary-source checks on 2026-10-01
+
+- **OpenReview:** searched 2026 EBM/verification submissions. The inspected
+  [intrinsic-optimizer PDF](https://openreview.net/pdf?id=UGB6JCl9lz) and NSVIF
+  PDF identify themselves as under review. Do not infer acceptance from that
+  text. EBT's separate proceedings page supplies its conference status.
+- **Extropic:** the [writing index](https://extropic.ai/writing) returned a tool
+  error. The [Z1T article](https://extropic.ai/writing/z1t) loaded. It maps sparse
+  tanh operations to Z1 and uses an FPGA coprocessor for other operations.
+  Its system boundary is not Carnot's measured service. No new local TSU access
+  or purchasable accelerator is established by this check.
+- **Semantic Scholar:** queried citations for ARXIV:2507.02092 and
+  ARXIV:2512.15605 through the Graph API. Both reads failed. Title searches
+  supplied no verified citing-paper inventory. Citation discovery is incomplete;
+  the primary-paper scan above is not presented as a citation census.
+- **Hugging Face:** checked the [Spilled Energy paper page](https://huggingface.co/papers/2602.18671).
+  Its author links [the implementation](https://github.com/OmnAI-Lab/spilled-energy).
+  The Verify to Amplify paper-page read failed. Feed recommendations are
+  discovery aids, not independent verification of reported results.
+- **GitHub trending:** checked weekly [Python](https://github.com/trending/python?since=weekly)
+  and [Rust](https://github.com/trending/rust?since=weekly). Both returned cached
+  pages from about two weeks earlier. No current trending rank is claimed.
+- **Logical Intelligence:** checked [Kona](https://logicalintelligence.com/kona)
+  and its Kona 1.0 link. Both resolve to the same product description. It states
+  an energy-based constraint role but supplies no reproducible local recipe on
+  the inspected page. Treat it as architectural context.
+
+All proposed adaptations need local controls. A new source-disjoint development
+cohort is not globally unexposed data. Official test data remain sealed.
+
 ## 2026-10-01 — V692 planning review, before experiment design
 
 This review follows completed milestone 2026.10.691. Its Qwen scalar-energy
