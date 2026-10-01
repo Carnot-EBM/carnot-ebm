@@ -19271,3 +19271,4 @@ code |
 | 2026-10-01 13:50 UTC | Test whether source features add signal beyond sca | OK | 95 passed, 1 warning in 61.24s (0:01:01) |
 | 2026-10-01 13:52 UTC | Learn persistent constraint additions from delayed | GATE_BLOCK | gate-unsat(final): 2 of 6 gate(s) failed; first failure: exp7981-qwen-stream-capture.stream_capture_ready_score (actual=0 == expected=1) |
 | 2026-10-01 13:54 UTC | Independently test learning benefit retention and | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7985-delayed-acquisition, exp7985-delayed-acquisition, exp7985-delayed-acquisition) |
+| 2026-10-01 13:54 UTC | Compare delayed confidence updates on a fixed qual | GATE_BLOCK | gate-unsat(final): 2 of 6 gate(s) failed; first failure: exp7981-qwen-stream-capture.stream_capture_ready_score (actual=0 == expected=1) |
