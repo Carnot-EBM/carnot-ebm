@@ -19252,3 +19252,5 @@ code |
 | 2026-10-01 04:27 UTC | Qualify fitting with private scratch and the artif | OK | 99 passed, 1 warning in 11.91s |
 | 2026-10-01 04:49 UTC | Qualify complete-response labels for disjoint cali | OK | 98 passed, 1 warning in 29.10s |
 | 2026-10-01 05:42 UTC | Capture bounded Qwen judgments for fitting and cal | OK | 98 passed, 1 warning in 13.31s |
+| 2026-10-01 05:44 UTC | Fit source energies through the qualified private  | GATE_BLOCK | gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp7967-private-training-qualification.training_execution_ready_score (actual=0 == expected=1) |
+| 2026-10-01 05:46 UTC | Measure source-energy decisions against equal-info | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7970-energy-fit, exp7970-energy-fit, exp7970-energy-fit) |
