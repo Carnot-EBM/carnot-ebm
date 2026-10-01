@@ -21215,3 +21215,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-10-01: Freeze thirteen tasks and separate historical authority from new evidence (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_validation; results/experiment_7979_v692_contract_methods.json
 - 2026-10-01: Join public source features and reserve evaluation sources before label access (⚠️ Research Finding) — honest_verdict=complete_null_evidence_preparation; results/experiment_7980_v692_evidence_features.json
 - 2026-10-01: Capture bounded Qwen judgments for delayed feedback and reserved evaluation (⚠️ Research Finding) — honest_verdict=complete_disqualified_owned_terminal_provenance; results/experiment_7981_v692_qwen_stream_capture.json
+- 2026-10-01: Fit a small conditional energy using Qwen and source evidence (⚠️ Research Finding) — honest_verdict=complete_null_multivariate_fit; results/experiment_7982_v692_multivariate_energy.json
