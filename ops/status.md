@@ -1,5 +1,31 @@
 # Carnot — Operational Status
 
+**Last Updated:** 2026-10-01
+
+## 2026-10-01 — Exp7967 test repair verified
+
+Missing and malformed historical sources now publish blocked qualification
+with readiness zero and intact failure-log hashes. Private temporary storage
+works for both library code and children, with environment and cache cleanup
+after normal and exceptional exits. All original test assertions remain.
+
+The affected/transitive suite passes 238 tests. The conductor/core/fix-gate
+subset passes 109 tests with one existing deprecation warning. All 25 frozen
+command checks pass, including E2E-015's three private CLI tests and E2E-016's
+24-family fixture and cold replay. Combined coverage is 831/831 statements
+across seven modules and CLIs, including 298/298 Exp7967 statements. Ruff,
+formatting, strict mypy and scoped spec coverage pass.
+
+The private checked primary and cold replay succeed, while execution
+qualification remains zero: two historical blocked fixture primaries omit
+`fixture_ready_score`, so their unchanged reader gates reject them. This
+repair does not establish natural fitting or an independent verifier win.
+Repository-wide spec traceability retains 1,142 unrelated missing references;
+the full-suite health receipt remains a separate failed diagnostic.
+Final reconciliation passes documentation freshness and fails only the
+repository-wide test-to-spec traceability check.
+Verification evidence is in `/tmp/carnot7967-repair-irihvsy5/`.
+
 ## 2026-09-30 — V689 sentence annotation CLI test repair
 
 - Exp7942 direct script-path execution resolves the repository-owned publication

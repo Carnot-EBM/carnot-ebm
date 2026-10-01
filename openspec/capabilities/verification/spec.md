@@ -47193,6 +47193,47 @@ freezes real CLI routes and reduces current coverage and fixture receipts.
 `test_training_coverage_7954.py` checks each exception category, external blocks,
 owned failures, unchanged historical scores and cold primitive reconstruction.
 The current producer's terminal evidence is `experiment_7954_v690_training_coverage.json`.
+
+## REQ-VERIFY-7967: Qualify fitting with private mutable storage
+
+Exp7967 SHALL adapt the unchanged Exp7954 command freezer with distinct scratch
+and archive roots. Reject scratch inside the checkout before children start.
+Each route gets its own publication directory. Pytest basetemp, coverage and
+child fixture files stay in one private workspace. Keep the artifact guard on.
+Archive closed evidence only after children exit. Preserve original argv and
+measured paths. Readiness requires every frozen route, nonempty 100 percent
+statement coverage, real numerical fixture predictions and current readers.
+External missing, retired or invalid prerequisites are terminal blocked.
+Owned failures are terminal disqualified with readiness zero.
+
+### SCENARIO-VERIFY-7967-ROOTS
+
+Reject checkout or results-nested scratch before freezing or spawning children.
+A private mirrored protected tree reproduces the guarded rename failure.
+Atomic replacement in private storage stays on one filesystem. Child guard
+environment remains enabled. Historical failed logs retain their byte hashes.
+Library-created and child temporary files inherit the private scratch root;
+restore the caller's temporary-directory environment and Python cache on exit,
+including exceptional exits.
+
+### SCENARIO-VERIFY-7967-QUALIFICATION
+
+Run unchanged affected and transitive tests, eleven fitting routes, E2E-015/016,
+and the current script from outside the checkout without PYTHONPATH. Preserve
+historical fixture dates. Failed or missing receipts cannot qualify readiness.
+Fixture predictions are circular_positive; natural source data remains exposed.
+The numerical callable remains carnot.verify.energy_fit_7930.fit_heads.
+
+### Implementation Status (REQ-VERIFY-7967)
+
+Implemented in `python/carnot/verify/private_training_7967.py`; private
+temporary storage is restored after normal and exceptional exits.
+The unchanged terminal custody assertions and added child cleanup regression
+pass. The affected/transitive suite passes 238 tests; all 25 frozen command
+checks, E2E-015/016 and 100 percent coverage of seven measured modules/CLIs
+pass. The missing readiness field in two historical blocked fixture primaries
+keeps the separately checked consumer qualification at zero.
+
 # REQ-VERIFY-7955: Rebuild complete-response human support targets
 
 Exp7955 SHALL freeze original source and whole-response bytes and public window

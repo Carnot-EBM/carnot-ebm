@@ -87971,3 +87971,33 @@ cover every added statement. Required owned failures disqualify readiness.
 Run E2E-018 private tests and E2E-015 without historical live publication.
 Cold replay and terminal validators SHALL bind the single checked primary.
 The conductor owns ops/status, changelog and traceability reconciliation.
+
+## REQ-REPORT-7967: Bind private qualification to one checked primary
+
+The current producer records 20261001 and milestone 2026.10.691. Authenticate
+each upstream against its own frozen identity and hash, including Exp7892
+public source hashes. Never replace an upstream date with the consumer date.
+Publish only checked terminal bytes at the declared Exp7967 primary. Store
+validator sidecars below raw. Keep all prior failed determinations unchanged.
+
+### SCENARIO-REPORT-7967-REPLAY
+
+Cold reduction verifies archived primitive hashes, coverage counts, complete
+command receipts, fixture predictions and dependencies. Mutated evidence fails.
+Newer nested sidecars cannot change either live reader's primary path or hash.
+Terminal validators bind the final primary hash. Readiness measures execution
+validity only. Preserve the September 28 oracle-distinct corrigendum.
+Missing or malformed historical source JSON SHALL retain the blocked operand
+and publish readiness zero without rereading it as required valid evidence.
+Available historical failure logs retain their hashes even when their source
+summary cannot be read; unavailable summary fields are not reconstructed.
+The conductor owns ops/status, changelog and traceability reconciliation.
+
+### Implementation Status (REQ-REPORT-7967)
+
+Implemented in `python/carnot/verify/private_training_7967.py` and its CLI.
+`tests/python/test_private_training_7967.py` preserves the six terminal custody
+cases and verifies archived hashes, prediction drift and dependency drift.
+Private terminal publication and cold replay pass. Execution qualification
+remains zero when historical blocked fixture reader gates lack their required
+readiness field; current coverage never overrides a failed gate.

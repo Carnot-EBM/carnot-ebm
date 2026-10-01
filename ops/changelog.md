@@ -1,5 +1,21 @@
 # Carnot — Changelog
 
+## 2026-10-01 — Exp7967 blocked-source custody and private storage repair
+
+- Handle missing or malformed historical source JSON while retaining blocked
+  operands, readiness zero and byte hashes of the historical failure logs.
+  Unavailable summary fields are no longer claimed as imported.
+- Implement private temporary-directory scope for library and child files,
+  restoring environment variables and Python's cache after exceptions.
+  Preserve all original test assertions and add child cleanup coverage.
+- Verify 238 affected/transitive tests, 109 conductor/core/fix-gate tests,
+  all 25 frozen command checks, E2E-015/016 and 831/831 measured statements.
+  Ruff, formatting, strict mypy and scoped spec coverage pass.
+- Private terminal publication and cold replay pass. Qualification correctly
+  remains zero because two historical blocked fixture primaries omit the
+  readiness field required by their reader gates. Global spec traceability
+  still has 1,142 unrelated missing references. The conductor source is unchanged.
+
 ## 2026-09-30 — V689 direct sentence annotation replay
 
 - Bootstrap the repository root before the Exp7942 CLI imports its producer,

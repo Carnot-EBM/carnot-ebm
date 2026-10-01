@@ -1,6 +1,6 @@
 # Carnot — Traceability Matrix
 
-**Last Updated:** 2026-09-30
+**Last Updated:** 2026-10-01
 **Operational Note:** REQ-REPORT-7942, SCENARIO-REPORT-7942-DIRECT-CLI and
 SCENARIO-REPORT-7942-COVERAGE-WORKSPACE map the direct script-path bootstrap and
 private coverage workspace to `python/carnot/experiment_7942_v689_sentence_labels.py`,
@@ -3486,3 +3486,27 @@ and FR-05/08/09/10 plus NFR-01 through qualification and complete service costs.
 All research tasks remain planned. No implementation capability was promoted.
 The existing reader/fixture suite passed 111 tests with scoped spec coverage;
 private E2E-015–018 checks passed. Historical repository-wide debt is unchanged.
+
+## Exp7967 private storage and terminal custody repair — 2026-10-01
+
+REQ-VERIFY-7967, SCENARIO-VERIFY-7967-ROOTS,
+SCENARIO-VERIFY-7967-QUALIFICATION, REQ-REPORT-7967 and
+SCENARIO-REPORT-7967-REPLAY map to
+`python/carnot/verify/private_training_7967.py`,
+`scripts/experiments/experiment_7967_v691_private_training_qualification.py`
+and `tests/python/test_private_training_7967.py`.
+
+The six original terminal custody cases pass without losing blocked operands
+or historical failure evidence. Added regressions verify child temporary-file
+placement and restoration after exceptions with present and absent environment
+variables. All original assertions remain. REQ-CONDUCTOR-FIXGATE-1's nine
+tests pass; `scripts/research_conductor.py` remains unchanged.
+
+Verification: 238 affected/transitive tests, 109 conductor/core/fix-gate tests,
+all 25 frozen command checks, E2E-015/016, strict mypy, Ruff, formatting and
+scoped spec coverage pass. Seven measured modules/CLIs cover 831/831 statements,
+including all 298 Exp7967 statements. The private primary passes terminal
+validation and cold replay. Execution qualification stays zero because the
+blocked and expected-failure fixture primaries omit the readiness field their
+reader gates require. Global spec traceability retains 1,142 unrelated gaps;
+no full-suite or natural-training qualification follows from these receipts.
