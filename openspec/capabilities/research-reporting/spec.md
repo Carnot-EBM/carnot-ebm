@@ -88849,3 +88849,26 @@ and its script-path CLI freeze the original code and call receipt subtree.
 `tests/python/test_experiment_7995_v693_qwen_development_capture.py` checks
 private CLI publication, blocked inputs, cold replay, load outcomes, required
 validation failures, original receipt mutations and both artifact readers.
+
+## REQ-REPORT-7996: Historical sparse training custody
+
+Exp7996 authenticates qualified Exp7969/7980 fit/tune bytes and frozen scalar
+heads. No old evaluation, new stream or retention labels may enter training.
+Freeze configuration and validation commands before measurement. Save all heads
+and a callable predict/update interface before new cohort access. Zero current
+pretrained calls and no_model_load are mandatory. A complete scientific null can
+set sparse_fit_ready_score=1 only after owned numerical, custody, CLI, consumer,
+static, spec and nonempty 100 percent changed-statement coverage checks. External
+missing prerequisites block with exact operands; failed owned checks disqualify
+with readiness zero. Preserve repository-health failures as diagnostics.
+
+### SCENARIO-REPORT-7996: Final bytes and private execution
+
+Private real CLI success, blocked and cold replay routes run with the artifact
+guard active. E2E-015 and E2E-019 run with private outputs. Freeze the full Python
+suite command once; retain its actual receipt separately from owned checks.
+Primitive rows carry numerators, denominators, eligibility and failure/censor
+status. Validate actual candidate bytes with adversarial_verify and strict row
+consistency, then check both conductor readers against the exact primary.
+Retain final-byte validator logs in a sidecar. The conductor owns ops/status,
+ops/changelog and BMAD traceability reconciliation for this invocation.

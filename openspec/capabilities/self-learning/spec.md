@@ -29911,3 +29911,11 @@ stream slots retain a fixed 20-slot label delay, including unavailable and
 end-censored events. Retention labels remain evaluator-only until an independent
 learning audit seal. Public source disjointness is bounded to recorded evidence;
 unknown historical access and public pretraining exposure remain unknown.
+
+## REQ-SELF-7996: Runnable adaptation precedes benefit claims
+
+Freeze a historical-fit spline checkpoint and predict/update interface before
+any new-cohort target access. Demonstrate CPU update locality and numerical
+parity. Readiness is a mechanism result; natural stream improvement and retention
+remain unmeasured. Sigmoid equivalence is an identity control and cannot count as
+an energy-method win.

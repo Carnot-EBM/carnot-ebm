@@ -47712,3 +47712,27 @@ Implementation: `python/carnot/verify/qwen_development_capture_7995.py` freezes
 public requests, checkpoints started calls, binds raw bytes to owned receipts
 and reduces independent role support. Its matching Python tests exercise
 interruption, no retry, censoring, token admission, overlap and byte mutations.
+
+## REQ-VERIFY-7996: Sparse residual spline training
+
+Train only qualified historical fit rows, using tune rows only to select a
+0.5/1/2 temperature by log loss. Each multivariate arm receives q and the eight
+fixed lexical features. Fit min/max scaling on fit rows and count clipped
+values. Freeze cubic clamped knots at four copies of each boundary and eight
+internal knots i/9. Each input has 12 coefficients; the spline has 109 including
+its intercept. E(x,0)=0 and E(x,1)=-[logit(clipped q)+b+sum c B]. Initialize
+spline residuals and b to zero. Use 200 batch gradient steps, rate .01, L2 .001,
+and seeds 17/29/43/71/101; seed 17 is primary. Train logistic and eight-tanh MLP
+controls with the same inputs and budget. Save an identical-coefficient sigmoid
+control without fitting and frozen Exp7972 scalar controls.
+
+### SCENARIO-VERIFY-7996: Numerical readiness
+
+One-example data gradients touch at most four basis coefficients per input and
+one intercept. Lazy global decay implements exact L2 without touching every
+stored coefficient. Report both physical writes and logical decay. Dense/sparse
+updates and gradients, zero-step identity, sign, finite differences, knot
+boundaries, saturated inputs and save/load predictions must agree. Report every
+seed's loss increases, state bytes and measured CPU work. Synthetic separable
+holdout is a circular positive control with headroom; it is not natural evidence.
+No FPGA speed or normalization advantage follows from this mechanism.
