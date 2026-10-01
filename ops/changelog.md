@@ -21163,3 +21163,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-10-01: Qualify the fitting exception routes before numerical execution (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_checks; results/experiment_7954_v690_training_coverage.json
 - 2026-10-01: Rebuild full-response support targets from original human spans (⚠️ Research Finding) — honest_verdict=complete_null_response_annotation_transport; results/experiment_7955_v690_response_targets.json
 - 2026-10-01: Measure bounded Qwen response support against human annotations (⚠️ Research Finding) — honest_verdict=complete_null_qwen_response_risk; results/experiment_7958_v690_qwen_response_risk.json
+- 2026-10-01: Assess new live ARC supervisor outcomes for generalization (⚠️ Research Finding) — honest_verdict=complete_null_no_new_supervisor_outcomes; results/experiment_7962_v690_arc_supervisor_delta.json
