@@ -21265,3 +21265,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-10-02: Fit calibrated source energies on the sealed eligible cohort (⚠️ Research Finding) — honest_verdict=complete_null_qualified_energy_fit; results/experiment_8020_v695_qualified_energy_fit.json
 - 2026-10-02: Measure calibrated decisions with complete prediction custody (⚠️ Research Finding) — honest_verdict=complete_disqualified_typed_decision_checks; results/experiment_8021_v695_typed_decision_test.json
 - 2026-10-02: Qualify fixed-answer Qwen scoring and source-removal controls (⚠️ Research Finding) — honest_verdict=complete_null_likelihood_protocol; results/experiment_8022_v695_likelihood_protocol.json
+- 2026-10-02: Capture source-conditioned likelihoods and freeze small decision heads (⚠️ Research Finding) — honest_verdict=complete_disqualified_likelihood_calibration; results/experiment_8023_v695_likelihood_calibration.json
