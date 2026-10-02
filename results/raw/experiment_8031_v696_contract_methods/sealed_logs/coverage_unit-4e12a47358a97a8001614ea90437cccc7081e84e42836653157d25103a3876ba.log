@@ -1,0 +1,45 @@
+F..........................                                              [100%]
+=================================== FAILURES ===================================
+_________________________ test_authority_and_mutations _________________________
+
+tmp_path = PosixPath('/tmp/exp8031-lohjilfg/coverage/test_authority_and_mutations0')
+
+    def test_authority_and_mutations(tmp_path):
+        """SCENARIO-REPORT-8031-AUTHORITY: all thirteen tasks and twelve mutations bind."""
+        args = inputs(tmp_path)
+        result = methods.assess(args.design, args.staged, args.active, tmp_path / "snapshots")
+        assert result["activated"] and len(result["contract_rows"]) == 13
+        assert result["staging_custody_status"] == "unknown_consumed"
+        assert all(r["passed"] for r in result["lineage_applicability_rows"])
+        controls = methods.mutations(args.design, args.active, args.staged, tmp_path / "mutations")
+        assert len(controls) == 12 and all(r["passed"] for r in controls)
+        original = args.design.read_text()
+        for token in (
+            "## Exact task contract",
+            "V696_TASK_CONTRACT_START",
+            "Canonical full-task SHA-256",
+        ):
+            args.design.write_text(original.replace(token, "removed", 1))
+            failed = methods.assess(args.design, args.staged, args.active, tmp_path / "missing")
+            assert not failed["activated"] and failed["gate_check_summary"]
+        changed_prompt = original.replace('"prompt": "', '"prompt": "CHANGED: ', 1)
+>       assert changed_prompt != original
+E       assert '# Carnot Research Roadmap v696 — Repeatable evidence and bounded-history learning\n\n**Created:** 2026-10-02. **Miles...te {date}\\nDo NOT push. Do NOT modify scripts/research_conductor.py.\\n"}\n]}\n```\n<!-- V696_TASK_CONTRACT_END -->\n' != '# Carnot Research Roadmap v696 — Repeatable evidence and bounded-history learning\n\n**Created:** 2026-10-02. **Miles...te {date}\\nDo NOT push. Do NOT modify scripts/research_conductor.py.\\n"}\n]}\n```\n<!-- V696_TASK_CONTRACT_END -->\n'
+
+tests/python/test_experiment_8031_v696_contract_methods.py:82: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp7953] phase=mutations completed_units=1/12 elapsed_s=0.598
+[exp7953] phase=mutations completed_units=2/12 elapsed_s=1.224
+[exp7953] phase=mutations completed_units=3/12 elapsed_s=1.846
+[exp7953] phase=mutations completed_units=4/12 elapsed_s=2.466
+[exp7953] phase=mutations completed_units=5/12 elapsed_s=3.087
+[exp7953] phase=mutations completed_units=6/12 elapsed_s=3.692
+[exp7953] phase=mutations completed_units=7/12 elapsed_s=4.313
+[exp7953] phase=mutations completed_units=8/12 elapsed_s=4.934
+[exp7953] phase=mutations completed_units=9/12 elapsed_s=5.556
+[exp7953] phase=mutations completed_units=10/12 elapsed_s=6.173
+[exp7953] phase=mutations completed_units=11/12 elapsed_s=6.914
+[exp7953] phase=mutations completed_units=12/12 elapsed_s=7.647
+=========================== short test summary info ============================
+FAILED tests/python/test_experiment_8031_v696_contract_methods.py::test_authority_and_mutations
+1 failed, 26 passed in 145.14s (0:02:25)

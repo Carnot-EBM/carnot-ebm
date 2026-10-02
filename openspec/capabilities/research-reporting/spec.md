@@ -90121,3 +90121,37 @@ schema/gate/authority tests, applicable private E2E-018, scoped lint and spec
 traceability. Planning validation does not assert experimental results.
 
 Status: planning in progress; all experimental implementation remains pending.
+
+## REQ-REPORT-8031: Bind the complete V696 invocation contract
+
+Exp8031 SHALL bind thirteen complete tasks for milestone 2026.10.696, first
+ID8031, using the shipped parameterized authority readers. Compare the visible
+table, complete JSON, full-task digest and actual YAML, including prompts, gates
+and prior failures. Freeze immutable invocation copies and each branch protocol
+hash before measurement. Preserve original Exp8018 and Exp8030 authority failures.
+Administrative readiness SHALL require exact active equality and owned checks,
+with zero independent scientific units and zero current model calls.
+
+### SCENARIO-REPORT-8031-AUTHORITY
+
+Exercise all twelve shipped authority mutations, missing table/JSON/digest,
+changed prompt, gate typo, UTC rollover and consumed staging in private fixtures.
+Report staging separately before activation; an older active milestone cannot
+confirm V696 activation. Never reconstruct an unobserved consumed staging file.
+Audit all exclusion entries with the shipped reader and check that gate fields
+occur verbatim in earlier producer prompts. Freeze the V696 H1/H2/H3 statistical
+plan, budgets, data access and numerical acceptance rules without borrowing V695
+comparisons. Private oracle controls support only circular_positive evidence.
+
+### SCENARIO-REPORT-8031-TERMINAL
+
+Tests SHALL precede implementation and cover every added statement including real
+CLI branches. Reuse bounded child supervision, strict mypy, Ruff, scoped spec
+coverage and consumer checks. Run one bounded full Python suite health diagnostic
+separately from required owned checks. Keep the artifact guard enabled and all
+test/child scratch outside results. Freeze argv, exit codes and durable log hashes.
+Cold-reduce durable raw rows and authenticated checkpoints in a fresh process.
+Validate exact candidate and published bytes with adversarial and strict row
+readers, publish with the primary publication helper and bind terminal sidecars.
+External prerequisites are terminal blocked; owned failures are disqualified.
+Ops/status/traceability reconciliation is conductor-owned for this invocation.
