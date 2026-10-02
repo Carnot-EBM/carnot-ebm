@@ -1,0 +1,59 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.10.695",
+  "generated_at": "2026-10-02T17:23:22Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 61.0,
+  "experiments_completed": 12,
+  "compute_bound_experiments_count": 12,
+  "slowest_experiments": [
+    {
+      "experiment": "Test equal-budget continuous learning on qualified energy decisions",
+      "duration_minutes": 10.11,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Capture source-conditioned likelihoods and freeze small decision heads",
+      "duration_minutes": 10.09,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Freeze thirteen tasks and qualify immutable terminal readers",
+      "duration_minutes": 8.35,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Measure loaded native update parity and complete transaction cost",
+      "duration_minutes": 7.36,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Fit calibrated source energies on the sealed eligible cohort",
+      "duration_minutes": 4.95,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.10.695 completed 12 experiments (all 12 compute-bound) totaling 61.0 wall-time minutes (averaging 5 minutes per experiment) reconstructed from disk modification timestamps. The longest-running experiments were 'Test equal-budget continuous learning on qualified energy decisions' at 10.11 minutes, 'Capture source-conditioned likelihoods and freeze small decision heads' at 10.09 minutes, 'Freeze thirteen tasks and qualify immutable terminal readers' at 8.35 minutes, 'Measure loaded native update parity and complete transaction cost' at 7.36 minutes, and 'Fit calibrated source energies on the sealed eligible cohort' at 4.95 minutes. While point-in-time monitor telemetry observed both RTX 3090 GPUs at 0% utilization with 4MB allocated outside active execution, active execution-window hardware traces were not captured and the locked indicator gpu_idle_on_compute_bound_tasks is false.",
+  "bottlenecks_identified": [
+    "Execution wall time was concentrated in the top compute-bound tasks: 'Test equal-budget continuous learning on qualified energy decisions' (10.11 minutes) and 'Capture source-conditioned likelihoods and freeze small decision heads' (10.09 minutes), which together accounted for 20.20 of 61.0 total wall-time minutes (33.1%), with the top five tasks accounting for 40.86 minutes (67.0%).",
+    "Milestone timing relied on disk-mtime fallback reconstruction following zero commits on the live git-log path, leaving intra-task execution phases (environment initialization, dataset preparation, forward model compute/training, and artifact validation) uninstrumented.",
+    "Absence of continuous in-flight accelerator telemetry across active execution windows leaves hardware utilization, memory bandwidth saturation, and kernel execution efficiency unmeasured during compute-bound runs."
+  ],
+  "improvements_suggested": [
+    "Instrument experiment runners with monotonic sub-phase timers to measure latency across environment setup, data preparation, compute inference passes, and artifact validation.",
+    "Deploy continuous, lightweight GPU sampling throughout task execution rather than relying solely on discrete point-in-time monitor checkpoints.",
+    "Profile and optimize the longest-running continuous learning (10.11 minutes) and likelihood calibration (10.09 minutes) workflows to explore batching and evaluation caching opportunities.",
+    "Restrict DualGPURunner orchestration strictly to parallel executions involving two or more distinct models, avoiding overhead or invalid dispatch on single-model inference jobs.",
+    "Preserve and maintain failure_ledger pre-launch checks to ensure doomed reruns continue to be blocked in sub-second time without consuming compute budget."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add granular sub-phase execution timing to experiment runners to measure setup, compute, training iterations, and artifact validation overhead.",
+    "Implement active-window GPU utilization and memory timeseries logging to assess hardware efficiency during compute-bound tasks.",
+    "Profile the longest-running continuous learning (10.11 minutes) and likelihood capture (10.09 minutes) workflows to identify optimization and batching opportunities."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Milestone 2026.10.695 completed 12 compute-bound experiments totaling 61.0 wall-time minutes, led by continuous learning (10.11 minutes), likelihood capture (10.09 minutes), and terminal reader qualification (8.35 minutes). While static monitor telemetry observed both RTX 3090 GPUs at 0% utilization with 4MB allocated outside execution, the locked field records gpu_idle_on_compute_bound_tasks as false and no continuous in-flight telemetry exists. Estimated time savings remain at 0% pending empirical measurement of intra-task phases and verified accelerator execution traces."
+}
