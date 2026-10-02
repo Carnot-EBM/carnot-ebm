@@ -19319,3 +19319,4 @@ code |
 | 2026-10-02 05:51 UTC | Freeze decision headroom and ingest budgeted onlin | OK | 87 passed, 1 warning in 13.88s |
 | 2026-10-02 06:22 UTC | Train converged energy heads with explicit saturat | OK | 87 passed, 1 warning in 26.09s |
 | 2026-10-02 06:24 UTC | Measure whether conditioned energies change useful | GATE_BLOCK | gate-unsat(final): 2 of 6 gate(s) failed; first failure: exp8008-conditioned-energy-fit.conditioned_fit_ready_score (actual=0 == expected=1) |
+| 2026-10-02 06:49 UTC | Seal full-source and placebo interventions before  | OK | 92 passed, 1 warning in 64.40s (0:01:04) |
