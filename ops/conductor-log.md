@@ -19323,3 +19323,5 @@ code |
 | 2026-10-02 07:31 UTC | Measure bounded Qwen source dependence against dup | OK | 92 passed, 1 warning in 40.76s |
 | 2026-10-02 07:33 UTC | Test delayed decision-loss update allocation at eq | GATE_BLOCK | gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp8008-conditioned-energy-fit.conditioned_fit_ready_score (actual=0 == expected=1) |
 | 2026-10-02 07:35 UTC | Independently measure later decisions retention an | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8012-budgeted-online-updates, exp8012-budgeted-online-updates, exp8012-budgeted-online-updates) |
+| 2026-10-02 07:48 UTC | Assess new supervisor outcomes for live ARC genera | OK | 87 passed, 1 warning in 7.74s |
+| 2026-10-02 07:50 UTC | Test a Rust sparse update kernel through the real | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8012-budgeted-online-updates, exp8012-budgeted-online-updates, exp8012-budgeted-online-updates) |
