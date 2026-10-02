@@ -90155,3 +90155,44 @@ Validate exact candidate and published bytes with adversarial and strict row
 readers, publish with the primary publication helper and bind terminal sidecars.
 External prerequisites are terminal blocked; owned failures are disqualified.
 Ops/status/traceability reconciliation is conductor-owned for this invocation.
+# REQ-REPORT-8032: Seal current methods before evaluator access
+
+Exp8032 SHALL seal immutable public identities, code, methods and acceptance
+rules before opening annotation shards. Preserve prior exposure and verdicts.
+Authenticate current primary and terminal sidecar bytes. Missing contracts block
+the affected branch with exact operands. Custody readiness gives no benefit credit.
+
+## SCENARIO-REPORT-8032-CUSTODY
+
+Bind original role order, normalized sources, byte duplicates, eligibility masks,
+exclusions and support. Freeze fit-only spline support quartiles and row masks.
+Reuse the 64/32/96 source-disjoint panel with complete original answers, input
+at most 6000 tokens and answers at most 384. Keep full, duplicate and no_source.
+Keep original targets under source removal. Preserve historical contradictions.
+
+## SCENARIO-REPORT-8032-ACCESS
+
+Separate public scoring, fitter, learner and evaluator interfaces. Reject target
+fields and label paths in public worker inputs. Reject vault access before a
+valid immutable protocol. Release stream labels only at original slot plus 20
+after durable issue. Fit and online workers cannot access retention labels.
+Unknown labels remain exclusions. Private sentinel and early-access probes must
+reject before real custody work. All fixture writes stay in guarded private scratch.
+
+## SCENARIO-REPORT-8032-METHODS
+
+Bind the qualified Exp8020 head and Exp8025 stream without requiring new model
+captures. Freeze block16, four updates, cap64, seeds101..120, rate0.01 and l2.001.
+Draw four rows uniformly without replacement within a block from recent64,
+cumulative history or newest16. Count reuse across blocks. Include frozen no-write.
+Freeze typed costs 5/1/.5/0, escalation ties, three Holm comparisons, original
+support floors, gain .02, retention cost drift .01 and Brier drift .005.
+Map the four V696 sources to code and limits. No current model calls are allowed.
+
+## SCENARIO-REPORT-8032-CLI
+
+Require traced tests, actual CLI coverage at 100 percent of added statements,
+consumer/E2E-019 tests, Ruff, strict mypy and spec coverage. Record bounded
+repository health separately. Cold-reduce durable rows in a fresh process,
+validate candidate and published bytes, and publish one terminal primary through
+the existing helper. Blocked or disqualified evidence cannot qualify readiness.
