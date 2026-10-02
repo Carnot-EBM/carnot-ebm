@@ -89837,3 +89837,67 @@ owned checks; imported historical model calls do not become current calls.
 Implementation: `python/carnot/experiment_8025_v695_causal_online_updates.py`
 freezes input roles, retains raw evidence, runs owned checks and publishes through
 existing validators and readers. The thin script runs the same entry point.
+
+# REQ-REPORT-8026: Independent learning and retention audit
+
+Exp8026 SHALL independently reconstruct the Exp8025 calibrated trajectory from
+original public features, issue/release records and coefficient checkpoints.
+It SHALL NOT call the producer aggregate reducer. Unknown labels keep original
+slots. Reject early release, substituted prediction state, wrong selected IDs,
+changed equations and unequal update budgets with exact failed operands.
+Freeze methods, source roles, exclusions, costs and gates before measurement.
+Preserve all prior exposure, including any audit access before method freeze.
+Such access disqualifies inferential credit; measurements remain descriptive.
+
+## SCENARIO-REPORT-8026-RETENTION
+
+Freeze every final state and all predictions before opening current retention
+targets. Use all 64 original slots without reselection; require 48 complete
+independent groups and eight per class. Report paired Brier/cost drift to the
+initial head, false accepts and unique source transitions. Freeze overlap
+quartiles from public fit activation support before retention labels. These
+strata diagnose a mechanism descriptively and do not prove nonforgetting.
+
+## SCENARIO-REPORT-8026-BENEFIT
+
+Compare decision-loss, Brier-loss and periodic selection with uniform selection.
+Average the 20 algorithm seeds within slot before moving-block resampling.
+Use 10000 draws, primary block length 32 and sensitivity lengths 16/64, with
+Holm adjustment across three registered comparisons. Require later cost gain
+at least 0.02, adjusted interval strictly above zero, no false-accept increase,
+retention cost degradation at most 0.01 and Brier degradation at most 0.005.
+One trajectory gives conditional uncertainty, not 20 independent environments.
+Private known-headroom and zero-headroom controls SHALL test the reducer.
+Generalized learning benefit remains zero for exposed development evidence.
+
+## SCENARIO-REPORT-8026-RECOVERY
+
+Kill a private task-owned SQLite learning worker immediately before/after its
+real synchronous durable commit. Restart the same CLI; release IDs SHALL occur
+exactly once, next predictions SHALL match uninterrupted execution, and held
+label bytes SHALL remain unchanged. Fixtures stay outside results. Use the
+unchanged calibrated optimizer and actual producer Ledger, not a mock store.
+
+## SCENARIO-REPORT-8026-PUBLISH
+
+Write traced failing tests first. Require scoped unit/consumer and E2E-007
+update/retention/immutability principles, private direct CLI recovery and cold
+state reconstruction, Ruff, strict mypy, spec coverage and 100 percent added
+statement coverage including CLI branches. Keep test/coverage scratch outside
+results with artifact guards enabled. Preserve one bounded full pytest health
+diagnostic separately, including failures. Cold-reduce durable raw evidence,
+run existing adversarial and strict row readers on exact candidate bytes,
+publish with primary_publication and recheck published bytes. A complete valid
+null earns readiness one and benefit zero. Blocked/disqualified evidence earns
+readiness zero; missing external inputs are terminal blocked, not partial.
+No pretrained calls, learner/default changes, conductor edits or external push.
+The conductor owns ops/status/changelog and BMAD traceability reconciliation.
+
+Exp8026 implementation: `python/carnot/experiment_8026_v695_learning_retention_audit.py`
+owns custody and publication. `python/carnot/verify/learning_retention_audit_8026.py`
+reconstructs calibrated issues, sparse updates, retention and block intervals.
+`python/carnot/reporting/learning_store_8026.py` owns the real private learning
+commit/restart CLI. The thin experiment script runs the same entry point.
+Traced tests cover 552 added statements, including direct CLI and failure paths.
+The 20261002 audit preserves its early retention annotation preview and grants
+no inferential readiness or benefit credit from that invocation.

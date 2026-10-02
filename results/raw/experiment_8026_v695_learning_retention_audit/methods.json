@@ -1,0 +1,173 @@
+{
+  "artifact_guard_enabled": true,
+  "code_config_hashes": [
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8026_v695_learning_retention_audit.py",
+      "sha256": "sha256:0b59154a36a60b13baee652d666a2b0325588f7a20924c0a5a19b9759025d031"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/learning_retention_audit_8026.py",
+      "sha256": "sha256:f855e109ce302739d7d23eb3077c06de07138d78f76b6863df72830fda8a0ea4"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/learning_store_8026.py",
+      "sha256": "sha256:899d2d6d6f0c353c0ac70e9d56b8d5035fb0601e58060f7c7d7654230eefc3e9"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8026_v695_learning_retention_audit.py",
+      "sha256": "sha256:b116bd770919827d87e19bb790d5cb41ddb7ed2e2035b49877bbb97626762137"
+    }
+  ],
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "run",
+        "--data-file=/tmp/carnot-8026-8jp9ak3f/.coverage",
+        "--rcfile=/tmp/carnot-8026-8jp9ak3f/coverage.ini",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-8026-8jp9ak3f/pytest",
+        "tests/python/test_learning_retention_audit_8026.py",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_response_targets_7955.py",
+        "tests/python/test_source_boundary_7852.py",
+        "tests/python/test_experiment_7942_v689_sentence_labels.py",
+        "-q"
+      ],
+      "name": "unit_consumers_e2e015_019",
+      "scope": "owned",
+      "timeout_s": 300
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--data-file=/tmp/carnot-8026-8jp9ak3f/.coverage",
+        "/tmp/carnot-8026-8jp9ak3f"
+      ],
+      "name": "coverage_combine",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/carnot-8026-8jp9ak3f/.coverage",
+        "--fail-under=100",
+        "--show-missing"
+      ],
+      "name": "coverage_report",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "json",
+        "--data-file=/tmp/carnot-8026-8jp9ak3f/.coverage",
+        "-o",
+        "/tmp/carnot-8026-8jp9ak3f/coverage.json"
+      ],
+      "name": "coverage_json",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_8026_v695_learning_retention_audit.py",
+        "scripts/experiments/experiment_8026_v695_learning_retention_audit.py",
+        "tests/python/test_learning_retention_audit_8026.py",
+        "python/carnot/verify/learning_retention_audit_8026.py",
+        "python/carnot/reporting/learning_store_8026.py"
+      ],
+      "name": "ruff_check",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_8026_v695_learning_retention_audit.py",
+        "scripts/experiments/experiment_8026_v695_learning_retention_audit.py",
+        "tests/python/test_learning_retention_audit_8026.py",
+        "python/carnot/verify/learning_retention_audit_8026.py",
+        "python/carnot/reporting/learning_store_8026.py"
+      ],
+      "name": "ruff_format",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "--follow-imports=silent",
+        "python/carnot/experiment_8026_v695_learning_retention_audit.py",
+        "scripts/experiments/experiment_8026_v695_learning_retention_audit.py",
+        "python/carnot/verify/learning_retention_audit_8026.py",
+        "python/carnot/reporting/learning_store_8026.py"
+      ],
+      "name": "strict_mypy",
+      "scope": "owned",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_learning_retention_audit_8026.py"
+      ],
+      "name": "spec_coverage",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q"
+      ],
+      "name": "repository_health",
+      "scope": "repository_health",
+      "timeout_s": 60
+    }
+  ],
+  "config": {
+    "alpha": 0.05,
+    "blocks": [
+      32,
+      16,
+      64
+    ],
+    "brier_drift": 0.005,
+    "cost_drift": 0.01,
+    "draws": 10000,
+    "gain": 0.02,
+    "hypotheses": [
+      "decision_loss",
+      "brier_loss",
+      "periodic"
+    ],
+    "later_start": 36,
+    "overlap": "public-fit support prevalence; exclude shared columns",
+    "per_class": 8,
+    "retention_minimum": 48,
+    "seed": 69526
+  },
+  "pretrained_load_budget": 0,
+  "prior_exposure": "historical development; audit annotation preview before freeze",
+  "source_roles": "original stream, original fit features, original retention; no reselection"
+}
