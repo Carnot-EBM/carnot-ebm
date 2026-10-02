@@ -89749,3 +89749,61 @@ adversarial verification and strict row checks through the publication helper.
 Published references SHALL live below durable raw/. Readiness requires passing
 owned checks and all relevant support gates. Exposed development earns no
 natural learning credit. The conductor owns ops and traceability reconciliation.
+
+### REQ-REPORT-8023: Calibrate fixed-answer intervention features on human targets
+
+Exp8023 SHALL bind the qualified Exp8022 scorer and frozen first 64 fit and 32
+tune source groups. Freeze inputs, methods, source roles, exclusions, budgets
+and gates before measurement. Validate protocol, GGUF bytes, complete views,
+source separation and CUDA lease before loading. Reuse the scorer and bounded
+runner. Schedule four views per group, at most 384 teacher-forced forwards,
+120 seconds per call and 2400 seconds total model work. Generate zero tokens.
+Persist each view before and after its call, keep all nonstarts and failures,
+and emit flushed progress with real pending-call heartbeats every 60 seconds.
+No candidate ranking, generator update, evaluation or retention target access.
+
+### SCENARIO-REPORT-8023-SCORE
+
+Score only original fixed answer tokens. Retain token IDs, byte offsets, log
+probabilities, sums/counts, full source/view hashes and actual current provenance.
+Cold-reduce token rows independently. Reject changed answer bytes, generated
+tokens, incomplete alignment and duplicate mean-NLL drift above 1e-6. Features
+are full mean NLL, no-source minus full, removal minus full and cached Qwen q.
+Duplicate is only a noise check. Preserve historical development exposure.
+
+### SCENARIO-REPORT-8023-FIT
+
+After scoring seals, join complete original fit/tune human annotations, with
+no imputation or outcome-selected replacements. Require 48/24 independent
+fit/tune groups and 8/4 per class. Fit a two-label conditional linear energy,
+same-feature logistic, full-NLL plus Qwen, scalar Qwen and intercept controls.
+Scale using fit only. Use ridge [0.001,0.01,0.1,1], tune-only selection,
+1000 optimizer iterations and 120 CPU seconds. Keep exact sigmoid identity.
+Positive label means unsupported; costs are accept unsupported=5, reject
+supported=1, escalate=0.5, correct=0. Freeze feature definitions, selected
+comparator, checkpoints and cost thresholds before any future evaluation.
+Readiness requires finite, converged, reloadable heads and owned checks.
+Fitting gives zero scientific or generalized learning credit.
+
+### SCENARIO-REPORT-8023-PUBLISH
+
+Traced tests SHALL precede implementation. Require scoped unit/consumer tests,
+Exp8022 token/private CLI fixtures, E2E-015/016, Ruff, strict mypy, spec coverage
+and 100 percent new statement coverage including direct CLI branches. Keep
+coverage, test scratch and child scratch outside results with artifact guards
+active. Preserve one bounded full-suite health diagnostic and failed assertions
+separately from owned checks. Cold-reduce durable raw rows and head checkpoints
+in a fresh process, check exact candidate with adversarial and strict row
+readers, publish through primary_publication and recheck published bytes.
+Blocked inputs SHALL remain terminal blocked with explicit operand gates and
+readiness zero. Producer/config changes require affected measurement replay.
+The conductor owns ops/status/changelog and BMAD traceability reconciliation.
+
+Exp8023 SHALL retain a failed duplicate gate and disqualify affected source groups.
+After all scoring slots seal, eligible groups may still enter the registered
+fit/tune support check and CPU fitting. This does not relax the frozen complete
+measurement gate: any failed duplicate qualification keeps readiness zero.
+A reporting or CPU-fitting correction SHALL archive previous reporting bytes,
+reuse unchanged score-producing code and frozen inputs, rerun affected CPU work
+and owned checks, and retain the single original repository-health diagnostic.
+It SHALL never add teacher-forced passes to repair numerical qualification.

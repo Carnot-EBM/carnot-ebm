@@ -1,0 +1,810 @@
+{
+  "checkpoints": [
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8023_v695_likelihood_calibration/heads/25bcbc829911ada45883aea621bdc0c6082792568f726e5d3d9b30d054a09f27.json",
+      "sha256": "sha256:25bcbc829911ada45883aea621bdc0c6082792568f726e5d3d9b30d054a09f27"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8023_v695_likelihood_calibration/heads/52d60c13c3187e160ee1f393e69f781e3e3e6607c166eb6effff36a078a6f34c.json",
+      "sha256": "sha256:52d60c13c3187e160ee1f393e69f781e3e3e6607c166eb6effff36a078a6f34c"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8023_v695_likelihood_calibration/heads/39cde9abdd15d2502f4c1c221c13faf8c00b078d99ffe60f1cfdc44e8595eea3.json",
+      "sha256": "sha256:39cde9abdd15d2502f4c1c221c13faf8c00b078d99ffe60f1cfdc44e8595eea3"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8023_v695_likelihood_calibration/heads/14761fc98001480c19b3932bd4435896a71781d4f1cd0022789a862bae4dab01.json",
+      "sha256": "sha256:14761fc98001480c19b3932bd4435896a71781d4f1cd0022789a862bae4dab01"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8023_v695_likelihood_calibration/heads/e803246cd39a1894a4f858414c862a3d7330bbde7682d5a65e6c9c3fd5f06c8d.json",
+      "sha256": "sha256:e803246cd39a1894a4f858414c862a3d7330bbde7682d5a65e6c9c3fd5f06c8d"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8023_v695_likelihood_calibration/heads/0de6f748ce382d5ba57bc244c47255dfcd1e5e35ddded84ffb879c126eccfd1a.json",
+      "sha256": "sha256:0de6f748ce382d5ba57bc244c47255dfcd1e5e35ddded84ffb879c126eccfd1a"
+    }
+  ],
+  "config": {
+    "comparator_selection": "lowest_tune_BCE_then_registered_control_order",
+    "costs": {
+      "accept_unsupported": 5,
+      "correct": 0,
+      "escalate": 0.5,
+      "reject_supported": 1
+    },
+    "cpu_training_seconds": 120,
+    "eval_label_access_count": 0,
+    "exposure": "all roles retain historical development exposure",
+    "feature_names": [
+      "full_mean_nll",
+      "no_source_minus_full",
+      "removal_minus_full",
+      "q"
+    ],
+    "feature_signs": "unconstrained_fit_only",
+    "max_iterations": 1000,
+    "ridge_grid": [
+      0.001,
+      0.01,
+      0.1,
+      1
+    ],
+    "seed": 69523,
+    "thresholds": {
+      "accept_below": 0.1,
+      "reject_above": 0.5
+    },
+    "tune_selection": "lowest_tune_BCE_then_grid_order"
+  },
+  "descriptive_losses": [
+    {
+      "arm": "conditional_linear_energy",
+      "denominator": 58,
+      "metric": 0.4300154982042012,
+      "numerator": 24.94089889584367,
+      "role": "fit"
+    },
+    {
+      "arm": "conditional_linear_energy",
+      "denominator": 31,
+      "metric": 0.4195059552828419,
+      "numerator": 13.004684613768099,
+      "role": "tune"
+    },
+    {
+      "arm": "sigmoid_identity",
+      "denominator": 58,
+      "metric": 0.4300154982042012,
+      "numerator": 24.94089889584367,
+      "role": "fit"
+    },
+    {
+      "arm": "sigmoid_identity",
+      "denominator": 31,
+      "metric": 0.4195059552828419,
+      "numerator": 13.004684613768099,
+      "role": "tune"
+    },
+    {
+      "arm": "same_feature_logistic",
+      "denominator": 58,
+      "metric": 0.4300154982042012,
+      "numerator": 24.94089889584367,
+      "role": "fit"
+    },
+    {
+      "arm": "same_feature_logistic",
+      "denominator": 31,
+      "metric": 0.4195059552828419,
+      "numerator": 13.004684613768099,
+      "role": "tune"
+    },
+    {
+      "arm": "full_nll_qwen",
+      "denominator": 58,
+      "metric": 0.44070595861744216,
+      "numerator": 25.560945599811646,
+      "role": "fit"
+    },
+    {
+      "arm": "full_nll_qwen",
+      "denominator": 31,
+      "metric": 0.42996604382142434,
+      "numerator": 13.328947358464154,
+      "role": "tune"
+    },
+    {
+      "arm": "scalar_qwen",
+      "denominator": 58,
+      "metric": 0.4881505861020042,
+      "numerator": 28.312733993916243,
+      "role": "fit"
+    },
+    {
+      "arm": "scalar_qwen",
+      "denominator": 31,
+      "metric": 0.42777621506012303,
+      "numerator": 13.261062666863815,
+      "role": "tune"
+    },
+    {
+      "arm": "intercept",
+      "denominator": 58,
+      "metric": 0.6920241722167032,
+      "numerator": 40.13740198856878,
+      "role": "fit"
+    },
+    {
+      "arm": "intercept",
+      "denominator": 31,
+      "metric": 0.6958087278301364,
+      "numerator": 21.570070562734227,
+      "role": "tune"
+    }
+  ],
+  "heads": [
+    {
+      "arm": "conditional_linear_energy",
+      "columns": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "converged": true,
+      "duration_s": 0.0002714999718591571,
+      "energy_definition": "E(x,0)=0; E(x,1)=-z(x)",
+      "epochs": [
+        {
+          "epoch": 0,
+          "gradient_norm": 0.30006245105893026,
+          "loss": 0.6882165929836832
+        },
+        {
+          "epoch": 1,
+          "gradient_norm": 0.040843051532462725,
+          "loss": 0.4618998815482734
+        },
+        {
+          "epoch": 2,
+          "gradient_norm": 0.005340509570783983,
+          "loss": 0.4512624191892536
+        },
+        {
+          "epoch": 3,
+          "gradient_norm": 0.0001314405814583676,
+          "loss": 0.45104528013119416
+        },
+        {
+          "epoch": 4,
+          "gradient_norm": 8.260258911943485e-08,
+          "loss": 0.45104514998514
+        },
+        {
+          "epoch": 5,
+          "gradient_norm": 3.5247846308372743e-14,
+          "loss": 0.45104514998508766
+        }
+      ],
+      "feature_names": [
+        "full_mean_nll",
+        "no_source_minus_full",
+        "removal_minus_full",
+        "q"
+      ],
+      "final_loss": 0.45104514998508766,
+      "finite": true,
+      "gradient_norm": 3.5247846308372743e-14,
+      "hessian_evaluations": 11,
+      "initial_loss": 0.6882165929836832,
+      "initial_parameters": [
+        0.20763936477824455,
+        -1.564367771526744e-06,
+        -5.644827161320414e-06,
+        2.0250143171131273e-05,
+        1.2070669805819038e-05
+      ],
+      "l2": 0.01,
+      "mean": [
+        1.012758180927753,
+        0.987614072492447,
+        0.5185610047163023,
+        0.42586206896551704
+      ],
+      "objective_evaluations": 11,
+      "optimizer_state": {
+        "last_gradient": [
+          -5.7375978967932895e-15,
+          -3.231963308092389e-14,
+          3.435793316519664e-14,
+          3.5247846308372743e-14,
+          -3.324424069361953e-14
+        ],
+        "last_rate": 1.0
+      },
+      "optimizer_steps": 5,
+      "parameter_count": 5,
+      "parameters": [
+        0.3000075338653754,
+        0.6484600866109596,
+        -0.5217882117365115,
+        0.24196934739649462,
+        1.1232310852173286
+      ],
+      "scale": [
+        0.26390060324199366,
+        0.3958691140186153,
+        0.3923179326104496,
+        0.4724515464401089
+      ],
+      "seed": 69523,
+      "thresholds": {
+        "accept_below": 0.1,
+        "reject_above": 0.5
+      },
+      "tune_loss": 0.4195059552828419
+    },
+    {
+      "additional_fit_steps": 0,
+      "arm": "sigmoid_identity",
+      "columns": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "converged": true,
+      "duplicate_of": "conditional_linear_energy",
+      "duration_s": 0.0002714999718591571,
+      "energy_definition": "E(x,0)=0; E(x,1)=-z(x)",
+      "epochs": [
+        {
+          "epoch": 0,
+          "gradient_norm": 0.30006245105893026,
+          "loss": 0.6882165929836832
+        },
+        {
+          "epoch": 1,
+          "gradient_norm": 0.040843051532462725,
+          "loss": 0.4618998815482734
+        },
+        {
+          "epoch": 2,
+          "gradient_norm": 0.005340509570783983,
+          "loss": 0.4512624191892536
+        },
+        {
+          "epoch": 3,
+          "gradient_norm": 0.0001314405814583676,
+          "loss": 0.45104528013119416
+        },
+        {
+          "epoch": 4,
+          "gradient_norm": 8.260258911943485e-08,
+          "loss": 0.45104514998514
+        },
+        {
+          "epoch": 5,
+          "gradient_norm": 3.5247846308372743e-14,
+          "loss": 0.45104514998508766
+        }
+      ],
+      "feature_names": [
+        "full_mean_nll",
+        "no_source_minus_full",
+        "removal_minus_full",
+        "q"
+      ],
+      "final_loss": 0.45104514998508766,
+      "finite": true,
+      "gradient_norm": 3.5247846308372743e-14,
+      "hessian_evaluations": 11,
+      "initial_loss": 0.6882165929836832,
+      "initial_parameters": [
+        0.20763936477824455,
+        -1.564367771526744e-06,
+        -5.644827161320414e-06,
+        2.0250143171131273e-05,
+        1.2070669805819038e-05
+      ],
+      "l2": 0.01,
+      "mean": [
+        1.012758180927753,
+        0.987614072492447,
+        0.5185610047163023,
+        0.42586206896551704
+      ],
+      "objective_evaluations": 11,
+      "optimizer_state": {
+        "last_gradient": [
+          -5.7375978967932895e-15,
+          -3.231963308092389e-14,
+          3.435793316519664e-14,
+          3.5247846308372743e-14,
+          -3.324424069361953e-14
+        ],
+        "last_rate": 1.0
+      },
+      "optimizer_steps": 5,
+      "parameter_count": 5,
+      "parameters": [
+        0.3000075338653754,
+        0.6484600866109596,
+        -0.5217882117365115,
+        0.24196934739649462,
+        1.1232310852173286
+      ],
+      "scale": [
+        0.26390060324199366,
+        0.3958691140186153,
+        0.3923179326104496,
+        0.4724515464401089
+      ],
+      "seed": 69523,
+      "thresholds": {
+        "accept_below": 0.1,
+        "reject_above": 0.5
+      },
+      "tune_loss": 0.4195059552828419
+    },
+    {
+      "arm": "same_feature_logistic",
+      "columns": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "converged": true,
+      "duration_s": 0.00023157603573054075,
+      "energy_definition": "E(x,0)=0; E(x,1)=-z(x)",
+      "epochs": [
+        {
+          "epoch": 0,
+          "gradient_norm": 0.30006245105893026,
+          "loss": 0.6882165929836832
+        },
+        {
+          "epoch": 1,
+          "gradient_norm": 0.040843051532462725,
+          "loss": 0.4618998815482734
+        },
+        {
+          "epoch": 2,
+          "gradient_norm": 0.005340509570783983,
+          "loss": 0.4512624191892536
+        },
+        {
+          "epoch": 3,
+          "gradient_norm": 0.0001314405814583676,
+          "loss": 0.45104528013119416
+        },
+        {
+          "epoch": 4,
+          "gradient_norm": 8.260258911943485e-08,
+          "loss": 0.45104514998514
+        },
+        {
+          "epoch": 5,
+          "gradient_norm": 3.5247846308372743e-14,
+          "loss": 0.45104514998508766
+        }
+      ],
+      "feature_names": [
+        "full_mean_nll",
+        "no_source_minus_full",
+        "removal_minus_full",
+        "q"
+      ],
+      "final_loss": 0.45104514998508766,
+      "finite": true,
+      "gradient_norm": 3.5247846308372743e-14,
+      "hessian_evaluations": 11,
+      "initial_loss": 0.6882165929836832,
+      "initial_parameters": [
+        0.20763936477824455,
+        -1.564367771526744e-06,
+        -5.644827161320414e-06,
+        2.0250143171131273e-05,
+        1.2070669805819038e-05
+      ],
+      "l2": 0.01,
+      "mean": [
+        1.012758180927753,
+        0.987614072492447,
+        0.5185610047163023,
+        0.42586206896551704
+      ],
+      "objective_evaluations": 11,
+      "optimizer_state": {
+        "last_gradient": [
+          -5.7375978967932895e-15,
+          -3.231963308092389e-14,
+          3.435793316519664e-14,
+          3.5247846308372743e-14,
+          -3.324424069361953e-14
+        ],
+        "last_rate": 1.0
+      },
+      "optimizer_steps": 5,
+      "parameter_count": 5,
+      "parameters": [
+        0.3000075338653754,
+        0.6484600866109596,
+        -0.5217882117365115,
+        0.24196934739649462,
+        1.1232310852173286
+      ],
+      "scale": [
+        0.26390060324199366,
+        0.3958691140186153,
+        0.3923179326104496,
+        0.4724515464401089
+      ],
+      "seed": 69523,
+      "thresholds": {
+        "accept_below": 0.1,
+        "reject_above": 0.5
+      },
+      "tune_loss": 0.4195059552828419
+    },
+    {
+      "arm": "full_nll_qwen",
+      "columns": [
+        0,
+        3
+      ],
+      "converged": true,
+      "duration_s": 0.00022821896709501743,
+      "energy_definition": "E(x,0)=0; E(x,1)=-z(x)",
+      "epochs": [
+        {
+          "epoch": 0,
+          "gradient_norm": 0.3000656397803472,
+          "loss": 0.6878319578635685
+        },
+        {
+          "epoch": 1,
+          "gradient_norm": 0.04431092974660654,
+          "loss": 0.4575199600335336
+        },
+        {
+          "epoch": 2,
+          "gradient_norm": 0.007549571001822484,
+          "loss": 0.44394014499019513
+        },
+        {
+          "epoch": 3,
+          "gradient_norm": 0.0003699872671070396,
+          "loss": 0.44342364169274306
+        },
+        {
+          "epoch": 4,
+          "gradient_norm": 9.966344748139032e-07,
+          "loss": 0.44342236877926205
+        },
+        {
+          "epoch": 5,
+          "gradient_norm": 7.356092731475306e-12,
+          "loss": 0.4434223687699798
+        }
+      ],
+      "feature_names": [
+        "full_mean_nll",
+        "no_source_minus_full",
+        "removal_minus_full",
+        "q"
+      ],
+      "final_loss": 0.4434223687699798,
+      "finite": true,
+      "gradient_norm": 7.356092731475306e-12,
+      "hessian_evaluations": 11,
+      "initial_loss": 0.6878319578635685,
+      "initial_parameters": [
+        0.20763936477824455,
+        -1.564367771526744e-06,
+        -5.644827161320414e-06
+      ],
+      "l2": 0.001,
+      "mean": [
+        1.012758180927753,
+        0.987614072492447,
+        0.5185610047163023,
+        0.42586206896551704
+      ],
+      "objective_evaluations": 11,
+      "optimizer_state": {
+        "last_gradient": [
+          -5.129346274980462e-12,
+          -4.479112827165954e-12,
+          -7.356092731475306e-12
+        ],
+        "last_rate": 1.0
+      },
+      "optimizer_steps": 5,
+      "parameter_count": 3,
+      "parameters": [
+        0.38812021322058354,
+        0.8225987747750451,
+        1.3744468372279313
+      ],
+      "scale": [
+        0.26390060324199366,
+        0.3958691140186153,
+        0.3923179326104496,
+        0.4724515464401089
+      ],
+      "seed": 69523,
+      "thresholds": {
+        "accept_below": 0.1,
+        "reject_above": 0.5
+      },
+      "tune_loss": 0.42996604382142434
+    },
+    {
+      "arm": "scalar_qwen",
+      "columns": [
+        3
+      ],
+      "converged": true,
+      "duration_s": 0.0002250330289825797,
+      "energy_definition": "E(x,0)=0; E(x,1)=-z(x)",
+      "epochs": [
+        {
+          "epoch": 0,
+          "gradient_norm": 0.30006450480378555,
+          "loss": 0.6878304065088541
+        },
+        {
+          "epoch": 1,
+          "gradient_norm": 0.03397154379181684,
+          "loss": 0.4961797695872058
+        },
+        {
+          "epoch": 2,
+          "gradient_norm": 0.00354356818432154,
+          "loss": 0.4905167589179144
+        },
+        {
+          "epoch": 3,
+          "gradient_norm": 7.929882090231682e-05,
+          "loss": 0.49041695969316673
+        },
+        {
+          "epoch": 4,
+          "gradient_norm": 4.400233710299267e-08,
+          "loss": 0.49041690654527775
+        },
+        {
+          "epoch": 5,
+          "gradient_norm": 1.3568139667352597e-14,
+          "loss": 0.4904169065452614
+        }
+      ],
+      "feature_names": [
+        "full_mean_nll",
+        "no_source_minus_full",
+        "removal_minus_full",
+        "q"
+      ],
+      "final_loss": 0.4904169065452614,
+      "finite": true,
+      "gradient_norm": 1.3568139667352597e-14,
+      "hessian_evaluations": 11,
+      "initial_loss": 0.6878304065088541,
+      "initial_parameters": [
+        0.20763936477824455,
+        -1.564367771526744e-06
+      ],
+      "l2": 0.001,
+      "mean": [
+        1.012758180927753,
+        0.987614072492447,
+        0.5185610047163023,
+        0.42586206896551704
+      ],
+      "objective_evaluations": 11,
+      "optimizer_state": {
+        "last_gradient": [
+          -1.223207733019871e-14,
+          -1.3568139667352597e-14
+        ],
+        "last_rate": 1.0
+      },
+      "optimizer_steps": 5,
+      "parameter_count": 2,
+      "parameters": [
+        0.383186374521237,
+        1.4558463674572957
+      ],
+      "scale": [
+        0.26390060324199366,
+        0.3958691140186153,
+        0.3923179326104496,
+        0.4724515464401089
+      ],
+      "seed": 69523,
+      "thresholds": {
+        "accept_below": 0.1,
+        "reject_above": 0.5
+      },
+      "tune_loss": 0.42777621506012303
+    },
+    {
+      "arm": "intercept",
+      "columns": [],
+      "converged": true,
+      "duration_s": 0.0001276099355891347,
+      "energy_definition": "E(x,0)=0; E(x,1)=-z(x)",
+      "epochs": [
+        {
+          "epoch": 0,
+          "gradient_norm": 0.4152787295564891,
+          "loss": 0.7309009287976257
+        },
+        {
+          "epoch": 1,
+          "gradient_norm": 0.0003089247584640506,
+          "loss": 0.6925526699923191
+        },
+        {
+          "epoch": 2,
+          "gradient_norm": 2.6973541455976857e-11,
+          "loss": 0.6925526487843422
+        }
+      ],
+      "feature_names": [
+        "full_mean_nll",
+        "no_source_minus_full",
+        "removal_minus_full",
+        "q"
+      ],
+      "final_loss": 0.6925526487843422,
+      "finite": true,
+      "gradient_norm": 2.6973541455976857e-11,
+      "hessian_evaluations": 5,
+      "initial_loss": 0.7309009287976257,
+      "initial_parameters": [
+        0.20763936477824455
+      ],
+      "l2": 1,
+      "mean": [
+        1.012758180927753,
+        0.987614072492447,
+        0.5185610047163023,
+        0.42586206896551704
+      ],
+      "objective_evaluations": 5,
+      "optimizer_state": {
+        "last_gradient": [
+          -2.6973541455976857e-11
+        ],
+        "last_rate": 1.0
+      },
+      "optimizer_steps": 2,
+      "parameter_count": 1,
+      "parameters": [
+        0.02298861821943488
+      ],
+      "scale": [
+        0.26390060324199366,
+        0.3958691140186153,
+        0.3923179326104496,
+        0.4724515464401089
+      ],
+      "seed": 69523,
+      "thresholds": {
+        "accept_below": 0.1,
+        "reject_above": 0.5
+      },
+      "tune_loss": 0.6958087278301364
+    }
+  ],
+  "ready": true,
+  "role_support": {
+    "fit": {
+      "class_counts": {
+        "0": 26,
+        "1": 32
+      },
+      "independent": 58,
+      "minimum": 48,
+      "passed": true,
+      "per_class": 8
+    },
+    "tune": {
+      "class_counts": {
+        "0": 19,
+        "1": 12
+      },
+      "independent": 31,
+      "minimum": 24,
+      "passed": true,
+      "per_class": 4
+    }
+  },
+  "selected_comparator": "same_feature_logistic",
+  "trials": [
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8023_v695_likelihood_calibration/trials/dba35e49c374b06a1b5b9386b7c897e0b77afb617653f0eefd1e90084dd4bede.json",
+      "sha256": "sha256:dba35e49c374b06a1b5b9386b7c897e0b77afb617653f0eefd1e90084dd4bede"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8023_v695_likelihood_calibration/trials/25bcbc829911ada45883aea621bdc0c6082792568f726e5d3d9b30d054a09f27.json",
+      "sha256": "sha256:25bcbc829911ada45883aea621bdc0c6082792568f726e5d3d9b30d054a09f27"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8023_v695_likelihood_calibration/trials/35add0672c0e0fe67066c84cbf64d13e7243a6f035bfa283aebc8d3ce6108417.json",
+      "sha256": "sha256:35add0672c0e0fe67066c84cbf64d13e7243a6f035bfa283aebc8d3ce6108417"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8023_v695_likelihood_calibration/trials/f82c345942b1cd50c77b4c0f4691c886018150f5e093b2a0e7c22bfbcc7c2468.json",
+      "sha256": "sha256:f82c345942b1cd50c77b4c0f4691c886018150f5e093b2a0e7c22bfbcc7c2468"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8023_v695_likelihood_calibration/trials/0d9145d242490d0db39d347f1a0cd0e293b7af021fa8291c6cc6ed3a26c3a11a.json",
+      "sha256": "sha256:0d9145d242490d0db39d347f1a0cd0e293b7af021fa8291c6cc6ed3a26c3a11a"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8023_v695_likelihood_calibration/trials/39cde9abdd15d2502f4c1c221c13faf8c00b078d99ffe60f1cfdc44e8595eea3.json",
+      "sha256": "sha256:39cde9abdd15d2502f4c1c221c13faf8c00b078d99ffe60f1cfdc44e8595eea3"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8023_v695_likelihood_calibration/trials/c1aa856079ee16243c4e2c8d378dc94615ea4240140a80f1b1f10f3912c11c88.json",
+      "sha256": "sha256:c1aa856079ee16243c4e2c8d378dc94615ea4240140a80f1b1f10f3912c11c88"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8023_v695_likelihood_calibration/trials/4540bd465ad801f070dae711aa4af45a860f9e13e572b213748cc229c3f64587.json",
+      "sha256": "sha256:4540bd465ad801f070dae711aa4af45a860f9e13e572b213748cc229c3f64587"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8023_v695_likelihood_calibration/trials/14761fc98001480c19b3932bd4435896a71781d4f1cd0022789a862bae4dab01.json",
+      "sha256": "sha256:14761fc98001480c19b3932bd4435896a71781d4f1cd0022789a862bae4dab01"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8023_v695_likelihood_calibration/trials/4ff4f8d522a496b86a6a4724a13a0103fe3d7ea18907bfc6349a108245806ce1.json",
+      "sha256": "sha256:4ff4f8d522a496b86a6a4724a13a0103fe3d7ea18907bfc6349a108245806ce1"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8023_v695_likelihood_calibration/trials/6d15a83b04e21246140af356f3e274610a784cfc4ce8f56d853803dc5a353834.json",
+      "sha256": "sha256:6d15a83b04e21246140af356f3e274610a784cfc4ce8f56d853803dc5a353834"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8023_v695_likelihood_calibration/trials/62a52d4dbb613ea040bcec53bc05eab43c06cf068166d578adfdb267e5fe75c0.json",
+      "sha256": "sha256:62a52d4dbb613ea040bcec53bc05eab43c06cf068166d578adfdb267e5fe75c0"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8023_v695_likelihood_calibration/trials/e803246cd39a1894a4f858414c862a3d7330bbde7682d5a65e6c9c3fd5f06c8d.json",
+      "sha256": "sha256:e803246cd39a1894a4f858414c862a3d7330bbde7682d5a65e6c9c3fd5f06c8d"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8023_v695_likelihood_calibration/trials/2d8e7b9ba3e5a728d81110d0b3b3eb5f1e35750e6cdc57a6328e5b00c927b966.json",
+      "sha256": "sha256:2d8e7b9ba3e5a728d81110d0b3b3eb5f1e35750e6cdc57a6328e5b00c927b966"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8023_v695_likelihood_calibration/trials/2828a07da32964d80cbe59ad7ce5b33e97d8269168ca8f7179a0b924a45f7392.json",
+      "sha256": "sha256:2828a07da32964d80cbe59ad7ce5b33e97d8269168ca8f7179a0b924a45f7392"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8023_v695_likelihood_calibration/trials/9a7240d38c4421e26a0c35143d023ba73d3b83b5db340f61c7bc52ce228df1f6.json",
+      "sha256": "sha256:9a7240d38c4421e26a0c35143d023ba73d3b83b5db340f61c7bc52ce228df1f6"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8023_v695_likelihood_calibration/trials/bcf305af1c1a05757ef7c4da9422a02e1ab35571fb8e3da8b151f84032c90a16.json",
+      "sha256": "sha256:bcf305af1c1a05757ef7c4da9422a02e1ab35571fb8e3da8b151f84032c90a16"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8023_v695_likelihood_calibration/trials/ad382551925b98927ccaab9ed8e79149473bc2c80a487573502eec762104e891.json",
+      "sha256": "sha256:ad382551925b98927ccaab9ed8e79149473bc2c80a487573502eec762104e891"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8023_v695_likelihood_calibration/trials/f7b8958cc0d46f2a03472a78f34d8b45d2a6ad81748d614f82694104a26a1e11.json",
+      "sha256": "sha256:f7b8958cc0d46f2a03472a78f34d8b45d2a6ad81748d614f82694104a26a1e11"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8023_v695_likelihood_calibration/trials/0de6f748ce382d5ba57bc244c47255dfcd1e5e35ddded84ffb879c126eccfd1a.json",
+      "sha256": "sha256:0de6f748ce382d5ba57bc244c47255dfcd1e5e35ddded84ffb879c126eccfd1a"
+    }
+  ]
+}
