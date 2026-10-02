@@ -21,3 +21,14 @@ results/arc_multimodal_fidelity_20260801/experiment_arc_multimodal_fidelity_2026
 # throughout (a candidate-selection eval, not a solve), and it is not registered in
 # ops/arc_solve_registry.yaml.
 results/experiment_bonsai2_arc_candidate_eval.json
+
+# 2026-09-30, version 2 of the ARC candidate-generator eval (Bonsai-2 ternary vs the
+# mandated model, plus the mandated model on the PrismML fork as a serving-stack control).
+# Version 1 truncated every induction call at 512 tokens. Version 2 raised the cap to 8192
+# with the live agent's own think-off switch, and all three arms (stock server + mandated
+# model, fork + mandated model, fork + ternary model) ran real llama-server processes on
+# GPU 1 for real ARC-AGI-3 induction calls during live gameplay (18 episodes, measured
+# decode speed 38 / 39 / 55 tok/s from the server logs). No ARC level-up is claimed;
+# solve_provenance is development_proxy and nothing is written to
+# ops/arc_solve_registry.yaml.
+results/experiment_bonsai2_arc_candidate_eval_v2.json

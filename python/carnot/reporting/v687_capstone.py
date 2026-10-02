@@ -176,7 +176,9 @@ def build_candidate(
         dict(path=s["source_path"], sha256=s["sha256"], role=role, exposure="administrative")
         for role, s in authority["authority_snapshots"].items()
     ]
-    observed = {
+    # Annotated so mypy 2.2.0 does not infer a star-unpacked tuple type; it crashes
+    # with an internal AssertionError on the tuple unpacking further down.
+    observed: dict[str, tuple[Any, ...]] = {
         t["id"]: (*shared.read(root / t["deliverable"]), root / t["deliverable"])
         for t in tasks[:-1]
     }
@@ -184,7 +186,7 @@ def build_candidate(
         dict(path=str(p), sha256=digest, role="declared_producer", exposure="exposed_development")
         for _, digest, p in observed.values()
     )
-    receipts = {}
+    receipts: dict[str, tuple[Any, ...]] = {}
     for task in tasks[:-1]:
         if not observed[task["id"]][0]:
             number, slug = task["id"].split("-", 1)

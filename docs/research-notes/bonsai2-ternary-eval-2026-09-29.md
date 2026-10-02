@@ -550,3 +550,168 @@ also spends time on explorer moves, env stepping, and server start/stop.
 - `python/carnot/experiment_10017_explorer_variants.py` (branch
   `explorer-pilot`, commit `f494c6cfc3`) -- the runner this harness's
   seed convention and adapter-disabling pattern is drawn from
+
+---
+
+## Addendum 2026-09-30: ARC candidate eval version 2 (induction completes, 3 arms)
+
+**Why this addendum exists.** The 2026-09-29 ARC addendum above found that both
+arms failed every induction call at a 512-token cap, so quality was never
+measured, and it skipped the serving-stack control arm. This addendum fixes
+both. Scope is unchanged: offline only, public games only (`cd82`, `lp85`,
+`ar25`), seeds 7491001 and 7491002, GPU 1 only, adapters and stored engines
+off, `solve_provenance: development_proxy`. No default, no live generator pin
+and no registry file changed.
+
+### Why the 512-token cap truncated every call
+
+Both hypotheses were true. Evidence is in
+`results/raw/experiment_bonsai2_arc_candidate_eval_v2/truncation_diagnosis/`
+(the probe replies and logs). All probes used one real induction prompt sent to
+the stock server with the mandated model.
+
+| Probe | Result |
+|---|---|
+| Chat endpoint, default (live shape), cap 512 | 512 tokens, finish `length`, 1057 characters of hidden reasoning, answer channel empty |
+| Chat endpoint, `enable_thinking: false`, cap 4096 | 2500 tokens, finish `stop`, answer present, no reasoning |
+| Raw code-only path (the live agent's think-off path), cap 4096 | 3132 tokens, stopped on the code fence, valid `engine` function |
+
+- **(b) Hidden thinking.** The live agent turns thinking on by default
+  (`induce_think_on()` returns true; the chat endpoint splits the thoughts into
+  `reasoning_content`). At 512 tokens the model never leaves the thinking
+  channel. Version 1 passed `/no_think` as a prefix. The live code applies that
+  prefix only when thinking is off, so the prefix was inert.
+- **(a) Cap too small.** Even with thinking off, a valid engine needs about
+  2.5k to 3.5k tokens.
+- **What the live agent does.** It is not the cause. Its own defaults are a
+  131072-token budget and a 2400 s timeout floor, because its documented
+  thinking inductions take 36k to 83k tokens (median 62k). Version 1 shrank the
+  budget for the eval. This is a finding about the eval harness, not a defect in
+  the live path. It does show a cost: at about 38 tokens per second on one
+  RTX 3090, a median thinking induction takes about 27 minutes per attempt, so
+  the live-default setting cannot fit an eval of this size here.
+- **Stock server option.** `chat_template_kwargs {"enable_thinking": false}`
+  works on the stock `llama-server`. The eval used the live agent's own switch
+  instead (`CARNOT_ARC_INDUCE_THINK=0`), which needs no code change.
+
+### Settings chosen, identical for all arms
+
+| Setting | Value | Reason |
+|---|---|---|
+| `induce_max_tokens` | 8192 | Valid engines measured at 2.5k to 3.5k tokens. 8192 leaves room for longer ones. It costs at most about 205 s per attempt. |
+| Request timeout | 600 s | The version 1 value of 90 s sat just above a measured 85 s call. |
+| Context | 32768, one slot | One slot owns the pool. Prompt (up to about 9k) plus 8192 fits. |
+| Episode wall cap | 1200 s | The version 1 cap of 320 s would cut slow arms short. |
+| Thinking | off (live switch) | Thinking-on at the live budget does not fit the time budget. **Not tested.** |
+
+### Results (18 episodes, 3 games x 2 seeds x 3 arms)
+
+Arms: A = mandated Qwen3.8-27B-Q4_K_M on the stock server (the live default).
+B = the same model on the PrismML fork (serving-stack control). C = ternary
+Bonsai-2 on the PrismML fork.
+
+| Metric | A stock | B fork, mandated | C fork, ternary |
+|---|---|---|---|
+| Mean real scorecard score | 0.0897 | 0.0967 | 0.0897 |
+| Level-ups (episodes) | 2 | 2 | 2 |
+| Generator calls returning usable code | 13 of 13 (100%) | 13 of 14 (93%) | 3 of 26 (12%) |
+| Policy induction attempts / trusted and planned | 8 / 1 | 8 / 2 | 8 / 1 |
+| Why attempts were not planned | 5 accuracy below threshold, 2 degenerate goal | 5 accuracy below threshold, 1 held-out check failed | 6 generator failed, 1 degenerate goal |
+| Server decode speed (median) | 38.1 tok/s | 39.6 tok/s | 55.0 tok/s |
+| Mean episode wall time | 321 s | 226 s | 173 s |
+
+Per-game mean score: `cd82` 0.2522 in every arm. `ar25` 0.0 in every arm.
+`lp85` 0.0169 (A), 0.0378 (B), 0.0169 (C).
+
+Paired per-game differences (score): A minus C is 0.0 on all three games.
+B minus A is 0.0, 0.0, +0.0209 on `cd82`, `ar25`, `lp85`. The only differing
+episode is `lp85` seed 7491002, where B planned from its own induced model and
+reached level 1 at action 103, against action 154 for A and C.
+
+The client-side "effective tokens per second" field in the artifact (13.6,
+16.6, 7.4) mixes in prompt processing, failed attempts and idle time. Use the
+server decode speeds above for speed comparisons.
+
+### What the numbers say
+
+1. **The generators now differ in a way the eval can see.** Ternary Bonsai-2
+   returned usable engine code in 12% of calls on this path. The mandated model
+   did so in 93 to 100%. This is the real quality signal, and it is the
+   opposite of the speed signal: the ternary model decodes 1.44 times faster
+   (55.0 against 38.1 tokens per second, and 1.39 times faster than the mandated
+   model on the same fork).
+2. **Weights, not the fork, explain the speed and the failure.** A against B
+   (same weights, different server) differs by 4% in decode speed and 7 points
+   in call success. B against C (same server, different weights) differs by 39%
+   in decode speed and 81 points in call success.
+3. **Scores did not separate the arms, for a structural reason.** In 14 of 18
+   episodes no induced model was trusted, so the agent played its generic
+   explorer. The documented 2026-07-27 finding (generator answers, a
+   post-generation trust gate rejects, arms come out identical) applies here
+   too. Two cases matter:
+   - `cd82` seed 7491002 (level-up in all three arms): every arm planned from a
+     second attempt and executed exactly 130 planned actions, with the level at
+     action 169. In arm C all four generator calls had failed, so that plan did
+     not come from C's generator output. The identical numbers in A and B
+     suggest the same non-generator path there. That is not proven.
+   - `lp85` seed 7491002: only arm B planned from its own induced model (two
+     short generator replies, 153 and 113 tokens). It reached level 1 at action
+     103, against 154 for A and C. This is the one episode where generator
+     output plausibly changed a score. One episode is not a result.
+4. **Run-to-run reproducibility.** The matrix ran twice (first with a shared
+   engine store, then with one store per arm). All 18 episodes matched on score,
+   levels, call count, per-call success and tokens. The runs are seeded, so the
+   seed pair gives two deterministic samples per game, not independent noise.
+
+### Caveats
+
+- **Prompt-format confound for the ternary arm.** The think-off switch selects
+  the raw code-only path, which skips the chat template. A single probe of the
+  ternary model on the chat endpoint with thinking off produced a long, full
+  engine (it hit the 4096 cap). So the 12% call success is partly a property of
+  the raw path, not proof that the weights cannot write the code. The chat path
+  was probed once and was not run through the matrix.
+- **Thinking-on was not tested.** That is the live default (131072 tokens).
+  Both models think by default (probe: answer channel empty at 512 tokens). The
+  live-default question is still open for all three arms.
+- **Directional only.** 3 games x 2 seeds. Below the project's N of 30 floor.
+- **Token counts undercount.** The client records tokens of the last attempt of
+  each call only. A call may make up to 3 attempts.
+- **High-concurrency collapse is untested here.** This eval is single stream.
+  The fork's N=32 throughput problem from the second section is not exercised.
+
+### Verdict
+
+Do not propose ternary Bonsai-2 as a generator candidate on this evidence. It
+decodes 1.4 times faster, and the fork is not the reason. But on the live
+agent's think-off path it failed to produce usable induction code in 88% of
+calls. None of its usable replies was trusted into a plan. The speed gain has
+no value if the generator does not produce a usable world model.
+
+Before the question is closed, this would need to be true:
+
+1. A matrix run on the chat endpoint (thinking off), to remove the prompt-format
+   confound, with the ternary arm's code success rate re-measured.
+2. A thinking-on run at the live budget for at least one game per arm, on
+   hardware where that time is affordable. The Kaggle card (RTX 6000 Blackwell)
+   is the real target. Local RTX 3090 results do not transfer to it.
+3. A larger N, with more games than three.
+4. The fork's concurrency collapse resolved or ruled out for the single-stream
+   scored path.
+
+Even then, no arm showed a score gain from induction in this eval. The
+mandated model on the stock server is the baseline to beat, and the bar is a
+trusted-plan rate that is higher than 1 in 8.
+
+### Files
+
+- `results/experiment_bonsai2_arc_candidate_eval_v2.json` (artifact)
+- `scripts/experiments/experiment_bonsai2_arc_candidate_eval_v2.py` (harness;
+  imports version 1 and overrides its budget; adds per-arm engine stores and
+  policy telemetry)
+- `results/raw/experiment_bonsai2_arc_candidate_eval_v2/` (per-episode rows,
+  per-arm evidence, server logs, probe replies, discarded first pass)
+- `ops/arc_artifact_live_allowlist.txt` (one commented entry added)
+
+`adversarial_verify.py`: 0 flags. `arc_artifact_lint.py` with the allowlist:
+exit 0.

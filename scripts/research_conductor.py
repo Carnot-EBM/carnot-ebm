@@ -2512,6 +2512,70 @@ def git_has_changes() -> bool:
     return bool(stdout.strip())
 
 
+def push_rejected_non_fast_forward(stderr: str) -> bool:
+    """True when git's push error says origin has commits this branch lacks.
+
+    Pure so it is testable without a git fixture. Only these two phrasings mean
+    "fetch and merge first"; any other push failure (auth, network, a server hook
+    refusing a file) must NOT trigger a merge, because a merge cannot fix it.
+    """
+    low = stderr.lower()
+    return "non-fast-forward" in low or "fetch first" in low
+
+
+def _push_origin_main() -> bool:
+    """Push `main` to origin; on a non-fast-forward rejection, reconcile once and retry.
+
+    REQ-INFRA-7091. Before this, a rejected push logged one warning and was forgotten, so
+    when an outer-loop session pushed commits the live checkout lacked, EVERY later
+    conductor push was rejected the same way and the unpushed backlog grew silently
+    (233, then 75 commits). Origin never learned about the work, and nothing alarmed.
+
+    The reconcile is a plain merge of origin/main, never a stash, reset, rebase or force
+    push: the conductor's standing rule is commit-first and never discard. If the fetch or
+    the merge fails (a real conflict, a dirty file the merge would overwrite, an index
+    lock held by another agent), `git merge --abort` puts the tree back (it is a no-op
+    when no merge started), every local commit stays, and the failure is logged by name.
+    The merge uses the same hook-skip flag as this module's own commit, for the same
+    reason (see git_commit_and_push): a hook that fails mid-merge must not strand work.
+
+    Retries exactly once. Returns True only when a push finally succeeded.
+    """
+    rc, _, stderr = run_cmd(["git", "push", "origin", "main"], timeout=60)
+    if rc == 0:
+        logger.info("Pushed to origin")
+        return True
+    if not push_rejected_non_fast_forward(stderr):
+        logger.warning("Push failed: %s", stderr[:200])
+        return False
+
+    logger.warning("Push rejected as non-fast-forward; reconciling with origin/main.")
+    rc, _, fetch_err = run_cmd(["git", "fetch", "origin", "main"], timeout=120)
+    if rc != 0:
+        logger.warning(
+            "PUSH_RECONCILE_FAILED: fetch failed (%s). Local commits are kept and unpushed.",
+            fetch_err[:200],
+        )
+        return False
+    rc, _, merge_err = run_cmd(
+        ["git", "merge", "--no-edit", "--no-verify", "origin/main"], timeout=120
+    )
+    if rc != 0:
+        run_cmd(["git", "merge", "--abort"])
+        logger.warning(
+            "PUSH_RECONCILE_FAILED: merge of origin/main failed (%s). Merge aborted, local "
+            "commits are kept and unpushed; an outer-loop session must reconcile by hand.",
+            merge_err[:200],
+        )
+        return False
+    rc, _, stderr = run_cmd(["git", "push", "origin", "main"], timeout=60)
+    if rc == 0:
+        logger.info("Pushed to origin after reconciling with origin/main")
+        return True
+    logger.warning("Push failed after reconcile: %s", stderr[:200])
+    return False
+
+
 def git_commit_and_push(message: str, push: bool = True) -> bool:
     """Stage, commit, and optionally push.
 
@@ -2549,11 +2613,7 @@ def git_commit_and_push(message: str, push: bool = True) -> bool:
         return False
     logger.info("Committed (--no-verify): %s", message.splitlines()[0][:80])
     if push:
-        rc, _, stderr = run_cmd(["git", "push", "origin", "main"], timeout=60)
-        if rc == 0:
-            logger.info("Pushed to origin")
-        else:
-            logger.warning("Push failed: %s", stderr[:200])
+        _push_origin_main()
     return True
 
 
