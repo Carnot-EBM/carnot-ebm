@@ -1,0 +1,104 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.2800757240038365,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:6d114b15e747fd42cb54b6042db8e7317d0c7cbe427db103ab1786b4474d73ad",
+  "input_tokens": 684,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 684,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 707
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:5f43ccd311fa62192df5484f092b0d5786817261c9a18816e0ba36ed71801f2b",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885932,
+    "id": "chatcmpl-sE4YKDgNlVEVtKOfv8khRRD1IfVoyg5s",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 539.825,
+      "predicted_n": 23,
+      "predicted_per_second": 42.606400222294255,
+      "predicted_per_token_ms": 23.470652173913045,
+      "prompt_ms": 620.905,
+      "prompt_n": 606,
+      "prompt_per_second": 975.9947173883284,
+      "prompt_per_token_ms": 1.024595709570957
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 684,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 707
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Salmonella bacteria are the most common cause of food borne illnesses. Find out more about salmonella bacteria characteristics with our salmonella FAQ.almonella bacteria are the most common cause of food borne illnesses. Find out more about salmonella bacteria characteristics with our salmonella FAQ.\\\\n\\\\npassage 2:Salmonella bacteria are rod-shaped, non spore-forming motile microbes that can be found in poultry, pigs, cows, pets, and many wild animals.There are more than 2,000 different serotypes of the bacteria, but it's Salmonella Enteritidis and Salmonella Typhimurium that cause more than 50% of human infections.almonella bacteria are the most common cause of food borne illnesses. Find out more about salmonella bacteria characteristics with our salmonella FAQ.\\\\n\\\\npassage 3:Physical. Salmonella bacteria are rod-shaped gram-negative bacteria. Gram-negative bacteria do not retain the crystal violet dye used in the gram staining method due to the fact that they have cell walls that are thin.Gram-negative bacteria are often harmful to a host, which is the case for many of the Salmonella bacteria.Salmonella bacteria are between 2 and 5 micrometers long and 0.7 to 1.5 micrometers in diameter. They have flagella, which are tail-like projections made of proteins that help the bacteria to move.ram-negative bacteria do not retain the crystal violet dye used in the gram staining method due to the fact that they have cell walls that are thin. Gram-negative bacteria are often harmful to a host, which is the case for many of the Salmonella bacteria.\\\\n\\\\n\\\",\\\"question\\\":\\\"salmonella bacteria characteristics\\\"}\", \"original_answer\": \"Salmonella bacteria are rod-shaped, non-spore-forming, motile microbes. They are gram-negative bacteria, meaning they do not retain the crystal violet dye used in gram staining due to their thin cell walls. These bacteria have flagella, which are tail-like projections that assist in movement. They are typically between 2 and 5 micrometers long and 0.7 to 1.5 micrometers in diameter. They can be found in a variety of animals, including poultry, pigs, cows, and pets, and in wild animals as well. There are more than 2,000 different serotypes of salmonella, but Salmonella Enteritidis and Salmonella Typhimurium cause more than 50% of human infections. Salmonella is the most common cause of foodborne illnesses.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "7445c9726b9cb0359136187836f28f846518be8fedc31e6523e961b5f3747dbc",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ]
+}

@@ -1,0 +1,119 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.7598285969579592,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:192cb042eb6946a6e967c97545503a0c7f7ac8308fd13653b5e03a7f383e080f",
+  "input_tokens": 1194,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1194,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1217
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:3f1d87a68f2783623f5b15b6ef3d2f0d58283d0c1c8c0a01467ea56ef17bd3ba",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886315,
+    "id": "chatcmpl-PJEyNrgAjf7goJPJesMj94LjYpOWtCeN",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.951,
+      "predicted_n": 23,
+      "predicted_per_second": 42.43926111401215,
+      "predicted_per_token_ms": 23.56308695652174,
+      "prompt_ms": 1062.169,
+      "prompt_n": 1116,
+      "prompt_per_second": 1050.6802589795032,
+      "prompt_per_token_ms": 0.9517643369175628
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1194,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1217
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"711 Chapala St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":true,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":true,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Nightlife, Coffee & Tea, Art Galleries, Bagels, Bakeries, Coffee Roasteries, Shopping, Coffeeshops, Food, Cafes, Restaurants, Arts & Entertainment\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"7:0-17:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"7:0-17:0\\\",\\\"Sunday\\\":\\\"7:0-17:0\\\",\\\"Thursday\\\":\\\"7:0-17:0\\\",\\\"Tuesday\\\":\\\"7:0-17:0\\\",\\\"Wednesday\\\":\\\"7:0-17:0\\\"},\\\"name\\\":\\\"Breakfast Culture Club\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2020-01-02 17:10:39\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"aesthetics: 4/5\\\\nfood: 2.5/5\\\\nservice: 2.5/5\\\\n\\\\noat milk matcha was too watered down, and toast took FOREVER to make!! :(\\\"},{\\\"review_date\\\":\\\"2019-10-11 09:31:16\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"You know...spiritually speaking, I'm going with 3 stars for now.  My soul wasn't stirred.  Here I am on a Saturday, looking for God in all the wrong places.  All I had were the gluten free chocolate chip cookie and the Rose matcha green tea, and well...My thoughts?\\\\n\\\\n1.) I like the pools of chocolate in the cookie, but I wish it were chewier.  Gluten free anything always feels like it's missing something...\\\\n\\\\n(gluten? Lol)\\\\n\\\\nGluten is the glue that holds everything together, and without it, everything falls apart.  I mean this on a spiritual level.\\\\n\\\\n2.)  And the rose matcha fell flat somewhere.  It was neither pronounced in rose or matcha flavor.  You need to pick a side.  You need to make a choice.  You need to commit.  You need to be STRONG with one flavor and have a HINT of the other, but you kinda did neither.   You were half-assed polyamorous.  You didn't pick a winner and run with it.  You shied away from both.  It was colored green iced water.\\\\n\\\\nAt the end of the day, I feel some potential here.  I suggest going back to the drawing board.\\\"},{\\\"review_date\\\":\\\"2019-09-01 17:26:19\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Dope coffee. Awesome toast. Tight art. Cool hangs. 10/10 cooler than every other coffee shop in SB. Also, p sure the name \\\\\\\"Breakfast\\\\\\\" is ironic so for every lamo who complained about that below just didn't ~get it~\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"The Breakfast Culture Club is a popular local business located at 711 Chapala St, Santa Barbara, CA. It operates from 7:00 am to 5:00 pm from Tuesday to Sunday. Known for its versatile services, it is categorized as a nightlife spot, coffee and tea shop, art gallery, bakery, coffee roastery, food joint, caf\u00e9, and restaurant. The establishment offers free WiFi and outdoor seating, and it is also good for groups. It does not accept reservations and offers take-out services. The ambiance is described as hipster and trendy, but not casual, touristy, romantic, divey, intimate, upscale, or classy. The business has an average rating of 4.0 stars. However, customer reviews vary with some praising the coffee and toast, while others were critical of the service and the taste of some food items. The Breakfast Culture Club offers street and lot parking but does not have a garage or valet services, and it does not validate parking.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "5c91d3461e863d5be45947143d1a75b8e375141dfca87c05cc3f5c8e3fae182f",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22
+  ]
+}

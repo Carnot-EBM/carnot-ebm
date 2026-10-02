@@ -1,0 +1,229 @@
+.F..                                                                     [100%]
+=================================== FAILURES ===================================
+______________________ test_isolation_and_missing_values _______________________
+
+    def test_isolation_and_missing_values():
+        """SCENARIO-REPORT-8007-ISOLATION: evaluator changes cannot select optimizer state."""
+        bundle = fixture()
+        before = e.diagnose(bundle)
+        bundle["slots"] = [dict(role="stream", y=1, family_id="private-label")]
+        after = e.diagnose(bundle)
+        assert before == after
+        bundle["data"]["stream"] = []
+        with pytest.raises(ValueError, match="role_roster"):
+            e.diagnose(bundle)
+        bundle = fixture()
+        bundle["data"]["fit"][0]["q"] = None
+        bundle["data"]["tune"][0]["y"] = None
+>       result = e.diagnose(bundle)
+                 ^^^^^^^^^^^^^^^^^^
+
+tests/python/test_conditioning_diagnosis_8007.py:82: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/experiment_8007_v694_conditioning_diagnosis.py:252: in diagnose
+    sparse.validate_data(data)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+data = {'fit': [{'family_id': 'fit-0', 'features': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, ...], 'q': None, 'source_cluster_id': 'fit-...ly_id': 'tune-5', 'features': [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, ...], 'q': 0.5, 'source_cluster_id': 'tune-5', ...}, ...]}
+
+    def validate_data(data: Json) -> None:
+        """Reject extra roles so reserved labels cannot reach any optimizer."""
+        if set(data) != {"fit", "tune"}:
+            raise ValueError("role_roster")
+        historical.validate_data(dict(data, policy_design=[]))
+        if (
+            not scalar.support(usable(data["fit"]), 128, 16)["passed"]
+            or not scalar.support(usable(data["tune"]), 32, 4)["passed"]
+        ):
+>           raise ValueError("support_floor")
+E           ValueError: support_floor
+
+python/carnot/verify/sparse_energy_7996.py:51: ValueError
+----------------------------- Captured stdout call -----------------------------
+[exp8007] phase=benchmark_intercept_before elapsed_s=0.087 units=128 pending=0
+[exp8007] phase=benchmark_intercept_after elapsed_s=0.087 units=2 pending=0
+[exp8007] phase=benchmark_fit_spline_before elapsed_s=0.087 units=128 pending=0
+[exp8007] phase=benchmark_fit_spline_after elapsed_s=0.089 units=128 pending=0
+[exp8007] phase=benchmark_tune_spline_before elapsed_s=0.089 units=32 pending=0
+[exp8007] phase=benchmark_tune_spline_after elapsed_s=0.091 units=32 pending=0
+[exp8007] phase=benchmark_synthetic_before elapsed_s=0.091 units=160 pending=0
+[exp7996] arm=spline seed=17 steps=1/200
+[exp7996] arm=spline seed=17 steps=51/200
+[exp7996] arm=spline seed=17 steps=101/200
+[exp7996] arm=spline seed=17 steps=151/200
+[exp8007] phase=benchmark_synthetic_after elapsed_s=0.145 units=32 pending=0
+[exp8007] phase=bootstrap_fit_brier_source elapsed_s=0.145 units=1000 pending=9000
+[exp8007] phase=bootstrap_fit_brier_source elapsed_s=0.146 units=2000 pending=8000
+[exp8007] phase=bootstrap_fit_brier_source elapsed_s=0.146 units=3000 pending=7000
+[exp8007] phase=bootstrap_fit_brier_source elapsed_s=0.146 units=4000 pending=6000
+[exp8007] phase=bootstrap_fit_brier_source elapsed_s=0.147 units=5000 pending=5000
+[exp8007] phase=bootstrap_fit_brier_source elapsed_s=0.147 units=6000 pending=4000
+[exp8007] phase=bootstrap_fit_brier_source elapsed_s=0.147 units=7000 pending=3000
+[exp8007] phase=bootstrap_fit_brier_source elapsed_s=0.148 units=8000 pending=2000
+[exp8007] phase=bootstrap_fit_brier_source elapsed_s=0.148 units=9000 pending=1000
+[exp8007] phase=bootstrap_fit_brier_source elapsed_s=0.148 units=10000 pending=0
+[exp8007] phase=bootstrap_fit_brier_block elapsed_s=0.149 units=1000 pending=9000
+[exp8007] phase=bootstrap_fit_brier_block elapsed_s=0.149 units=2000 pending=8000
+[exp8007] phase=bootstrap_fit_brier_block elapsed_s=0.149 units=3000 pending=7000
+[exp8007] phase=bootstrap_fit_brier_block elapsed_s=0.150 units=4000 pending=6000
+[exp8007] phase=bootstrap_fit_brier_block elapsed_s=0.150 units=5000 pending=5000
+[exp8007] phase=bootstrap_fit_brier_block elapsed_s=0.151 units=6000 pending=4000
+[exp8007] phase=bootstrap_fit_brier_block elapsed_s=0.151 units=7000 pending=3000
+[exp8007] phase=bootstrap_fit_brier_block elapsed_s=0.151 units=8000 pending=2000
+[exp8007] phase=bootstrap_fit_brier_block elapsed_s=0.152 units=9000 pending=1000
+[exp8007] phase=bootstrap_fit_brier_block elapsed_s=0.152 units=10000 pending=0
+[exp8007] phase=bootstrap_fit_decision_loss_source elapsed_s=0.153 units=1000 pending=9000
+[exp8007] phase=bootstrap_fit_decision_loss_source elapsed_s=0.154 units=2000 pending=8000
+[exp8007] phase=bootstrap_fit_decision_loss_source elapsed_s=0.154 units=3000 pending=7000
+[exp8007] phase=bootstrap_fit_decision_loss_source elapsed_s=0.154 units=4000 pending=6000
+[exp8007] phase=bootstrap_fit_decision_loss_source elapsed_s=0.155 units=5000 pending=5000
+[exp8007] phase=bootstrap_fit_decision_loss_source elapsed_s=0.155 units=6000 pending=4000
+[exp8007] phase=bootstrap_fit_decision_loss_source elapsed_s=0.155 units=7000 pending=3000
+[exp8007] phase=bootstrap_fit_decision_loss_source elapsed_s=0.156 units=8000 pending=2000
+[exp8007] phase=bootstrap_fit_decision_loss_source elapsed_s=0.156 units=9000 pending=1000
+[exp8007] phase=bootstrap_fit_decision_loss_source elapsed_s=0.156 units=10000 pending=0
+[exp8007] phase=bootstrap_fit_decision_loss_block elapsed_s=0.157 units=1000 pending=9000
+[exp8007] phase=bootstrap_fit_decision_loss_block elapsed_s=0.157 units=2000 pending=8000
+[exp8007] phase=bootstrap_fit_decision_loss_block elapsed_s=0.157 units=3000 pending=7000
+[exp8007] phase=bootstrap_fit_decision_loss_block elapsed_s=0.158 units=4000 pending=6000
+[exp8007] phase=bootstrap_fit_decision_loss_block elapsed_s=0.158 units=5000 pending=5000
+[exp8007] phase=bootstrap_fit_decision_loss_block elapsed_s=0.159 units=6000 pending=4000
+[exp8007] phase=bootstrap_fit_decision_loss_block elapsed_s=0.159 units=7000 pending=3000
+[exp8007] phase=bootstrap_fit_decision_loss_block elapsed_s=0.159 units=8000 pending=2000
+[exp8007] phase=bootstrap_fit_decision_loss_block elapsed_s=0.160 units=9000 pending=1000
+[exp8007] phase=bootstrap_fit_decision_loss_block elapsed_s=0.160 units=10000 pending=0
+[exp8007] phase=bootstrap_tune_brier_source elapsed_s=0.161 units=1000 pending=9000
+[exp8007] phase=bootstrap_tune_brier_source elapsed_s=0.161 units=2000 pending=8000
+[exp8007] phase=bootstrap_tune_brier_source elapsed_s=0.161 units=3000 pending=7000
+[exp8007] phase=bootstrap_tune_brier_source elapsed_s=0.161 units=4000 pending=6000
+[exp8007] phase=bootstrap_tune_brier_source elapsed_s=0.161 units=5000 pending=5000
+[exp8007] phase=bootstrap_tune_brier_source elapsed_s=0.162 units=6000 pending=4000
+[exp8007] phase=bootstrap_tune_brier_source elapsed_s=0.162 units=7000 pending=3000
+[exp8007] phase=bootstrap_tune_brier_source elapsed_s=0.162 units=8000 pending=2000
+[exp8007] phase=bootstrap_tune_brier_source elapsed_s=0.162 units=9000 pending=1000
+[exp8007] phase=bootstrap_tune_brier_source elapsed_s=0.162 units=10000 pending=0
+[exp8007] phase=bootstrap_tune_brier_block elapsed_s=0.162 units=1000 pending=9000
+[exp8007] phase=bootstrap_tune_brier_block elapsed_s=0.162 units=2000 pending=8000
+[exp8007] phase=bootstrap_tune_brier_block elapsed_s=0.162 units=3000 pending=7000
+[exp8007] phase=bootstrap_tune_brier_block elapsed_s=0.162 units=4000 pending=6000
+[exp8007] phase=bootstrap_tune_brier_block elapsed_s=0.163 units=5000 pending=5000
+[exp8007] phase=bootstrap_tune_brier_block elapsed_s=0.163 units=6000 pending=4000
+[exp8007] phase=bootstrap_tune_brier_block elapsed_s=0.163 units=7000 pending=3000
+[exp8007] phase=bootstrap_tune_brier_block elapsed_s=0.163 units=8000 pending=2000
+[exp8007] phase=bootstrap_tune_brier_block elapsed_s=0.163 units=9000 pending=1000
+[exp8007] phase=bootstrap_tune_brier_block elapsed_s=0.163 units=10000 pending=0
+[exp8007] phase=bootstrap_tune_decision_loss_source elapsed_s=0.164 units=1000 pending=9000
+[exp8007] phase=bootstrap_tune_decision_loss_source elapsed_s=0.164 units=2000 pending=8000
+[exp8007] phase=bootstrap_tune_decision_loss_source elapsed_s=0.164 units=3000 pending=7000
+[exp8007] phase=bootstrap_tune_decision_loss_source elapsed_s=0.164 units=4000 pending=6000
+[exp8007] phase=bootstrap_tune_decision_loss_source elapsed_s=0.164 units=5000 pending=5000
+[exp8007] phase=bootstrap_tune_decision_loss_source elapsed_s=0.165 units=6000 pending=4000
+[exp8007] phase=bootstrap_tune_decision_loss_source elapsed_s=0.165 units=7000 pending=3000
+[exp8007] phase=bootstrap_tune_decision_loss_source elapsed_s=0.165 units=8000 pending=2000
+[exp8007] phase=bootstrap_tune_decision_loss_source elapsed_s=0.165 units=9000 pending=1000
+[exp8007] phase=bootstrap_tune_decision_loss_source elapsed_s=0.165 units=10000 pending=0
+[exp8007] phase=bootstrap_tune_decision_loss_block elapsed_s=0.165 units=1000 pending=9000
+[exp8007] phase=bootstrap_tune_decision_loss_block elapsed_s=0.165 units=2000 pending=8000
+[exp8007] phase=bootstrap_tune_decision_loss_block elapsed_s=0.165 units=3000 pending=7000
+[exp8007] phase=bootstrap_tune_decision_loss_block elapsed_s=0.165 units=4000 pending=6000
+[exp8007] phase=bootstrap_tune_decision_loss_block elapsed_s=0.165 units=5000 pending=5000
+[exp8007] phase=bootstrap_tune_decision_loss_block elapsed_s=0.166 units=6000 pending=4000
+[exp8007] phase=bootstrap_tune_decision_loss_block elapsed_s=0.166 units=7000 pending=3000
+[exp8007] phase=bootstrap_tune_decision_loss_block elapsed_s=0.166 units=8000 pending=2000
+[exp8007] phase=bootstrap_tune_decision_loss_block elapsed_s=0.166 units=9000 pending=1000
+[exp8007] phase=bootstrap_tune_decision_loss_block elapsed_s=0.166 units=10000 pending=0
+[exp8007] phase=benchmark_intercept_before elapsed_s=0.168 units=128 pending=0
+[exp8007] phase=benchmark_intercept_after elapsed_s=0.168 units=2 pending=0
+[exp8007] phase=benchmark_fit_spline_before elapsed_s=0.168 units=128 pending=0
+[exp8007] phase=benchmark_fit_spline_after elapsed_s=0.170 units=128 pending=0
+[exp8007] phase=benchmark_tune_spline_before elapsed_s=0.170 units=32 pending=0
+[exp8007] phase=benchmark_tune_spline_after elapsed_s=0.172 units=32 pending=0
+[exp8007] phase=benchmark_synthetic_before elapsed_s=0.172 units=160 pending=0
+[exp7996] arm=spline seed=17 steps=1/200
+[exp7996] arm=spline seed=17 steps=51/200
+[exp7996] arm=spline seed=17 steps=101/200
+[exp7996] arm=spline seed=17 steps=151/200
+[exp8007] phase=benchmark_synthetic_after elapsed_s=0.226 units=32 pending=0
+[exp8007] phase=bootstrap_fit_brier_source elapsed_s=0.227 units=1000 pending=9000
+[exp8007] phase=bootstrap_fit_brier_source elapsed_s=0.227 units=2000 pending=8000
+[exp8007] phase=bootstrap_fit_brier_source elapsed_s=0.227 units=3000 pending=7000
+[exp8007] phase=bootstrap_fit_brier_source elapsed_s=0.227 units=4000 pending=6000
+[exp8007] phase=bootstrap_fit_brier_source elapsed_s=0.228 units=5000 pending=5000
+[exp8007] phase=bootstrap_fit_brier_source elapsed_s=0.228 units=6000 pending=4000
+[exp8007] phase=bootstrap_fit_brier_source elapsed_s=0.228 units=7000 pending=3000
+[exp8007] phase=bootstrap_fit_brier_source elapsed_s=0.229 units=8000 pending=2000
+[exp8007] phase=bootstrap_fit_brier_source elapsed_s=0.229 units=9000 pending=1000
+[exp8007] phase=bootstrap_fit_brier_source elapsed_s=0.229 units=10000 pending=0
+[exp8007] phase=bootstrap_fit_brier_block elapsed_s=0.230 units=1000 pending=9000
+[exp8007] phase=bootstrap_fit_brier_block elapsed_s=0.230 units=2000 pending=8000
+[exp8007] phase=bootstrap_fit_brier_block elapsed_s=0.231 units=3000 pending=7000
+[exp8007] phase=bootstrap_fit_brier_block elapsed_s=0.231 units=4000 pending=6000
+[exp8007] phase=bootstrap_fit_brier_block elapsed_s=0.231 units=5000 pending=5000
+[exp8007] phase=bootstrap_fit_brier_block elapsed_s=0.232 units=6000 pending=4000
+[exp8007] phase=bootstrap_fit_brier_block elapsed_s=0.232 units=7000 pending=3000
+[exp8007] phase=bootstrap_fit_brier_block elapsed_s=0.232 units=8000 pending=2000
+[exp8007] phase=bootstrap_fit_brier_block elapsed_s=0.233 units=9000 pending=1000
+[exp8007] phase=bootstrap_fit_brier_block elapsed_s=0.233 units=10000 pending=0
+[exp8007] phase=bootstrap_fit_decision_loss_source elapsed_s=0.235 units=1000 pending=9000
+[exp8007] phase=bootstrap_fit_decision_loss_source elapsed_s=0.235 units=2000 pending=8000
+[exp8007] phase=bootstrap_fit_decision_loss_source elapsed_s=0.235 units=3000 pending=7000
+[exp8007] phase=bootstrap_fit_decision_loss_source elapsed_s=0.236 units=4000 pending=6000
+[exp8007] phase=bootstrap_fit_decision_loss_source elapsed_s=0.236 units=5000 pending=5000
+[exp8007] phase=bootstrap_fit_decision_loss_source elapsed_s=0.236 units=6000 pending=4000
+[exp8007] phase=bootstrap_fit_decision_loss_source elapsed_s=0.237 units=7000 pending=3000
+[exp8007] phase=bootstrap_fit_decision_loss_source elapsed_s=0.237 units=8000 pending=2000
+[exp8007] phase=bootstrap_fit_decision_loss_source elapsed_s=0.237 units=9000 pending=1000
+[exp8007] phase=bootstrap_fit_decision_loss_source elapsed_s=0.238 units=10000 pending=0
+[exp8007] phase=bootstrap_fit_decision_loss_block elapsed_s=0.238 units=1000 pending=9000
+[exp8007] phase=bootstrap_fit_decision_loss_block elapsed_s=0.238 units=2000 pending=8000
+[exp8007] phase=bootstrap_fit_decision_loss_block elapsed_s=0.239 units=3000 pending=7000
+[exp8007] phase=bootstrap_fit_decision_loss_block elapsed_s=0.239 units=4000 pending=6000
+[exp8007] phase=bootstrap_fit_decision_loss_block elapsed_s=0.239 units=5000 pending=5000
+[exp8007] phase=bootstrap_fit_decision_loss_block elapsed_s=0.240 units=6000 pending=4000
+[exp8007] phase=bootstrap_fit_decision_loss_block elapsed_s=0.240 units=7000 pending=3000
+[exp8007] phase=bootstrap_fit_decision_loss_block elapsed_s=0.241 units=8000 pending=2000
+[exp8007] phase=bootstrap_fit_decision_loss_block elapsed_s=0.241 units=9000 pending=1000
+[exp8007] phase=bootstrap_fit_decision_loss_block elapsed_s=0.241 units=10000 pending=0
+[exp8007] phase=bootstrap_tune_brier_source elapsed_s=0.242 units=1000 pending=9000
+[exp8007] phase=bootstrap_tune_brier_source elapsed_s=0.242 units=2000 pending=8000
+[exp8007] phase=bootstrap_tune_brier_source elapsed_s=0.243 units=3000 pending=7000
+[exp8007] phase=bootstrap_tune_brier_source elapsed_s=0.243 units=4000 pending=6000
+[exp8007] phase=bootstrap_tune_brier_source elapsed_s=0.243 units=5000 pending=5000
+[exp8007] phase=bootstrap_tune_brier_source elapsed_s=0.243 units=6000 pending=4000
+[exp8007] phase=bootstrap_tune_brier_source elapsed_s=0.243 units=7000 pending=3000
+[exp8007] phase=bootstrap_tune_brier_source elapsed_s=0.243 units=8000 pending=2000
+[exp8007] phase=bootstrap_tune_brier_source elapsed_s=0.243 units=9000 pending=1000
+[exp8007] phase=bootstrap_tune_brier_source elapsed_s=0.243 units=10000 pending=0
+[exp8007] phase=bootstrap_tune_brier_block elapsed_s=0.243 units=1000 pending=9000
+[exp8007] phase=bootstrap_tune_brier_block elapsed_s=0.243 units=2000 pending=8000
+[exp8007] phase=bootstrap_tune_brier_block elapsed_s=0.244 units=3000 pending=7000
+[exp8007] phase=bootstrap_tune_brier_block elapsed_s=0.244 units=4000 pending=6000
+[exp8007] phase=bootstrap_tune_brier_block elapsed_s=0.244 units=5000 pending=5000
+[exp8007] phase=bootstrap_tune_brier_block elapsed_s=0.244 units=6000 pending=4000
+[exp8007] phase=bootstrap_tune_brier_block elapsed_s=0.244 units=7000 pending=3000
+[exp8007] phase=bootstrap_tune_brier_block elapsed_s=0.244 units=8000 pending=2000
+[exp8007] phase=bootstrap_tune_brier_block elapsed_s=0.244 units=9000 pending=1000
+[exp8007] phase=bootstrap_tune_brier_block elapsed_s=0.244 units=10000 pending=0
+[exp8007] phase=bootstrap_tune_decision_loss_source elapsed_s=0.245 units=1000 pending=9000
+[exp8007] phase=bootstrap_tune_decision_loss_source elapsed_s=0.245 units=2000 pending=8000
+[exp8007] phase=bootstrap_tune_decision_loss_source elapsed_s=0.246 units=3000 pending=7000
+[exp8007] phase=bootstrap_tune_decision_loss_source elapsed_s=0.246 units=4000 pending=6000
+[exp8007] phase=bootstrap_tune_decision_loss_source elapsed_s=0.246 units=5000 pending=5000
+[exp8007] phase=bootstrap_tune_decision_loss_source elapsed_s=0.246 units=6000 pending=4000
+[exp8007] phase=bootstrap_tune_decision_loss_source elapsed_s=0.246 units=7000 pending=3000
+[exp8007] phase=bootstrap_tune_decision_loss_source elapsed_s=0.246 units=8000 pending=2000
+[exp8007] phase=bootstrap_tune_decision_loss_source elapsed_s=0.246 units=9000 pending=1000
+[exp8007] phase=bootstrap_tune_decision_loss_source elapsed_s=0.246 units=10000 pending=0
+[exp8007] phase=bootstrap_tune_decision_loss_block elapsed_s=0.246 units=1000 pending=9000
+[exp8007] phase=bootstrap_tune_decision_loss_block elapsed_s=0.246 units=2000 pending=8000
+[exp8007] phase=bootstrap_tune_decision_loss_block elapsed_s=0.247 units=3000 pending=7000
+[exp8007] phase=bootstrap_tune_decision_loss_block elapsed_s=0.247 units=4000 pending=6000
+[exp8007] phase=bootstrap_tune_decision_loss_block elapsed_s=0.247 units=5000 pending=5000
+[exp8007] phase=bootstrap_tune_decision_loss_block elapsed_s=0.247 units=6000 pending=4000
+[exp8007] phase=bootstrap_tune_decision_loss_block elapsed_s=0.247 units=7000 pending=3000
+[exp8007] phase=bootstrap_tune_decision_loss_block elapsed_s=0.247 units=8000 pending=2000
+[exp8007] phase=bootstrap_tune_decision_loss_block elapsed_s=0.247 units=9000 pending=1000
+[exp8007] phase=bootstrap_tune_decision_loss_block elapsed_s=0.247 units=10000 pending=0
+=========================== short test summary info ============================
+FAILED tests/python/test_conditioning_diagnosis_8007.py::test_isolation_and_missing_values
+1 failed, 3 passed in 6.26s

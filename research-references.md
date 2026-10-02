@@ -49443,3 +49443,22 @@ in this planning session. Proposed adaptations are hypotheses, not reproductions
 No new hardware purchase or generator-weight training follows from this scan.
 The next design must distinguish known development exposure, causal replay,
 current model inference and independently reproduced deployment benefit.
+
+## 2026-10-02 — Exp8007 primary-source conditioning delta
+
+This adds version and section evidence to the existing V694 scan. It does not
+repeat the discovery inventory. Ten accessible abstract/HTML pages are archived
+with hashes under `results/raw/experiment_8007_v694_conditioning_diagnosis/literature/`.
+The adjacent `literature_review.json` binds each source to its method change,
+limitations and retirement conflicts.
+
+| Primary source | Accessible version and sections | Local consequence |
+|---|---|---|
+| [ADOWIP](https://arxiv.org/html/2606.25068v1) | v1, June 23, 2026; delayed accounting, observed decision-loss priority, theory and experiments | Fix released-label costs and budgets. Its time-series benefit and convex assumptions do not transfer to binary verification. |
+| [Spline locality](https://arxiv.org/html/2602.02056v4) | v4, June 19, 2026; locality, quantization, hardware and experiments | Audit existing local gradients and residual scales. No borrowed board speed or revived importance anchoring. |
+| [Multicalibration](https://arxiv.org/html/2604.19592v2) | v2, August 4, 2026; EVI reduction, delayed and censored observations | Freeze class and group support. The diagnostic does not implement or inherit the reduction. |
+| [EBT](https://arxiv.org/html/2507.02092v1) | v1, July 2, 2025; learning to verify, scalable learning/thinking and results | Keep small decision energies. Compatibility is not correctness; no foundation-model fitting. |
+| [ARM-EBM](https://arxiv.org/html/2512.15605v4) | v4, May 25, 2026; unified energy/probability view and lookahead | Keep the equivalent sigmoid control. Normalization supplies no independent truth certificate. |
+
+All five pages were accessible on October 2. No external result becomes a local
+measurement, and this targeted check is not a complete citation census.

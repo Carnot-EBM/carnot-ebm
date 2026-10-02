@@ -1,0 +1,102 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.3414332460379228,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:10b973c73daa6e954b90b87d5bc6dde184eb17eb1602e170f19df743674eb368",
+  "input_tokens": 826,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 826,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 847
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:e13bcd01cf8a1a59a4a2b6af45dca444051c2cd614a7331464b1a41ffbee7fc6",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886256,
+    "id": "chatcmpl-siaLf83uvYyL0gP8yX39krKCkGdcHgDR",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 492.926,
+      "predicted_n": 21,
+      "predicted_per_second": 42.60274361668892,
+      "predicted_per_token_ms": 23.472666666666665,
+      "prompt_ms": 730.742,
+      "prompt_n": 748,
+      "prompt_per_second": 1023.6170905736909,
+      "prompt_per_token_ms": 0.976927807486631
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 826,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 847
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"2009 De La Vina St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":true,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Mexican, Food, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"10:0-22:0\\\",\\\"Monday\\\":\\\"10:0-21:0\\\",\\\"Saturday\\\":\\\"10:0-22:0\\\",\\\"Thursday\\\":\\\"10:0-22:0\\\",\\\"Tuesday\\\":\\\"10:0-21:0\\\",\\\"Wednesday\\\":\\\"10:0-21:0\\\"},\\\"name\\\":\\\"Taqueria El Pastorcito\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2016-04-25 05:55:08\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"It's an average priced taco place in this high priced town! I live right around the corner and constantly find myself craving their amazing carne asada tacos. Probably the best tacos in Santa Barbara.\\\"},{\\\"review_date\\\":\\\"2016-03-15 05:11:38\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"This is for their Noleta location.Muy delicioso.The people were friendly,the homemade tortillas  were fresh and on the thicker side with a good texture.I got the vegetarian alambres and a side of beans and a burrito.It all had good flavor .The salsas were tasty and am I super excited that they are there.\\\"},{\\\"review_date\\\":\\\"2016-03-09 23:42:56\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Let's start by saying no one mexican was in here. If a Mexican came here they would say,\\\\\\\"cagada.\\\\\\\" Not once but eight times did I believe this. Horrible tortillas, and beans were from a can. Last but not least they gave me food poisoning.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Taqueria El Pastorcito is a Mexican restaurant located at 2009 De La Vina St, Santa Barbara, CA. The restaurant is open from 10am to 9pm from Monday to Wednesday, and until 10pm from Thursday to Saturday. It offers convenient street and lot parking, outdoor seating, take out options, and is good for groups. However, it doesn't offer Wi-Fi or accept reservations. Reviews of Taqueria El Pastorcito are mixed, with an average rating of 4 stars. Some customers have praised the quality of the tacos, particularly the carne asada, and the homemade tortillas. However, one reviewer expressed dissatisfaction with the quality of the tortillas and beans, and alleged that they suffered food poisoning after their visit.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "e4ecba57253902feef36cac835f6728b0ace94bf6417f5d490cb8d30cc1606f5",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ]
+}

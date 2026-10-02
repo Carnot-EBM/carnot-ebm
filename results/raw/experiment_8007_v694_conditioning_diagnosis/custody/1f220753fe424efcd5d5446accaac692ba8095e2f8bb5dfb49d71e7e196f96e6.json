@@ -1,0 +1,105 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.193979311035946,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:35d694f938e81a3ac30044f2ff34b0808e271076a0728d9dfd24eb1fe101c57e",
+  "input_tokens": 575,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 575,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 598
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:308fb8bd89fc16cba231e0ec071b092872d0136f3d9c67a23ba57962c8bf4337",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885962,
+    "id": "chatcmpl-4VCiEJqeXxnV1UekkJqArnq5GDuvl1Fd",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.767,
+      "predicted_n": 23,
+      "predicted_per_second": 42.53218114271026,
+      "predicted_per_token_ms": 23.511608695652175,
+      "prompt_ms": 534.714,
+      "prompt_n": 497,
+      "prompt_per_second": 929.4688375468006,
+      "prompt_per_token_ms": 1.0758832997987928
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 575,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 598
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:You can put sauce on the side or on the top, or both. You can serve yours with macaroni salad, potato salad, baked beans, I always put pickles on mine. Thanks for watching, for more information on how to cook ribs on a charcoal grill, check us out on the web, at About.com.\\\\n\\\\npassage 2:1 To barbecue ribs on a charcoal grill, you control the temperature with the bottom/side vents on your grill. 2  Adjust the top vent to half open, and leave it alone. 3  Put a big ol' handful of hardwood chips or chunks (pre-soaked in water for about an hour) on the coals. 4  Now, close the grill and let the smoke get started.\\\\n\\\\npassage 3:1 You will need to fire-up some more coals (about 8, or so), several times during the cooking cycle, to maintain the temperature. 2  Closely monitor the temperature. 3  and anticipate this with about a 15-minute lead. 4  To barbecue ribs on a charcoal grill, you control the temperature with the bottom/side vents on your grill.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to barbecue ribs on a charcoal grill\\\"}\", \"original_answer\": \"To barbecue ribs on a charcoal grill, first control the temperature with the bottom/side vents on your grill. Then adjust the top vent to half open and leave it as it is. Next, put a handful of hardwood chips or chunks that have been pre-soaked in water for about an hour on the coals and close the grill to let the smoke start. During the cooking cycle, you will need to fire up about 8 more coals several times to maintain the temperature, closely monitoring the temperature and anticipating this with about a 15-minute lead. You can choose to serve your ribs with sauce on the side or on the top, along with sides like macaroni salad, potato salad, baked beans, and pickles.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "cff3ab65db1d3b9c0f2284b44fae232b402fcd3011f9e9b91a3573f11609dee1",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ]
+}

@@ -1,0 +1,118 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.3771835240768269,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:9dfb8ab324d613c6b98aa11cf972765b007c9c2fad31955cf0297292d305d5d3",
+  "input_tokens": 848,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 848,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 871
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:8d98838e7df977d99da477e64e6f5d709d388fd1b925fdec8ac64e853aced6c4",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885883,
+    "id": "chatcmpl-BPCLgKEVxr6yL2VhxVhYrgPZE7OvqUaI",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 536.192,
+      "predicted_n": 23,
+      "predicted_per_second": 42.89508235855813,
+      "predicted_per_token_ms": 23.312695652173915,
+      "prompt_ms": 721.885,
+      "prompt_n": 770,
+      "prompt_per_second": 1066.6518905365813,
+      "prompt_per_token_ms": 0.937512987012987
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 848,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 871
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Method 1 of 2: Determine Your Ideal Shape. 1. Determine where your inner brow should end. Hold a straight edge, such as an eyebrow pencil or a ruler, vertically in front of your face. 1  Line it up so that it touches the outermost of edge your nose and the inside of your eye.2  This line will determine where your eyebrow should start.ethod 1 of 2: Determine Your Ideal Shape. 1. Determine where your inner brow should end. Hold a straight edge, such as an eyebrow pencil or a ruler, vertically in front of your face. 1  Line it up so that it touches the outermost of edge your nose and the inside of your eye.\\\\n\\\\npassage 2:2. Fill in sparse spots. If your brows are too light (or dark), fill them in with an eyebrow pencil. 1  If your brows are fair, choose a pencil two shades darker than your hair. ( 2 If you have dark hair, go two shades lighter.). 3  Hold your skin taut at the temple, and line softly along the upper edge of your brow.4  Then, line along the bottom edge.ethod 1 of 2: Determine Your Ideal Shape. 1. Determine where your inner brow should end. Hold a straight edge, such as an eyebrow pencil or a ruler, vertically in front of your face. 1  Line it up so that it touches the outermost of edge your nose and the inside of your eye.\\\\n\\\\npassage 3:1. Frame Brows With Concealer: One of the quickest ways to give an instant lift to eyebrows is to frame them with concealer. This trick is a great way to enhance the shape of your brows, especially if you are someone who wears little to no makeup.Literally use concealer to trace around the eyebrows, and blend with your foundation brush. This adds highlight in all the right places, while helping sustain shape.rom waxing, plucking, threading, and everything in between, our eyebrows are one of the most important features to frame our face. Not only is it important to know the right eyebrow shape for you, it's equally important to know how to maintain brows so they appear polished and perfect.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to enhance brows\\\"}\", \"original_answer\": \"To enhance brows, first determine your ideal brow shape by holding a straight edge, such as an eyebrow pencil or a ruler, vertically in front of your face, lining it up so that it touches the outermost of edge your nose and the inside of your eye. If your brows are too light or dark, fill them in with an eyebrow pencil. If your brows are fair, choose a pencil two shades darker than your hair and if you have dark hair, go two shades lighter. Hold your skin taut at the temple, and line softly along the upper edge and bottom edge of your brow. You can also frame your brows with concealer for an instant lift. Trace around the eyebrows with concealer and blend it with your foundation brush to highlight and sustain shape.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "calibration",
+  "source_cluster_id": "33eea40eab68c89401278722d4e53aa601624b1e358c98633dcd455e7b0979eb",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21
+  ]
+}

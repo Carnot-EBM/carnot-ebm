@@ -1,0 +1,102 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.420855030999519,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:2271b4d8fc306045210ff799116f1a45437e281a887a7a67058a8c10e6167c7a",
+  "input_tokens": 835,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 835,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 858
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:7f183d5d1291aed543029fd65bf053e1a33d9f82b4ea6cf9a8947abc4b43d5d6",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885936,
+    "id": "chatcmpl-xg5HNoFHXwjPtUsmcqIbhAZUyEXFlH9A",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.195,
+      "predicted_n": 23,
+      "predicted_per_second": 42.5772174862781,
+      "predicted_per_token_ms": 23.486739130434785,
+      "prompt_ms": 727.756,
+      "prompt_n": 757,
+      "prompt_per_second": 1040.183797866318,
+      "prompt_per_token_ms": 0.9613685601056803
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 835,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 858
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"3849 State St, Ste I157\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Restaurants, Food, Juice Bars & Smoothies, Breakfast & Brunch\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"7:0-17:0\\\",\\\"Monday\\\":\\\"7:0-17:0\\\",\\\"Saturday\\\":\\\"7:0-17:0\\\",\\\"Sunday\\\":\\\"7:0-17:0\\\",\\\"Thursday\\\":\\\"7:0-17:0\\\",\\\"Tuesday\\\":\\\"7:0-17:0\\\",\\\"Wednesday\\\":\\\"7:0-17:0\\\"},\\\"name\\\":\\\"Backyard Bowls\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-10 00:15:45\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Always so good bowls and great service though it can take some time to get your order and they are pretty good at messing up orders though always very helpful when you are pointing it out\\\"},{\\\"review_date\\\":\\\"2021-12-31 19:07:11\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"The bowls taste great, but the service was painfully slow. It took over 30 minutes for me to get my order: 1 a\u00e7a\u00ed bowl. Even worse was people who ordered significantly after me got theirs first! It was a frustrating experience for an otherwise great location.\\\"},{\\\"review_date\\\":\\\"2021-12-18 12:27:49\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Legendary BYB opened a location at La Cumbre plaza and that makes me happy! Best a\u00e7a\u00ed bowls & smoothies ever; some have tried to recreate but couldn't get close. Think quality ingredients and no bullshit; it tastes straight out of heaven!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Backyard Bowls is a popular restaurant located at 3849 State St, Ste I157 in Santa Barbara, California. The establishment is known for its food, juice bars & smoothies, breakfast & brunch offerings. The restaurant, which has a casual ambiance, operates from 7:00 to 17:00 every day. It offers additional features such as takeout services and is suitable for group dining. However, it does not provide WiFi, outdoor seating, or music. The restaurant has an overall rating of 4 stars. Reviewers have praised the quality of the bowls and smoothies, citing them as the best they've ever had. However, some customers have expressed concerns about the slow service and occasional mix-ups in orders. Despite these issues, the restaurant is generally well-liked for its tasty food and helpful customer service.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "6311ed992f22fb330c7ccd0f7e5b738e2fa3bbc73a9e60a48b66bacf3410e175",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ]
+}

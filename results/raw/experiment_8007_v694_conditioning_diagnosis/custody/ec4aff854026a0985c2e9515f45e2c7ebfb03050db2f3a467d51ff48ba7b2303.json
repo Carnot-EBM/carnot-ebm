@@ -1,0 +1,101 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.1851818370632827,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:21b2f3b2848af35eb568d5253ebed7d0e0f1a0324f33ff8a346ea27e1fdcbb57",
+  "input_tokens": 478,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 478,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 501
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:e6d76f3aad092ab1c5bf3b2ef439466b3893d668a85e62524b9234ff79736284",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886235,
+    "id": "chatcmpl-xxZw1tf6XQhIO6xdAnQyr6kFjqnOtq4e",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.328,
+      "predicted_n": 23,
+      "predicted_per_second": 42.566737241083196,
+      "predicted_per_token_ms": 23.492521739130435,
+      "prompt_ms": 489.617,
+      "prompt_n": 400,
+      "prompt_per_second": 816.9650972086345,
+      "prompt_per_token_ms": 1.2240425000000001
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 478,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 501
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:If these aren't removed, the cells decompose and can cause bad breath. While dry mouth, which is often a cause of bad breath, can be permanent or even progressive, there are management and relief options available to those who suffer. These options involve the use of either saliva substitutes and/or saliva stimulants.\\\\n\\\\npassage 2:Causes of Mouth Dryness. Ongoing dryness of your mouth can be a symptom of various medical conditions, including Parkinson's disease, as the Journal of Parkinson's Disease reports, or even diabetes. Mouth dryness (known as xerostomia) is also a side effect of some medication.\\\\n\\\\npassage 3:Bad breath (clinically termed halitosis) is most commonly the result of poor dental hygiene and can be worsened by certain habits (such as smoking or tobacco use) or through the consumption of odorous foods such as onions, garlic, coffee, alcohol, dairy products, orange juice, soda, and more.\\\\n\\\\n\\\",\\\"question\\\":\\\"causes of bad breath and dry mouth\\\"}\", \"original_answer\": \"Bad breath can be caused by the decomposition of cells that aren't removed, poor dental hygiene, certain habits like smoking or tobacco use, and consumption of odorous foods such as onions, garlic, coffee, alcohol, dairy products, orange juice, and soda. Dry mouth, which often leads to bad breath, can be a symptom of various medical conditions like Parkinson's disease or diabetes. It can also be a side effect of some medications. Management and relief options for dry mouth include the use of saliva substitutes and/or saliva stimulants.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "e2b64a8e4af9ade03fe58c79da803d43fec250ee6323c18998fa6a7ea56c358b",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ]
+}

@@ -6358,3 +6358,23 @@ These access results do not establish a complete citation census. Retired
 importance anchoring and four-expert reweighting remain closed. Human labels
 remain fallible exposed-development evidence. The September 28 oracle-distinct
 corrigendum remains open. The contract audit is not a universal science gate.
+
+## Exp8007 V694 conditioning methods delta — 2026-10-02
+
+Recheck the five V694 primary papers before fitting a new method. The archived
+HTML and version dates live in
+`results/raw/experiment_8007_v694_conditioning_diagnosis/literature_review.json`.
+ADOWIP motivates released-label cost and budget accounting. Spline locality
+motivates auditing residual scale, gradients and coefficient writes. The
+multicalibration paper now has v2 dated August 4, 2026; its delayed and censored
+observation sections motivate frozen group support diagnostics. This scalar
+diagnostic does not implement that reduction. EBT and ARM-EBM remain context
+for normalized energies and the equivalent sigmoid control.
+
+Freeze historical fit/tune and V693 development slots. Use fit-only intercept
+convergence to test scale, with tune diagnostics and a separate circular
+synthetic control. Costs are accept=5*y, reject=1-y and escalate=0.5; ties
+escalate. The registered outcomes are Brier and decision loss. Keep source and
+block bootstrap uncertainty and Holm correction. Neither a responsive fixture
+nor an intercept change establishes natural stream benefit. Retired importance
+anchoring, foundation-model fitting and energy-as-generator claims remain closed.

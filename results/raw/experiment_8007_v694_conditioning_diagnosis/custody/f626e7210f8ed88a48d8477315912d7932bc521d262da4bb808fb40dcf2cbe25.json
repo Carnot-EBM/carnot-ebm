@@ -1,0 +1,117 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.302068987977691,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:af85343ec387b33609bdd118068ddb215497bac72463e219b92874b7e89cc051",
+  "input_tokens": 690,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 690,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 714
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:9346e1313d262a7c5fc962ae491b134785e1e99cbce0ab357c46773ba6454961",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885955,
+    "id": "chatcmpl-TpFbT73j0NaqgQGt2KrAPrPJUikPw3io",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.619,
+      "predicted_n": 24,
+      "predicted_per_second": 42.50653980826008,
+      "predicted_per_token_ms": 23.525791666666667,
+      "prompt_ms": 623.078,
+      "prompt_n": 612,
+      "prompt_per_second": 982.2205245571181,
+      "prompt_per_token_ms": 1.0181013071895424
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 690,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 714
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Two Transportation Security Administration screeners have been fired after conspiring to grope attractive men at Denver International Airport, Denver police said. Here's how police say the scheme worked: When the male TSA officer noticed a man he found attractive, he would alert a female TSA officer. The female officer would then tell the screening machine that a female passenger -- not a male -- was walking through. And that information would trigger a machine to register an anomaly in the groin area, prompting the male TSA officer to pat down the passenger, police said, citing a TSA investigation. But during the patdown, the male TSA officer used the palms of his hands to touch the passenger's front groin area and buttocks, which violates TSA policy. Former TSA agent sentenced for recording coworker. All this came to light after an anonymous tip from a TSA employee in November. The agency launched an investigation, and investigator Chris Higgins monitored the two TSA officers in question, Denver police said in a report. Higgins watched the plan being carried out on February 9. He interviewed the female TSA officer, who said she had done this with her colleague at least 10 other times, police said. Both of the TSA officers investigated have been fired, TSA special agent Charles Stone told police. Authorities did not release their names. Giant security gap at airports: Lack of criminal background checks. The TSA called the incident deplorable. \\\"These alleged acts are egregious and intolerable,\\\" the agency said in a written statement to CNN. \\\"All allegations of misconduct are thoroughly investigated by the agency. And when substantiated, employees are held accountable.\\\" But it's unlikely criminal charges will be filed because there is no identifiable victim. The TSA said it has been trying to identify the passenger in the February incident but to no avail. The TSA said no passengers have come forward with similar cases so far at the Denver airport. Hidden cameras reveal airport workers stealing from luggage. CNN's Tony Marco contributed to this report.\\n\", \"original_answer\": \"Two TSA screeners have been fired for conspiring to grope attractive men at Denver International Airport. When the male TSA officer noticed a man he found attractive, he would alert a female TSA officer who would tell the screening machine that a female passenger was walking through, triggering a machine to register an anomaly in the groin area, prompting the male TSA officer to pat down the passenger. The TSA called the incident \\\"deplorable\\\" and \\\"egregious\\\".\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "6e11ca1460b3d43236bfcc8e67af890cfb4da55e5c679ee49a858f12c003f6dd",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20
+  ]
+}

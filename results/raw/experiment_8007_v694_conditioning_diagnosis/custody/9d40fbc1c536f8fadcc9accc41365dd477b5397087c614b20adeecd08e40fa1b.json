@@ -1,0 +1,113 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.393013347988017,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:c5a0f4b055f224a06d25838c90d8defa2ce4ea1fe6bc886734267bb2995a1022",
+  "input_tokens": 819,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 819,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 842
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:238c4fe87c80b68accab59568d099f399ad06167ed0c63cc59f34257be3897ac",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886339,
+    "id": "chatcmpl-7yopCnYqCi2NKqj3cOCUUYwVDl9aPl83",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.963,
+      "predicted_n": 23,
+      "predicted_per_second": 42.43832143522713,
+      "predicted_per_token_ms": 23.56360869565217,
+      "prompt_ms": 727.802,
+      "prompt_n": 741,
+      "prompt_per_second": 1018.1340529429707,
+      "prompt_per_token_ms": 0.9821889338731444
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 819,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 842
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"After more than nine years of traveling through the solar system, NASA's New Horizons spacecraft has sent back its first color image of Pluto. The initial picture released on Tuesday shows a couple of orange-tinged blobs: Pluto and its largest moon, Charon. But the probe will soon be beaming back much sharper images and a wealth of other information about Pluto's remote, unexplored corner of the solar system. \\\"This is pure exploration; we're going to turn points of light into a planet and a system of moons before your eyes,\\\" said Alan Stern, New Horizons' principal investigator. Launched in 2006, New Horizons is nearing the crucial point in its epic voyage of more than 3 billion miles. The probe is due to make its closest approach to Pluto on July 14. \\\"In an unprecedented flyby this July, our knowledge of what the Pluto system is really like will expand exponentially, and I have no doubt there will be exciting discoveries,\\\" said John Grunsfeld, an astronaut and associate administrator of the NASA Science Mission Directorate. Discovered in 1930, Pluto was once considered to be the smallest planet in the solar system. But scientists have since revised that view because of Pluto's size and location, demoting it to the status of \\\"dwarf planet\\\": a planet that's too small to clear other objects out of its way. Pluto is 1,400 miles wide, roughly half the width of the continental United States. At 3.6 billion miles out in the solar system, it's about 40 times as far from the sun as Earth is. By discovering more about Pluto and its moons, New Horizons will shed light on a little-known third zone of the solar system, beyond the rocky planets and the gas giants. The area, known as the Kuiper Belt, contains \\\"mysterious small planets and planetary building blocks,\\\" according to NASA. It's known for producing comets, such as Halley's Comet, which orbits the sun about every 75 years. New Horizons will use its array of cameras and other instruments to study Pluto's surface and atmosphere, as well as its moons, which number at least five. It will also be on the lookout for rings and other satellites. Stern said the spacecraft's encounter was set to be \\\"an exploration bonanza unparalleled in anticipation since the storied missions of Voyager in the 1980s.\\\"\\n\", \"original_answer\": \"After nine years of travelling, NASA's New Horizons spacecraft has sent back its first colour image of Pluto. The photo shows two orange-tinged blobs, one being Pluto and the other its largest moon, Charon. The spacecraft is set to send back sharper images and further information about the dwarf planet and its system of moons. The spacecraft's closest approach to Pluto will be on July 14th. The principal investigator at New Horizons, Alan Stern, said that the spacecraft's encounter with Pluto was set to be \\\"an exploration bonanza unparalleled in anticipation since the storied missions of Voyager in the 1980s\\\".\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "adbc1aabc9c055116755c0c7dcd58bd26478641dc58916d675ef2c4f91ec5c64",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+  ]
+}

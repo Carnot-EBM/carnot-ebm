@@ -1,0 +1,117 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.7457329740282148,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:32f7339e7d034c5afa7b58d1bc0b927cf14482e376159c41271e1f3468494c37",
+  "input_tokens": 1278,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 1278,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1299
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:1f8673f9aeb63f68e69c32797a13b25e0ba4b3e3055866ab5cedb5afafa586ae",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886297,
+    "id": "chatcmpl-b322B6BbQxgBOj15m4rUwrQBWmiwitMG",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 500.69,
+      "predicted_n": 21,
+      "predicted_per_second": 41.94211987457309,
+      "predicted_per_token_ms": 23.842380952380953,
+      "prompt_ms": 1127.843,
+      "prompt_n": 1200,
+      "prompt_per_second": 1063.9778763533577,
+      "prompt_per_token_ms": 0.9398691666666668
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 1278,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1299
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"1131 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Comfort Food, Bakeries, Food, Desserts, Restaurants, Empanadas, Argentine\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-17:0\\\",\\\"Monday\\\":\\\"11:0-20:0\\\",\\\"Saturday\\\":\\\"11:0-16:0\\\",\\\"Sunday\\\":\\\"11:0-20:0\\\",\\\"Thursday\\\":\\\"11:0-20:0\\\",\\\"Tuesday\\\":\\\"11:0-20:0\\\",\\\"Wednesday\\\":\\\"11:0-20:0\\\"},\\\"name\\\":\\\"Buena Onda at Mosaic Locale\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-12-31 18:56:14\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"Mosaic Locale is such a cute area! It's a shared space where people can come to stay - coffee, beer, or empanadas. They have extra long tables so there's ample counter space if you're trying to do laptop work or studying.\\\\n\\\\nI love empanadas and really wanted to like this place but it fell flat for me. Maybe better luck with their meat-y empanadas??\\\\n\\\\n* Chile Verde: SO liked it and said it had nice big chunks of meat.\\\\n* Serrano: I liked this one more than I expected to. They do not skimp on the cheese! The prosciutto was bite-sized so I didn't have to struggle with chewing. That being said, it seemed over-baked - instead of a nice golden color, the empanadas had splotches of dark brown. \\\\n* Caprese: A lot of air in this empanada. Seems like the middle of the pastry didn't rise properly or maybe just not enough filling. For a caprese-inspired empanada, there wasn't much tomato in this one at all.\\\"},{\\\"review_date\\\":\\\"2021-12-06 05:20:44\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Delicious food at a fair price!  \\\\n(ok, I copied it.  Could not describe Buena Onda better)\\\\n\\\\nWe wanted something quick and not overly filling before heading into the Art Museum across the street and Buena Onda was perfect.  We had 4 vegetarian empanadas (papa vegan, vegan quinoa, hongos, and espinaca).  If forced to choose, I would go for the hongos and espinaca, but all were really good.\\\\n\\\\nThe very personable service was an added plus.\\\"},{\\\"review_date\\\":\\\"2021-09-22 23:01:18\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"My daughter loves empanadas, so we had to stop at Buena Onda after touring the Santa Barbara Art Museum across the street. \\\\n\\\\nThe shop is nice and has a local beer vendor in the shared space. There are several tables in the doorway outside under the arched entrance that looked really nice, but they were taken, so we sat at a table on State Street in an outdoor dining area. We ordered several types of empanadas, which were all very good. The dough was light and fluffy. We ordered the carne, quinoa vegan, Serrano, and caprese empanadas. All were good and the caprese was very good. Next time we're in town we'll stop by for a beer and a caprese empanada!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Buena Onda at Mosaic Locale, located at 1131 State St, Santa Barbara, CA, is known for its comfort food, desserts, and most notably, Argentine empanadas. This restaurant provides outdoor seating and free WiFi, and it also offers takeout services. While it doesn't provide reservation services or business parking, street parking and lot parking are available. Open every day with varying hours, Buena Onda maintains an overall business star rating of 4.5. Customer reviews highlight the spacious shared space and fair prices for the delicious food. However, some customers have noted that the quality of the empanadas can be inconsistent, with some versions falling flat while others, like the Caprese and Serrano, have been praised for their taste. Despite these mixed reviews, Buena Onda\u2019s proximity to the Santa Barbara Art Museum and its personable service make it a popular choice among locals and tourists alike.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "f1432f39a619c3a74fb51ae0e85e9a0cf80f8c6c354fe97931846d8ef5e1e821",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20
+  ]
+}

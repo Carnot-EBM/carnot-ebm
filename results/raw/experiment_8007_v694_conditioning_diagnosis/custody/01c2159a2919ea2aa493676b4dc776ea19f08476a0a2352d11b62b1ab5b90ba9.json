@@ -1,0 +1,118 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.3359920039074495,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:7e4955c1d7c751b4f00c4bf2b6f18e493501c5a5433c4d67dc3e6115c8c28bbc",
+  "input_tokens": 841,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 841,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 862
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:9933eb8cb1d99d9eb1ae07b04a482fe94d927158269211d94fa772b6a0a81251",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885961,
+    "id": "chatcmpl-jDXLyXP3sdaMYROVFsjXC7zqoLrhPCEp",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 492.332,
+      "predicted_n": 21,
+      "predicted_per_second": 42.65414395164239,
+      "predicted_per_token_ms": 23.444380952380953,
+      "prompt_ms": 730.365,
+      "prompt_n": 763,
+      "prompt_per_second": 1044.6831378831132,
+      "prompt_per_token_ms": 0.9572280471821757
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 841,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 862
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:If you want to insert such a calendar into your spreadsheet, you can do so by enabling Developer Mode from the program's main menu. Step 1. Click the Office button and select the Excel Options option from the drop-down menu that appears. Step 2.Click the Popular tab in the Options menu and place a check mark next to the Show Developer Tab in the Ribbon option.Click OK to save the changes.tep 5. Click on the upper left corner of the cell to which you want to add the calendar and drag your mouse pointer to the cell's bottom-right corner. This will draw a rectangle around the cell. Step 6. Release your mouse button to insert the calendar into the cell.\\\\n\\\\npassage 2:Step 5. Click on the upper left corner of the cell to which you want to add the calendar and drag your mouse pointer to the cell's bottom-right corner. This will draw a rectangle around the cell. Step 6. Release your mouse button to insert the calendar into the cell.tep 5. Click on the upper left corner of the cell to which you want to add the calendar and drag your mouse pointer to the cell's bottom-right corner. This will draw a rectangle around the cell. Step 6. Release your mouse button to insert the calendar into the cell.\\\\n\\\\npassage 3:To add a Calendar Control to Excel 2003, begin by clicking on a cell in the area of the spreadsheet where you want to make a calendar. Go to the Insert menu and click on Object. On the Create New tab of the Object dialog box, click Calendar Control and then click OK.In Excel 2007, go to the Developer tab of the ribbon and click Insert. Select ActiveX Controls and then More Controls. Select Calendar Control and click OK.o to the Insert menu and click on Object. On the Create New tab of the Object dialog box, click Calendar Control and then click OK. In Excel 2007, go to the Developer tab of the ribbon and click Insert.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to insert calendar in excel cell\\\"}\", \"original_answer\": \"To insert a calendar into an Excel cell, you first need to enable Developer Mode. This can be done by clicking on the Office button and selecting the Excel Options from the drop-down menu. Then, click on the Popular tab in the Options menu and place a check mark next to 'Show Developer Tab in the Ribbon' option. After saving these changes, click on the upper left corner of the cell where you want the calendar and drag the mouse pointer to the cell's bottom-right corner which will draw a rectangle around the cell. Release the mouse button to insert the calendar into the cell. For Excel 2003, go to the Insert menu and click on Object. On the Create New tab of the Object dialog box, click on Calendar Control and then click OK. For Excel 2007, go to the Developer tab of the ribbon, click Insert, select ActiveX Controls and then More Controls. Select Calendar Control and click OK.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "f7a8ac1ee3ebf6e4e8be1a434a619092fdc67e567e1e00625f4927bb33904298",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21
+  ]
+}

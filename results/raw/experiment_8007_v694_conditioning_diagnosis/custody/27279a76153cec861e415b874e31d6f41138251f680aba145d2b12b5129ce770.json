@@ -1,0 +1,114 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.666702507995069,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:e1ab303c1afb90b9c359337a24a13d923763795148ce5aea66550a429cc65bdb",
+  "input_tokens": 1162,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 1162,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1183
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:aa7dbc63b707f79b2cce89f8bc0b7f0338eed6a3f006ff75488f2afbd090b7b7",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886224,
+    "id": "chatcmpl-LnkO3cjYIqgaoEjHB41D0apq7Tgyq8Gd",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 493.675,
+      "predicted_n": 21,
+      "predicted_per_second": 42.538107054236086,
+      "predicted_per_token_ms": 23.508333333333333,
+      "prompt_ms": 1039.876,
+      "prompt_n": 1084,
+      "prompt_per_second": 1042.4319822748096,
+      "prompt_per_token_ms": 0.9592952029520295
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 1162,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1183
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"3130 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"German, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"17:0-21:0\\\",\\\"Monday\\\":\\\"17:0-21:0\\\",\\\"Saturday\\\":\\\"17:0-21:0\\\",\\\"Thursday\\\":\\\"17:0-21:0\\\",\\\"Tuesday\\\":\\\"17:0-21:0\\\",\\\"Wednesday\\\":\\\"17:0-21:0\\\"},\\\"name\\\":\\\"Brummis - the German Taste\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2014-02-16 05:45:09\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Just spoke with the owners today - they are OPEN as of today.  Our plan is to go grab dinner there tonight.  Relieved to hear it as we don't live locally and were just in town for a day or two.  So, please, please support this place - especially if you live in the area.  It's as good as it gets...\\\"},{\\\"review_date\\\":\\\"2014-02-08 08:29:24\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I LOVE BRUMMIS.\\\\n\\\\nThe food is authentically German and incredibly good.  The priciest entrees are huge portions of food so really, they're quite reasonable, and there are some more affordable options as well.\\\\n\\\\nI have heard that they are considering closing their doors in the next couple months so GO THERE NOW while you still can!\\\\n\\\\nI could go on and on about this place.  The service is wonderful.  I highly recommend the Rouladen or Goulash (which comes with Spaetzle -- Germany's answer to mac n' cheese--- delicious).  I've heard that the various Schnitzel dishes are also extremely good.  Also, their darkest beer on tap is wunderbar.\\\\n\\\\nAll in all, I am heartbroken that they plan to close.  But I wish Veronika and Rudi all the best!\\\"},{\\\"review_date\\\":\\\"2014-01-23 03:21:15\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Brummis-The German Taste is a simple place with a simple menu and the food is good with a truly Home-Cooked flair and flavor. Probably the best thing about Brummis-The German Taste is the service! The owner and server Veronika immediately makes you feel at home. My wife and I were vacationing in Santa Barbara for our anniversary and found Brummis. We liked it so much we went back on our anniversary and had dinner there. The first night we had gone to Brummis, they had run out of the dish that my wife wanted to try, So Veronika offered to make her something special, unheard of since we hadn't asked and yes the dish was Delicious! Brummis is a down home kind of place, nothing fancy but very comfortable. AT Brummis you get great service, a wonderful home-cooked meal and the price is perfect, just a great little place.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"\\\"Brummis - the German Taste\\\" is a well-rated restaurant located at 3130 State St, Santa Barbara, CA, serving authentic German cuisine. Operating from 5 PM to 9 PM from Monday to Saturday, they offer services such as dine-in, take-out, and accept group reservations. However, the restaurant doesn't provide WiFi, outdoor seating, nor live music. The ambiance is described as casual with street parking available. The restaurant has a high average rating of 4.5 stars. Customers appreciate the home-cooked style food, with the Rouladen, Goulash, and Schnitzel dishes receiving special mentions. The large portion sizes, reasonable prices, and the exceptional service, particularly from owner Veronika, are highlighted in the reviews. However, there is a mention of the restaurant potentially closing in the future.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "fa013a11ec30281470b1b4a601b3369e0ab8835d473e120837154b45a1ae50e5",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17
+  ]
+}

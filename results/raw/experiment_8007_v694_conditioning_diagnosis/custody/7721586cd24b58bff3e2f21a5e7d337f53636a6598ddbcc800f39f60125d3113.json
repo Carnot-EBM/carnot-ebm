@@ -1,0 +1,110 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.2354985389392823,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:cf4d47a0b1edfb0d63236b59763dcbc1e3c6c284b66a6cb4df4a34a571cfbdef",
+  "input_tokens": 615,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 615,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 638
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:1e17e4f3e94b789fce0377173a20e303d610a66daf94223383f366817c0af465",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886215,
+    "id": "chatcmpl-VDiJbujgt2SUuUJAfkp8QiYXK6MWDfEi",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.991,
+      "predicted_n": 23,
+      "predicted_per_second": 42.51457048268826,
+      "predicted_per_token_ms": 23.521347826086956,
+      "prompt_ms": 577.442,
+      "prompt_n": 537,
+      "prompt_per_second": 929.9635288046245,
+      "prompt_per_token_ms": 1.0753109869646182
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 615,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 638
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Upgrade to a REAL ID for Smooth US Travel: California DMV's Encouragement\\nThe California Department of Motor Vehicles (DMV) is urging residents to take a step towards hassle-free travel within the United States by obtaining their REAL ID. With a growing number of Californians recognizing the importance of this identification, now is the time to secure your REAL ID online.\\nAs of the latest DMV data, approximately 15.5 million Californians have acquired a REAL ID, reflecting an increase of 185,842 in just the past month. This surge in applications highlights the awareness of the benefits this identification offers.\\nWhy is getting a REAL ID crucial? To ensure that your next adventure takes off without a hitch, having a REAL ID is vital. Without it, you may experience delays and inconveniences when boarding domestic flights or accessing secure federal facilities. So, don't let travel plans bloom into a complex ordeal\u2014get your REAL ID in advance.\\nTo apply for a REAL ID, the process is made simple for Californians. Just visit the official website, where you can fill out the online application and upload the required documents. The documents you need to provide include proof of identity, such as a valid passport or birth certificate, with legal name change documents if applicable. Additionally, two paper copies of proofs of California residency, like utility bills or bank statements, are necessary, along with your Social Security number (with exceptions that may apply).\\nBy upgrading to a REAL ID, you can ensure your future travels within the United States are smooth and uncomplicated. So, don't delay; make your REAL ID application today and look forward to stress-free adventures in the years to come.\", \"original_answer\": \"The California Department of Motor Vehicles (DMV) is encouraging residents to obtain a REAL ID for hassle-free domestic travel. Latest data shows that 15.5 million Californians have a REAL ID, an increase of 185,842 in the past month. A REAL ID is crucial for avoiding delays when boarding domestic flights or accessing federal facilities. Californians can apply for a REAL ID online, providing proof of identity, residency, and a Social Security number.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "2cd7cdf5d861233b01d146554fdbe55432e0d6c91a0234931b8e8ab1d2563fda",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ]
+}

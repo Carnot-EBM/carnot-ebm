@@ -1,0 +1,116 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.5795428369892761,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:402d6f76562ef72ba42f7797033cb25be59267cb6ff841742e35f94c2b264107",
+  "input_tokens": 1011,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 1011,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1032
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:f5d898dfd82e9341bdb2f0da17a938c86824e2ff3f4a5cfd5ef71f7b78ae69fd",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885998,
+    "id": "chatcmpl-hDpWhYdhXsWOTPg48lwzjT60rdkmspWg",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 500.043,
+      "predicted_n": 21,
+      "predicted_per_second": 41.99638831060528,
+      "predicted_per_token_ms": 23.81157142857143,
+      "prompt_ms": 929.941,
+      "prompt_n": 933,
+      "prompt_per_second": 1003.2894559977461,
+      "prompt_per_token_ms": 0.9967213290460879
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 1011,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1032
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"636 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":null,\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":null},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Restaurants, Delis, Food, Grocery\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":null,\\\"name\\\":\\\"Italian & Greek Delicatessen\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2008-05-21 17:48:40\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"wait..this is the greek italian deli... and there closed... that sucks... i cant even explain how good the food was... the hot pastrami was unmatched!!! it was a family run spot since the beginning...and everyone was friendly as fuck!!!\\\"},{\\\"review_date\\\":\\\"2007-04-18 01:27:37\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Sadly, the Italian and Greek deli has closed its doors forever as of April 14, 2007. I was there myself, picking up a meatball sub soon after they'd opened for business. If it's any testament to their popularity, I saw the lunch queue 30 people deep the Thursday before they closed, and the shop had about 50 people in it within 5 minutes of opening on their last Saturday.  My meatball sub was delicious.\\\\nThis store was open for business for 36 years, my mother recalls this was the only place she could buy phyllo pastry way back when. For me, I liked the shop because it was the first in Santa Barbara to carry halloumi cheese. \\\\nQuelle bummer to lose the Italian and Greek deli! But life goes on.\\\"},{\\\"review_date\\\":\\\"2007-01-31 20:11:04\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"The pastrami sandwich is well, the best I've ever had.  It's all warmly scrumptious and peppery and toasty and goo-ily provoloney and has pickles and pepperoncinis and is totally EPIC in its proportions (must be the Greek side of things). Mmmm....Even Carnegie Deli doesn't do it as well as these guys-different part of the country, but still... \\\\n\\\\nKiller Greek Salad (dolmas anyone?), various marinated olive selection in their case, and major bonus points for deviled egg option as well. The meatball sando hits the spot. But it's the GYRO that makes my tastebuds gyrate (I've never tried the cluck, but the lamb/beef dynamic option is fantastic). This is just about the best lunch in town, and you're home free with a big ol' Pellegrino and chips for less than 10 bucks. One of my favorite spots for sure. A fun stop on Farmer's Market Tuesday evenings!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Italian & Greek Delicatessen, located at 636 State St, Santa Barbara, CA, was a popular local business known for its exceptional food, particularly its hot pastrami and gyros. This family-run spot was reputed for its friendly service and was a favorite among locals. The deli, unfortunately, closed its doors forever in April 2007, after serving the community for 36 years. Even in its final days, the shop was bustling, with long lunch queues and a packed store. This business had a 4.5-star rating, a testament to its quality and popularity. The Italian & Greek Delicatessen was also known for its unique offerings such as halloumi cheese, various marinated olives, and phyllo pastry.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "a42b301f326bbb0127610b170cd96118e42b9fa23d1bedfb5e51eae481edba8d",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ]
+}

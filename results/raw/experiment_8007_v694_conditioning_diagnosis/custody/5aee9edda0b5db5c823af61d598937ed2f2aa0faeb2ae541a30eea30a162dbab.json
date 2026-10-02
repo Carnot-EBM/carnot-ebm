@@ -1,0 +1,102 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.0360556800151244,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:c9727d36985cfbaebfe81a7de857df1dbaac020cd5da8c31216536fe906c518b",
+  "input_tokens": 418,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 418,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 440
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:ab1c2286969ea6dc369c73572f65a230eff3bf6131cec4dffdd5cb958e7a23af",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"unsupported_probability\": 0.0,\n\"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885844,
+    "id": "chatcmpl-9OYLi7iLmqoKUMSPw6xkWSUQUpdS8Uv8",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 508.985,
+      "predicted_n": 22,
+      "predicted_per_second": 43.223277699735746,
+      "predicted_per_token_ms": 23.13568181818182,
+      "prompt_ms": 410.306,
+      "prompt_n": 340,
+      "prompt_per_second": 828.6498369509586,
+      "prompt_per_token_ms": 1.2067823529411765
+    },
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 418,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 440
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:A music producer (or an executive music producer) is someone who makes sure that when recording a song or making a record, the end result is as good as it can be. He or she will ensure that a song is well produced and well recorded.\\\\n\\\\npassage 2:A music producer usually selects the songs\u2014with the help of the record label. The producer also manages a recording budget, contracts session players and supervises all of the recordings. Over the last few decades, there have been many occasions where engineer and producer responsibilities are combined in one person.\\\\n\\\\npassage 3:What does a music producer do? Music producers are responsible for helping musical artists achieve the best possible sound for their recorded music. Music producers must have extensive knowledge of audio recording techniques and the best way to use music studio equipment.\\\\n\\\\n\\\",\\\"question\\\":\\\"what does a music producer do\\\"}\", \"original_answer\": \"A music producer ensures that the recording of a song or making of a record results in the best possible product. They are involved in selecting the songs, managing the recording budget, contracting session players and supervising all of the recordings. They may also combine the roles of engineer and producer. They help musical artists to achieve the best sound for their recorded music, using their extensive knowledge of audio recording techniques and music studio equipment.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "calibration",
+  "source_cluster_id": "251e608370fab40bc76545810fbde50a9fa67580d7b7e142a3d0adefba54051d",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ]
+}

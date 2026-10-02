@@ -1,0 +1,120 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.680627982947044,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:7d24e180d4c9932faea738658316ede6711d4f7e9179066a7b47540af47fb9fa",
+  "input_tokens": 1112,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1112,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1135
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:74a0179d3b578b1d2e117dfc84a83f6496f0bd0041221a8132189429c55c2810",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886237,
+    "id": "chatcmpl-BqiuRuwK5UxnascKSQYpQBdlQwZCkz91",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 542.379,
+      "predicted_n": 23,
+      "predicted_per_second": 42.40577160988903,
+      "predicted_per_token_ms": 23.581695652173913,
+      "prompt_ms": 1025.1,
+      "prompt_n": 1034,
+      "prompt_per_second": 1008.682079797093,
+      "prompt_per_token_ms": 0.9913926499032881
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1112,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1135
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"1111 E Cabrillo Blvd\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"paid\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Tapas/Small Plates, Restaurants, Breakfast & Brunch, Seafood, American (New)\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"17:0-22:0\\\",\\\"Monday\\\":\\\"17:0-22:0\\\",\\\"Saturday\\\":\\\"17:0-22:0\\\",\\\"Sunday\\\":\\\"17:0-22:0\\\",\\\"Thursday\\\":\\\"17:0-22:0\\\",\\\"Tuesday\\\":\\\"17:0-22:0\\\",\\\"Wednesday\\\":\\\"17:0-22:0\\\"},\\\"name\\\":\\\"Marbella\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2020-08-24 02:29:48\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"We were tired and hungry.  The manager at Hyatt was kind of enough to serve us a great dinner.  I am fairly happy with the pasta, chicken salad especially the avocado toast.  Great flavor and it's not greasy either.  Everything is seasoned perfectly.  A little spice goes a long way.\\\"},{\\\"review_date\\\":\\\"2019-07-06 00:29:17\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Methinks not indeed. This place is so gross. The food has small, cold portions. The wait staff is a bunch of bus boys, who speak very poor English. It's as if they've fired their regular wait staff to save money, and then dragooned the dish washer into serving.\\\\n Don't be penny wise and pound foolish, and this nonsense includes the tip.  One of the buffets was an $18 TERRIBLE hamburger and cold fries. Why? \\\\nI had a grilled chicken sandwich that was apparently taken out of the ice box minutes before it found its way to my plate. It may have been left over from the previous day. Soooooo gross. The hotel is undergoing a renovation, according to the manger. START WITH THE RESTAURANT.\\\"},{\\\"review_date\\\":\\\"2019-04-13 23:50:55\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"My boyfriend and I wanted a late lunch/ snack. We decided to stay in the hotel to eat at this restaurant.  The vibe and food WASN'T inviting. We just thought, \\\\\\\"let's give this place a try.\\\\\\\"  SUPER DISAPPOINTED ON THE FOOD AND COST for this HOTEL!! Its pretty dry, tasteless, and expensive. (We ordered Nachos, Brussels sprouts, & Mahi Mahi fish taco). Did i mentioned that it was expensive too? GO ELSE WHERE FOR BETTER FOOD.Service was ok but we were there for food, Not the the service.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Marbella is a restaurant located at 1111 E Cabrillo Blvd, Santa Barbara, CA. This establishment specializes in tapas, small plates, breakfast & brunch, seafood, and new American cuisine. They operate from 17:00 to 22:00 from Monday to Sunday. They offer outdoor seating and take-out options, and are suitable for group dining. However, they do not have a parking facility and their WiFi service is paid. The ambience is not specified. Marbella has an overall rating of 3.5 stars. The reviews are mixed with some customers praising the great flavor of the food, specifically the pasta, chicken salad and avocado toast. However, there are also negative reviews mentioning cold and small portions, poor service, and high prices. The restaurant seems to have a varying level of customer satisfaction.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "68eda85e3c5bef35dbdfe2112b5f9ef18f1068d038a9a6f0b3275028a6f353eb",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23
+  ]
+}

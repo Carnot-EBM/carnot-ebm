@@ -1,0 +1,114 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.543366831028834,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:e591e993e96616724d69aa3ed04d6f1829ab74a6e3c7317b5b3dc2adb074d622",
+  "input_tokens": 918,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 918,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 941
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:25bb5bf28ed8f369816f5be0e9109f309aa5fa41496916aae6d345d5217e2979",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885910,
+    "id": "chatcmpl-toHjdOZOMzC7H7MVKzr188ONzO71rS5M",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 538.973,
+      "predicted_n": 23,
+      "predicted_per_second": 42.67375174637691,
+      "predicted_per_token_ms": 23.433608695652172,
+      "prompt_ms": 846.385,
+      "prompt_n": 840,
+      "prompt_per_second": 992.4561517512717,
+      "prompt_per_token_ms": 1.0076011904761906
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 918,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 941
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Two Missing Girls, One Baffling Pattern: Chilling Parallels in Lauren and Dulce Cases in New Jersey\\nThe unsolved disappearances of Lauren Spierer and Dulce Alavez have stirred up disturbing parallels, potentially offering vital leads to their mysterious fates, says a private detective.\\nOn September 16, 2019, five-year-old Dulce Alavez went missing from Bridgeton City Park, New Jersey, roughly an hour away from Philadelphia. As per reports, Dulce was playing on a swing set with her brother and vanished shortly after. Despite the intense search led by her mother, Noema Alavez Perez, and multiple investigative trails by Bridgeton Police spanning 11 states and even Mexico, no significant leads have been found over the past four years.\\nDrawing a harrowing comparison to Dulce's case is the story of Lauren Spierer, a 20-year-old Indiana University sophomore. Spierer disappeared on June 3, 2011, in Bloomington, Indiana, after an evening with friends. The last known footage of Spierer, captured around 4:30 am, shows her walking home barefoot in a white shirt and black leggings. She was merely a few blocks away from her apartment when she vanished and hasn't been seen since.\\nTrent Steele, co-founder of the Florida-based nonprofit Anti-Predator Project, working alongside the families of both missing individuals, shed light on the uncanny resemblances in these cases. Speaking exclusively to The U.S. Sun, Steele emphasized the uniqueness of these cases, remarking that both have remained unsolved for extended periods without a single trace being found. Typically, missing persons either return or are discovered after a short time; however, the complete absence of any clue in both these instances is rare.\\nAdding another dimension to Dulce's case, Steele labeled it as an \\\"old-school disappearance,\\\" referring to the complete absence of technological evidence, which is quite unusual in today's era where many disappearances have online interactions as an underlying factor.\\nDetermined to breathe new life into the investigation, Steele and his team aim to approach Dulce's case from a new angle, relying on fresh perspectives, technologies, and a thorough approach.\\nWhile Spierer's parents, Robert and Charlene, still hope for their daughter's return, they maintain a Facebook page dedicated to her.\\nIn another related development, The National Center for Missing and Exploited Children released an age-progressed picture of Dulce on the fourth anniversary of her disappearance, hoping it might lead to her identification. Dulce's mother, shocked by the progression, expressed how different her daughter looked but noted that her eyes remained unmistakably familiar.\\nThe quest for answers in both cases continues, as families and investigators seek closure.\", \"original_answer\": \"The unsolved disappearances of Lauren Spierer and Dulce Alavez in New Jersey have raised disturbing similarities, potentially offering crucial leads, according to a private detective. Five-year-old Dulce went missing from a park in 2019, and despite an extensive search, no significant leads have been found. Lauren, a 20-year-old university student, disappeared in 2011. Trent Steele, co-founder of the Anti-Predator Project, noted the lack of any trace in both cases, which is rare for missing person cases. Steele's team plans to approach Dulce's case from a fresh perspective. The National Center for Missing and Exploited Children has released an age-progressed picture of Dulce on the fourth anniversary of her disappearance.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "calibration",
+  "source_cluster_id": "3cb974802d021b2d5f9ad4296dd2ce85f0adf7ac1a610537b5661d3cb9f28e25",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17
+  ]
+}

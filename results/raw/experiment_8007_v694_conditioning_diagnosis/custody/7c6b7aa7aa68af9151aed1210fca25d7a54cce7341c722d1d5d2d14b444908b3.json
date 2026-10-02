@@ -1,0 +1,110 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.292929626069963,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:31b4d2e832b28946843681a946dba3222f70d14c83e0634e27974c035c313d19",
+  "input_tokens": 641,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 1,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 641,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 665
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:acc7266d1f157dcf2b93ede134c53a17a387d7fe298ead6f7323916844dcbc59",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 1\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886117,
+    "id": "chatcmpl-kYRXx15vJf9VEk8GgcnkE55qLUSW9eN2",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.515,
+      "predicted_n": 24,
+      "predicted_per_second": 42.4391925943609,
+      "predicted_per_token_ms": 23.563125,
+      "prompt_ms": 592.647,
+      "prompt_n": 563,
+      "prompt_per_second": 949.9752803945687,
+      "prompt_per_token_ms": 1.0526589698046183
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 641,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 665
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Featured articles. 1  Where to go on holiday in October for the best weather. 2  Where to go on holiday in February for the best weather. 3  Where to go on holiday in January for the best weather. 4  New airline routes & destinations for 2017/2018. 5  Top 10 sunny holiday destinations year round. 6  May half term holiday: Best deals & destinations.\\\\n\\\\npassage 2:Tromso: Annual Weather Averages. July is the hottest month in Tromso with an average temperature of 12\u00b0C (54\u00b0F) and the coldest is January at -4\u00b0C (25\u00b0F) with the most daily sunshine hours at 8 in August. The wettest month is October with an average of 130mm of rain. The best month to swim in the sea is in August when the average sea temperature is 54 \u00b0F (12 \u00b0C). Average Temperature: Tromso\\\\n\\\\npassage 3:Guide to Tromso weather in October. The average maximum daytime temperature in Tromso in October is a cold 4\u00b0C (39\u00b0F). The average night-time temperature is usually a very cold -2\u00b0C (28\u00b0F). There are usually 2 hours of bright sunshine each day, which represents 18% of the 9 hours of daylight.\\\\n\\\\n\\\",\\\"question\\\":\\\"average weather in tromso norway\\\"}\", \"original_answer\": \"The average weather in Tromso, Norway varies throughout the year. July is the hottest month with an average temperature of 12\u00b0C (54\u00b0F), while the coldest month is January with temperatures averaging -4\u00b0C (25\u00b0F). The most daily sunshine hours occur in August. The wettest month is October with an average of 130mm of rain. The best month to swim in the sea is in August when the average sea temperature is 54 \u00b0F (12 \u00b0C). In October, the average maximum daytime temperature is a cold 4\u00b0C (39\u00b0F) and the average night-time temperature is usually a very cold -2\u00b0C (28\u00b0F), with usually 2 hours of bright sunshine each day.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "97b74b2194bd5cf7a26c0eb810f88348c64bd1d1c38a23c6217aaea9962ded36",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ]
+}

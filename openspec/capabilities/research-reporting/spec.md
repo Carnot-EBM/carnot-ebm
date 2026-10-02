@@ -89234,3 +89234,42 @@ with adversarial and strict row readers, cold replay in a fresh process, and
 both conductor readers. Publish through the existing primary helper. All
 published checkpoint and snapshot references SHALL resolve to durable files.
 The conductor owns ops/status, ops/changelog and BMAD reconciliation.
+
+### REQ-REPORT-8007: Diagnose conditioning before new V694 fitting
+
+Exp8007 SHALL preserve historical fit/tune and the 64/256/64 V693 development
+slots. Freeze role hashes, method roster, optimizer budgets and gates before
+reading evaluator manifests. Verify upstream bytes through the existing primary
+readers and persist copied checkpoints and capture evidence below its raw path.
+Missing q stays excluded; exposed development never becomes untouched validation.
+Measure fit/tune logits, target support, gradient norms, coefficient scales,
+loss decrease and distances to fixed action thresholds. Compare historical
+200-step heads with a bounded converged intercept-only diagnostic and a separate
+responsive synthetic control. Do not use evaluation outcomes to choose a method.
+
+### SCENARIO-REPORT-8007-ISOLATION
+
+Optimizer input SHALL contain only fit/tune; extra roles, duplicate identities,
+overlapping sources, unknown targets and absent probabilities SHALL not reach
+fitting. Frozen development slots retain exclusions and hashes. Changing stream
+or retention labels SHALL not change a fit. Durable copy drift SHALL fail closed.
+
+### SCENARIO-REPORT-8007-THRESHOLDS
+
+Costs SHALL be unsupported accept=5, supported reject=1, escalate=0.5 and correct
+decision=0. Accept p<0.1, reject p>0.5, and escalate ties. Freeze Brier and decision
+loss, 10,000 source/block bootstrap draws, Holm correction, support floors and
+synthetic claim separation. Saturation, insufficient convergence, no signal and
+inadequate support SHALL remain distinct unresolved possibilities.
+
+### SCENARIO-REPORT-8007-PUBLICATION
+
+Traced units, consumer checks, E2E-015, real private CLI routes, Ruff, strict
+mypy and explicit spec checks SHALL cover all new statements. Run the full
+Python suite once as a separate bounded health diagnostic; preserve failures.
+Cold reduction in a fresh process SHALL reject changed rows, checkpoint bytes
+and aggregate claims. Validate exact candidate bytes with adversarial and strict
+row readers, publish through the existing helper, then recheck the primary.
+Methods readiness one requires complete measurements and owned checks, not a
+positive scientific result. Record source access, dates and retirement conflicts
+for all five requested papers. The conductor owns ops and BMAD reconciliation.

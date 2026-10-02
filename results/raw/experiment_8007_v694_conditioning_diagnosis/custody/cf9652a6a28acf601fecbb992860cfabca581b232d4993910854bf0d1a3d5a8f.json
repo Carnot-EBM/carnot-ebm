@@ -1,0 +1,110 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.5298250609776005,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:df674f530c0747cdc123d37c90d131c9b6b6386b9776c19590abbfd151e0de0c",
+  "input_tokens": 921,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 921,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 944
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:9a62a4eb689dd578ef82ef86fc0fdf0aa708ccf3228c2bde42738af684829e3b",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886333,
+    "id": "chatcmpl-hWx25SU9ymq0rvSQwqLHEcsMOH4nEPbH",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.983,
+      "predicted_n": 23,
+      "predicted_per_second": 42.43675539638698,
+      "predicted_per_token_ms": 23.564478260869564,
+      "prompt_ms": 855.84,
+      "prompt_n": 843,
+      "prompt_per_second": 984.997195737521,
+      "prompt_per_token_ms": 1.0152313167259788
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 921,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 944
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"At the UCen\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":null,\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":null},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Delis, Restaurants, Sandwiches\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":null,\\\"name\\\":\\\"Gaucho Cafe\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2015-06-24 00:04:42\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Gaucho Cafe had the finest cantaloupe, watermelon, and olive tapenade salad I've ever had. It might be the best salad I've had in my entire life, and this is coming from a self-described salad aficionado. The cantaloupe is just past ripe and it is served over a generous helping of delicious SPROUTS along with the rest of the aforementioned ingredients. I really wish this place wasn't closed as I've tried recreating this salad but haven't had any luck at all.\\\"},{\\\"review_date\\\":\\\"2010-10-15 01:54:30\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"The line is long around the lunch hour, but it's understandable.\\\\n\\\\nI really liked the scrambled eggs breakfast combo, although I was disappointed with the eggs were obviously watery (made from instant liquid yolk). The ham I asked for was also straight up sandwich ham. I was expecting a ham steak for some reason.\\\\n\\\\nOverall the breakfast was okay though. Very filling\\\\n\\\\nI'll likely be coming here, perhaps to try other breakfast options or salads\\\"},{\\\"review_date\\\":\\\"2010-08-04 22:46:00\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Gaucho Cafe is a no-frills salad and sandwich place with a DEEP menu that doesn't disappoint. The place has a huge selection of hot and cold sandwiches with plenty of options for us vegetarians. I have been here a handful of times, and I have never been unhappy with my food. The sandwiches don't come with anything else, and look plain and lonely on a white paper plate, but throw on a side salad for a buck, and you have a nice happy lunch. The food is definitely tasty, but the portions could be a bit bigger, and the ingredients could be fresher. Besides that (and their cash-only policy) I have no complaints. The service is friendly and pleasant, the food is great, and their options are almost endless. Easily one of the best places to eat on campus.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Gaucho Cafe, located at the UCen in Goleta, CA, is a local deli and restaurant known for its sandwiches and salads. It has a business rating of 4.0 stars. Customers have praised the cafe for its variety of food options, with vegetarian-friendly dishes and a deep menu. One customer highlighted the exceptional cantaloupe, watermelon, and olive tapenade salad, describing it as the best they've ever had. Another reviewer mentioned the extensive selection of hot and cold sandwiches. However, some customers have expressed that the portions could be larger and the ingredients fresher. The cafe also offers outdoor seating and takeout options, but does not take reservations. Please note that the restaurant does not clarify its parking situation, WiFi availability, suitability for groups, music, and ambience.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "d32986b68d92d11dc98c0de1f054600f44acbc676660618d9383df0eaf4f0395",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ]
+}

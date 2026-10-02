@@ -1,0 +1,103 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.0744952139211819,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:5a2a217b227ce8885ac5fafab24b8837339ad3272b50ef64992dc16a5dcb3a88",
+  "input_tokens": 365,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 365,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 388
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:da4e48b4d0ae98faa7c1949df7e37c934ef797281b741217333733ec0dd37e6c",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885943,
+    "id": "chatcmpl-svNSDhBH4WrGjh8OKtO7VNalBtFG8jU4",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 539.364,
+      "predicted_n": 23,
+      "predicted_per_second": 42.64281635407628,
+      "predicted_per_token_ms": 23.450608695652175,
+      "prompt_ms": 391.353,
+      "prompt_n": 287,
+      "prompt_per_second": 733.353264188597,
+      "prompt_per_token_ms": 1.3635993031358886
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 365,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 388
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:The first thing to keep in mind is that the term organic can be applied to a variety of different kinds of foods. The term can be used on agricultural products, and on meat, poultry, eggs and dairy products.\\\\n\\\\npassage 2:One of the easiest ways to get probiotics into your diet is by adding acidophilus milk. It's milk that's been fermented with bacteria. Sometimes it's labeled sweet acidophilus milk. Buttermilk -- usually milk that's cultured with lactic acid bacteria -- is also rich in probiotics.\\\\n\\\\npassage 3:Collodial Minerals: Facts and Myths Colloidal Minerals. You must give your body all the raw materials it requires to maintain and renew itself in order to achieve a healthful life. The raw materials so vital to your health can be challenging to find.\\\\n\\\\n\\\",\\\"question\\\":\\\"what are 15 different plant-derived materials other than food that you can find in our home\\\"}\", \"original_answer\": \"Unable to answer based on given passages.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "4b6ec1ada7b240f98bc6e7720866c20b67607c13fbe5c6b4267b5dba1eba6094",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ]
+}

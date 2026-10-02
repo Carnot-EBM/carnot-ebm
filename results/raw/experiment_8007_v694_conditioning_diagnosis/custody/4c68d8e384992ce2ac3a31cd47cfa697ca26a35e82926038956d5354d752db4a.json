@@ -1,0 +1,104 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.1255717549938709,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:81f6849a7a90539d44bdec17db09bb594a7c981781cb7b0612f34732226061a2",
+  "input_tokens": 387,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 4,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 387,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 411
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:7442a7e21abfbe2194227f3d6c5f3dc7369ef8b5342d676a1da4495859f45624",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 4\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886390,
+    "id": "chatcmpl-pwbzDTfHo08PQVBTaavnkm9WHCHILQX0",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.582,
+      "predicted_n": 24,
+      "predicted_per_second": 42.5093254832779,
+      "predicted_per_token_ms": 23.52425,
+      "prompt_ms": 415.615,
+      "prompt_n": 309,
+      "prompt_per_second": 743.476534773769,
+      "prompt_per_token_ms": 1.345032362459547
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 387,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 411
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Blinky and Pinky on the Champs Elysees? Inky and Clyde running down Broadway? Power pellets on the Embarcadero? Leave it to Google to make April Fools' Day into throwback fun by combining Google Maps with Pac-Man. The massive tech company is known for its impish April Fools' Day pranks, and Google Maps has been at the center of a few, including a Pokemon Challenge and a treasure map. This year the company was a day early to the party, rolling out the Pac-Man game Tuesday. It's easy to play: Simply pull up Google Maps on your desktop browser, click on the Pac-Man icon on the lower left, and your map suddenly becomes a Pac-Man course. Twitterers have been tickled by the possibilities, playing Pac-Man in Manhattan, on the University of Illinois quad, in central London and down crooked Lombard Street in San Francisco, among many locations:.\\n\", \"original_answer\": \"Google has added a Pac-Man feature to its Google Maps service for April Fools' Day. Users can play the game on any map by clicking the Pac-Man icon in the bottom left corner of the screen.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "91b57caf2c9230a501bd92360d51a48fef52bbea467d213f94144128e53563d7",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ]
+}

@@ -1,0 +1,102 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.0933294129790738,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:96edeeda869ad0f3efe908439a92613304d0e84bfd17853f3bc3b57cd73ce579",
+  "input_tokens": 451,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 451,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 472
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:c3590cb7e7f775808d260c098c01c8589708e593719ba2bbedb77c0ad21bbfec",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"unsupported_probability\": 0.0,\n\"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886074,
+    "id": "chatcmpl-mDitUpJ1kLW7AUkQF98S2LgNAVyTwnlI",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 491.883,
+      "predicted_n": 21,
+      "predicted_per_second": 42.693079451820864,
+      "predicted_per_token_ms": 23.423,
+      "prompt_ms": 446.676,
+      "prompt_n": 373,
+      "prompt_per_second": 835.0571779097153,
+      "prompt_per_token_ms": 1.1975227882037534
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 451,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 472
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Communicable disease refers to diseases that can pass from one person to another. Non-communicable diseases occur in one person and cannot be passed on to another person. Communicable diseases are also known as infectious diseases, and non-communicable diseases are referred to as chronic.\\\\n\\\\npassage 2:One important difference between communicable and non-communicable disease is that non-communicable diseases tend to be chronic, which means they last a long time and progress slowly. Communicable diseases are more likely to be acute, which means the disease develops quickly.\\\\n\\\\npassage 3:Cancers are one category of non-communicable diseases that cannot be spread to others. Chicken pox and other conditions caused by viruses are communicable diseases. Non-infectious diseases involving the respiratory system are a class of non-communicable conditions.\\\\n\\\\n\\\",\\\"question\\\":\\\"what is the difference between communicable and non communicable diseases\\\"}\", \"original_answer\": \"Communicable diseases are those that can pass from one person to another, also known as infectious diseases. They are more likely to be acute, meaning they develop quickly. Examples include conditions caused by viruses such as chicken pox. On the other hand, non-communicable diseases are those that occur in one person and cannot be passed on to another. They are also referred to as chronic diseases because they tend to last a long time and progress slowly. Examples include cancers and non-infectious diseases involving the respiratory system.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "6dbc84fd1cf7e17c69c85623b4012d00a0b8e5d392e4e8c1f7e3e9a7b5f6677b",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ]
+}

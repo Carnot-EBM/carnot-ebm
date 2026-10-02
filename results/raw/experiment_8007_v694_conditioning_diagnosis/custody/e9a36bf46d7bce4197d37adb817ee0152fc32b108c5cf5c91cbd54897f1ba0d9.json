@@ -1,0 +1,113 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.2339882620144635,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:f9031039dae5a69b81faf427e865df12cf21fa88addfb600a9bc07b481c1c281",
+  "input_tokens": 615,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 1,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 615,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 637
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:42cfdc3e29a93dbc5b71a1f78788cb00af4bc2a593c47cc5c42493d3f745b07f",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"unsupported_probability\": 0.0,\n\"source_sentence_id\": 1\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886100,
+    "id": "chatcmpl-5bTjAspwdOv2Not9PE21itsdxrni5FPS",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 517.304,
+      "predicted_n": 22,
+      "predicted_per_second": 42.52818458778591,
+      "predicted_per_token_ms": 23.51381818181818,
+      "prompt_ms": 577.479,
+      "prompt_n": 537,
+      "prompt_per_second": 929.9039445590229,
+      "prompt_per_token_ms": 1.0753798882681564
+    },
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 615,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 637
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:The difference between price and value 2 Successful investing the difference between price and value Successful investing the difference between price and value 3 Studies suggest that around a third of transactions fail to\\\\n\\\\npassage 2:That\u2019s unfortunate, but shows that he, along with millions of others, does not understand the difference between price and value. What is Price? Price is what you pay for a given product or service. You buy a book that costs $14.95. It\u2019s cost is $14.95. You decide to have your car detailed before you sell it. This costs you $80. It\u2019s price is $80. Simple as that. What is Value? Value is what any given product or service is worth. If the book you bought inspires you to invent a new product that you sell for $50. It\u2019s value is $50 multiplied by the number of products you sell. If detailing your car encourages a buyer to spend an extra $500, the value of that service is not $80, but $500. Price is the amount you pay.\\\\n\\\\npassage 3:Marketing didn't create a difference, it only caused people to have a perception of a difference, thus marketing was altering peoples values. Same thing. It creates a difference in how someone values a product.\\\\n\\\\n\\\",\\\"question\\\":\\\"difference between price and value\\\"}\", \"original_answer\": \"Price is the amount of money you pay for a product or service, such as buying a book for $14.95 or getting your car detailed for $80. On the other hand, value is what the product or service is worth to you. For instance, if a book you bought for $14.95 inspires you to invent a product that you sell for $50, the book's value is $50 multiplied by the number of products you sell. If detailing your car for $80 encourages a buyer to spend an extra $500, the value of that service is $500.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "74d36b60c39532bbc93d95c2d0d9e4f2fbf88eff6cf113b21ad55a02220c5fc3",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+  ]
+}

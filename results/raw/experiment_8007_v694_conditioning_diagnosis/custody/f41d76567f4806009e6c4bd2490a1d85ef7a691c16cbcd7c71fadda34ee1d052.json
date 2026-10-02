@@ -1,0 +1,108 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.3166266510961577,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:41ab9a437a3764804492592adc49b86ff0c7351a9fc14babdcd3bfeb85531f68",
+  "input_tokens": 817,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 817,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 838
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:2537bb342f2bb9147457762ca2ae7ee47553109a65ffdb16bc96ab2e6904d6cb",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885884,
+    "id": "chatcmpl-b7l1kJr0l2n4kFjxiciR4GAQLgwThsYL",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 489.095,
+      "predicted_n": 21,
+      "predicted_per_second": 42.93644384015376,
+      "predicted_per_token_ms": 23.290238095238095,
+      "prompt_ms": 704.432,
+      "prompt_n": 739,
+      "prompt_per_second": 1049.0721602652918,
+      "prompt_per_token_ms": 0.9532232746955346
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 817,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 838
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"93 Castilian Dr\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":false,\\\"WiFi\\\":null},\\\"business_stars\\\":5.0,\\\"categories\\\":\\\"Arts & Entertainment, Wine Tasting Room, Bars, Wineries, Distilleries, Food, Cocktail Bars, Nightlife, Venues & Event Spaces, Beer, Wine & Spirits, Event Planning & Services\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-18:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"11:0-18:0\\\",\\\"Sunday\\\":\\\"11:0-17:0\\\",\\\"Thursday\\\":\\\"11:0-17:0\\\",\\\"Wednesday\\\":\\\"11:0-17:0\\\"},\\\"name\\\":\\\"Goleta Red Distilling Company\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-05-28 14:46:47\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"We love this craft distillery!  All the spirits are delicious. Rum, Vodka, Agave...I especially love the Goodland Gin. The tasting room is right next to where Michael distills his stuff.\\\"},{\\\"review_date\\\":\\\"2021-05-02 02:37:40\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"This was a delightful surprise on our drive through. Some quite unique spirits and one of the best gins I've had. My wife can't stand gin, but insisted we buy a bottle. Definitely worth stopping by.\\\"},{\\\"review_date\\\":\\\"2021-04-15 05:15:08\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Such a wonderful distillery/tasting room! Michael, the owner, is so friendly, knowledgeable and welcoming. We tried 5 different spirits and they were all great!! We especially liked the gin and brought a bottle home. I hope you support this amazing local business!! Highly recommended!!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Goleta Red Distilling Company, located at 93 Castilian Dr in Goleta, CA, is a highly-rated local business known for its wide range of offerings. Its categories include Arts & Entertainment, Wine Tasting Room, Bars, Wineries, Distilleries, Food, Cocktail Bars, Nightlife, Venues & Event Spaces, Beer, Wine & Spirits, and Event Planning & Services. Open from Wednesday to Sunday, the company provides ample parking space but does not offer reservations, outdoor seating, Wi-Fi, live music, or takeout. The company has been highly praised in customer reviews for their tasty spirits, especially the gin. Customers have also lauded the owner, Michael, for his friendliness and knowledge. The distillery has a 5-star rating, reflecting its high-quality offerings and excellent customer service.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "calibration",
+  "source_cluster_id": "b4cc661623646f299e8a1b980fe71f3002ef341fad69784802a1d8344a34a6f9",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]
+}

@@ -1,0 +1,105 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.1228163120104,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:037692ed38147f581f5d56fb5afed55107f2f8856ed227598f4565fce3712364",
+  "input_tokens": 491,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 1,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 491,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 513
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:8ccc9c6531a843ce4b407603840b2be530b9bcd05f37cf105348accba1cfa0f3",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"unsupported_probability\": 0.0,\n\"source_sentence_id\": 1\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886199,
+    "id": "chatcmpl-gOowFxhkSbB0RbV4423tQP0DztUWjJET",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 516.091,
+      "predicted_n": 22,
+      "predicted_per_second": 42.62814116115181,
+      "predicted_per_token_ms": 23.45868181818182,
+      "prompt_ms": 492.89,
+      "prompt_n": 413,
+      "prompt_per_second": 837.9151534825215,
+      "prompt_per_token_ms": 1.1934382566585957
+    },
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 491,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 513
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:The earliest sunrise of the month in Madrid is 8:18 AM on December 1 and the latest sunrise is 19 minutes later at 8:37 AM on December 31. The earliest sunset is 5:48 PM on December 8 and the latest sunset is 10 minutes later at 5:57 PM on December 31.\\\\n\\\\npassage 2:Events in December in Madrid: For Christmas markets and other outdoor festivities in Madrid, see Christmas in Madrid. Madrid in Mid-December: Average Temperatures and Recent Years' Weather. It doesn't really get much colder as we head deeper into December and Madrid tends to stay dry. December 15 Averages High: 9\u00b0C. Low: 0\u00b0C.\\\\n\\\\npassage 3:See also: 100 Things to Do in Madrid. Weather in Barcelona in December. Main article: Weather in December in Barcelona. The sea has a warming effect in winter, so Barcelona isn't as cold in December as in Madrid, but it can still get pretty chilly.\\\\n\\\\n\\\",\\\"question\\\":\\\"weather madrid december\\\"}\", \"original_answer\": \"The weather in Madrid in December tends to stay dry with average high temperatures of 9\u00b0C and low temperatures of 0\u00b0C. The earliest sunrise is at 8:18 AM on December 1 and the latest sunrise is at 8:37 AM on December 31. The earliest sunset is at 5:48 PM on December 8 and the latest sunset is at 5:57 PM on December 31.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "6cdd7706536febb0cf71e140831405ca7afd0590933df195afeb2ead99317156",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ]
+}
