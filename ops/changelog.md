@@ -21250,3 +21250,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
   results remain pending.
 
 - 2026-10-02: Bind all thirteen tasks to complete immutable planning authority (⚠️ Research Finding) — honest_verdict=complete_circular_positive_contract_methods; results/experiment_8005_v694_contract_methods.json
+- 2026-10-02: Reconstruct static custody and delayed issued errors from original receipts (⚠️ Research Finding) — honest_verdict=complete_null_independent_replay; results/experiment_8006_v694_independent_replay.json
