@@ -1,0 +1,82 @@
+{
+  "arm": "original",
+  "capture_identity": "sha256:c690c1f517fbce73c5da6a2d1e99e3819c3de93e1045fe76d1c8215b54691541",
+  "censor_status": false,
+  "denominator": 1,
+  "donor_group_id": "sha256:4d9046ec443ab9667420221471b32ed448e475ce66505437a1704ac9720379ef",
+  "duration_s": 0.0019488109974190593,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:4d9046ec443ab9667420221471b32ed448e475ce66505437a1704ac9720379ef:original",
+  "group_id": "sha256:4d9046ec443ab9667420221471b32ed448e475ce66505437a1704ac9720379ef",
+  "input_byte_upper_bound": 2289,
+  "input_tokens": 30,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.25,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 18,
+      "prompt_tokens": 30
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:c4a425142e09b3efd18e14bc40b28c0a74aa255fdeb29f45a80410b82cc2910a",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "message": {
+          "content": "{\"unsupported_probability\": 0.25, \"source_sentence_id\": null}"
+        }
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "usage": {
+      "completion_tokens": 18,
+      "prompt_tokens": 30
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 32,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:As such, it is normally good to think of these two terms as logical phases in the general process of delivering something valuable to the end users. Quality assurance starts with the definition of procedures, rules and policies that govern the selection and use of raw materials for the manufacturing process.\\\\n\\\\npassage 2:Quality Control is focused on the initiation of the evaluation process, while quality assurance is focused on managing the process to ensure the stipulated business goals are realized within the set period of time.\\\\n\\\\npassage 3:In general, the QA activities are done before the product is manufactured or the service delivered (proactive approach). The QC activities are done during the manufacturing process and once the product is manufactured. QA is process oriented. QC is product oriented.\\\\n\\\\n\\\",\\\"question\\\":\\\"what is the difference between quality assurance and quality control\\\"}\", \"original_answer\": \"Quality Assurance (QA) and Quality Control (QC) are both important parts of the process of delivering a valuable product to end users, but they differ in focus and timing. QA is a proactive process that starts with defining procedures, rules, and policies for selecting and using raw materials in the manufacturing process. It is focused on managing the process to ensure that business goals are met within a set period of time. On the other hand, QC is focused on the evaluation process and takes place during and after the manufacturing process. It is product-oriented and is aimed at ensuring the quality of the finished product.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69410,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "seed": 69410,
+  "source_cluster_id": "051bb9f0196443eb8d35db0113b9c734c9932ddc1cebc072b1a37e09ce910adf",
+  "source_hash": "sha256:c4a57860c338904a8c69ce06abb680360560fa727a9c3e39bce66c9294cd3c1c",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ]
+}

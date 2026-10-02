@@ -1,0 +1,85 @@
+{
+  "arm": "duplicate",
+  "capture_identity": "sha256:c690c1f517fbce73c5da6a2d1e99e3819c3de93e1045fe76d1c8215b54691541",
+  "censor_status": false,
+  "denominator": 1,
+  "donor_group_id": "sha256:ce1efefde7a6346f5af8c6d4e3e77fb57afa2f22c3168ef4876b87c12187a4b9",
+  "duration_s": 0.0024750500451773405,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:ce1efefde7a6346f5af8c6d4e3e77fb57afa2f22c3168ef4876b87c12187a4b9:duplicate",
+  "group_id": "sha256:ce1efefde7a6346f5af8c6d4e3e77fb57afa2f22c3168ef4876b87c12187a4b9",
+  "input_byte_upper_bound": 2338,
+  "input_tokens": 30,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.25,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 18,
+      "prompt_tokens": 30
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:1e9497f50c547447fc77704c1cd22d00b9a7f0fbc869144b4e72a708456522a8",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "message": {
+          "content": "{\"unsupported_probability\": 0.25, \"source_sentence_id\": null}"
+        }
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "usage": {
+      "completion_tokens": 18,
+      "prompt_tokens": 30
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 32,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Madison's iconic State Street is a beautiful downtown center for shopping, eating, and entertainment, notes Livability. Spanning a narrow strip of land between the scenic Lake Mendota and Lake Monona, the street is also banked by the impressive Wisconsin State Capitol building and University of Wisconsin-Madison.\\\\n\\\\npassage 2:Or that we\u2019re the \u201cWater Park Capital of The World\u201d \u2013 thanks to Wisconsin Dells. Our Wisconsin Fish Fry, beer brats and other famous food traditions are also great reasons to love this state! But, there are even more reasons we can all be glad we live in Wisconsin. Here are 10 of the big ones\u2026.\\\\n\\\\npassage 3:IT\u2019S BEERVANA. Wisconsin could just as easily be called The Beer State. This land of malted hops and barley welcomed German immigrants and their brewing traditions with open arms. A staggering 3.9% of the state\u2019s GDP comes from beer, with over 60,000 people employed in the beer industry.\\\\n\\\\n\\\",\\\"question\\\":\\\"reasons why wisconsin is the best state\\\"}\", \"original_answer\": \"Wisconsin is considered the best state due to its rich culture, scenic beauty, and strong economy. Madison's State Street, which serves as a hub for shopping, dining, and entertainment, is a significant attraction. The state is also known as the \\\"Water Park Capital of The World\\\" due to Wisconsin Dells. Wisconsin's food traditions, such as the Wisconsin Fish Fry and beer brats, add to its appeal. Furthermore, Wisconsin has a strong beer industry, which contributes 3.9% to the state's GDP and employs over 60,000 people, thanks to its embraced German brewing traditions.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69410,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "seed": 69410,
+  "source_cluster_id": "1889240020d7f05d772d4bf389e1a4f3fba0c336623ce245c85682892eb977a1",
+  "source_hash": "sha256:cb853606911997aa955aedd62b1dc31297b3058e523563cd55b3d36cbab26a6b",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ]
+}

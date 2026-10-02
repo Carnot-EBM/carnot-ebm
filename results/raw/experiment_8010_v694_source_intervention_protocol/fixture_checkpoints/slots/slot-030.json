@@ -1,0 +1,84 @@
+{
+  "arm": "duplicate",
+  "capture_identity": "sha256:c690c1f517fbce73c5da6a2d1e99e3819c3de93e1045fe76d1c8215b54691541",
+  "censor_status": false,
+  "denominator": 1,
+  "donor_group_id": "sha256:71ecefce7eba695d846aead9eeec7a2a4ba4073f978f2e8547e7fcdef2f3ed6a",
+  "duration_s": 0.0020955969812348485,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:71ecefce7eba695d846aead9eeec7a2a4ba4073f978f2e8547e7fcdef2f3ed6a:duplicate",
+  "group_id": "sha256:71ecefce7eba695d846aead9eeec7a2a4ba4073f978f2e8547e7fcdef2f3ed6a",
+  "input_byte_upper_bound": 3229,
+  "input_tokens": 30,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.25,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 18,
+      "prompt_tokens": 30
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:63b4c2ec63eef801d8a3861d51adc998bf5e40cc4325a156ee78ade7b5045a97",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "message": {
+          "content": "{\"unsupported_probability\": 0.25, \"source_sentence_id\": null}"
+        }
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "usage": {
+      "completion_tokens": 18,
+      "prompt_tokens": 30
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 32,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"503 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":false,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":3.0,\\\"categories\\\":\\\"Bubble Tea, Restaurants, Food, Asian Fusion, Vegan, Acai Bowls\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-2:0\\\",\\\"Monday\\\":\\\"11:0-21:0\\\",\\\"Saturday\\\":\\\"11:0-2:0\\\",\\\"Sunday\\\":\\\"11:0-21:0\\\",\\\"Thursday\\\":\\\"11:0-21:0\\\",\\\"Tuesday\\\":\\\"11:0-21:0\\\",\\\"Wednesday\\\":\\\"11:0-21:0\\\"},\\\"name\\\":\\\"Hana Kitchen\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-08 03:18:16\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Received an email with a promo code (YUMMY) to get 15% off and the website won't accept the discount. Bait & Switch! Ugh!\\\"},{\\\"review_date\\\":\\\"2021-12-28 17:35:11\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Food poisoning yesterday from eating there the night before. Not much else I can say about that except the obvious - not recommended.\\\"},{\\\"review_date\\\":\\\"2021-11-28 23:25:44\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"Their water tasted like plastic. I got the chicken bowl and their broccoli was moldy. I asked the lady about the mango tacos and she was rude about it. I do not recommend, I did not eat more than two bites.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Hana Kitchen is a restaurant located at 503 State St, Santa Barbara, CA, specializing in a fusion of Asian and Vegan cuisines, offering a range of food items including Bubble Tea and Acai Bowls. The establishment is open seven days a week, with extended hours on Fridays and Saturdays. They provide free WiFi, outdoor seating, and takeout options, but do not accommodate reservations or large groups. The ambience of the restaurant is casual and they offer both street and lot parking. However, customer reviews suggest a less-than-satisfactory experience, with complaints about promotional code issues, food quality, and customer service. The business has an overall rating of 3 out of 5 stars.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69410,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "seed": 69410,
+  "source_cluster_id": "0d92e1fd0abe65074dc7c56ad7989c70ae43ece4bcfb6ca00b926781ac9b8f65",
+  "source_hash": "sha256:e9961dcfaecbb9c8b6fe588e25714e9a427f2e33af87ca74451e740c6152488c",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ]
+}

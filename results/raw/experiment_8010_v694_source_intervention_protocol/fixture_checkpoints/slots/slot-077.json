@@ -1,0 +1,103 @@
+{
+  "arm": "swap",
+  "capture_identity": "sha256:c690c1f517fbce73c5da6a2d1e99e3819c3de93e1045fe76d1c8215b54691541",
+  "censor_status": false,
+  "denominator": 1,
+  "donor_group_id": "sha256:b7cb03719dddbbfdfd90a24267170005c9703781ec01e8fa538f326539d9b175",
+  "duration_s": 0.002447137958370149,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:8a2356c726ba4a4cbcc131179731a1da8e9be383d6783480705941188494264b:swap",
+  "group_id": "sha256:8a2356c726ba4a4cbcc131179731a1da8e9be383d6783480705941188494264b",
+  "input_byte_upper_bound": 2702,
+  "input_tokens": 30,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.25,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 18,
+      "prompt_tokens": 30
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:5018d914fbbc4bbb94853b0ae534ad288f31e45cb670e4eb2d46d9cc7ea2b383",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "message": {
+          "content": "{\"unsupported_probability\": 0.25, \"source_sentence_id\": null}"
+        }
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "usage": {
+      "completion_tokens": 18,
+      "prompt_tokens": 30
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 32,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Steps. 1  1. Combine the flour, baking powder, and salt in a medium mixing bowl. 2  2. Add the warm water and the oil. 3  3. Stir all ingredients together until the mixture forms a ball.  4. Turn out the dough onto a floured cutting board and knead the ball of dough gently for a few 1  minutes. 5. Spread the dough onto a pizza pan or a flat baking sheet.\\\\n\\\\npassage 2:Preheat oven to 450 degrees F (230 degrees C). In a medium bowl, dissolve yeast and sugar in warm water. Let stand until creamy, about 10 minutes. Stir in flour, salt and oil. Beat until smooth. Let rest for 5 minutes. Turn dough out onto a lightly floured surface and pat or roll into a round. Transfer crust to a lightly greased pizza pan or baker's peel dusted with cornmeal. Spread with desired toppings and bake in preheated oven for 15 to 20 minutes, or until golden brown. Let baked pizza cool for 5 minutes before serving.\\\\n\\\\npassage 3:Combine the flour, baking powder, and salt in a medium mixing bowl. 2. Add the warm water and the oil. 3. Stir all ingredients together until the mixture forms a ball. (Add more water if the dough becomes too stiff.) 4. Turn out the dough onto a floured cutting board and knead the ball of dough gently for a few minutes.\\\\n\\\\n\\\",\\\"question\\\":\\\"how do you make homemade pizza dough\\\"}\", \"original_answer\": \"Preheat the oven to 375\u00b0F. Place one chicken breast on a 10x10 piece of heavy aluminum foil. Brush each breast with olive oil, and season with salt and pepper. You may also arrange vegetables around the chicken if desired. Fold the foil over, or bring up the sides and crimp the edges tightly to seal. Place the foil packet on a baking sheet and put it in the oven. Bake for about 20 to 30 minutes, depending on the size of the chicken breast. Allow the chicken to rest for five minutes before opening the packet. Transfer chicken and vegetables to a plate and serve immediately.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69410,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "seed": 69410,
+  "source_cluster_id": "20fc29bd4d6d1c65f893131c6366f93559f4aef605e11da57ea3b79750f3045b",
+  "source_hash": "sha256:dc056335d38d4af54565ee7eabc606da53fc6d826731279e7d9c28154ccf5c75",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25
+  ]
+}

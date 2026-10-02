@@ -1,0 +1,87 @@
+{
+  "arm": "duplicate",
+  "capture_identity": "sha256:c690c1f517fbce73c5da6a2d1e99e3819c3de93e1045fe76d1c8215b54691541",
+  "censor_status": false,
+  "denominator": 1,
+  "donor_group_id": "sha256:0979a7dff07e1b024a151afa424adcbdcab11c32f2c391f626b61428d90858f9",
+  "duration_s": 0.0024035759270191193,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:0979a7dff07e1b024a151afa424adcbdcab11c32f2c391f626b61428d90858f9:duplicate",
+  "group_id": "sha256:0979a7dff07e1b024a151afa424adcbdcab11c32f2c391f626b61428d90858f9",
+  "input_byte_upper_bound": 2386,
+  "input_tokens": 30,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.25,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 18,
+      "prompt_tokens": 30
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:fde5d42ec7fd9d7418dacfbd552d83efeb0f1a7667cba3a60b4ca5729b522d58",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "message": {
+          "content": "{\"unsupported_probability\": 0.25, \"source_sentence_id\": null}"
+        }
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "usage": {
+      "completion_tokens": 18,
+      "prompt_tokens": 30
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 32,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:1 After 3 hours, turn the roast onto one side and cook for 20 minutes. 2  After 20 minutes, turn the roast on the next side and cook 20 minutes, repeat until the roast has the fat side on the bottom again. 3  Cook for about 2 more hours usually 6 hours total. 4  The roast is done when it shreds easily with a fork.\\\\n\\\\npassage 2:1 Place roast on top of onions and carrots, fat side down. 2  Combine mustard, sugar, Worcestershire sauce, beef broth and red wine in a separate bowl and pour over roast. 3  Set crock pot to low and cook for 3 hours. 4  After 3 hours, turn the roast onto one side and cook for 20 minutes.\\\\n\\\\npassage 3:1 Set crock pot to low and cook for 3 hours. 2  After 3 hours, turn the roast onto one side and cook for 20 minutes. 3  After 20 minutes, turn the roast on the next side and cook 20 minutes, repeat until the roast has the fat side on the bottom again. 4  Cook for about 2 more hours usually 6 hours total.\\\\n\\\\n\\\",\\\"question\\\":\\\"bottom round roast how to cook\\\"}\", \"original_answer\": \"To cook a bottom round roast, initially set the crock pot to low and cook for 3 hours. Place the roast on top of onions and carrots with the fat side down. Combine mustard, sugar, Worcestershire sauce, beef broth, and red wine in a separate bowl and pour this over the roast. After 3 hours, turn the roast onto one side and cook for 20 minutes. After 20 minutes, turn the roast on the next side and cook for 20 more minutes, repeating until the roast has the fat side on the bottom again. Continue to cook for about 2 more hours, generally totaling 6 hours of cook time. The roast is done when it can be easily shredded with a fork.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69410,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "seed": 69410,
+  "source_cluster_id": "13b56bdb30dfac0dfbdf609ecba53c61cace35d8f0633bb5b16e3d66a0a7eb47",
+  "source_hash": "sha256:75dcfa0126d45b853b9704220ac835e2a786f710e8a093b9c03356133cd29932",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ]
+}

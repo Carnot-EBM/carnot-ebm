@@ -1,0 +1,248 @@
+{
+  "code_config_hashes": [
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8010_v694_source_intervention_protocol.py",
+      "sha256": "sha256:dbebe00c7c193b944e79d4232d9fb86a844ec7a14fe765ba7c56d9e6456b671f"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8010_v694_source_intervention_protocol.py",
+      "sha256": "sha256:dc5ec85dd6e3a9e6bd8b2764b8063d9e23007b81e29276ac789cf90244b58b60"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_source_intervention_protocol_8010.py",
+      "sha256": "sha256:aa4e4b5f5763be87ccd844032cd7002cf7863cc7506e0421682752d23d6d8990"
+    }
+  ],
+  "cold_reduction_argv": [
+    "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+    "-u",
+    "scripts/experiments/experiment_8010_v694_source_intervention_protocol.py",
+    "--cold-replay",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8010_v694_source_intervention_protocol/experiment_8010_v694_source_intervention_protocol.json"
+  ],
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "run",
+        "--rcfile=/tmp/carnot-8010-grm0uv2m/coverage.ini",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_source_intervention_protocol_8010.py"
+      ],
+      "name": "focused",
+      "scope": "owned",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "combine",
+        "--rcfile=/tmp/carnot-8010-grm0uv2m/coverage.ini",
+        "/tmp/carnot-8010-grm0uv2m"
+      ],
+      "name": "combine",
+      "scope": "owned",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "json",
+        "--rcfile=/tmp/carnot-8010-grm0uv2m/coverage.ini",
+        "--fail-under=100",
+        "-o",
+        "/tmp/carnot-8010-grm0uv2m/coverage.json"
+      ],
+      "name": "coverage",
+      "scope": "owned",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_source_boundary_7852.py",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_current_work_receipt.py",
+        "tests/python/test_qwen_development_capture_7995.py",
+        "tests/python/test_experiment_7995_v693_qwen_development_capture.py",
+        "tests/python/test_llama_cpp_process.py"
+      ],
+      "name": "consumers_E2E015_7995",
+      "scope": "owned",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_7868_v683_intervention_protocol.py",
+        "--date",
+        "20260929",
+        "--fixture-e2e",
+        "/tmp/carnot-8010-grm0uv2m/e2e016.json"
+      ],
+      "name": "E2E016_fixture",
+      "scope": "owned",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_7868_v683_intervention_protocol.py",
+        "--date",
+        "20260929",
+        "--cold-replay",
+        "/tmp/carnot-8010-grm0uv2m/e2e016.json"
+      ],
+      "name": "E2E016_replay",
+      "scope": "owned",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "ruff",
+        "check",
+        "python/carnot/experiment_8010_v694_source_intervention_protocol.py",
+        "scripts/experiments/experiment_8010_v694_source_intervention_protocol.py",
+        "tests/python/test_source_intervention_protocol_8010.py"
+      ],
+      "name": "ruff",
+      "scope": "owned",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_8010_v694_source_intervention_protocol.py",
+        "scripts/experiments/experiment_8010_v694_source_intervention_protocol.py",
+        "tests/python/test_source_intervention_protocol_8010.py"
+      ],
+      "name": "format",
+      "scope": "owned",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "mypy",
+        "--strict",
+        "python/carnot/experiment_8010_v694_source_intervention_protocol.py",
+        "scripts/experiments/experiment_8010_v694_source_intervention_protocol.py"
+      ],
+      "name": "mypy",
+      "scope": "owned",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "python/carnot/experiment_8010_v694_source_intervention_protocol.py",
+        "scripts/experiments/experiment_8010_v694_source_intervention_protocol.py",
+        "tests/python/test_source_intervention_protocol_8010.py"
+      ],
+      "name": "spec",
+      "scope": "owned",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q"
+      ],
+      "name": "repository_health",
+      "scope": "repository_health",
+      "timeout_s": 120
+    }
+  ],
+  "methods": {
+    "bootstrap_draws": 10000,
+    "call_timeout_s": 120,
+    "context_admission": "conservative_UTF8_byte_upper_bound_then_embedded_tokenizer_at_capture",
+    "independent_unit": "original_source_group",
+    "input_tokens": 6000,
+    "intended_calls": 192,
+    "intended_groups": 64,
+    "max_tokens": 32,
+    "measured_work_cap_s": 2400,
+    "minimum_complete_pairs": 48,
+    "natural_truth_labels": false,
+    "output_token_budget": 6144,
+    "placebo_absolute_mean_gate": 0.01,
+    "placebo_metric": "mean_source_paired_duplicate_minus_original_risk",
+    "primary_metric": "mean_source_paired_swap_minus_original_risk",
+    "seed": 69410,
+    "selection": "eligible_stream_source_hash_ascending",
+    "sensitivity_lower_CI_gate": 0,
+    "temperature": 0
+  },
+  "terminal_argv": [
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "-u",
+      "scripts/adversarial_verify.py",
+      "--json",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8010_v694_source_intervention_protocol/experiment_8010_v694_source_intervention_protocol.json"
+    ],
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "-u",
+      "scripts/verdict_row_consistency_lint.py",
+      "--strict",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8010_v694_source_intervention_protocol/experiment_8010_v694_source_intervention_protocol.json"
+    ],
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "-u",
+      "scripts/adversarial_verify.py",
+      "--json",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8010_v694_source_intervention_protocol.json"
+    ],
+    [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "-u",
+      "scripts/verdict_row_consistency_lint.py",
+      "--strict",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8010_v694_source_intervention_protocol.json"
+    ]
+  ],
+  "transport_qualification_argv": [
+    "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+    "-u",
+    "scripts/experiments/experiment_8010_v694_source_intervention_protocol.py",
+    "--capture-peer",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8010_v694_source_intervention_protocol/panel.json",
+    "--output",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8010_v694_source_intervention_protocol/fixture.json"
+  ]
+}

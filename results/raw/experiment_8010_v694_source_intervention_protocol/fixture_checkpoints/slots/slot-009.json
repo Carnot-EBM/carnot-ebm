@@ -1,0 +1,69 @@
+{
+  "arm": "swap",
+  "capture_identity": "sha256:c690c1f517fbce73c5da6a2d1e99e3819c3de93e1045fe76d1c8215b54691541",
+  "censor_status": false,
+  "denominator": 1,
+  "donor_group_id": "sha256:d744457477ae41ab7f0611967e7870e465f0fe222594573c5acd262dcfcf9ba1",
+  "duration_s": 0.0,
+  "eligibility": false,
+  "exclusion_reason": "paired_context_upper_bound_overrun",
+  "failure_status": false,
+  "family_id": "sha256:79a49f716c0401cf69508c2311e6e9be8e38bd9467191d92db4918bee4527b60:swap",
+  "group_id": "sha256:79a49f716c0401cf69508c2311e6e9be8e38bd9467191d92db4918bee4527b60",
+  "input_byte_upper_bound": 2657,
+  "input_tokens": null,
+  "numerator": 0,
+  "parsed": {
+    "citation_valid": false,
+    "completed": false,
+    "finish_reason": null,
+    "probability": null,
+    "schema_valid": false,
+    "source_sentence_id": null,
+    "status": "invalid_envelope",
+    "syntax_valid": false,
+    "usage": {}
+  },
+  "public_eligible": false,
+  "public_hash": "sha256:2371429c056b04b0b39b3dab9b3264c4dee5241cc64c6219fadeb1feca9a8d38",
+  "raw_response": {},
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 32,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:1 Sip a clean swab of cotton in the juice and apply on the pimples before you go to bed. 2  Another remedy is to make a paste by mixing a teaspoon of cinnamon powder with a tablespoon of lemon juice. 3  Apply the paste on the pimples and leave the paste overnight and wash off in the morning with warm water.\\\\n\\\\npassage 2:Before you cleanse the rest of your face, remove makeup from your forehead with cold cream. With clean fingers, apply a layer of cold cream to your forehead and let it stand on your skin for 60 seconds. Then with a clean cotton small, blot the cold cream off your forehead, using minimal pressure against your skin.\\\\n\\\\npassage 3:Leave the mask overnight, and rinse it off in the morning. Cover your pillow with a clean towel to avoid mess. This natural mask will cure the acne bumps and pimples on your forehead. 2. Lemon Juice: Dab a few drops of lemon juice over the zits on your overhead, leaving it overnight.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to remove forehead pimples overnight\\\"}\", \"original_answer\": \"Bernie Sanders, a Democratic Senator from Vermont, is expected to announce within days that he will run for President in 2016, and is expected to add a populist voice to the race. Sanders' potential announcement comes after his popularity at a recent South Carolina Democratic event. Meanwhile, Vice President Joe Biden is said to be considering his options for the 2016 race, as he ponders whether or not to make a third run for the Democratic presidential nomination. Biden's official line is that he is still looking at the race and this \\\"wait and see\\\" approach is likely to continue. In other news, Ohio Governor John Kasich is reportedly not in a rush to announce his candidacy for the 2016 Republican presidential nomination. Some see Kasich's hesitation as a sign of uncertainty, but others believe that he is taking his time to build relationships with donors and in the early states.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69410,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 0,
+  "role": "stream",
+  "seed": 69410,
+  "source_cluster_id": "0421e9bbd38ff0bd8041b502e546853f3013dfd6f27b41e52a0a807cff7d6a34",
+  "source_hash": "sha256:a9d76579a7340f2b613565ee9f03e724ee9e302719ef8593c4fa0d383dba15af",
+  "started": false,
+  "status": "excluded",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ]
+}

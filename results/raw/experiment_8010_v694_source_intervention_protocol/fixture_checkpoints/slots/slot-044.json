@@ -1,0 +1,125 @@
+{
+  "arm": "duplicate",
+  "capture_identity": "sha256:c690c1f517fbce73c5da6a2d1e99e3819c3de93e1045fe76d1c8215b54691541",
+  "censor_status": false,
+  "denominator": 1,
+  "donor_group_id": "sha256:5982816b5e4a6617aba5f99c460cd38b14d9e9418dfb6dd0ed7b0e259c7abd8c",
+  "duration_s": 0.0018296269699931145,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:5982816b5e4a6617aba5f99c460cd38b14d9e9418dfb6dd0ed7b0e259c7abd8c:duplicate",
+  "group_id": "sha256:5982816b5e4a6617aba5f99c460cd38b14d9e9418dfb6dd0ed7b0e259c7abd8c",
+  "input_byte_upper_bound": 5162,
+  "input_tokens": 30,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.25,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 18,
+      "prompt_tokens": 30
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:df1ee7fdc86e8958926688bd96361fb082113d1e0957c55b3209e4a020e71e4a",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "message": {
+          "content": "{\"unsupported_probability\": 0.25, \"source_sentence_id\": null}"
+        }
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "usage": {
+      "completion_tokens": 18,
+      "prompt_tokens": 30
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 32,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Garissa, Kenya (CNN)Freshly laundered clothes still hang Friday in the dormitory at Garissa University College. Stuffed animals remain in one room. On the wall in another hangs a poster on proper preparation for Muslim prayer. These small reminders of college life at this Kenyan school belie the horror of what happened here: the slaughter of at least 147 people, many of them students who lived in this building. On Friday afternoon, more than 36 hours after the attack, investigators and Kenya Red Cross crews were finishing up the task of removing the bodies of dead students. The corpses of four Al-Shabaab attackers -- dressed head to toe in black and still clutching their AK-47s -- remained where they fell, their bodies shattered in a torrent of bullets. Kenya terrorist attack: 6 things you need to know. Investigators marked the locations of students' bodies with numbered tags before Red Cross workers came in to send them off to morgues. They would call out to each other with the locations of the dead, reducing once promising lives, for the time being at least, to numbers. 221. 214. 216. 217. Sometimes, the cell phones of the dead would ring, taking the workers aback. Beyond the bodies, evidence of what had happened at the dormitory was everywhere. Shattered glass and shell casings littered the floor. Walls and ceilings were marred by bullet holes. In some places, the blood was as thick as mud. The problems plaguing Kenya's security efforts. According to students and authorities, militants burst onto the campus around 5 a.m. Thursday. The gunmen, from the Al-Shabaab terror group, first stormed a Christian prayer service, killing some students, taking others hostage. They rampaged across the campus, shooting non-Muslims, sparing Muslims, a witness said. One student, Hellen Titus, told CNN she hid inside a wardrobe for nearly an hour before the gunmen came for her. Come out, they told her, you won't be shot. \\\"They were lying,\\\" she said. The gunmen herded her and maybe three dozen other students into a community room where they'd usually hang out and watch television. They were told to lie down, lectured about how the Quran forbids killing women. And then the men, Titus said, were shot in the head. One of the gunmen egged on the others. \\\"Shoot them! Shoot them!\\\" he would say, according to Titus. More lecturing: the land, the gunmen said, didn't belong to nonbelievers. We, the gunmen said, have just two missions: to kill, and be killed. And then they started shooting the women. \\\"Anyone who is breathing, shoot them,\\\" Titus said the gunman in charge said. \\\"We just lay there hopelessly, because we know automatically we're going to be killed,\\\" Titus said. It was then she saw the blood of a fellow student coursing toward her on the floor. She smeared it onto her face and body to make it appear she, too, was dead. \\\"In the time of shooting, they skipped me,\\\" she said. She survived with only a hand wound. Many of the other students were shot in the back of the head, a medic told CNN. Others had been beheaded, according to people who had viewed bodies at the morgue in Chiromo. Even longtime relief workers such as Reuben Nyaora with the International Rescue Committee said they were shocked at what they saw. \\\"I have seen many things,\\\" Nyaora told Agence France-Presse, \\\"but nothing like that.\\\" Opinion: A weakened Al-Shabaab lashes out. CNN's Michael Pearson wrote from Atlanta. CNN's David McKenzie and Lillian Leposo reported from Kenya. CNN's Dominique van Heerden and Soni Methu contributed to this report.\\n\", \"original_answer\": \"At least 147 people have been killed, and many more injured, in a terrorist attack on Garissa University College, in Kenya. The attack was carried out by members of Al-Shabaab, an Islamist extremist group. The attackers targeted a Christian prayer service, before moving through the campus, killing non-Muslims and taking hostages. Witnesses have described the attackers forcing students to lie down before shooting them in the head. Some students were beheaded. The attackers then killed the remaining hostages. One student, Hellen Titus, survived by smearing herself in the blood of another victim to make it look as though she was dead. The bodies of the attackers were found still clutching their weapons.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69410,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "seed": 69410,
+  "source_cluster_id": "12ebfe81dd8cbde138d41f25285e0004c0e769e41e20c4dea73a071b9aa5a0bd",
+  "source_hash": "sha256:c772926aa0799aa50f8d75373960c2b0ec760d5c710e11e08affa9e3da6be513",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47
+  ]
+}

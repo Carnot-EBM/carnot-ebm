@@ -1,0 +1,88 @@
+{
+  "arm": "original",
+  "capture_identity": "sha256:c690c1f517fbce73c5da6a2d1e99e3819c3de93e1045fe76d1c8215b54691541",
+  "censor_status": false,
+  "denominator": 1,
+  "donor_group_id": "sha256:7f06f6889791c67aa67160c6fc50e8e8ce55ac57b32be1d98d17f2c52e802b55",
+  "duration_s": 0.0032066850690171123,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:7f06f6889791c67aa67160c6fc50e8e8ce55ac57b32be1d98d17f2c52e802b55:original",
+  "group_id": "sha256:7f06f6889791c67aa67160c6fc50e8e8ce55ac57b32be1d98d17f2c52e802b55",
+  "input_byte_upper_bound": 3778,
+  "input_tokens": 30,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.25,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 18,
+      "prompt_tokens": 30
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:32386452e9018d2d42635b900dbb4158a8ba49a9f027cefdb6e9fea9d29aaa99",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "message": {
+          "content": "{\"unsupported_probability\": 0.25, \"source_sentence_id\": null}"
+        }
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "usage": {
+      "completion_tokens": 18,
+      "prompt_tokens": 30
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 32,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Bucks County Rep. Brian Fitzpatrick Votes To Elevate Extremist Republican Jim Jordan To House Speaker, Twice\\nFor a second time, Bucks County\u2019s self-proclaimed moderate Congressman Brian Fitzpatrick voted Tuesday to elevate Jim Jordan, the MAGA, election denying Republican from Ohio who supports a national abortion ban, to Speaker of the House of Representatives.\\n\u201cAfter years of paying lip service to bipartisanship, Fitzpatrick doubled down on his drive to the right wing of the Republican Party by voting for Trump\u2019s hand-picked Speaker,\u201d said Ashley Ehasz , the Democratic contender for Fitzpatrick\u2019s PA01 congressional seat. \u201dWhat else would we expect from a representative who claims to represent us, but then votes with MAGA to ban abortions, restrict our freedom to vote, and take books out of our schools?\u201d\\nInternet criticisms about Fitzpatrick\u2019s vote for Jordan on Tuesday, barely a day old, remain fresh and abundant.\\n\u201cWhy does Brian Fitzpatrick lack the political courage to vote against an election-denying anti-choice extremist, while other members of the GOP are standing on the right side of justice,\u201d Ehasz added.\\nIn a 393 word statement on the Speaker Vote issued by the Congressman , Fitzpatrick didn\u2019t even have the courage to inform his constituents who he voted for, not mentioning Jordan\u2019s name once, let alone why he voted for the far-right Ohio congressman.\\n\u201cBrian Fitzpatrick makes frequent claims about his moderate stance and his bipartisanship credentials,\u201d wrote Indivisible Bucks County in a news release that pointed out the congressman\u2019s support for a national abortion ban, school book bans and the GOP\u2019s \u201csham committee to amplify conspiracy theories and discredited witnesses.\u201d\\nJordan, the founding member of the right-wing House Freedom Caucus , is alleged to have first-hand knowledge of events surrounding the January 6 insurrection and defied a Jan. 6 Committee subpoena for testimony and documents. An outspoken support of Donald Trump, Jordan has also refused to acknowledge that President Joe Biden won the 2020 election.\\n\u201cOver a dozen other Republicans had the courage to vote against Representative Jordan for Speaker, and Fitzpatrick chose to vote for Donald Trump\u2019s choice instead of joining his more principled colleagues,\u201d said Kierstyn Zolfo of Indivisible Bucks County.\\nReactions on Twitter (X) to Fitzpatrick\u2019s Support for Jim Jordan :\", \"original_answer\": \"Bucks County's Congressman Brian Fitzpatrick has been criticized for voting twice to elevate controversial Republican Jim Jordan to Speaker of the House of Representatives. Critics, including Democratic contender Ashley Ehasz, accuse Fitzpatrick of aligning with the right wing of the Republican Party by supporting Jordan, who has refused to acknowledge President Biden's 2020 election win and defied a subpoena for testimony and documents related to the January 6 insurrection. Fitzpatrick has been accused of lacking political courage and of promoting a national abortion ban, school book bans, and conspiracy theories.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69410,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "seed": 69410,
+  "source_cluster_id": "2da396348bc5a33263e18257ea0b2f5b7ab115e137923e6eb3bfac4efe4edd9a",
+  "source_hash": "sha256:f98f884b8df76e9240b908f0bf6dfd091005d396088b8079cf2dc345080fa650",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ]
+}

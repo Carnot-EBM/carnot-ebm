@@ -1,0 +1,94 @@
+{
+  "arm": "original",
+  "capture_identity": "sha256:c690c1f517fbce73c5da6a2d1e99e3819c3de93e1045fe76d1c8215b54691541",
+  "censor_status": false,
+  "denominator": 1,
+  "donor_group_id": "sha256:f37857853f7df7bc09de403728cf0c2db2061171a661fe6072b92b22876761cc",
+  "duration_s": 0.004144495935179293,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:f37857853f7df7bc09de403728cf0c2db2061171a661fe6072b92b22876761cc:original",
+  "group_id": "sha256:f37857853f7df7bc09de403728cf0c2db2061171a661fe6072b92b22876761cc",
+  "input_byte_upper_bound": 3941,
+  "input_tokens": 30,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.25,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 18,
+      "prompt_tokens": 30
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:019c8e8fa6be3796e41b0558bc65fbb1fdd45ad494edf1c18f18f4fcce933d3a",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "message": {
+          "content": "{\"unsupported_probability\": 0.25, \"source_sentence_id\": null}"
+        }
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "usage": {
+      "completion_tokens": 18,
+      "prompt_tokens": 30
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 32,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Report says Federal Reserve rate hikes likely to cause more slowdowns in CA jobs over next 6 months\\nCALIFORNIA \u2013 The California Economic Forecast, published October 11, reported that due to the Federal Reserve\u2019s aggressive monetary policy \u2013 in the form of interest rate hikes, the labor market is very likely to show more pronounced slowdowns in job creation and job turnover over the next six months.\\nStrong labor market is bad news to the Fed\\nAccording to the report, the September employment report indicated that twice as many new jobs were created -- 336,000, than had been forecast by economists.\\nHowever, the report says this is bad news to the Fed.\\n\u201cThe news is that the labor market remains strong. Typically that is good news. But good news about the labor market in the current environment is bad news for the Federal Reserve as its main goal now is to bring down inflation,\u201d said the report.\\nFor September, overall inflation is 3.7 percent.\\nThe report says that unless there is clear progress of inflation approaching the Fed\u2019s 2.0 percent target, continued aggressive monetary policy in the form of interest rate hikes are probable.\\nCurbing spending to combat inflation\\nThe Federal Reserve believes that when they raise interest rates, it can help lower inflation by making it more expensive for people and businesses to borrow money, which can discourage them from spending.\\nThe report says that higher interest rates will ultimately take their toll on more than just the housing and new car sales markets.\\nConsumers are reeling in their spending;\\nUsing credit to consume is less attractive with high interest rates;\\nHigher rates also discourage business investment, which slowed in May, June and July;\\nFewer goods can be purchased with the same expenditure level, due to inflation;\\nFewer goods sold mean less sales, lower earnings of corporations, and lower stock prices.\\nRELATED: Report says $90,399 annually is needed for Californians to live comfortably in retirement\\nRecession likely avoided in 2024\\nThe UCLA Anderson School forecast has growth slowing to less than one percent by mid-2024.\\nThe report says that next year, a bona fide recession is avoided but the economy will grow slowly. There's a possibility that it could tip into a mild recession lasting for about two quarters.\\nIn addition, overall inflation will remain in the 3.0 to 3.3 percent range. Mortgage rates will stay high throughout 2024 and begin to contract in 2025.\\nTo read the full report visit https://californiaforecast.com/october-2023/\", \"original_answer\": \"The California Economic Forecast has predicted a slowdown in job creation and turnover in the state over the next six months, due to the Federal Reserve's aggressive monetary policy. The report suggests that the strong labor market, which saw twice as many new jobs created than expected in September, is actually bad news for the Fed, whose main aim is to reduce inflation currently at 3.7%. Unless progress is made towards the Fed's 2% inflation target, further interest rate hikes are likely. These higher rates are expected to impact beyond housing and new car sales, discouraging consumer spending and business investment.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69410,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "seed": 69410,
+  "source_cluster_id": "297cd39fd6c347d36d1c21677ec8016ba01ef29901da064dbb33cb160799cce8",
+  "source_hash": "sha256:286dd1410183a38ce6bc2ce5e2b06d7567e6bd4ce06c7160508e67eac730e623",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+  ]
+}

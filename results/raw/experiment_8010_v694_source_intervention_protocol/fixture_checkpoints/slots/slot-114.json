@@ -1,0 +1,94 @@
+{
+  "arm": "duplicate",
+  "capture_identity": "sha256:c690c1f517fbce73c5da6a2d1e99e3819c3de93e1045fe76d1c8215b54691541",
+  "censor_status": false,
+  "denominator": 1,
+  "donor_group_id": "sha256:f98db386f18bfd16823a5a2a66646ceee70255988e489384f1873448401bb9fe",
+  "duration_s": 0.0027982769533991814,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:f98db386f18bfd16823a5a2a66646ceee70255988e489384f1873448401bb9fe:duplicate",
+  "group_id": "sha256:f98db386f18bfd16823a5a2a66646ceee70255988e489384f1873448401bb9fe",
+  "input_byte_upper_bound": 4177,
+  "input_tokens": 30,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.25,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 18,
+      "prompt_tokens": 30
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:5a63e4c2288e6c771de6c9ef8200510881caace556a1af53f88c261593c42805",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "message": {
+          "content": "{\"unsupported_probability\": 0.25, \"source_sentence_id\": null}"
+        }
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "usage": {
+      "completion_tokens": 18,
+      "prompt_tokens": 30
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 32,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"436-B East Gutierrez St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Delis, Grocery, Delicatessen, Coffee & Tea, Restaurants, Food\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"6:30-15:30\\\",\\\"Monday\\\":\\\"6:30-15:30\\\",\\\"Thursday\\\":\\\"6:30-15:30\\\",\\\"Tuesday\\\":\\\"6:30-15:30\\\",\\\"Wednesday\\\":\\\"6:30-15:30\\\"},\\\"name\\\":\\\"Sunnyside Market & Deli\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2014-03-12 20:13:44\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I love this place so much, but I am heartbroken to say that they closed as of March 3rd. I am just happy I got to go there the Friday before that, without knowing it would be my last visit. I'll miss you Sunnyside!\\\"},{\\\"review_date\\\":\\\"2013-06-04 23:37:56\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"While waiting for your food, you can look around and shop for $900 microwave ovens, $800 mixers and even a $10,000 convection steamer oven! \\\\n\\\\nWait, there's more! On the other side with the chips and drinks you can find nail clippers and combs! I didn't ask what they had behind the counter but I bet they had some questionable items for sale back there, hidden from view.\\\\n\\\\nNow, as far as the food. Pastrami was good with a lot of it. Bread was stale and fell apart...bummer.\\\\n\\\\nChicken bacon panini, believe it or not, had too much bacon. \\\\n\\\\nFood is 2 1/2 star. Prices are on the \\\\\\\"low\\\\\\\" side for Santa Barbara @ $7.95 for a big sandwich. So, half extra star for that.\\\"},{\\\"review_date\\\":\\\"2013-04-30 23:21:15\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Dont go!  just got back from there and bit into my cold cut sandwhich and it was horrible.  The bread was dry the spirinkling of bitter iceburg lettuce and soggy tomato just made everything worse.  There is no love in the food at this place.  How do places so bad stay open.  I would never go back if someone even offered to buy me lunch.  my stomach is ont very happy!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Sunnyside Market & Deli is a local business located at 436-B East Gutierrez St, Santa Barbara, CA. It operates from Monday to Friday, 6:30 am to 3:30 pm, offering a variety of services such as Delis, Grocery, Delicatessen, Coffee & Tea, Restaurants, and Food. The business has an overall 4.0-star rating, however, the reviews are mixed. Some customers expressed their love for the place, while others were critical of the food quality, citing stale bread and unsatisfactory sandwiches. The establishment provides street and lot parking, but does not offer WiFi, music, or outdoor seating. The ambiance is not specifically classified as romantic, intimate, touristy, hipster, divey, classy, trendy, upscale, or casual. It's important to note that one customer mentioned that the business closed as of March 3rd, 2014.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69410,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "seed": 69410,
+  "source_cluster_id": "27721fc45fba24789be7758d21f827329807a386692a4dfc508e8d5d7c62b393",
+  "source_hash": "sha256:f9f30848647df3072b806e4f243b69da1c636b89ce5daa7828b75588dc5975d1",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+  ]
+}

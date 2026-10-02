@@ -1,0 +1,96 @@
+{
+  "arm": "original",
+  "capture_identity": "sha256:c690c1f517fbce73c5da6a2d1e99e3819c3de93e1045fe76d1c8215b54691541",
+  "censor_status": false,
+  "denominator": 1,
+  "donor_group_id": "sha256:eb73d16fdd5d460bd1e28d99b8083aea7d8799462c6d1cfdc8f518b136ebfb0d",
+  "duration_s": 0.001869391999207437,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:eb73d16fdd5d460bd1e28d99b8083aea7d8799462c6d1cfdc8f518b136ebfb0d:original",
+  "group_id": "sha256:eb73d16fdd5d460bd1e28d99b8083aea7d8799462c6d1cfdc8f518b136ebfb0d",
+  "input_byte_upper_bound": 3635,
+  "input_tokens": 30,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.25,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 18,
+      "prompt_tokens": 30
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:55a82e5aa672a098a635d73fda53d8bbe75b090ad4115808b7e655da03ae70a6",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "message": {
+          "content": "{\"unsupported_probability\": 0.25, \"source_sentence_id\": null}"
+        }
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "usage": {
+      "completion_tokens": 18,
+      "prompt_tokens": 30
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 32,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:1 Select Gaming as the product type. 2  Select Xbox 360 Wireless Controller for Windows as the product (this is the software for the wireless gaming receiver). 3  Select the version of Microsoft Windows you\u2019re using on your computer, select your operating system language, and then click Download. 4  Click Run.o install the software by downloading it online: 1  Go to the Software Downloads section of the Microsoft Hardware website. 2  Select Gaming as the product type. 3  Select Xbox 360 Wireless Controller for Windows as the product (this is the software for the wireless gaming receiver).\\\\n\\\\npassage 2:Instructions. Turn on the console that you wish to program the controller for and move the controller within 30 feet of the Xbox 360. Insert batteries in the controller if necessary. Hold the controller's silver Guide button until it powers on. The button will flash, indicating power.Push the Xbox 360's Connect button, situated to the right of the memory unit slots. Push the Connect button on your wireless controller. The connect button is located between the RB and LB buttons.old the controller's silver Guide button until it powers on. The button will flash, indicating power. Push the Xbox 360's Connect button, situated to the right of the memory unit slots. Push the Connect button on your wireless controller.\\\\n\\\\npassage 3:To install the software by downloading it online: 1  Go to the Software Downloads section of the Microsoft Hardware website. 2  Select Gaming as the product type. 3  Select Xbox 360 Wireless Controller for Windows as the product (this is the software for the wireless gaming receiver).o install the software by downloading it online: 1  Go to the Software Downloads section of the Microsoft Hardware website. 2  Select Gaming as the product type. 3  Select Xbox 360 Wireless Controller for Windows as the product (this is the software for the wireless gaming receiver).\\\\n\\\\n\\\",\\\"question\\\":\\\"how to program wireless controller for xbox 360\\\"}\", \"original_answer\": \"To program a wireless controller for Xbox 360, start by turning on the console and keep the controller within 30 feet of the Xbox 360. Insert batteries in the controller if needed. Hold the controller's silver Guide button until it powers on, it will flash to indicate power. Push the Xbox 360's Connect button, located to the right of the memory unit slots. Subsequently, push the Connect button on the wireless controller. For software installation, go to the Software Downloads section of the Microsoft Hardware website. Select Gaming as the product type and Xbox 360 Wireless Controller for Windows as the product, which is the software for the wireless gaming receiver. Select the version of Microsoft Windows you\u2019re using on your computer, choose your operating system language, and then click Download. Run the downloaded software to install.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69410,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "seed": 69410,
+  "source_cluster_id": "053efb7a1cb4ed1a53822e64023c9d69502845b6436ed941fa46459dbc079dae",
+  "source_hash": "sha256:47f0850a939e13606f7bbeb1f5523b11f548ed2475f5bcfd51a60132d6b1dbee",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18
+  ]
+}

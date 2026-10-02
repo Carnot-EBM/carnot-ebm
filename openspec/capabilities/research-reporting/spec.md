@@ -89320,3 +89320,41 @@ If fewer than 62 groups have known targets, retain fitted heads and base losses.
 Record each missing target's exact upstream row field and hash. Freeze a blocked
 calibration checkpoint. Post-hoc rows SHALL be blocked, with no fitted map or
 measured calibrated loss. Readiness SHALL remain zero after passing owned checks.
+### REQ-REPORT-8010: Freeze a label-free source conditioning panel
+
+Exp8010 SHALL select the first 64 eligible V693 stream source groups in frozen
+source-hash order using sealed public bytes only. Preserve full source and
+response bytes. Freeze a seed-69410 derangement and independently executed exact
+request duplicate placebo. Freeze 192 intended calls, temperature zero, unchanged
+qualified Qwen risk prompt/schema, 32 output tokens, 120 seconds per call and a
+2,400-second measurement cap. Context overrun SHALL exclude without replacement.
+No model SHALL load or generate in this protocol preparation invocation.
+
+### SCENARIO-REPORT-8010-ISOLATION
+
+Reject target-bearing public predictors, repeated request identities, wrong
+served model, timeout, context overrun, code drift and checkpoint hash drift.
+Exercise the real script-path qualified capture and HTTP transport against a
+private scripted peer. Persist transcripts and checkpoints at durable raw paths.
+Every natural intended row SHALL retain its arm, seed, numerator, denominator,
+status and exclusion/censor reason. Current model counts SHALL remain zero.
+
+### SCENARIO-REPORT-8010-PUBLICATION
+
+Register paired swapped-minus-original risk and duplicate-minus-original placebo
+differences. Original human labels SHALL never become swapped-source truth.
+Report source conditioning only; fixture success is circular transport evidence.
+Require traced tests, 100 percent new statement coverage including real CLI,
+Ruff, strict mypy, spec checks, E2E-015, private E2E-016 and qualified Exp7995
+CPU checks. Keep one bounded full-suite health diagnostic separate. Cold-reduce
+in a fresh process, check exact candidate bytes with adversarial and strict row
+validators, publish with the existing helper, and recheck final bytes. Readiness
+one requires complete protocol preparation and owned checks, not scientific
+benefit. The conductor owns ops and BMAD reconciliation for this task.
+
+Implementation: `python/carnot/experiment_8010_v694_source_intervention_protocol.py`
+and its thin script-path entry point. Verification:
+`tests/python/test_source_intervention_protocol_8010.py` covers public isolation,
+HTTP transport, context admission, cold reduction, terminal publication and
+failure gates. Exact command outcomes and new statement coverage are recorded
+under `results/raw/experiment_8010_v694_source_intervention_protocol/`.

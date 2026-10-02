@@ -1,0 +1,82 @@
+{
+  "arm": "duplicate",
+  "capture_identity": "sha256:c690c1f517fbce73c5da6a2d1e99e3819c3de93e1045fe76d1c8215b54691541",
+  "censor_status": false,
+  "denominator": 1,
+  "donor_group_id": "sha256:f1e8d3440505bf13b1e0c9ed63cf1994b1428b001c6e299458f63b9e621e747d",
+  "duration_s": 0.0033970120130106807,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:f1e8d3440505bf13b1e0c9ed63cf1994b1428b001c6e299458f63b9e621e747d:duplicate",
+  "group_id": "sha256:f1e8d3440505bf13b1e0c9ed63cf1994b1428b001c6e299458f63b9e621e747d",
+  "input_byte_upper_bound": 1778,
+  "input_tokens": 30,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.25,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 18,
+      "prompt_tokens": 30
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:c65b2ebebe29f20387a3b32fe678f7ece341270f4094e3ed57e462e8ae797b05",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "message": {
+          "content": "{\"unsupported_probability\": 0.25, \"source_sentence_id\": null}"
+        }
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "usage": {
+      "completion_tokens": 18,
+      "prompt_tokens": 30
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 32,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:3pm: The Morro Bay, CA forecast for Feb 14 is 64 degrees and Partly cloudy. There is 42 percentage chance of rain and 8 mph winds from the West-Northwest. 6pm: The Morro Bay, CA forecast for Feb 14 is 55 degrees and Partly cloudy. There is 58 percentage chance of rain and 7 mph winds from the Northwest. 9pm: The Morro Bay, CA forecast for Feb 14 is 52 degrees and Partly cloudy.\\\\n\\\\npassage 2:Excessive Rainfall and Winter Weather Forecasts; River Flooding ; Latest Warnings; Thunderstorm/Tornado Outlook ; Hurricanes ; Fire Weather Outlooks ; UV Alerts ; Drought ; Space Weather ; NOAA Weather Radio ; NWS CAP Feeds\\\\n\\\\npassage 3:Home \u00bb Local \u00bb Weather Report Morro Bay, California Weather Report \u00b7 Interactive Map \u00b7 Extended Forecast \u00b7 Hourly Forecast \u00b7 Past Observations \u00b7 Historic Averages\\\\n\\\\n\\\",\\\"question\\\":\\\"weather in morro bay ca\\\"}\", \"original_answer\": \"The weather in Morro Bay, CA on Feb 14 is partly cloudy with temperatures ranging from 52 to 64 degrees. There is a 42% to 58% chance of rain with wind speeds ranging from 7 to 8 mph.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69410,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "seed": 69410,
+  "source_cluster_id": "3c0900e29e7d1521beb4bd9660ab83b24fa0c90d74d265126a5714b169dccc63",
+  "source_hash": "sha256:20259714a2e1d14d633440af9f22ab4c3b6443c60208abb1b9b48dc4f364a4b6",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ]
+}

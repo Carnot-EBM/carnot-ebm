@@ -1,0 +1,73 @@
+{
+  "arm": "swap",
+  "capture_identity": "sha256:c690c1f517fbce73c5da6a2d1e99e3819c3de93e1045fe76d1c8215b54691541",
+  "censor_status": false,
+  "denominator": 1,
+  "donor_group_id": "sha256:d6fb692d68caeba5c02d798ee0875e39173c6b7254b01fc4f5bfa1206bdf6d96",
+  "duration_s": 0.0,
+  "eligibility": false,
+  "exclusion_reason": "paired_context_upper_bound_overrun",
+  "failure_status": false,
+  "family_id": "sha256:7f90fde1a2e6208dbd2477a32bdf25e8e3c169180a97e70f61f09402e1b4ad99:swap",
+  "group_id": "sha256:7f90fde1a2e6208dbd2477a32bdf25e8e3c169180a97e70f61f09402e1b4ad99",
+  "input_byte_upper_bound": 3888,
+  "input_tokens": null,
+  "numerator": 0,
+  "parsed": {
+    "citation_valid": false,
+    "completed": false,
+    "finish_reason": null,
+    "probability": null,
+    "schema_valid": false,
+    "source_sentence_id": null,
+    "status": "invalid_envelope",
+    "syntax_valid": false,
+    "usage": {}
+  },
+  "public_eligible": false,
+  "public_hash": "sha256:6eed16c3787063fca82c9cd45d5d85dbbba5a6ae8f21ad1b46e464a01f2a96e0",
+  "raw_response": {},
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 32,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"5764 Calle Real\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":null,\\\"divey\\\":false,\\\"hipster\\\":null,\\\"intimate\\\":false,\\\"romantic\\\":null,\\\"touristy\\\":null,\\\"trendy\\\":null,\\\"upscale\\\":null},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Restaurants, Mexican, Breakfast & Brunch\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-21:0\\\",\\\"Monday\\\":\\\"11:0-21:0\\\",\\\"Saturday\\\":\\\"10:0-21:0\\\",\\\"Sunday\\\":\\\"10:0-21:0\\\",\\\"Thursday\\\":\\\"11:0-21:0\\\",\\\"Tuesday\\\":\\\"11:0-21:0\\\",\\\"Wednesday\\\":\\\"11:0-21:0\\\"},\\\"name\\\":\\\"Los Arroyos Mexican Restaurant & Take Out\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-15 22:19:36\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"We had a great time here last night! The burritos were splendid and the generous side of chips did not go unnoticed. Adam was our bartender, he was skilled and fun to talk too. He's Italian, so naturally I had to ask him 'if he liked Sebastian Maniscalco?' He said, \\\\\\\"Yes!\\\\\\\" (And that is when I decided that Adam and Los Arroyos were getting a 5-star review). Adam made sure we received all of our take-out orders and remembered our drink modifications. Angel was equally up to par and made a great margarita recommendation. Take care guys, we'll see you soon!\\\"},{\\\"review_date\\\":\\\"2022-01-03 00:37:47\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"Doesn't have any flavor. Tastes gross half way thru eating it. Was a Take out delivery, wouldn't order again\\\"},{\\\"review_date\\\":\\\"2021-12-27 02:16:02\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"My favorite place to eat!!! The tacos are so good! And I can practically DRINK the green salsa!!!  So good. First place I go to when I'm back in SB\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"A 7.8 magnitude earthquake hit Nepal on Saturday, causing panic and fear as cities, villages and camps were affected. The quake was followed by another strong aftershock, and many people were too scared to go back inside any buildings. Rescue operations began quickly with locals volunteering to help those trapped in the rubble. So far hundreds of people have already been confirmed dead, and many more have suffered injuries. The earthquake and its aftershocks have also caused significant structural damage to buildings and infrastructure, including the collapse of historic buildings and landmarks. There are widespread power outages and water supply issues, and many people are planning to stay out on the street overnight due to fear of further aftershocks. The situation is particularly difficult for the elderly and for young children, and there are concerns about a lack of sufficient food and water. The earthquake is the worst to hit the region in many years.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69410,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 0,
+  "role": "stream",
+  "seed": 69410,
+  "source_cluster_id": "239dae46dd8c7cb59ed01afa507a5560a08191ef61861d201d0668d13c7f771a",
+  "source_hash": "sha256:a0477b40ed2b3af858bd54ce681d9ce354c3f70c7915517e1ea665b27b4ef250",
+  "started": false,
+  "status": "excluded",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ]
+}

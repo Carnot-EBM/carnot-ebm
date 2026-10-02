@@ -1,0 +1,85 @@
+{
+  "arm": "swap",
+  "capture_identity": "sha256:c690c1f517fbce73c5da6a2d1e99e3819c3de93e1045fe76d1c8215b54691541",
+  "censor_status": false,
+  "denominator": 1,
+  "donor_group_id": "sha256:9f357f23e1b94d812fb2c1df704fcf70fe95e317a042d53d1ae1a0d2a7453f0d",
+  "duration_s": 0.0029192949878051877,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:f98db386f18bfd16823a5a2a66646ceee70255988e489384f1873448401bb9fe:swap",
+  "group_id": "sha256:f98db386f18bfd16823a5a2a66646ceee70255988e489384f1873448401bb9fe",
+  "input_byte_upper_bound": 2433,
+  "input_tokens": 30,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.25,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 18,
+      "prompt_tokens": 30
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:bdd65659dfc583e8a18093885de41c3f311dad0a23cf780a812bf532576de6ff",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "message": {
+          "content": "{\"unsupported_probability\": 0.25, \"source_sentence_id\": null}"
+        }
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "usage": {
+      "completion_tokens": 18,
+      "prompt_tokens": 30
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 32,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:The easiest way is to export music to the computer using iTunes. Go to My Music and copy everything to PC. Then use a free app to transfer music to your Android wirelessly. I've used this way to transfer hundreds of songs.\\\\n\\\\npassage 2:Once you have identified your iTunes music that's transferable to your Android phone, just connect the phone to your computer via USB. You'll see a message in the phone's notification area saying that you're connected via USB and it'll ask if you want to mount the storage for use by your computer.\\\\n\\\\npassage 3:Manually selecting songs for transfer to your Android phone. 1  On the doubleTwist window, click Music under Library. 2  Select a song from the list. 3  You can select one song, select multiple songs, or select all songs from a single album.\\\\n\\\\n\\\",\\\"question\\\":\\\"how do i get my music from itunes to my android\\\"}\", \"original_answer\": \"Sunnyside Market & Deli is a local business located at 436-B East Gutierrez St, Santa Barbara, CA. It operates from Monday to Friday, 6:30 am to 3:30 pm, offering a variety of services such as Delis, Grocery, Delicatessen, Coffee & Tea, Restaurants, and Food. The business has an overall 4.0-star rating, however, the reviews are mixed. Some customers expressed their love for the place, while others were critical of the food quality, citing stale bread and unsatisfactory sandwiches. The establishment provides street and lot parking, but does not offer WiFi, music, or outdoor seating. The ambiance is not specifically classified as romantic, intimate, touristy, hipster, divey, classy, trendy, upscale, or casual. It's important to note that one customer mentioned that the business closed as of March 3rd, 2014.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69410,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "seed": 69410,
+  "source_cluster_id": "27721fc45fba24789be7758d21f827329807a386692a4dfc508e8d5d7c62b393",
+  "source_hash": "sha256:d8dba8599421216b70cf70efba53355dbdb890276597321f48f7ef4bb1711c58",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ]
+}

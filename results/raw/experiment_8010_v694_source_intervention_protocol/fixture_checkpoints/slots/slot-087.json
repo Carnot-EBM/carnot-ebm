@@ -1,0 +1,89 @@
+{
+  "arm": "swap",
+  "capture_identity": "sha256:c690c1f517fbce73c5da6a2d1e99e3819c3de93e1045fe76d1c8215b54691541",
+  "censor_status": false,
+  "denominator": 1,
+  "donor_group_id": "sha256:3deb1d2dabf820a9267929a62246e673cb91829d0be8a774bce72b0869aacaff",
+  "duration_s": 0.0029969799797981977,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:e9b85d668dcedd936af82e3e83c49009debb90f7594fc42956ca8966ebcc56bc:swap",
+  "group_id": "sha256:e9b85d668dcedd936af82e3e83c49009debb90f7594fc42956ca8966ebcc56bc",
+  "input_byte_upper_bound": 3392,
+  "input_tokens": 30,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.25,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 18,
+      "prompt_tokens": 30
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:75ec0a2f78575e24718d5ef52548fa953b59e02cfb41cd2a535aa1f26842a88c",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "message": {
+          "content": "{\"unsupported_probability\": 0.25, \"source_sentence_id\": null}"
+        }
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "usage": {
+      "completion_tokens": 18,
+      "prompt_tokens": 30
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 32,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"901 Chapala St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Cajun/Creole, Breakfast & Brunch, Caterers, Restaurants, Event Planning & Services, Burgers\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"7:0-14:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"7:0-14:0\\\",\\\"Sunday\\\":\\\"7:0-14:0\\\",\\\"Thursday\\\":\\\"7:0-14:0\\\",\\\"Tuesday\\\":\\\"7:0-14:0\\\",\\\"Wednesday\\\":\\\"7:0-14:0\\\"},\\\"name\\\":\\\"Cajun Kitchen Cafe\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-18 04:59:22\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Amazing brunch in Santa Barbara. The wait is always worth it. The staff are kind and you can never go wrong with a breakfast burrito or benedict.\\\"},{\\\"review_date\\\":\\\"2022-01-12 10:39:53\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"My grandson and I really enjoyed this place!  The food was incredible and the staff were friendly and efficient.  We always come here when he's in town and will keep doing so.\\\"},{\\\"review_date\\\":\\\"2021-12-12 19:36:08\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"The wait was not that long on a Sunday. But ommmggg the food! If you're in this area or from the area and can check it out you SHOULD. The Beignets were good BUT THE Fried Chicken Benedict BOMB. Best ever. It's just a party in your mouth. 10/10. I have no words just try it and thank me later.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"The main differences between a whitetail and mule deer are based on their physical appearances and reproductive cycles. Mule deer have a black tip on their tail, which is noticeable against their white rump patch, while white-tailed deer do not have this black tip. The antlers of the two species are also different, with mule deer antlers forking as they grow rather than branching from a single main beam as seen in white-tailed deer. In terms of reproductive cycles, mule deer mate from mid-to late November with a gestation period of seven months, while white-tailed deer breed from late November to early December, with a gestation period of 6 1/2 months.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69410,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "seed": 69410,
+  "source_cluster_id": "22eb90d2d965df0a1cffb664bd77109774f24a49dee8014bbadc28f3aa6d646c",
+  "source_hash": "sha256:5b720a5ea0dea1a850fb8b578c44f4246db692daf5cff756dd79da87e27df216",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]
+}

@@ -1,0 +1,93 @@
+{
+  "arm": "swap",
+  "capture_identity": "sha256:c690c1f517fbce73c5da6a2d1e99e3819c3de93e1045fe76d1c8215b54691541",
+  "censor_status": false,
+  "denominator": 1,
+  "donor_group_id": "sha256:e239cb5f4ad379eac0dc58fbbcc427f7db410d30f3bf5430836852ea12fa5d19",
+  "duration_s": 0.003785641980357468,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:7aed197f599fd8d5a8c56af0e210a76c0961bbd5c3e2a363b625218c31e90ab9:swap",
+  "group_id": "sha256:7aed197f599fd8d5a8c56af0e210a76c0961bbd5c3e2a363b625218c31e90ab9",
+  "input_byte_upper_bound": 2764,
+  "input_tokens": 30,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.25,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 18,
+      "prompt_tokens": 30
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:140d336716df5398682de5a7dfbb7cb522ec76075044bbba18255a4da62a7bdd",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "message": {
+          "content": "{\"unsupported_probability\": 0.25, \"source_sentence_id\": null}"
+        }
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "usage": {
+      "completion_tokens": 18,
+      "prompt_tokens": 30
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 32,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:How about a simple list of 10 foods to eat for healthy eyes? Whole Grains. Whole Grains are good for your eyes, because they have a low glycemic index as opposed to other common types of carbs (white rice, pasta, processed bread). Eat foods like quinoa, brown rice and whole wheat and oats to protect your eyes. Whole grains also contain Vitamin E, Zinc and Niacin. Fish. Fish are one of the best foods for eye health, because they are rich in omega-3 fatty acids. These acids help protect against dry eyes, cataracts, AMD and more. They are also lower in fat than most other meat, which is always a dieting plus!\\\\n\\\\npassage 2:The Nutrition Source on Twitter. 1  RT @HarvardChanSPH: Most products in the popular Box Tops school-based marketing program don't meet federal school nutrition standards ht\u2026. 2  RT @HarvardChanSPH: This week we're sharing recipes for quick, tasty, and nutritious meals. First up: Our take on Caesar salad.\\\\n\\\\npassage 3:Eggs are rich in the proteins that are essential for eye health and basic functions. They contain lutein and Vitamin A, protect against dry eye syndrome, and can even improve your night vision. The only thing to beware of is the fat contained in eating too many yolks. Nuts. Almost all kinds of nuts are good for eye health.\\\\n\\\\n\\\",\\\"question\\\":\\\"what foods should i eat for eye health\\\"}\", \"original_answer\": \"Reality TV star Teresa Giudice and her daughters have faced criticism for partnering with controversial fashion brand Shein on their own pre-holiday collection. While Giudice received some positive feedback, many were critical of the brand and the clothes her daughters were wearing. Despite the controversy, Giudice seemed proud of the collaboration. The Real Housewives of New Jersey star did not respond to any of the over 1,000 comments on the announcement. This comes as Giudice continues to publicly feud with her brother and sister-in-law, Joe and Melissa Gorga, on her podcast and during the filming of the reality show's 14th season.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69410,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "seed": 69410,
+  "source_cluster_id": "30a7a3d95093a99675202fe8dd894aa780bf6b182b70c631d80fd3098b2ec9b4",
+  "source_hash": "sha256:6291f477c192e5c083cebef7ec75485d2b8f30c37b5f2178f1a6303909c6aecb",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ]
+}

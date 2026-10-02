@@ -1,0 +1,93 @@
+{
+  "arm": "swap",
+  "capture_identity": "sha256:c690c1f517fbce73c5da6a2d1e99e3819c3de93e1045fe76d1c8215b54691541",
+  "censor_status": false,
+  "denominator": 1,
+  "donor_group_id": "sha256:e44ea7a533a66f03d48b29f569d5b180dfabb243007a6508ae8b9cf3dde4ad30",
+  "duration_s": 0.0033879339462146163,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:6d245a931cfeed435680567a037f8c2ffdfc3001162cbf861361027a8b2e05ee:swap",
+  "group_id": "sha256:6d245a931cfeed435680567a037f8c2ffdfc3001162cbf861361027a8b2e05ee",
+  "input_byte_upper_bound": 2782,
+  "input_tokens": 30,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.25,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 18,
+      "prompt_tokens": 30
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:003c53b71128ad57c3c173228e2241e63ea5d94a742ba85c4af15fabcb029ddd",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "message": {
+          "content": "{\"unsupported_probability\": 0.25, \"source_sentence_id\": null}"
+        }
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "usage": {
+      "completion_tokens": 18,
+      "prompt_tokens": 30
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 32,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Place meat on grill rack over heat. Cover the grill.) Remove steaks from grill; cover and let stand for 5 minutes. For more tenderloin steak recipes, see: Grilled Steak and Peppers Grilled Beef Fillet with Portobello Relish Beef Tenderloins with Wine Sauce Try filet mignon! Our best filet mignon cooking tips.tep 2: Roast or grill the tenderloin. Roast: Browning the tenderloin first is optional, but it does caramelize the outside and lock in the juices. In a large skillet heat olive oil over medium-high heat.\\\\n\\\\npassage 2:Start with beef tenderloin steaks cut 3/4 inch to 1 inch thick (1 inch for grilling). Trim fat from steaks. Season as desired. Timings below are based on meat removed directly from the refrigerator.tep 2: Roast or grill the tenderloin. Roast: Browning the tenderloin first is optional, but it does caramelize the outside and lock in the juices. In a large skillet heat olive oil over medium-high heat.\\\\n\\\\npassage 3:1 Let the steak sear for 1 minute. 2  Place the entire pan in the oven for about 5 minutes. 3  Poke the fleshy lump at the base of your palm, where it intersects with your thumb. Remove the steaks from the pan and place to the side, in a warm location, on a plate. 2  They will continue to (carryover) cook, on their own. 3  This should bring them up to a nice medium-rare, while also allowing the muscle to relax, again, and the juices to settle within the meat.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to cook a tenderloin steak in the oven\\\"}\", \"original_answer\": \"During the filming of a documentary on bison, a buffalo was struck by lightning in Colorado, leading to her death and the subsequent killing of her calf by local predators. The behind-the-scenes footage is part of a multi-year project by Meet My Neighbor Productions, a nonprofit, documenting bison ranches, Native American reservations, and parks across the US and Canada. The documentary, \\\"Native the Prodigies of an Icon,\\\" highlights the struggles of maintaining bison populations and is set to be released in 2025.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69410,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "seed": 69410,
+  "source_cluster_id": "3e54a0c2c5e4ebfdd594231b0c61b9a28b6c4aa38581e98854dae388b4dfff0f",
+  "source_hash": "sha256:beae9656776f732ba37db19dea4e784b28af8d9b17e68c7eed35fb1ce2972196",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "arm": "duplicate",
+  "capture_identity": "sha256:c690c1f517fbce73c5da6a2d1e99e3819c3de93e1045fe76d1c8215b54691541",
+  "censor_status": false,
+  "denominator": 1,
+  "donor_group_id": "sha256:aac628b5d94a3088f5f6d88b6a19e83cb81f652995f2af8a2a86b8625739b1b3",
+  "duration_s": 0.0,
+  "eligibility": false,
+  "exclusion_reason": "paired_context_upper_bound_overrun",
+  "failure_status": false,
+  "family_id": "sha256:aac628b5d94a3088f5f6d88b6a19e83cb81f652995f2af8a2a86b8625739b1b3:duplicate",
+  "group_id": "sha256:aac628b5d94a3088f5f6d88b6a19e83cb81f652995f2af8a2a86b8625739b1b3",
+  "input_byte_upper_bound": 2166,
+  "input_tokens": null,
+  "numerator": 0,
+  "parsed": {
+    "citation_valid": false,
+    "completed": false,
+    "finish_reason": null,
+    "probability": null,
+    "schema_valid": false,
+    "source_sentence_id": null,
+    "status": "invalid_envelope",
+    "syntax_valid": false,
+    "usage": {}
+  },
+  "public_eligible": false,
+  "public_hash": "sha256:70e3190df78a64f3adc61eb1d50b5b3e631095cc8af282a437e4920dea541923",
+  "raw_response": {},
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 32,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Macropus antilopinus is the exception among wallaroos. It is, essentially, the far-northern equivalent of the eastern and western grey kangaroos. Like them, it is a creature of the grassy plains and woodlands, and gregarious, where the other wallaroos are solitary.\\\\n\\\\npassage 2:Kangaroos are usually larger than wallabies, which tend to be small (around 60 cm or 2 ft). Though their sizes vary hugely, the largest wallabies measure up to 180 cm (6 ft) from tail to head and weigh up to 20 kg (44 lbs).\\\\n\\\\npassage 3:Kangaroos and wallabies are very similar marsupials that belong to the same family (Macropodidae) and genus (Macropus). (The above image is a wallaby.) Their native territories often overlap, but wallabies are generally much, much smaller than kangaroos with a color pattern that is much more varied. The lifespan of a kangaroo is much longer, and these larger animals take longer to grow, and become more independent than their relatives.\\\\n\\\\n\\\",\\\"question\\\":\\\"difference between kangaroo and wallaby\\\"}\", \"original_answer\": \"Kangaroos and wallabies are similar marsupials that belong to the same family and genus. However, kangaroos are usually larger than wallabies, which tend to be small and have a more varied color pattern. The largest wallabies measure up to 6 feet from tail to head and weigh up to 44 pounds. Kangaroos also have a longer lifespan and take longer to grow and become more independent than wallabies.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69410,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 0,
+  "role": "stream",
+  "seed": 69410,
+  "source_cluster_id": "032cd0d2f7159107dac1e8f1d60d07c43111c4ad2d5a96f788e351e343c5297e",
+  "source_hash": "sha256:690ca56b7f1801afc387b585905b96da5493ea8cdea6d8cd350a65f78ef039fb",
+  "started": false,
+  "status": "excluded",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ]
+}

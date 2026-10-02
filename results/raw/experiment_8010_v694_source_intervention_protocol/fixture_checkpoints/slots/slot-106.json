@@ -1,0 +1,86 @@
+{
+  "arm": "duplicate",
+  "capture_identity": "sha256:c690c1f517fbce73c5da6a2d1e99e3819c3de93e1045fe76d1c8215b54691541",
+  "censor_status": false,
+  "denominator": 1,
+  "donor_group_id": "sha256:f09e245c1efa4230f70dadc1c663cc397c8498740f48f4a1aa8c64dc7fd74e6f",
+  "duration_s": 0.0029266279889270663,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:f09e245c1efa4230f70dadc1c663cc397c8498740f48f4a1aa8c64dc7fd74e6f:duplicate",
+  "group_id": "sha256:f09e245c1efa4230f70dadc1c663cc397c8498740f48f4a1aa8c64dc7fd74e6f",
+  "input_byte_upper_bound": 2335,
+  "input_tokens": 30,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.25,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 18,
+      "prompt_tokens": 30
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:14b29b3293715d2122d67e2506a7e1cc94f03118278fa6277aedbd17f9d499a2",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "message": {
+          "content": "{\"unsupported_probability\": 0.25, \"source_sentence_id\": null}"
+        }
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "usage": {
+      "completion_tokens": 18,
+      "prompt_tokens": 30
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 32,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Knee bends \u2013 3 sets of 10 repetitions (reps). Stand a foot away from a wall with your knees hip-width apart and your feet pointing slightly outwards. Slide your back down the wall by slowly bending your knees. Let the knees point in the same direction as your toes.\\\\n\\\\npassage 2:6) TFL Distraction. The TFL (Tensor Fasciae Latae) is a small muscle located at the side of your hip just below the crest of your pelvis. When tight and bound up this nasty little bugger can affect the knee by pulling through the IT band and causing pain on the outside of the knee.\\\\n\\\\npassage 3:Thigh contraction \u2013 three sets of 15 seconds with each leg. Sit up straight on a chair. Slowly straighten and raise your right leg until straight with your foot pointing slightly outwards. Squeeze your right thigh muscles and hold this position for 10 seconds.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to strengthen muscles around knee\\\"}\", \"original_answer\": \"The passages suggest a few exercises to strengthen the muscles around the knee. One is knee bends, which involves standing a foot away from a wall, bending your knees, and sliding your back down the wall, then repeating this in sets of three, ten times each. Another exercise is thigh contractions, which involves sitting up straight, slowly raising and straightening your leg, squeezing your thigh muscles, and holding this position for a few seconds. This should be done in three sets of 15 seconds with each leg. The TFL Distraction is not clearly explained as an exercise but the passage indicates that it's a small muscle at the side of the hip that can affect the knee.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69410,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "seed": 69410,
+  "source_cluster_id": "24d7d40952e9a439db71520c93b7f92cb9d0401d967fe289848a21f481b20c65",
+  "source_hash": "sha256:d6a1b98da562b5f0d0043e15146eabb01390fa87d59809ac51c5b2df3418560c",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ]
+}
