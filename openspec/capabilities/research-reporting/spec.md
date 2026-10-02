@@ -89235,6 +89235,14 @@ both conductor readers. Publish through the existing primary helper. All
 published checkpoint and snapshot references SHALL resolve to durable files.
 The conductor owns ops/status, ops/changelog and BMAD reconciliation.
 
+Exp8016 implementation: `python/carnot/reporting/hardware_update_8016.py`,
+`python/carnot/experiment_8016_v694_hardware_update_boundary.py` and its thin
+script entry point. Twenty traced tests cover ordered CPU updates, JSON restart,
+overflow, threshold stress, independent receipt mutation, raw custody, consumer
+selection and actual CLI routes. The producer records final owned commands and
+statement counts below `results/raw/experiment_8016_v694_hardware_update_boundary/`.
+Missing Exp8012/Exp8015 inputs block natural replay independently of board custody.
+
 ### REQ-REPORT-8007: Diagnose conditioning before new V694 fitting
 
 Exp8007 SHALL preserve historical fit/tune and the 64/256/64 V693 development
@@ -89438,4 +89446,36 @@ adversarial and strict row readers. Publish through the existing primary helper
 and recheck final bytes. Raw evidence and checkpoints SHALL use durable paths.
 Protocol controls remain circular and supply no natural observations. Readiness
 one requires valid measurement and owned checks, not scientific benefit.
+The conductor owns ops/status, ops/changelog and BMAD reconciliation.
+### REQ-REPORT-8016: Keep update precision separate from board custody
+
+Exp8016 SHALL freeze methods, role hashes, budgets and gates before labels.
+Authenticate KV260, PolarFire and GateMate receipts independently, without device
+contact. Missing history SHALL block only its board row. Preserve SSH k_max<=5,
+Linux CPU-only dispatch, unchanged 0xffffffff and unqualified NPU/TSU access.
+Keep actual execution dates separate from later custody dates. Missing exact
+Exp8012 trajectory or Exp8015 native parity SHALL block natural numerical replay.
+No historical inference sweep SHALL substitute for the new update trajectory.
+
+### SCENARIO-REPORT-8016-NUMERIC
+
+Replay qualified ordered updates against float64 using signed 24-bit Q12 storage
+and signed 32-bit Q12 accumulator control. Record scales, each overflow,
+probability and action disagreement before/after each update and restart.
+Require drift <=0.001, zero natural action disagreements, zero overflow and
+identical restart replay. Near-threshold synthetic stress remains circular.
+Map coefficient IO, nonlinear functions, pending labels and commits to host
+versus hypothetical devices. Missing native timing components remain null.
+No compatible deployed kernel permits a current-device acceleration claim.
+
+### SCENARIO-REPORT-8016-SEAL
+
+Traced tests SHALL cover receipt mutation, update accumulation, restart and real
+CLI routes, with 100 percent added statement coverage. Run owned consumers,
+Ruff, strict mypy and explicit module/test spec checks. Retain one bounded full
+Python suite diagnostic separately. Cold-reduce in a fresh process and run
+unchanged adversarial and strict-row validators on exact final bytes. Publish
+through the existing helper and recheck both consumers and published bytes.
+Persist raw rows, sealed inputs, checkpoints and command logs below the durable
+Exp8016 raw directory. Readiness cannot be one for blocked or disqualified work.
 The conductor owns ops/status, ops/changelog and BMAD reconciliation.
