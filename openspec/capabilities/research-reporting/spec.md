@@ -89479,3 +89479,51 @@ through the existing helper and recheck both consumers and published bytes.
 Persist raw rows, sealed inputs, checkpoints and command logs below the durable
 Exp8016 raw directory. Readiness cannot be one for blocked or disqualified work.
 The conductor owns ops/status, ops/changelog and BMAD reconciliation.
+
+### REQ-REPORT-8017: Independently reduce the thirteen V694 dispositions
+
+Exp8017 SHALL bind the complete V694 table, JSON, digest and immutable activated
+YAML before reading evaluation rows. Freeze methods, role hashes, budgets and
+exact gate fields. Resolve only declared primaries or exact conductor skip
+receipts. Missing scientific rows SHALL stay missing. Recompute static cost,
+Brier and action counts when Exp8009 exists. Reconstruct Exp8011 source
+contrasts from original response checkpoints. Recompute update and retention
+primitives when Exp8012/8013 exist. Compare producer summaries and retain drift
+as a failed operand. Check final-byte sidecars and every referenced primitive.
+Administrative success, valid nulls and narrow source sensitivity SHALL survive
+without closing useful decisions, durable learning or affordable deployment.
+Generalized learning benefit SHALL remain zero. External blockers SHALL yield
+blocked, never partial. Execution readiness SHALL be zero for blocked or
+disqualified verdicts. Terminal validation SHALL complete the thirteenth row.
+
+### SCENARIO-REPORT-8017-CUSTODY
+
+Private fixtures SHALL cover null and blocked reductions, exact skip receipts,
+missing fields, malformed primaries, missing sidecars, byte drift, edited
+summaries and checkpoints. Repeated seeds SHALL not enlarge independent units.
+Authenticated prior verdict comparisons SHALL retain changed scope and concrete
+reopen conditions. Unchanged no-headroom extensions SHALL stop.
+
+### SCENARIO-REPORT-8017-TERMINAL
+
+Run traced unit and consumer checks, private E2E-018, scoped Ruff, strict mypy,
+spec coverage and nonempty 100 percent new-statement coverage including real
+CLI branches. Run the full Python suite once and preserve its original result
+as separate repository health. Freeze argv, exits and durable log hashes.
+Cold-reduce in a fresh process, verify adversarial and strict rows on exact
+candidate bytes, publish through the existing helper and recheck final bytes.
+Publication gate G1-G4 and historical paper readiness SHALL stay separate from
+milestone science readiness. Published references SHALL resolve to durable
+paths. The conductor owns status, changelog and BMAD reconciliation.
+
+Exp8017 implementation: `python/carnot/reporting/v694_capstone.py` reuses the
+parameterized authority, primitive scoring, subprocess supervision and primary
+publication helpers. Its thin CLI is
+`scripts/experiments/experiment_8017_v694_capstone.py`. Traced private tests live
+in `tests/python/test_experiment_8017_v694_capstone.py`. The frozen terminal
+receipts report actual owned checks and separate repository health. The outcome
+note is `docs/research-notes/v694-outcomes.md`. No conductor source is changed.
+
+Exp8017 retries SHALL reuse the prior byte-bound repository health diagnostic.
+They SHALL rerun owned checks after code or test changes. Retained diagnostics
+SHALL keep original argv, exit, timing and log hashes, separate from new checks.

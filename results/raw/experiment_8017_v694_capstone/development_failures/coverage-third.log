@@ -1,0 +1,179 @@
+....F..                                                                  [100%]
+=================================== FAILURES ===================================
+_____________________ test_validation_and_real_publication _____________________
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261002T084334-1235442-75ce1baf/test_validation_and_real_publi0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f2c21efa6f0>
+
+    def test_validation_and_real_publication(tmp_path, monkeypatch):
+        """SCENARIO-REPORT-8017-TERMINAL: final bytes pass actual private terminal readers."""
+        root = tmp_path / "input"
+        fixture(root)
+        output = tmp_path / "experiment_8017_v694_capstone.json"
+        real_run = cap.run_check
+        real_manifest = cap.manifest
+    
+        def manifest(private):
+            frozen = real_manifest(private)
+            assert frozen["coverage_includes"] == cap.OWNED
+            assert any(s["classification"] == "diagnostic" for s in frozen["commands"])
+            frozen["commands"] = [
+                s for s in frozen["commands"] if s["name"] in {"publication_gate", "coverage_json"}
+            ]
+            return frozen
+    
+        def run(repo, spec, private, durable):
+            if spec["name"] not in {"publication_gate", "coverage_json"}:
+                return real_run(repo, spec, private, durable)
+            log = durable / (spec["name"] + ".json")
+            atomic_json(
+                log,
+                dict(
+                    paper_ready=False,
+                    unmet_gates=["G2"],
+                    gates={f"G{i}": {"pass": i != 2} for i in range(1, 5)},
+                ),
+            )
+            if spec["name"] == "coverage_json":
+                atomic_json(
+                    private.parent / "coverage.json",
+                    dict(
+                        files={
+                            p: {"summary": {"num_statements": 1, "covered_lines": 1}} for p in cap.OWNED
+                        }
+                    ),
+                )
+            return dict(
+                spec, passed=True, actual_exit=0, log_path=str(log), log_sha256=sha256_file(log)
+            )
+    
+        monkeypatch.setattr(cap, "manifest", manifest)
+        monkeypatch.setattr(cap, "run_check", run)
+        assert cap.qualify(root, root / "design.md", "20261002", output) == 0
+        value = cap.old.read(output)
+        assert value["capstone_execution_ready_score"] == 1
+        assert value["sample_size_budget"]["completed"] == 13
+        assert value["generalized_learning_benefit_score"] == 0
+        assert cap.old.read(Path(value["terminal_validation_sidecar_path"]))[
+            "primary_sha256"
+        ] == sha256_file(output)
+        cap.apply_checks(value, [dict(passed=False)], {})
+        assert value["verdict_class"] == "disqualified"
+        cap.apply_checks(
+            value,
+            [dict(passed=True), dict(passed=False, classification="diagnostic")],
+            {p: dict(num_statements=1, covered_lines=1) for p in cap.OWNED},
+        )
+        assert value["required_checks_passed"] and value["capstone_execution_ready_score"] == 0
+        monkeypatch.setattr(cap, "qualify", lambda *a: 0)
+        assert cli.main(["--date", "20261002"]) == 0
+        original = cap.old.read(output)
+        monkeypatch.setattr(cap, "build", lambda *a: deepcopy(original))
+        retired = []
+        monkeypatch.setattr(cap, "append_retirements", lambda rows: retired.extend(rows))
+        assert cap.qualify(ROOT, root / "design.md", "20261002", output) == 0
+>       assert retired
+E       assert []
+
+tests/python/test_experiment_8017_v694_capstone.py:297: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8017] phase=freeze_authority elapsed_s=30.342 completed_units=0 pending=methods and roles
+[exp8017] phase=task_reduced elapsed_s=32.301 completed_units=1 pending=11
+[exp8017] phase=task_reduced elapsed_s=32.301 completed_units=2 pending=10
+[exp8017] phase=task_reduced elapsed_s=32.301 completed_units=3 pending=9
+[exp8017] phase=task_reduced elapsed_s=32.301 completed_units=4 pending=8
+[exp8017] phase=task_reduced elapsed_s=32.301 completed_units=5 pending=7
+[exp8017] phase=task_reduced elapsed_s=32.301 completed_units=6 pending=6
+[exp8017] phase=task_reduced elapsed_s=32.301 completed_units=7 pending=5
+[exp8017] phase=task_reduced elapsed_s=32.301 completed_units=8 pending=4
+[exp8017] phase=task_reduced elapsed_s=32.302 completed_units=9 pending=3
+[exp8017] phase=task_reduced elapsed_s=32.302 completed_units=10 pending=2
+[exp8017] phase=task_reduced elapsed_s=32.302 completed_units=11 pending=1
+[exp8017] phase=task_reduced elapsed_s=32.302 completed_units=12 pending=0
+[exp8004] phase=primitive_scoring rows=0/2
+[exp8004] phase=primitive_scoring rows=0/2
+[exp7303-validation] before_subprocess cold_replay elapsed_s=0.000 unit=1/1
+[exp7303-validation:cold_replay] [exp8017] phase=cli_start elapsed_s=0.000 completed_units=0 pending=
+[exp7303-validation:cold_replay] [exp8017] phase=cold_replay_start elapsed_s=0.001 completed_units=0 pending=source custody
+[exp7303-validation:cold_replay] [exp8017] phase=task_reduced elapsed_s=0.028 completed_units=1 pending=11
+[exp7303-validation:cold_replay] [exp8017] phase=task_reduced elapsed_s=0.028 completed_units=2 pending=10
+[exp7303-validation:cold_replay] [exp8017] phase=task_reduced elapsed_s=0.028 completed_units=3 pending=9
+[exp7303-validation:cold_replay] [exp8017] phase=task_reduced elapsed_s=0.028 completed_units=4 pending=8
+[exp7303-validation:cold_replay] [exp8017] phase=task_reduced elapsed_s=0.028 completed_units=5 pending=7
+[exp7303-validation:cold_replay] [exp8017] phase=task_reduced elapsed_s=0.028 completed_units=6 pending=6
+[exp7303-validation:cold_replay] [exp8017] phase=task_reduced elapsed_s=0.028 completed_units=7 pending=5
+[exp7303-validation:cold_replay] [exp8017] phase=task_reduced elapsed_s=0.028 completed_units=8 pending=4
+[exp7303-validation:cold_replay] [exp8017] phase=task_reduced elapsed_s=0.029 completed_units=9 pending=3
+[exp7303-validation:cold_replay] [exp8017] phase=task_reduced elapsed_s=0.029 completed_units=10 pending=2
+[exp7303-validation:cold_replay] [exp8017] phase=task_reduced elapsed_s=0.029 completed_units=11 pending=1
+[exp7303-validation:cold_replay] [exp8017] phase=task_reduced elapsed_s=0.029 completed_units=12 pending=0
+[exp7303-validation:cold_replay] {"errors": []}
+[exp7303-validation] after_subprocess cold_replay elapsed_s=1.393 exit=0 unit=1/1
+[exp7303-validation] before_subprocess adversarial elapsed_s=0.000 unit=1/1
+[exp7303-validation:adversarial] {
+[exp7303-validation:adversarial]   "reports": [
+[exp7303-validation:adversarial]     {
+[exp7303-validation:adversarial]       "artifact": "/tmp/carnot-8017-402djhet/terminal/experiment_8017_v694_capstone.json",
+[exp7303-validation:adversarial]       "loaded": true,
+[exp7303-validation:adversarial]       "exp_id": 8017,
+[exp7303-validation:adversarial]       "title": "",
+[exp7303-validation:adversarial]       "honest_verdict": "complete_null_v694_development_only",
+[exp7303-validation:adversarial]       "flag_count": 0,
+[exp7303-validation:adversarial]       "max_severity": -1,
+[exp7303-validation:adversarial]       "flags": [],
+[exp7303-validation:adversarial]       "gate_version": "197e0a5eacacb09ce6607ae8bdfd507498082857f0d02ec2003a62c251b69a24"
+[exp7303-validation:adversarial]     }
+[exp7303-validation:adversarial]   ],
+[exp7303-validation:adversarial]   "flagged_count": 0
+[exp7303-validation:adversarial] }
+[exp7303-validation] after_subprocess adversarial elapsed_s=0.544 exit=0 unit=1/1
+[exp7303-validation] before_subprocess strict_rows elapsed_s=0.000 unit=1/1
+[exp7303-validation:strict_rows] 
+[exp7303-validation:strict_rows] verdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.
+[exp7303-validation:strict_rows]   No row/verdict contradictions among the artifacts that could be checked.
+[exp7303-validation] after_subprocess strict_rows elapsed_s=0.029 exit=0 unit=1/1
+[exp7303-validation] before_subprocess published_cold_replay elapsed_s=0.000 unit=1/1
+[exp7303-validation:published_cold_replay] [exp8017] phase=cli_start elapsed_s=0.000 completed_units=0 pending=
+[exp7303-validation:published_cold_replay] [exp8017] phase=cold_replay_start elapsed_s=0.001 completed_units=0 pending=source custody
+[exp7303-validation:published_cold_replay] [exp8017] phase=task_reduced elapsed_s=0.028 completed_units=1 pending=11
+[exp7303-validation:published_cold_replay] [exp8017] phase=task_reduced elapsed_s=0.028 completed_units=2 pending=10
+[exp7303-validation:published_cold_replay] [exp8017] phase=task_reduced elapsed_s=0.028 completed_units=3 pending=9
+[exp7303-validation:published_cold_replay] [exp8017] phase=task_reduced elapsed_s=0.029 completed_units=4 pending=8
+[exp7303-validation:published_cold_replay] [exp8017] phase=task_reduced elapsed_s=0.029 completed_units=5 pending=7
+[exp7303-validation:published_cold_replay] [exp8017] phase=task_reduced elapsed_s=0.029 completed_units=6 pending=6
+[exp7303-validation:published_cold_replay] [exp8017] phase=task_reduced elapsed_s=0.029 completed_units=7 pending=5
+[exp7303-validation:published_cold_replay] [exp8017] phase=task_reduced elapsed_s=0.029 completed_units=8 pending=4
+[exp7303-validation:published_cold_replay] [exp8017] phase=task_reduced elapsed_s=0.029 completed_units=9 pending=3
+[exp7303-validation:published_cold_replay] [exp8017] phase=task_reduced elapsed_s=0.029 completed_units=10 pending=2
+[exp7303-validation:published_cold_replay] [exp8017] phase=task_reduced elapsed_s=0.029 completed_units=11 pending=1
+[exp7303-validation:published_cold_replay] [exp8017] phase=task_reduced elapsed_s=0.029 completed_units=12 pending=0
+[exp7303-validation:published_cold_replay] {"errors": []}
+[exp7303-validation] after_subprocess published_cold_replay elapsed_s=1.394 exit=0 unit=1/1
+[exp7303-validation] before_subprocess published_adversarial elapsed_s=0.000 unit=1/1
+[exp7303-validation:published_adversarial] {
+[exp7303-validation:published_adversarial]   "reports": [
+[exp7303-validation:published_adversarial]     {
+[exp7303-validation:published_adversarial]       "artifact": "/tmp/pytest-carnot-ianblenke/20261002T084334-1235442-75ce1baf/test_validation_and_real_publi0/experiment_8017_v694_capstone.json",
+[exp7303-validation:published_adversarial]       "loaded": true,
+[exp7303-validation:published_adversarial]       "exp_id": 8017,
+[exp7303-validation:published_adversarial]       "title": "",
+[exp7303-validation:published_adversarial]       "honest_verdict": "complete_null_v694_development_only",
+[exp7303-validation:published_adversarial]       "flag_count": 0,
+[exp7303-validation:published_adversarial]       "max_severity": -1,
+[exp7303-validation:published_adversarial]       "flags": [],
+[exp7303-validation:published_adversarial]       "gate_version": "197e0a5eacacb09ce6607ae8bdfd507498082857f0d02ec2003a62c251b69a24"
+[exp7303-validation:published_adversarial]     }
+[exp7303-validation:published_adversarial]   ],
+[exp7303-validation:published_adversarial]   "flagged_count": 0
+[exp7303-validation:published_adversarial] }
+[exp7303-validation] after_subprocess published_adversarial elapsed_s=0.555 exit=0 unit=1/1
+[exp7303-validation] before_subprocess published_strict_rows elapsed_s=0.000 unit=1/1
+[exp7303-validation:published_strict_rows] 
+[exp7303-validation:published_strict_rows] verdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.
+[exp7303-validation:published_strict_rows]   No row/verdict contradictions among the artifacts that could be checked.
+[exp7303-validation] after_subprocess published_strict_rows elapsed_s=0.025 exit=0 unit=1/1
+[exp8017] phase=published_final_bytes elapsed_s=36.280 completed_units=13 pending=
+[exp8017] phase=cli_start elapsed_s=36.282 completed_units=0 pending=
+=========================== short test summary info ============================
+FAILED tests/python/test_experiment_8017_v694_capstone.py::test_validation_and_real_publication
+1 failed, 6 passed in 45.88s
