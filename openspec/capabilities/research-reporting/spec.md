@@ -89527,3 +89527,44 @@ note is `docs/research-notes/v694-outcomes.md`. No conductor source is changed.
 Exp8017 retries SHALL reuse the prior byte-bound repository health diagnostic.
 They SHALL rerun owned checks after code or test changes. Retained diagnostics
 SHALL keep original argv, exit, timing and log hashes, separate from new checks.
+
+### REQ-REPORT-8018: Bind V695 invocation authority before science
+
+Exp8018 SHALL compare count=13 and IDs8018 through8030 through the existing
+parameterized authority reader. The visible table, full JSON, prompts, prior
+failures and canonical digest SHALL bind the actual observed authority bytes.
+Missing V695 design or consumed staging SHALL never be reconstructed as history.
+Missing design is terminal blocked. Freeze methods, source roles, exclusions,
+statistical directions and three primary comparisons before qualification.
+Current readiness is administrative and independent of scientific branch gates.
+Oracle controls SHALL remain circular_positive with zero independent science.
+
+### SCENARIO-REPORT-8018-AUTHORITY
+
+Private frozen fixtures SHALL exercise the twelve existing authority mutations,
+missing table/JSON/digest, gate-field typo, staged/active mismatch and byte drift.
+Every gate SHALL name an earlier task and a verbatim upstream required field.
+Run existing schema, failure-ledger and exclusion readers. Historical fixtures
+SHALL bind their original date and milestone, without reading live defaults.
+
+### SCENARIO-REPORT-8018-TERMINAL
+
+Private CLI paths SHALL qualify valid, null, blocked and tampered evidence.
+Trace original Exp8017 failures to byte-bound saved logs. Fix only reproduced
+reader defects, preserving original assertions and historical primaries.
+Invocation method, configuration, authority and failure snapshots SHALL be
+content addressed. Cold replay SHALL reject changed rows, summaries and bytes.
+Require nonempty 100 percent added-statement coverage, real CLI coverage,
+scoped consumers, E2E-018, Ruff, strict mypy and traced spec checks.
+Preserve one bounded full-suite diagnostic separately from owned checks.
+Run unchanged adversarial and strict row readers on exact candidate bytes.
+Publish through the existing primary helper and recheck published bytes.
+All published checkpoints SHALL resolve under the durable raw directory.
+The conductor owns status, changelog and BMAD reconciliation.
+
+Exp8018 implementation uses `python/carnot/reporting/v695_contract_methods.py`
+and its thin experiment CLI. Tests freeze private V695 authority independently
+of live planning. The reproduced Exp8017 retry defect used mutable command and
+primitive checkpoint names. The reader now retains content-addressed copies;
+original test assertions and historical primary bytes remain unchanged.
+An absent live V695 design stays terminal blocked and readiness zero.

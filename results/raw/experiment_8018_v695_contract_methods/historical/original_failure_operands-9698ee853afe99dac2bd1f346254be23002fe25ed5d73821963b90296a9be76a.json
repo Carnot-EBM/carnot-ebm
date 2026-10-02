@@ -1,0 +1,305 @@
+{
+  "authority_snapshots": {
+    "active": {
+      "exists": true,
+      "role": "active",
+      "sha256": "sha256:f0367b938a66d672e51463bdbf56b26cc1159fa8893b1c0c3b4297a02b8ff9a5",
+      "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8017_v694_capstone/authority/active-f0367b938a66d672e51463bdbf56b26cc1159fa8893b1c0c3b4297a02b8ff9a5.bin",
+      "snapshot_sha256": "sha256:f0367b938a66d672e51463bdbf56b26cc1159fa8893b1c0c3b4297a02b8ff9a5",
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml"
+    },
+    "design": {
+      "exists": true,
+      "role": "design",
+      "sha256": "sha256:2922d685ecc1148d0fabc51c775f09ff9b9d30273ba25b1f87ddf3403bca5200",
+      "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8017_v694_capstone/authority/design-2922d685ecc1148d0fabc51c775f09ff9b9d30273ba25b1f87ddf3403bca5200.bin",
+      "snapshot_sha256": "sha256:2922d685ecc1148d0fabc51c775f09ff9b9d30273ba25b1f87ddf3403bca5200",
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/research-roadmap-vNEXT.md"
+    },
+    "staged": {
+      "exists": false,
+      "role": "staged",
+      "sha256": null,
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap-next.yaml"
+    }
+  },
+  "gate_check_summary": [
+    {
+      "artifact_field": "prior_exposure_receipt.predictions_sealed_before_stream_label_access",
+      "check_result": "failed",
+      "expected": true,
+      "field": "predictions_sealed_before_stream_label_access",
+      "hash": "sha256:857f237e4594a1f2b6d5a029e580e7c38c6668cdd902559c3f1e3eaf4e993724",
+      "observed": false,
+      "op": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7997_v693_typed_development_decisions.json",
+      "upstream_id": "exp7997"
+    },
+    {
+      "artifact_field": "prior_exposure_receipt.missing_original_stream_predictions",
+      "check_result": "failed",
+      "expected": true,
+      "field": "original_stream_prediction_seal_exists",
+      "hash": null,
+      "observed": false,
+      "op": "==",
+      "passed": false,
+      "path": "/tmp/carnot-7997-qeqci7zs/evidence/stream_predictions.json",
+      "upstream_id": "exp7997"
+    },
+    {
+      "artifact_field": "primitive_sha256",
+      "check_result": "failed",
+      "expected": "sha256:17ba30f7bbd7819132bd8ad2a25d80206296198d9b87f23dc447c5a786da5b5d",
+      "hash": "sha256:6073cb843eaf7c22e8c96e1f0197b46a1c1f2cc257ae877d85dbf117e330c864",
+      "observed": "sha256:6073cb843eaf7c22e8c96e1f0197b46a1c1f2cc257ae877d85dbf117e330c864",
+      "op": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8007_v694_conditioning_diagnosis/configuration.json",
+      "upstream_id": "exp8007-conditioning-diagnosis"
+    },
+    {
+      "artifact_field": "rows[33].y",
+      "check_result": "failed",
+      "exclusion_reason": "truncated",
+      "expected": "binary target 0 or 1 for all 62 public-input calibration groups",
+      "family_id": "sha256:7810ef39d2264330cc1118c66161f7981383595ed61c020bb6b43892c2644e6f",
+      "hash": "sha256:35bba530fb36ba99f085ba98f3934276fdb9abc60fbdc322db962b5dd8647058",
+      "observed": null,
+      "op": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8008_v694_conditioned_energy_fit/custody/35bba530fb36ba99f085ba98f3934276fdb9abc60fbdc322db962b5dd8647058.json",
+      "upstream_id": "exp7994"
+    },
+    {
+      "artifact_field": "conditioned_fit_ready_score",
+      "check_result": "failed",
+      "expected": 1,
+      "hash": "sha256:c760c40d906cef7b6d88499e89178c1b566d7d1a77fd7e3cf3b9e90509f9b186",
+      "observed": 0,
+      "op": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8008_v694_conditioned_energy_fit.json",
+      "upstream_id": "exp8008-conditioned-energy-fit"
+    },
+    {
+      "artifact_field": "verdict_class",
+      "check_result": "failed",
+      "expected": [
+        "positive",
+        "null",
+        "circular_positive"
+      ],
+      "hash": "sha256:c760c40d906cef7b6d88499e89178c1b566d7d1a77fd7e3cf3b9e90509f9b186",
+      "observed": "blocked",
+      "op": "in",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8008_v694_conditioned_energy_fit.json",
+      "upstream_id": "exp8008-conditioned-energy-fit"
+    },
+    {
+      "artifact_field": "declared_primary_present",
+      "check_result": "failed",
+      "expected": true,
+      "hash": null,
+      "observed": false,
+      "op": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8009_v694_development_decisions.json",
+      "upstream_id": "exp8009-development-decisions"
+    },
+    {
+      "artifact_field": "conditioned_fit_ready_score",
+      "check_result": "failed",
+      "expected": 1,
+      "hash": "sha256:c760c40d906cef7b6d88499e89178c1b566d7d1a77fd7e3cf3b9e90509f9b186",
+      "observed": 0,
+      "op": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8008_v694_conditioned_energy_fit.json",
+      "upstream_id": "exp8008-conditioned-energy-fit"
+    },
+    {
+      "artifact_field": "verdict_class",
+      "check_result": "failed",
+      "expected": [
+        "positive",
+        "null",
+        "circular_positive"
+      ],
+      "hash": "sha256:c760c40d906cef7b6d88499e89178c1b566d7d1a77fd7e3cf3b9e90509f9b186",
+      "observed": "blocked",
+      "op": "in",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8008_v694_conditioned_energy_fit.json",
+      "upstream_id": "exp8008-conditioned-energy-fit"
+    },
+    {
+      "artifact_field": "declared_primary_present",
+      "check_result": "failed",
+      "expected": true,
+      "hash": null,
+      "observed": false,
+      "op": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8012_v694_budgeted_online_updates.json",
+      "upstream_id": "exp8012-budgeted-online-updates"
+    },
+    {
+      "artifact_field": "learning_measurement_ready_score",
+      "check_result": "failed",
+      "expected": 1,
+      "hash": null,
+      "observed": "contract_error_missing_field",
+      "op": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8012_v694_budgeted_online_updates.json",
+      "upstream_id": "exp8012-budgeted-online-updates"
+    },
+    {
+      "artifact_field": "flagged_adversarial",
+      "check_result": "failed",
+      "expected": false,
+      "hash": null,
+      "observed": "contract_error_missing_field",
+      "op": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8012_v694_budgeted_online_updates.json",
+      "upstream_id": "exp8012-budgeted-online-updates"
+    },
+    {
+      "artifact_field": "verdict_class",
+      "check_result": "failed",
+      "expected": [
+        "positive",
+        "null",
+        "circular_positive"
+      ],
+      "hash": null,
+      "observed": "contract_error_missing_field",
+      "op": "in",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8012_v694_budgeted_online_updates.json",
+      "upstream_id": "exp8012-budgeted-online-updates"
+    },
+    {
+      "artifact_field": "declared_primary_present",
+      "check_result": "failed",
+      "expected": true,
+      "hash": null,
+      "observed": false,
+      "op": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8013_v694_learning_benefit_audit.json",
+      "upstream_id": "exp8013-learning-benefit-audit"
+    },
+    {
+      "artifact_field": "learning_measurement_ready_score",
+      "check_result": "failed",
+      "expected": 1,
+      "hash": null,
+      "observed": "contract_error_missing_field",
+      "op": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8012_v694_budgeted_online_updates.json",
+      "upstream_id": "exp8012-budgeted-online-updates"
+    },
+    {
+      "artifact_field": "flagged_adversarial",
+      "check_result": "failed",
+      "expected": false,
+      "hash": null,
+      "observed": "contract_error_missing_field",
+      "op": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8012_v694_budgeted_online_updates.json",
+      "upstream_id": "exp8012-budgeted-online-updates"
+    },
+    {
+      "artifact_field": "verdict_class",
+      "check_result": "failed",
+      "expected": [
+        "positive",
+        "null",
+        "circular_positive"
+      ],
+      "hash": null,
+      "observed": "contract_error_missing_field",
+      "op": "in",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8012_v694_budgeted_online_updates.json",
+      "upstream_id": "exp8012-budgeted-online-updates"
+    },
+    {
+      "artifact_field": "declared_primary_present",
+      "check_result": "failed",
+      "expected": true,
+      "hash": null,
+      "observed": false,
+      "op": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8015_v694_native_update_parity.json",
+      "upstream_id": "exp8015-native-update-parity"
+    },
+    {
+      "artifact_field": "artifact.exists",
+      "artifact_hash": null,
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8012_v694_budgeted_online_updates.json",
+      "check_result": "failed",
+      "expected": true,
+      "hash": null,
+      "observed": false,
+      "op": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8012_v694_budgeted_online_updates.json",
+      "upstream_id": "exp8012"
+    },
+    {
+      "artifact_field": "conditioned_fit_ready_score",
+      "artifact_hash": "sha256:c760c40d906cef7b6d88499e89178c1b566d7d1a77fd7e3cf3b9e90509f9b186",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8008_v694_conditioned_energy_fit.json",
+      "check_result": "failed",
+      "expected": 1,
+      "hash": "sha256:c760c40d906cef7b6d88499e89178c1b566d7d1a77fd7e3cf3b9e90509f9b186",
+      "observed": 0,
+      "op": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8008_v694_conditioned_energy_fit.json",
+      "scope": "historical_conductor_block_diagnostic_not_trajectory",
+      "upstream_id": "exp8008-conditioned-energy-fit"
+    },
+    {
+      "artifact_field": "verdict_class",
+      "artifact_hash": "sha256:c760c40d906cef7b6d88499e89178c1b566d7d1a77fd7e3cf3b9e90509f9b186",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8008_v694_conditioned_energy_fit.json",
+      "check_result": "failed",
+      "expected": [
+        "positive",
+        "null",
+        "circular_positive"
+      ],
+      "hash": "sha256:c760c40d906cef7b6d88499e89178c1b566d7d1a77fd7e3cf3b9e90509f9b186",
+      "observed": "blocked",
+      "op": "in",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8008_v694_conditioned_energy_fit.json",
+      "scope": "historical_conductor_block_diagnostic_not_trajectory",
+      "upstream_id": "exp8008-conditioned-energy-fit"
+    },
+    {
+      "artifact_field": "artifact.exists",
+      "artifact_hash": null,
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8015_v694_native_update_parity.json",
+      "check_result": "failed",
+      "expected": true,
+      "hash": null,
+      "observed": false,
+      "op": "==",
+      "passed": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8015_v694_native_update_parity.json",
+      "upstream_id": "exp8015"
+    }
+  ],
+  "historical_verdict": "complete_disqualified_v694_owned_checks"
+}

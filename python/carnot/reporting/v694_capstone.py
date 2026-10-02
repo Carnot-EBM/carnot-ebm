@@ -797,7 +797,8 @@ def qualify(root: Path, design: Path, date: str, output: Path) -> int:
                 s for s in frozen["commands"] if s["classification"] != "diagnostic"
             ]
         frozen["retained_repository_health"] = retained_health
-        atomic_json(durable / "validation_manifest.json", frozen)
+        manifest_path = durable / f"validation_manifest-{canonical_hash(frozen)[7:]}.json"
+        atomic_json(manifest_path, frozen)
         value = build(root, design, date, durable)
         receipts = [
             run_check(ROOT, spec, private / spec["name"], durable / "validation_logs")
@@ -814,9 +815,7 @@ def qualify(root: Path, design: Path, date: str, output: Path) -> int:
         counts = {p: f["summary"] for p, f in report.get("files", {}).items()}
         apply_checks(value, receipts, counts)
         value["repository_health_reused"] = bool(retained_health)
-        value["checkpoint_references"].append(
-            old.reference(durable / "validation_manifest.json", "command_freeze")
-        )
+        value["checkpoint_references"].append(old.reference(manifest_path, "command_freeze"))
         ended = time.monotonic_ns()
         value.update(
             duration_s=(ended - started) / 1e9,
@@ -831,15 +830,12 @@ def qualify(root: Path, design: Path, date: str, output: Path) -> int:
                 completed_units=len(receipts),
             )
         )
-        atomic_json(
-            durable / "primitive_rows.json",
-            dict(
-                rows=value["rows"], independent_reduction_rows=value["independent_reduction_rows"]
-            ),
+        primitive = dict(
+            rows=value["rows"], independent_reduction_rows=value["independent_reduction_rows"]
         )
-        value["checkpoint_references"].append(
-            old.reference(durable / "primitive_rows.json", "owned_reduction")
-        )
+        primitive_path = durable / f"primitive_rows-{canonical_hash(primitive)[7:]}.json"
+        atomic_json(primitive_path, primitive)
+        value["checkpoint_references"].append(old.reference(primitive_path, "owned_reduction"))
         value["field_principles"].update(
             {
                 k: "Current checks bind exact bytes; historical paper readiness does not supply milestone science."

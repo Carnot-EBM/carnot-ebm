@@ -1,0 +1,428 @@
+{
+  "affected_tests": [
+    "tests/python/test_experiment_8018_v695_contract_methods.py",
+    "tests/python/test_experiment_7891_v685_authority_lifecycle.py",
+    "tests/python/test_experiment_8017_v694_capstone.py"
+  ],
+  "authority_snapshots": {
+    "active": {
+      "exists": true,
+      "role": "active",
+      "sha256": "sha256:0d1b8cb3e41549ca273fd0d1d5175e82af8b7b9b45b3420e58757147d49d0b03",
+      "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8018_v695_contract_methods/authority_snapshots/active-0d1b8cb3e41549ca273fd0d1d5175e82af8b7b9b45b3420e58757147d49d0b03.bin",
+      "snapshot_sha256": "sha256:0d1b8cb3e41549ca273fd0d1d5175e82af8b7b9b45b3420e58757147d49d0b03",
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml"
+    },
+    "design": {
+      "exists": true,
+      "role": "design",
+      "sha256": "sha256:2922d685ecc1148d0fabc51c775f09ff9b9d30273ba25b1f87ddf3403bca5200",
+      "snapshot_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8018_v695_contract_methods/authority_snapshots/design-2922d685ecc1148d0fabc51c775f09ff9b9d30273ba25b1f87ddf3403bca5200.bin",
+      "snapshot_sha256": "sha256:2922d685ecc1148d0fabc51c775f09ff9b9d30273ba25b1f87ddf3403bca5200",
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/research-roadmap-vNEXT.md"
+    },
+    "staged": {
+      "exists": false,
+      "role": "staged",
+      "sha256": null,
+      "source_path": "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap-next.yaml"
+    }
+  },
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "--basetemp=/tmp/exp8018-x2bi18el/consumer",
+        "tests/python/test_roadmap_schema.py",
+        "tests/python/test_audit_roadmap_gates.py",
+        "tests/python/test_exclusion_manifest_lint.py",
+        "tests/python/test_conductor_gates.py"
+      ],
+      "classification": "required",
+      "deadline_s": 240,
+      "expected_exit": 0,
+      "failure_reason": "required_check_failed",
+      "name": "consumer_pytest"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/exp8018-x2bi18el/.coverage.unit",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v695_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8018_v695_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v694_capstone.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "--basetemp=/tmp/exp8018-x2bi18el/coverage",
+        "tests/python/test_experiment_8018_v695_contract_methods.py",
+        "tests/python/test_experiment_7891_v685_authority_lifecycle.py",
+        "tests/python/test_experiment_8017_v694_capstone.py"
+      ],
+      "classification": "required",
+      "deadline_s": 900,
+      "expected_exit": 0,
+      "failure_reason": "required_check_failed",
+      "name": "coverage_unit"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/exp8018-x2bi18el/.coverage.cli",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v695_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8018_v695_contract_methods.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8018_v695_contract_methods.py",
+        "--date",
+        "20261002",
+        "--fixture-e2e",
+        "--design",
+        "/tmp/exp8018-x2bi18el/design.md",
+        "--active",
+        "/tmp/exp8018-x2bi18el/active.yaml",
+        "--staged",
+        "/tmp/exp8018-x2bi18el/consumed.yaml",
+        "--output",
+        "/tmp/exp8018-x2bi18el/fixture.json",
+        "--raw",
+        "/tmp/exp8018-x2bi18el/rows.json"
+      ],
+      "classification": "required",
+      "deadline_s": 120,
+      "expected_exit": 0,
+      "failure_reason": "required_check_failed",
+      "name": "coverage_cli_success"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/exp8018-x2bi18el/.coverage.failure",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v695_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8018_v695_contract_methods.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8018_v695_contract_methods.py",
+        "--date",
+        "20261002",
+        "--cold-replay",
+        "/tmp/exp8018-x2bi18el/negative.json",
+        "--raw",
+        "/tmp/exp8018-x2bi18el/negative-rows.json"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 1,
+      "failure_reason": "cold_replay_mismatch",
+      "name": "coverage_expected_failure"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/exp8018-x2bi18el/.coverage.replay",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v695_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8018_v695_contract_methods.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8018_v695_contract_methods.py",
+        "--date",
+        "20261002",
+        "--cold-replay",
+        "/tmp/exp8018-x2bi18el/fixture.json",
+        "--raw",
+        "/tmp/exp8018-x2bi18el/rows.json"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "failure_reason": "required_check_failed",
+      "name": "coverage_cold_replay"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--data-file=/tmp/exp8018-x2bi18el/.coverage.combined",
+        "/tmp/exp8018-x2bi18el/.coverage.unit",
+        "/tmp/exp8018-x2bi18el/.coverage.cli",
+        "/tmp/exp8018-x2bi18el/.coverage.failure",
+        "/tmp/exp8018-x2bi18el/.coverage.replay"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "failure_reason": "required_check_failed",
+      "name": "coverage_combine"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/exp8018-x2bi18el/.coverage.combined",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v695_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8018_v695_contract_methods.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "failure_reason": "required_check_failed",
+      "name": "coverage_report"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "json",
+        "--data-file=/tmp/exp8018-x2bi18el/.coverage.combined",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v695_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8018_v695_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v694_capstone.py",
+        "-o",
+        "/tmp/exp8018-x2bi18el/coverage.json"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "failure_reason": "required_check_failed",
+      "name": "coverage_json"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/reporting/v695_contract_methods.py",
+        "scripts/experiments/experiment_8018_v695_contract_methods.py",
+        "tests/python/test_experiment_8018_v695_contract_methods.py"
+      ],
+      "classification": "required",
+      "deadline_s": 90,
+      "expected_exit": 0,
+      "failure_reason": "required_check_failed",
+      "name": "ruff_check"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/reporting/v695_contract_methods.py",
+        "scripts/experiments/experiment_8018_v695_contract_methods.py",
+        "tests/python/test_experiment_8018_v695_contract_methods.py"
+      ],
+      "classification": "required",
+      "deadline_s": 90,
+      "expected_exit": 0,
+      "failure_reason": "required_check_failed",
+      "name": "ruff_format"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "python/carnot/reporting/v695_contract_methods.py",
+        "scripts/experiments/experiment_8018_v695_contract_methods.py",
+        "--follow-imports=silent"
+      ],
+      "classification": "required",
+      "deadline_s": 180,
+      "expected_exit": 0,
+      "failure_reason": "required_check_failed",
+      "name": "mypy_strict"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_8018_v695_contract_methods.py",
+        "tests/python/test_experiment_7891_v685_authority_lifecycle.py",
+        "tests/python/test_experiment_8017_v694_capstone.py"
+      ],
+      "classification": "required",
+      "deadline_s": 180,
+      "expected_exit": 0,
+      "failure_reason": "required_check_failed",
+      "name": "scoped_spec_coverage"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q"
+      ],
+      "classification": "diagnostic",
+      "deadline_s": 180,
+      "expected_exit": 0,
+      "failure_reason": "required_check_failed",
+      "name": "repository_full_suite"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-c",
+        "import yaml; from scripts.roadmap_schema import Roadmap; Roadmap.model_validate(yaml.safe_load(open('research-roadmap.yaml'))); print('schema_passed', flush=True)"
+      ],
+      "classification": "required",
+      "deadline_s": 90,
+      "expected_exit": 0,
+      "name": "roadmap_schema"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/audit_roadmap_gates.py",
+        "research-roadmap.yaml"
+      ],
+      "classification": "required",
+      "deadline_s": 90,
+      "expected_exit": 0,
+      "name": "roadmap_gate_audit"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/exclusion_manifest_lint.py",
+        "research-roadmap.yaml"
+      ],
+      "classification": "required",
+      "deadline_s": 90,
+      "expected_exit": 0,
+      "name": "exclusion_manifest"
+    }
+  ],
+  "consumer_tests": [
+    "tests/python/test_roadmap_schema.py",
+    "tests/python/test_audit_roadmap_gates.py",
+    "tests/python/test_exclusion_manifest_lint.py",
+    "tests/python/test_conductor_gates.py"
+  ],
+  "coverage_includes": [
+    "python/carnot/reporting/v695_contract_methods.py",
+    "scripts/experiments/experiment_8018_v695_contract_methods.py"
+  ],
+  "dependency_hashes": {
+    "ops/exclusion_manifest.yaml": "sha256:004acbfa4adb4ea1ef03b2cc58f3679827c34e5b017318e2f1a2a62bb7951ba3",
+    "python/carnot/__init__.py": "sha256:54a412ef98981dc2a81350103234369fa56cd96f17f4f1fdfbb9f6cde9415da4",
+    "python/carnot/_rust_compat.py": "sha256:0d9145d00884db86e06cf4dda66ddede79e4618767e6fecdf4f0753c4fe9ef55",
+    "python/carnot/_version.py": "sha256:9f816815d13dcbd2f86e62cbfb9174990e0ff855795880082f8b71449ff1e570",
+    "python/carnot/core/__init__.py": "sha256:4c0e250986e229b64e9f8b3948ce2f5395fab3a37560fa1a0057f7bea07e1069",
+    "python/carnot/core/energy.py": "sha256:12f929cb933e4171773c077b42d17af87c5280ccffd4a3bd1a8d88e915459013",
+    "python/carnot/core/state.py": "sha256:0950123528c008954177f9b3d0656d6c15f62aa95a2cf4d36d2929197a042280",
+    "python/carnot/models/__init__.py": "sha256:a68c61c664e881e8efb128c413cd62b5fe86cd157a0b78f7464d9d1c00edd5cf",
+    "python/carnot/models/boltzmann/__init__.py": "sha256:a916d20fb41b6403121c6b560aa033cbe6ea7229ba479cf667f5b91abb29995d",
+    "python/carnot/models/cikan_energy.py": "sha256:c187064e6ad12333ad5136483ea8bfab40ec138614f4558dd1c66e3a5a3f504e",
+    "python/carnot/models/cikan_verifier.py": "sha256:f2843bafa949eb6fafa1e861923ad5c94b16cedd9e29607c5cbb0bcbc8ce00fb",
+    "python/carnot/models/compliance_checker.py": "sha256:adafaff21c55d7dbaa2c5c3d1bedf83f584d02dd459c85c280ac4d91eb6890df",
+    "python/carnot/models/ebm_cot_calibrator.py": "sha256:acd64e9aa4422f0fd4cbbe54571367c8e9085ed7671c232533b1276b4f80dbfd",
+    "python/carnot/models/ebm_cot_calibrator_v3.py": "sha256:7b9788e2770fa38794345d15576bf58b6ec0f2e9a87cbd75c552460ea0419fa8",
+    "python/carnot/models/ebrm_scorer.py": "sha256:6ba77eb09bbfbb717aaca29cd4c2cca785ecd23ffc2cec8e65c07702cae7cb86",
+    "python/carnot/models/ebt.py": "sha256:8c7073b7fa8cd43c22230bdb25a5571d041183e42ad5a20ea13cfc64c609419f",
+    "python/carnot/models/eorm.py": "sha256:054f7be6c8901efbbb6f48e8080bafcd8fbc7f2657292d0431aff7f62b4b44ea",
+    "python/carnot/models/gibbs/__init__.py": "sha256:a08e2ef56a946eabc9901cdee4846e34f7d39dbb4eb8355da011aaf2174afcbd",
+    "python/carnot/models/ising/__init__.py": "sha256:6acefaa5f40c6a95d74a2f25ead9167e3abac7f4bd9635722479ebfcf09677b8",
+    "python/carnot/models/jepa_curriculum_diagnostic.py": "sha256:ff72ae6747aecfdb7a32d2e5f6995035cd3c4b896a5308c6742e6cf4d52bd26d",
+    "python/carnot/models/jepa_curriculum_trainer.py": "sha256:637f2094a4c7fbfdd1a03d37c536597ac43379fec9d3df438339ee91fed96dfe",
+    "python/carnot/models/jepa_platt.py": "sha256:39cc8e7447b8a3175276937c3f7bc17a467b4e4ffcb4cf3c39f0c636a80e2366",
+    "python/carnot/models/jepa_retrain_v2.py": "sha256:bcebc92b496468de023b906e19f06b4f807a85307b0f369c371cb15c21b521d6",
+    "python/carnot/models/kaem_adaptive_topology.py": "sha256:e605b193f5de924bd624c633ae46e69c17d22913dc672c3aaef820cda6094301",
+    "python/carnot/models/kaem_crossover.py": "sha256:17ce761e0d4029bd3b104fc4a461c1daf5e26ff8235873f65179494dae0d6712",
+    "python/carnot/models/kaem_distribution_benchmark.py": "sha256:3c80d4b6969ca5dc78d7d01ac33d177a7f9fc038cbfa6ed126c6287c1a36b37f",
+    "python/carnot/models/kaem_energy.py": "sha256:61a0d7eaf2958876b5a74e43e9e34e461e4ad5f198a127a7a5aa8f4dfa6a5132",
+    "python/carnot/models/kaem_extended_result.py": "sha256:f395d9cf7218afa091bb96de0918b5d4d384a9afb286dc0022597ff4b34a9357",
+    "python/carnot/models/kan/__init__.py": "sha256:191cb4eb1154ed302b6479d1150a5034f7a4baa08239b1d74cbb8499bfe0c69a",
+    "python/carnot/models/lowrank_kaem.py": "sha256:abeb784d422d32b2593f6d393d58400cc93b2135b8ce2ec58e542d3bf313556f",
+    "python/carnot/models/otv_verifier.py": "sha256:eb9559fd15ec8f204d16e2d0db507ba4184bd79f048585b3dc3a423b9510789c",
+    "python/carnot/models/pinet_layer.py": "sha256:1222fc7ed81c7c8c86d50dad0dae3faa0611e4d7779ecb443e4de5479f05af23",
+    "python/carnot/models/potts_machine.py": "sha256:d7cd27e603774b8446ea49a29f3a592c98f3177ff9b15843f17eae0ce0084e7f",
+    "python/carnot/models/pwa_kan.py": "sha256:64f98fa05f75d805ac0dacee431d4633fc55fceab7f7fd4fd5cea2b1a052ad1e",
+    "python/carnot/models/rkan.py": "sha256:301888a2c3c6b32f0e82dbc53d975b35524eccae7392284376280cdfbe8aa0de",
+    "python/carnot/models/sparse_kaem_energy.py": "sha256:5e9c441494fa3f8f8b00982d48ab7b2588ebdd623e007747a6379589b7353408",
+    "python/carnot/models/symbolic_kan_energy.py": "sha256:3836cd07f361b5a4b6c7ff748f8eaa4f5493ed05ae10c70c6eb49683f54d55ae",
+    "python/carnot/paths.py": "sha256:16128da118007bfc7d4c971603cf08c2409bdd24b4d818c43f30e56364595f61",
+    "python/carnot/reporting/__init__.py": "sha256:602501860fed64c2b107a195aadd7f67667ecb7c9d1ee28d822051a5c9bf9aa5",
+    "python/carnot/reporting/current_work_receipt.py": "sha256:428d1696eef0820ce9df519532743aeccb8ec1156eb8c1b52fa0c8f72bf16a10",
+    "python/carnot/reporting/experiment_7303_validation_scope.py": "sha256:e6291ced5d52a50544cc6dcc46870886cdb2149796fc5eb7781e16c9ce42d229",
+    "python/carnot/reporting/primary_publication.py": "sha256:7fe8c6caa2725d68eeae612d2f4a17146b08afc29ff5a8003a4f1ad5f21d1310",
+    "python/carnot/reporting/roadmap_contract.py": "sha256:eed75373b8b00f3dc6442fbf878cc833ec7bcf44f6c258019eebcb3e89e4ea63",
+    "python/carnot/reporting/source_boundary_7866.py": "sha256:566e2812d90ece23115f9ab40bedde52de825a52113a17799cccf1134ae7ee71",
+    "python/carnot/reporting/source_boundary_7880.py": "sha256:a61d7339babc0abd515fe8a9740633b58e71a8deb80e602b0d2b1651226226cb",
+    "python/carnot/reporting/source_boundary_7892.py": "sha256:52942073239cdce193893331c0142d8b287728d1707cb878b66293b363aef4e8",
+    "python/carnot/reporting/v685_authority_lifecycle.py": "sha256:e24db0845c9dcf805034ad4845ed22b45bee74713a125d7a4c7d22b70c654dd4",
+    "python/carnot/reporting/v686_contract_methods.py": "sha256:185a408bd44ffbeb9c91f42941b0dd5bfe63944e9afdc7cb518e844081418cf9",
+    "python/carnot/reporting/v686_contract_validation.py": "sha256:a426b1d1e47e12deb84842f5e9ce5540701972f30c23f6e8fdab8b256c2b8df3",
+    "python/carnot/reporting/v687_contract_methods.py": "sha256:16c2fc53f0dc275c19e5ec07787de9ae6edd9ef9ce85cc7cd1a6f4cbc3f4c88e",
+    "python/carnot/reporting/v688_contract_methods.py": "sha256:b2a83f90fb93655a0e8c8942a6682f8a86a33c20117ffe0736b6285576750d11",
+    "python/carnot/reporting/v689_contract_methods.py": "sha256:8422e0f1f188887433ca02b455769b5046b9c03e313d46ffca96c07776a3efff",
+    "python/carnot/reporting/v690_authority.py": "sha256:44becd2417d4cbde3e3d64c4f4b4aa26db52b0b735ab27d7bcb9a92054ab3f1c",
+    "python/carnot/reporting/v690_contract_methods.py": "sha256:5ff229f140cd9f18c70ad39994e78d9ab8fb8074a9be4a2164ee25a476b0bb64",
+    "python/carnot/reporting/v691_contract_methods.py": "sha256:1db9cf38f32c49f179ab288bd54e7237f5ebfd22b6feec6dfd1b464454833ae5",
+    "python/carnot/reporting/v693_capstone.py": "sha256:c1ca585e96a634411da8c0d9be400ef606ad077581f29ae7469d1bf1a88ba54f",
+    "python/carnot/reporting/v693_capstone_reduction.py": "sha256:eeda5ef62ed52bb855040045cef2efd40046d0db0faa65baacd67a6affa3158b",
+    "python/carnot/reporting/v693_contract_methods.py": "sha256:f245ca0b0c8e7e8574106462f357cd669b0e37acc9641335303ce26a51b96986",
+    "python/carnot/reporting/v694_capstone.py": "sha256:99c4a6a745cc083682e5694ab4e256f26652ee813e35b9db91130debda31432d",
+    "python/carnot/reporting/v695_contract_methods.py": "sha256:5d27fd000db612d7787586d741ca86708bff97ecba4b9d5c95cb3d9a4745da65",
+    "python/carnot/samplers/__init__.py": "sha256:73ecac85f64ec47e0f7c5a171571ac78d496a45ff21ef3571c81999643cf78f9",
+    "python/carnot/samplers/parallel_ising.py": "sha256:9e949d9b6b9ea3a660373ce8cdb709166e8b3995287b9ef0605d7b014952da87",
+    "python/carnot/serialization_safety.py": "sha256:b93276a29918d8ec1b0697889c30ad27c964e11b929ab1b3a23d30b1d256dd6e",
+    "python/carnot/terminal_artifacts.py": "sha256:c4ac466c5ccf0cb12198eaac58ade42632d18854c4818aa7633a1d39c158b591",
+    "python/carnot/training/__init__.py": "sha256:4672e5dd8416801ab076156dc4d7e832377bc508fa6cd73e689206b61e90215c",
+    "python/carnot/training/capo_loss.py": "sha256:8f8389e89d5ee23b92db8edc7eeb371fa2498b1e603ba3015449a3a1f82ce4aa",
+    "python/carnot/training/ebft_objective.py": "sha256:eb3316bb1cecc0252e42a8b791270611eace306788ce9ac0a63620da2c1b815b",
+    "python/carnot/training/fast_slow.py": "sha256:83cdfb030340c0808cbf69a12e570f8acce601f56efbcbdb33d44a75c982640d",
+    "python/carnot/training/multilevel_kan_trainer.py": "sha256:aaaf22ccf9cb483b489fc944802d7588b8061e1f5a86f4566eb522a6f6019eb9",
+    "python/carnot/training/multilevel_sparse_kaem.py": "sha256:4302ba92ad731d9864f4f11c7c2c8ebee47ce8c6f016acab9ad5f5ca1e68cf67",
+    "python/carnot/training/nce.py": "sha256:bc6f0cfd99a97b70c9af9cafb19c69e0d20ad3f14aa37b7a2110cf7b6cef7a50",
+    "python/carnot/training/optimization_training.py": "sha256:e032eaca75ccd2b4df4e1c4d31d043d0ec5561cfc241b273b66f379262b45717",
+    "python/carnot/training/platt_scaler.py": "sha256:8eaa82e6528dbdf271512f6ea6e76189ddc5d5bbfeeac429472640ae51f555d5",
+    "python/carnot/training/replay_buffer.py": "sha256:ada2c93d38042c00ac1b8177c17561cd25a95049fd24014362ff23520fbaa406",
+    "python/carnot/training/score_matching.py": "sha256:1dd202306a62b1f309890e69af7e7fde2520ed57fff8f7a106ab1036640e6197",
+    "python/carnot/training/semantic_pruning.py": "sha256:9b1266215d930fb0e7ce5ddd61b581454635955ee577533eaefebb18bbff3d24",
+    "python/carnot/training/snl.py": "sha256:3d6b337c076be02b5b071888d22d3e7a970ecd5da5eb589f4877a7764a7bcaff",
+    "python/carnot/verify/__init__.py": "sha256:fd21b6e7e7d21d45097f582387ff0e11021ebcd47c0f9a41be4bb1562daa47cb",
+    "python/carnot/verify/constraint.py": "sha256:4946da275e270f3d67ee0e9ad53d29edc350b262952f6304543bc058a384bec7",
+    "python/carnot/verify/convergence.py": "sha256:47f1a51d22ad292db553f39fba63aa359a7ccb872c56cdf11dca8c3cfc64be53",
+    "python/carnot/verify/deentangled_ensemble.py": "sha256:bc0bf1565d48cf89531da45d476f953b0f407c7ac1fd4bd2c5492010e40f3c7e",
+    "python/carnot/verify/evidence_views.py": "sha256:dbebf5bbb362ee324bd19b529957c689ca5165aefa043de08451f197d31eed3d",
+    "python/carnot/verify/graph_coloring.py": "sha256:7c8c5e7ac7f523712b0fe39993ff4139cefb894498b17e0570e43a9ab15e6734",
+    "python/carnot/verify/landscape.py": "sha256:a66946a44a778253600fa3e8a4b9dc95b7636f8b32b2197b60eb0b2878f50689",
+    "python/carnot/verify/linear_probe_calibrator.py": "sha256:05a77a20ce6148563f13da6a5b98487f067ce5b58cac17d768bfb530375cb879",
+    "python/carnot/verify/property_test.py": "sha256:88030590b0247e4002983f6aac21e0786bf70c5e61dce410e6804f6defb66bc4",
+    "python/carnot/verify/python_types.py": "sha256:0c75c468f843e7adead0831354e10243ae404c1dc810afb786ba225f0117e34c",
+    "python/carnot/verify/qwen_completion_7932.py": "sha256:8b821b8ba456956c9dc7588f7e33aeb77418560cfbd998053cdb07776f9cef2f",
+    "python/carnot/verify/sandbox.py": "sha256:447a4845ea42945da373b20670a422ea9fff1601dd19e4831a77400aca73e54a",
+    "python/carnot/verify/sat.py": "sha256:af6544d7612c84f2670145cb575cc6c30645b8e1737a552b608ff007ab80c496",
+    "python/carnot/verify/source_alignment.py": "sha256:10d5329444d47dc2421d8cceca615c8d5c76df5267c1a70eb669340f05ea475b",
+    "python/carnot/verify/source_interventions.py": "sha256:dd79ab98fb4cb2567e7ebfcb855354e7dc19adcf2535ef637209f6748de26819",
+    "python/carnot/verify/source_projection.py": "sha256:0497fdc01af13f5d1652f57302de1db5be7307803f1eae8131931df8eef3e169",
+    "python/carnot/verify/tier0e_eorm.py": "sha256:7a5ed3894fbb23af1960f23d2fd51d09824958c870f9039ffe054af1066b057f",
+    "python/carnot/verify/tier0f_semantic_calibration.py": "sha256:afd5c061d3642cb6bfc1478554ebcb01fa13d7b6d3bc85a2eb1a5c6bfa1794aa",
+    "python/carnot/verify/tier0g_semantic_energy.py": "sha256:12332ccea9a5794f5fdc9c9c0cee6c9f7d026ff5812e6429c2444449c244562f",
+    "python/carnot/verify/tier0r_curry_howard.py": "sha256:437706272063ea08a4d8d97da681d2c8396841e1942b528c608edf32b7f16ca6",
+    "python/carnot/verify/tier0s_halluguard.py": "sha256:4bcb71754d58b473b7f63c2ff65b7cc00a0f13c76c3dccaaf5f31a57278517ac",
+    "python/carnot/verify/tier0u_logical_consistency.py": "sha256:a48d1b5fd0e212d590ee4693545afc25c6de3c74ef663090135f1df82120944d",
+    "python/carnot/verify/tier0v_set_consistency.py": "sha256:7fcaad9bc14cff6103c71575a5fc7135c8beda5d02b9e72af0ac3653169b9582",
+    "python/carnot/verify/training_runtime.py": "sha256:250b14aac412d1be2d835c37e9b9a3457d5f97bf728e672ffab8cabdc0b00f4b",
+    "scripts/__init__.py": "sha256:13d4c70bdead43f0de9faeb10757b5057c26fe0ce66616764c13ba5237e8c9eb",
+    "scripts/adversarial_verify.py": "sha256:941c931701a51eb3553d3e37b51b2ea7b1c3d595315d5864be6ef822ba2b80fa",
+    "scripts/conductor_gates.py": "sha256:d406171cde38a594a78e7bff8958212e722fced9fc583b2b1858f8fc9d3732ca",
+    "scripts/exclusion_manifest_lint.py": "sha256:7f2eba6577f71e349aa03debd8c4e77fd6b23fdd24c3b0e945f12e1b7a53e042",
+    "scripts/experiments/__init__.py": "sha256:4c8f727f8ca16395fb8bfdcf17f81a067a3744465bab1de87177fe45f0f121eb",
+    "scripts/experiments/experiment_8005_v694_contract_methods.py": "sha256:a827313fbd3ffc18b6701159d994ea5988a955dd87ce2e6da3ad08a18c389205",
+    "scripts/experiments/experiment_8018_v695_contract_methods.py": "sha256:422b2dd807663e9ba28ddc3b9e0b626e346b78556c6ea9c71ba8607844fdaf3a",
+    "scripts/failure_ledger.py": "sha256:d18d74d27a831eba7d294f13521e5401df2f96561572466ae4f2871e9b9c1a4b",
+    "scripts/in_process_doc_reconcile.py": "sha256:7fbff3005af55d74acf50c6f932998ea282c674dce197400ea5c1ec219ccd762",
+    "tests/python/test_audit_roadmap_gates.py": "sha256:aa36a48a71269dcf41c5772280436c2fe0db1060c04040c719953ba6ba5eaaf8",
+    "tests/python/test_conductor_gates.py": "sha256:a5a22b1908237000a737920d22c36a9df38e14e92996956e96f1864411b3b409",
+    "tests/python/test_exclusion_manifest_lint.py": "sha256:142fa1d54c1996f213df2a710ddcc1fcb8fcf0047ca7cbfb0769076eaa937d8a",
+    "tests/python/test_experiment_8018_v695_contract_methods.py": "sha256:260a87cfc7fbbb829007a2f69449f3a43e3b58688bcc2f9b3f9d71c9ff031ced",
+    "tests/python/test_roadmap_schema.py": "sha256:a6ddb92b180f24011eb266db87be84bbbfb604d5c7d0653b25ab38739f24598f"
+  },
+  "e2e_018": "Private immutable lifecycle tests only; no historical publishing CLI against V686",
+  "environment": {
+    "JAX_PLATFORMS": "cpu",
+    "PYTHONPATH": "python:."
+  },
+  "future_scope": "Task prompt snapshots freeze methods; future producers must freeze their actual code closure before running",
+  "method_sha256": "sha256:c8f32dd591b6389c831e7dd0248401767110ada5f2492a89dac9c5c9e45acd80"
+}
