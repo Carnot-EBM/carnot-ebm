@@ -21254,3 +21254,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-10-02: Freeze decision headroom and ingest budgeted online adaptation methods (⚠️ Research Finding) — honest_verdict=complete_null_conditioning_diagnosis; results/experiment_8007_v694_conditioning_diagnosis.json
 - 2026-10-02: Train converged energy heads with explicit saturation controls (⚠️ Blocked) — honest_verdict=complete_blocked_calibration_target_support; results/experiment_8008_v694_conditioned_energy_fit.json
 - 2026-10-02: Seal full-source and placebo interventions before bounded inference (⚠️ Research Finding) — honest_verdict=complete_null_source_intervention_protocol; results/experiment_8010_v694_source_intervention_protocol.json
+- 2026-10-02: Measure bounded Qwen source dependence against duplicate controls (✅ Complete) — honest_verdict=complete_positive_source_sensitivity; results/experiment_8011_v694_qwen_source_sensitivity.json
