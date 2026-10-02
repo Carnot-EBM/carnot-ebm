@@ -87091,6 +87091,55 @@ A qualified empty audit may be ready but establishes no scientific benefit.
 An unchanged qualified null is retired as new evidence under retire_if_same_verdict.
 The conductor owns ops and traceability reconciliation.
 
+### REQ-REPORT-8020: Fit qualified heads before sealed calibration
+
+Exp8020 SHALL gate on Exp8019 fit_targets_ready_score and
+calibration_targets_ready_score using exact immutable public and evaluator
+manifests. Fit coefficients use fit labels only; tune selects ridge penalties.
+Freeze methods, roles, exclusions, five seeds 17/29/43/71/101, 2000 steps,
+600 fitting seconds and gradient tolerance 1e-8 before measurement. Use the
+existing 110 coefficient conditioned spline, equivalent sigmoid identity,
+converged linear, scalar affine, isotonic and intercept baselines, plus the
+historical 200-step residual control. The identity adds no independent method.
+Keep original objective, scaling, code and configuration in durable custody.
+
+### SCENARIO-REPORT-8020-ISOLATION
+
+Freeze fit-selected checkpoints before opening calibration labels. Apply the
+Exp8019 complete-label mask and 48 group/eight per class support floors.
+Keep every excluded slot and reason. Public stream and retention predictions
+SHALL read no individual targets. Their outcomes SHALL enter no optimizer.
+Changing reserved targets SHALL leave all coefficients and predictions intact.
+
+### SCENARIO-REPORT-8020-NUMERICS
+
+A private CPU miniature SHALL train, serialize and use the direct CLI before
+natural fitting. Require finite coefficients, finite difference agreement,
+fixed convergence gates and exact reload predictions. Log objectives, gradient
+norms, condition bounds and active coefficient counts at least every 50 steps.
+Primary nonconvergence SHALL give a terminal null and readiness zero without
+increasing the budget. Lower energy gives no correctness or learning credit.
+
+### SCENARIO-REPORT-8020-PUBLICATION
+
+Cold-reduce checkpoints and primitive predictions in a fresh process. Require
+scoped consumer checks, E2E-015, task CPU CLI round trip, Ruff, strict mypy,
+spec checks and 100 percent added statement coverage including direct CLI.
+Run the full Python suite once as a bounded separate repository diagnostic;
+retain its failed exits. Preserve historical logs. Publish exact validated
+bytes through the existing helper after adversarial and strict row checks.
+References SHALL resolve under durable raw/. Missing external inputs are
+terminal blocked. The conductor owns ops and traceability reconciliation.
+
+Exp8020 implementation uses
+`python/carnot/experiment_8020_v695_qualified_energy_fit.py` and the thin
+`scripts/experiments/experiment_8020_v695_qualified_energy_fit.py` entrypoint.
+Traced private tests are in `tests/python/test_qualified_energy_8020.py`.
+They cover isolated label roles, numerical fits, serialization, the real CLI,
+blocked prerequisites, failed owned checks and tampered checkpoint reductions.
+Statement coverage applies only to this producer and its new CLI; historical
+producer bytes and failure logs remain in custody without rewritten receipts.
+
 A corrected qualification may reuse a sealed repository-health receipt from its
 disqualified attempt. It SHALL rerun every required check and preserve the prior
 candidate hash, failed commands and diagnostic receipt. Reuse SHALL authenticate
