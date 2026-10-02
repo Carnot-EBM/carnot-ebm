@@ -21235,3 +21235,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-10-02: Qualify supervisor evidence before generalization refinement (⚠️ Research Finding) — honest_verdict=complete_null_no_new_outcomes; results/experiment_8001_v693_arc_supervisor_qualification.json
 - 2026-10-02: Measure complete service cost and sparse durable updates (⚠️ Research Finding) — honest_verdict=complete_null_service_cost; results/experiment_8002_v693_service_cost.json
 - 2026-10-02: Bound sparse-update hardware compatibility and preserve board custody (⚠️ Research Finding) — honest_verdict=complete_null_cpu_sparse_boundary_no_device_execution; results/experiment_8003_v693_hardware_sparse_boundary.json
+- 2026-10-02: Independently decide verifier learning and deployment gaps (⚠️ Blocked) — honest_verdict=complete_blocked_v693_prerequisites; results/experiment_8004_v693_capstone.json
