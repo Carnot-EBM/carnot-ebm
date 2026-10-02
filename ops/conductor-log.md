@@ -19331,3 +19331,4 @@ code |
 | 2026-10-02 10:05 UTC | Milestone 2026.10.695 activated | OK | 13 tasks queued |
 | 2026-10-02 10:35 UTC | Freeze thirteen tasks and qualify immutable termin | OK | 89 passed, 1 warning in 136.81s (0:02:16) |
 | 2026-10-02 11:05 UTC | Freeze complete-label eligibility before fitting o | OK | 111 passed, 1 warning in 31.08s |
+| 2026-10-02 11:31 UTC | Fit calibrated source energies on the sealed eligi | OK | 86 passed, 1 warning in 24.30s |
