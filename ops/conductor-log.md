@@ -19321,3 +19321,5 @@ code |
 | 2026-10-02 06:24 UTC | Measure whether conditioned energies change useful | GATE_BLOCK | gate-unsat(final): 2 of 6 gate(s) failed; first failure: exp8008-conditioned-energy-fit.conditioned_fit_ready_score (actual=0 == expected=1) |
 | 2026-10-02 06:49 UTC | Seal full-source and placebo interventions before  | OK | 92 passed, 1 warning in 64.40s (0:01:04) |
 | 2026-10-02 07:31 UTC | Measure bounded Qwen source dependence against dup | OK | 92 passed, 1 warning in 40.76s |
+| 2026-10-02 07:33 UTC | Test delayed decision-loss update allocation at eq | GATE_BLOCK | gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp8008-conditioned-energy-fit.conditioned_fit_ready_score (actual=0 == expected=1) |
+| 2026-10-02 07:35 UTC | Independently measure later decisions retention an | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8012-budgeted-online-updates, exp8012-budgeted-online-updates, exp8012-budgeted-online-updates) |
