@@ -19339,3 +19339,4 @@ code |
 | 2026-10-02 13:16 UTC | Conductor re-exec: fresh committed source | OK | 13dc269eb2f0 -> 4c629e8aee19; argv preserved |
 | 2026-10-02 13:16 UTC | Test source-removal information against human-labe | GATE_BLOCK | gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp8023-likelihood-calibration.likelihood_calibration_ready_score (actual=0 == expected=1) |
 | 2026-10-02 13:53 UTC | Test equal-budget continuous learning on qualified | OK | 93 passed, 1 warning in 20.50s |
+| 2026-10-02 14:23 UTC | Independently reconstruct learning benefit retenti | OK | 99 passed, 1 warning in 36.72s |
