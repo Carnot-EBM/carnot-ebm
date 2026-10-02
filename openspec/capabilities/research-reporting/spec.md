@@ -90096,3 +90096,28 @@ learning gain is 0.008080808080808077 in one environment; retention is
 disqualified. External failures require terminal blocked, readiness zero and
 generalized benefit zero. Historical primary bytes and failed checks remain
 unchanged. Repository-wide health is a separate bounded diagnostic.
+
+## V696 staged research plan (2026-10-02)
+
+### REQ-REPORT-8031-V696-PLAN
+
+The staged milestone 2026.10.696 SHALL contain exactly thirteen ordered tasks,
+Exp8031 through Exp8043. The design SHALL contain the matching visible table,
+complete task JSON and canonical full-task SHA-256. Its prompts, gates, paths,
+model declarations and failure records SHALL agree with research-roadmap-next.yaml.
+The active roadmap and conductor source SHALL remain byte-identical.
+Research sources SHALL be recorded before experiment design. Planned experiments
+SHALL test repeatable source scoring, calibrated energy decisions, bounded-history
+continuous learning and deployment costs, while preserving ARC and board duties.
+
+### SCENARIO-REPORT-8031-V696-PLAN
+
+Validate with Roadmap.model_validate, parse_design, compare_contract and
+assess_authorities using milestone=2026.10.696, first_id=8031, count=13.
+Require exact full-task/digest equality, current upstream gate producers,
+complete prior_failures and rendered placeholders. Exercise activation only on
+private fixtures, including consumed staging and a changed prompt. Run existing
+schema/gate/authority tests, applicable private E2E-018, scoped lint and spec
+traceability. Planning validation does not assert experimental results.
+
+Status: planning in progress; all experimental implementation remains pending.

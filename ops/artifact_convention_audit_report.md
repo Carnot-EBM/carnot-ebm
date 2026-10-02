@@ -9,54 +9,50 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 5 |
-| CANNOT_DETERMINE | 3 |
+| CHECKABLE | 2 |
+| CANNOT_DETERMINE | 6 |
 
-## experiment_8008_v694_conditioned_energy_fit.json
-
-**CANNOT_DETERMINE**
-
-reviewer call failed
-
-## experiment_8009_development_decisions.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The task was blocked at conductor pre-gate because upstream experiment 8008 failed required gate checks (`conditioned_fit_ready_score` was 0 vs expected 1, and `verdict_class` was 'blocked').
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_8010_v694_source_intervention_protocol.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-no claim
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_8011_v694_qwen_source_sensitivity.json
+## experiment_8023_v695_likelihood_calibration.json
 
 **CANNOT_DETERMINE**
 
 reviewer call failed
 
-## experiment_8012_budgeted_online_updates.json
+## experiment_8024_likelihood_decision_test.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The experiment was blocked at pre-gate because upstream dependency `exp8023-likelihood-calibration` failed required gate checks.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_8025_v695_causal_online_updates.json
+
+**CANNOT_DETERMINE**
+
+reviewer call failed
+
+## experiment_8026_v695_learning_retention_audit.json
+
+**CANNOT_DETERMINE**
+
+reviewer call failed
+
+## experiment_8027_v695_native_update_cost.json
+
+**CANNOT_DETERMINE**
+
+reviewer call failed
+
+## experiment_8028_v695_arc_supervisor_delta.json
 
 **CHECKABLE**
 
@@ -72,39 +68,13 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_8014_v694_arc_supervisor_delta.json
+## experiment_8029_v695_hardware_workload_boundary.json
 
-**CHECKABLE**
+**CANNOT_DETERMINE**
 
-## VERDICT
-CHECKABLE
+reviewer call failed
 
-## WHAT THE CLAIM IS
-no claim
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_8016_v694_hardware_update_boundary.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The run is blocked with no qualified update trajectory or device benefit due to failed upstream gating prerequisites.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_8017_v694_capstone.json
+## experiment_8030_v695_capstone.json
 
 **CANNOT_DETERMINE**
 

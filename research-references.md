@@ -49541,3 +49541,82 @@ The following are research leads, not local performance claims.
 
 The hardware wishlist still supports CPU small-head training and the local CUDA
 RTX 3090 pair for the mandated Qwen GGUF. No acquisition is justified by this scan.
+
+## 2026-10-02 — V696 planning scan: repeatable evidence and future decision loss
+
+Recorded before the V696 experiment design. These are external research findings
+and proposed local adaptations, not Carnot measurements. Abstracts were checked
+unless a method page is explicitly listed below. Prior entries remain intact.
+
+### Promising changes to investigate
+
+- **CoRun**, August 14, 2026: [paper](https://arxiv.org/abs/2608.14376),
+  [method, sections III–IV and limitations](https://arxiv.org/html/2608.14376v1).
+  Execution shape can affect numerical repeatability. Isolated prefill and
+  controlled scheduling motivate a local cache-reset and fixed-chunk experiment.
+  The paper studies another serving stack; it does not establish the cause of
+  Exp8023's duplicate drift or guarantee llama.cpp parity. Do not relax the old
+  tolerance after observing outcomes. Test a changed execution mechanism first.
+- **LLM-42**, January 25, 2026: [paper](https://arxiv.org/abs/2601.17768).
+  Fixed-shape verification motivates an independent token-scoring check.
+  Recheck the existing scoring API's token alignment and state lifecycle before
+  attributing drift to hardware. A local scoring diagnostic is not a reproduction
+  of its speculative-generation system.
+- **To Retain or to Adapt?**, July 6, 2026:
+  [paper](https://arxiv.org/abs/2607.05609),
+  [method](https://arxiv.org/html/2607.05609v1).
+  The paper separates future prediction loss from retaining all historical tasks.
+  Test a fixed recent-feedback window against cumulative history under equal
+  released labels and gradient budgets. Report retention separately. No task-
+  duration theorem transfers to Carnot's finite development stream.
+- **GASP**, July 2026: [method rechecked](https://arxiv.org/html/2607.04223v1).
+  Retain fixed-answer context interventions with independent human targets,
+  complete answers and exact duplicate controls. Source dependence and factual
+  correctness remain separate hypotheses. Qualification must precede calibration.
+
+### Coverage of the requested topics
+
+| Topic | Sources checked | Planning consequence |
+|---|---|---|
+| EBM verification/reasoning | [EBT, July 2025](https://arxiv.org/abs/2507.02092); [ARM–EBM, December 2025, v4 May 2026](https://arxiv.org/abs/2512.15605) | Compare conditional energy heads with identical-feature classifiers; an energy name alone adds no verification guarantee. |
+| Neural constraint satisfaction | [T-SKM-Net, December 2025](https://arxiv.org/abs/2512.10461); [PAL, March 2025](https://arxiv.org/abs/2503.19466) | Feasibility guarantees require correctly supplied constraints. Defer another solver while source-to-decision utility remains open. |
+| Ising applications in ML | [Lagrange ONNs, May 2025](https://arxiv.org/abs/2505.07179); [parallel Ising with inertia, April 2026](https://arxiv.org/abs/2604.17109) | Optimization quality is distinct from calibrated sampling; do not revive retired small-graph inertia sweeps. |
+| Hallucination detection | GASP above; [HalluTracer, August 2026](https://arxiv.org/abs/2608.16353); [OpenHalDet, June 2026](https://arxiv.org/abs/2606.06959) | Source likelihood is implementable on the existing GGUF path. Depth probes need extra internal access and remain deferred. OpenHalDet is a corpus/access-contract lead, not a verified replacement dataset. |
+| KANs | [KAC, March 2025](https://arxiv.org/abs/2503.21076); [KAN-CL, May 2026](https://arxiv.org/abs/2605.12306) | Local spline support suggests cheap updates. Published image results do not establish language verification or reopen retired importance anchoring. |
+| Energy-guided generation | [ETS, January 2026](https://arxiv.org/abs/2601.21484); [ERM, July 2026](https://arxiv.org/abs/2607.10128) | Match compute and candidate information before claiming selection benefit; defer generation changes until an independent decision signal qualifies. |
+| Hardware sampling | [FPGA–ASIC decomposition, February 2026](https://arxiv.org/abs/2602.15985); [dual-BRAM annealer, February 2026](https://arxiv.org/abs/2602.16143) | Include memory traffic and host work; optimization hardware cannot automatically execute spline learning or transformer prefill. |
+| Continual/online learning | To Retain or to Adapt above; [When Does Continual Learning Require Learning, July 2026](https://arxiv.org/abs/2607.07847) | Separate adapting later decisions from storage efficiency and retrospective retention. Keep the mandated generator frozen. |
+
+### Secondary-source checks and limits
+
+- **OpenReview:** searched ICLR/ICML 2026 and NeurIPS 2025. The
+  [EBT page](https://openreview.net/pdf?id=ZBj3Qp1bYg) required browser
+  verification. The indexed primary [Energy Matching paper](https://openreview.net/pdf/62ec030c254ffe361caf735408232b71dcc9075f.pdf)
+  describes scalar-potential generative modeling. It does not supply a factual
+  verifier. No additional relevant ICML method was established by this search.
+- **Semantic Scholar:** both [EBT citations](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,url&limit=20)
+  and [ARM–EBM citations](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,url&limit=20)
+  were inaccessible through the browser tool. Domain searches were attempted;
+  they did not establish a reliable citing-paper list. Citation coverage is
+  incomplete; do not claim an exhaustive novelty check.
+- **Hugging Face:** searched the verification feed and opened
+  [OpenHalDet](https://huggingface.co/papers/2606.06959). The GASP paper page
+  returned a cache miss; its primary arXiv method remained accessible.
+- **GitHub:** checked [Trending](https://github.com/trending) and searched
+  relevant repositories. [Author EBT code](https://github.com/alexiglad/EBT)
+  and [KAC code](https://github.com/Ethanhuhuhu/KAC) are implementation leads.
+  No verified new relevant trend ranking or CoRun repository was established.
+- **Extropic:** checked [Writing](https://extropic.ai/writing) and
+  [Z1T, September 4, 2026](https://extropic.ai/writing/z1t/). Its hybrid
+  sparse-compute estimates motivate complete workload accounting. They do not
+  establish local TSU access or a measured Carnot speedup.
+- **Logical Intelligence:** checked its [home page](https://logicalintelligence.com/)
+  and [Kona 1.0](https://logicalintelligence.com/kona). These describe a
+  constraint reasoning layer below the language interface. No reproducible new
+  architecture or training recipe was established from these pages.
+
+Hardware implications: the current CPU and CUDA RTX 3090 pair can run these
+small-head and GGUF studies. Preserve KV260, PolarFire and GateMate evidence
+separately. A numerical action disagreement in Exp8029 calls for precision-aware
+fallback analysis before device work. The wishlist supplies future options;
+no purchase or device availability is inferred from vendor descriptions.

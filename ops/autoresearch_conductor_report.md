@@ -1,6 +1,6 @@
 # Autoresearch conductor round
 
-- started: 2026-10-02T09:54:57.114208+00:00
+- started: 2026-10-02T17:47:37.011810+00:00
 - model: gpt-6-astra
 - max_iterations: 5
 
@@ -9,17 +9,19 @@
 - rejected: 4
 - pending_review: 0
 - circuit_breaker_tripped: False
-- breaker_invocation_start_position: 439
-- breaker_historical_tail_at_start: 0
+- breaker_invocation_start_position: 444
+- breaker_historical_tail_at_start: 4
 - breaker_invocation_local_tail_at_start: 0
-- breaker_invocation_local_tail_at_end: 4
+- breaker_invocation_local_tail_at_end: 3
 - generator_exhausted: False
 - fallback_iterations: none
 
 
 ## Generator failure reasons
-- Implementation: Energy regression on: verifier_auroc
-- The untrained baseline on `calibrated_decision` (energy = 0.293428, steps = 0) can be improved by training the 2-hidden-unit Gibbs energy model (`hidden_dims=[4]`) using Noise Contrastive Estimation (`nce_loss`) with full-batch Adam gradient descent. Pushing correct rows to low energy and incorrect rows to high energy establishes calibrated decision boundaries on the PCIB entity-uptake and falsifiability feature signals. Concurrently, for `verifier_auroc`, we resolve the prior energy regression by dynamically calibrating the positive/negative label convention against the baseline `(0.5, 0.5)` AUROC before performing a constrained simplex grid search over $(w_{\text{entity}}, w_{\text{falsifiability}})$, falling back to default weights if no candidate strictly improves discrimination.: Sandbox failed: TypeError: Argument '<carnot.models.gibbs.GibbsModel object at 0x7f2d03a0ee40>' of type <class 'carnot.models.gibbs.GibbsModel'> is not a valid JAX type.
-- ---: Energy regression on: verifier_auroc, calibrated_decision
-- ---: Energy regression on: verifier_auroc
+- Optimization Procedure: Energy regression on: verifier_auroc
+- Optimization Procedure: Energy regression on: verifier_auroc
+- This procedure resolves both failure modes:
+1. **Dynamic Orientation Calibration**: Evaluates `benchmark_data["PCIBProbe"](entity_weight=0.5, falsifiability_weight=0.5)` on the training set to check which label assignment matches the $\text{AUROC} > 0.5$ direction of the baseline. This aligns with the evaluator's ground-truth scoring convention with certainty.
+2. **Stratified 5-Fold Cross-Validation**: Precomputes basis feature responses and searches across the full unit circle $\theta \in [0, 2\pi)$ covering all four quadrants of `(entity_weight, falsifiability_weight)`. Candidates are evaluated by mean out-of-fold AUROC across stratified folds.
+3. **Plateau Smoothing & Failsafe**: Applies a circular moving-average window to select the center of the widest, most robust generalization plateau rather than a noisy boundary spike. If no candidate significantly improves cross-validation performance over $(0.5, 0.5)$, it safely defaults to the proven baseline weights.: Energy regression on: verifier_auroc
 No hypothesis both won this round and committed cleanly.
