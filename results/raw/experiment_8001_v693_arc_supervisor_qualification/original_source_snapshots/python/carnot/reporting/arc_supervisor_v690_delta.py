@@ -179,13 +179,6 @@ def execute(output: Path, private: Path, scope: Any = None) -> int:
         }
     )
     sources.update(checked.get("additional_source_hashes", {}))
-    if getattr(scope, "FREEZE_SOURCES", False):
-        for label in scope.ADDED:
-            source = scope.ROOT / label
-            snapshot = durable / "source_snapshots" / label
-            snapshot.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copyfile(source, snapshot)
-            sources[str(snapshot)] = sha256_file(snapshot)
     producers = [
         p
         for p in sorted((scope.ROOT / "results").glob("experiment_*arc*.json"))
@@ -222,21 +215,9 @@ def execute(output: Path, private: Path, scope: Any = None) -> int:
     )
     sources[str(manifest)] = sha256_file(manifest)
     previous.progress(started, f"exp{scope.EXPERIMENT_ID}_scope_frozen", len(sources))
-    qualification = None
-    qualification_ready = True
-    qualification_end = 0.0
-    if getattr(scope, "QUALIFY_BEFORE_SCAN", False):
-        qualification = [previous.run(s, private, durable) for s in specs]
-        qualification_ready = all(
-            r["passed"] for r in qualification if r["classification"] == "required"
-        ) and validation.coverage_complete(private / "coverage.json", includes=scope.ADDED)
-        previous.progress(
-            started, f"exp{scope.EXPERIMENT_ID}_qualification_terminal", len(qualification)
-        )
-        qualification_end = time.monotonic() - started
-    delta = getattr(scope, "scan", previous.scan)(
+    delta = previous.scan(
         scope.ROOT,
-        producers if not checked["failures"] and qualification_ready else [],
+        producers if not checked["failures"] else [],
         checked,
         private,
         current_date=scope.RUN_DATE,
@@ -259,22 +240,18 @@ def execute(output: Path, private: Path, scope: Any = None) -> int:
     inventory = durable / "receipt_inventory.json"
     atomic_json(inventory, delta)
     sources[str(inventory)] = sha256_file(inventory)
-    receipts = (
-        qualification
-        if qualification is not None
-        else [
-            dict(
-                s["reuse_receipt"],
-                reused=True,
-                classification=s["classification"],
-                reuse_source_path=s["reuse_source_path"],
-                reuse_source_sha256=s["reuse_source_sha256"],
-            )
-            if "reuse_receipt" in s
-            else previous.run(s, private, durable)
-            for s in specs
-        ]
-    )
+    receipts = [
+        dict(
+            s["reuse_receipt"],
+            reused=True,
+            classification=s["classification"],
+            reuse_source_path=s["reuse_source_path"],
+            reuse_source_sha256=s["reuse_source_sha256"],
+        )
+        if "reuse_receipt" in s
+        else previous.run(s, private, durable)
+        for s in specs
+    ]
     complete = validation.coverage_complete(private / "coverage.json", includes=scope.ADDED)
     counts = (
         json.loads((private / "coverage.json").read_text())["files"]
@@ -348,27 +325,6 @@ def execute(output: Path, private: Path, scope: Any = None) -> int:
         ),
         duration_s=finished,
         phase_spans=[
-            dict(
-                phase="supervisor_qualification",
-                start_s=0,
-                end_s=qualification_end,
-                duration_s=qualification_end,
-            ),
-            dict(
-                phase="authenticated_frontier",
-                start_s=qualification_end,
-                end_s=science_end,
-                duration_s=science_end - qualification_end,
-            ),
-            dict(
-                phase="candidate_freeze",
-                start_s=science_end,
-                end_s=finished,
-                duration_s=finished - science_end,
-            ),
-        ]
-        if qualification is not None
-        else [
             dict(phase="authenticated_delta", start_s=0, end_s=science_end, duration_s=science_end),
             dict(
                 phase="owned_validation",

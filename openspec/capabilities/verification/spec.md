@@ -47823,3 +47823,20 @@ quantile, issue-before-release state machine, persisted slot128 restart and pair
 fixed-window block reduction. `tests/python/test_delayed_confidence_8000.py`
 references this requirement and exercises boundary sets, delayed identity,
 future outcomes, controls and support floors.
+# REQ-VERIFY-8001: Repair owned qualification before admitting supervisor evidence
+
+The current audit SHALL qualify E2E-017 and the entire owned statement denominator
+before reading natural outcomes. Historical failed primaries SHALL remain failed.
+Private receipt and replay mutations SHALL test missing, corrupt, fixture, live
+wrapper and frame evidence. Protocol controls SHALL NOT count as natural samples.
+
+## SCENARIO-VERIFY-8001-READINESS
+
+Tests SHALL prove qualification failure prevents scanning, readiness is zero for
+failed owned checks, an empty qualified frontier is a terminal null, and cold
+replay rejects invented firings. Coverage SHALL include actual private CLI success,
+blocked, exception and replay routes without exclusions or a lower threshold.
+
+Implementation for REQ-VERIFY-8001: the Exp8001 qualification tests exercise the
+original shared CLI entrypoint and preserve the Exp7988 268/269 failure operand.
+Current qualification covers every owned statement before opening the frontier.

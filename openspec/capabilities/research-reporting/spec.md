@@ -88814,6 +88814,11 @@ bytes with unchanged adversarial and strict row validators. Both conductor
 readers must select the exact primary. The conductor owns ops and traceability
 reconciliation for this invocation.
 
+Implementation for REQ-REPORT-8001: `arc_supervisor_qualification.py`, the Exp8001
+CLI, and the opt-in shared runner qualification stage. The Exp8001 test module
+asserts live frame support, fixture exclusion, bounded scans, private CLI routes
+and qualification order. Scoped development coverage measured 461/461 statements.
+
 Implementation: `python/carnot/experiment_7994_v693_development_cohort.py`,
 `python/carnot/verify/development_cohort_7994.py`, and the script-path CLI.
 Verification: `tests/python/test_development_cohort_7994.py` and
@@ -88989,3 +88994,53 @@ script own immutable input checks, private seals, terminal publication and actua
 validation receipts. `tests/python/test_experiment_8000_v693_delayed_confidence.py`
 exercises real CLI success, blocking, cold replay and altered checkpoint rejection.
 Ops and traceability reconciliation is deferred to the conductor as instructed.
+# REQ-REPORT-8001: Qualify the supervisor reader before outcome refinement
+
+Exp8001 SHALL use milestone 2026.10.693 and execution date 20261002. Freeze
+configuration, commands and source snapshots before qualification. Preserve
+the disqualified Exp7975 and Exp7988 primaries and the exact Exp7988 coverage
+failure (268 of 269 statements, shared CLI line 71). Extend its tests and retain
+its owned routes and 100 percent statement threshold. Run E2E-017 and all owned
+qualification checks before scanning. An owned failure disqualifies this attempt,
+sets readiness zero and retires the attempt without repeating the failed scan.
+
+## SCENARIO-REPORT-8001-QUALIFICATION
+
+Private actual CLI success, missing/corrupt receipt, argument failure and cold
+replay routes SHALL be asserted, including the shared script entrypoint. Keep
+the artifact guard enabled and reuse the shipped private scratch and historical
+health receipt repair. Measure current full-suite health once as a diagnostic.
+All new statements and inherited owned qualification routes require nonempty
+100 percent coverage. Run direct consumers, scoped Ruff, strict mypy and explicit
+test-path spec coverage. Required receipts retain actual exits and byte hashes.
+
+## SCENARIO-REPORT-8001-AUTHENTICATION
+
+Scan recorded trajectory supervisor outcomes for at most 120 seconds after
+qualification. Emit flushed progress at phase boundaries and every 30 seconds
+of long work. Novelty SHALL use outcome content hashes, not dates or retries.
+Reject fixtures, duplicated outcome bytes and missing live wrapper receipts.
+Each admitted redirect SHALL be bound to a choose_action application and actual
+frame sequence with contiguous action indices, frame bytes, levels_completed,
+resolved_by_levelup and actions_to_levelup. Require matching game, seed and
+invocation identity, and live_agent_self_discovery provenance. No model or game
+is invoked and no source, BFS, adapter, arm-table or live-default change is allowed.
+
+## SCENARIO-REPORT-8001-NULL
+
+An authenticated empty frontier SHALL terminate complete_null_no_new_outcomes
+with readiness one after all owned checks. A protocol positive control proves
+reader headroom but supplies no natural evidence. Report primitive dispositions,
+per-game/per-arm fired, helped, action distances and stagnations counted once
+per receipt. A directional proposal needs at least eight firings in three games;
+arm allocation stays observational. Registry-precheck inherited levels and claim
+zero new solves. Missing external operands block with exact gate operands.
+
+## SCENARIO-REPORT-8001-SEAL
+
+Cold replay SHALL reconstruct primitive reductions and detect changed summaries.
+Validate exact candidate bytes with adversarial verification, strict verdict row
+consistency and both conductor readers before publishing one stable primary.
+Retain terminal validator logs in a sidecar. Report current zero pretrained calls
+separately from historical activity. The conductor owns ops and traceability
+reconciliation for this invocation.

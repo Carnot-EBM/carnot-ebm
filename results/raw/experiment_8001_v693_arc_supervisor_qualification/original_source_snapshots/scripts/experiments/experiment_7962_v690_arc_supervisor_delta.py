@@ -45,7 +45,7 @@ def reduce_or_execute(args: Any, parser: argparse.ArgumentParser, scope: Any, pr
     if args.reduce_ledger:
         if not args.producer or args.output is None:
             parser.error("--reduce-ledger requires --producer and --output")
-        value = getattr(scope, "scan", scope.previous.scan)(
+        value = scope.previous.scan(
             args.reduce_ledger,
             args.producer,
             dict(prior={}, inventory={}),
