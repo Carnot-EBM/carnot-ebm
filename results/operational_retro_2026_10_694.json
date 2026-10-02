@@ -1,0 +1,59 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.10.694",
+  "generated_at": "2026-10-02T09:05:23Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 41.5,
+  "experiments_completed": 9,
+  "compute_bound_experiments_count": 9,
+  "slowest_experiments": [
+    {
+      "experiment": "Bind all thirteen tasks to complete immutable planning authority",
+      "duration_minutes": 9.32,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Measure bounded Qwen source dependence against duplicate controls",
+      "duration_minutes": 8.44,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Independently decide all thirteen outcomes and the three PRD gaps",
+      "duration_minutes": 5.32,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Seal full-source and placebo interventions before bounded inference",
+      "duration_minutes": 4.24,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Reconstruct static custody and delayed issued errors from original receipts",
+      "duration_minutes": 3.86,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.10.694 completed 9 experiments (all 9 compute-bound) totaling 41.5 wall-time minutes (averaging 5 minutes per experiment) reconstructed from disk modification timestamps. The longest-running experiments were 'Bind all thirteen tasks to complete immutable planning authority' at 9.32 minutes, 'Measure bounded Qwen source dependence against duplicate controls' at 8.44 minutes, 'Independently decide all thirteen outcomes and the three PRD gaps' at 5.32 minutes, 'Seal full-source and placebo interventions before bounded inference' at 4.24 minutes, and 'Reconstruct static custody and delayed issued errors from original receipts' at 3.86 minutes. While point-in-time monitor telemetry observed both RTX 3090 GPUs at 0% utilization with 4MB allocated outside active execution, active execution-window hardware traces were not captured and the locked indicator gpu_idle_on_compute_bound_tasks is false.",
+  "bottlenecks_identified": [
+    "Execution wall time was heavily concentrated in the top compute-bound experiments: 'Bind all thirteen tasks to complete immutable planning authority' (9.32 minutes) and 'Measure bounded Qwen source dependence against duplicate controls' (8.44 minutes), which together accounted for 17.76 of 41.5 total wall-time minutes (42.8%), with the top five tasks accounting for 31.18 minutes (75.1%).",
+    "Milestone timing relied on disk-mtime fallback reconstruction after the live git-log path found 0 commits, leaving intra-task execution phases (environment setup, data loading, forward model inference, and artifact validation) uninstrumented.",
+    "Absence of continuous execution-window accelerator telemetry leaves active GPU utilization, kernel execution efficiency, and VRAM bandwidth saturation unmeasured during compute-bound runs."
+  ],
+  "improvements_suggested": [
+    "Instrument experiment runners with monotonic sub-phase timers to isolate latency across environment setup, data preparation, model inference passes, and artifact validation.",
+    "Deploy continuous, lightweight GPU sampling throughout task execution rather than relying exclusively on discrete point-in-time monitor checkpoints.",
+    "Profile and optimize the longest-running task binding (9.32 minutes) and Qwen source dependence measurement (8.44 minutes) workflows to explore batching and evaluation caching opportunities.",
+    "Restrict DualGPURunner orchestration strictly to parallel executions involving two or more distinct models, avoiding overhead or invalid dispatch on single-model inference jobs.",
+    "Preserve and maintain failure_ledger pre-launch checks to ensure doomed reruns continue to be blocked in sub-second time without consuming compute budget."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add granular sub-phase execution timing to experiment runners to measure setup, data preparation, compute inference, and artifact serialization overhead.",
+    "Implement active-window GPU utilization and memory timeseries logging to assess hardware efficiency during compute-bound tasks.",
+    "Profile the longest-running task binding (9.32 minutes) and Qwen source dependence measurement (8.44 minutes) workflows to identify optimization and batching opportunities."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Milestone 2026.10.694 completed 9 compute-bound experiments totaling 41.5 wall-time minutes, led by planning authority binding (9.32 minutes) and Qwen source dependence measurement (8.44 minutes). While static monitor telemetry observed both RTX 3090 GPUs at 0% utilization with 4MB allocated outside execution, the locked field records gpu_idle_on_compute_bound_tasks as false and no continuous in-flight telemetry exists. Estimated time savings remain at 0% pending empirical measurement of intra-task phases and verified accelerator execution traces."
+}
