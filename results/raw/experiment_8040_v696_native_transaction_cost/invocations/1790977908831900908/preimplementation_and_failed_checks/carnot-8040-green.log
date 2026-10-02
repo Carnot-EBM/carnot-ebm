@@ -1,0 +1,138 @@
+...F.                                                                    [100%]
+=================================== FAILURES ===================================
+______________________ test_cli_publication_and_terminal _______________________
+
+tmp_path = PosixPath('/tmp/carnot-8040-green/test_cli_publication_and_termi0')
+data = {'gate_checks': [], 'head': {'arm': 'conditioned_energy', 'calibration': [0.2, 1.3], 'decay_scale': 0.7, 'geometry': {...x-gnu.so', 'sha256': 'sha256:ee1e82d2891e735fa7824228a3e98f474ca43cf5cc114b89c3c6e4d460e89170'}, 'references': [], ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fb152092e10>
+
+    def test_cli_publication_and_terminal(tmp_path, data, monkeypatch):
+        """SCENARIO-REPORT-8040-PUBLICATION: real CLI branches retain terminal identity."""
+        fixture = tmp_path / "fixture.json"
+        e.atomic_json(fixture, data)
+        monkeypatch.setitem(e.CONFIG, "repetitions", 1)
+        monkeypatch.setitem(e.CONFIG, "warmups", 0)
+        monkeypatch.setattr(e, "regression", lambda *a: dict(passed=True, exit_code=0))
+        counts = {p: dict(num_statements=1, covered_lines=1, missing_lines=0) for p in e.OWNED}
+        monkeypatch.setattr(e, "validate", lambda *a: ([dict(passed=True)], counts, []))
+        monkeypatch.setattr(e, "terminal", lambda *a: dict(passed=True))
+        output = tmp_path / "good" / (e.NAME + ".json")
+        assert e.main(["--fixture-input", str(fixture), "--output", str(output)]) == 0
+        v = json.loads(output.read_text())
+        assert v["native_transaction_ready_score"] == 1 and v["generalized_learning_benefit_score"] == 0
+        assert e.main(["--cold-replay", str(output)]) == 0
+        monkeypatch.setattr(
+            sys,
+            "argv",
+            [
+                e.SCRIPT,
+                "--root",
+                str(tmp_path / "missing"),
+                "--output",
+                str(tmp_path / "blocked" / output.name),
+                "--validation-worker",
+            ],
+        )
+        with pytest.raises(SystemExit) as ex:
+            runpy.run_path(str(e.ROOT / e.SCRIPT), run_name="__main__")
+        assert ex.value.code == 0
+        monkeypatch.setattr(e, "validate", lambda *a: ([dict(passed=False)], counts, []))
+        failed = tmp_path / "failed" / output.name
+        assert e.main(["--fixture-input", str(fixture), "--output", str(failed)]) == 0
+        assert json.loads(failed.read_text())["verdict_class"] == "disqualified"
+        monkeypatch.setattr(e, "regression", lambda *a: dict(passed=False, exit_code=139))
+        assert (
+            e.main(
+                [
+                    "--fixture-input",
+                    str(fixture),
+                    "--output",
+                    str(tmp_path / "regression_failed" / output.name),
+                ]
+            )
+            == 0
+        )
+        unsafe = copy.deepcopy(v)
+        unsafe["verdict_class"] = "blocked"
+        e.atomic_json(output, unsafe)
+        with pytest.raises(ValueError, match="unsafe_readiness"):
+            e.replay(output)
+        monkeypatch.setattr(e, "run_commands", lambda *a, **k: [dict(passed=False)])
+        assert e.terminal_commands(output)["passed"] is False
+        assert any(c.name == "repository_health" for c in e.validation_plan(tmp_path))
+>       assert e.validate(tmp_path, tmp_path)[1] == {}
+E       AssertionError: assert {'python/carn...atements': 1}} == {}
+E         
+E         Left contains 2 more items:
+E         {'python/carnot/experiment_8040_v696_native_transaction_cost.py': {'covered_lines': 1,
+E                                                                            'missing_lines': 0,
+E                                                                            'num_statements': 1},
+E          'scripts/experiments/experiment_8040_v696_native_transaction_cost.py': {'covered_lines': 1,
+E                                                                                  'missing_lines': 0,
+E                                                                                  'num_statements': 1}}
+E         Use -v to get more diff
+
+tests/python/test_native_transaction_8040.py:213: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8040] phase=freeze_before elapsed_s=8.161 completed=0 pending=0
+[exp8040] phase=freeze_after elapsed_s=8.163 completed=0 pending=0
+[exp8040] phase=native_library_load_before elapsed_s=8.167 completed=0 pending=0
+[exp8040] phase=native_library_load_after elapsed_s=8.171 completed=0 pending=0
+[exp8040] phase=measurement_before elapsed_s=8.189 completed=0 pending=0
+[exp8040] phase=parity_before elapsed_s=8.189 completed=0 pending=2
+[exp8040] phase=parity_after elapsed_s=8.191 completed=2 pending=0
+[exp8027] phase=parity_before elapsed_s=8.196 completed=0 pending=256
+[exp8027] phase=parity_after elapsed_s=8.228 completed=256 pending=0
+[exp8040] phase=benchmark_before elapsed_s=8.223 completed=0 pending=4
+[exp8040] phase=transaction_before elapsed_s=8.223 completed=0 pending=0
+[exp8040] phase=transaction_after elapsed_s=8.225 completed=1 pending=0
+[exp8040] phase=transaction_before elapsed_s=8.225 completed=0 pending=0
+[exp8040] phase=transaction_after elapsed_s=8.227 completed=1 pending=0
+[exp8040] phase=benchmark_pair_after elapsed_s=8.227 completed=2 pending=2
+[exp8040] phase=transaction_before elapsed_s=8.227 completed=0 pending=0
+[exp8040] phase=transaction_after elapsed_s=8.228 completed=1 pending=0
+[exp8040] phase=transaction_before elapsed_s=8.229 completed=0 pending=0
+[exp8040] phase=transaction_after elapsed_s=8.230 completed=1 pending=0
+[exp8040] phase=benchmark_pair_after elapsed_s=8.231 completed=4 pending=0
+[exp8040] phase=benchmark_after elapsed_s=8.231 completed=4 pending=0
+[exp8040] phase=measurement_after elapsed_s=8.233 completed=4 pending=0
+[exp8040] phase=publication_before elapsed_s=8.237 completed=0 pending=0
+[exp8040] phase=publication_after elapsed_s=8.311 completed=1 pending=0
+[exp8040] phase=parity_before elapsed_s=8.322 completed=0 pending=2
+[exp8040] phase=parity_after elapsed_s=8.324 completed=2 pending=0
+{"passed": true}
+[exp8040] phase=freeze_before elapsed_s=8.326 completed=0 pending=0
+[exp8040] phase=freeze_after elapsed_s=8.327 completed=0 pending=0
+[exp8040] phase=publication_before elapsed_s=8.327 completed=0 pending=0
+[exp8040] phase=publication_after elapsed_s=8.328 completed=1 pending=0
+[exp8040] phase=freeze_before elapsed_s=8.328 completed=0 pending=0
+[exp8040] phase=freeze_after elapsed_s=8.329 completed=0 pending=0
+[exp8040] phase=native_library_load_before elapsed_s=8.333 completed=0 pending=0
+[exp8040] phase=native_library_load_after elapsed_s=8.337 completed=0 pending=0
+[exp8040] phase=measurement_before elapsed_s=8.356 completed=0 pending=0
+[exp8040] phase=parity_before elapsed_s=8.356 completed=0 pending=2
+[exp8040] phase=parity_after elapsed_s=8.358 completed=2 pending=0
+[exp8027] phase=parity_before elapsed_s=8.363 completed=0 pending=256
+[exp8027] phase=parity_after elapsed_s=8.393 completed=256 pending=0
+[exp8040] phase=benchmark_before elapsed_s=8.388 completed=0 pending=4
+[exp8040] phase=transaction_before elapsed_s=8.388 completed=0 pending=0
+[exp8040] phase=transaction_after elapsed_s=8.390 completed=1 pending=0
+[exp8040] phase=transaction_before elapsed_s=8.390 completed=0 pending=0
+[exp8040] phase=transaction_after elapsed_s=8.392 completed=1 pending=0
+[exp8040] phase=benchmark_pair_after elapsed_s=8.392 completed=2 pending=2
+[exp8040] phase=transaction_before elapsed_s=8.392 completed=0 pending=0
+[exp8040] phase=transaction_after elapsed_s=8.393 completed=1 pending=0
+[exp8040] phase=transaction_before elapsed_s=8.394 completed=0 pending=0
+[exp8040] phase=transaction_after elapsed_s=8.395 completed=1 pending=0
+[exp8040] phase=benchmark_pair_after elapsed_s=8.395 completed=4 pending=0
+[exp8040] phase=benchmark_after elapsed_s=8.396 completed=4 pending=0
+[exp8040] phase=measurement_after elapsed_s=8.398 completed=4 pending=0
+[exp8040] phase=publication_before elapsed_s=8.402 completed=0 pending=0
+[exp8040] phase=publication_after elapsed_s=8.406 completed=1 pending=0
+[exp8040] phase=freeze_before elapsed_s=8.407 completed=0 pending=0
+[exp8040] phase=freeze_after elapsed_s=8.408 completed=0 pending=0
+[exp8040] phase=publication_before elapsed_s=8.409 completed=0 pending=0
+[exp8040] phase=publication_after elapsed_s=8.409 completed=1 pending=0
+=========================== short test summary info ============================
+FAILED tests/python/test_native_transaction_8040.py::test_cli_publication_and_terminal
+1 failed, 4 passed in 10.18s

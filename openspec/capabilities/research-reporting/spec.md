@@ -90359,3 +90359,63 @@ crash/restart cases pass. These findings remain finite exposed-development repla
 Owned validation passes 57 task and consumer tests, 535/535 added statements,
 Ruff check and format, strict mypy and traced spec coverage. Repository health
 is a separate bounded receipt and cannot supply or remove scientific benefit.
+
+# Exp8040 repaired native transaction cost — 2026-10-02
+
+## REQ-REPORT-8040: complete durable numerical transactions
+
+Reuse the recorded Rust/PyO3 library and atomic inode replacement from Exp8027.
+Preserve its exit139 failure and disqualified artifact. Do not rebuild libraries.
+Authenticate the sealed Exp8038 trajectory and Exp8039 audit before measurement.
+Freeze code, input hashes, budgets, identity, selection and acceptance rules first.
+Use no pretrained model loads or generations. Production defaults stay fixed.
+
+## SCENARIO-REPORT-8040-SHUTDOWN
+
+Run the shipped mapped-inode regression first in a guarded private subprocess.
+Require normal exit after assertions. Record argv, exit and durable log hash.
+Load only a private atomic copy of the recorded library. Bind both library paths
+and hashes, actual module path, interpreter identity and process identity.
+Stop measurement if regression or library custody fails, recording exact operands.
+
+## SCENARIO-REPORT-8040-PARITY
+
+Replay all recent64 and cumulative commit traces with the actual native API.
+Compare float64 state and next probabilities and actions with Python and the
+original checkpoints. Require errors at most 1e-10 and zero action disagreement.
+Include calibration, sparse updates, global decay, serialization and restart.
+Keep synthetic controls separate from the original natural source count.
+
+## SCENARIO-REPORT-8040-COST
+
+For each replay policy measure thirty paired repetitions per numerical arm.
+Exclude five paired warmups per policy. Randomize pair order with seed8040.
+Bound benchmark work to 600 seconds. Time feature gather, replay selection,
+initialization, design, arithmetic, FFI, serialization, atomic write, file and
+directory fsync, reload and next prediction within one complete elapsed span.
+Persist replay support with the head. Record per-transaction times, replay bytes
+and update overhead. Report p50/p95 and paired 10000-draw bootstrap intervals
+for ratio of total paired times. NFR-01 requires complete-workload throughput
+at least10 with a95 percent lower bound at least10 and parity in both policies.
+Current qualified capture spans are optional, separate likelihood acquisition
+cost. Missing scalar acquisition and feedback costs prohibit a service claim.
+
+## SCENARIO-REPORT-8040-PUBLICATION
+
+Write failing traced tests before implementation. Require all owned unit,
+consumer, Ruff, strict mypy and spec checks and 100 percent added statement
+coverage including real CLI routes. Run the full Python health command once
+with a bound; preserve unrelated failures separately. Cold-reduce raw rows and
+reopen checkpoints in a fresh process. Validate candidate and published bytes
+with adversarial verification and strict row lint. Use primary publication.
+Integer readiness one requires valid measurement and every owned check;
+speed benefit is separate. External failures are terminal blocked, never partial.
+The conductor owns ops and traceability reconciliation for this task.
+
+Implementation: `python/carnot/experiment_8040_v696_native_transaction_cost.py`
+authenticates current trajectories, reuses the recorded native library, and
+measures durable transactions with the original replay selector. The thin CLI
+is `scripts/experiments/experiment_8040_v696_native_transaction_cost.py`.
+Traced tests are `tests/python/test_native_transaction_8040.py`. Current
+measurements and terminal byte validation live in the Exp8040 primary and raw
+invocation directory. Readiness and NFR-01 remain separate fields.

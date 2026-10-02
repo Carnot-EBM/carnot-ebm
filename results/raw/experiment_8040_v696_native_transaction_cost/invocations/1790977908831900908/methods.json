@@ -1,0 +1,22 @@
+{
+  "artifact_guard_enabled": true,
+  "binary_generation": false,
+  "config": {
+    "budget_s": 600,
+    "draws": 10000,
+    "interval": "paired percentile bootstrap; timing repeats are not natural n",
+    "nfr01_target": 10,
+    "policy": "Exp8038 unchanged selector; four released gradients per block",
+    "repetitions": 30,
+    "seed": 8040,
+    "statistic": "ratio of summed paired transaction times",
+    "tolerance": 1e-10,
+    "warmups": 5
+  },
+  "data_access": "original public bytes and already released feedback; no retention labels",
+  "fixture": false,
+  "identity": "exp8040-native-transaction-cost",
+  "model_loads": 0,
+  "numerical_acceptance": "probability and state error <=1e-10; zero action disagreement",
+  "production_defaults_changed": false
+}
