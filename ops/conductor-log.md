@@ -19334,3 +19334,4 @@ code |
 | 2026-10-02 11:31 UTC | Fit calibrated source energies on the sealed eligi | OK | 86 passed, 1 warning in 24.30s |
 | 2026-10-02 11:59 UTC | Measure calibrated decisions with complete predict | OK | 93 passed, 1 warning in 20.73s |
 | 2026-10-02 12:30 UTC | Qualify fixed-answer Qwen scoring and source-remov | FAIL | Codex CLI error: ormalization failures cannot earn readiness.""" + origina |
+| 2026-10-02 12:36 UTC | Qualify fixed-answer Qwen scoring and source-remov | OK | cache hit: 93 passed, 1 warning in 22.51s |
