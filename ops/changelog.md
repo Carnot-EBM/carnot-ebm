@@ -21257,3 +21257,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-10-02: Measure bounded Qwen source dependence against duplicate controls (✅ Complete) — honest_verdict=complete_positive_source_sensitivity; results/experiment_8011_v694_qwen_source_sensitivity.json
 - 2026-10-02: Assess new supervisor outcomes for live ARC generalization (⚠️ Research Finding) — honest_verdict=complete_null_no_new_outcomes; results/experiment_8014_v694_arc_supervisor_delta.json
 - 2026-10-02: Bound cumulative quantization error and preserve each board obligation (⚠️ Blocked) — honest_verdict=complete_blocked_no_qualified_update_trajectory_or_board_custody; results/experiment_8016_v694_hardware_update_boundary.json
+- 2026-10-02: Independently decide all thirteen outcomes and the three PRD gaps (⚠️ Research Finding) — honest_verdict=complete_disqualified_v694_owned_checks; results/experiment_8017_v694_capstone.json
