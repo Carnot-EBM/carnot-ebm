@@ -89174,3 +89174,33 @@ Status: staged planning contract verified; experimental implementation and
 scientific acceptance remain pending. Planned work covers conditioned energy
 decisions, delayed equal-budget updates, independent retention/restart audits,
 bounded Qwen source sensitivity and a narrow Rust/hardware feasibility path.
+
+### REQ-REPORT-8005: Qualify activated V694 without scientific credit
+
+Exp8005 SHALL bind thirteen ordered tasks starting at 8005 through the existing
+parameterized authority reader. Read table, JSON, digest and actual YAML bytes
+independently. Absent consumed staging SHALL remain absent. Freeze complete
+prompts, costs, exposure, class support, headroom, update budgets and comparison
+families before qualification. Save immutable V693 design and producer bytes;
+preserve their blocked verdicts. This audit has zero model calls and independent
+scientific units. Valid owned checks yield circular_positive and readiness one;
+missing authority blocks and owned failures disqualify with readiness zero.
+
+### SCENARIO-REPORT-8005-AUTHORITY
+
+Private fixtures SHALL reject all twelve inherited authority mutations, missing
+table, JSON or digest, changed title, prompt, prior history and exact gate names.
+Run failure-ledger and exclusion readers. Direct CLI success, blocked authority,
+invalid arguments and negative cold replay SHALL keep outputs outside results.
+Cold reduction SHALL reject edited rows, checkpoints and immutable snapshots.
+
+### SCENARIO-REPORT-8005-PUBLICATION
+
+Freeze actual owned commands and run E2E-018, consumers, scoped Ruff, strict
+mypy and explicit-path spec checks. Require nonempty 100 percent added-statement
+coverage including the real entrypoint. Run the full Python suite once as a
+bounded health diagnostic and preserve actual failures. Validate final bytes
+with adversarial and strict row readers, cold replay in a fresh process, and
+both conductor readers. Publish through the existing primary helper. All
+published checkpoint and snapshot references SHALL resolve to durable files.
+The conductor owns ops/status, ops/changelog and BMAD reconciliation.
