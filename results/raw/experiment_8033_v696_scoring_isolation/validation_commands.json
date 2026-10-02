@@ -1,0 +1,167 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "carnot.experiment_8033_v696_scoring_isolation",
+        "carnot.inference.scoring_isolation_8033",
+        "carnot.inference.likelihood_isolation_runtime_8033"
+      ],
+      "name": "worktree_imports",
+      "scope": "owned",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-8033-ecl4d_8d/pytest/focused",
+        "tests/python/test_scoring_isolation_8033.py",
+        "-q"
+      ],
+      "name": "focused_pytest",
+      "scope": "owned",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "run",
+        "--rcfile=/tmp/carnot-8033-ecl4d_8d/coverage.ini",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_scoring_isolation_8033.py"
+      ],
+      "name": "changed_code_coverage",
+      "scope": "owned",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "combine",
+        "--rcfile=/tmp/carnot-8033-ecl4d_8d/coverage.ini"
+      ],
+      "name": "combine",
+      "scope": "owned",
+      "timeout_s": 30
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "json",
+        "--rcfile=/tmp/carnot-8033-ecl4d_8d/coverage.ini",
+        "-o",
+        "/tmp/carnot-8033-ecl4d_8d/coverage.json",
+        "--fail-under=100"
+      ],
+      "name": "coverage_json",
+      "scope": "owned",
+      "timeout_s": 30
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_8033_v696_scoring_isolation.py",
+        "python/carnot/inference/scoring_isolation_8033.py",
+        "python/carnot/inference/likelihood_isolation_runtime_8033.py",
+        "scripts/experiments/experiment_8033_v696_scoring_isolation.py",
+        "tests/python/test_scoring_isolation_8033.py"
+      ],
+      "name": "ruff_check",
+      "scope": "owned",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_8033_v696_scoring_isolation.py",
+        "python/carnot/inference/scoring_isolation_8033.py",
+        "python/carnot/inference/likelihood_isolation_runtime_8033.py",
+        "scripts/experiments/experiment_8033_v696_scoring_isolation.py",
+        "tests/python/test_scoring_isolation_8033.py"
+      ],
+      "name": "ruff_format",
+      "scope": "owned",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "--follow-imports=skip",
+        "--ignore-missing-imports",
+        "python/carnot/experiment_8033_v696_scoring_isolation.py",
+        "python/carnot/inference/scoring_isolation_8033.py",
+        "python/carnot/inference/likelihood_isolation_runtime_8033.py"
+      ],
+      "name": "changed_module_mypy",
+      "scope": "owned",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_scoring_isolation_8033.py"
+      ],
+      "name": "scoped_spec_coverage",
+      "scope": "owned",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_likelihood_protocol_8022.py",
+        "tests/python/test_primary_publication_7928.py"
+      ],
+      "name": "consumer_contracts",
+      "scope": "owned",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "timeout",
+        "--kill-after=5s",
+        "60s",
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q"
+      ],
+      "name": "repository_health",
+      "scope": "repository_health",
+      "timeout_s": 60
+    }
+  ]
+}

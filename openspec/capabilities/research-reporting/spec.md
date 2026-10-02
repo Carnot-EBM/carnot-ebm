@@ -90196,3 +90196,52 @@ consumer/E2E-019 tests, Ruff, strict mypy and spec coverage. Record bounded
 repository health separately. Cold-reduce durable rows in a fresh process,
 validate candidate and published bytes, and publish one terminal primary through
 the existing helper. Blocked or disqualified evidence cannot qualify readiness.
+
+## REQ-REPORT-8033: Qualify changed scoring execution before source interpretation
+
+Exp8033 SHALL freeze eight label-free fit sources by evenly spaced token-length
+ranks before scoring. Preserve Exp8023's 384 passes and 0.0063769592214454884
+maximum drift as historical evidence. Use only the cached mandated Q4_K_M model,
+embedded tokenizer and template, native CUDA offload and an exclusive GPU lease.
+Compare existing reset/full eval, fresh native context/full eval, existing reset/
+fixed 128-token chunks, and fresh native context/fixed chunks. Keep weights,
+tokens, n_batch=256, n_ubatch=256, device and kernel options fixed. Record native
+KV clearing, context identity, positions, shapes and immediate scalar copies.
+
+### SCENARIO-REPORT-8033-SCORE
+
+Each condition primes with the last source, then traverses eight sources twice,
+scoring each twice consecutively. Each source has two after-self and two after-
+different targets. Freeze at most 128 target passes, 80000 scored tokens, 120s
+per forward/context creation and 900s total model work. Four conditioning passes
+are separate current calls. No generation, substitution, padding or borrowed
+server is allowed. Compare full answer alignment and float64 full-vocabulary
+normalization with an independent synthetic logit oracle. Preserve failed and
+censored slots. Select the first passing changed condition in order fresh/full,
+fresh/chunks, reset/chunks. Require range of duplicate mean NLL <=1e-6,
+normalization error<=1e-10, complete coverage and zero owned-check failures.
+Mixed or unexplained causes remain unresolved. Numerical readiness gives no
+correctness, deployment or learning credit.
+
+### SCENARIO-REPORT-8033-LIFECYCLE
+
+Private token-shift, stale-buffer, failed-load and timeout fixtures SHALL reject
+invalid scoring and preserve cleanup. Direct scoring-child and cold CLI routes
+SHALL execute with private scratch and the artifact guard enabled. Persist each
+call before and after execution. Close each fresh context and release the lease.
+Record all actual loads, teacher-forced calls and zero sampled tokens. The 2s
+model_load_no_generation diagnostic floor SHALL never pad measured duration.
+
+### SCENARIO-REPORT-8033-SEAL
+
+Traced tests precede implementation. Cover all added statements including actual
+CLI routes. Run owned tests, consumer tests, Ruff, strict mypy and scoped spec
+coverage. Run one bounded full-suite health check separately; do not require
+unrelated health to qualify science. Freeze producer/configuration bytes before
+measurement and rerun affected measurements if these change. Cold-reduce durable
+raw checkpoints in a fresh process. Validate candidate and published bytes with
+adversarial and strict row readers. Use the primary publication helper and bind
+terminal validation. Missing external prerequisites are terminal blocked; a
+fully measured numerical failure is terminal null. Readiness is zero for blocked
+or disqualified evidence. Ops/status/traceability reconciliation is conductor-
+owned for this invocation. Production inference defaults remain fixed.
