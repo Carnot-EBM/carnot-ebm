@@ -19310,3 +19310,4 @@ code |
 | 2026-10-02 00:34 UTC | Test delayed confidence using the state that issue | OK | 91 passed, 1 warning in 23.06s |
 | 2026-10-02 00:58 UTC | Qualify supervisor evidence before generalization  | OK | 105 passed, 1 warning in 8.17s |
 | 2026-10-02 01:50 UTC | Measure complete service cost and sparse durable u | OK | 94 passed, 1 warning in 43.80s |
+| 2026-10-02 02:39 UTC | Bound sparse-update hardware compatibility and pre | OK | 106 passed, 1 warning in 28.93s |
