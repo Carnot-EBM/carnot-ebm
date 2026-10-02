@@ -88994,6 +88994,36 @@ script own immutable input checks, private seals, terminal publication and actua
 validation receipts. `tests/python/test_experiment_8000_v693_delayed_confidence.py`
 exercises real CLI success, blocking, cold replay and altered checkpoint rejection.
 Ops and traceability reconciliation is deferred to the conductor as instructed.
+# REQ-REPORT-8006: Independent static custody and issued-error reconstruction
+
+Exp8006 SHALL preserve historical primary bytes and failing assertions. Freeze
+methods, role hashes, source pins, budgets and commands before target access.
+Trace Exp7997's failed command to its request, original seal and access receipt.
+Absent original custody blocks historical recovery; fixtures cannot repair it.
+Report static reader readiness separately from historical static recovery.
+Independently join Exp8000 issued sets, issue slots and original targets. Check
+release order and phase=(issue_slot-1) modulo (delay+1). Unknown or excluded
+targets remain unscored. Preserve the minimal failing row and original assertion.
+No new confidence sweep, training or pretrained calls are permitted.
+
+### SCENARIO-REPORT-8006-REPLAY
+
+Separate valid and corrupted private fixtures SHALL detect error, set, target,
+release, phase, role and byte drift. Real CLI success, blocked inputs, invalid
+arguments and fresh-process cold reduction SHALL use private test outputs.
+Require 100 percent added statement coverage, consumers, E2E-015/019, issued
+error mutation replay, Ruff, strict mypy and explicit spec checks. One bounded
+full-suite health command retains its actual outcome separately. Missing fields
+are contract errors. Complete valid readers may be ready with historical static
+recovery blocked. Publish only checked final bytes through primary_publication.
+All published source snapshots and checkpoints SHALL be durable. The conductor
+owns ops/status, ops/changelog and BMAD reconciliation for this invocation.
+
+Implementation for REQ-REPORT-8006: `python/carnot/reporting/independent_replay_8006.py`
+and its thin script preserve original source snapshots and reduce each issued
+set independently. `tests/python/test_independent_replay_8006.py` covers the
+private CLI, custody, eligibility, timing, mutations and final-byte checks.
+
 # REQ-REPORT-8001: Qualify the supervisor reader before outcome refinement
 
 Exp8001 SHALL use milestone 2026.10.693 and execution date 20261002. Freeze
