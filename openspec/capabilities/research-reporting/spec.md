@@ -88961,3 +88961,31 @@ denominators bind to the current invocation. No finite development replay may
 set generalized_learning_benefit_score above zero.
 
 Implementation: `python/carnot/experiment_7999_v693_learning_causal_audit.py` and its script own the terminal artifact. `python/carnot/reporting/learning_audit_validation_7999.py` freezes supervised commands. `tests/python/test_experiment_7999_v693_learning_causal_audit.py` covers real private CLI success, blocking and cold replay.
+
+## REQ-REPORT-8000: Publish a checked delayed-confidence diagnostic
+
+Exp8000 SHALL authenticate Exp7972, Exp7994 and Exp7995 producer bytes and dates,
+independently of sparse fitting or learning benefit. Freeze configuration and
+validation before measurement. Save primitive issue, feedback, censor, window
+and restart rows. Require 160 eligible evaluated independent groups and eight
+complete 20-slot blocks. Fixed windows are 65-128, 129-192, 193-256. Primary
+saved-state versus scalar delay20 gates are deviation gain >=.02, paired block
+bootstrap lower95 >0, set-size increase <=.10 and no extra false accepts.
+Use 10000 paired draws; other delays are sensitivity. Underpowered valid work
+is null. Working protocol control and natural headroom are disclosed separately.
+Readiness is independent of benefit. Owned failures disqualify with readiness0;
+missing upstream blocks with exact operands. Validate actual private candidate
+bytes with both validators and conductor readers before publishing one primary.
+
+### SCENARIO-REPORT-8000-CLI
+
+Real private CLI success, missing capture blocking, cold replay, E2E-019,
+nonempty 100 percent new-statement coverage, scoped Ruff, strict mypy, explicit
+spec coverage and one full pytest diagnostic SHALL have actual receipts.
+
+Implementation: `python/carnot/experiment_8000_v693_delayed_confidence.py`,
+`python/carnot/reporting/delayed_confidence_validation_8000.py` and the Exp8000
+script own immutable input checks, private seals, terminal publication and actual
+validation receipts. `tests/python/test_experiment_8000_v693_delayed_confidence.py`
+exercises real CLI success, blocking, cold replay and altered checkpoint rejection.
+Ops and traceability reconciliation is deferred to the conductor as instructed.

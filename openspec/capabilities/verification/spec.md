@@ -47793,3 +47793,33 @@ Private producer fixtures and mutated rows test the separate reducer. Cold repla
 rejects drift even if an attacker recomputes a local shard hash.
 
 Implementation: `python/carnot/verify/learning_causal_audit_7999.py` owns the separate primitive reducer and atomic recovery. `tests/python/test_learning_causal_audit_7999.py` rejects the four registered mutations and corrupt saved gradients.
+
+## REQ-VERIFY-8000: Preserve issued confidence state under delayed feedback
+
+Freeze the historical Exp7972 first Gibbs head and one calibration-only Brier
+choice from temperatures 0.5, 1, 2, with ascending deterministic ties. No model
+loads or coefficient fits occur. Scores are 1-p_y. Use order statistic
+ceil((n+1)*(1-alpha)); rank above n means an infinite cutoff. Singleton supported
+accepts, singleton unsupported rejects, and empty or full sets escalate.
+Compare fixed calibration confidence, scalar current-alpha ACI, and saved issued
+alpha ACI with delays 20, 24, 36, gamma .01, clipping [.01,.50], and trailing 64
+due observations. Issue before releasing labels; keep unresolved states.
+
+The recurrence from https://arxiv.org/html/2609.07251v1 section 4 is
+alpha_(t+tau)=alpha_t+gamma*(target-error_t). This experiment uses binary scores
+and clipping. Since issue precedes feedback at slot t, the saved-state update
+becomes alpha_(t+1)=clip(issue_alpha_(t-delay)+.01*(.10-error_(t-delay))).
+Thus effective phase spacing is delay+1; it is a timing adaptation of the paper.
+Scalar ACI instead uses current alpha as the update base. No theorem transfers.
+
+### SCENARIO-VERIFY-8000-CAUSAL
+
+Quantile boundaries, empty/full sets, future-label mutation, known-responsive
+and no-shift fixtures, and JSON restart at slot 128 SHALL preserve issued sets
+and subsequent feedback updates. Confidence SHALL preserve point Brier exactly.
+
+Implementation: `python/carnot/verify/delayed_confidence_8000.py` owns the binary
+quantile, issue-before-release state machine, persisted slot128 restart and paired
+fixed-window block reduction. `tests/python/test_delayed_confidence_8000.py`
+references this requirement and exercises boundary sets, delayed identity,
+future outcomes, controls and support floors.
