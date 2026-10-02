@@ -1,0 +1,125 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 2.003566194907762,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:daa6f62da7ee3de3a4d06521878a31a25b416b3b92b4a3381318e68b4dfc1d17",
+  "input_tokens": 1527,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1527,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1550
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:2e0ac6ea2b19dbf79c60d6fd77c5fe62f79f1bd28e7736be3d7f4952b2343905",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886372,
+    "id": "chatcmpl-Pp2ggQ9Rn4NA8SfiH5U4keijMV7Uchcf",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 549.761,
+      "predicted_n": 23,
+      "predicted_per_second": 41.83636161895806,
+      "predicted_per_token_ms": 23.902652173913044,
+      "prompt_ms": 1313.887,
+      "prompt_n": 1449,
+      "prompt_per_second": 1102.8345664429287,
+      "prompt_per_token_ms": 0.9067543133195307
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1527,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1550
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"900 Embarcadero Del Mar\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":null,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":null,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Burgers, American (Traditional), Sandwiches, Restaurants, Salad, Soup, Breakfast & Brunch\\\",\\\"city\\\":\\\"Isla Vista\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"9:0-21:0\\\",\\\"Monday\\\":\\\"9:0-21:0\\\",\\\"Saturday\\\":\\\"9:0-21:0\\\",\\\"Sunday\\\":\\\"9:0-21:0\\\",\\\"Thursday\\\":\\\"9:0-21:0\\\",\\\"Tuesday\\\":\\\"9:0-21:0\\\",\\\"Wednesday\\\":\\\"9:0-21:0\\\"},\\\"name\\\":\\\"Silvergreens\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2020-04-11 21:17:29\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I came here the first day I was attempting to be vegan. I had vegetable soup, oat bread, and fruit salad. The vegan options at this restaurant were so good that they gave me hope that I could potentially be vegan for the rest of my life. Flash forward to 5 weeks later, and I can say with confidence that I would NEVER be vegan again. But the fact that this restaurant had me fooled, means that their food is magnificent.\\\"},{\\\"review_date\\\":\\\"2020-04-05 06:19:06\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"I've eaten at Silvergreens twice. While it's now temporarily closed due to Covid-19, I do hope it will reopen and am giving it four stars because it is one of a few places in Isla Vista that genuinely (mostly; see the end of my review for why not) caters to vegans. If it weren't for this, I would be giving the place three stars--or, actually, I wouldn't be eating there, since I'm vegan, lol. \\\\n\\\\nSo the fourth star is for Silvergreens' vegan options. But the place would be three stars because it is s--l--o--w. Both times when I arrived for lunch, there was a line with two or three customers, and it took about five minutes to reach the front of the line because there was only one employee both making the food and working the register. Once my order was in, it took a further ten minutes on my first visit, and 15 minutes on my second, to get my grub. That's a long time to wait, but luckily I had good company once and a good book the other time. \\\\n\\\\nThat said, when the food did arrive it was quite good. On my first visit I had the Wise Vegan sandwich. It came served on a warmed whole wheat bun with avocado, tomato, hummus, and greens. The flavors went together nicely and the avocado was super fresh. It wasn't very large, but I was full after eating the whole thing (with a bigger sandwich, I save half for later). \\\\n\\\\nOn my second visit I ordered the Thai Chicken salad (add chilis) and subbed in organic vegan protein. The dressing was delicious, and the servers were generous with the broccoli, wonton strips, and roasted almonds. The protein serving was big too. This time, I did save half for later, and it tasted even better once the dressing had infused the vegan \\\\\\\"meat.\\\\\\\" The employee who made my salad forgot to give me the half-roll it comes with, and I forgot too until I was leaving. When I went to the counter to let her know, by way of apology she gave me a whole roll to go.\\\\n\\\\nI foresee eating here again as long as it's able to reopen after the pandemic cools down. Next on my list is trying other salads with vegan meat. One disappointment: they have these delicious-looking cookies by the register and I asked if they have any plans to get fresh-baked vegan cookies (often sold out across the street at Campus Point Coffee.) I was told, \\\\\\\"no, we don't think there's demand.\\\\\\\" If anyone from Silvergreens is reading this: there is demand. I promise. (And please, pay another worker, because I'm not the only who's noticed service is slow @Angel S., @Emily G., @Cameron C., @Jack B., @Michelle M., @Shayan H., @JoAnna S., @John C.)\\\"},{\\\"review_date\\\":\\\"2020-03-21 23:37:57\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Are you kidding! The best, I'll keep this name over Kyle's kitchen any day. I like a nice salad w a side of burger or maybe some soft brown bread or some soup. Oh let's have clam chowder!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Silvergreens is a popular casual dining restaurant located at 900 Embarcadero Del Mar in Isla Vista, California. The restaurant offers a variety of food options including burgers, traditional American dishes, sandwiches, salads, soups, and breakfast and brunch items. It is open from 9:00am to 9:00pm every day of the week. The restaurant provides free Wi-Fi and is good for groups, but does not take reservations. It has a 3.5-star rating, with many customers praising the vegan options and the quality of the food. A few customers have cited slow service as a downside, suggesting that the restaurant could benefit from additional staff. Despite this, the reviews are largely positive, with customers particularly praising the vegan options, fresh produce, and variety of salads.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "31f6004da5aabe449bf570e36135e4cc5478afd64ad213355e58bbead2370dc4",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28
+  ]
+}

@@ -1,0 +1,123 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.8095501629868522,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:8b498d784aa5385eba5a2994100bd8ea43d07e9ac231e14478cc188ea9ec06ce",
+  "input_tokens": 1306,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1306,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1329
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:5cab3b47c90cfe3ea829593ffe21c2a580e54ad7c82e7121f50db363237b67f2",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886202,
+    "id": "chatcmpl-7Wbk3icJfbvFRTPz6hExXMmNZxL8zsBv",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 542.146,
+      "predicted_n": 23,
+      "predicted_per_second": 42.4239964880309,
+      "predicted_per_token_ms": 23.571565217391303,
+      "prompt_ms": 1148.83,
+      "prompt_n": 1228,
+      "prompt_per_second": 1068.9135903484416,
+      "prompt_per_token_ms": 0.935529315960912
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1306,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1329
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"1316 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":true,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Greek, Restaurants, Mediterranean, Food, Beer, Wine & Spirits, American (New)\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":null,\\\"name\\\":\\\"Petros Restaurant\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2017-08-05 18:34:23\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"We called the restaurant, and it went to a greeting, then checked the website, and made a reservation on OpenTable for 10 of us. Got to the restaurant and, surprise, surprise, it was closed!!!! If you are going to have a website, a phone greeting, or an OpenTable listing for your business, show the customers at least a little courtesy and put some sort of notice when you are not going to be open.\\\"},{\\\"review_date\\\":\\\"2017-07-15 18:25:20\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"I was dying to go here (We'd been to the Petros in Solvang a while back and being an optimist, imagined it would be the same or better). On a recent visit to SB, we went in for dinner. First of all, the service was outstanding--warm and welcoming, eager and friendly, very caring and kind people, from the hostess to our server to the manager--everyone was so very sweet, it made up for our letdown with the food. To be fair, we live in the Bay Area with Kokkari in S.F. and Evvia in Palo Alto, and we'd had an unbelievable time at Petros Solvang--so we went in with expectations off the chart. Maybe this was the problem--it wasn't that their food was intrinsically bad; it was good. It just didn't sparkle, didn't blow our minds . . . the watermelon and feta salad was good, albeit not super alive with flavor. The grilled octopus was a good dose of protein, though with slightly muddled flavor (we were expecting it to be charred and tender), which is a tough call for octopus. While we were looking over the menu, we didn't see lamb listed, and were expressing disappointment to each other. Our server who had not yet come to our table, and was doing something else at the adjacent table, overheard us, and came over to reassure. He was just so sweet: going over not one or two, but three different lamb options. I mean, seriously, what kind of Greek restaurant doesn't have lamb, right? Petros had terrific lamb options: we had the lamb loin or was it the chops? They were good; again, not so memorable that I'd track down a postcard and write home about them. But they were good enough that we scarfed down everything :-) At some point during our dinner, someone spilled water everywhere near our table on the floor, and the manager was on top of it, asking someone to mop it up (before we tripped). We didn't stay for dessert, but I'd give anything to live near Petros, and I could go in for lunch anytime, we'd have a ball. Btw, the next day we were having dinner across the street at sunset, and Petros was the site for an outdoor wedding party/reception. We watched a gorgous and touching show--traffic stopped on the street while the bride and groom took photos, her white train trailing the street, veil blowing in the breeze . . . I damn near cried.\\\"},{\\\"review_date\\\":\\\"2017-07-10 22:31:18\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Awesome food and service! Just got back from Greece and this restaurant met our expectations of traditional Greek dishes.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Petros Restaurant, located at 1316 State St, Santa Barbara, CA, is an esteemed establishment known for its Greek and Mediterranean cuisine, along with its selection of American (New) food, beer, wine, and spirits. The restaurant provides free Wi-Fi and is suitable for groups. It also offers outdoor seating and a takeout option. Despite not offering parking facilities, the eatery allows street parking. Petros Restaurant has been praised for its exceptional service, with a 4-star rating overall. One customer commended it for its authentic Greek dishes, while another appreciated the warm and caring staff, even though the food didn't quite meet their high expectations. However, one instance of miscommunication regarding the restaurant's operating hours led to a 1-star review.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "6a0301d09ded3168800d2a634455190ebdc95157f1f1ed4e0e366ee3f13cd1d2",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26
+  ]
+}

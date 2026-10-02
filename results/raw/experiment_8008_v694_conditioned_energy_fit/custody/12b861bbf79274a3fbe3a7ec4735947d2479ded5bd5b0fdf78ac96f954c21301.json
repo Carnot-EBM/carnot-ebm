@@ -1,0 +1,106 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.1449167319806293,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:ee917a4ea6ddafab964bd74aa91e4c1e121024b14a085dc0fba1b11534598e43",
+  "input_tokens": 580,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 580,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 601
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:563e1a06d2749d07babda45773a033ba2b3e6d8ece88a3edb8b4b4541a51a13c",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"unsupported_probability\": 0.0,\n\"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886192,
+    "id": "chatcmpl-8pUylHDiaQkq45Uw2EZPhOfNYSQuASIo",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 492.262,
+      "predicted_n": 21,
+      "predicted_per_second": 42.660209400685005,
+      "predicted_per_token_ms": 23.44104761904762,
+      "prompt_ms": 535.644,
+      "prompt_n": 502,
+      "prompt_per_second": 937.1896259455907,
+      "prompt_per_token_ms": 1.0670199203187252
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 580,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 601
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:1 Drain and discard marinade. 2  Broil 4-6 in. from the heat or grill over medium heat for 8-10 minutes on each side or until meat reaches desired doneness (for medium-rare, a meat thermometer should read 145\u00b0; medium, 160\u00b0; well-done, 170\u00b0). 3  Thinly slice steak across the grain. 4  Yield: 6 servings.\\\\n\\\\npassage 2:1 In a large resealable plastic bag, combine the soy sauce, lemon juice, honey and garlic; add steak. 2  Seal bag and turn to coat; refrigerate for 6-8 hours. 3  Drain and discard marinade.\\\\n\\\\npassage 3:1 Seal bag and turn to coat; refrigerate for 6-8 hours. 2  Drain and discard marinade. 3  Broil 4-6 in. from the heat or grill over medium heat for 8-10 minutes on each side or until meat reaches desired doneness (for medium-rare, a meat thermometer should read 145\u00b0; medium, 160\u00b0; well-done, 170\u00b0).\\\\n\\\\n\\\",\\\"question\\\":\\\"how to grill tender steaks\\\"}\", \"original_answer\": \"To grill tender steaks, first combine soy sauce, lemon juice, honey, and garlic in a large resealable plastic bag and add the steak. Seal the bag, turn to coat the steak, and refrigerate for 6-8 hours. After this, drain and discard the marinade. Grill the steak over medium heat or broil 4-6 inches from the heat for 8-10 minutes on each side or until the meat reaches your desired level of doneness: 145\u00b0 for medium-rare, 160\u00b0 for medium, and 170\u00b0 for well-done. Finally, thinly slice the steak across the grain.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "5e4fe476efaf17090e6e051530560bf32bee3363976fb6087ea9616309ea2ae0",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ]
+}

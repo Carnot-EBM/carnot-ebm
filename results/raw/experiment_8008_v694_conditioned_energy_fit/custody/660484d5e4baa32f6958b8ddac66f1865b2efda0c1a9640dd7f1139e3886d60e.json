@@ -1,0 +1,120 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.8831114899367094,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:490dda4ad5422672961362cf0845e85c60a0985763c8ec531889eeda185b71e1",
+  "input_tokens": 1366,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1366,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1389
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:f81e4d957b3dc090297f40bf57b77414c627823b5ebf8c7a92231b1619af324f",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886250,
+    "id": "chatcmpl-z6edW56h3PyUcbHuQiZRkMDf7HLjF7Tz",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 542.499,
+      "predicted_n": 23,
+      "predicted_per_second": 42.396391514085735,
+      "predicted_per_token_ms": 23.586913043478262,
+      "prompt_ms": 1202.468,
+      "prompt_n": 1288,
+      "prompt_per_second": 1071.1303751950154,
+      "prompt_per_token_ms": 0.9335931677018634
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1366,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1389
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"714 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":null,\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":null},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Latin American, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:30-0:0\\\",\\\"Monday\\\":\\\"11:30-22:0\\\",\\\"Saturday\\\":\\\"11:30-0:0\\\",\\\"Sunday\\\":\\\"10:0-22:0\\\",\\\"Thursday\\\":\\\"11:30-22:0\\\",\\\"Tuesday\\\":\\\"11:30-22:0\\\",\\\"Wednesday\\\":\\\"11:30-22:0\\\"},\\\"name\\\":\\\"Matador Tapas Bar & Latin Steakhouse\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2009-01-11 15:49:01\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"CLOSED!\\\\n\\\\nLooks like the place shut down in mid-December. A pity, but I'm also not terribly surprised, given the emptiness of the restaurant when I ate there about a month earlier.\\\\n\\\\nRents were probably too high, and with this economy right now...\\\\n\\\\nAny fans that would like to stay in touch with the place for future announcements can email info@sbmatador.com to get on their mailing list.\\\"},{\\\"review_date\\\":\\\"2008-11-21 02:52:07\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"Business lunch, and we had the whole place to ourselves.\\\\nI'm serious, we were the only customers on a weekday from 12-1. After 1 pm a couple other people filtered in, but other than that it was us and the spanish and latin tumbleweeds.\\\\n\\\\nThe calamari small plate was my favorite of the appetizers, with two sauces.\\\\nThe meatballs were good, it's a dish best served to two people and no more.\\\\nThe tortilla...I felt sorry for the vegetarians at the table. It wasn't like any tortilla I had in Spain. \\\\nEverything had the same creamy tomato sauce on it.\\\\n\\\\nThe food I ordered was good, but I have to say this:\\\\n\\\\nAdding manchego and chorizo flavors to non-Spanish food does not turn it into Spanish food. It does not turn it into Latin food either.\\\\n\\\\nI had the mac and cheese with, you guessed it, manchego and chorizo. I uploaded a picture of it. It came with a side salad.  $11. \\\\n\\\\nOthers had assorted sandwiches, soups and salads. The good conversation held the meal, and the service was just fine. \\\\n\\\\nThe toasted and buttered bread was tasty dipped into the large quantities of creamy tomato sauce that seemed to come with everything. But I generally stayed away from it since I was carb-o-rific with my mac and cheese. \\\\n\\\\nI do hope they get more business at dinnertime. \\\\n\\\\nSorry.\\\"},{\\\"review_date\\\":\\\"2008-10-06 15:04:20\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"I may have a new love. No, I'm still with the boyfriend. But a tapas happy hour may be his new competition.\\\\n\\\\nOn a little jaunt down to State Street with my person (that would be my best friend, but...well, if you know Grey's Anatomy, I'm the Meredith to her Christina, though less whiney/bitchy, respectively), we decided to come here for an early dinner. And lo and behold, it was Happy Hour, with three tapas for $15 and $3 sangrias. Um, we had five or six tapas, but still. Three for $15! That's, like, Spain prices.\\\\n\\\\nThe ambiance is cool, sleek, moody, the general for tapas places in urban areas...and the size of their tapas is just right. I would skip the chicken mole skewers, but definitely spring for the bacon-wrapped dates. And personally, I think the red sangria is definitely better than the white, which kind of just tastes like a watered-down muscat.\\\\n\\\\nIf I were in Santa Barbara again? This would definitely get another visit...well, from 5-7 p.m.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Matador Tapas Bar & Latin Steakhouse, a Latin American restaurant located at 714 State St, Santa Barbara, CA, is known for its authentic cuisine. The restaurant provides reservations, outdoor seating, and take-out service, making it a versatile option for various dining needs. The tapas bar is open seven days a week, with extended hours on Fridays and Saturdays. \\n\\nHowever, customer reviews suggest a relatively low footfall during weekdays and concerns about its long-term sustainability have been raised. Patrons particularly appreciated the calamari appetizer, bacon-wrapped dates, and the value-for-money tapas during happy hour. However, some critics argue that the addition of Spanish ingredients does not necessarily translate into Spanish or Latin cuisine. Despite some criticism, the Matador Tapas Bar & Latin Steakhouse holds a solid 4.0-star rating.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "8f721ce129f03504e40accd3f22e218bdeb04d7fca8f3b29f718958b341a71a8",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23
+  ]
+}

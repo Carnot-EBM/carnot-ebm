@@ -1,0 +1,111 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.2583775139646605,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:c801b063eaf68bf3ac953444066e3ba20240977957bc4fdff37cd85b7ee9b8bb",
+  "input_tokens": 602,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 602,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 625
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:f3b07b26224b38546ccde8b563966d50c9e44a492be8ce3068a1586c80a8f046",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886112,
+    "id": "chatcmpl-hlDBlP5GdDlXLMCLqrooS4bID962WJ9F",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.49,
+      "predicted_n": 23,
+      "predicted_per_second": 42.475391973997674,
+      "predicted_per_token_ms": 23.54304347826087,
+      "prompt_ms": 600.743,
+      "prompt_n": 524,
+      "prompt_per_second": 872.253193129175,
+      "prompt_per_token_ms": 1.146456106870229
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 602,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 625
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"DC Young Fly's Sister Dies 4 Months After His Partner Jacky Oh\\nDC Young Fly has suffered another unfortunate loss.\\nJust four months after the passing of his partner and mother of his children, Jacky Oh, DC, shared that his sister has died.\\n\\\"In a matter of a year I lost 3 people,\\\" he wrote in an Oct. 16 Instagram post, \\\"my Kuzzin on last August, my girl in May, and my sister a couple of days ago...u jus gotta stick through the mission knowing that GOD got u and he will grant you the strength\u2026. Remember he parted the Red Sea, not make it disappear.\\\"\\nAccording to E News, the 31-year-old did not reveal further the cause of his sister's passing. Instead, he concludes the post with a note of positivity, stating, \\\"The problems are still there. He jus allowed u to get through it. Make sure Yu stay righteous. Don't hold no grudge because GOD is love, and love will always overcome adversity.\\\"\\nIn late May, Jacky Oh, DC's partner with whom he shares three kids, died after she was found unresponsive in a Miami hotel at 33.\\nThe Wild'N' Out star spoke out after her sudden death, noting that his faith is his strongest pillar.\\n\\\"God is the greatest,\\\" the TV host told TMZ in June. \\\"He's granting me the strength to keep going. I gotta take care of my babies. That's the key to life. Gotta keep going, stay prayed up, and never let the tragedies and the stuff that you going through bring you down.\\\"\", \"original_answer\": \"Comedian DC Young Fly has announced the death of his sister, just four months after his partner, Jacky Oh, passed away. DC Young Fly, 31, revealed the loss in an Instagram post, but did not disclose the cause of death. Earlier this year, Jacky Oh, the mother of his three children, was found unresponsive in a Miami hotel and died at the age of 33.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "d7937f94a3e43ee6ba51a62e87b50a6724bece4cabfd9f61a106fdd2af02c969",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ]
+}

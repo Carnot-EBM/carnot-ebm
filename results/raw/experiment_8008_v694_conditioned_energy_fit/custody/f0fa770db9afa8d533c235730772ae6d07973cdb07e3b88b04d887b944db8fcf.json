@@ -1,0 +1,108 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.4869066219544038,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:834211717e805515518060516336fa79085b3295739fe45fb06714a47655f803",
+  "input_tokens": 954,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 954,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 975
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:6be841017866793bd4a1c22c3cd990c1c37c6f427cf8398fee18c83e40418e3f",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886242,
+    "id": "chatcmpl-7NjLgfT7u66Pc5mh4FNXfRCtY78CKVWp",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 493.281,
+      "predicted_n": 21,
+      "predicted_per_second": 42.57208366022612,
+      "predicted_per_token_ms": 23.48957142857143,
+      "prompt_ms": 879.262,
+      "prompt_n": 876,
+      "prompt_per_second": 996.2900705364273,
+      "prompt_per_token_ms": 1.0037237442922373
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 954,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 975
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"622 N Milpas St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Restaurants, Mexican\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-21:0\\\",\\\"Monday\\\":\\\"11:0-21:0\\\",\\\"Saturday\\\":\\\"11:0-21:0\\\",\\\"Sunday\\\":\\\"11:0-21:0\\\",\\\"Thursday\\\":\\\"11:0-21:0\\\",\\\"Tuesday\\\":\\\"11:0-21:0\\\",\\\"Wednesday\\\":\\\"11:0-21:0\\\"},\\\"name\\\":\\\"La Super-Rica Taqueria\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-18 01:58:57\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"not a super long line, but a 20+minute wait for food which is reasonable\\\\nThe food was pretty good, not exceptional, but I appreciated that evrrything was made there and then with fresh tortillas. The tritip in my tacos was a bit chewy, but tasty enough. Great service\\\"},{\\\"review_date\\\":\\\"2022-01-17 19:38:17\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Literally the best FOOD in Santa Barbara. This place never ever disappoints. Family owned, tortillas de mano. Does not get better.\\\"},{\\\"review_date\\\":\\\"2022-01-17 17:10:08\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"This is a cash only restaurant therefore you know everything is amazing! The best thing about this spot is that the tortillas are cooked fresh and all your items are cooked when it's ordered. The line can get long but it definitely did not take longer than 40 mins to stand in line and then get or food. Definitely get an order of the adobado, quesadilla w/ chorizo, guacamole, and queso fundido w/ bacon. They all come with 2-3 tortillas so there's more than enough to eat. Skip the tri-tip with onions and the super rica especial. There's also a specials menu for the day and next time I do want to try the pozole.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"La Super-Rica Taqueria is a popular Mexican restaurant located at 622 N Milpas St, Santa Barbara, CA. It is open every day of the week from 11:00 AM to 9:00 PM. The restaurant offers street and lot parking, but does not provide WiFi or valet services. It is suitable for groups and features an outdoor seating area. The ambiance of the restaurant is casual and classy, making it a comfortable dining environment. The restaurant has an average rating of 4 stars. Customers appreciate the freshly made tortillas and the quality of the food, describing it as \\\"the best food in Santa Barbara\\\". However, some customers have mentioned a wait time of up to 20 minutes and the restaurant only accepts cash. Popular dishes include the adobado, quesadilla with chorizo, guacamole, and queso fundido with bacon.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "b61dd84555cc457519773275a85351c806e1d07195b5d8f19f156a389d7b1ace",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]
+}

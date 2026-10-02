@@ -1,0 +1,105 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.1879058330086991,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:3c05f6c51ac19f0461f3af9b83a4f3585c7482ec44c7489bc495ed52aed6a18e",
+  "input_tokens": 544,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 544,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 567
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:ffc8652398db4f3a404f4cd45dfdaf08a9493643f009e2131a09dfbd244c5ada",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885930,
+    "id": "chatcmpl-K17ceBuBQgMyvxUnfy4pFo6wsXID8VaJ",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 539.957,
+      "predicted_n": 23,
+      "predicted_per_second": 42.59598449506164,
+      "predicted_per_token_ms": 23.476391304347825,
+      "prompt_ms": 525.651,
+      "prompt_n": 466,
+      "prompt_per_second": 886.5197631127878,
+      "prompt_per_token_ms": 1.1280064377682402
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 544,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 567
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Hi, I'm a reminder scheduled with Ohdontforget! It's simple. You can send a message now or schedule it for a later date, to one person or many at once. You can have it repeat every week, month or year - or every second Tuesday or third day of the month if you\u2019d like.\\\\n\\\\npassage 2:Tap \u201cAdd\u201d at the bottom of the SMS Scheduler screen to create a new automatic text message. Tap \u201cSchedule\u201d if you're using Auto SMS or, if you're using Tasker, tap \u201cPhone\u201d and then \u201cSend SMS.\u201d You will go to a page where you can enter the message, cell number and the time you would like to send the message.\\\\n\\\\npassage 3:Tap the \u201cphone number\u201d text field, and enter the number. Tap the \u201cmessage date\u201d and enter the month, day and time to send the message. 4. Tap \u201cOK\u201d or press the \u201cBack\u201d button on your smartphone to save the details. The SMS message will be sent using a background service, so you won't need to keep the program running.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to automatically send out text message to alert you of an event that you signed up for\\\"}\", \"original_answer\": \"You can automatically send out a text message to alert you of an event you signed up for by using services like Ohdontforget or apps like Auto SMS or Tasker. With Ohdontforget, you can schedule a reminder for a later date and even have it repeat at regular intervals. For Auto SMS or Tasker, you'll need to tap \u201cAdd\u201d at the bottom of the SMS Scheduler screen, then input the message, cell number and the time to send the message. With these services, the SMS message will be sent using a background service, so you don't need to keep the program running.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "d9bacdf81130a01428c714c43b03faeb523e329a59fca5a8d4575ef60b7ebdf9",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ]
+}

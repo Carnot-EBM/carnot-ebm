@@ -1,0 +1,105 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.5344333329703659,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:10598205fa6d01ca71c3aa69dba30cb3731acd1a4f2d07078a5dc812dd67fd55",
+  "input_tokens": 940,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 940,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 963
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:90fb1d93dfd5c49b176d17cbdf41a6a15f7af9faf0afe5b55825cee5df811e82",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886066,
+    "id": "chatcmpl-yOasSYmP9D2SRJ71PMA8bWWyqyuePSl5",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.126,
+      "predicted_n": 23,
+      "predicted_per_second": 42.503963956638565,
+      "predicted_per_token_ms": 23.527217391304347,
+      "prompt_ms": 876.301,
+      "prompt_n": 862,
+      "prompt_per_second": 983.6802651143843,
+      "prompt_per_token_ms": 1.0165904872389793
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 940,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 963
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"1940 Cliff Dr, Ste B-13\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":null,\\\"classy\\\":null,\\\"divey\\\":null,\\\"hipster\\\":false,\\\"intimate\\\":null,\\\"romantic\\\":null,\\\"touristy\\\":false,\\\"trendy\\\":null,\\\"upscale\\\":null},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":3.0,\\\"categories\\\":\\\"Restaurants, Sandwiches, Salad, Fast Food\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"9:0-22:30\\\",\\\"Monday\\\":\\\"9:0-22:30\\\",\\\"Saturday\\\":\\\"9:0-22:30\\\",\\\"Sunday\\\":\\\"11:0-22:0\\\",\\\"Thursday\\\":\\\"9:0-22:30\\\",\\\"Tuesday\\\":\\\"9:0-22:30\\\",\\\"Wednesday\\\":\\\"9:0-22:30\\\"},\\\"name\\\":\\\"Subway\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2020-05-11 02:07:36\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"My husband and I came in earlier today for lunch after I ordered my sandwich my husband ordered a club and didn't think anything about it while the girl made it because he assumed she knew what went on a club.  Once we got in the car I looked at the receipt and realized she made him a turkey sandwich so we went back in to ask her to add the other meat and to refund us and recharge the correct price since a club is a little more. She was very rude about it and told us she wasn't going to do anything about and proceeded to call us liars and say he asked for a turkey sub. I told her she didn't have to be so rude so she told me to \\\\\\\"get the f**k out b***h\\\\\\\" and if I had a problem with it I could \\\\\\\"call her f***ing manager\\\\\\\". Also she proceeded to cuss us as we walked out of the store. It was quite unacceptable and inappropriate of an employee to be this unprofessional and aggressive.\\\"},{\\\"review_date\\\":\\\"2020-03-02 20:05:55\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"Small store, personnel not very well organized, store is only moderately clean. \\\\nStaff is friendly sometimes, other times they will only barely recognize you.\\\"},{\\\"review_date\\\":\\\"2019-07-10 01:49:07\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Nice and clean location. Toppings look fresh and well stocked. Joaquin and Odalis are always helpful and friendly.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Subway, located at 1940 Cliff Dr, Ste B-13 in Santa Barbara, CA, is a fast food restaurant offering sandwiches and salads. It is open every day of the week. The restaurant provides outdoor seating and is good for groups. It does not offer WiFi or reservations. The restaurant has a parking lot but does not offer valet, street, or garage parking. Its overall business rating stands at 3.0 stars. The reviews are mixed, with one customer praising the clean location and fresh toppings, and complimenting the friendly staff. However, other customers have had negative experiences, citing instances of rudeness and unprofessionalism from the staff. Some customers also mentioned that the store's cleanliness and staff organization could be improved.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "da2aeb0b96edff6345ca956b45750df45fc5553a5ba78b7582d53ddad3cd8509",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ]
+}

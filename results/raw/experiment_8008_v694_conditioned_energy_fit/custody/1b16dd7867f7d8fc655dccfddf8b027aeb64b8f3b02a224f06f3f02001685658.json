@@ -1,0 +1,125 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.5907960470067337,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:c972d86211321405cc0da2b77f511f7c344ccf4745a6c14ba7d59a5606d3478e",
+  "input_tokens": 970,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 970,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 993
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:266d5a1cf72340ab33bba7820ab9f145a81281573fd36fc1acab1e7db3855486",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886147,
+    "id": "chatcmpl-1T865O8Ub92E4yl7q4tupB2fEDCCfQAQ",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.844,
+      "predicted_n": 23,
+      "predicted_per_second": 42.44764175666796,
+      "predicted_per_token_ms": 23.558434782608696,
+      "prompt_ms": 884.058,
+      "prompt_n": 892,
+      "prompt_per_second": 1008.9835734759483,
+      "prompt_per_token_ms": 0.9910964125560539
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 970,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 993
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Football: Big Noon Kickoff heads to Columbus Saturday\\nBig Noon Kickoff will come to Columbus for the first time this season when No. 4 Ohio State takes on Maryland Saturday. Credit: Zachary Rilley | Lantern File Photo\\nFOX\u2019s Big Noon Kickoff will be heading to Columbus for the matchup of two of the final four undefeated teams in the Big Ten: No. 4 Ohio State and Maryland.\\nBig Noon Kickoff, a pregame college football TV show headlining big matchups, came to Columbus three times last season for matchups against Iowa, Indiana and Michigan. Ohio State was also featured on Big Noon Kickoff on the road at Penn State. Ohio State has headlined the show 14 times \u2014 the most of any school \u2014 and won 11 times.\\nBig Noon Kickoff started hosting its show from college campuses in 2019. This will be the ninth time that Ohio State has hosted the broadcast. Ohio State is rumored to be hosting the show again Oct. 21 against Penn State.\\nThe stage for the show will be set up outside of Ohio Stadium and will start at 10 a.m. until the kickoff at noon. Fans are encouraged to get there at 9 a.m., before the show starts, to get closer to the stage. The show will be set up in front of the RPAC and across from Gate 32.\\nThe event involves free food, T-shirts, music and other prizes for fans. Oftentimes, celebrities also show up. Fans are encouraged to create their own sign supporting the Buckeyes, as there is a prize for fans with the best signs.\\nThe pregame show is hosted by Rob Stone and features Matt Leinert, Brady Quinn, Mark Ingram and former Ohio State head coach Urban Meyer. Stone has also hosted pregame shows for the World Cup. Leinert, Quinn and Ingram are former college football stars. Meyer won a national championship as head coach for Ohio State in 2014 and won two for Florida in 2006 and 2008.\\nFOX Sports covers the Big Ten, Big 12 and Pac-12. This will be the first time this season that the FOX Sports crew sets up their show at a Big Ten school.\\nThis game will be Ohio State\u2019s 111th Homecoming game, where the Buckeyes are 75-19-5.\\nDespite being undefeated, Maryland is still unranked and coach Ryan Day is 32-0 against unranked teams. This is the first time that both the Terrapins and Buckeyes are undefeated, playing against each other.\\nIn 2022, Ohio State defeated Maryland on the road in a tightly contested 43-30 battle. The Buckeyes are 8-0 against Maryland all time and will look to make it nine straight on Saturday.\", \"original_answer\": \"FOX's Big Noon Kickoff is heading to Columbus for the first time this season for the match between two of the final four undefeated teams in the Big Ten: No. 4 Ohio State and Maryland. This will be the ninth time Ohio State has hosted the broadcast. The pregame show will be hosted outside Ohio Stadium from 10 a.m. until the noon kickoff, with fans encouraged to arrive from 9 a.m. The event features free food, T-shirts, music, and other prizes. This will be the first time this season that the FOX Sports crew has set up their show at a Big Ten school. It will also be Ohio State\u2019s 111th Homecoming game.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "d63e1b1b0c892e175206657a1af29affeb39ddb340496df655a33c574182fc7e",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28
+  ]
+}

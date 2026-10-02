@@ -1,0 +1,108 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.5762386149726808,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:b38e89dec24374758d49017a6858cf5518dfbe8adde438f7b1237d934ffe7b0f",
+  "input_tokens": 644,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 644,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 667
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:f9b360a8fd9774f32ea8f80533467f633112bb948779584f0820397cf58bafb5",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885831,
+    "id": "chatcmpl-9KgYW8Yp98z6QED0KR12x8cbJnztiz2S",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 537.413,
+      "predicted_n": 23,
+      "predicted_per_second": 42.797624917893685,
+      "predicted_per_token_ms": 23.365782608695653,
+      "prompt_ms": 1011.923,
+      "prompt_n": 644,
+      "prompt_per_second": 636.412059020301,
+      "prompt_per_token_ms": 1.57130900621118
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 644,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 667
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Massachusetts Based Insurance Company Announces Significant Layoffs\\nIn a move that has sent shockwaves through the insurance industry, Massachusetts based insurance behemoth, Liberty Mutual, has disclosed its plans to lay off 870 employees across its various operations.\\nAs of 2022, Liberty Mutual Group proudly positioned itself as the world's fifth largest property and casualty insurer, measuring by gross written premium. Furthermore, its stature in the corporate world was underscored by its 71st rank on the Fortune 100 list, which ranks the nation's largest corporations based on revenue. However, recent financial results have painted a less rosy picture for the insurance titan. It reported a substantial net loss of $585 million in the second quarter of 2023, which marks a stark increase from the $343 million net loss reported during the corresponding quarter in 2022.\\nAttributing to these financial setbacks, the company felt compelled to recalibrate its workforce. A spokesperson for Liberty Mutual stated, \\\"Faced with challenging circumstances, we've made the tough call to eliminate around 850 positions, with the majority being within the US. These reductions span various functions and are set to be enforced by year's end. Those affected by this decision will receive severance packages, access to outplacement services, and are also encouraged to explore other opportunities within the company.\\\"\\nSpecific details regarding the number of employees to be let go from their Massachusetts headquarters remain undisclosed. Alarmingly, this round of staff reductions isn't an isolated incident. Earlier in August, Liberty Mutual had already trimmed its workforce by 370 employees spread across the US.\\nThe looming layoffs raise pertinent questions about the broader challenges faced by the insurance sector and the measures industry leaders are willing to adopt to navigate these uncertain times.\", \"original_answer\": \"Liberty Mutual, a Massachusetts-based insurance company, plans to lay off 870 employees across its operations due to financial setbacks. The company reported a net loss of $585 million in Q2 2023, a significant increase from the previous year. Despite ranking 71st on the Fortune 100 list, recent financial results have led to workforce recalibration. The company had already reduced its workforce by 370 in August. The layoffs raise concerns about challenges in the insurance sector.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "calibration",
+  "source_cluster_id": "8dbdb7eb69d3a4aeea71bfc60b168738592dd3df803872a750ab095a7de8ac32",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]
+}

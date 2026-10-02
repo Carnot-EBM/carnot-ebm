@@ -1,0 +1,102 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.3279814400011674,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:eeb1b649e99470adb8af401665914509dfdf9902399953667f337931cf84782f",
+  "input_tokens": 806,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 806,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 827
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:b33c3e69ea99dee064cc255e28b36f976637fdee80354c521fd862ebe9ecd175",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886364,
+    "id": "chatcmpl-HWarBwtNnTcHMPzIrxKPhMOJKwRaK7OX",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 493.398,
+      "predicted_n": 21,
+      "predicted_per_second": 42.561988496102536,
+      "predicted_per_token_ms": 23.49514285714286,
+      "prompt_ms": 713.805,
+      "prompt_n": 728,
+      "prompt_per_second": 1019.8863835361199,
+      "prompt_per_token_ms": 0.9805013736263736
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 806,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 827
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"38 W Victoria St, Shop 113\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":true,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":null},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Wine Bars, Beer, Wine & Spirits, Wineries, Arts & Entertainment, Food, Nightlife, Bars, Beer Bar\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-22:0\\\",\\\"Monday\\\":\\\"11:0-21:0\\\",\\\"Saturday\\\":\\\"11:0-22:0\\\",\\\"Sunday\\\":\\\"11:0-21:0\\\",\\\"Thursday\\\":\\\"11:0-22:0\\\",\\\"Tuesday\\\":\\\"11:0-21:0\\\",\\\"Wednesday\\\":\\\"11:0-18:0\\\"},\\\"name\\\":\\\"Wine + Beer\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2020-06-28 06:19:43\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I just had the best 10 minutes of the past two weeks at Beer and Wine.\\\\n\\\\nBen, who helped me select wines from 3 continents was the most personable, polite and professional person I have met in a long time.\\\\n\\\\nHe really knows his stuff!\\\"},{\\\"review_date\\\":\\\"2020-01-27 15:55:18\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"I would skip this place - limited selection, careless service and pricey.  Much better options to grab a beer or glass of wine all over Santa Barbara.  It is unfortunate because the Public Market is a great, fun place for lunch and dinner.\\\"},{\\\"review_date\\\":\\\"2019-10-04 20:53:47\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Great place to have a drink with a meal from the public market.  Nice selection of beers and wine on tap.  Had a couple free samples to help us decide.  Great local wines, and a not so local sour!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Wine + Beer is a local business located at 38 W Victoria St, Shop 113, Santa Barbara, CA. It operates under various categories, including Wine Bars, Beer, Wine & Spirits, Wineries, Arts & Entertainment, Food, Nightlife, Bars, and Beer Bar. The establishment is open every day, with varying operating hours. The business offers parking facilities, including garage and street parking, and allows takeout. However, it does not offer services such as valet parking, Wi-Fi, music, or reservations. The business has an average rating of 4.5 stars. One customer praised the excellent service and knowledgeable staff. However, another review mentioned a limited selection and high prices. Another customer complimented the establishment's nice selection of beers and wines.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "7e023d9e5e9d2c055f666c266ef9971364161f6014954e0ee83ceb7f90bca7ef",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ]
+}

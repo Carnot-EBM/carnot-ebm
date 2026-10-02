@@ -1,0 +1,113 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.5004247699398547,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:a1c9d35ddd633efafaac4453b6cdb6dbc156f04aefc304206ec852d6418f1f4a",
+  "input_tokens": 975,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 975,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 996
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:6e98f8b9209941c37ea9d3b5a022871e562caa51e84b8d2275ccd96da70af449",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886376,
+    "id": "chatcmpl-SGiLjh5BraLXz814g6eoCdQVGn6lbUb1",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 493.205,
+      "predicted_n": 21,
+      "predicted_per_second": 42.57864376881824,
+      "predicted_per_token_ms": 23.48595238095238,
+      "prompt_ms": 884.61,
+      "prompt_n": 897,
+      "prompt_per_second": 1014.0061722114831,
+      "prompt_per_token_ms": 0.9861872909698997
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 975,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 996
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"1 Paradise Rd\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"American (Traditional), Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"9:0-19:0\\\",\\\"Monday\\\":\\\"9:0-18:0\\\",\\\"Saturday\\\":\\\"9:0-19:0\\\",\\\"Sunday\\\":\\\"9:0-18:0\\\",\\\"Thursday\\\":\\\"9:0-18:0\\\",\\\"Tuesday\\\":\\\"9:0-18:0\\\",\\\"Wednesday\\\":\\\"9:0-18:0\\\"},\\\"name\\\":\\\"Paradise Store & Grill\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2016-04-03 23:33:30\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Oh no!  They're closed for good!  Must have just happened.  A shame. This was a great place to stop after a hike in the Paradise Road area.\\\"},{\\\"review_date\\\":\\\"2016-03-30 19:02:09\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Neat, historic general store...and so much more!  Rustic little stop, seating on front deck, or out back nestled in the trees.  Both have live music usually!  Not a rock band, but one guy, one guitar, one voice.  So enjoyable for 20 minutes, or the entire afternoon!\\\\n\\\\nTwo words: Tritip Chili.  So good.  Even if all you do is stop for a couple of containers of the stuff (don't forget onions and cheese) and take them home.  You won't regret it.  Used to do that on the way home EVERY camping trip we made to Rancho Oso.  But don't be fooled, this place may have the best burger in SB County.  EVERYTHING on the menu is fantastic...and even a little better due to ambiance.\\\\n\\\\nDon't sell yourself short.  Stop here at the Paradise Store.\\\"},{\\\"review_date\\\":\\\"2015-12-01 21:08:21\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"Nice people. Did not try the food.the rating is for the 10$ they charged for a very small box of firewood.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Paradise Store & Grill is a traditional American restaurant located at 1 Paradise Rd, Santa Barbara, CA. It operates from 9:00 to 18:00 on weekdays and until 19:00 on weekends. The restaurant doesn't offer WiFi or take reservations, but it is good for groups and offers takeout options. It also provides outdoor seating but doesn't have a specific ambiance. Parking is available in a lot, but there's no street parking, garage, or valet service. The restaurant has a 4-star business rating. \\n\\nReviews highlight its historic charm, live music, and excellent menu, with a particular mention of the Tri-tip Chili and burgers. However, one review mentioned dissatisfaction with the price charged for a small box of firewood. One reviewer regretted its sudden closure, indicating it was a preferred stop after hikes in the area.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "e874f12a8300066ec9ff349c61632aedc8c196a59169c10bd9a14f754e97beaa",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+  ]
+}

@@ -1,0 +1,100 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.0613864640472457,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:c10de33115648ed8b6e86cca36bf1cbf6cdbc1197638ee53c29467ba8d2b4a14",
+  "input_tokens": 358,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 358,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 381
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:c3459980eeb933706cb6c66e8859652f1ea8516b28459486062772df80861742",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886306,
+    "id": "chatcmpl-e4VviCnc1sYTYRk7dx4ffPo97d95Ba8k",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.393,
+      "predicted_n": 23,
+      "predicted_per_second": 42.56161719341294,
+      "predicted_per_token_ms": 23.49534782608696,
+      "prompt_ms": 389.79,
+      "prompt_n": 280,
+      "prompt_per_second": 718.335513994715,
+      "prompt_per_token_ms": 1.392107142857143
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 358,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 381
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:The Founding Fathers created the Supreme Court in Article III of the Constitution of the United States. The most influential role of the Court, however, was defined later through the appeal process, in cases involving the laws of state and local legislatures and Congress.\\\\n\\\\npassage 2:In War and In Peace: The Supreme Court and the Civil War. Marking the 150th anniversary of the Civil War, this exhibition looks at the Supreme Court during this volatile period in American history and the conflict's impact on the institution.\\\\n\\\\npassage 3:Dred Scott Decision summary: Dred Scott was a slave who sought his freedom through the American legal system. The 1857 decision by the United States Supreme Court in the Dred Scott case denied his plea, determining that no Negro, the term then used to describe anyone with African blood, was or could ever be a citizen.\\\\n\\\\n\\\",\\\"question\\\":\\\"role of the supreme court during the civil war\\\"}\", \"original_answer\": \"Unable to answer based on given passages.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "1ebd874e8c7ee537e4287e850897ae70b9a835f3c6e3a0fac4fc839bc8407f9e",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3
+  ]
+}

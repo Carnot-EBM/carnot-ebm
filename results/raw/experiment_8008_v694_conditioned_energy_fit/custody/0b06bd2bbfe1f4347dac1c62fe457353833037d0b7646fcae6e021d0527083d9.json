@@ -1,0 +1,102 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.3711995700141415,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:f2c9972526f58a90177e40d685fed5df7fd958d90ac207c0231cfafb9a4912b6",
+  "input_tokens": 784,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 784,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 807
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:a52ca302dec8b1ae9086eaebb6cf5b8cd5c37a1e0126349e03829a047a000221",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885924,
+    "id": "chatcmpl-HZIQSigMvmT5a1xRXMAEZLSlKwcVzgo4",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.375,
+      "predicted_n": 23,
+      "predicted_per_second": 42.56303492944714,
+      "predicted_per_token_ms": 23.494565217391305,
+      "prompt_ms": 693.247,
+      "prompt_n": 706,
+      "prompt_per_second": 1018.3960406608322,
+      "prompt_per_token_ms": 0.9819362606232294
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 784,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 807
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"6543 Pardall Rd\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":null,\\\"classy\\\":null,\\\"divey\\\":true,\\\"hipster\\\":null,\\\"intimate\\\":null,\\\"romantic\\\":null,\\\"touristy\\\":null,\\\"trendy\\\":null,\\\"upscale\\\":null},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":null,\\\"street\\\":null,\\\"valet\\\":false,\\\"validated\\\":null},\\\"Music\\\":true,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":3.0,\\\"categories\\\":\\\"Bars, Nightlife\\\",\\\"city\\\":\\\"Isla Vista\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"18:0-0:0\\\",\\\"Monday\\\":\\\"19:0-0:0\\\",\\\"Saturday\\\":\\\"16:0-0:0\\\",\\\"Thursday\\\":\\\"18:0-0:0\\\",\\\"Tuesday\\\":\\\"18:0-0:0\\\",\\\"Wednesday\\\":\\\"18:0-0:0\\\"},\\\"name\\\":\\\"The Study Hall\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-04-18 20:43:05\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"The owner/manager was drunk on the job and kept trying to touch me so gross and was interrupting me and my friend in conversation. Also the drinks were horrible I will not be back\\\"},{\\\"review_date\\\":\\\"2020-08-21 17:02:46\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Why is this bar still open during the COVID-19 pandemic when there is a statewide order for bars to remain closed. There are always creepy men sitting outside in the new patio area on Pardall staring at girls and catcalling. This place shows the worst side of Isla Vista.\\\"},{\\\"review_date\\\":\\\"2020-02-20 07:52:18\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Horrible scary place. Multiple friends I know have been drugged here and we think it was the bartenders. Please stay away for your safety and tell friends to avoid here.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"\\\"The Study Hall\\\" is a local business located at 6543 Pardall Rd, Isla Vista, California, categorized under Bars and Nightlife. It operates from 6pm to midnight during weekdays, and from 4pm to midnight on Saturdays. The bar offers free Wi-Fi and has a divey ambiance. It caters to groups but does not offer outdoor seating or restaurant reservations. The bar has an average business rating of 3 stars. However, recent customer reviews are quite negative. Customers have raised serious concerns about the behavior of the staff, including allegations of inappropriate conduct. There have been complaints about the quality of the drinks, and concerns about the bar operating during the statewide closure order due to the COVID-19 pandemic. Customers have also reported feeling unsafe due to allegations of drugging incidents at the bar.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "648fa296fbc72bffcc5505025cd7540f281ad0c45a577ff268138e55ec54f725",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ]
+}

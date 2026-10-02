@@ -1,0 +1,103 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.0533624360105023,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:81182154887a795356ecabfd533b025f6c5ac85afd678e07079b2546678eecfb",
+  "input_tokens": 440,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 440,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 461
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:3d3fcf53e2a6de30c73a79006d9292daee959196f4bd63fe97215ccb97591723",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"unsupported_probability\": 0.0,\n\"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886119,
+    "id": "chatcmpl-vTeCYORoqO46sfYy0r6Ft4sxaeBWxGH8",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 492.12,
+      "predicted_n": 21,
+      "predicted_per_second": 42.6725188978298,
+      "predicted_per_token_ms": 23.434285714285714,
+      "prompt_ms": 445.034,
+      "prompt_n": 362,
+      "prompt_per_second": 813.4209970474166,
+      "prompt_per_token_ms": 1.2293756906077349
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 440,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 461
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Magic mouthwash is a prescription mixture typically used to treat mouth sores caused by cancer treatment. However, a modified homemade version can provide pain relief for tongue and other mouth ulcers.\\\\n\\\\npassage 2:Salt Water Mouth Rinse. Rinsing your mouth several times daily with a simple salt water solution helps keep the area clean and might provide temporary pain relief caused by tongue ulcers. Mix one-half teaspoon of salt in a cup of warm water. If the solution stings too much, dilute it with more warm water.\\\\n\\\\npassage 3:Strawberries and oranges are also traditional forms of vitamin C that can be safely consumed. Try placing a wet tea bag on the spot of the tongue where you feel the scorched and burning sensation. The tea bag will help absorb the pain and is an effective home remedy.\\\\n\\\\n\\\",\\\"question\\\":\\\"tongue sores remedy\\\"}\", \"original_answer\": \"Remedies for tongue sores include a homemade version of magic mouthwash, which can provide pain relief for tongue and other mouth ulcers. Another remedy is a salt water rinse, which involves rinsing your mouth several times daily with a solution of half a teaspoon of salt in a cup of warm water. This can help keep the area clean and might provide temporary pain relief. A wet tea bag placed on the sore spot on the tongue can also help absorb the pain.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "8930f12e7f3380d8e8cad7252da26e3beeeeedc5687fb42e27f1833cf4e09103",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ]
+}

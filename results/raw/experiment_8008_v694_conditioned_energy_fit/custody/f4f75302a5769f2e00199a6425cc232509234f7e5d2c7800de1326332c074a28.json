@@ -1,0 +1,104 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.1224457969656214,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:de81e041cbf0aa0f91a34d14d17e2d105eeef4530f4ea3e6dc2e13f22e2d7ae0",
+  "input_tokens": 430,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 1,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 430,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 454
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:29792ff42357ccb731eadc5bba3ac1eccfbd5e168a1f09acfb218b5cc58a3095",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 1\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885848,
+    "id": "chatcmpl-VKdp3HTc1WRDuglALfRQSB2AtLLGkYZq",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 557.477,
+      "predicted_n": 24,
+      "predicted_per_second": 43.051103453595395,
+      "predicted_per_token_ms": 23.22820833333333,
+      "prompt_ms": 431.362,
+      "prompt_n": 352,
+      "prompt_per_second": 816.019955397091,
+      "prompt_per_token_ms": 1.2254602272727273
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 430,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 454
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Bartleson led the health department\u2019s investigation of Jack In The Box during the epidemic, and in the process, personally reviewed many of the documents that also appear in the court files.\\\\n\\\\npassage 2:1993: Jack in the Box hamburgers. Four people in Washington and California died from eating contaminated meat from Jack in the Box. Hundreds of other customers also fell ill. This caused a national panic, nearly resulting in the end for the fast-food chain. The outbreak led to stronger government regulations of food handling. 2006: Dole baby spinach\\\\n\\\\npassage 3:The bug was later traced to undercooked hamburger served at Jack in the Box restaurants. This outbreak thrust foodborne illness onto the national stage as a real and present threat, sparking a sea change in the way Americans and the government treat this issue. To commemorate the 20th anniversary of the 1993 Jack in the Box outbreak, Food Safety News has produced a series of retrospective stories chronicling the outbreak itself and how food safety in America has changed since that time.\\\\n\\\\n\\\",\\\"question\\\":\\\"what was the foodborne illness for jack in the box\\\"}\", \"original_answer\": \"The foodborne illness associated with Jack in the Box was traced back to eating contaminated meat from the restaurant, specifically undercooked hamburgers.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "calibration",
+  "source_cluster_id": "52021e77179bbaaaba96b7fdf82b2b5f468ae9053c0efea48b6d1642ee7395a9",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ]
+}

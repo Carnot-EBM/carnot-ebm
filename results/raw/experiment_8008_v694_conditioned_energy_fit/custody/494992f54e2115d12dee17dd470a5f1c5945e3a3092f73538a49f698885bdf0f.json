@@ -1,0 +1,103 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.2962880550185218,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:ad0a6376094110ad474b79ddb99ee819f045259816ee1c7c52d37efe474eec55",
+  "input_tokens": 706,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 706,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 729
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:c63b61fcfb72da8e054975d0f8a9e6d57629c87a66562d921ffe85e70a914689",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885876,
+    "id": "chatcmpl-lPX0OdPLlxiRn6tEqBRGNJ6YJt50moEs",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 534.601,
+      "predicted_n": 23,
+      "predicted_per_second": 43.02274032409217,
+      "predicted_per_token_ms": 23.243521739130436,
+      "prompt_ms": 623.085,
+      "prompt_n": 628,
+      "prompt_per_second": 1007.888169350891,
+      "prompt_per_token_ms": 0.992173566878981
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 706,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 729
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Recent estimates on materials used to construct chain link fence is as follows: Plain silver galvanized steel 3 foot high fence is $75 to $100 per 50 foot roll. At six feet high the same gauge fence is $150 to $200 per 50 foot roll, and at 12 feet it is $350 to $400 for a 50 foot roll. Vinyl chain link at 3 foot high goes for $150 to $200 per 50 foot roll , The same type at 6 feet high will fetch around $350 per roll and 12 foot high fences go for $600 to $700. Installation will work out to be around $250 for half day and double that for the full day.\\\\n\\\\npassage 2:Chain-link fence prices change when the cost of steel fluctuates. Generally, materials for a typical residential chain link fence (2 mesh, 9 or 11 gauge) might cost $3-$6 a linear foot for 4' high or $8-$15 a foot for 6' high, depending on whether it's galvanized or vinyl coated. A gate can add $100-$350 or more, depending on size (walking or driving width), gauge and mesh.\\\\n\\\\npassage 3:The cost for a wooden fence can vary from $3 -$9 a foot for do-it-yourself installation of a ranch-style rail fence, to $10 -$30 or more a foot for professional installation of a basic 6' wood privacy fence. For details, see How Much Does a Wood Fence Cost.\\\\n\\\\n\\\",\\\"question\\\":\\\"how much does a chain link fence cost\\\"}\", \"original_answer\": \"The cost of a chain link fence can vary based on the height of the fence, the type of material used, and whether it is installed professionally or as a do-it-yourself project. Plain silver galvanized steel chain link fences can range from $75 to $400 per 50 foot roll depending on the height, while vinyl chain link can cost between $150 and $700 for the same length. Installation costs could be around $250 for half a day and double that for a full day. Prices may also change with the cost of steel. For a typical residential chain link fence, the cost might range from $3-$6 a linear foot for 4' high or $8-$15 a foot for 6' high. Adding a gate can increase the price by $100-$350 or more.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "calibration",
+  "source_cluster_id": "3e8e479bc1ea59d227e04e579ca70fef7a087fdb05a74408a3fb61450d467c26",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ]
+}

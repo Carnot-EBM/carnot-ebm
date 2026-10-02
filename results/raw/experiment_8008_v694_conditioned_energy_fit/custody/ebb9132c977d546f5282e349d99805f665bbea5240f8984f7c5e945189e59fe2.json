@@ -1,0 +1,104 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.1794712209375575,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:f5c1d4d6c658c298dfd7007b3276e9b11ce86d9429e47890c054313c9f9d1d8f",
+  "input_tokens": 544,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 544,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 567
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:a60327a79be8ada4743d69d54fb02c109316c9120776681e9a1c23c498124540",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885903,
+    "id": "chatcmpl-A4RNe5uZ2vST4GKaUHcenUvZRClEWNqG",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 537.863,
+      "predicted_n": 23,
+      "predicted_per_second": 42.76181852999741,
+      "predicted_per_token_ms": 23.38534782608696,
+      "prompt_ms": 522.27,
+      "prompt_n": 466,
+      "prompt_per_second": 892.2587933444387,
+      "prompt_per_token_ms": 1.1207510729613734
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 544,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 567
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Set a 4-foot level on the floor next to the wall to see if the floor is level. If not, move the level across the floor to find its lowest point. At that point, tack a scrap piece of baseboard to the wall with a nail.\\\\n\\\\npassage 2:Slide the compass along the floor over the board's length, keeping the points aligned vertically. With a circular saw set for a 2- to 5-degree bevel, cut alongside the scribe line so the face of the cut will be on the side toward the wall. Trim the beveled edge down to the line with a block plane. When the scribed baseboard is put back on the wall, its top edge should line up with the chalk line snapped in Step 3.\\\\n\\\\npassage 3:Here's a cheat sheet to help you miter cut your baseboards based on the corner type you need. The most common baseboard corner is an inside 90 degree corner, and the easiest way to install baseboards to fit this corner is to cut two pieces of baseboard at the edges and at an angle so they fit flush when installed. This is called a miter joint.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to cut floor moulding\\\"}\", \"original_answer\": \"Based on the passages, to cut floor moulding, you should first check if the floor is level. When cutting, use a circular saw set for a 2-to 5-degree bevel and cut alongside the scribe line so the face of the cut will be on the side toward the wall. You can trim the beveled edge down to the line with a block plane. If you're dealing with a common inside 90 degree corner, you can cut two pieces of baseboard at the edges and at an angle so they fit flush when installed. This is referred to as a miter joint.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "calibration",
+  "source_cluster_id": "093a00aef2526b61f5e0f01dcfac30b53219df46913b8a9b91cca710f3c1c7dc",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ]
+}

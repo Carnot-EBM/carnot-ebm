@@ -1,0 +1,106 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.3899353930028155,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:735877a3ce1064680b0ff0bf2d54c081c89b82aba0971e77f7c0a19440680c9e",
+  "input_tokens": 836,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 836,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 859
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:97902f0fcc4e13f82bf6f601c290993a4af518ffdb9585898a1e19b76881df64",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885902,
+    "id": "chatcmpl-p6TD1UanjMCo9gjWcHLSrnVi9qvXauPU",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 538.104,
+      "predicted_n": 23,
+      "predicted_per_second": 42.742666845070836,
+      "predicted_per_token_ms": 23.395826086956525,
+      "prompt_ms": 720.551,
+      "prompt_n": 758,
+      "prompt_per_second": 1051.9727264274145,
+      "prompt_per_token_ms": 0.950594986807388
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 836,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 859
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"10 E Carrillo St\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":false,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":null},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"American (New), Restaurants, Breakfast & Brunch\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":null,\\\"name\\\":\\\"Tuttini\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2010-05-23 02:12:49\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"I haven't eaten here in awhile and looking at the reviews, I'll need to try this place again.\\\\n\\\\nOtherwise I like their breakfast menu, but everything else I don't find appetizing.\\\"},{\\\"review_date\\\":\\\"2010-02-15 20:38:30\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Another great pastry and cafe store leaving SB.  Stop by this week, Tuttini's last day is 2/21.  Sad to see them go.\\\"},{\\\"review_date\\\":\\\"2010-02-15 00:54:45\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"It was a nice quaint bakery/cafe with decent breakfast foods.  Nothing earth-shatteringly unique, but the food is done competently and taste home-made and not mass market.\\\\n\\\\nbaked apple - a backed apple wrapped with filo crust and placed upon a bed of caramel and topped with whipped cream.  very good.\\\\n\\\\nomelet with cheese and ham/bacon.  Also very good, not spectacular but a well execute omelet\\\\n\\\\noatmeal - again very standard with currants/raisins and sliced bananas.  I think it might have included a bit of pearl barley\\\\n\\\\nThe crostini (vegetable) was not great.  Lacking in much flavor.  That was the one standout disappointment.\\\\n\\\\nThe service is a little slow here, so don't expect to be in and out.  We waited about 20 minutes for our food.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Tuttini is a local business located at 10 E Carrillo St, Santa Barbara, CA. It falls under the categories of American (New), Restaurants, and Breakfast & Brunch. The business offers outdoor seating and takeout options but does not accommodate reservations or large groups. There is no business parking provided, but street parking is available. Tuttini has an average rating of 3.5 stars. Reviews highlight their breakfast menu, with one reviewer specifically mentioning the baked apple, cheese and ham/bacon omelet, and oatmeal as decent, homemade-tasting dishes. However, one reviewer found the crostini (vegetable) lacking in flavor. The service is reported to be a bit slow, with a wait time of about 20 minutes. The business closed on 21st February 2010, as mentioned in one of the reviews.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "calibration",
+  "source_cluster_id": "80fb10e4e5e3d5050df8a97b93744bcbb1751126034188cdae6ed252b99ab159",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ]
+}

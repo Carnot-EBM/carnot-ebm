@@ -1,0 +1,114 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.4068678009789437,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:4a6c98967d6b5822a1df2f4659fae68e97db817f36343e78817ed8754b412399",
+  "input_tokens": 784,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 1,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 784,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 808
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:cfe36d2452361efe70036e8fc553086d8d1c79570d3f3ff4e25d717a6ce733e4",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 1\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886325,
+    "id": "chatcmpl-X4lGvFuT4kTlKUAX8WXflUbwtz370Nkv",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.773,
+      "predicted_n": 24,
+      "predicted_per_second": 42.41983975905531,
+      "predicted_per_token_ms": 23.573875,
+      "prompt_ms": 696.981,
+      "prompt_n": 706,
+      "prompt_per_second": 1012.9400944932502,
+      "prompt_per_token_ms": 0.9872252124645893
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 784,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 808
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:1 First, insert the USB memory stick into an available USB port. 2  On Windows, this will bring up a window showing the memory stick is now seen as a drive on your computer (e.g., Removable Disk E: drive). 3  You'll also get a menu of options for using the device. 4  Select Open folder to view files at the bottom. This is also similar to how you would find the drive on Mac: open up a Finder window and look for the new mounted drive under Devices.. 2  To copy files from the USB memory stick, select your files and drag them to your desktop or, for better organization, a folder in Windows Explorer (or Finder on Mac).\\\\n\\\\npassage 2:1 To copy files from the USB memory stick, select your files and drag them to your desktop or, for better organization, a folder in Windows Explorer (or Finder on Mac). 2  To copy files to the USB memory stick, drag them from the Windows Explorer folder to the drive. This is also similar to how you would find the drive on Mac: open up a Finder window and look for the new mounted drive under Devices.. 2  To copy files from the USB memory stick, select your files and drag them to your desktop or, for better organization, a folder in Windows Explorer (or Finder on Mac).\\\\n\\\\npassage 3:Copying files could be done in many ways. First insert your USB into the PC after it has booted. The USB should be recognised by the PC and assigned a drive letter. Look under My Computer to see the letter assigned. Using a Windows PC, some of the easiest ways to copy data to your Integral USB Flash Drive are:-.A. Select the files that you want to copy.opying files could be done in many ways. First insert your USB into the PC after it has booted. The USB should be recognised by the PC and assigned a drive letter. Look under My Computer to see the letter assigned. Using a Windows PC, some of the easiest ways to copy data to your Integral USB Flash Drive are:-.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to transfer files to usb stick\\\"}\", \"original_answer\": \"To transfer files to a USB stick, first insert the USB stick into an available USB port on your computer. On Windows, a window will appear showing the USB stick is now seen as a drive on your computer, such as Removable Disk E: drive. You'll also get a menu of options for using the device. Select 'Open folder to view files' at the bottom. To copy files to the USB stick, select your files and drag them from the Windows Explorer folder to the drive. If you're on a Mac, open up a Finder window and look for the new mounted drive under Devices. Then, drag files from your desktop or Finder to the drive.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "7ae90aa37b0c267624ea1a14b1f63c3d311ee2259210a79471e808625c432cbb",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17
+  ]
+}

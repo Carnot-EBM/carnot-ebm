@@ -1,0 +1,107 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.3485086469445378,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:be0725352eb66a4458fac4e1669e4e7019095b7dc0f9f3b6401827d3ca8016ba",
+  "input_tokens": 719,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 719,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 743
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:752bb816372d9d7016c2c14adeec39306862eeddfd16566cb30317cbd3cbd5e3",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885999,
+    "id": "chatcmpl-6mEswg5ir1Om574heo7gLwuXWanmXnOG",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.496,
+      "predicted_n": 24,
+      "predicted_per_second": 42.44061850128029,
+      "predicted_per_token_ms": 23.56233333333333,
+      "prompt_ms": 645.851,
+      "prompt_n": 641,
+      "prompt_per_second": 992.4889796562984,
+      "prompt_per_token_ms": 1.0075678627145086
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 719,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 743
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:9,487. The registration document, the V5 is not proof at all of the ownership of a car, it is just the name and address of the registered keeper who may or may not own the car. The car could be owned by a lease company, finance company, the seller's mate as in your case or anybody that the keeper decides to tell DVLA.riginally Posted by bbroadhead hi all He said that the name on the log book wasn't his name because of the cost of insurance he has used a friends. Thanks for any help! To use an excuse like the cost of the insurance sounds extremely suspect to me.\\\\n\\\\npassage 2:Filling in the log book when selling to a private individual. The first step is that you will need to fill in your car's log book also known as a V5C certificate. Turn to section 6 of the log book entitled new keeper or new name/new address details and fill in the details of the buyer.Then turn to section 8 of the same log book and, along with your buyer, sign the declaration contained in this section.illing out your log book when selling to a trader. When selling to a motor trader, rather than to an individual, you complete and hand over a different section called the V5C/3. In these cases you must also get the contact details and signature of the trader and post them to the DVLA at the same address as above.\\\\n\\\\npassage 3:When you sell your vehicle the buyer will expect to see the car's log book to ensure that you car is officially the same as you have described it in your advertisement and so it is important to locate this before selling.illing out your log book when selling to a trader. When selling to a motor trader, rather than to an individual, you complete and hand over a different section called the V5C/3. In these cases you must also get the contact details and signature of the trader and post them to the DVLA at the same address as above.\\\\n\\\\n\\\",\\\"question\\\":\\\"selling car logbook in different name\\\"}\", \"original_answer\": \"Selling a car with a logbook in a different name can raise suspicions as it may indicate the seller is not the true owner of the car. The registration document, or V5, is not definitive proof of ownership, as it merely indicates the registered keeper of the vehicle. It is important to fill out the appropriate sections of the logbook when selling a car, whether to a private individual or a trader, to ensure all details are correctly updated. It is also crucial to get the contact details and signature of the buyer or trader and send them to the DVLA.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "455ada0fd37a559038cbb63c6789b8d5aa8182dcd422bb62c17a4b5330b1b88a",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ]
+}

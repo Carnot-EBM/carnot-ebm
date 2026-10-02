@@ -89273,3 +89273,50 @@ row readers, publish through the existing helper, then recheck the primary.
 Methods readiness one requires complete measurements and owned checks, not a
 positive scientific result. Record source access, dates and retirement conflicts
 for all five requested papers. The conductor owns ops and BMAD reconciliation.
+
+### REQ-REPORT-8008: Fit a conditioned binary energy on frozen public inputs
+
+Exp8008 SHALL reuse Exp8007 historical fit/tune roles and cached q plus eight
+public features. Freeze methods, role hashes, penalties, five seeds, 2,000-step
+limits and a 600-second fit budget before opening development evaluator labels.
+Use E0=0 and E1=-z. Fit a calibrated intercept, centered logit coefficient and
+local cubic residuals with damped Newton and bounded backtracking. Penalized
+curvature SHALL identify the solution despite redundant spline bases. Compare
+frozen V693, converged linear, intercept-only, isotonic, equal-information spline
+and fixed-step controls. Choose L2 from 0.0001, 0.001, 0.01 using tune only.
+Record actual gradient, objective and Hessian work; matched iteration budgets do
+not imply equal floating-point cost. Adding an intercept is established practice.
+
+### SCENARIO-REPORT-8008-ISOLATION
+
+Base fitting SHALL reject reserved roles and extra predictor fields. Fit-only
+scaling and fixed knots SHALL survive endpoint q=0/1 and count extrapolation.
+Calibration SHALL use exactly 62 eligible calibration groups with fixed bias
+and slope bounds, then freeze before stream or retention labels are read.
+Evaluation label changes SHALL not change fitted coefficients or calibration.
+
+### SCENARIO-REPORT-8008-NUMERICS
+
+Verify analytic loss gradients with finite differences, energy/sigmoid equality
+without another fit, and dense/local update equality. Persist coefficients,
+scaler, knots, optimizer state, role hashes and convergence diagnostics before
+evaluation. Failed convergence or checks SHALL produce complete disqualified
+outcomes. Natural decision benefit remains unassessed; synthetic claims stay circular.
+
+### SCENARIO-REPORT-8008-PUBLICATION
+
+Use private outputs for tests and real CLI branches. Require 100 percent added
+statement coverage, scoped consumers, Ruff, strict mypy, spec coverage, E2E-015
+and train-save-load-predict/update replay. Run the full Python suite once as a
+bounded separate health diagnostic and preserve failures. Cold-reduce raw rows
+and checkpoints in a fresh process. Validate exact candidate bytes with both
+terminal readers, publish through the existing helper and recheck final bytes.
+Readiness one requires all owned checks. Published references SHALL be durable.
+The conductor owns ops and BMAD reconciliation.
+
+Exp8008 calibration support SHALL count known targets separately from public
+input eligibility. An eligible capture with unknown target SHALL remain unknown.
+If fewer than 62 groups have known targets, retain fitted heads and base losses.
+Record each missing target's exact upstream row field and hash. Freeze a blocked
+calibration checkpoint. Post-hoc rows SHALL be blocked, with no fitted map or
+measured calibrated loss. Readiness SHALL remain zero after passing owned checks.

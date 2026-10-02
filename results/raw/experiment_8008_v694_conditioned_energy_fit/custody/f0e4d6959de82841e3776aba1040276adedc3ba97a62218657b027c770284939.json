@@ -1,0 +1,155 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 2.1779704849468544,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:3646a2c6174233c59a798f976835c22e3a1a1f512fb4a58914fed37ee094efad",
+  "input_tokens": 1795,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1795,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1818
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:536a0d13fc3f188b52b11b8662e3d148eefcf2ffd0078e704ad58a062d4c4fab",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886313,
+    "id": "chatcmpl-tTVNet8YaVEuTPxPXMwxb42ebRyvjRul",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 543.308,
+      "predicted_n": 23,
+      "predicted_per_second": 42.33326216437085,
+      "predicted_per_token_ms": 23.622086956521738,
+      "prompt_ms": 1514.668,
+      "prompt_n": 1717,
+      "prompt_per_second": 1133.5817486076157,
+      "prompt_per_token_ms": 0.8821595806639487
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1795,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1818
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"West of Baghdad, Iraq (CNN)The call from Faleh Essawi, the deputy chief of the provincial council, who we were supposed to be meeting up with, came just as we were about to hit the bridge -- the only safe route from Baghdad to neighboring Anbar province. \\\"ISIS has taken the east of the city, it's not accessible,\\\" he says, sounding frantic, rapidly rattling off the neighborhoods and areas ISIS fighters had just stormed into. Moments later, we see the impact: An endless stream of humanity, shell shocked, and exhausted. Parents cradle babies in blankets, some struggle under the weight of their belongings, some carry small plastic bags, while others nothing but the children clutching at their hands. Cars are not permitted to cross this bridge across the Euphrates. The government feels that restricting vehicles will decrease the likelihood of explosives making their way into Iraq's capital. Those too young or too tired to walk pile into metal carts pushed by boys or young men, normally used to carry produce to markets. An elderly woman sits in one, a child in her arms, a worn down plastic doll in her hand. Many don't want to talk, at least not for long. What they just went through is too raw, too painful. One man we encounter describes how ISIS fighters commandeered his house. \\\"We heard clashes in the early morning, and we couldn't see the security forces anywhere,\\\" he recalls. \\\"We saw the ISIS fighters, they just came into the house, they didn't say a word. They just sent a sniper to the roof.  I grabbed my children and ran.\\\" His wife bursts into tears, prompting him to apologize for not being able to talk anymore -- they just want to keep going. Another older woman, sitting in one of the carts surrounded by her grandchildren, starts sobbing the moment we approach her. \\\"They took our homes and kicked us out,\\\" she cries. Over the weekend ISIS moved into towns just to the north of Ramadi, which lies 68 miles (110km) west of Baghdad, sending thousands fleeing on foot into the city.  ISIS had already blocked off access from the south months ago, and the west was contested territory.  The east, until now, was not just a relatively safe zone but the only viable entrance and exit. At a hospital in Amriyat al-Falluja, about a 15-minute drive away, a wounded local fighter winces in pain. He was shot by a sniper in Ramadi that morning as ISIS fighters advanced -- the bullet barely missed his heart. \\\"We had been warning we could see their movements,\\\" he tells us. \\\"But we just didn't have the force to hold them off.  We didn't leave a single person we didn't call and ask for back up.\\\" But none came. Hours after our morning conversation we speak to Essawi again by phone. \\\"Security is collapsing in the city,\\\" he screams. \\\"This is what we warned Baghdad would happen. Where is Baghdad? Where is al-Abadi? \\\"Just God knows if we will survive this,\\\" he says and hangs up. Amriyat al-Falluja regularly comes under attack from rockets and mortars from ISIS positions nearby. The hospital's fa\u00e7ade is scarred by shrapnel. The wards are full of people injured during these attacks. Fifteen-year-old Mustafa Ahmed has bandages on his neck, leg, and other parts of his body. \\\"A mortar fell on our street, one of my neighbors was wounded,\\\" he explains. \\\"We went out to help him and the second one fell on us.\\\" His friend died, he says. In the next room Amal Ahmed speaks softly. \\\"I was in the garden and a rocket hit and the shrapnel sliced me open,\\\" she says, as tears roll down her face. \\\"Something fell out of me and I grabbed it and I put it back in and I lay down.\\\" She starts to cry harder. Her husband was killed by U.S. forces in Fallujah -- another city in Anbar -- in 2003.  Her children have all moved away except her youngest, who broke his arm in the same attack. \\\"When I see the situation I don't have hope, it's just getting worse.\\\" A few moments later, we hear two massive explosions from another of the hospital's buildings. They think it's an ISIS rocket or mortar attack so we take cover along with the Iraqi forces we are with in the hallway, away from the windows. More explosions go off in the distance. Then another actually shakes our building. \\\"Anyone want tea?\\\" one of the policemen with us asks, laughing as he pours.  \\\"This happens all the time, we're used to it.\\\" The police chief, Major Aref al-Janabi, radios to his men to respond.  Al-Janabi, like so many others, is frustrated with the lack of support from Baghdad.  Earlier, he had taken us to the front lines, a long berm that stretches along the northern and western parts of the town that is dotted with fighting positions.  He says he regularly provides the joint command center with coordinates for ISIS positions, but so far there have been no significant air strikes or reinforcements. More explosions follow in the distance. We're quickly moved out and leave the town, heading back towards the bridge and the long, snaking lines of refugees. An ambulance passes us, trying to force its way through the crowds.  The swell of people fleeing has grown considerably in the last hours -- not surprising given Essawi's dire assessment and warning. \\\"Ramadi is under siege from all sides,\\\" he'd told us earlier, anger mixed with an air of resignation. \\\"I consider the city to have fallen.\\\" He claimed that 150,000 have fled, scoffing at statements from Iraqi officials in Baghdad that reinforcements have been sent to Ramadi.  He has yet to see them.\\n\", \"original_answer\": \"ISIS has taken control of the east of Ramadi, a city 68 miles west of Baghdad, leading to a mass exodus of the city's residents. The only safe route out of the city, a bridge across the Euphrates, was filled with people fleeing on foot, as cars are not permitted to cross due to concerns about explosives. Reports suggest that ISIS militants moved into towns just north of Ramadi, causing thousands to flee into the city, which has then been attacked by ISIS. The south has been blocked off by ISIS for several months, and the west was contested territory, leaving the east as the only viable route in and out. Many of the refugees have spoken of how ISIS militants stormed their homes and forced them out. The deputy chief of the provincial council, Faleh Essawi, said \\\"Ramadi is under siege from all sides, I consider the city to have fallen.\\\" He also claimed that 150,000 people have fled the city. Hospitals in the area are filled with people injured in the attacks, and are regularly targeted by ISIS.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "4eb6ff2f2cc249f521d962c8dd80657a84b0551abf8bca7f80666e6a7bb0ab76",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51,
+    52,
+    53,
+    54,
+    55,
+    56,
+    57,
+    58
+  ]
+}

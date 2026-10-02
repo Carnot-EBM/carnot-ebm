@@ -1,0 +1,104 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.3027970499824733,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:e179d314582d5b6dc75a4dc15d17ceda23c4f1c973d891709ee5421278efe33a",
+  "input_tokens": 761,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 761,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 782
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:7d529d00fc4cb91880ddd48a57f02d081c7ae6ff08078682232e166a558d12e7",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886247,
+    "id": "chatcmpl-hIHmNvekWMr8YZqKID5q4bQJb4QqefCr",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 499.523,
+      "predicted_n": 21,
+      "predicted_per_second": 42.040106261373346,
+      "predicted_per_token_ms": 23.786809523809524,
+      "prompt_ms": 690.29,
+      "prompt_n": 683,
+      "prompt_per_second": 989.4392211968883,
+      "prompt_per_token_ms": 1.0106734992679356
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 761,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 782
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"290 Storke Rd, Ste D\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":null},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Restaurants, Mexican\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":null,\\\"name\\\":\\\"La Carreta\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2013-06-15 03:33:43\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"This place was great, especially the shrimps, which were always plump and well seasoned.  Twice, I came here to get takeouts for dinner, they were completely empty, yet places like Jack in the Box and Chipotle in the same shopping center get way more business with their boring food and sometimes highly processed food.  People of this city, you frustrate me.  I am just hoping that Pollofino doesn't close the same way as La Carreta.\\\"},{\\\"review_date\\\":\\\"2013-04-16 22:15:55\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Adios La Carreta...it's closed.\\\"},{\\\"review_date\\\":\\\"2013-03-03 22:52:05\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"This place is amazing!!\\\\n\\\\nDelicious food (especially the carne asada plate and the chili verde), good service, and an all around good experience. Prices are very good too. \\\\n\\\\nThe owner, Rosie, is so helpful and nice. \\\\n\\\\nEvery time I go I leave happy. Definitely recommend\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"La Carreta is a Mexican restaurant located at 290 Storke Rd, Ste D, Goleta, CA. It is known for its shrimps which are well seasoned and plump, as well as its carne asada plate and chili verde. The restaurant does not offer Wi-Fi or music but it has outdoor seating and take-out service. It also accommodates groups. Despite the absence of valet, street, garage, and validated parking, there is a lot available for customers. The owner, Rosie, is commended for being helpful and nice. However, it is important to note that as per one of the reviews dated 2013, the restaurant has closed. Prior to its closure, the restaurant had an average rating of 4.0 stars.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "9572d6159a44b8e8db3038affc87a357ea1a6e5491d50fb9c4315b0adde8e6da",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ]
+}

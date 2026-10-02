@@ -1,0 +1,104 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.3707247149432078,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:d15f1e9ec156a0dda1e12f7997f5f58afc32b936a28b7013b3b8492b45436f48",
+  "input_tokens": 794,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 794,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 817
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:0cf06324b338aaa8282b7030b6a00d1522200f0ee015a9e43b91ae75be00a0fc",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886375,
+    "id": "chatcmpl-N2W9yMMTQpXwKI3ycIE0tGslsmGBETS0",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.718,
+      "predicted_n": 23,
+      "predicted_per_second": 42.45751479552092,
+      "predicted_per_token_ms": 23.55295652173913,
+      "prompt_ms": 710.311,
+      "prompt_n": 716,
+      "prompt_per_second": 1008.0091678152245,
+      "prompt_per_token_ms": 0.9920544692737431
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 794,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 817
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"1260 Channel Drive\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":true,\\\"validated\\\":true},\\\"Music\\\":false,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Bars, Nightlife, Tapas/Small Plates, Tapas Bars, Restaurants, Lounges\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"15:0-1:0\\\",\\\"Monday\\\":\\\"15:0-2:0\\\",\\\"Saturday\\\":\\\"13:0-1:0\\\",\\\"Sunday\\\":\\\"12:0-23:0\\\",\\\"Thursday\\\":\\\"9:0-11:0\\\",\\\"Tuesday\\\":\\\"9:0-23:0\\\",\\\"Wednesday\\\":\\\"15:0-23:0\\\"},\\\"name\\\":\\\"Ty Lounge\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2020-02-14 01:37:43\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Five stars for the service we received from Emilio our server. I recommend going for happy hour as the prices are better!\\\"},{\\\"review_date\\\":\\\"2020-02-11 18:21:04\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"The food here is better than at Bella Vista, the resort's flagship restaurant.  They have a huge TV that they were playing sports on so it was loud.  Otherwise, the place looks cool and has a great vibe.  I think you can also sit out on the patio.  Would eat here again.\\\"},{\\\"review_date\\\":\\\"2020-02-08 21:41:37\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Excellent service great place to slide into for a drink and / or a bite! Burgers excellent always. Always 5 stars from Four Seasons and Ty Warner.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Ty Lounge, located at 1260 Channel Drive in Santa Barbara, CA, is a local business offering a blend of nightlife and dining options, including bars, lounges, and Tapas restaurants. The establishment is notable for its classy ambiance and is open every day of the week, with varying hours. Outdoor seating is available, and guests can access free WiFi. The lounge does not take reservations but is well-suited for groups. Based on customer reviews, the service, particularly from a server named Emilio, is of high quality. The food, including their burgers, is highly praised, and the establishment is recommended for happy hour due to better pricing. There is also a big TV for sports enthusiasts. Ty Lounge holds a business rating of 4.0 stars.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "01edd1317eca81d51cdf800993cb0e973265f13e57a53a8370e469ae6f0d82e0",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ]
+}

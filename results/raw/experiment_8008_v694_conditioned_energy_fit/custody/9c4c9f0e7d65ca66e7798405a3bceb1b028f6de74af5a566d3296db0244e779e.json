@@ -1,0 +1,106 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.2680483530275524,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:50d58671010591c174c15c24029104fb1e0123c67ee1d054c582d3c3005b5d3e",
+  "input_tokens": 700,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 700,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 721
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:0d264dc7ba1be6263a4ceb246eb9f87b47931000811789f19e16e811325a6835",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886295,
+    "id": "chatcmpl-u0woMcjYJLiUzfj5nqUvsaFGmbtVOID1",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 492.833,
+      "predicted_n": 21,
+      "predicted_per_second": 42.61078296299152,
+      "predicted_per_token_ms": 23.468238095238096,
+      "prompt_ms": 634.26,
+      "prompt_n": 622,
+      "prompt_per_second": 980.6703875382335,
+      "prompt_per_token_ms": 1.0197106109324758
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 700,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 721
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"413 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":null},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"American (Traditional), Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":null,\\\"name\\\":\\\"Lettuce B. Frank\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2010-05-31 10:53:37\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"I'm so sad to hear this place has closed.  I liked the menu and my hotdog very much.  I remember chatting with the owner late one night as I waited for my group to take care of the birthday boy after a night of drinking, and it seemed like things were going well.\\\"},{\\\"review_date\\\":\\\"2010-01-28 01:34:07\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"I almost cried today when I went to LBF to have lunch with some friends and realized they're no longer in business.  I'm so sad.  It was the only place I've ever found that had vegetarian sliders.  Soooooooo amazing!  They're veggie hot dogs were awesome too!  I'm going to miss you LBF!\\\"},{\\\"review_date\\\":\\\"2009-10-19 17:21:00\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Staying true to my words - I will never come back here again.  Trying to give this place another shot on my recent SB visit, I was disappointed at the annoying staff that could not fulfill my order correctly.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"\\\"Lettuce B. Frank\\\" is a traditional American restaurant located at 413 State St, Santa Barbara, CA. The restaurant allows takeout and is suitable for groups. However, it does not offer outdoor seating, reservations, wi-fi, or a variety of parking options. Street parking is available, but there is no garage, validated parking, lot, or valet service. The restaurant has an average rating of 3.5 stars. Customer reviews highlight a unique menu, including vegetarian sliders and hot dogs, but mention that the restaurant has closed. One review also criticizes the staff for incorrectly fulfilling their order, and indicated no intention to return.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "9eeae1a9d1d11d79715caa2efdd61ae5a74ff0d8c501738796d10b84ce130ff0",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ]
+}

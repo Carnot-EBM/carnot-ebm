@@ -1,0 +1,106 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.1941533599747345,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:9a02de51157da0da51309338c9dead0a654bf4631e92bb19fd667f8ef31e40da",
+  "input_tokens": 578,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 578,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 601
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:8c0cb68f5a7b4fda08f0ba9016bfc97ae2098bd52bbe07a52a37d74a7208b1a1",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886241,
+    "id": "chatcmpl-KB4J4PXKAoZoL3xEfyts9k77SGdnTt0n",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.161,
+      "predicted_n": 23,
+      "predicted_per_second": 42.50121498038477,
+      "predicted_per_token_ms": 23.52873913043478,
+      "prompt_ms": 534.993,
+      "prompt_n": 500,
+      "prompt_per_second": 934.5916675545287,
+      "prompt_per_token_ms": 1.069986
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 578,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 601
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:1 Bake for 45 minutes for sweet potatoes/yams that are 2-3 inches in diameter. 2  For sweet potatoes that are up to 4 inches in diameter, bake for an hour. 3  For super large sweet potatoes, bake for an hour and 15 minutes. 4  After the time has elapsed, don't open the oven but turn it off.\\\\n\\\\npassage 2:1 For super large sweet potatoes, bake for an hour and 15 minutes. 2  After the time has elapsed, don't open the oven but turn it off. 3  Let the sweet potatoes sit in the oven for at least 30 minutes but up to an hour. 4  Remove from the oven and eat immediately, or remove the skin and store in a container in the fridge.\\\\n\\\\npassage 3:1 For sweet potatoes that are up to 4 inches in diameter, bake for an hour. 2  For super large sweet potatoes, bake for an hour and 15 minutes. 3  After the time has elapsed, don't open the oven but turn it off. 4  Let the sweet potatoes sit in the oven for at least 30 minutes but up to an hour.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to bake the best sweet potato\\\"}\", \"original_answer\": \"To bake the best sweet potato, the baking time depends on the size of the sweet potato. For sweet potatoes that are 2-3 inches in diameter, bake for 45 minutes. If they are up to 4 inches in diameter, bake for an hour. For super large sweet potatoes, bake for an hour and 15 minutes. After the time has elapsed, turn off the oven but do not open it. Allow the sweet potatoes to sit in the oven for at least 30 minutes but up to an hour. You can eat them immediately after removing them from the oven, or remove the skin and store them in a container in the fridge.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "466382006b6a02ed61e34f2a674c403dc5fc518c0e5b48dc947d3465063c40ed",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ]
+}

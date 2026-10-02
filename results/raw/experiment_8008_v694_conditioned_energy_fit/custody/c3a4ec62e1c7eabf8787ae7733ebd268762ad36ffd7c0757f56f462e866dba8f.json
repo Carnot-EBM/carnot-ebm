@@ -1,0 +1,125 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.8933446169830859,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:fe9d2421e3e169e61e4303666ab8ac8e5e2133a452f2487a52c4bafe259a750b",
+  "input_tokens": 1431,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1431,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1454
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:e479eaf1739ed07dc9392927fdafa89787b3118fecd542828c8c2d82fa21f70c",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886324,
+    "id": "chatcmpl-BsHKr5nYOaRCbrGkGHgeAjQWvLBae7Va",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 542.195,
+      "predicted_n": 23,
+      "predicted_per_second": 42.42016248766587,
+      "predicted_per_token_ms": 23.573695652173914,
+      "prompt_ms": 1235.551,
+      "prompt_n": 1353,
+      "prompt_per_second": 1095.0579943685045,
+      "prompt_per_token_ms": 0.9131936437546193
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1431,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1454
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"The outlines of a nuclear deal with Iran are in place. Unfortunately, it seems like too many in President Barack Obama's administration have forgotten that the only reason this terrorist-supporting state came to the negotiating table in the first place was because of tough sanctions imposed by the U.S. Congress. Indeed, the reality is that President Obama is giving up enormous leverage in his nuclear deal with Iran -- and I worry we will lose it for good. Bleeding money, and faced with falling oil prices, Supreme Leader Ayatollah Khamenei gave his government rare permission to bargain with the \\\"Great Satan\\\" -- the United States. But just as U.S. and European sanctions were forcing Iran to the nuclear crossroads, President Obama has given Tehran an easy exit. For Khamenei, the \\\"framework\\\" announced last week looks like a win-win: He gets to keep his nuclear infrastructure, and in return gets billions of dollars in sanctions relief. Congress offered a better strategy when the top Democrat on the Foreign Affairs Committee, Eliot Engel, and I introduced a bill to hit Tehran with its toughest sanctions yet. Unfortunately, this bill -- which passed the House in a 400-20 vote -- was blocked in the Senate last year, despite the fact that it would have sharpened the Ayatollah's choice: Dismantle your nuclear weapons program or see your economy collapse. President Obama once had a tougher line, when in 2012 he said: \\\"The deal we'll accept is they end their nuclear program. It's very straightforward.\\\" But the framework announced last week does nothing of the sort. Negotiated between Iran and the United States, Russia, China, Britain, France and Germany, the framework concedes that Iran can maintain \\\"a mutually defined enrichment program,\\\" operate thousands of centrifuges, and continue its research and development of nuclear technologies. The deal currently on the table would hand Tehran billions of previously sanctioned funds, filling the coffers of the world's biggest state sponsor of terrorism, with strongholds in Syria, Iraq, Yemen and Lebanon. Meanwhile, the strictest restrictions on Iran's enrichment will expire in only 10 years, despite the President receiving a letter from 367 Members of Congress -- both Democrats and Republicans -- in which we insisted that \\\"verifiable constraints on Iran's nuclear program must last for decades.\\\" The President admitted as much when he conceded that \\\"in year 13, 14, 15, they have advanced centrifuges that enrich uranium fairly rapidly, and at that point the breakout times would have shrunk almost down to zero.\\\" But as bad as these concessions are, the most concerning aspect of the April 2 deal is that it lacks tough safeguards to stop Iran from cheating. The key question is this: Will the inspectors at the International Atomic Energy Agency be allowed to inspect these military sites without warning? Because if the IAEA cannot conduct \\\"anytime, anywhere\\\" inspections, Iran will be able to \\\"sneak out\\\" to a bomb. It has been done before. Remember, in 1994, when President Bill Clinton told us he had struck a deal with North Korea that would \\\"make the United States, the Korean Peninsula, and the world safer\\\"? President Clinton sounded a little too much like the current Secretary of State John Kerry, when he promised that the North Korea agreement \\\"does not rely on trust\\\" and that \\\"compliance will be certified by the International Atomic Energy Agency.\\\" Twelve years after these assurances, North Korea detonated its first nuclear bomb. Iran could easily do the same. The best predictor of its future behavior is its past behavior -- between 2004 and 2009, the Iranian government built a huge centrifuge facility named Fordo under a mountain deep in the Iranian desert. Luckily for the world, Western intelligence agencies discovered Tehran's deception. But we cannot rely on such luck in the future, particularly when Iran still hasn't come clean about its history of secret weapons development and is still dodging basic questions from the IAEA. Let's not forget the other things Iran has been doing while its diplomats have been bargaining with the U.S. and its partners. While Iran was showing its friendly new face to the world, it has simultaneously been helping Syrian dictator Bashar al Assad kill his own people, training and funding the terrorist group Hezbollah, which aims to annihilate Israel, and supporting the Houthis, who started a civil war and overthrew the government in Yemen -- one of America's more reliable counterterrorism partners in the region. If President Obama is going to hand over billions of dollars to a regime that behaves like this, run by a man who publicly declares: \\\"Death to America,\\\" it has to be a better deal. The framework we have before us keeps Iran's nuclear door well and truly open.\\n\", \"original_answer\": \"The framework of a nuclear deal with Iran has been confirmed, however, there are doubts over whether the deal will be effective due to previous failed attempts. President Obama has been accused of forgetting the reason Iran agreed to negotiate in the first place, which was because of US-imposed sanctions. The deal on the table merely gives Iran access to funds and allows them to keep their nuclear infrastructure, while the strictest limitations expire in ten years. The most concerning aspect of the deal is the lack of precautions to stop Iran from cheating, by preventing the International Atomic Energy Agency (IAEA) from inspecting military sites without notice. The agreement could replicate the 1994 deal with North Korea, which saw the country detonate its first nuclear bomb 12 years later. It is feared that Iran could do the same, especially as the country has not been honest about its history of secret weapons development. The Obama administration has been warned that if it is going to give billions of dollars to a regime like Iran\u2019s, it has to be a better deal.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "3246792aff8837ef1ccba00e17e58de94eb1577b8656271e4fa4eb1726e63b17",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28
+  ]
+}

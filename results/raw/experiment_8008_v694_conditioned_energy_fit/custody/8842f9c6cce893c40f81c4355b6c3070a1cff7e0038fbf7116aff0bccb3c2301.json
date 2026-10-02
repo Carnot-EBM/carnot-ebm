@@ -1,0 +1,116 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.3246444029500708,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:281e2f055ceb0782b91523dba507c530f02fe07ce5153258813b16d6409e811d",
+  "input_tokens": 743,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 743,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 766
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:d2960643cf2757e4104a342cc2e437fcfd3ebe6b92d3f9ecd0d307ce749e4a77",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886335,
+    "id": "chatcmpl-8lejboPnuv355zPwMrr5rw6xDhoW2Khz",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.699,
+      "predicted_n": 23,
+      "predicted_per_second": 42.45900398560825,
+      "predicted_per_token_ms": 23.552130434782608,
+      "prompt_ms": 674.249,
+      "prompt_n": 665,
+      "prompt_per_second": 986.282515806475,
+      "prompt_per_token_ms": 1.0139082706766918
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 743,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 766
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Directions. 1  Brush chicken breast with olive oil on both sides. 2  season with garlic powder, seasoned salt and pepper. 3  Preheat grill on medium heat. 4  Place seasoned breasts on the grill, close the lid and set a timer for 4 minutes. Preheat grill on medium heat. 2  Place seasoned breasts on the grill, close the lid and set a timer for 4 minutes. 3  After 4 minutes, flip the chicken breast, close the lid again and set timer for another 4 minutes.\\\\n\\\\npassage 2:1 season with garlic powder, seasoned salt and pepper. 2  Preheat grill on medium heat. 3  Place seasoned breasts on the grill, close the lid and set a timer for 4 minutes. 4  After 4 minutes, flip the chicken breast, close the lid again and set timer for another 4 minutes. Preheat grill on medium heat. 2  Place seasoned breasts on the grill, close the lid and set a timer for 4 minutes. 3  After 4 minutes, flip the chicken breast, close the lid again and set timer for another 4 minutes.\\\\n\\\\npassage 3:1 Preheat grill on medium heat. 2  Place seasoned breasts on the grill, close the lid and set a timer for 4 minutes. 3  After 4 minutes, flip the chicken breast, close the lid again and set timer for another 4 minutes.4  Remove from grill, allow to sit for 2 or 3 minutes. 5  Pour on some BBQ sauce and serve. Preheat grill on medium heat. 2  Place seasoned breasts on the grill, close the lid and set a timer for 4 minutes. 3  After 4 minutes, flip the chicken breast, close the lid again and set timer for another 4 minutes.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to cook boneless chicken breasts on the grill\\\"}\", \"original_answer\": \"To cook boneless chicken breasts on the grill, start by brushing the chicken breast with olive oil on both sides. Then, season it with garlic powder, seasoned salt, and pepper. Preheat your grill on medium heat. Once it's ready, place the seasoned breasts on the grill, close the lid, and set a timer for 4 minutes. After 4 minutes, flip the chicken breast, close the lid again, and set the timer for another 4 minutes. Finally, remove the chicken from the grill, let it sit for 2 or 3 minutes, then pour on some BBQ sauce and serve.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "352d0a8347e4c278b5603f67eba7201e328bfb7206b19bf27d8eed61164b87c0",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ]
+}
