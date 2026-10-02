@@ -21297,3 +21297,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-10-02: Independently test later loss retention and process recovery (⚠️ Research Finding) — honest_verdict=complete_null_learning_benefit; results/experiment_8039_v696_learning_benefit_audit.json
 - 2026-10-02: Measure repaired native updates and complete durable transaction cost (⚠️ Research Finding) — honest_verdict=complete_null_native_transaction_cost; results/experiment_8040_v696_native_transaction_cost.json
 - 2026-10-02: Assess only new live supervisor outcomes for transferable refinement (⚠️ Research Finding) — honest_verdict=complete_null_no_new_outcomes; results/experiment_8041_v696_arc_supervisor_delta.json
+- 2026-10-02: Bound quantized decision fallback and preserve each board obligation (⚠️ Research Finding) — honest_verdict=complete_null_bounded_fallback_custody; results/experiment_8042_v696_precision_fallback_boundary.json
