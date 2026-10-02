@@ -89044,3 +89044,44 @@ consistency and both conductor readers before publishing one stable primary.
 Retain terminal validator logs in a sidecar. Report current zero pretrained calls
 separately from historical activity. The conductor owns ops and traceability
 reconciliation for this invocation.
+
+## REQ-REPORT-8002: Frozen complete service and sparse durable cost
+
+Exp8002 SHALL use execution date 20261002 and milestone 2026.10.693. Qualify
+sparse-fit and authenticated capture/scalar branches independently by exact
+producer bytes and readiness fields. Missing fields are contract errors. Preserve
+producer dates and immutable snapshots; never import Exp7989 timing as current.
+Freeze configuration, code, tests and validation commands before final timing.
+Run one warmup and ten randomized paired CPU repetitions on at most 64 source
+groups. Include byte parsing, public features, prediction, decision, acquisition,
+due feedback, serialization, file fsync and directory fsync. Save no-write,
+empty-feedback durable and actual sparse-update cases separately. Replay qualified
+Exp7998 due receipts from authenticated prior committed state; absent learning
+receipts permit only explicit fixture update costs. Join model durations only
+by matching Exp7995 public hashes or authenticated historical Exp7993 identities.
+Unknown acquisition costs remain null. Source groups, never timing repetitions,
+determine paired intervals. Report acceleration bounds only for measured fractions.
+
+### SCENARIO-REPORT-8002-CUSTODY
+
+Reject changed producer pins, missing operands, checkpoint drift and owned code
+changes after freezing. Preserve the two Exp7989 storage and health-reuse
+regressions. Cold replay reconstructs decisions, touches, bytes and reductions.
+
+### SCENARIO-REPORT-8002-CLI
+
+Require real private success, blocked and cold CLI paths with artifact guard
+active, nonempty 100 percent owned statement coverage, affected consumers,
+E2E-019, scoped Ruff, strict mypy and explicit test-path spec coverage. Run full
+pytest health once and preserve historical failures as diagnostics. Owned failures
+are complete_disqualified with readiness zero. Missing independent branches are
+complete_blocked only when neither can execute. Valid cost-only work is null.
+Check actual candidate bytes with unchanged adversarial and strict row validators,
+and both conductor readers. Publish only checked bytes and retain final-byte
+sidecars. The conductor owns ops and BMAD reconciliation for this invocation.
+
+Implementation for REQ-REPORT-8002: `python/carnot/reporting/service_cost_8002.py`
+measures immutable source-bound requests. `python/carnot/experiment_8002_v693_service_cost.py`
+and its matching script publish checked bytes. `service_validation_8002.py`
+freezes actual private commands. The two matching test files assert branch
+independence, sparse writes, drift, private CLI routes and readiness failures.

@@ -47840,3 +47840,21 @@ blocked, exception and replay routes without exclusions or a lower threshold.
 Implementation for REQ-VERIFY-8001: the Exp8001 qualification tests exercise the
 original shared CLI entrypoint and preserve the Exp7988 268/269 failure operand.
 Current qualification covers every owned statement before opening the frontier.
+
+## REQ-VERIFY-8002: Complete cost reconstruction
+
+Authenticate immutable measured inputs and code snapshots. Recompute each
+response, sparse physical coefficient change, global logical decay, encoded
+checkpoint bytes, exclusive phase total and source-group paired interval.
+A sub-microsecond sparse kernel or 100x component gain remains an unmeasured
+target; acquisition and model generation remain outside the accelerated fraction.
+
+### SCENARIO-VERIFY-8002-DRIFT
+
+Changed rows, summaries, receipts, producer bytes or frozen owned code SHALL
+fail cold replay. Fixture feedback SHALL never claim natural learning evidence.
+
+Implementation for REQ-VERIFY-8002: cold replay in `service_cost_8002.py`
+reconstructs deterministic work and validates paired rows before reduction.
+`tests/python/test_service_cost_8002.py` asserts producer, commit, row, timing,
+source-join and frozen-code rejection paths.
