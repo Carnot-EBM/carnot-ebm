@@ -49365,3 +49365,81 @@ post-midnight date. A successor must authenticate each producer's actual
 invocation date and frozen hashes; a milestone can span UTC days. Historical
 fixture dates stay fixed. The active roadmap and historical results remain
 unchanged during planning.
+## 2026-10-02 — V694 research scan before milestone design
+
+The completed V693 artifacts support a runnable sparse learner, but its
+independent audit found zero changed typed decisions and no finite-replay
+benefit. These observations motivate testing update allocation and calibration
+conditioning before adding another architecture. The sources below were checked
+in this planning session. Proposed adaptations are hypotheses, not reproductions.
+
+### New candidates and local relevance
+
+- **Adapt Only When It Pays (ADOWIP)**, submitted 2026-06-23,
+  [arXiv:2606.25068](https://arxiv.org/abs/2606.25068),
+  [method, sections 3–4](https://arxiv.org/html/2606.25068v1).
+  It schedules updates after delayed labels arrive, using observed decision
+  loss and a hard compute budget. It reports mixed results outside its primary
+  time-series tasks. Carnot can test this scheduling idea on its existing small
+  energy head. Give all arms the same released labels and compare update budgets;
+  this differs from V693's randomized label acquisition. Do not transfer its
+  regression theorem or its empirical gains to binary source verification.
+- **An Efficient Black-Box Reduction from Online Learning to Multicalibration,
+  and a New Route to Phi-Regret Minimization**, submitted 2026-04-21,
+  [arXiv:2604.19592](https://arxiv.org/abs/2604.19592).
+  The reduction covers richer calibration objectives and delayed or censored
+  observations. Use it to motivate reporting calibration by preregistered source
+  groups. A small empirical head is not an implementation of the full reduction
+  and earns no multicalibration theorem by citation.
+- **Precision meets speed through an FPGA-based natively sparse Ising machine
+  for combinatorial optimization**, published 2026-07-11,
+  [Nature Communications](https://doi.org/10.1038/s41467-026-75119-0).
+  Tiled coordinate storage and quantization are workload-specific co-design
+  methods. Inspect memory traffic as well as arithmetic when mapping sparse
+  learning. Max-Cut speedups do not establish a spline-update accelerator.
+
+### Rechecked primary sources across the requested topics
+
+| Topic | Primary source | Planning consequence |
+|---|---|---|
+| EBM reasoning and verification | [EBT, 2507.02092](https://arxiv.org/abs/2507.02092), 2025; [ICLR 2026 proceedings](https://proceedings.iclr.cc/paper_files/paper/2026/hash/e19a65fd53b6f9a88b354da98813465d-Abstract-Conference.html) | Train only the small selector; do not infer verification benefit from lower learned energy. |
+| ARM–EBM relationship | [2512.15605](https://arxiv.org/abs/2512.15605), 2025 | Retain the exactly equivalent sigmoid classifier as a control. |
+| Neural constraint satisfaction | [NSVIF, 2601.17789](https://arxiv.org/abs/2601.17789), 2026 | Logical feasibility and semantic extraction remain different sources of error. |
+| Verification soundness | [Verify to Amplify, 2603.03538](https://arxiv.org/abs/2603.03538), 2026 | Measure later error and false acceptance; do not learn labels from the head's own energy. |
+| Hallucination detection | [Spilled Energy, 2602.18671](https://arxiv.org/abs/2602.18671), 2026 | A useful future internal-signal comparator; defer a fresh activation/logit branch until the current decision mechanism is understood. |
+| KAN and online learning | [Spline locality, 2602.02056](https://arxiv.org/abs/2602.02056), 2026; [KAN-CL, 2605.12306](https://arxiv.org/abs/2605.12306), 2026 | Count active coefficient writes and retain forgetting controls. The unchanged importance-anchor mechanism remains retired. |
+| Ising in ML | [Scaling Up Thermodynamic AI Models, 2607.00170](https://arxiv.org/abs/2607.00170), submitted June 2026 | Sampling quality and autocorrelation belong in a future device comparison. Image classification does not establish reasoning transfer. |
+| Energy-guided generation | [Energy-Based Decoding, 2605.28020](https://arxiv.org/abs/2605.28020), 2026 | External reward steering needs a qualified reward signal; defer generation steering. |
+| Delayed confidence | [Delayed ACI, 2609.07251](https://arxiv.org/abs/2609.07251), 2026 | Fix the issued-error replay discrepancy before any new conformal comparison. Confidence-set adaptation does not change point Brier scores. |
+
+### Secondary-source checks and limits
+
+- **OpenReview:** searched ICLR/NeurIPS energy and verification submissions.
+  EBT and NSVIF forum/PDF requests reached browser verification. Search-index
+  snippets identify NSVIF as under review; no acceptance claim follows. The
+  separate official ICLR proceedings page supports EBT's conference status.
+- **Extropic:** the [writing index](https://extropic.ai/writing) loaded.
+  The [Z1T article](https://extropic.ai/writing/z1t), dated 2026-09-04,
+  describes sparse probabilistic operations with FPGA companion operations.
+  Its efficiency analysis contains estimates. This establishes neither local
+  TSU access nor an end-to-end Carnot speedup. Its linked open recipe is an
+  implementation lead, not a required new dependency.
+- **Semantic Scholar:** both Graph API citation requests for
+  `ARXIV:2507.02092` and `ARXIV:2512.15605` failed in the browser tool.
+  Title searches did not yield a verified list of citing papers. Citation
+  discovery is incomplete; no citation census or novelty claim is made.
+- **Hugging Face papers:** the [Spilled Energy page](https://huggingface.co/papers/2602.18671)
+  loaded and links the author's implementation. The ADOWIP paper-page request
+  failed; its primary arXiv HTML supplied the method instead.
+- **GitHub:** checked weekly [Python trending](https://github.com/trending/python?since=weekly)
+  and [Rust trending](https://github.com/trending/rust?since=weekly).
+  Both responses were cached about two weeks earlier. No current ranking or
+  newly trending EBM/constraint/KAN repository was established. Paper-linked
+  repositories are preferable to inventing a trend from this incomplete view.
+- **Logical Intelligence:** the [Kona page](https://logicalintelligence.com/kona)
+  loaded. Its constraint/energy framing is relevant context, but the inspected
+  product page does not supply a reproducible Carnot implementation recipe.
+
+No new hardware purchase or generator-weight training follows from this scan.
+The next design must distinguish known development exposure, causal replay,
+current model inference and independently reproduced deployment benefit.

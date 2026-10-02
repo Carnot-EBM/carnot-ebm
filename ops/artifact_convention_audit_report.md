@@ -9,22 +9,34 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 6 |
-| CANNOT_DETERMINE | 2 |
+| CHECKABLE | 1 |
+| CANNOT_DETERMINE | 7 |
 
-## experiment_7983_reserved_decisions.json
-
-**CANNOT_DETERMINE**
-
-reviewer call failed
-
-## experiment_7984_v692_evidence_ablation.json
+## experiment_7997_v693_typed_development_decisions.json
 
 **CANNOT_DETERMINE**
 
 reviewer call failed
 
-## experiment_7985_delayed_acquisition.json
+## experiment_7998_v693_selective_feedback_learning.json
+
+**CANNOT_DETERMINE**
+
+reviewer call failed
+
+## experiment_7999_v693_learning_causal_audit.json
+
+**CANNOT_DETERMINE**
+
+reviewer call failed
+
+## experiment_8000_v693_delayed_confidence.json
+
+**CANNOT_DETERMINE**
+
+reviewer call failed
+
+## experiment_8001_v693_arc_supervisor_qualification.json
 
 **CHECKABLE**
 
@@ -40,82 +52,20 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7987_issued_confidence.json
+## experiment_8002_v693_service_cost.json
 
-**CHECKABLE**
+**CANNOT_DETERMINE**
 
-## VERDICT
-CHECKABLE
+reviewer call failed
 
-## WHAT THE CLAIM IS
-The experiment was blocked at the conductor pre-gate stage because upstream dependency exp7981-qwen-stream-capture failed two gate criteria.
+## experiment_8003_v693_hardware_sparse_boundary.json
 
-## WHAT IS MISSING
-nothing
+**CANNOT_DETERMINE**
 
-## THE CHECK A READER CANNOT DO
-none
+reviewer call failed
 
-## experiment_7988_v692_arc_supervisor_delta.json
+## experiment_8004_v693_capstone.json
 
-**CHECKABLE**
+**CANNOT_DETERMINE**
 
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-no claim
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7989_v692_service_cost.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The artifact makes no comparative claim; it is a scaffolding receipt recording upstream branch readiness and dependency validation checks.
-
-## WHAT IS MISSING
-nothing. Evaluated present fields `acceptance_gate_results`, `branch_gate_check_summary`, `branch_readiness`, `acquisition_setup`, and `cited_upstream_artifacts`, which record complete per-check expected, observed, and pass/fail diagnostics.
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7990_v692_hardware_evidence.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-Execution is blocked due to failed upstream custody or service checks (`honest_verdict`: "complete_blocked_required_custody_or_service"), with no hardware speedup claimed (`hardware_speedup_claimed`: false).
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7991_v692_capstone.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The capstone execution is blocked with zero readiness (`capstone_execution_ready_score`: 0) and failed acceptance gates due to multiple upstream check failures.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
+reviewer call failed

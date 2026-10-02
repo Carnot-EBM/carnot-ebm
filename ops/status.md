@@ -17717,3 +17717,17 @@ Validation: schema/prior-failure, exclusion and overdue-priority checks pass;
 Scoped Ruff, explicit-path spec coverage and exact contract/gate checks pass.
 No new scientific result, hardware execution or publication is claimed.
 `research-roadmap.yaml` and `scripts/research_conductor.py` are unchanged.
+## 2026-10-02 — V694 staged; execution pending
+
+Milestone 2026.10.694 plans thirteen tasks, Exp8005–Exp8017, across four phases.
+The complete design table, full executable JSON and digest match
+`research-roadmap-next.yaml`. The active roadmap and conductor source are
+unchanged. V693's incomplete design is preserved as a historical document.
+
+V693 qualified capture and finite delayed learning, but its independent audit
+found no typed-decision benefit. Static exposure custody and delayed-error
+reconstruction still need resolution. V694 tests optimizer conditioning and
+equal-budget updates selected after label release, with matched classical
+controls and independent retention/restart checks. A bounded Qwen source panel,
+real Rust binding prototype and cumulative precision analysis have explicit
+claim limits. No new science or device speedup is claimed by this plan.

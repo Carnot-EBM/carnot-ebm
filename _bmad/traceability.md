@@ -3570,3 +3570,13 @@ Verification: exact table/machine/YAML/hash and gate-field comparison;
 private authority CLI tests, including E2E-018. Scoped Ruff and explicit-path
 spec coverage pass. No implementation or new experiment result is claimed.
 No active-roadmap or conductor modification is part of this planning change.
+## V694 planning traceability — 2026-10-02
+
+| Requirement | Planned work | Evidence/status |
+|---|---|---|
+| REQ-REPORT-8005-V694-PLAN | Exp8005–Exp8017, exactly thirteen tasks | Design table/full JSON/digest agree with staged YAML; implementation pending |
+| FR-06, FR-12 | Exp8007–Exp8011 conditioning, typed decisions and source sensitivity | Measured benefit pending; exposed development scope |
+| FR-11 | Exp8012–Exp8013 causal update allocation, retention and recovery | Continuous-learning experiment planned; no generalized benefit claimed |
+| FR-05, FR-08, NFR-01 | Exp8015 real binding parity and current update timing | Opt-in research prototype planned |
+| FR-09, FR-10 | Exp8005–Exp8006 authority and independent replay; all task checks | Existing contract/schema checks used for this planning change |
+| ARC generalization and hardware continuity | Exp8014 and Exp8016 | New supervisor outcomes only; all three board obligations retained |

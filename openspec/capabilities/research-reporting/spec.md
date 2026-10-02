@@ -89147,3 +89147,30 @@ Private controls SHALL show both useful changes and a no-headroom case.
 A missing declared producer SHALL remain missing even if an unrelated artifact
 shares its number. Missing fields SHALL be contract errors, never zero values.
 Cold replay SHALL reconstruct immutable inputs and reject edited aggregates.
+## V694 staged research plan (2026-10-02)
+
+### REQ-REPORT-8005-V694-PLAN
+
+The staged milestone 2026.10.694 SHALL contain exactly thirteen ordered tasks,
+Exp8005 through Exp8017. Its design at
+`openspec/change-proposals/research-roadmap-vNEXT.md` SHALL include a visible
+task table, complete executable task JSON and a canonical full-task SHA-256.
+Those representations SHALL agree with `research-roadmap-next.yaml`, including
+prompts, gates, model/substrate declarations and failure-lineage records.
+Planning SHALL preserve the active roadmap and conductor source.
+
+### SCENARIO-REPORT-8005-V694-PLAN
+
+Read the staged YAML with `scripts.roadmap_schema.Roadmap`, then use
+`roadmap_contract.parse_design`, `compare_contract` and
+`v685_authority_lifecycle.assess_authorities` with milestone=2026.10.694,
+first_id=8005 and count=13. Require exact full-task equality and digest equality.
+Use a private active-file fixture to test activation; do not activate production.
+Validate every structured gate against an earlier task's required artifact
+fields. Require rendered prompts, valid prior-failure retirement flags and the
+ARC generalization floor.
+
+Status: staged planning contract verified; experimental implementation and
+scientific acceptance remain pending. Planned work covers conditioned energy
+decisions, delayed equal-budget updates, independent retention/restart audits,
+bounded Qwen source sensitivity and a narrow Rust/hardware feasibility path.
