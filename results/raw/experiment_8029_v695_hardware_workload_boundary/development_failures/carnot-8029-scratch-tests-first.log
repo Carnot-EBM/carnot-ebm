@@ -1,0 +1,24 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+________________________ test_private_validation_parent ________________________
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261002T162407-1463008-13a89128/test_private_validation_parent0')
+
+    def test_private_validation_parent(tmp_path: Path) -> None:
+        """SCENARIO-REPORT-8029-SEAL: frozen pytest scratch has an existing parent."""
+        e.commands(tmp_path)
+>       assert (tmp_path / "pytest").is_dir()
+E       AssertionError: assert False
+E        +  where False = is_dir()
+E        +    where is_dir = (PosixPath('/tmp/pytest-carnot-ianblenke/20261002T162407-1463008-13a89128/test_private_validation_parent0') / 'pytest').is_dir
+
+tests/python/test_hardware_workload_8029.py:285: AssertionError
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_hardware_workload_8029.py::test_private_validation_parent
+1 failed, 1 warning in 2.82s

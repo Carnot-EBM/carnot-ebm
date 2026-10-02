@@ -1,0 +1,70 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+____________________________ test_qualified_sources ____________________________
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261002T162045-1459703-41788c50/test_qualified_sources0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f3121c5abd0>
+
+    def test_qualified_sources(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+        """SCENARIO-REPORT-8029-INDEPENDENT: eligible current sources bind their bytes."""
+        history = dict(
+            boards=plan()["boards"],
+            checks=[],
+            cited_upstream_artifacts=[],
+            historical_failed_operands=[],
+        )
+        monkeypatch.setattr(h.history, "authenticate", lambda *a: deepcopy(history))
+        inputs = tmp_path / "inputs.json"
+        atomic_json(inputs, {k: v for k, v in plan()["trajectory"].items() if k != "updates"})
+        ref = dict(path=str(inputs), sha256=sha256_file(inputs))
+        for eid, (stem, field) in h.SOURCES.items():
+            path = tmp_path / "results" / (stem + ".json")
+            atomic_json(
+                path,
+                dict(
+                    experiment_id=eid,
+                    run_date="20261002",
+                    verdict_class="null",
+                    flagged_adversarial=False,
+                    **{field: 1},
+                    raw_shard_hashes=[ref],
+                    update_rows=plan()["trajectory"]["updates"],
+                    checkpoint_references=[ref],
+                    timing_rows=[],
+                    validation_receipts=[dict(required=True, passed=True)],
+                    rows=[dict(started_monotonic_ns=1, ended_monotonic_ns=1000000001, id="score")],
+                ),
+            )
+        atomic_json(
+            tmp_path / "results/experiment_8024_likelihood_decision_test.json", dict(blocked=True)
+        )
+        atomic_json(
+            tmp_path / "results/experiment_8016_v694_hardware_update_boundary.json",
+            dict(honest_verdict="complete_blocked_original", verdict_class="blocked"),
+        )
+        loaded = h.load(tmp_path, tmp_path / "raw")
+        assert loaded["trajectory"]["updates"]
+        assert loaded["scoring"][0]["duration_s"] == 1
+        assert all(Path(r["path"]).is_relative_to(tmp_path / "raw") for r in loaded["references"])
+        assert loaded["preserved_historical_outcomes"][0]["verdict_class"] == "blocked"
+        path = tmp_path / "results" / (h.SOURCES[8027][0] + ".json")
+        value = json.loads(path.read_text())
+        log = tmp_path / "failure.log"
+        log.write_text("original failed assertion\n")
+        value["validation_receipts"] = [dict(required=True, passed=False, log_path=str(log),
+            log_sha256=sha256_file(log))]
+        atomic_json(path, value)
+        loaded = h.load(tmp_path, tmp_path / "other-raw")
+>       assert loaded["timings"] is None
+E       assert [] is None
+
+tests/python/test_hardware_workload_8029.py:226: AssertionError
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_hardware_workload_8029.py::test_qualified_sources - ...
+1 failed, 1 warning in 1.81s

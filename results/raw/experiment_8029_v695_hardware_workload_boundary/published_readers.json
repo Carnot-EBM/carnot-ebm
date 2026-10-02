@@ -1,0 +1,93 @@
+{
+  "final": {
+    "candidate_sha256": "sha256:1265399214f722aee6dc9b512951eb7470186928dbe8e74cf78512d2e1b7c296",
+    "flagged_adversarial": false,
+    "passed": true,
+    "receipts": [
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/experiment_8029_v695_hardware_workload_boundary.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+          "--json",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8029_v695_hardware_workload_boundary.json"
+        ],
+        "duration_s": 7.409805066999979,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8029_v695_hardware_workload_boundary/terminal_logs/1265399214f722aee6dc9b512951eb7470186928dbe8e74cf78512d2e1b7c296/00_adversarial.log",
+        "log_sha256": "sha256:1e88dc3c4db24b9c79aafcbc3756d2c9ca794ab70c9ccfb52fa8b44ae97b76e1",
+        "name": "adversarial",
+        "output_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8029_v695_hardware_workload_boundary.json\",\n      \"loaded\": true,\n      \"exp_id\": 8029,\n      \"title\": \"\",\n      \"honest_verdict\": \"complete_null_independent_hardware_custody\",\n      \"flag_count\": 0,\n      \"max_severity\": -1,\n      \"flags\": [],\n      \"gate_version\": \"197e0a5eacacb09ce6607ae8bdfd507498082857f0d02ec2003a62c251b69a24\"\n    }\n  ],\n  \"flagged_count\": 0\n}\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/experiment_8029_v695_hardware_workload_boundary.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py",
+          "--strict",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8029_v695_hardware_workload_boundary.json"
+        ],
+        "duration_s": 0.4913945159642026,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8029_v695_hardware_workload_boundary/terminal_logs/1265399214f722aee6dc9b512951eb7470186928dbe8e74cf78512d2e1b7c296/01_row_consistency.log",
+        "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+        "name": "row_consistency",
+        "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8029_v695_hardware_workload_boundary.py --cold-replay /home/ianblenke/github.com/ianblenke/carnot/results/experiment_8029_v695_hardware_workload_boundary.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8029_v695_hardware_workload_boundary.py",
+          "--cold-replay",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8029_v695_hardware_workload_boundary.json"
+        ],
+        "duration_s": 7.4134942080127075,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8029_v695_hardware_workload_boundary/cold_logs/1265399214f722aee6dc9b512951eb7470186928dbe8e74cf78512d2e1b7c296/00_cold_reduce.log",
+        "log_sha256": "sha256:1188b8c57141ff20182d47181113dd816c0bf7db8bf6f67c686ead236911e016",
+        "name": "cold_reduce",
+        "output_tail": "[exp8029] phase=start elapsed_s=0.001 completed=1 pending=current_phase model_loads=0 generations=0 device_calls=0\n[exp8029] numeric elapsed_s=0.001 completed=1 pending=4479\n[exp8029] numeric elapsed_s=0.311 completed=257 pending=4223\n[exp8029] numeric elapsed_s=0.539 completed=513 pending=3967\n[exp8029] numeric elapsed_s=0.767 completed=769 pending=3711\n[exp8029] numeric elapsed_s=0.993 completed=1025 pending=3455\n[exp8029] numeric elapsed_s=1.220 completed=1281 pending=3199\n[exp8029] numeric elapsed_s=1.448 completed=1537 pending=2943\n[exp8029] numeric elapsed_s=1.674 completed=1793 pending=2687\n[exp8029] numeric elapsed_s=1.899 completed=2049 pending=2431\n[exp8029] numeric elapsed_s=2.124 completed=2305 pending=2175\n[exp8029] numeric elapsed_s=2.562 completed=2561 pending=1919\n[exp8029] numeric elapsed_s=2.789 completed=2817 pending=1663\n[exp8029] numeric elapsed_s=3.018 completed=3073 pending=1407\n[exp8029] numeric elapsed_s=3.245 completed=3329 pending=1151\n[exp8029] numeric elapsed_s=3.473 completed=3585 pending=895\n[exp8029] numeric elapsed_s=3.701 completed=3841 pending=639\n[exp8029] numeric elapsed_s=3.929 completed=4097 pending=383\n[exp8029] numeric elapsed_s=4.156 completed=4353 pending=127\n[exp8029] numeric elapsed_s=4.269 completed=4480 pending=0\n{\"passed\": true, \"rows_checksum\": \"sha256:5df5998a060a6a17080e0199cdfbd03b820a19bae1e4d337f6ffa88316b03b03\"}\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      }
+    ]
+  },
+  "publication": {
+    "primary_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8029_v695_hardware_workload_boundary.json",
+    "primary_sha256": "sha256:1265399214f722aee6dc9b512951eb7470186928dbe8e74cf78512d2e1b7c296",
+    "sidecar_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8029_v695_hardware_workload_boundary/validators/1265399214f722aee6dc9b512951eb7470186928dbe8e74cf78512d2e1b7c296.json"
+  },
+  "readers": {
+    "document_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8029_v695_hardware_workload_boundary.json",
+    "document_sha256": "sha256:1265399214f722aee6dc9b512951eb7470186928dbe8e74cf78512d2e1b7c296",
+    "document_status": "\u26a0\ufe0f Research Finding",
+    "gate_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8029_v695_hardware_workload_boundary.json",
+    "gate_sha256": "sha256:1265399214f722aee6dc9b512951eb7470186928dbe8e74cf78512d2e1b7c296",
+    "gates": [
+      {
+        "actual": 1,
+        "artifact_field": "hardware_custody_ready_score",
+        "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8029_v695_hardware_workload_boundary.json",
+        "artifact_sha256": "sha256:1265399214f722aee6dc9b512951eb7470186928dbe8e74cf78512d2e1b7c296",
+        "expected": 1,
+        "op": "==",
+        "passed": true,
+        "reason": "actual=1 == expected=1",
+        "upstream": "exp8029-hardware-workload-boundary",
+        "upstream_final": true
+      }
+    ],
+    "passed": true,
+    "summary": "1 gate(s) satisfied",
+    "task_id": "exp8029-hardware-workload-boundary"
+  }
+}

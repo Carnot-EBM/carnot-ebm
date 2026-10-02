@@ -89990,3 +89990,59 @@ candidate and published bytes. Checkpoint references SHALL reside under this
 task's durable raw directory. arc_delta_ready_score is 1 only for a valid
 terminal measurement with passing owned checks, otherwise 0; it is not benefit.
 Ops/status/traceability reconciliation is conductor-owned for this invocation.
+
+## REQ-REPORT-8029: Separate hardware custody and current workload evidence
+
+Exp8029 SHALL freeze methods, roles, exclusions, budgets and gates before reading
+measurement operands on 20261002. Reuse authenticated historical readers without
+device contact. KV260 retains SSH quadratic Ising fabric k_max<=5, PolarFire
+retains Linux CPU-only scope, and GateMate retains its unchanged 0xffffffff
+physical/JTAG block. Execution dates must come from original receipts; absent
+timestamps remain null with a reason. NPU and TSU remain unqualified.
+
+### SCENARIO-REPORT-8029-INDEPENDENT
+
+Custody readiness depends only on complete valid custody and owned checks. A
+missing scientific trajectory SHALL block only the numerical branch. Valid
+custody remains terminal null, with no current device performance claim. Preserve
+original blocked outcomes and failures. Current trajectories, transactions and
+teacher-forced scoring qualify independently by exact upstream operands; missing
+contract fields fail explicitly and zero fails readiness. Disqualified producers
+cannot qualify costs. No historical experiment or physical check is repeated.
+
+### SCENARIO-REPORT-8029-NUMERIC
+
+Replay every eligible current update in original arm/seed order against float64
+using signed 24-bit Q12 coefficient state and signed 32-bit Q12 accumulators.
+Keep fitted geometry and calibration, lazy decay, saturation and every action
+disagreement. Save durable restart states. Require drift<=0.001, zero natural
+action disagreement, zero overflow and identical restarted decisions. Synthetic
+threshold and overflow cases are stress controls with independent n=0.
+
+### SCENARIO-REPORT-8029-WORKLOAD
+
+Keep prefill/scoring, sparse arithmetic, FFI, orchestration and durable storage
+separate. Compute 100x arithmetic Amdahl bounds only from qualified matching
+transactions; sampling bounds require a matching measured Ising operation.
+Report serial share and missing costs. FPGA-ASIC co-design orchestration and
+Extropic hybrid sparse operations supply operation context, not local speedups.
+Recommend no purchase without a useful measured compatible executable kernel.
+
+### SCENARIO-REPORT-8029-SEAL
+
+Traced tests precede implementation and cover all added statements including CLI.
+Reuse scoped validation and publication helpers. Keep the artifact guard enabled
+and test/coverage/child scratch outside results. Preserve one bounded full-suite
+health diagnostic separately from owned checks. Freeze argv, exits and log hashes.
+Cold-reduce durable raw rows and checkpoints in a fresh process, then run exact
+candidate and published adversarial and strict row readers. Record zero current
+device and pretrained-model calls. Physical hardware_smoke is inapplicable.
+Ops/status/traceability reconciliation is conductor-owned for this invocation.
+
+Exp8029 implementation is in `python/carnot/reporting/hardware_workload_8029.py`
+and its package/CLI runner, with traced `test_hardware_workload_8029.py` checks.
+The current replay retains all 4,480 updates. Q12 qualification fails with
+maximum drift 0.0013333509694702927 and one action disagreement; saturation is
+zero and restart states agree. Custody is independently valid. Added statement
+coverage is 296/296. Candidate and published cold/adversarial/strict readers pass.
+Unrelated bounded repository health remains separate.
