@@ -19325,3 +19325,4 @@ code |
 | 2026-10-02 07:35 UTC | Independently measure later decisions retention an | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8012-budgeted-online-updates, exp8012-budgeted-online-updates, exp8012-budgeted-online-updates) |
 | 2026-10-02 07:48 UTC | Assess new supervisor outcomes for live ARC genera | OK | 87 passed, 1 warning in 7.74s |
 | 2026-10-02 07:50 UTC | Test a Rust sparse update kernel through the real | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8012-budgeted-online-updates, exp8012-budgeted-online-updates, exp8012-budgeted-online-updates) |
+| 2026-10-02 08:21 UTC | Bound cumulative quantization error and preserve e | OK | 101 passed, 1 warning in 29.79s |
