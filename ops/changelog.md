@@ -21286,3 +21286,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-10-02: Test equal-budget continuous learning on qualified energy decisions (⚠️ Research Finding) — honest_verdict=complete_null_causal_online_updates; results/experiment_8025_v695_causal_online_updates.json
 - 2026-10-02: Independently reconstruct learning benefit retention and restart behavior (⚠️ Research Finding) — honest_verdict=complete_disqualified_learning_retention_audit; results/experiment_8026_v695_learning_retention_audit.json
 - 2026-10-02: Measure loaded native update parity and complete transaction cost (⚠️ Research Finding) — honest_verdict=complete_disqualified_native_update_cost; results/experiment_8027_v695_native_update_cost.json
+- 2026-10-02: Inspect only new live supervisor outcomes for transferable refinement (⚠️ Research Finding) — honest_verdict=complete_null_no_new_outcomes; results/experiment_8028_v695_arc_supervisor_delta.json
