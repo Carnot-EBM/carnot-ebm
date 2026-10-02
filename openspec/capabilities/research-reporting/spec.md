@@ -90472,3 +90472,55 @@ operands, arm support, durable replay and private CLI routes. New code has
 89 measured statements with complete coverage before final invocation.
 The final primary and durable validation receipts record the measured outcome.
 Conductor-owned ops and traceability reconciliation remains separate.
+# Exp8042 bounded precision fallback — 2026-10-02
+
+## SCENARIO-REPORT-8042-COUNTS
+
+Exact JSON integer fields ending in `_count` SHALL remain structural counts at
+all sample sizes. Equal eligible and completed counts mean all eligible work
+completed. The adversarial verifier SHALL retain critical equality flags for
+floating-point count fields and distinct measured metrics. This prevents a
+large successful replay from being rejected solely because its two counts match.
+
+## REQ-REPORT-8042: Preserve custody and bound quantized decisions
+
+Freeze Q12 signed24 state, signed32 accumulation, ties-to-even rounding,
+8192 updates and a 600-second numerical budget before measurement. Authenticate
+each original board receipt without device contact. Preserve KV260 SSH fabric
+at k_max<=5, PolarFire Linux CPU-only execution and GateMate's unchanged
+0xffffffff physical/JTAG block. Retain historical failed checks and exact bytes.
+
+Propagate outward rounded coefficient, calibration and global-decay intervals
+through the original bounded sparse update recurrence. Initial intervals use
+the fixed-point rounding cell; saturated inputs retain their exact rounding loss.
+Never derive widths from observed evaluation error or action disagreement.
+Fall back to the existing CPU float64 state when either typed threshold, 0.1 or
+0.5, overlaps the interval or any fixed operation saturates. Account for the
+unconditional float64 shadow, interval computation, transfer, storage and fallback.
+Require containment for every readout, exact action parity, no unhandled overflow
+and identical checkpoint restart decisions. Synthetic controls have independent n=0.
+
+## SCENARIO-REPORT-8042-BOUND
+
+Threshold, saturation and long-update fixtures SHALL exercise the real recurrence.
+Every before/after interval SHALL contain the reference float64 probability.
+Missing current trace or numerical budget exhaustion SHALL block only numerical
+scope with exact operands. Custody qualification SHALL remain independent.
+
+## SCENARIO-REPORT-8042-COST
+
+Measure CPU emulation and fallback fractions without a device speed claim.
+Qualified matching transaction rows SHALL support only hypothetical 100x
+compatible-arithmetic bounds, with fallback and transfer retained as serial cost.
+Missing complete service or device components SHALL remain explicit.
+No acquisition SHALL be recommended without a useful measured compatible kernel.
+
+## SCENARIO-REPORT-8042-SEAL
+
+Private traced tests and historical custody mutations SHALL run with artifact
+guards. Require Ruff, strict mypy, spec tracing and 100% added-code statement
+coverage including runnable CLI paths. One bounded full-suite health diagnostic
+SHALL remain separate from owned readiness. Cold-reduce durable rows/checkpoints
+in a fresh process. Validate candidate and published bytes through the existing
+adversarial verifier, strict row lint and primary publication helper. Preserve
+real argv, exit codes, hashes and flushed progress. No model or device calls.

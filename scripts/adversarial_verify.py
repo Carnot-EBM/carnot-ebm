@@ -1885,14 +1885,22 @@ def check_tautology(d: dict[str, Any], flags: list[Flag]) -> None:
             and (_has_control_treatment_qualifier(k1) or _has_control_treatment_qualifier(k2))
         ):
             continue
-        # Skip count-coincidence pairs: both names imply counts AND
-        # both values are small integers.
+        # Count identities do not become measured float coincidences at large n.
+        # Require exact JSON integers and explicit count suffixes for large counts.
         if (
             _is_count_field(k1)
             and _is_count_field(k2)
             and _is_integer_value(v1)
             and _is_integer_value(v2)
-            and abs(v1) < 1000
+            and (
+                abs(v1) < 1000
+                or (
+                    k1.endswith("_count")
+                    and k2.endswith("_count")
+                    and type(d[k1]) is int
+                    and type(d[k2]) is int
+                )
+            )
         ):
             continue
         # Skip integer-value pairs entirely if either value is small
