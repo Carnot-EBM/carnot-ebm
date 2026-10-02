@@ -1,0 +1,59 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.10.696",
+  "generated_at": "2026-10-02T23:32:25Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 34.2,
+  "experiments_completed": 9,
+  "compute_bound_experiments_count": 9,
+  "slowest_experiments": [
+    {
+      "experiment": "Bind thirteen tasks to the complete V696 design",
+      "duration_minutes": 6.36,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Independently test later loss retention and process recovery",
+      "duration_minutes": 5.54,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Test cache and execution-shape causes of duplicate likelihood drift",
+      "duration_minutes": 5.5,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Learn from bounded recent feedback under equal update budgets",
+      "duration_minutes": 3.8,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Measure repaired native updates and complete durable transaction cost",
+      "duration_minutes": 3.47,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.10.696 completed 9 experiments (all 9 compute-bound) totaling 34.2 wall-time minutes (averaging 4 minutes per experiment) reconstructed from disk modification timestamps. The longest-running experiments were 'Bind thirteen tasks to the complete V696 design' at 6.36 minutes, 'Independently test later loss retention and process recovery' at 5.54 minutes, 'Test cache and execution-shape causes of duplicate likelihood drift' at 5.50 minutes, 'Learn from bounded recent feedback under equal update budgets' at 3.80 minutes, and 'Measure repaired native updates and complete durable transaction cost' at 3.47 minutes. While point-in-time monitor telemetry observed both RTX 3090 GPUs at 0% utilization with 4MB allocated outside active execution, active execution-window hardware traces were not captured and the locked indicator gpu_idle_on_compute_bound_tasks is false.",
+  "bottlenecks_identified": [
+    "Execution wall time was concentrated in the top compute-bound experiments: 'Bind thirteen tasks to the complete V696 design' (6.36 minutes), 'Independently test later loss retention and process recovery' (5.54 minutes), and 'Test cache and execution-shape causes of duplicate likelihood drift' (5.50 minutes), which together accounted for 17.40 of 34.2 total wall-time minutes (50.9%), with the top five tasks accounting for 24.67 minutes (72.1%).",
+    "Milestone timing relied on disk-mtime fallback reconstruction following zero commits on the live git-log path, leaving intra-task execution phases (environment initialization, dataset loading, model forward compute/training, and artifact validation) uninstrumented.",
+    "Absence of continuous in-flight accelerator telemetry across active execution windows leaves hardware utilization, memory bandwidth saturation, and kernel execution efficiency unmeasured during compute-bound runs."
+  ],
+  "improvements_suggested": [
+    "Instrument experiment runners with monotonic sub-phase timers to isolate latency across environment setup, data preparation, compute passes, and artifact validation.",
+    "Deploy continuous, lightweight GPU sampling throughout task execution rather than relying solely on discrete point-in-time monitor checkpoints.",
+    "Profile and optimize the longest-running task binding (6.36 minutes), loss retention/recovery testing (5.54 minutes), and duplicate likelihood drift analysis (5.50 minutes) workflows to explore batching and evaluation caching opportunities.",
+    "Restrict DualGPURunner orchestration strictly to parallel executions involving two or more distinct models, avoiding overhead or invalid dispatch on single-model inference jobs.",
+    "Preserve and maintain failure_ledger pre-launch checks to ensure doomed reruns continue to be blocked in sub-second time without consuming compute budget."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add granular sub-phase execution timing to experiment runners to measure setup, compute, training iterations, and artifact validation overhead.",
+    "Implement active-window GPU utilization and memory timeseries logging to assess hardware efficiency during compute-bound tasks.",
+    "Profile the longest-running task binding (6.36 minutes), loss retention testing (5.54 minutes), and likelihood drift testing (5.50 minutes) workflows to identify optimization and caching opportunities."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Milestone 2026.10.696 completed 9 compute-bound experiments totaling 34.2 wall-time minutes, led by V696 design binding (6.36 minutes), loss retention testing (5.54 minutes), and likelihood drift testing (5.50 minutes). While static monitor telemetry observed both RTX 3090 GPUs at 0% utilization with 4MB allocated outside execution, the locked field records gpu_idle_on_compute_bound_tasks as false and no continuous in-flight telemetry exists. Estimated time savings remain at 0% pending empirical measurement of intra-task phases and verified accelerator execution traces."
+}
