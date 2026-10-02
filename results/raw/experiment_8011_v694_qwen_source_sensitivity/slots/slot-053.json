@@ -1,0 +1,118 @@
+{
+  "arm": "duplicate",
+  "capture_identity": "sha256:c690c1f517fbce73c5da6a2d1e99e3819c3de93e1045fe76d1c8215b54691541",
+  "censor_status": false,
+  "denominator": 1,
+  "donor_group_id": "sha256:33e62a53ed3af22d5cddf7e80004bde2f59c1e11e731076bb9b999490bebebb5",
+  "duration_s": 0.8653307430213317,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:33e62a53ed3af22d5cddf7e80004bde2f59c1e11e731076bb9b999490bebebb5:duplicate",
+  "group_id": "sha256:33e62a53ed3af22d5cddf7e80004bde2f59c1e11e731076bb9b999490bebebb5",
+  "input_byte_upper_bound": 3649,
+  "input_tokens": 825,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 825,
+      "prompt_tokens_details": {
+        "cached_tokens": 821
+      },
+      "total_tokens": 848
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:e79ca20cfc52e4734b609081011634ac0f7e825c08c85b61c7455a83ec7126e7",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790925749,
+    "id": "chatcmpl-rULSQMtX0UJVEU7TV6TrwVVmoLXy3yFf",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 821,
+      "predicted_ms": 534.977,
+      "predicted_n": 23,
+      "predicted_per_second": 42.99250248141509,
+      "predicted_per_token_ms": 23.25986956521739,
+      "prompt_ms": 102.514,
+      "prompt_n": 4,
+      "prompt_per_second": 39.01906081120627,
+      "prompt_per_token_ms": 25.6285
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 825,
+      "prompt_tokens_details": {
+        "cached_tokens": 821
+      },
+      "total_tokens": 848
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 32,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"FBI Top 10 Most Wanted fugitive wanted on serious charges in Texas, reward offered for information\\nOne of the fugitives on the FBI's Top 10 Most Wanted is wanted on multiple charges in Texas, per officials from the department.\\nAccording to the FBI, on May 11, 2012, a couple from Texas exchanged marriage vows and celebrated with a reception shortly after. Less than 48 hours later, per officials, the 26-year-old bride, Estrella Carrera, was tragically discovered in her apartment's bathtub, still in her wedding attire, having succumbed to fatal stab wounds.\\nThe FBI has formally accused her newlywed, now 41-year-old Arnaldo Jiminez, of being responsible for this terrible crime. According to investigators, Jiminez allegedly stabbed Estrella while they were in his black four-door Maserati, and then he moved her lifeless body to the bathtub in her Burbank, Illinois apartment.\\nThe FBI's pursuit of evidence in this case began with their focus on Jiminez's movements. Officials stated that they discovered that on May 12, his cellphone signal was traced to various locations, spanning from Chicago to Southern Illinois, Memphis, Tennessee, and finally culminating in Arkansas, all within a single day. The following day, his cell phone was registered in Houston, Texas, and eventually traced to Hidalgo, Mexico, according to investigators.\\nDuring the same year, law enforcement arrested Jiminez's brother on drug-related charges, which led to the discovery of Arnaldo's Maserati stored in the garage, according to a statement from the FBI. Traces of blood were found inside the vehicle, further supporting the theory that Jiminez may have committed the crime in the car before moving the body to the bathtub, per FBI officials.\\nInvestigators stated they suspect that Jiminez's brother might have driven him to Mexico in the same vehicle and left him there. Since the night of the wedding, Jiminez has managed to elude authorities and remains unaccounted for. FBI officials believe he is likely in hiding in Mexico, specifically in the Santiago Papasquiaro area or in Reynosa, Tamaulipas.\\nA $250,000 reward is being offered for information leading to Jimenez's arrest, per officials.\\nFBI officials also stated that Jimenez should be considered armed and dangerous. If you have any information concerning this person, please call 1-800-CALL-FBI or contact your nearest American Embassy or Consulate.\", \"original_answer\": \"The FBI is seeking information on Arnaldo Jiminez, who is on its Top 10 Most Wanted list. Jiminez is accused of fatally stabbing his bride, Estrella Carrera, in 2012 in his Maserati and leaving her body in her apartment's bathtub. His movements were traced from Illinois to Mexico, where he is believed to be hiding. His brother was arrested on drug charges and Jiminez's Maserati, with traces of blood, was found in his garage. The FBI offers a $250,000 reward for information leading to Jiminez's arrest.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69410,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "seed": 69410,
+  "source_cluster_id": "16dc2c35fc4458254ea31ddafa9fddaae67ccb8e01eca484e1a2dd724357cd95",
+  "source_hash": "sha256:25d319ac5fd7cfe7687873fdd5acb1a3d522db186d89ddbb1b80559d1982cc65",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ]
+}

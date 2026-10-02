@@ -1,0 +1,43 @@
+{
+  "passed": true,
+  "receipts": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8011_v694_qwen_source_sensitivity/experiment_8011_v694_qwen_source_sensitivity.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/adversarial_verify.py",
+        "--json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8011_v694_qwen_source_sensitivity/experiment_8011_v694_qwen_source_sensitivity.json"
+      ],
+      "duration_s": 0.8463735660770908,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_8011_v694_qwen_source_sensitivity/terminal_logs/00_adversarial.log",
+      "log_sha256": "sha256:8743c2f4fa5d1fcc9ed4eb46aa4a5e0149815e20602515f36e633b503708fc6f",
+      "name": "adversarial",
+      "output_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8011_v694_qwen_source_sensitivity/experiment_8011_v694_qwen_source_sensitivity.json\",\n      \"loaded\": true,\n      \"exp_id\": 8011,\n      \"title\": \"\",\n      \"honest_verdict\": \"complete_positive_source_sensitivity\",\n      \"flag_count\": 0,\n      \"max_severity\": -1,\n      \"flags\": [],\n      \"gate_version\": \"197e0a5eacacb09ce6607ae8bdfd507498082857f0d02ec2003a62c251b69a24\"\n    }\n  ],\n  \"flagged_count\": 0\n}\n",
+      "passed": true,
+      "scope": "terminal",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8011_v694_qwen_source_sensitivity/experiment_8011_v694_qwen_source_sensitivity.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8011_v694_qwen_source_sensitivity/experiment_8011_v694_qwen_source_sensitivity.json"
+      ],
+      "duration_s": 0.052627068012952805,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_8011_v694_qwen_source_sensitivity/terminal_logs/01_strict_rows.log",
+      "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+      "name": "strict_rows",
+      "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+      "passed": true,
+      "scope": "terminal",
+      "timed_out": false
+    }
+  ]
+}

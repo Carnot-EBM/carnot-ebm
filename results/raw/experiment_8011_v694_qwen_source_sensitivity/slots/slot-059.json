@@ -1,0 +1,116 @@
+{
+  "arm": "swap",
+  "capture_identity": "sha256:c690c1f517fbce73c5da6a2d1e99e3819c3de93e1045fe76d1c8215b54691541",
+  "censor_status": false,
+  "denominator": 1,
+  "donor_group_id": "sha256:550a69582fcc5d1e474a387b3dbba3ea3ef45cf5353adfe88222dbb5aa071e92",
+  "duration_s": 1.2900878849904984,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:ce1efefde7a6346f5af8c6d4e3e77fb57afa2f22c3168ef4876b87c12187a4b9:swap",
+  "group_id": "sha256:ce1efefde7a6346f5af8c6d4e3e77fb57afa2f22c3168ef4876b87c12187a4b9",
+  "input_byte_upper_bound": 2830,
+  "input_tokens": 682,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 1.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 682,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 705
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:6109e1a0f948cfee7370a5ec85075966d528ec522a47207155db77bf77b7734b",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 1.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790925755,
+    "id": "chatcmpl-dEkCA7fYgeKWxm68zn1f9b4hck8IRr41",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 535.131,
+      "predicted_n": 23,
+      "predicted_per_second": 42.98013009898511,
+      "predicted_per_token_ms": 23.266565217391303,
+      "prompt_ms": 609.007,
+      "prompt_n": 604,
+      "prompt_per_second": 991.7784196240767,
+      "prompt_per_token_ms": 1.0082897350993376
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 682,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 705
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 32,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Welcome to Farkle Ten! Farkle Ten is a unique twist on the game of Farkle geared towards fast and fun online play. Choose How To Play Farkle for a simple set of instructions on how to play or browse the rest of the Farkle Ten guide for hints and tips! Object: The player with the highest score in 10 rounds of play wins! This is a modified version of Farkle geared towards faster online play allowing you to finish up a game in one series instead of waiting on the other player over and over again. How to Play: Each player takes turns rolling the dice. When it's your turn you'll roll all 6 dice.\\\\n\\\\npassage 2:A Farkle occurs when the dice are rolled and no point dice appear. At this point the player loses all the point dice he/she/it has collected during that turn, and the play passes to the player to the left. No points are recorded on the scratch paper. If a player decides not to risk rolling a Farkle then he/she/it can stop rolling and the play passes to the player to the left. Any points collected during that turn are then recorded on the scratch paper. At this point the player may eat some Tostitos\u00ae Chips and salsa.\\\\n\\\\npassage 3:1 Two sets of three of a kind: 2,500 points. 2  Four of a kind is scored as 1,000 points, or double the three of a kind value, or quadruple the three of a kind value.  Five of a kind is scored as 2,000 points, or triple the three of a kind value, or six times the three of a kind value.\\\\n\\\\n\\\",\\\"question\\\":\\\"how play farkle\\\"}\", \"original_answer\": \"Wisconsin is considered the best state due to its rich culture, scenic beauty, and strong economy. Madison's State Street, which serves as a hub for shopping, dining, and entertainment, is a significant attraction. The state is also known as the \\\"Water Park Capital of The World\\\" due to Wisconsin Dells. Wisconsin's food traditions, such as the Wisconsin Fish Fry and beer brats, add to its appeal. Furthermore, Wisconsin has a strong beer industry, which contributes 3.9% to the state's GDP and employs over 60,000 people, thanks to its embraced German brewing traditions.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69410,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "seed": 69410,
+  "source_cluster_id": "1889240020d7f05d772d4bf389e1a4f3fba0c336623ce245c85682892eb977a1",
+  "source_hash": "sha256:0048f6c0d9dd043735b6587655f9ead4306eb282fcaaf3d62e2fe86e8f694693",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ]
+}

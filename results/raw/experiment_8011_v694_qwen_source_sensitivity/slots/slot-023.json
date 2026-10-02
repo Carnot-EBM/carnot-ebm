@@ -1,0 +1,111 @@
+{
+  "arm": "duplicate",
+  "capture_identity": "sha256:c690c1f517fbce73c5da6a2d1e99e3819c3de93e1045fe76d1c8215b54691541",
+  "censor_status": false,
+  "denominator": 1,
+  "donor_group_id": "sha256:d744457477ae41ab7f0611967e7870e465f0fe222594573c5acd262dcfcf9ba1",
+  "duration_s": 0.6565927049377933,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:d744457477ae41ab7f0611967e7870e465f0fe222594573c5acd262dcfcf9ba1:duplicate",
+  "group_id": "sha256:d744457477ae41ab7f0611967e7870e465f0fe222594573c5acd262dcfcf9ba1",
+  "input_byte_upper_bound": 2313,
+  "input_tokens": 509,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 509,
+      "prompt_tokens_details": {
+        "cached_tokens": 505
+      },
+      "total_tokens": 532
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:48ec06698161e756c30d4f0b8df05fccc47968486487e939d8f36ed838605d69",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790925716,
+    "id": "chatcmpl-LJivgxawDrg3WAXeqdVBTJmaqZPt52LG",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 505,
+      "predicted_ms": 539.761,
+      "predicted_n": 23,
+      "predicted_per_second": 42.61145210565417,
+      "predicted_per_token_ms": 23.46786956521739,
+      "prompt_ms": 101.638,
+      "prompt_n": 4,
+      "prompt_per_second": 39.35535921604124,
+      "prompt_per_token_ms": 25.4095
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 509,
+      "prompt_tokens_details": {
+        "cached_tokens": 505
+      },
+      "total_tokens": 532
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 32,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:1 Sip a clean swab of cotton in the juice and apply on the pimples before you go to bed. 2  Another remedy is to make a paste by mixing a teaspoon of cinnamon powder with a tablespoon of lemon juice. 3  Apply the paste on the pimples and leave the paste overnight and wash off in the morning with warm water.\\\\n\\\\npassage 2:Before you cleanse the rest of your face, remove makeup from your forehead with cold cream. With clean fingers, apply a layer of cold cream to your forehead and let it stand on your skin for 60 seconds. Then with a clean cotton small, blot the cold cream off your forehead, using minimal pressure against your skin.\\\\n\\\\npassage 3:Leave the mask overnight, and rinse it off in the morning. Cover your pillow with a clean towel to avoid mess. This natural mask will cure the acne bumps and pimples on your forehead. 2. Lemon Juice: Dab a few drops of lemon juice over the zits on your overhead, leaving it overnight.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to remove forehead pimples overnight\\\"}\", \"original_answer\": \"There are several methods to remove forehead pimples overnight. One method is to apply lemon juice or a paste made from a teaspoon of cinnamon powder and a tablespoon of lemon juice. Apply these on the pimples and leave them overnight, washing them off in the morning with warm water. You can also apply a natural mask and leave it overnight, rinsing it off in the morning. However, before you do any of these, make sure to remove any makeup from your forehead with cold cream and always use clean cotton swabs or clean fingers to apply these treatments.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69410,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "seed": 69410,
+  "source_cluster_id": "09dcdeb81cd84e2e7cda7fd01f2572db2af6c9c8048149dbf0dcc51d29345d2f",
+  "source_hash": "sha256:a9d76579a7340f2b613565ee9f03e724ee9e302719ef8593c4fa0d383dba15af",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ]
+}

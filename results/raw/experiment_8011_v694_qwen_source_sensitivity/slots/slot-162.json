@@ -1,0 +1,129 @@
+{
+  "arm": "duplicate",
+  "capture_identity": "sha256:c690c1f517fbce73c5da6a2d1e99e3819c3de93e1045fe76d1c8215b54691541",
+  "censor_status": false,
+  "denominator": 1,
+  "donor_group_id": "sha256:58f471adbcc86c18e9d9c9f2d29f4eda0edb5307ae3bf1134dbda5eb306d0ae3",
+  "duration_s": 1.4362790579907596,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:58f471adbcc86c18e9d9c9f2d29f4eda0edb5307ae3bf1134dbda5eb306d0ae3:duplicate",
+  "group_id": "sha256:58f471adbcc86c18e9d9c9f2d29f4eda0edb5307ae3bf1134dbda5eb306d0ae3",
+  "input_byte_upper_bound": 5246,
+  "input_tokens": 1277,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": 26,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 26,
+      "prompt_tokens": 1277,
+      "prompt_tokens_details": {
+        "cached_tokens": 703
+      },
+      "total_tokens": 1303
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:67f652227e940e21927285371f5c520e09282447a6e9d0d022157e90e4d8847a",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": 26\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790925846,
+    "id": "chatcmpl-WfT0m3XqTgqmtZ8yZn6mpgmmxGG5Sx5b",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 703,
+      "predicted_ms": 620.01,
+      "predicted_n": 26,
+      "predicted_per_second": 41.934807503104786,
+      "predicted_per_token_ms": 23.84653846153846,
+      "prompt_ms": 604.181,
+      "prompt_n": 574,
+      "prompt_per_second": 950.0464264847785,
+      "prompt_per_token_ms": 1.0525801393728225
+    },
+    "usage": {
+      "completion_tokens": 26,
+      "prompt_tokens": 1277,
+      "prompt_tokens_details": {
+        "cached_tokens": 703
+      },
+      "total_tokens": 1303
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 32,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"38 W Victoria St, Ste 109\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":true,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":true,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":true,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":true},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Comfort Food, Asian Fusion, Chinese, Tapas/Small Plates, Noodles, Thai, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-21:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"11:0-21:0\\\",\\\"Sunday\\\":\\\"11:0-21:0\\\",\\\"Thursday\\\":\\\"11:0-21:0\\\",\\\"Tuesday\\\":\\\"11:0-16:0\\\",\\\"Wednesday\\\":\\\"11:0-21:0\\\"},\\\"name\\\":\\\"Empty Bowl Gourmet Noodle Bar\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-13 06:06:46\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"The Empty Bowl is one of my favorite Thai restaurants in town! The curry noodles is my favorite dish. It's creamy but not too rich that you can't eat the whole bowl as a meal. I also love the papaya salad. It is fresh and just the right amount of sourness. I usually order the curry noodles but this time I ordered the hang over noodles and they were extremely spicy for some reason. I had to trade meals with my boyfriend who had curry noodles. This Thai restaurant has more interesting dishes than many of the Thai places in Santa Barbara. I would definitely want to try their chicken wings and their pad see ew.\\\"},{\\\"review_date\\\":\\\"2022-01-13 04:44:08\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Now before I begin, I want everyone to know this place is outstanding. First off, the public market is such an exquisite place to be if you ever land in Santa Barbara and are not sure on which cuisine you want. Since I was in the food industry for quite some time, my wife has been a huge fan of green star coffee, which is what led us to the public market. After purchasing the coffee from public market, we were drawn to the smell of Empty Bowl. If you aren't sure what to get, you can't go wrong with the Northern Thailand Curry Noodle. The ratio between the rice noodles and crunchy noodles in combination with their coconut curry broth is pure perfection. The chicken absolutely melts off the bone leaving you in a trance. My wife ordered the pan fried pancit noodles and couldn't rave about it enough. We were bummed off the dessert menu because they didn't have anything.. but we enjoyed dessert at rori's ice cream a few steps after leaving empty bowl. 10/10\\\"},{\\\"review_date\\\":\\\"2022-01-05 20:22:18\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"-Food-\\\\n5/5! Delicious Thai food with a ton of flavor. I ordered Bangkok noodles and they were just the right amount of spices. But I would say pretty pricey! For their average portioned noodle bowls, they were around $18 after tax. \\\\n\\\\n-Service-\\\\nThey were average in preparation time, but they give you a machine that vibrates when your food is ready! It's nice to be able to walk around while the food is getting ready!\\\\n\\\\n-Looks-\\\\nThe restaurant is one of the many within Santa Barbara's public market! There's a ton of cuisine options there, but I only tried this location. \\\\n\\\\nThere's plenty of free street parking, so avoid the paid parking lots if you can.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Empty Bowl Gourmet Noodle Bar is a popular restaurant located at 38 W Victoria St, Ste 109 in Santa Barbara, CA. Known for its unique blend of Comfort Food, Asian Fusion, Chinese, Tapas/Small Plates, Noodles, and Thai cuisines, it has received an average rating of 4.5 stars. The restaurant offers free Wi-Fi and outdoor seating, and is suitable for groups. Despite not accepting reservations, it also caters to take-out orders. Customers praise the restaurant for its delicious Thai food, highlighting dishes such as the Northern Thailand Curry Noodle, Bangkok noodles, and pan-fried pancit noodles. The establishment is also noted for its trendy and casual ambience, and its location within Santa Barbara's public market. It operates from 11 am to 9 pm from Tuesday to Sunday.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69410,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "seed": 69410,
+  "source_cluster_id": "39794fd4bf545ebf1ff524af305598ba9e6b090d132627a72624da2dffcb82a8",
+  "source_hash": "sha256:b304fd4b2016bab2e01721ebc53caa94a6d1c441df66edf341c7c0ec89966924",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26
+  ]
+}

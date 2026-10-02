@@ -1,0 +1,126 @@
+{
+  "arm": "duplicate",
+  "capture_identity": "sha256:c690c1f517fbce73c5da6a2d1e99e3819c3de93e1045fe76d1c8215b54691541",
+  "censor_status": false,
+  "denominator": 1,
+  "donor_group_id": "sha256:5e8c1281c5c0fadb67d644c0ba69ad9b680be83db02003e9b3e369cda9ddb5bc",
+  "duration_s": 1.5281685299705714,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:5e8c1281c5c0fadb67d644c0ba69ad9b680be83db02003e9b3e369cda9ddb5bc:duplicate",
+  "group_id": "sha256:5e8c1281c5c0fadb67d644c0ba69ad9b680be83db02003e9b3e369cda9ddb5bc",
+  "input_byte_upper_bound": 3853,
+  "input_tokens": 864,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 864,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 887
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:22ad825f734ecec57ffdaf1b6d18ac3cbf55c69fbad1f05269937106c159f180",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790925780,
+    "id": "chatcmpl-RIS0ArmfRiP3No9Fps73uBYZ1pgBfR2H",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 536.899,
+      "predicted_n": 23,
+      "predicted_per_second": 42.83859720357088,
+      "predicted_per_token_ms": 23.343434782608696,
+      "prompt_ms": 809.566,
+      "prompt_n": 786,
+      "prompt_per_second": 970.8905759382186,
+      "prompt_per_token_ms": 1.0299821882951654
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 864,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 887
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 32,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Capital One Ordered to Pay Consumers From $190 Million Class Action Settlement\\nAre you a Captial One current customer, or a former customer?\\nMillions of Capital Onecustomers have less than a month to collect their paymentfrom a $190 million settlement after the company settled a class-action lawsuitwith victims last year.\\nThe first round of emails began going out to customers on Sept. 28 for those who opted into the Capitol One settlement last year. The settlement spans back to 2019 when a hackergained access to the personal information of approximately 98 million Capital One users. The final approval of the class-action settlementwas on Sept. 13, 2022.\\nThe class action settlement is worth $190 million. The money will go toward consumers paying claims for out-of-pocket losses, lost time, identity defense services, and restoration services; administrative and notice costs and service awards for settlement class representatives and any other settlement class member deposed in the case; and attorneys\u2019 fees, costs, and expenses as approved by the court, according to the settlement website.\\nWhat if I did not opt-in?\\nThose who did not opt-in for the settlement in 2022 will not receive an email. The first email that arrives will be a courtesy email alerting the customer that they are receiving a payment. Please take note of the following information to avoid deleting a valid email. It will come from noreply@epiqpay.com and will be addressed by the recipient's first and last name.\\nThe email will also include a payment amount. One Capital One customer was eligible for a $707 payment, according to a copy of their email obtainedby WGAL 8 News.\\nWhat if I spent money on Identity Theft Services?\\nCustomers who spent money to deal with fraud or identity theft that they believed was fairly traceable to the 2019 data breach or to protect themselves from future harm as a result of the data breach could have submitted a claim for reimbursement of up to $25,000, according to the settlement website.\\nI received the first email, what is the next step?\\nAfter you receive the first email, Capital One recipients will receive another email that contains a link to claim the payment. Customers have until Nov. 27 to claim the electronic payment. If a customer does not respond by November 27, they will still receive a paper check from the settlement in December according to the agreement.\\nConsider that check to be a long-awaited end-of-the-year gift.\", \"original_answer\": \"Capital One customers have until 27 November to claim their share of a $190m class-action settlement. The lawsuit was settled last year after a 2019 data breach exposed the personal information of approximately 98m Capital One users. The settlement will cover customer claims for out-of-pocket losses, time lost, identity defence and restoration services, as well as administrative costs, service awards and legal expenses. Customers who did not opt into the settlement last year will not receive an email regarding the payment. Any unclaimed electronic payments will be sent out as paper checks in December.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69410,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "seed": 69410,
+  "source_cluster_id": "223a28bc410db1c0f68b7c1f1684cfad5a431bba208d66c19cdc87b2b289c962",
+  "source_hash": "sha256:96e2bbe1c1ae7a913fd95824539f2bcbf65a98e38ee2bff73e188792437126b8",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23
+  ]
+}

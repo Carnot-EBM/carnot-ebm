@@ -1,0 +1,127 @@
+{
+  "arm": "original",
+  "capture_identity": "sha256:c690c1f517fbce73c5da6a2d1e99e3819c3de93e1045fe76d1c8215b54691541",
+  "censor_status": false,
+  "denominator": 1,
+  "donor_group_id": "sha256:e8a76a95107dc0033661b2f0520f5e07b158e0bde712fb63295cb070c1bc9bdd",
+  "duration_s": 1.7510292530059814,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:e8a76a95107dc0033661b2f0520f5e07b158e0bde712fb63295cb070c1bc9bdd:original",
+  "group_id": "sha256:e8a76a95107dc0033661b2f0520f5e07b158e0bde712fb63295cb070c1bc9bdd",
+  "input_byte_upper_bound": 5618,
+  "input_tokens": 1244,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1244,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1267
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:9d8b39677fe908e8df024430f00fdc8426f161abee01f2440a80d57e7bb5638e",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790925737,
+    "id": "chatcmpl-XfX6rlImdjEA1tOZ30nhJZ6pFPyhmXRR",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 534.788,
+      "predicted_n": 23,
+      "predicted_per_second": 43.007696507775044,
+      "predicted_per_token_ms": 23.251652173913044,
+      "prompt_ms": 1077.753,
+      "prompt_n": 1166,
+      "prompt_per_second": 1081.8805422021558,
+      "prompt_per_token_ms": 0.9243164665523156
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1244,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1267
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 32,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Shanghai, China (CNN)When China's biggest auto show opens in Shanghai this week, the only models on display will be the ones with four wheels. Gone, show organizers hope, will be the scantily-clad \\\"car babes\\\" that in previous years have posed provocatively on car hoods and sashayed through the aisles to draw crowds to the 9-day event. The focus, instead, will be the latest offerings from an array of global car manufacturers, which -- models or not -- are pulling out all the stops to compete for Chinese customers in what since 2009 has been the world's largest car market. \\\"It's a major industry event for us,\\\" said Andrew Boyle, global product communications manager at Rolls Royce. It sells several hundred of its super-luxury vehicles in China each year, and in Shanghai this week will launch its latest model, the Phantom Limelight. Vehicle sales in China totaled 23.5 million units last year, almost a third more than in the United States. However, the show comes at a turning point for China's auto market, which is facing a second year of slower growth in 2015 after a decade-long sales and production frenzy. Intense competition for China's drivers means that car manufacturers are increasingly developing vehicles that cater to Chinese preferences. Nissan will use Auto Shanghai 2015 to unveil the Lannia mid-size sedan, which it says has been specially created for \\\"the rising young Chinese generation.\\\" The country's gearheads have embraced the SUV or sport utility vehicle, sales of which jumped a third last year, and many will feature in the displays planned by dozens of European, Japanese U.S., South Korea and Chinese automakers. This year MG, once known for its sleek sports cars and now owned by Shanghai Automotive Industries Corp, enters the fray with its first SUV, the GS, while Ford will give two new luxury SUVs their China market debut --  the Lincoln MKX and Lincoln Navigator, the latter favored by hip hop stars. \\\"The SUV is popular as a first car,\\\" said Raymond Tsang, a Shanghai-based partner at consultancy Bain & Company. \\\"If you only have one, you want one that you can commute in and take on a road trip.\\\" Foreign brands have dominated sales in the past two years, but as they improve product quality and design, local rivals like Geely, which also owns Sweden's Volvo, and Great Wall Motor are clawing back market share, especially when it comes to SUVs. Geely, which already exports to Russia, the Middle East and Africa, is also stepping up its efforts to crack more developed markets. It is preparing to export the Volvo S60 Inscription to the United States from a factory in the southwestern city of Chengdu. It would be the first car made in China to hit U.S showrooms and may pave the way for Chinese brands to shake up the U.S. market like Japanese and Korean car manufacturers did decades earlier. With car ownership still at much lower levels than the U.S. and Europe, China is likely to remain the industry's most important market for decades. However, the breakneck growth may be a thing of the past. In 2014, growth in sales halved to 7% and according to the China Association of Automobile Manufacturers, the slowdown continued in the first three months of this year when sales rose just 3.9%. It comes as the wider economy slows and a prolonged campaign against corruption has hit sales of luxury vehicles, especially brands like Audi that have been the ride of choice for Chinese officials. On top of that, the hassles of car ownership are deterring some potential buyers, as is an awareness of the environmental costs. Congested and chaotic roads, restrictions on the number of new vehicle license plates and a shortage of residential parking space  may trigger a backlash against car ownership, according to a recent report from Bain & Company. \\\"The car was seen as a status symbol,\\\" says Pierre-Henri Boutot, a partner at Bain and co-author of the report. \\\"But now in larger cities they see the hassle and some of these people are thinking of giving up their car.\\\" Just maybe, China will need those car babes to boost sales after all.\\n\", \"original_answer\": \"Shanghai, China will host the country's largest auto show this week, where global car manufacturers will unveil their latest models in a bid to attract Chinese customers. The event is a major industry event, and is important to many of the big car manufacturers, such as Rolls Royce, which sells several hundred of its super-luxury vehicles in China each year. The show comes at a turning point for China's auto market, which is facing a second year of slower growth in 2015 after a decade-long sales and production frenzy. In 2014, growth in sales halved to 7% and according to the China Association of Automobile Manufacturers, the slowdown continued in the first three months of this year when sales rose just 3.9%.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69410,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "seed": 69410,
+  "source_cluster_id": "0dcbadc790920ea9a97b7c57c93df3dd9e20f66973cfc2fe71eb8d00bbbe45a0",
+  "source_hash": "sha256:830bf62585aba828ee43ec0cbf08fc0a0fe50cd05e1fd981f110ea2e3c46a4b7",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+  ]
+}

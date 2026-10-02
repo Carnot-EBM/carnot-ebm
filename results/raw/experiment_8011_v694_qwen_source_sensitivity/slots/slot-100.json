@@ -1,0 +1,76 @@
+{
+  "arm": "duplicate",
+  "capture_identity": "sha256:c690c1f517fbce73c5da6a2d1e99e3819c3de93e1045fe76d1c8215b54691541",
+  "censor_status": false,
+  "denominator": 1,
+  "donor_group_id": "sha256:e44ea7a533a66f03d48b29f569d5b180dfabb243007a6508ae8b9cf3dde4ad30",
+  "duration_s": 0.0,
+  "eligibility": false,
+  "exclusion_reason": "paired_context_upper_bound_overrun",
+  "failure_status": false,
+  "family_id": "sha256:e44ea7a533a66f03d48b29f569d5b180dfabb243007a6508ae8b9cf3dde4ad30:duplicate",
+  "group_id": "sha256:e44ea7a533a66f03d48b29f569d5b180dfabb243007a6508ae8b9cf3dde4ad30",
+  "input_byte_upper_bound": 2890,
+  "input_tokens": null,
+  "numerator": 0,
+  "parsed": {
+    "citation_valid": false,
+    "completed": false,
+    "finish_reason": null,
+    "probability": null,
+    "schema_valid": false,
+    "source_sentence_id": null,
+    "status": "invalid_envelope",
+    "syntax_valid": false,
+    "usage": {}
+  },
+  "public_eligible": false,
+  "public_hash": "sha256:dac909887cecded0565dd28c725a35217fd24e18bae1e18d84c4c98122bf95ab",
+  "raw_response": {},
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 32,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Place meat on grill rack over heat. Cover the grill.) Remove steaks from grill; cover and let stand for 5 minutes. For more tenderloin steak recipes, see: Grilled Steak and Peppers Grilled Beef Fillet with Portobello Relish Beef Tenderloins with Wine Sauce Try filet mignon! Our best filet mignon cooking tips.tep 2: Roast or grill the tenderloin. Roast: Browning the tenderloin first is optional, but it does caramelize the outside and lock in the juices. In a large skillet heat olive oil over medium-high heat.\\\\n\\\\npassage 2:Start with beef tenderloin steaks cut 3/4 inch to 1 inch thick (1 inch for grilling). Trim fat from steaks. Season as desired. Timings below are based on meat removed directly from the refrigerator.tep 2: Roast or grill the tenderloin. Roast: Browning the tenderloin first is optional, but it does caramelize the outside and lock in the juices. In a large skillet heat olive oil over medium-high heat.\\\\n\\\\npassage 3:1 Let the steak sear for 1 minute. 2  Place the entire pan in the oven for about 5 minutes. 3  Poke the fleshy lump at the base of your palm, where it intersects with your thumb. Remove the steaks from the pan and place to the side, in a warm location, on a plate. 2  They will continue to (carryover) cook, on their own. 3  This should bring them up to a nice medium-rare, while also allowing the muscle to relax, again, and the juices to settle within the meat.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to cook a tenderloin steak in the oven\\\"}\", \"original_answer\": \"Begin by trimming fat from your beef tenderloin steaks, which should be cut 3/4 inch to 1 inch thick. Season as desired. Optionally, you can brown the tenderloin first in a large skillet with olive oil over medium-high heat to caramelize the outside and lock in the juices. After, place the steak in a pan and sear for 1 minute. Then, place the entire pan in the oven for about 5 minutes. Remove the steaks from the oven and place them to the side in a warm location on a plate. They will continue to cook on their own, bringing them to a nice medium-rare while allowing the muscle to relax and the juices to settle within the meat.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69410,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 0,
+  "role": "stream",
+  "seed": 69410,
+  "source_cluster_id": "23fc389af092ceee76582f8c85e5323f9e84f6b158c53ea78881f46102e8224e",
+  "source_hash": "sha256:beae9656776f732ba37db19dea4e784b28af8d9b17e68c7eed35fb1ce2972196",
+  "started": false,
+  "status": "excluded",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ]
+}

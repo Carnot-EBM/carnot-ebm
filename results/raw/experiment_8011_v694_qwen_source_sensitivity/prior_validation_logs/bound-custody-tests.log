@@ -1,0 +1,28 @@
+..........F                                                              [100%]
+=================================== FAILURES ===================================
+_____________________ test_referenced_runtime_file_hashes ______________________
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261002T071447-1198652-cddb87de/test_referenced_runtime_file_h0')
+
+    def test_referenced_runtime_file_hashes(tmp_path):
+        """SCENARIO-REPORT-8011-CUSTODY: log and native-map byte drift remains visible."""
+        path = tmp_path / "server.log"
+        path.write_text("owned worker log")
+        e.verify_references(
+            dict(
+                nested=[
+                    e.reference(path),
+                    dict(log_path=str(path), log_sha256=e.sha256_file(path)),
+                    None,
+                ]
+            )
+        )
+        path.write_text("changed")
+>       with pytest.raises(ValueError, match="receipt_file_hash"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/python/test_source_sensitivity_8011.py:391: Failed
+=========================== short test summary info ============================
+FAILED tests/python/test_source_sensitivity_8011.py::test_referenced_runtime_file_hashes
+1 failed, 10 passed in 59.07s

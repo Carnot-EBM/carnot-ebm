@@ -1,0 +1,123 @@
+{
+  "arm": "swap",
+  "capture_identity": "sha256:c690c1f517fbce73c5da6a2d1e99e3819c3de93e1045fe76d1c8215b54691541",
+  "censor_status": false,
+  "denominator": 1,
+  "donor_group_id": "sha256:0b557af719c6d1c1bd343d06399fec3d8d50be911c1eac117826f20aba9bfeae",
+  "duration_s": 1.243085726047866,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:f7a73b357b127d4d8f2c467498cffff01476fa74ab9320f10e23964a5d07c14b:swap",
+  "group_id": "sha256:f7a73b357b127d4d8f2c467498cffff01476fa74ab9320f10e23964a5d07c14b",
+  "input_byte_upper_bound": 2868,
+  "input_tokens": 629,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 1.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 629,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 652
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:5b567493734cc1d053c50df2243ae8a9228e03b26fb9f9bfaebd50dc8bb3001b",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 1.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790925712,
+    "id": "chatcmpl-IFy9QK8R54oF3D5UDuwQy4r3DaDQyl0r",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 532.048,
+      "predicted_n": 23,
+      "predicted_per_second": 43.22918232941389,
+      "predicted_per_token_ms": 23.132521739130436,
+      "prompt_ms": 571.024,
+      "prompt_n": 551,
+      "prompt_per_second": 964.9331726862619,
+      "prompt_per_token_ms": 1.0363411978221415
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 629,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 652
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 32,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Washington (CNN)Washington was rocked late Thursday by shootings -- one at the gates of the U.S. Census Bureau's headquarters and another in a popular area packed with restaurant patrons. The shootings were connected, authorities said. They began with what authorities believe was a domestic kidnapping incident, according to D.C. Police Chief Cathy Lanier. The suspect's vehicle was spotted outside the Census Bureau, which is in Suitland, Maryland. A guard apparently approached the vehicle and saw two people arguing. That guard was then shot at least once in the upper body, said Prince George's County Fire Department spokesman Mark Brady. The guard was in extremely critical condition, according to Brady. The police chief said the suspect then fled the scene. Officers picked up the chase, and the suspect fired gunshots at multiple locations, Lanier said. The chase ended in a crash on Washington's busy H Street. A shootout ensues, Lanier said. An officer and the suspect were wounded, according to the police chief. Both were conscious and talking when they left the scene. \\\"Right now, we have every reason to believe that the car that we have in this last incident here is the same car involved and the same person involved in the kidnapping,\\\" she said. Lanier told reporters the kidnapping victim was located and is in good condition. She did not identify the suspect, nor the guard, nor the officer who were injured. Steve Brusk reported from Washington. Dana Ford wrote from Atlanta. CNN's Greg Botelho also contributed to this report.\\n\", \"original_answer\": \"The 2023 regular season of area high school football concluded on Friday. The Sunset League saw Los Alamitos as its champion. The Garden Grove League resulted in a tie between Rancho Alamitos and Los Amigos for first place. Marina emerged as the champion of the Big 4 League while in the Pac 4 League, Laguna Beach emerged victorious, with Westminster qualifying for the playoffs. Tustin won the Empire League. The Orange Coast League ended with a three-way tie between the Panthers, Saints and St. Margaret\u2019s. First-round playoff games will start on November 3.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69410,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "seed": 69410,
+  "source_cluster_id": "05461a09a3a1ccc89ef37fdf45e55bab5ec2677bafc78fa47d94297b6b5a13f9",
+  "source_hash": "sha256:53e03ce05a0d9f066d2e3bf5760b1fb6511eb1997faae041881e7657a41ab39b",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20
+  ]
+}

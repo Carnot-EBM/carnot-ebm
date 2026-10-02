@@ -1,0 +1,114 @@
+{
+  "arm": "original",
+  "capture_identity": "sha256:c690c1f517fbce73c5da6a2d1e99e3819c3de93e1045fe76d1c8215b54691541",
+  "censor_status": false,
+  "denominator": 1,
+  "donor_group_id": "sha256:3deb1d2dabf820a9267929a62246e673cb91829d0be8a774bce72b0869aacaff",
+  "duration_s": 0.6593399420380592,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:3deb1d2dabf820a9267929a62246e673cb91829d0be8a774bce72b0869aacaff:original",
+  "group_id": "sha256:3deb1d2dabf820a9267929a62246e673cb91829d0be8a774bce72b0869aacaff",
+  "input_byte_upper_bound": 3487,
+  "input_tokens": 847,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 847,
+      "prompt_tokens_details": {
+        "cached_tokens": 843
+      },
+      "total_tokens": 870
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:da1de922a890c52c430880a3f9d36f549561285579ce50c493498aac9afe72c5",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790925852,
+    "id": "chatcmpl-DXHV3LQFCwN4INX8FJlaWHGwzmtbw89N",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 843,
+      "predicted_ms": 540.202,
+      "predicted_n": 23,
+      "predicted_per_second": 42.5766657657691,
+      "predicted_per_token_ms": 23.48704347826087,
+      "prompt_ms": 103.909,
+      "prompt_n": 4,
+      "prompt_per_second": 38.49522178059648,
+      "prompt_per_token_ms": 25.97725
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 847,
+      "prompt_tokens_details": {
+        "cached_tokens": 843
+      },
+      "total_tokens": 870
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 32,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"901 Chapala St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Cajun/Creole, Breakfast & Brunch, Caterers, Restaurants, Event Planning & Services, Burgers\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"7:0-14:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"7:0-14:0\\\",\\\"Sunday\\\":\\\"7:0-14:0\\\",\\\"Thursday\\\":\\\"7:0-14:0\\\",\\\"Tuesday\\\":\\\"7:0-14:0\\\",\\\"Wednesday\\\":\\\"7:0-14:0\\\"},\\\"name\\\":\\\"Cajun Kitchen Cafe\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-18 04:59:22\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Amazing brunch in Santa Barbara. The wait is always worth it. The staff are kind and you can never go wrong with a breakfast burrito or benedict.\\\"},{\\\"review_date\\\":\\\"2022-01-12 10:39:53\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"My grandson and I really enjoyed this place!  The food was incredible and the staff were friendly and efficient.  We always come here when he's in town and will keep doing so.\\\"},{\\\"review_date\\\":\\\"2021-12-12 19:36:08\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"The wait was not that long on a Sunday. But ommmggg the food! If you're in this area or from the area and can check it out you SHOULD. The Beignets were good BUT THE Fried Chicken Benedict BOMB. Best ever. It's just a party in your mouth. 10/10. I have no words just try it and thank me later.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"The Cajun Kitchen Cafe is a highly-rated, casual and classy restaurant located at 901 Chapala St, Santa Barbara, CA. This establishment is known for its Cajun/Creole cuisine and serves breakfast and brunch. It also provides catering services and is well-equipped for group meals. The cafe is open from 7:00 am to 2:00 pm from Tuesday to Sunday, with Monday's schedule unspecified. The restaurant offers outdoor seating and takeout services, but no WiFi. Parking is available in a dedicated lot, with no valet, street or garage parking options. Customers consistently praise the cafe for its amazing brunch offerings, particularly the breakfast burrito, benedict and the Fried Chicken Benedict. The staff is commended for their friendliness and efficiency.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69410,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "seed": 69410,
+  "source_cluster_id": "3b2d28f8337336fa75262db06f5ec08dc4383f2112161910ee110ff7faf13363",
+  "source_hash": "sha256:5b720a5ea0dea1a850fb8b578c44f4246db692daf5cff756dd79da87e27df216",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]
+}

@@ -1,0 +1,112 @@
+{
+  "arm": "swap",
+  "capture_identity": "sha256:c690c1f517fbce73c5da6a2d1e99e3819c3de93e1045fe76d1c8215b54691541",
+  "censor_status": false,
+  "denominator": 1,
+  "donor_group_id": "sha256:2d55538f40ed8551b05695f97ff21e400cbc895d97469f4bd619463b069b2a2b",
+  "duration_s": 1.4241781260352582,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:f09e245c1efa4230f70dadc1c663cc397c8498740f48f4a1aa8c64dc7fd74e6f:swap",
+  "group_id": "sha256:f09e245c1efa4230f70dadc1c663cc397c8498740f48f4a1aa8c64dc7fd74e6f",
+  "input_byte_upper_bound": 3369,
+  "input_tokens": 813,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 1.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 813,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 834
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:4068eb9342cac1cde1d94cfc755f7b9f1740b9d7d1f12e2dc21f138d9dcd479d",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 1.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790925792,
+    "id": "chatcmpl-nimtmHoccRToMLSBV2jIaaur5dQpy0aI",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 489.348,
+      "predicted_n": 21,
+      "predicted_per_second": 42.91424507712303,
+      "predicted_per_token_ms": 23.302285714285716,
+      "prompt_ms": 707.03,
+      "prompt_n": 735,
+      "prompt_per_second": 1039.5598489455892,
+      "prompt_per_token_ms": 0.9619455782312925
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 813,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 834
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 32,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"413 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Sandwiches, Wraps, Kebab, German, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-2:30\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"11:0-2:30\\\",\\\"Sunday\\\":\\\"11:0-21:0\\\",\\\"Thursday\\\":\\\"11:0-22:0\\\",\\\"Tuesday\\\":\\\"11:0-22:0\\\",\\\"Wednesday\\\":\\\"11:0-22:0\\\"},\\\"name\\\":\\\"Urkeb\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2018-12-12 01:34:32\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Open back up!!!! I miss this food soooo bad!!! Move the business up to the Mesa! I promise I will be your best customer\\\"},{\\\"review_date\\\":\\\"2018-10-14 15:35:41\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Personally I felt this place was around 3 stars. It's packed with everything but meat(weak portion of meat) and I didn't think it was all that flavorful. It was ok, but not that great. I'm giving it 4 stars because the 2 German guys that I know love this place and would give it 5 stars. One of my friends said it was as good as anything that he'd have back home. So maybe it's just me.\\\"},{\\\"review_date\\\":\\\"2018-09-11 22:45:49\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Sehr sch\u00f6nes Lokal und der D\u00f6ner war mehr als lecker! \\\\nFalls man in Santa Barbara ist, sollte man auf jeden Fall dort hin.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"The passages suggest a few exercises to strengthen the muscles around the knee. One is knee bends, which involves standing a foot away from a wall, bending your knees, and sliding your back down the wall, then repeating this in sets of three, ten times each. Another exercise is thigh contractions, which involves sitting up straight, slowly raising and straightening your leg, squeezing your thigh muscles, and holding this position for a few seconds. This should be done in three sets of 15 seconds with each leg. The TFL Distraction is not clearly explained as an exercise but the passage indicates that it's a small muscle at the side of the hip that can affect the knee.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69410,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "seed": 69410,
+  "source_cluster_id": "24d7d40952e9a439db71520c93b7f92cb9d0401d967fe289848a21f481b20c65",
+  "source_hash": "sha256:5c206753d0ceb4c6f36d1a463c5c29816d2699112d84d459d2ee5e9631bebe45",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ]
+}

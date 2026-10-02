@@ -1,0 +1,121 @@
+{
+  "arm": "duplicate",
+  "capture_identity": "sha256:c690c1f517fbce73c5da6a2d1e99e3819c3de93e1045fe76d1c8215b54691541",
+  "censor_status": false,
+  "denominator": 1,
+  "donor_group_id": "sha256:96e2a5a3b57e3cbf627a34e551a4250b373b6459b54700f68c0ed723989646fe",
+  "duration_s": 0.6603924649534747,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:96e2a5a3b57e3cbf627a34e551a4250b373b6459b54700f68c0ed723989646fe:duplicate",
+  "group_id": "sha256:96e2a5a3b57e3cbf627a34e551a4250b373b6459b54700f68c0ed723989646fe",
+  "input_byte_upper_bound": 3594,
+  "input_tokens": 788,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 788,
+      "prompt_tokens_details": {
+        "cached_tokens": 784
+      },
+      "total_tokens": 811
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:2ba283ff73238e3a20bd0a106fc5afd97d76027f495db04feb28e650c696e790",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790925877,
+    "id": "chatcmpl-AeAtLheGaPeAiNAC47wKLmcxNHwkDtk5",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 784,
+      "predicted_ms": 540.645,
+      "predicted_n": 23,
+      "predicted_per_second": 42.541778801246664,
+      "predicted_per_token_ms": 23.506304347826084,
+      "prompt_ms": 103.33,
+      "prompt_n": 4,
+      "prompt_per_second": 38.71092615890835,
+      "prompt_per_token_ms": 25.8325
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 788,
+      "prompt_tokens_details": {
+        "cached_tokens": 784
+      },
+      "total_tokens": 811
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 32,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Thursday will mark three weeks since Saudi Arabia began airstrikes on Houthi rebels in Yemen. But there is as yet little sign that the rebels are being driven back, that the fighting in Yemen is dying down or that lives there are being saved. To the contrary, increasingly more Yemenis appear to be fleeing the country, attempting the dangerous trip in rickety fishing boats across the Red Sea to the Horn of Africa -- a trip historically made by people fleeing Africa rather than the other way around. Hopes for stability, not only in Yemen but in the Middle East in general, are fading as fears grow that Saudia Arabia and Iran are fighting a proxy war in Yemen for regional domination. And the number of dead continues to mount. Yemen's health ministry said over the weekend that 385 civilians had been killed and 342 others had been wounded. The World Health Organization has put a higher figure on both tolls -- 648 killed and 2,191 wounded -- but includes militant casualties in the totals. The Houthis forced Yemeni President Abdu Rabu Mansour Hadi from power in January, though Hadi still claims he is Yemen's legitimate leader and is working with the Saudis and other allies to return to Yemen. Those allied with Hadi have accused the Iranian government of supporting the Houthis in their uprising in Yemen. Like the Iranians, the Houthis are Shiites. And like the Saudis, Hadi and his government are Sunni. Since it began on March 26, Saudi Arabia has launched more than 1,200 airstrikes. Saudi officials claim to have killed more than 500 Houthi rebels. The U.N. Security Council voted Tuesday in favor of an arms embargo on Houthis -- the minority group that has taken over large swaths of Yemen, including its capital, Sanaa -- and supporters of former Yemeni President Ali Abdullah Saleh. The resolution \\\"raises the cost\\\" for the Houthis, according to Mark Lyall Grant, Britain's ambassador to the United Nations. In addition to the arms embargo, the resolution also demands that the Shiite group pull back and refrain from more violence and includes sanctions aimed at controlling the spread of terrorism, according to Grant. Russia abstained from Tuesday's vote, saying it didn't like the inclusion of sanctions. Why is Saudi Arabia bombing Yemen?\\n\", \"original_answer\": \"The situation in Yemen continues to deteriorate as Saudi Arabia's airstrikes on Houthi rebels show no signs of driving them back. As the fighting continues, increasing numbers of Yemenis are fleeing the country, crossing the Red Sea to the Horn of Africa. The UN Security Council has imposed an arms embargo on the Houthis and demands they pull back to prevent further violence, along with sanctions aimed at controlling the spread of terrorism. Russia abstained from the vote due to the inclusion of sanctions. The World Health Organization has reported 648 killed and 2,191 wounded.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69410,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "seed": 69410,
+  "source_cluster_id": "40ee247cf13fee92c9211be31c341a3c2be9b72cad4c825547b7af032799aafb",
+  "source_hash": "sha256:8ab7a0796fb8e81b68a9c735c1f8123aed0b44ec86e972cdd909f17612ed09a2",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18
+  ]
+}

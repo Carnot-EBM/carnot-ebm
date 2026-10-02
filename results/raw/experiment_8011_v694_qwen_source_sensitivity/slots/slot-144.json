@@ -1,0 +1,130 @@
+{
+  "arm": "duplicate",
+  "capture_identity": "sha256:c690c1f517fbce73c5da6a2d1e99e3819c3de93e1045fe76d1c8215b54691541",
+  "censor_status": false,
+  "denominator": 1,
+  "donor_group_id": "sha256:2f9c803bd5757ba9621e30216073739c79e96def6bb2f654c4031b3256f4ce9e",
+  "duration_s": 1.7570954971015453,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:2f9c803bd5757ba9621e30216073739c79e96def6bb2f654c4031b3256f4ce9e:duplicate",
+  "group_id": "sha256:2f9c803bd5757ba9621e30216073739c79e96def6bb2f654c4031b3256f4ce9e",
+  "input_byte_upper_bound": 5880,
+  "input_tokens": 1307,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 1307,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1328
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:c53a553ea5db5a31649c610565ac8ae707f4adf9f8277cbf2407d573ba176a46",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"unsupported_probability\": 0.0,\n\"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790925825,
+    "id": "chatcmpl-mzYXJQ7SAIt7s883CS16mS3xumVH1kis",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 492.155,
+      "predicted_n": 21,
+      "predicted_per_second": 42.66948420721114,
+      "predicted_per_token_ms": 23.43595238095238,
+      "prompt_ms": 1140.58,
+      "prompt_n": 1229,
+      "prompt_per_second": 1077.5219625103018,
+      "prompt_per_token_ms": 0.9280553295362083
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 1307,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1328
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 32,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Saturday's deadly earthquake in Nepal was the \\\"big one\\\" experts were waiting for based on the region's history. Earthquakes are a fact of life in the South Asian country, with tremors of magnitude 4 or 5 occurring several times each year, geologist and science journalist Kate Ravilious said. With the last major earthquake in 1934, the concern was not if, but when the next \\\"great\\\" earthquake would hit, said Ravilious, author of the 2014 article, \\\"Kathmandu's earthquake nightmare.\\\" In a landlocked country like Nepal, where infrastructure is fragile to begin with, the consequences of such an earthquake had the potential to be \\\"much more serious,\\\" Ravilious told CNN. Those fears were realized when a magnitude-7.8 earthquake centered less than 50 miles from the national capital of Kathmandu rocked Nepal, toppling homes, historic buildings and leaving more 1,400 dead, authorities said. \\\"This event, while large and tragic, is not unusual for that region of the world as the whole mountain range stretching from Tibet almost to Caspian Sea is an area of major collision between continental plates,\\\" said geological engineer Nicholas Sitar with the University of California, Berkeley's Department of Civil and Environmental Engineering. What's different this time from 1934 is the size and density of Kathmandu, which suffered the brunt of damage in both earthquakes. \\\"The population has exploded in several decades,\\\" U.S. Geological Survey spokesman Gavin Hayes told CNN. \\\"When you get a vast population in the kind of building infrastructure that isn't equipped to handle shaking of an earthquake this size, that's when you see the scale of disaster we're seeing now.\\\" The big unknown is what happens next, now that the initial rumbles of the quake have passed, Ravilious said. How will emergency response teams enter the landlocked country, whose single international airport is closed? How will transports carrying aid move through the country if roads are destroyed? If and when landslides start, how will mountainside villages in the Himalayan range fare? And, will it all be resolved before monsoon season starts? \\\"The worry now is to get Nepal up and running again on feet,\\\" Ravilious said. \\\"The monsoons in a couple of months could make things worse if we don't sort things out before then.\\\" An earthquake is the ground shaking caused by a sudden slip on a fault, according to the U.S. Geological Survey. Stresses in the earth's outer layer push the sides of the fault together, releasing energy in waves that travel through the earth's crust and cause the shaking felt during an earthquake. Nepal is located on a major plate boundary between India and Eurasia, where collisions have been in progress for about 50 million years. Those collisions are responsible for the construction of the Himalayas, which has the tallest and some of the fastest growing mountains in the world, said Chris Goldfinger, director of Oregon State University's Active Tectonics and Seafloor Mapping Laboratory. India is moving northward into Eurasia at a rate of about 45 millimeters a year, with earthquakes of a magnitude from 8 to 9 occurring on average in the Himalaya every 500 to 1,000 years, said Marin K. Clark, associate professor of Geological Sciences with the University of Michigan's Department of Earth and Environmental Sciences. The last major earthquake to affect this part of the Himalayas was in the 1500s, and Kathmandu was badly damaged in an earthquake that occurred farther east of Saturday's quake in 1934. A major concern for this earthquake is damage from landslides generated by the strong shaking, Clark said. The entire area that experienced shaking was in steep, mountainous topography where landsliding is a significant hazard. Clark compared the circumstances to the 2008 earthquake in Sichuan Province, China. The magnitude-7.9  earthquake generated more 200,000 landslides, many of which blocked roads, slowing response and recovery efforts. The landslides also blocked river valleys, which created significant flood hazard. \\\"We might anticipate a similar situation for Nepal.\\\"\\n\", \"original_answer\": \"Saturday's deadly earthquake in Nepal was the inevitable \\\"big one\\\" that experts had been expecting, given its history of seismic activity. Tremors of magnitude 4 or 5 occur several times a year in the country, and there had not been a major earthquake since 1934. The fragile infrastructure of landlocked Nepal meant the consequences of a major earthquake were potentially devastating, and this was realised when a magnitude-7.8 earthquake hit less than 50 miles from the capital, Kathmandu. What made this earthquake different from the one in 1934 was the size and density of Kathmandu's population, which has exploded over the last few decades. The buildings in the city are not equipped to handle an earthquake of this size, which is why the scale of the disaster is so large. The challenge now will be getting aid into the country, particularly if landslides start\u00a0and if everything is not resolved before monsoon season starts.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69410,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "seed": 69410,
+  "source_cluster_id": "2e7e64c2b3fb8a1dc50ccb8148d8d3f89944c7ce2f04a267c4d0a8d5139c56ef",
+  "source_hash": "sha256:3ccf084900d64487e5db5d18a5fab74cede471b8e13d66d1f63974daec3da84c",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27
+  ]
+}

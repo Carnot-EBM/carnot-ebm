@@ -89358,3 +89358,50 @@ and its thin script-path entry point. Verification:
 HTTP transport, context admission, cold reduction, terminal publication and
 failure gates. Exact command outcomes and new statement coverage are recorded
 under `results/raw/experiment_8010_v694_source_intervention_protocol/`.
+
+### REQ-REPORT-8011: Measure frozen source dependence with owned Qwen calls
+
+Exp8011 SHALL authenticate exact Exp8010 bytes and its label-free 64-source,
+192-slot panel before model work. Preserve all slots and the 39 frozen exclusions.
+Reuse the owned runtime, cached model hash and revision, CUDA capacity check,
+GPU lease, embedded tokenizer, request ledger and atomic per-call checkpoints.
+Use the frozen 32-token decoder, 120-second requests, 2,400-second inference
+budget and 4,800-second task cap. No model download, replacement or job eviction
+is permitted. Missing model or lease SHALL produce blocked with zero calls.
+Persist raw replies, model and request IDs, tokens, timings and owned cleanup
+at durable paths. Print flushed progress at phase and subprocess boundaries.
+
+### SCENARIO-REPORT-8011-PAIRED
+
+Reparse original replies. Match independent original/swap/duplicate source
+triplets, without scoring against truth labels. At least 48 complete triplets
+are required for comparisons. Report source-paired 10,000-draw intervals for
+swap minus original, duplicate minus original and their difference. Use seed
+69410. Report duplicate absolute mean and instability, parse failures, role
+counts and censor reasons. Positive source dependence requires a positive
+lower swap interval, positive lower net interval and duplicate absolute mean
+at most 0.01. This establishes source dependence only. Below the sample floor,
+report a bounded incomplete-measurement null. Readiness one requires valid
+measurement and owned checks; it does not require a positive effect.
+
+### SCENARIO-REPORT-8011-CUSTODY
+
+Freeze methods, role hashes, decoder budgets and exact validation argv before
+capture. Current invocation counts SHALL be identical before and after
+validation. Scripted CPU transport remains circular and separate. Cold replay
+in a fresh process SHALL verify exact request/model IDs, original checkpoints,
+ledger, code hashes and reductions. Added code and actual CLI branches require
+100 percent statement coverage, traced unit and consumer checks, Ruff, strict
+mypy and explicit spec checks. Preserve failing assertions and one bounded full
+suite health diagnostic separately. Validate final candidate bytes with the
+unchanged adversarial and strict row readers. Publish through the existing
+helper, then recheck the published bytes and both consumers. The conductor owns
+ops and BMAD reconciliation.
+
+Implementation: `python/carnot/experiment_8011_v694_qwen_source_sensitivity.py`
+and its thin script-path CLI reuse Exp8010 public inputs and the qualified
+Exp7995/Exp7969 owned runtime. `tests/python/test_source_sensitivity_8011.py`
+covers paired sample floors, duplicate controls, nonstarts, owned load outcomes,
+private CLI publication, frozen requests, runtime file hashes, claim gates,
+validation failures and cold replay. The live run persists evidence below
+`results/raw/experiment_8011_v694_qwen_source_sensitivity/`.

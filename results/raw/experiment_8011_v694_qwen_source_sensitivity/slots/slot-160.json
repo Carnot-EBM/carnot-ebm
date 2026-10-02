@@ -1,0 +1,123 @@
+{
+  "arm": "original",
+  "capture_identity": "sha256:c690c1f517fbce73c5da6a2d1e99e3819c3de93e1045fe76d1c8215b54691541",
+  "censor_status": false,
+  "denominator": 1,
+  "donor_group_id": "sha256:0b557af719c6d1c1bd343d06399fec3d8d50be911c1eac117826f20aba9bfeae",
+  "duration_s": 1.2086434210650623,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:0b557af719c6d1c1bd343d06399fec3d8d50be911c1eac117826f20aba9bfeae:original",
+  "group_id": "sha256:0b557af719c6d1c1bd343d06399fec3d8d50be911c1eac117826f20aba9bfeae",
+  "input_byte_upper_bound": 2746,
+  "input_tokens": 591,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 591,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 614
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:4f2c219031c6c4935588f28d7c7869c7be6bc4ee9136072d878bcb7f4a5f01c7",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790925844,
+    "id": "chatcmpl-f8JCJ8147ITvrmsJuYDmIwiJsmYV1ysd",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 539.385,
+      "predicted_n": 23,
+      "predicted_per_second": 42.641156131520155,
+      "predicted_per_token_ms": 23.451521739130435,
+      "prompt_ms": 535.711,
+      "prompt_n": 513,
+      "prompt_per_second": 957.605873316023,
+      "prompt_per_token_ms": 1.0442709551656921
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 591,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 614
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 32,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Washington (CNN)Washington was rocked late Thursday by shootings -- one at the gates of the U.S. Census Bureau's headquarters and another in a popular area packed with restaurant patrons. The shootings were connected, authorities said. They began with what authorities believe was a domestic kidnapping incident, according to D.C. Police Chief Cathy Lanier. The suspect's vehicle was spotted outside the Census Bureau, which is in Suitland, Maryland. A guard apparently approached the vehicle and saw two people arguing. That guard was then shot at least once in the upper body, said Prince George's County Fire Department spokesman Mark Brady. The guard was in extremely critical condition, according to Brady. The police chief said the suspect then fled the scene. Officers picked up the chase, and the suspect fired gunshots at multiple locations, Lanier said. The chase ended in a crash on Washington's busy H Street. A shootout ensues, Lanier said. An officer and the suspect were wounded, according to the police chief. Both were conscious and talking when they left the scene. \\\"Right now, we have every reason to believe that the car that we have in this last incident here is the same car involved and the same person involved in the kidnapping,\\\" she said. Lanier told reporters the kidnapping victim was located and is in good condition. She did not identify the suspect, nor the guard, nor the officer who were injured. Steve Brusk reported from Washington. Dana Ford wrote from Atlanta. CNN's Greg Botelho also contributed to this report.\\n\", \"original_answer\": \"Two connected shootings occurred in Washington on Thursday, one at the U.S. Census Bureau's headquarters and another in a busy restaurant area. The incidents began with a suspected domestic kidnapping. A guard was critically injured at the Census Bureau after approaching a vehicle in which two people were arguing. Following a police chase and shootout, an officer and the suspect were wounded. The kidnap victim was found in good condition.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69410,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "seed": 69410,
+  "source_cluster_id": "38f65cf643f8731969a4c4c1d640b49829b27ab90e0a3435cf4bef4ad5aaacdd",
+  "source_hash": "sha256:53e03ce05a0d9f066d2e3bf5760b1fb6511eb1997faae041881e7657a41ab39b",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20
+  ]
+}
