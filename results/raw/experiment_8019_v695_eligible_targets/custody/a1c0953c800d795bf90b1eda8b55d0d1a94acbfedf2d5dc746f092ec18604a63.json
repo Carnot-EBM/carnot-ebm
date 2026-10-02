@@ -1,0 +1,133 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 2.0284817370120436,
+  "exclusion_reason": null,
+  "family_id": "sha256:43547f11e36ca991e428e2509d9db3ad7145230a66ecde82ceac9e9320bb60e1",
+  "input_tokens": 1553,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.05,
+    "schema_valid": true,
+    "source_sentence_id": 36,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 26,
+      "prompt_tokens": 1553,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1579
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:1e357bf860e4f1a7e30242b6001152d95d1da9c434dbd1036c30aa6ac62c23f2",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.05,\n  \"source_sentence_id\": 36\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832527,
+    "id": "chatcmpl-2T81BgIPYqI3NJ2OxEWJox4k3mUJSyrU",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 610.558,
+      "predicted_n": 26,
+      "predicted_per_second": 42.58399693395222,
+      "predicted_per_token_ms": 23.483,
+      "prompt_ms": 1294.862,
+      "prompt_n": 1475,
+      "prompt_per_second": 1139.1175275820897,
+      "prompt_per_token_ms": 0.8778725423728814
+    },
+    "usage": {
+      "completion_tokens": 26,
+      "prompt_tokens": 1553,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1579
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Baltimore (CNN)The streets of Baltimore are calm once again. For the second night in a row, protesters peacefully dispersed Wednesday night after a 10 p.m. curfew meant to prevent riots that tore up the city two days earlier. Many wore T-shirts that said \\\"Black Lives Matter,\\\" demanding accountability for the death of Freddie Gray. While the Baltimore protesters remained calm, some of their counterparts across the country were not. More than 100 people were arrested in New York during a \\\"NYC Rise Up & Shut It Down With Baltimore\\\" rally Wednesday night, New York police said. And Denver police arrested 11 people for charges such as assaulting a police officer, robbery, resisting police, disobedience to lawful orders and obstructing roadways. All this comes as protesters demand to know what happened to Gray, who was arrested April 12 and suffered a severe spinal cord injury. He died one week later. Demonstrations are planned for Thursday in Cincinnati, CNN affiliate WXIX said. And a \\\"Philly is Baltimore\\\" protest will take place at Philadelphia City Hall, Philly.com said. Seattle, Portland, Oregon, and Oakland, California, are on tap for Friday, which is also May Day or International Workers Day -- often used to call attention to issues affecting the working class and minorities. More than 100 people arrested during the fracas in Baltimore this week were released Wednesday without charges, the state public defender's office said. Authorities either had to charge or release them within 48 hours of their arrests. \\\"We've come up on a time line,\\\" said Police Commissioner Anthony Batts. But, he added: \\\"We're not giving up on them. We're just going to follow up.\\\" Enya Baez-Ferreras, a student at Johns Hopkins University, joined in the protests Wednesday. She said the violence that marred Baltimore this week is not reflective of the city. \\\"Baltimore is not violent. We have been under a lot of duress, and the violence that erupted the other day is only in reaction to the years and decades of oppression, of police brutality, of harassment that many of the Baltimore residents have been under,\\\" she said. President Barack Obama denounced the \\\"violence, looting, destruction that we saw from a handful of individuals in Baltimore.\\\" \\\"There's no excuse for that,\\\" he said in an interview that aired Wednesday on \\\"The Steve Harvey Morning Show.\\\" Obama said his \\\"heart goes out\\\" to injured officers, and he praised police who he said \\\"showed appropriate restraint.\\\" But he also talked about the state of urban communities. \\\"If you send police officers into those situations where the drug trade is the primary economy and you say to them basically your job is to contain that and arrest kids and put them in jail, when those police officers know (it's not going to fix things), then it's not surprising you end up with a situation of enormous tension between those communities and those police officers,\\\" he said. Obama: Baltimore rioting 'hurts communities that are already suffering' The relative calm that took over Baltimore can be credited in part to peaceful protesters who formed human barricades between hot-tempered demonstrators and police, day and night. \\\"We show that we can police ourselves,\\\" said a man who stood for hours in what protesters called a \\\"unity line.\\\" \\\"We're about positivity here in Baltimore. It starts with us. This long line of people came out here because what we seen on TV (Monday night), we didn't like it.\\\" The city implemented a 10 p.m.-to-5 a.m. curfew for a one-week period that started Tuesday. Asked if she was considering lifting the curfew early, Baltimore Mayor Stephanie Rawlings-Blake told CNN's Chris Cuomo she had not made a decision yet. \\\"We re-evaluate it on a daily basis,\\\" the mayor said Thursday morning. Many residents credited police for not overreacting after the curfew went into effect Tuesday night, setting the tone for peaceful dispersal. \\\"The police did a fantastic job tonight,\\\" one person commented on Twitter. \\\"Technically they could of arrested everyone at 10:01.\\\" Some 2,000 National Guardsmen and more than 1,000 police officers from across Maryland and neighboring states were assigned to the streets of Baltimore on Tuesday night, Maryland Gov. Larry Hogan said. Opinion: In Baltimore riots, 'our hearts were broken' While there was no major damage Wednesday, the recovery from Monday's destruction is far from over. Many saw their homes and vehicles damaged, their livelihoods in shambles. So residents like Cindy Oxendine took to the streets to sweep up rocks, glass and more, despite her aching back. The governor's office has started a website for those wanting to help Baltimore recover from this week's riots. \\\"We have received an outpouring of support from Marylanders and people all around the country who want to help get our beloved Baltimore back on its feet in the wake of the violence and destruction,\\\" Hogan said in a statement. The website, governor.maryland.gov/mdunites/, allows visitors to volunteer for cleanup efforts, donate to charities helping affected residents and report new incidents to police. Some leaders slam 'thug' as the new n-word. CNN's Brian Todd reported from Baltimore; Holly Yan reported and wrote from Atlanta. CNN's Evan Perez, Greg Botelho, Dana Ford and Diane Ruggiero contributed to this report.\\n\", \"original_answer\": \"Peaceful protests continued in Baltimore for the second night in a row, despite a 10 PM curfew imposed to prevent riots. Protests were held across the country in solidarity with Baltimore, including in New York, Denver, and Philadelphia. Over 100 people were arrested in New York and Denver, while in Baltimore, over 2,000 National Guard members and over 1,000 police officers were deployed to maintain order. President Obama condemned the violence in Baltimore but also acknowledged the underlying issues of police brutality and systemic racism that led to the unrest. Some residents of Baltimore expressed gratitude for the peaceful protests and credited them with preventing further violence. A curfew remains in effect in Baltimore until further notice.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:01729bd0030f69f652754c3d6de7a463020090cd202ba05a2e54a476716db098",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41
+  ]
+}

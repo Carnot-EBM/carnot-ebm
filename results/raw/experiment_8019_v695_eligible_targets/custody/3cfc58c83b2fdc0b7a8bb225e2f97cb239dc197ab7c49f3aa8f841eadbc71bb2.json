@@ -1,0 +1,113 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.2160497430013493,
+  "exclusion_reason": null,
+  "family_id": "sha256:1ba198961b935fa5e940ce2d669c7fdb74ceabecff82b3617d52857503564b02",
+  "input_tokens": 573,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 573,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 597
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:843ad1fc734b0cf275430ce0e722ed9335f26db20a4ad2de07740c4cd3151e77",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832718,
+    "id": "chatcmpl-7HSLYg3QJAblGmrhuSBWXwkWUwnxSU4a",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.68,
+      "predicted_n": 24,
+      "predicted_per_second": 42.50194800595028,
+      "predicted_per_token_ms": 23.528333333333332,
+      "prompt_ms": 534.84,
+      "prompt_n": 495,
+      "prompt_per_second": 925.5104330266996,
+      "prompt_per_token_ms": 1.0804848484848486
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 573,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 597
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:That you were gonna make me cry. It's breaking my heart to watch you run around. 'Cause I know that you're living a lie. That's okay baby 'cause in time you will find... What goes around, goes around, goes around. Comes all the way back around. What goes around, goes around, goes around. Comes all the way back around. What goes around, goes around, goes around. Comes all the way back around.\\\\n\\\\npassage 2:What goes around, goes around, goes around. Comes all the way back around. What goes around, goes around, goes around. Comes all the way back around. What goes around, goes around, goes around. Comes all the way back around. What goes around, goes around, goes around.\\\\n\\\\npassage 3:Should have known better that you were gonna make me cry. It's breaking my heart to watch you run around ('cause I know that you're living a lie) That's ok, baby, 'cause in time you will find. What goes around, goes around, goes around. Comes all the way back around. What goes around, goes around, goes around. Comes all the way back around.  Comes all the way back around.\\\\n\\\\n\\\",\\\"question\\\":\\\"what goes around comes around lyrics\\\"}\", \"original_answer\": \"Based on the given passages, it is clear that the lyrics are about a person who has made someone else cry and is running around lying about something. The repetition of \\\"What goes around, goes around\\\" implies that this cycle will continue until the truth comes out or until the person learns from their actions. Ultimately, the message seems to be that good deeds and honesty will eventually prevail, as what goes around will come back around.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:31aabe3422af80c4a7f033b3eb819b6ab5bee88a4398750f898f183c7886f2cc",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21
+  ]
+}

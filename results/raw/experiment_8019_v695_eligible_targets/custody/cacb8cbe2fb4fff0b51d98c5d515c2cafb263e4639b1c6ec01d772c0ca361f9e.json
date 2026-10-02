@@ -1,0 +1,106 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.532173077983316,
+  "exclusion_reason": null,
+  "family_id": "sha256:75a155bb27bc0c73f04b1369219c68f1b51acb62387d3d9b70126a13f3322fe2",
+  "input_tokens": 978,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 978,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1000
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:8dcab8e290aaaea8a012e75dd38a931da9ca9e6790aa9cb559bea2d500c05281",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.95,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832748,
+    "id": "chatcmpl-R0APNiJFubHfPf1de50FJFpMY0FFI9Lz",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 516.966,
+      "predicted_n": 22,
+      "predicted_per_second": 42.55599014248519,
+      "predicted_per_token_ms": 23.498454545454546,
+      "prompt_ms": 884.831,
+      "prompt_n": 900,
+      "prompt_per_second": 1017.1433867032235,
+      "prompt_per_token_ms": 0.9831455555555556
+    },
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 978,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1000
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"109 S Fairview Ave\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":null,\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":2.5,\\\"categories\\\":\\\"Restaurants, Pizza\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":null,\\\"name\\\":\\\"Little Caesars\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-09-23 04:38:26\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Worst food\\\\nWorst customer service\\\\nAfter we made the order and waited hour and a half for delivery I called and cancel the order but there's no money got refunded \\\\nyou go to the store to talk to some people get surprised \\\\nWorker are very rude and if you called them over the phone they closed the line in your face \\\\nI would never go to that place anymore or make orders from them\\\"},{\\\"review_date\\\":\\\"2021-04-13 13:22:14\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Decent place to get a quick meal if you're on a budget. \\\\n\\\\nI used to order from here periodically when I was newly initiated into the workforce right out of college. My budget was extremely tight (as in I could only afford to cook at home) so considered this place an occasional treat of sorts. You get a lot of bang for the buck. \\\\n\\\\nThis location is just off the freeway but you likely won't see it unless you're traveling north on Fairview. It is in a very small strip mall with only a few parking spaces but I've never had an issue finding a spot. As is the case with other Little Caesar's locations, the venue is confined to a small waiting room with a partially open kitchen. One can typically find pre-made pizzas at the ready - or wait 5-10 minutes as they make your order on the spot. \\\\n\\\\nThe food here won't be mind-blowing but is a pretty good deal for the price paid. You can walk out with a substantial pizza and drink for under $10, enough to feed 3-4. Their menu tends to rotate gently with various limited-time items on special. Service is typically on the subpar side but the interaction is really no more than placing your order and waiting. \\\\n\\\\nLook no further if you are on a time crunch and in the market for a cheap, hot pizza.\\\"},{\\\"review_date\\\":\\\"2021-03-29 21:43:19\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"OK so last two times I ate here were several years apart. The first time I had violent stomach cramps the next morning, and the second wasn't as bad but my stomach still hurt after. Do not go; I do not know the experiences of others but I'm never eating at this chain again.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Little Caesars is a restaurant located in Goleta, CA that serves pizza and other fast food items. The business has been in operation for several years and offers takeout and outdoor seating options. The restaurant has received mixed reviews, with some customers praising their experience while others have had negative experiences with poor food quality and customer service. Overall, Little Caesars appears to be a decent option for a quick and affordable meal, but customers may want to consider alternative options if they are looking for higher quality food and better customer service.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:ea265adfc4074fa857642574390f39166e12314106ebd55c398ee9b0f9f535fa",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ]
+}

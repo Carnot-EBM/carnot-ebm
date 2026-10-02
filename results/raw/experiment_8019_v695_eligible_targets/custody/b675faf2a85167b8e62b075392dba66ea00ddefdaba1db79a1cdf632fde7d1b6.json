@@ -1,0 +1,99 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.311436877003871,
+  "exclusion_reason": null,
+  "family_id": "sha256:ce51fae73e6cda56d772face963156d6b7cacf8147909c8c81e58d6d4cb19e48",
+  "input_tokens": 696,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 696,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 720
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:f96618a12650126a1250508f51d5769809170e77daf9835f1437f2d823a4c2b4",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832992,
+    "id": "chatcmpl-tkT2IyDqDL7dJRy5bHDHDIE53RrqQ26z",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.839,
+      "predicted_n": 24,
+      "predicted_per_second": 42.41489186853504,
+      "predicted_per_token_ms": 23.576625000000003,
+      "prompt_ms": 629.849,
+      "prompt_n": 618,
+      "prompt_per_second": 981.1875544773429,
+      "prompt_per_token_ms": 1.019173139158576
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 696,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 720
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"516 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":null,\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":null},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Restaurants, American (New)\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":null,\\\"name\\\":\\\"State Street Wine Bistro\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2016-08-28 06:14:18\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Were the kardashians here? I'm watching an old episode of keeping up with the kardashians and I think Kim, kourtney, and Khloe were here. I actually never ate here but 5 stars because it looked good on the episode\\\"},{\\\"review_date\\\":\\\"2016-05-20 21:13:58\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"We're the kardashians here? I'm watching an old episode of keeping up with the kardashians and I think Kim, kourtney, and Khloe were here. I actually never ate here but 5 stars because it looked good on the episode\\\"},{\\\"review_date\\\":\\\"2014-09-30 19:09:27\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Excellent stop for a quick lunch. Menu has great options and combo choices too for lunch. People watching is great and wine selection was good. Would highly recommend the white bean and soppresatta flatbread- delish!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Sure! Here's an objective overview of State Street Wine Bistro based on the provided structured data:\\n\\nState Street Wine Bistro is a restaurant located in Santa Barbara, California that offers American new cuisine. The bistro has a rating of 4.5 stars and is open for both dine-in and takeout. It has attributes such as outdoor seating, WiFi, and reservations available. Customers have praised the menu options and people watching, with one reviewer commenting that they would highly recommend the white bean and soppresatta flatbread. The ambiance is casual and there is no live music or trendy atmosphere. The reviews are positive overall, with an average rating of 4.5 stars.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:807e1ecc3649ce4189aee8812926c94f906e55fa6ec3afb738bdc077214cb7db",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ]
+}

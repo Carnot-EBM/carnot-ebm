@@ -1,0 +1,111 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.2358305279631168,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:cd8db240527f6771bd176384087a81150d173e393c0782d32ac5ce8dc4ef28ec",
+  "input_tokens": 587,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 587,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 611
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:2524db419117e4419db88abe9fa748cda6a7d74dc7a86d38bb70a62fc4a7027a",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885854,
+    "id": "chatcmpl-bHxdAXhfbh410NrTqM1AAWSwH2jBjrQM",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 558.784,
+      "predicted_n": 24,
+      "predicted_per_second": 42.95040659718246,
+      "predicted_per_token_ms": 23.282666666666668,
+      "prompt_ms": 522.672,
+      "prompt_n": 509,
+      "prompt_per_second": 973.8421036520035,
+      "prompt_per_token_ms": 1.0268605108055011
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 587,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 611
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:exists and is an alternate of. Merge this question into. Split and merge into it. Answer by Redbloodd. Confidence votes 25. Characteristics (traits) such as height, foot size, and hand span are controlled by the genes you have.enes control our characteristics we develop because each gene is a code for making a certain protein, having different versions means we end up with different characteristics \u2026 .\\\\n\\\\npassage 2:Heredity is the passing of phenotypic traits from parents to their offspring, either through asexual reproduction or sexual reproduction. This is the process by which an offspring cell or organism acquires or becomes predisposed to the characteristics of its parent cell or organism.he complete set of observable traits of the structure and behavior of an organism is called its phenotype. These traits arise from the interaction of its genotype with the environment. As a result, many aspects of an organism's phenotype are not inherited.\\\\n\\\\npassage 3:Characteristics of Control. What I week I've had! I have once again seen the ugly affects that control and manipulation can have over a person. There are controlling leaders out there who will go to any length to protect their own image, while hurting innocent people in the process. have been reading from a book titled Confronting Jezebel: Discerning and Defeating the Spirit of Control, by Steve Sampson. This is a list of characteristics from the book that controlling people display. You can apply this list to any area of your life, not just the church.\\\\n\\\\n\\\",\\\"question\\\":\\\"what are characteristics controlled by\\\"}\", \"original_answer\": \"Characteristics such as height, foot size, and hand span are controlled by genes. Heredity is the process by which these phenotypic traits are passed from parents to their offspring, either through asexual reproduction or sexual reproduction. These traits arise from the interaction of an organism's genotype with the environment. However, many aspects of an organism's phenotype are not inherited.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "calibration",
+  "source_cluster_id": "d64be4935d31b2ce7c7d3108a4f93489bfb9f60cef200767f073f1047736f87c",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ]
+}

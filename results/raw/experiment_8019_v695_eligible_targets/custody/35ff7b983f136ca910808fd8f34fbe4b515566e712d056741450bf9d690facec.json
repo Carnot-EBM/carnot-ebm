@@ -1,0 +1,109 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.238471986958757,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:6500912509b78a4162995960c15d1536e6143047a0d5bee93ad1f5f40e6e44af",
+  "input_tokens": 628,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 628,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 651
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:40f4fe9476cb8ef85f033d9dbc66f6109ced3b1e86499886042dc1dd99729b73",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885977,
+    "id": "chatcmpl-b7opfMFpI33tPuFbOjJifPQjk9x9iRB7",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.634,
+      "predicted_n": 23,
+      "predicted_per_second": 42.54264437678725,
+      "predicted_per_token_ms": 23.50582608695652,
+      "prompt_ms": 585.918,
+      "prompt_n": 550,
+      "prompt_per_second": 938.6979065329961,
+      "prompt_per_token_ms": 1.0653054545454546
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 628,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 651
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Heat the water, sugar, and condensed milk in a saucepan. Bring it just to a boil and turn off the heat. Stir in the vanilla and bloomed gelatin until it is fully dissolved. Place the chocolate in a bowl and pour the hot liquid over it. Let the mixture sit for a few minutes until the chocolate is fully melted.\\\\n\\\\npassage 2:1. 1  Prepare the chocolate mirror glaze the day before using: soften the gelatin in cold water and in the meantime prepare a syrup by bringing the water and sugar to a boil on medium heat. 2  Add the sifted cocoa powder and whisk. 3  Brink the heavy cream to a boil.  Incorporate the cream in the cocoa sugar syrup.\\\\n\\\\npassage 3:When it boils, remove from the heat and add chopped dark chocolate. Stir slowly to melt and add the strained gelatin, stir until smooth and strain. Store in a airtight container in the fridge over night. When you\u2019re about to use it, warm the chocolate mirror glaze to the temperature around 110\u00b0F (44\u00b0C) before using it. If you do get a a lot of air bubbles in the glaze, strain it through a fine mesh strainer before using, otherwise the tiny bubbles will show on the finished cake.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to make chocolate mirror glaze\\\"}\", \"original_answer\": \"To make a chocolate mirror glaze, start by softening gelatin in cold water. While that's happening, prepare a syrup by heating water and sugar to a boil on medium heat. Add sifted cocoa powder and whisk it into the syrup. Bring heavy cream to a boil and incorporate it into the cocoa sugar syrup. Once it boils, remove from the heat and add chopped dark chocolate. Stir slowly to melt and then add the strained gelatin, stirring until smooth. Store in an airtight container in the fridge overnight. Prior to using it, warm the chocolate mirror glaze to around 110\u00b0F (44\u00b0C). If there are air bubbles in the glaze, strain it through a fine mesh strainer before using to avoid bubbles on the finished cake.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "dbaa794bfd4f883185d6169aa04b9161729d0b076af9f733a54bd7432b815d7d",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ]
+}

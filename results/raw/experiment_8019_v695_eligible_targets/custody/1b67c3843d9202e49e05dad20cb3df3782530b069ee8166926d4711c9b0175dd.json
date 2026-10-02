@@ -1,0 +1,98 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.4799102279939689,
+  "exclusion_reason": null,
+  "family_id": "sha256:96e3d1c82bf2eb0e5dc9fd4e8e67baa9e653e3889e8693be5b3c3dc2f8b261d7",
+  "input_tokens": 864,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 864,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 888
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:00bd561643fcdea30c9721fea734b3944cb0066f85f5e48520585c53105dae52",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832470,
+    "id": "chatcmpl-mAH9XCCQQNjqeI8h2N5HyNhMqqyxaVsV",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 556.334,
+      "predicted_n": 24,
+      "predicted_per_second": 43.13955285853462,
+      "predicted_per_token_ms": 23.18058333333333,
+      "prompt_ms": 793.713,
+      "prompt_n": 786,
+      "prompt_per_second": 990.282381666925,
+      "prompt_per_token_ms": 1.0098129770992366
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 864,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 888
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Food, Beer, Wine & Spirits, Hot Dogs, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"8:30-18:0\\\",\\\"Monday\\\":\\\"8:30-18:0\\\",\\\"Saturday\\\":\\\"8:30-18:0\\\",\\\"Sunday\\\":\\\"8:30-18:0\\\",\\\"Thursday\\\":\\\"8:30-18:0\\\",\\\"Tuesday\\\":\\\"8:30-18:0\\\",\\\"Wednesday\\\":\\\"8:30-18:0\\\"},\\\"name\\\":\\\"Hotdog Mini Mart\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2020-02-05 05:01:18\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Delish! Enjoyed my dog. Man at cash register was so friendly, a really nice man! It's a 'hole in the wall', truly. The friendliness of the man behind the counter and simplicity, yet tastiness of the hot dog made it an enjoyable experience..Took away one star for ambience...although the ocean nearby is a plus.\\\"},{\\\"review_date\\\":\\\"2019-08-24 22:43:56\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"No update on the hot dog, but they no longer sell fresh local donuts, only prepackaged crappy pastries.\\\"},{\\\"review_date\\\":\\\"2018-09-30 21:13:38\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"My wife and I absolutely love stopping by here every single time we visit S.B. I really like Richard and Dolly , you can just tell they are wonderful people and I personally enjoy seeing them even when it's just for a minute to get your Dog ! And yes, the Hotdogs are delicious!\\\\nSee you guys' in Dec.!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Sure! Here's an objective overview of Hotdog Mini Mart based on the provided structured data:\\n\\nHotdog Mini Mart is a small food establishment located in Santa Barbara, California that offers a variety of products including hot dogs, beer, wine, and spirits. They have a rating of 4.5 stars based on customer reviews and are open seven days a week from 8:30am to 6:00pm. One reviewer enjoyed their hot dog and praised the friendly service, while another reviewer noted that the establishment no longer sells fresh local donuts. A third reviewer gave a five-star review and expressed their love for the owners, Richard and Dolly. The establishment offers outdoor seating and free WiFi, and accepts reservations. The ambiance is described as casual and simple, with a positive atmosphere. Overall, Hotdog Mini Mart appears to be a popular spot for hot dogs and other quick eats in Santa Barbara.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "tune",
+  "source_cluster_id": "sha256:475acd84e82cea74f673ca27b98378418dfed5527a1820ab61728ec29f651552",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ]
+}

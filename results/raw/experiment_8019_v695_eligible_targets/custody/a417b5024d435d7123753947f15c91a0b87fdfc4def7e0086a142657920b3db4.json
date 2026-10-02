@@ -1,0 +1,101 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.460105549020227,
+  "exclusion_reason": null,
+  "family_id": "sha256:bc052907ca04ed07742895df911feb760d0232f8eb517d01c96f7e21ca45a3c9",
+  "input_tokens": 912,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 912,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 933
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:54a0ae69f3a81e30a29c21a77ccb6d7b05a5019c3eae5e9980b95a081f35a687",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832638,
+    "id": "chatcmpl-UICCFPsqlr06Hawg9XDjUIUhV57e456v",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 492.27,
+      "predicted_n": 21,
+      "predicted_per_second": 42.659516119202884,
+      "predicted_per_token_ms": 23.44142857142857,
+      "prompt_ms": 849.752,
+      "prompt_n": 834,
+      "prompt_per_second": 981.4628268012315,
+      "prompt_per_token_ms": 1.0188872901678656
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 912,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 933
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"1417 San Andres St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":null,\\\"divey\\\":null,\\\"hipster\\\":null,\\\"intimate\\\":null,\\\"romantic\\\":false,\\\"touristy\\\":null,\\\"trendy\\\":null,\\\"upscale\\\":null},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Mexican, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"6:0-21:0\\\",\\\"Monday\\\":\\\"6:0-21:0\\\",\\\"Saturday\\\":\\\"6:0-21:0\\\",\\\"Sunday\\\":\\\"6:0-21:0\\\",\\\"Thursday\\\":\\\"6:0-21:0\\\",\\\"Tuesday\\\":\\\"6:0-21:0\\\",\\\"Wednesday\\\":\\\"6:0-21:0\\\"},\\\"name\\\":\\\"Su Casa Fresh Mexican Grill\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2020-07-29 04:39:12\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Found this gem bopping around the neighborhood, thankfully we did! It was really good food food and the woman making it was gem! I'll be more than happy to go back!\\\"},{\\\"review_date\\\":\\\"2020-01-01 20:58:37\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Amazing!!!! Such great food. The nachos were incredible and the service was great. My wife eats low carb and she got the bowl with no rice and it tasted healthy and delicious. I recommend getting fresh avocado in place of the guacamole sauce for the extra charge on the nachos. It's like 1.50 extra but so worth it!!! We will be back next time we are in SB.\\\"},{\\\"review_date\\\":\\\"2019-11-19 05:14:43\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"The owner Efren (from Michoac\u00e1n), allowed me to have dinner and a cold beer after they were closing (slow\\\\nMonday night). He made me a plate of Chile Verde (pork), very tasty.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Su Casa Fresh Mexican Grill is a local business located at 1417 San Andres St, Santa Barbara, CA. It is a Mexican restaurant that offers a variety of dishes. The restaurant is open from 6:00 AM to 9:00 PM every day of the week. Customers can enjoy their meals either in the outdoor seating area or takeout.\\n\\nBased on the provided customer reviews, Su Casa Fresh Mexican Grill has received positive feedback. One customer mentioned finding this place while exploring the neighborhood and praised the delicious food and friendly service. Another customer raved about the amazing food, particularly the nachos, and recommended adding fresh avocado for an extra charge. The customer also appreciated the low-carb options available for their spouse. Another customer appreciated the hospitality shown by the owner, who allowed them to have dinner and a cold beer even after closing time.\\n\\nOverall, Su Casa Fresh Mexican Grill has a rating of 4.5 stars. It is known for its tasty food, friendly service, and accommodating staff. Whether customers choose to dine in or take out, they can expect a delightful Mexican dining experience at Su Casa Fresh Mexican Grill.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:7c659d2e36ac231368edb06ba53649c32f6be4eaa42aee4418ffb3c77f9680b0",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ]
+}

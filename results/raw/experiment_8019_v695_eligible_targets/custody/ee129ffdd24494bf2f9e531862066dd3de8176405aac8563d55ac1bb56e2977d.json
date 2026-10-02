@@ -1,0 +1,139 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 2.0033994360128418,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:79a49f716c0401cf69508c2311e6e9be8e38bd9467191d92db4918bee4527b60",
+  "input_tokens": 1499,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1499,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1522
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:49ff659b5138bae745d7a1a114810eda823662a2e1f28aa82ab71ba9873f97d6",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886260,
+    "id": "chatcmpl-iflkKy1qJqnEQxEYqChm5zeeiuyd1e9Y",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 542.407,
+      "predicted_n": 23,
+      "predicted_per_second": 42.40358254963523,
+      "predicted_per_token_ms": 23.582913043478264,
+      "prompt_ms": 1305.357,
+      "prompt_n": 1421,
+      "prompt_per_second": 1088.5910904066857,
+      "prompt_per_token_ms": 0.9186185784658691
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1499,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1522
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Washington (CNN)A new entry and a waiting game on the Democratic side, a go-slow approach from a leading Republican, and the big stakes of 2016 filled our Sunday morning trip around the \\\"Inside Politics\\\" table. 1. Here's ... Bernie! Hillary Clinton is about to get her first official challenger. Sen. Bernie Sanders of Vermont could make an announcement within days, reports CNN's Nia-Malika Henderson, adding a populist voice to a Democratic race that starts with Clinton as the overwhelming favorite. Sanders has been exploring a run for months, and was a hit this weekend at a big South Carolina Democratic event. \\\"I don't think he can necessarily challenge Hillary Clinton in terms of donors and in terms of organization,\\\" said Henderson. \\\"But in terms of bringing the heat, bringing the fire, bringing that populist rhetoric, he'll be interesting to see, and how he moves Hillary Clinton's own rhetoric as well.\\\" 2. For Biden, watch, wait and ... Few think Vice President Joe Biden is willing to risk a third losing bid for the Democratic presidential nomination. But his official word is that he is still looking at the race, and Julie Hirschfeld Davis of The New York Times reports that this \\\"wait and see\\\" approach is likely to continue for a bit. \\\"There is a strain of thinking that if Hillary Clinton's campaign is truly to implode at some point, that Democrats are going to need someone who can jump in quickly, raise a lot of money and have a lot of experience and launch a campaign,\\\" said Davis. \\\"And Joe Biden would not mind being the person they talk about as that person. So, and as long as we are talking about that, we are still talking about Joe Biden, and that's just the way he likes it.\\\" 3. Kasich also thinks waiting is best. Ohio Gov. John Kasich is more visible of late, and makes no secret of the fact that he thinks he is the most qualified among the potential Republican 2016 presidential prospects. But he isn't in a rush to make a formal declaration of candidacy. Some see this as hesitation. But Robert Costa of The Washington Post detailed a conversation with the Ohio governor in which Kasich made the case that he need not rush. \\\"He's not formally moving toward it right now,\\\" said Costa. \\\"But I don't think he feels a rush, because in this age of super PACs, it's more about building donor relationships, building relationships in the early states, then maybe getting in when you have a little momentum.\\\" 4. Listen to the candidates -- and be reminded of the high stakes. Personalities often trump policy in political coverage, especially in the early days of a campaign. But the old line \\\"elections have consequences\\\" gets repeated a lot because it just happens to be true. NPR's Steve Inskeep says the prospect of big changes was obvious as he did some recent homework about the 2016 race. \\\"Jeb Bush was asked this past week about President Obama'a executive actions on immigration, and he said on a conservative radio talk show, 'Yes, of course I would reverse them,'\\\" said Inskeep. \\\"So suddenly you are talking about millions of people who are on a path to be legalized for a while, now potentially on a path not to be legalized, depending on who wins an election.\\\" \\\"Doesn't mean they would go through with it. I think we all can recall President Obama's promise to close Guantanamo right away if he could just replace President Bush. But it certainly would color the campaign and the tenor of the campaign -- the huge changes that could lie in store depending on who wins.\\\" 5. Remember Sharron Angle? The GOP establishment sure does! Goal No.1 for Republicans in 2016 is taking back the White House. But preserving their new Senate majority runs a close second -- and that will be no easy task, because so many of the competitive races are in states that tend to lean blue in presidential years. So the GOP establishment is putting a priority on candidate recruitment and hoping to build on its 2014 successes, which you might recall included an aggressive effort to discourage or defeat tea party candidates viewed as too risky by the establishment. So in Nevada, where Democrat Harry Reid is retiring, there is an intensifying effort to get Republican Rep. Joe Heck to declare his Senate candidacy. And in Colorado, the establishment favorite is Rep. Mike Coffman, who opened a lot of eyes with his 2014 race in a competitive swing district against a top-tier Democratic opponent. Those two states -- and those two seats -- have special significance in the 2016 maneuvering: Reid and Colorado Democrat Michael Bennet won narrow 2010 victories in what was for the most part a big GOP year. Ask the establishment why, and you will get a ton of finger-pointing at the tea party candidates who emerged as the GOP nominees -- Sharron Angle in Nevada and Ken Buck in Colorado.\\n\", \"original_answer\": \"Bernie Sanders, a Democratic Senator from Vermont, is expected to announce within days that he will run for President in 2016, and is expected to add a populist voice to the race. Sanders' potential announcement comes after his popularity at a recent South Carolina Democratic event. Meanwhile, Vice President Joe Biden is said to be considering his options for the 2016 race, as he ponders whether or not to make a third run for the Democratic presidential nomination. Biden's official line is that he is still looking at the race and this \\\"wait and see\\\" approach is likely to continue. In other news, Ohio Governor John Kasich is reportedly not in a rush to announce his candidacy for the 2016 Republican presidential nomination. Some see Kasich's hesitation as a sign of uncertainty, but others believe that he is taking his time to build relationships with donors and in the early states.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "0421e9bbd38ff0bd8041b502e546853f3013dfd6f27b41e52a0a807cff7d6a34",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42
+  ]
+}

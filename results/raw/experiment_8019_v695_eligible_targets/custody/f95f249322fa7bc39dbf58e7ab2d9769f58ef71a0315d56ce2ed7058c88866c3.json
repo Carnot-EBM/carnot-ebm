@@ -1,0 +1,102 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.5043750919867307,
+  "exclusion_reason": null,
+  "family_id": "sha256:4764bd10186f2655d2f01fdd947630ee7bdf39e9a19517f49f5e4d910186d6a7",
+  "input_tokens": 881,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 881,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 904
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:9e1b14151890fb56221bf784bd87484729333d6ec30a37a415fc165fde21eea4",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832792,
+    "id": "chatcmpl-lnXdHvrZaAwuqGRXcx0AfnSy2Ilkzd9U",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.093,
+      "predicted_n": 23,
+      "predicted_per_second": 42.506556174262094,
+      "predicted_per_token_ms": 23.52578260869565,
+      "prompt_ms": 825.709,
+      "prompt_n": 803,
+      "prompt_per_second": 972.4975748114651,
+      "prompt_per_token_ms": 1.028280199252802
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 881,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 904
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"1213 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":null,\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Restaurants, Fast Food, Sandwiches, Delis\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"10:0-21:0\\\",\\\"Monday\\\":\\\"10:0-21:0\\\",\\\"Saturday\\\":\\\"10:0-21:0\\\",\\\"Sunday\\\":\\\"10:0-21:0\\\",\\\"Thursday\\\":\\\"10:0-21:0\\\",\\\"Tuesday\\\":\\\"10:0-21:0\\\",\\\"Wednesday\\\":\\\"10:0-21:0\\\"},\\\"name\\\":\\\"Jersey Mike's Subs\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2019-04-11 18:41:37\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"My favorite JM's out there.\\\\n\\\\nEvery time I walk through the door the manager give me a smile and asks how I am doing. The staff are super friendly and it's cool to see the fresh faces as of late. \\\\n\\\\nThe food is typical Jersey Mike's, but somehow it tastes better here.\\\"},{\\\"review_date\\\":\\\"2019-01-12 00:10:55\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Came here yesterday with my boyfriend. We have gone to many other Jersey Mike's before and never had a problem. \\\\nHowever this time we got bad food poisoning from our sandwiches and are still exhibiting symptoms from it. \\\\nVery unpleasant experience, especially since we got 2 giants in hopes to get 2 meals out of it. \\\\nInstead we got one meal and a date with the bathroom. \\\\n\\\\nAvoid this location. Not worth the risk.\\\"},{\\\"review_date\\\":\\\"2018-10-01 00:26:45\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Great service! Best chicken Parm than most other jersey mikes locations! A must try with their rosemary bread!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Jersey Mike's Subs is a local restaurant located at 1213 State St in Santa Barbara, CA. The restaurant specializes in fast food, sandwiches, and delis. It operates from 10:00 AM to 9:00 PM every day of the week. \\n\\nAccording to the provided review information, customers have had mixed experiences at this location. One customer describes it as their favorite Jersey Mike's, praising the friendly staff and fresh faces. They also mention that the food tastes better here compared to other locations. On the other hand, another customer had a negative experience, stating that they suffered from food poisoning after eating sandwiches from this location. They advise others to avoid this particular branch.\\n\\nBased on the structured data, the restaurant offers outdoor seating and takeout options. However, there is no information about the availability of parking or the presence of music or specific ambience. The restaurant does not provide WiFi.\\n\\nOverall, Jersey Mike's Subs in Santa Barbara has received an average rating of 3.5 stars. While some customers have had positive experiences, the negative review raises concerns about food safety.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "tune",
+  "source_cluster_id": "sha256:24b8b58ae6f6a6c1cffe9de733e97f059aa84185de7ab9503b1e8b26df397923",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ]
+}

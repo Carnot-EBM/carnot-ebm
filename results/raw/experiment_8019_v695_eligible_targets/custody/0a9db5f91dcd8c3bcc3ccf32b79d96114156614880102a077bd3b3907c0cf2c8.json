@@ -1,0 +1,107 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.3307066679699346,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:ee61b1e0808bd33a009064f8adfd254cd0729a122b5b8b98fa01dc8b94d43b92",
+  "input_tokens": 725,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 3,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 725,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 747
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:5e65ba3a7ef0c30bb77329a8da37d63f77ec2dd38b4233e026007735519eb2cd",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"unsupported_probability\": 0.0,\n\"source_sentence_id\": 3\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886273,
+    "id": "chatcmpl-tQbDHUFdFOaSfjkpEQF3DHqd5KvJVP4P",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 516.71,
+      "predicted_n": 22,
+      "predicted_per_second": 42.57707418087515,
+      "predicted_per_token_ms": 23.486818181818183,
+      "prompt_ms": 665.956,
+      "prompt_n": 647,
+      "prompt_per_second": 971.535657010373,
+      "prompt_per_token_ms": 1.0292982998454405
+    },
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 725,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 747
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:The chemical properties of calcium are reacts with oxygen and reacts with water. There are other chemical properties, but not all of them are true for calcium.These are the two that I know.he chemical properties of calcium are reacts with oxygen and reacts with water. There are other chemical properties, but not all of them are true for calcium.\\\\n\\\\npassage 2:Chemical and Physical Properties of Magnesium. Magnesium is one of the most important elements that is present in many compounds as well as alloys. It is widely used as a chemical reagent, desulfurization agent, and vital ingredient in fireworks.It finds multiple applications due to its unique chemical and physical properties.s mentioned in the chemical properties, magnesium is also present in many other compounds like dolomite, magnesium carbonate (that is also known as magnesite), and magnesium sulfate (which is also known by the name epsomite).\\\\n\\\\npassage 3:Calcium: Physical Properties --silver-grey metal. melts at 840\u00b0C, boils at 1484\u00b0C to produce monatomic gas. density 1540 kg/m^3. Conductor of electricity but a poor one com \u2026 pared to most other metals.Diamagnetic. Chemical properties -- tarnishes rapidly in air to produce a powdery, flaky oxide coating.Reacts steadily with water, giving off bubbles of hydrogen and a solution/slurry of alkaline, sparingly soluble calcium hydroxide. Flammable at high temperatures with oxygen, or air.an also burn in nitrogen to form calcium nitride or carbon dioxide to form calcium carbonate. Nearly all compounds are in oxidation state +2, and the water chemistry of calcium is dominated by the hydrated Ca(2+) ion.\\\\n\\\\n\\\",\\\"question\\\":\\\"what are some physical and chemical properties of magnesium and calcium\\\"}\", \"original_answer\": \"Calcium is a silver-grey metal that melts at 840\u00b0C and boils at 1484\u00b0C. It is a conductor of electricity, but is not as good as most other metals. It is also diamagnetic. Chemically, calcium reacts with oxygen and water, and can also burn in nitrogen to form calcium nitride. It tarnishes rapidly in air to produce a powdery, flaky oxide coating. It reacts with water to produce hydrogen and a solution/slurry of alkaline, sparingly soluble calcium hydroxide. \\n\\nMagnesium is present in many compounds and alloys, and is widely used as a chemical reagent, desulfurization agent, and vital ingredient in fireworks due to its unique chemical and physical properties. It is also present in compounds like dolomite, magnesium carbonate (also known as magnesite), and magnesium sulfate (known as epsomite).\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "9bf6d14974c912c7a327634849130601312c6fdbd7a38c67c6d56fa05baa3be0",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ]
+}

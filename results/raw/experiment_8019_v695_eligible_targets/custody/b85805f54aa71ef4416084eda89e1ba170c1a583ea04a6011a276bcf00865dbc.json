@@ -1,0 +1,106 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.4497402519918978,
+  "exclusion_reason": null,
+  "family_id": "sha256:f8237f1a9034220d94f9a48d026f8340a89d7b8f240f4872e14f75498a9e4304",
+  "input_tokens": 927,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 927,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 949
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:05e554eb635a1b9f5e255cdca8e98d595ed0e5bc3e79af89e6cf178afe5e6366",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.95,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832482,
+    "id": "chatcmpl-MZiOO4qiCV6BB24OYOthmYYqZgqKxPWd",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 509.339,
+      "predicted_n": 22,
+      "predicted_per_second": 43.193236724460526,
+      "predicted_per_token_ms": 23.15177272727273,
+      "prompt_ms": 829.707,
+      "prompt_n": 849,
+      "prompt_per_second": 1023.252786827157,
+      "prompt_per_token_ms": 0.9772756183745583
+    },
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 927,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 949
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"2294 Lillie Ave\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Restaurants, American (Traditional), Breakfast & Brunch\\\",\\\"city\\\":\\\"Summerland\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"7:0-14:0\\\",\\\"Monday\\\":\\\"7:0-14:0\\\",\\\"Saturday\\\":\\\"7:0-15:0\\\",\\\"Sunday\\\":\\\"7:0-15:0\\\",\\\"Thursday\\\":\\\"7:0-14:0\\\",\\\"Tuesday\\\":\\\"7:0-14:0\\\",\\\"Wednesday\\\":\\\"7:0-14:0\\\"},\\\"name\\\":\\\"Summerland Beach Cafe\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-11 01:51:04\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Took a weekend trip to Carpinteria/Santa Barbara and found this place when researching good breakfast options. We were seated immediately on a Saturday morning at around 10 AM. We loved the decor and old photos of Summerland everywhere! \\\\n\\\\nMy boyfriend got the regular eggs benedict, I got the crab cake eggs benedict, and a cinnamon roll to share. The food was fresh and delicious! I highly recommend to anyone looking for some delicious breakfast and/or lunch!\\\"},{\\\"review_date\\\":\\\"2021-12-12 19:52:14\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Came here with a party of 6 and we got seated immediately on a busy Sunday brunch day. Our server was very helpful and polite. The portion sizes are huge and our food came out less than 10 minutes after ordering! We left with full tummies and with plenty of leftovers for later. The food was good quality but wasn't memorable/special besides its serving size but we still enjoyed the experience.\\\"},{\\\"review_date\\\":\\\"2021-12-09 18:01:49\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"This place is great for families. I love their breakfast. Great place to go. The parking is a little difficult but there's a parking lot across the street. The waffles are my favorite. Yummy\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Based on the provided structured data, here is an objective overview of Summerland Beach Cafe:\\n\\nSummerland Beach Cafe is a popular restaurant located in Summerland, California, offering a variety of dining options including American (Traditional) cuisine. The cafe has a cozy atmosphere and serves both breakfast and lunch. According to customer reviews, the food is fresh and delicious, with generous portion sizes. The restaurant offers free WiFi and has outdoor seating available. While the service is generally good, some customers have noted that it can be slow during busy times. Parking can also be a challenge, but there is a parking lot across the street. Despite these minor issues, Summerland Beach Cafe appears to be a great spot for families and those looking for a casual dining experience. Overall rating: 4.0 stars.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:e376e462623fc0679097ac8ec81f81f65f0eec4e232db7ff15d75817f382322f",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ]
+}

@@ -1,0 +1,114 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.4671755159506574,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:613d566dc24d146be83423c593f76cc64a3e4e9365001205e552e4687e04aea4",
+  "input_tokens": 878,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 878,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 901
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:d0507b7b1fd9be40810f77ae7ad910890adda93b066b4605020da82ea524996e",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885900,
+    "id": "chatcmpl-b7vjoKzGV85Icjx0I8ZEEQ0EX6HU1FMp",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 538.05,
+      "predicted_n": 23,
+      "predicted_per_second": 42.746956602546234,
+      "predicted_per_token_ms": 23.393478260869564,
+      "prompt_ms": 817.01,
+      "prompt_n": 800,
+      "prompt_per_second": 979.1801813931286,
+      "prompt_per_token_ms": 1.0212625
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 878,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 901
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:* Average Cost (with preferred health discount): $1,720-per-year. Age 55, standard health rate. Initial policy benefit for EACH is $164,000 based on a Daily benefit of $150 and 3 year benefit period. Coverage value will increase annually because a 3 percent compound inflation growth option was included.According to the 2012 long term care insurance Price Index the costs for LTC insurance can vary significantly.Long Term Care Insurance Rates for Single Age 55. Long Term Care Insurance Rates for Couple Both Age 55. Average Cost: $3,381-per-year (combined).ccording to the 2012 long term care insurance Price Index the costs for LTC insurance can vary significantly. Long Term Care Insurance Rates for Single Age 55. Long Term Care Insurance Rates for Couple Both Age 55. Average Cost: $3,381-per-year (combined).\\\\n\\\\npassage 2:The costs of long-term care vary widely. Using the average costs in an area closest to you, this tool helps you determine how much you need to save or whether you should consider buying long-term care insurance.(For more on if you need such insurance, click here.).Type of care:he costs of long-term care vary widely. Using the average costs in an area closest to you, this tool helps you determine how much you need to save or whether you should consider buying long-term care insurance. (For more on if you need such insurance, click here.). Type of care:\\\\n\\\\npassage 3:Costs of Care. Some average costs for long-term care in the United States (in 2010) were: 1  $205 per day or $6,235 per month for a semi-private room in a nursing home.2  $229 per day or $6,965 per month for a private room in a nursing home. $205 per day or $6,235 per month for a semi-private room in a nursing home. 2  $229 per day or $6,965 per month for a private room in a nursing home. 3  $3,293 per month for care in an assisted living facility (for a one-bedroom unit). 4  $21 per hour for a home health aide.\\\\n\\\\n\\\",\\\"question\\\":\\\"average cost of long term care\\\"}\", \"original_answer\": \"The average cost of long term care can vary widely. For a 55-year-old with standard health rate, the average cost of long term care insurance is $1,720 per year. For a couple both aged 55, the average is $3,381 per year. In terms of actual care costs in the United States in 2010, it was $205 per day or $6,235 per month for a semi-private room in a nursing home, $229 per day or $6,965 per month for a private room in a nursing home, and $3,293 per month for care in an assisted living facility (for a one-bedroom unit). The cost for a home health aide was $21 per hour.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "calibration",
+  "source_cluster_id": "28c0c6f227d48b8b60035a415e378ecce3e0b029a4e70ed80e63cf3f6aaf1172",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17
+  ]
+}

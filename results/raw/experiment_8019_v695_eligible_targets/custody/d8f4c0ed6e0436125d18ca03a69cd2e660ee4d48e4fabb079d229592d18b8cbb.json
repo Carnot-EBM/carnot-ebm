@@ -1,0 +1,110 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.2652746220119298,
+  "exclusion_reason": null,
+  "family_id": "sha256:ca026a64b4dd7a74f4870192d2d9e6e0b73c2a62a1c5ac6ad98bae2bbe6303e5",
+  "input_tokens": 647,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 647,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 670
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:016873724d96ab7d39a53fe66dbedecf7f14bc08df8e0873d96529d5d3bfc777",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832475,
+    "id": "chatcmpl-mKfmhfobIQ3nTI5umqVZkFaxOPZOO8fW",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 532.251,
+      "predicted_n": 23,
+      "predicted_per_second": 43.212694762433514,
+      "predicted_per_token_ms": 23.141347826086957,
+      "prompt_ms": 580.211,
+      "prompt_n": 569,
+      "prompt_per_second": 980.6777189677548,
+      "prompt_per_token_ms": 1.0197029876977153
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 647,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 670
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"If you're famous and performing the American national anthem, be prepared to become a national hero or a national disgrace. Facts are facts.  Just ask Vince, Whitney, Roseanne, Jimi and Michael. M\u00f6tley Cr\u00fce's Vince Neil reminded us again this week of the dangers of tackling \\\"The Star-Spangled Banner.\\\" Sure, he can shred it on \\\"Girls, Girls, Girls\\\" and \\\"Dr. Feelgood,\\\" but this is a different story -- a completely different story. To say Neil butchered the song before the Las Vegas Outlaws Arena Football League game would be unkind to those in the profession.  There's less carnage when butchers are done with their work. The late Whitney Houston set the modern standard for the national anthem at Super Bowl XXV.  In the early stages of the Gulf War in 1991, a patriotic America saluted her performance. Just six months earlier, comedian Roseanne Barr may have established the low-water mark. The crowd at the San Diego Padres game booed her rendition and President George H. W. Bush called it \\\"disgraceful.\\\" There's nothing quite like getting the presidential thumbs down. One of the most controversial and beloved versions of \\\"The Star-Spangled Banner\\\" comes from 1969. Guitar slinger Jimi Hendrix inflamed mainstream America with his psychedelic take on the national anthem to the delight of the Woodstock generation. And then there's Michael Bolton's version.  Overly wrought songs are his specialty and he doesn't disappoint in that department when he sings at the American League Championship Series in 2003.  Bolton belts it out, but there's one little problem -- the words.  Can anyone say crib notes?\\n\", \"original_answer\": \"Performing the national anthem can make you a hero or a disgrace, as seen with Vince Neil, Whitney Houston, Roseanne Barr, Jimi Hendrix, and Michael Bolton. Neil's recent performance was butchered, while Houston's is considered a modern standard. Barr's version was booed and called disgraceful by President Bush. Hendrix's psychedelic take was controversial, while Bolton's overly dramatic version had errors in the lyrics, which he blamed on crib notes.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:9f2e85b038a27e0f719a9777d4b005da6be8b1bad1cae765919c94d24366a7fa",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18
+  ]
+}

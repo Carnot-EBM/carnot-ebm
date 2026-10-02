@@ -1,0 +1,106 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.3698455059784465,
+  "exclusion_reason": null,
+  "family_id": "sha256:fe00b85e321c6d41c38f3e2eadbc362a5026771af2ec6929d6c82260f970e057",
+  "input_tokens": 807,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 807,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 830
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:539733ee2877a9483d56143fd492f5681751512a1c9aef50b26124215b3e2132",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832637,
+    "id": "chatcmpl-CUmTDL4LxHqEAQnRexBwAvmNL1S2MPW5",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.313,
+      "predicted_n": 23,
+      "predicted_per_second": 42.56791896548852,
+      "predicted_per_token_ms": 23.491869565217392,
+      "prompt_ms": 710.335,
+      "prompt_n": 729,
+      "prompt_per_second": 1026.2763344055975,
+      "prompt_per_token_ms": 0.9743964334705076
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 807,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 830
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:HotPicks is derived from the Lotto game and uses the Lotto numbers drawn bi-weekly on Wednesday\u2019s and Saturday\u2019s. How To Play Lotto HotPicks. For each Lotto draw, there are five different ways you can play Lotto HotPicks.The aim of the game is to pick 1, 2, 3, 4, or 5 of the Lotto numbers from 1 to 49.Not as simple as it sounds when you add the fact that you have to select how many you are aiming to match and that you have to match them all to win. For example, if you choose to play \u2018Pick 3\u2032, you would select 3 numbers from 1 \u2013 49.f all 3 numbers were drawn in the main Lotto draw then you would have a winning ticket. If only 1 or 2 numbers matched those in the Lotto draw, then you wouldn\u2019t win anything. It isn\u2019t necessary to enter the main Lotto game to play Lotto HotPicks.\\\\n\\\\npassage 2:Playing with your saved numbers. You can save your lucky numbers once you've bought your ticket. You can then play with these numbers as often as you like. Simply select the link above the play slip.laying with your saved numbers. You can save your lucky numbers once you've bought your ticket. You can then play with these numbers as often as you like. Simply select the link above the play slip.\\\\n\\\\npassage 3:On a HotPicks payslip you can play up to 5 games for both the Wednesday and Saturday draws and choose to play those same numbers for up to eight weeks in advance, starting with the next draw. The same options are available to those playing Lotto HotPicks Online.f all 3 numbers were drawn in the main Lotto draw then you would have a winning ticket. If only 1 or 2 numbers matched those in the Lotto draw, then you wouldn\u2019t win anything. It isn\u2019t necessary to enter the main Lotto game to play Lotto HotPicks.\\\\n\\\\n\\\",\\\"question\\\":\\\"how do you play lotto hotpicks\\\"}\", \"original_answer\": \"To play Lotto HotPicks, you first choose how many numbers you want to pick, ranging from 1 to 5. You then select your chosen numbers from a range of 1 to 49. The aim is to match all the numbers you have chosen with those drawn in the main Lotto game, which takes place on Wednesdays and Saturdays. For example, if you choose to play \u2018Pick 3\u2019, you would need to select 3 numbers and all 3 numbers would need to be drawn in the main Lotto draw for you to win. You can play up to 5 games for both the Wednesday and Saturday draws, with the option to play the same numbers for up to eight weeks in advance. You can also save your lucky numbers once you've bought your ticket and play with these numbers as often as you like. It isn't necessary to enter the main Lotto game to play Lotto HotPicks.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "tune",
+  "source_cluster_id": "sha256:1307a0e78a9c3b8a54ec7fe39f1d411faced0bc7ffccf8370e8798ae8adc560f",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ]
+}

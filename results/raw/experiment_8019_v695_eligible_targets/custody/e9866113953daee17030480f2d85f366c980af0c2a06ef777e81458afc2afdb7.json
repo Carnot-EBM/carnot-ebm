@@ -1,0 +1,110 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.3853950980119407,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:c1a757bad408fa624d676c79749031bccf022b41fc7e3f879a2ca0b07e813c52",
+  "input_tokens": 787,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 3,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 787,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 811
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:31d6c34046df55a7e4eef5143a4a00ac74b52e8498a3dc6a11e2f77869ca3e78",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 3\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885931,
+    "id": "chatcmpl-CX95hXRMbt5OSnceRLZy1mXDGOrJNywr",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.322,
+      "predicted_n": 24,
+      "predicted_per_second": 42.52891079915368,
+      "predicted_per_token_ms": 23.513416666666668,
+      "prompt_ms": 706.525,
+      "prompt_n": 709,
+      "prompt_per_second": 1003.5030607551042,
+      "prompt_per_token_ms": 0.996509167842031
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 787,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 811
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:The Dearness Allowance (DA) is a cost of living adjustment allowance paid to Government employees, Public sector employees (PSU)and pensioners in Bangladesh and India. Dearness Allowance is calculated as a percentage of an Indian citizen's basic salary to mitigate the impact of inflation on people.Indian citizens may receive a basic salary or pension that is then supplemented by a housing or a dearness allowance, or both.earness Allowance is calculated as a percentage of an Indian citizen's basic salary to mitigate the impact of inflation on people.\\\\n\\\\npassage 2:Gratuity Calculation= [ (Basic Pay + D.A) x 15 days x No. of years of service ] / 26 Where, D.A = Dearness Allowance. End of Service Benefits Eligibility: 1.Any person employed on wages/salary.2.ratuity Calculation= [ (Basic Pay + D.A) x 15 days x No. of years of service ] / 26 Where, D.A = Dearness Allowance. End of Service Benefits Eligibility: 1.\\\\n\\\\npassage 3:Generally, basic salary is fixed between 30% to 50% of total salary. It is done so that employee can get an appropriate tax exemption as well as retirement benefit. 2. House Rent Allowance (HRA) \u2013 HRA is basically an allowance, which forms a part of one\u2019s taxable salary.It is in the range of the 40% or 50% of basic salary. It is not mandatory for the employer to give HRA.But, if an employer chooses to offer the allowance as part of salary then employee may get some part of it as tax-free if the employee satisfies certain conditions. 3.enerally, basic salary is fixed between 30% to 50% of total salary. It is done so that employee can get an appropriate tax exemption as well as retirement benefit. 2. House Rent Allowance (HRA) \u2013 HRA is basically an allowance, which forms a part of one\u2019s taxable salary.\\\\n\\\\n\\\",\\\"question\\\":\\\"india basic salary calculation\\\"}\", \"original_answer\": \"In India, the basic salary is calculated as 30% to 50% of the total salary. This is done to ensure employees receive appropriate tax exemptions and retirement benefits. The basic salary may be supplemented by a housing or dearness allowance (DA). The DA is a cost of living adjustment allowance calculated as a percentage of the basic salary to offset the impact of inflation. There's also the House Rent Allowance (HRA), which forms part of the taxable salary and ranges from 40% to 50% of the basic salary, if the employer chooses to offer it. Additionally, there's a calculation for a gratuity, which is [(Basic Pay + D.A) x 15 days x No. of years of service] / 26.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "5dd44861d1d929f4224e806a33d682a24187fb99af89ceac434a3cf22d035877",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ]
+}

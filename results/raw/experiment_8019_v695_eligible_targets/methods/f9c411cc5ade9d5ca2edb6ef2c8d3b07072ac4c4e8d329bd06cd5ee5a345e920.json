@@ -1,0 +1,183 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "run",
+        "--rcfile=/tmp/carnot-8019-m_5k1yk0/coverage.ini",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-8019-m_5k1yk0/pytest",
+        "tests/python/test_eligible_targets_8019.py",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_response_targets_7955.py",
+        "tests/python/test_source_boundary_7852.py",
+        "tests/python/test_experiment_7942_v689_sentence_labels.py",
+        "-q"
+      ],
+      "name": "unit_consumers_e2e015_019",
+      "scope": "owned",
+      "timeout_s": 300
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--data-file=/tmp/carnot-8019-m_5k1yk0/.coverage",
+        "/tmp/carnot-8019-m_5k1yk0"
+      ],
+      "name": "coverage_combine",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/carnot-8019-m_5k1yk0/.coverage",
+        "--fail-under=100",
+        "--show-missing"
+      ],
+      "name": "coverage_report",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "json",
+        "--data-file=/tmp/carnot-8019-m_5k1yk0/.coverage",
+        "-o",
+        "/tmp/carnot-8019-m_5k1yk0/coverage.json"
+      ],
+      "name": "coverage_json",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_8019_v695_eligible_targets.py",
+        "scripts/experiments/experiment_8019_v695_eligible_targets.py",
+        "tests/python/test_eligible_targets_8019.py"
+      ],
+      "name": "ruff_check",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_8019_v695_eligible_targets.py",
+        "scripts/experiments/experiment_8019_v695_eligible_targets.py",
+        "tests/python/test_eligible_targets_8019.py"
+      ],
+      "name": "ruff_format",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "--follow-imports=silent",
+        "python/carnot/experiment_8019_v695_eligible_targets.py",
+        "scripts/experiments/experiment_8019_v695_eligible_targets.py"
+      ],
+      "name": "strict_mypy",
+      "scope": "owned",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_eligible_targets_8019.py"
+      ],
+      "name": "spec_coverage",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q"
+      ],
+      "name": "repository_health",
+      "scope": "repository_health",
+      "timeout_s": 180
+    }
+  ],
+  "feedback_delay_slots": 20,
+  "floors": {
+    "calibration": [
+      48,
+      8
+    ],
+    "fit": [
+      128,
+      16
+    ],
+    "retention": [
+      48,
+      8
+    ],
+    "stream": [
+      192,
+      20
+    ],
+    "tune": [
+      32,
+      4
+    ]
+  },
+  "mask_selection": "complete_original_annotation_and_valid_public_inputs_only",
+  "measurement_budget_s": 300,
+  "model_calls": 0,
+  "policy_cost_matrix": {
+    "accept_unsupported": 5,
+    "correct_accept_reject": 0,
+    "escalate": 0.5,
+    "reject_supported": 1
+  },
+  "random_seed": 69519,
+  "replacement_allowed": false,
+  "schema": "carnot.v695.eligibility_methods.v1",
+  "schemas": {
+    "evaluator": "original rows and annotations; eligible_y is null unless complete",
+    "public": [
+      "answer_bytes",
+      "capture_identity",
+      "exclusion_reason",
+      "family_id",
+      "features",
+      "q",
+      "response_id",
+      "role",
+      "slot",
+      "source_bytes",
+      "source_cluster_id",
+      "status"
+    ]
+  },
+  "slots": {
+    "calibration": 64,
+    "fit": 256,
+    "retention": 64,
+    "stream": 256,
+    "tune": 64
+  },
+  "synthetic_fill": false,
+  "training_steps": 0
+}

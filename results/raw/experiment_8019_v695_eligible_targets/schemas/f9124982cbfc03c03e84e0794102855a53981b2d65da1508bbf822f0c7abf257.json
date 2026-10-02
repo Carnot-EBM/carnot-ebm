@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "role": {
+      "enum": [
+        "fit",
+        "tune",
+        "calibration",
+        "stream",
+        "retention"
+      ]
+    },
+    "rows": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "answer_bytes": {},
+          "capture_identity": {},
+          "exclusion_reason": {},
+          "family_id": {},
+          "features": {},
+          "public_eligible": {},
+          "q": {},
+          "response_id": {},
+          "role": {},
+          "slot": {},
+          "source_bytes": {},
+          "source_cluster_id": {},
+          "status": {},
+          "target_eligible": {}
+        },
+        "required": [
+          "answer_bytes",
+          "capture_identity",
+          "exclusion_reason",
+          "family_id",
+          "features",
+          "public_eligible",
+          "q",
+          "response_id",
+          "role",
+          "slot",
+          "source_bytes",
+          "source_cluster_id",
+          "status",
+          "target_eligible"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "schema": {
+      "const": "carnot.v695.public_source_role.v1"
+    }
+  },
+  "required": [
+    "schema",
+    "role",
+    "rows"
+  ],
+  "type": "object"
+}

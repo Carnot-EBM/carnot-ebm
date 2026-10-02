@@ -1,0 +1,98 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.4617178189801052,
+  "exclusion_reason": null,
+  "family_id": "sha256:492491be1fae3d6926fc645839257696189c263e83e99649459c36445c53f7de",
+  "input_tokens": 930,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 930,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 951
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:8146b91e090bccb83f724da85ac2b5a4fc8a4ef373a57bfe84e51b5f253d74f2",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832710,
+    "id": "chatcmpl-uYtTohKKNZ3XSGDZs8r6Flf7tmKN0gZl",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 493.033,
+      "predicted_n": 21,
+      "predicted_per_second": 42.59349779832181,
+      "predicted_per_token_ms": 23.477761904761905,
+      "prompt_ms": 855.227,
+      "prompt_n": 852,
+      "prompt_per_second": 996.2267327855646,
+      "prompt_per_token_ms": 1.003787558685446
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 930,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 951
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"3761 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":null,\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Seafood, Nightlife, Bars, Food, Sports Bars, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"10:0-20:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"12:0-20:0\\\",\\\"Sunday\\\":\\\"12:0-20:0\\\",\\\"Thursday\\\":\\\"7:0-21:0\\\",\\\"Tuesday\\\":\\\"6:0-22:0\\\",\\\"Wednesday\\\":\\\"6:0-22:0\\\"},\\\"name\\\":\\\"The Buzz Hive\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2018-10-11 20:42:19\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Great beer selection, hot food, hot bartenders. Crazy that my favorite bar is in a grocery store.\\\"},{\\\"review_date\\\":\\\"2018-10-02 04:51:23\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"This is the best place for craft beer, burgers, steak that tastes like you had it at a steak house but ten times better, and amazing customer service. Whether you have Anthony as your bartender, Joseph, Tracy, or Britany you know you are going to get the best service and have the best experience. I will keep going back and hope that Whole Foods keeps them for a long time and maybe eventually gives them a remodel with more seating and better hours.\\\"},{\\\"review_date\\\":\\\"2018-09-28 21:09:16\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I love this place! Great locals scene, best beer selection in town and the food is great! The staff is also very friendly. Highly recommend!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"The Buzz Hive is a local business located at 3761 State St in Santa Barbara, CA. It offers a variety of services and amenities such as seafood, nightlife, bars, food, sports bars, and restaurants. The business has a rating of 4.5 stars.\\n\\nThe business operates on specific hours, opening at 6:00 AM on Tuesdays, Wednesdays, and Thursdays, and closing at 10:00 PM. On Mondays, the business is closed, and on Fridays, Saturdays, and Sundays, it opens later in the day at 10:00 AM and closes at 8:00 PM.\\n\\nThe Buzz Hive provides free WiFi and offers takeout options for its customers. It also welcomes groups and has a casual ambience. The business does not have its own parking lot, but customers can find parking nearby.\\n\\nCustomers have left positive reviews about The Buzz Hive. They praise the great beer selection, hot food, and attractive bartenders. One customer even mentions that it is unique to have their favorite bar located within a grocery store. Another customer appreciates the excellent customer service, mentioning specific bartenders who provide the best experience. The locals scene, friendly staff, and great beer selection are also highly recommended.\\n\\nOverall, The Buzz Hive seems to be a popular spot in Santa Barbara, offering a combination of good food, drinks, and a friendly atmosphere.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "tune",
+  "source_cluster_id": "sha256:df1208143001819bc48c1a45dbd0e8d11d16779755e3743fd32290140ec704ad",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 0.0,
+  "exclusion_reason": "answer_units_over_budget",
+  "family_id": "sha256:629e32d14d0005abc3e2ffef1eb3aa5027c7c444f05a0e349802546d2322f553",
+  "input_tokens": null,
+  "parsed": {
+    "citation_valid": false,
+    "completed": false,
+    "finish_reason": null,
+    "probability": null,
+    "schema_valid": false,
+    "source_sentence_id": null,
+    "status": "invalid_envelope",
+    "syntax_valid": false,
+    "usage": {}
+  },
+  "public_eligible": false,
+  "public_hash": "sha256:d3d46d38039ae5022526e14782a35b7c3557343f7b68c59da572e1b4195a473a",
+  "raw_response": {},
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Although a peacock can be seen in many parts of the world, it is native to the Indian subcontinent and parts of western China. Peacocks are magnificent birds known for their beauty and grace. They have multicolored stunning tail feathers. Only the male birds of this species have these beautiful multicolored feathers.he Muslims used the quill of peacock feathers to write and mark passages in the Quran. The female peacocks are known to be very protective about their young ones, which is why many women get a peacock feather tattooed on themselves to symbolize this trait.\\\\n\\\\npassage 2:Peacocks are revered around the globe and have been for centuries: It is believed that a peacock (sometimes a pair of peacocks) stands guard at the entrance to the Gates of Paradise. They are also a symbol of the immortality of Christ.In Buddhist iconography, peacocks are symbols of wisdom.hile some believe that having peacock feathers in the home is bad luck, I am of the opinion that the energy we put into our thoughts is what actually brings us our luck. The collection of feathers that we do have indoors was gifted to us at a music festival held at a peacock farm in Oregon by one of the caretakers.\\\\n\\\\npassage 3:It is also thought of as a symbol of good luck in most parts of the world. The feathers are used for decorative purposes in homes as well as means to keep away insects and flies. Peacock is considered as the manifestation of the celestial Phoenix bird, and its feather is often recommended in Feng Shui as a love cure.he Muslims used the quill of peacock feathers to write and mark passages in the Quran. The female peacocks are known to be very protective about their young ones, which is why many women get a peacock feather tattooed on themselves to symbolize this trait.\\\\n\\\\n\\\",\\\"question\\\":\\\"what does a peacock symbolize pragya\\\"}\", \"original_answer\": \"Based on the provided passages, a peacock can symbolize several things:\\n\\n1. Beauty and grace: The peacock is known for its multicolored stunning tail feathers, which are only found in male birds of the species. This has led to the bird being associated with beauty and grace.\\n2. Protectiveness: Female peacocks are known to be very protective of their young ones, and this trait is often admired and emulated by humans. Many women get a peacock feather tattooed on themselves to symbolize this quality.\\n3. Good luck: The peacock is thought to be a symbol of good luck in many parts of the world. Its feathers are used for decorative purposes in homes and are also believed to keep away insects and flies.\\n4. Wisdom: In Buddhist iconography, peacocks are symbols of wisdom.\\n5. Immortality: In some cultures, peacocks are associated with immortality, particularly in Christianity, where they are believed to stand guard at the gates of paradise.\\n6. Fertility: Peacocks are also associated with fertility, as their plumage is said to represent the cycle of life and death.\\n7. Celestial origin: Peacocks are sometimes referred to as the manifestation of the celestial Phoenix bird, and their feathers are often recommended in Feng Shui as a love cure.\\n\\nOverall, the peacock symbolizes various qualities such as beauty, grace, protectiveness, good luck, wisdom, immortality, fertility, and celestial origin, among others.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 0,
+  "role": "fit",
+  "source_cluster_id": "sha256:9b97022335856c37c3083b7569fd5da673da5818276e6e311397597521a24e46",
+  "started": false,
+  "status": "excluded",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ]
+}

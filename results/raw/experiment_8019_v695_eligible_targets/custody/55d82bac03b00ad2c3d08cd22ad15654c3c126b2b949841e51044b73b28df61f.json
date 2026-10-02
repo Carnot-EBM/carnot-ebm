@@ -1,0 +1,99 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.394392524030991,
+  "exclusion_reason": null,
+  "family_id": "sha256:be66afacabe06c82f0bd24a770b6a319d5792a977203c6c44048644341d25c7a",
+  "input_tokens": 822,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 822,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 845
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:3960748d6680244f4464d96d2ae736970a3f7df190b6838bac5adb08ef9a07cf",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832591,
+    "id": "chatcmpl-p5Ki9RMc8FkFilkN9ZSRxyc3bryQ2WV9",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 539.649,
+      "predicted_n": 23,
+      "predicted_per_second": 42.62029578485275,
+      "predicted_per_token_ms": 23.463,
+      "prompt_ms": 722.706,
+      "prompt_n": 744,
+      "prompt_per_second": 1029.4642634764343,
+      "prompt_per_token_ms": 0.9713790322580645
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 822,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 845
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"956 Embarcadero Del Norte\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":false,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Mexican, Beer Bar, Bars, Sports Bars, Nightlife, Restaurants, Tacos\\\",\\\"city\\\":\\\"Isla Vista\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"10:0-22:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"12:0-22:0\\\",\\\"Sunday\\\":\\\"12:0-20:30\\\",\\\"Thursday\\\":\\\"10:0-22:0\\\",\\\"Tuesday\\\":\\\"10:0-22:0\\\",\\\"Wednesday\\\":\\\"10:0-22:0\\\"},\\\"name\\\":\\\"California Tacos and Taproom\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-11-28 02:37:25\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Wonderful fish tacos with homemade tortillas. Guacamole is very fresh and tasty. A great find in Solvang. Outdoor seating was very comfortable and the staff was very accommodating.\\\"},{\\\"review_date\\\":\\\"2021-11-28 02:30:22\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"We stumbled upon this place trying to avoid the chaos of Solvang and we were pleasantly surprised how good the food and service is! Not only do they plate it beautifully and serve you after you order at the front, but they use fresh ingredients and make their own tortillas, chips, guacamole and salsas. Bonus points for vegan section on menu.\\\"},{\\\"review_date\\\":\\\"2021-03-29 02:39:34\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Ordered online and the order went through without a hitch but apparently this location is closed? I was charged but when I went to pick it up, no sign of life there whatsoever. Not happy.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"\\\"California Tacos and Taproom\\\" is a 4-star rated Mexican restaurant located at 956 Embarcadero Del Norte, Isla Vista, California. It offers a variety of options including tacos, beer, and other Mexican cuisines. Open from Tuesday to Sunday, the restaurant offers outdoor seating, free wifi, and takeout options. However, it does not offer parking facilities, music, or reservations. According to customer reviews, the restaurant is known for its wonderful fish tacos with homemade tortillas and fresh guacamole. It has also been praised for its good service, beautiful presentation, and use of fresh ingredients. However, there has been a case of an online order issue when the restaurant was unexpectedly closed.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "tune",
+  "source_cluster_id": "sha256:e5d3752d838f33241a50fa99c4a52ab46f1c2fd7f1bcb28ea05a8f33932b3b21",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ]
+}

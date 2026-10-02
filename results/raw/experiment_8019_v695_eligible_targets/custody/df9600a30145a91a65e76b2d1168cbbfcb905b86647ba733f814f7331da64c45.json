@@ -1,0 +1,131 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.9249938459834084,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:d6599b34edf835906113ad9643bdc63d1a16b1893176dff041a877220d9455ba",
+  "input_tokens": 1462,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1462,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1485
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:1bdecf4901346628816ec9123039ce06b7e1296a7ecaee870f6eed05cf38fc5c",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886319,
+    "id": "chatcmpl-dj3WAcUg29NCsjTIVDvK6FLDyoCRL7iy",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 542.094,
+      "predicted_n": 23,
+      "predicted_per_second": 42.428065981176694,
+      "predicted_per_token_ms": 23.56930434782609,
+      "prompt_ms": 1260.283,
+      "prompt_n": 1384,
+      "prompt_per_second": 1098.1660468323385,
+      "prompt_per_token_ms": 0.9106091040462427
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1462,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1485
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Pope Francis has accepted the resignation of Bishop Robert Finn, who remained on the job for years after becoming the highest-ranking U.S. Catholic official convicted in connection with the church's long-running sex abuse scandal, the Vatican announced Tuesday. Finn, who led the Diocese of Kansas City-St. Joseph, Missouri, was found guilty in 2012 of failure to report suspected child abuse. The case was tried by a judge instead of by jury because prosecutors wanted to protect the young victims' anonymity. Finn was convicted of one count but not a misdemeanor charge he'd also faced. He was put on two years' probation but was not forced to spend time in jail or pay a fine, according to the Jackson County Prosecuting Attorney's Office. Two charges against his diocese were dropped. At the time of his conviction, Finn said, according to CNN affiliate KCTV: \\\"I truly regret and am sorry for the hurt these events have caused.\\\" Jackson County Prosecutor Jean Peters Baker said the conviction and penalty, which included starting a $10,000 fund for sexual abuse counseling and mandatory training for church officials on how to report abuse, would have positive ramifications. \\\"We can be assured now that if an allegation of child abuse comes to the attention of the Diocese of Kansas City-St. Joseph, there will be no hesitation to report it immediately to the proper authorities,\\\" Baker said. The case against Finn revolved around his diocese's dealings with Shawn Ratigan, an Independence, Missouri, priest who pleaded guilty in August 2012 to five child pornography charges. Church officials found disturbing images on Ratigan's computer but didn't notify police until nearly five months later, prosecutors said. In those interceding months, the priest kept on working. And Finn kept his job as bishop, even after his 2012 conviction. The official website of the Catholic diocese of Kansas City-St. Joseph still listed him as its bishop Tuesday morning. Cardinal Sean O'Malley, who took over the abuse-shaken Boston archdiocese and has become one of the Pope's point men in the United States, has acknowledged the inconsistency that someone who wouldn't be allowed to teach Sunday school was still running an American diocese. \\\"It's a question that the Holy See needs to address urgently,\\\" O'Malley said in a \\\"60 Minutes\\\" interview in November. \\\"There's a recognition of that ... from Pope Francis.\\\" Candida Moss -- a professor at Notre Dame, a Catholic university in Indiana -- said it \\\"doesn't look very urgent\\\" that a decision came down only now, nearly three years after the conviction and five months after O'Malley's comments. Several factors may have played a role in the delay, including views from lawyers or power players at the Vatican, who may be reluctant to cast blame at high-level officials who don't report allegations quickly enough to government authorities. But the timing of the announcement may make sense given that it comes weeks after Francis came under fire for the installation of a new bishop in Chile, Juan Barros, despite protesters' claims he was complicit in sexual abuse cases there. \\\"It kind of shook Francis' reputation,\\\" said Moss. \\\"Having this resignation and putting right one of the more visible injustices on this, especially in the U.S., I think this is a typical Francis way to reinstall confidence.\\\" Now that the case has been addressed, the Kansas City-St. Joseph diocese has a new leader: Kansas Archbishop Joseph Naumann. Under the Pope's directive, Naumann will be the Kansas City diocese's apostolic administrator, in addition to his regular responsibilities in Kansas, until a permanent bishop is appointed, according to an announcement on the diocese's website. \\\"I pray that the coming weeks and months will be a time of grace and healing for the Diocese,\\\" Naumann said in an open letter to parishioners. \\\"All of us, who are privileged to serve in leadership for the Church, do so for only a season. It is not our Church, but Christ's Church.\\\" Moss, the Notre Dame professor, predicted that the shuffling at the western Missouri diocese will be \\\"very well received,\\\" though some may question why it took so long. \\\"It's not just that it's late,\\\" Moss said, \\\"but it's that Francis could have been more explicit.\\\" To that point, the co-director of BishopAccountability.org asked for more elaboration than the Vatican's one-line announcement that Francis accepted the resignation \\\"in accordance with ... Canon Law.\\\" Anne Doyle, from the watchdog group that documents the Catholic church's abuse crisis, called Finn's removal \\\"a good step but just the beginning.\\\" \\\"The pope must show that this decision represents a meaningful shift in papal practice -- that it signals a new era in bishop accountability,\\\" Doyle said. \\\"... What no pope has done to date is publicly confirm that he removed a culpable bishop because of his failure to make children's safety his first priority. We urge Pope Francis to issue such a statement immediately.\\\" CNN's AnneClaire Stapleton contributed to this report.\\n\", \"original_answer\": \"Pope Francis has accepted the resignation of Bishop Robert Finn, following his conviction that he failed to report child abuse in his diocese of Kansas City-St. Joseph, Missouri. Finn was found guilty in 2012 after church officials discovered child pornography on a priest's computer and failed to report it to the police for nearly five months. Following his conviction, Finn was put on two years' probation, but was not forced to spend time in jail or pay a fine. Two charges against his diocese were also dropped. The Bishop's resignation follows criticism of Pope Francis for the installation of a new bishop in Chile, Juan Barros, despite protesters' claims he was complicit in sexual abuse cases there. The Pope has now appointed Kansas Archbishop Joseph Naumann as the apostolic administrator of the Kansas City-St. Joseph diocese.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "d06900c0027ac51235bf6a008929550cac4e730b21de87c230952d016668e197",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34
+  ]
+}

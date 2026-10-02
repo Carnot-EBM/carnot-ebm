@@ -1,0 +1,101 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.3079686050186865,
+  "exclusion_reason": null,
+  "family_id": "sha256:ea816b2d4f6e96849b3afa0aca7b4515382efc69ca49915f88d47e2b344effb4",
+  "input_tokens": 660,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": 6,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 660,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 685
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:bfd0d5c49bb011302fcf5a7e8b30392c6aec7ff6455c728eeb69b7dd1d41464d",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": 6\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832872,
+    "id": "chatcmpl-MUNB9o2daiX2ustvXQlyMEjJt9WLGRqw",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 589.473,
+      "predicted_n": 25,
+      "predicted_per_second": 42.41076351249337,
+      "predicted_per_token_ms": 23.578919999999997,
+      "prompt_ms": 609.004,
+      "prompt_n": 582,
+      "prompt_per_second": 955.6587477257949,
+      "prompt_per_token_ms": 1.0463986254295532
+    },
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 660,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 685
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Or follow these steps: 1  Open iTunes. 2  If you\u2019re not signed in, sign in with your Apple ID. 3  Mac: From the menu bar at the top of your computer screen, choose Account > View My Account.  Enter your password, then press the Return or Enter key on your keyboard, or click View Account.\\\\n\\\\npassage 2:Q: How to list authorized devices. I recently purchased a Iphone 4. When I connected to Itunes and wanted to download an app from the Istore, I got a message that I had already reached five authorized devices. The only function I have found so far is deactivate all!\\\\n\\\\npassage 3:As soon as you try to do something that requires iTunes authorization, such as enable iTunes Match, a box will pop up asking you to do so. Just enter the Apple ID and password associated with the content you\u2019re trying to access and Apple will automatically authorize iTunes on your PC or Mac. If you\u2019d like to manually authorize iTunes, just go to the Store menu in the OS X menu bar and select Authorize This Computer. For Windows users, the lack of a menu bar means you\u2019ll find this menu by clicking the small icon on the top-left of the iTunes window, illustrated in the following screenshot.\\\\n\\\\n\\\",\\\"question\\\":\\\"apple, how to authorize a device\\\"}\", \"original_answer\": \"Based on the provided passages, here's how to authorize a device using iTunes:\\n\\nPassage 1 provides general instructions for signing in to iTunes with an Apple ID, but does not specifically address authorizing a device.\\n\\nPassage 2 mentions that if you see a message indicating you have reached the maximum number of authorized devices, the only option available is to deactivate all devices. This suggests that there is no direct way to add a new authorized device through this passage.\\n\\nPassage 3 provides steps for manually authorizing iTunes on a PC or Mac. On a PC, this can be done by going to the Store menu in the OS X menu bar and selecting Authorize This Computer. On a Mac, the process is similar - click the small icon on the top-left of the iTunes window.\\n\\nTherefore, based on the provided passages, the answer to the question \\\"How to authorize a device\\\" is:\\n\\nManually authorize iTunes on your PC or Mac by following the steps outlined in Passage 3.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:183b59a8680e23cabbd3b51eadbb339af04b03f527648422ae51cd490ce0d768",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ]
+}

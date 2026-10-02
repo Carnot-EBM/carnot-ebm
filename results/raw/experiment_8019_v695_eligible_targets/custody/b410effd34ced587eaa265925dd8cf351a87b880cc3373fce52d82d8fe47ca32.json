@@ -1,0 +1,110 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.71099300700007,
+  "exclusion_reason": null,
+  "family_id": "sha256:a604f9b7da7ee20cbfff9ae7295ee26a07602c92a5527268f17c9452dae8d31f",
+  "input_tokens": 1154,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1154,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1178
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:35660b666cfcc8dbf50fd0a6ff841b06bbfc653af81327fcf559d7db9cd4cf1b",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832582,
+    "id": "chatcmpl-cxp7l4AA7C16ozfrDMto4hVBq42jJZ5B",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.57,
+      "predicted_n": 24,
+      "predicted_per_second": 42.51022902385886,
+      "predicted_per_token_ms": 23.523750000000003,
+      "prompt_ms": 1024.37,
+      "prompt_n": 1076,
+      "prompt_per_second": 1050.4017103195135,
+      "prompt_per_token_ms": 0.9520167286245352
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1154,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1178
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"5892 Hollister Ave\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Chinese, Cafes, Taiwanese, Restaurants\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-20:30\\\",\\\"Monday\\\":\\\"11:0-20:30\\\",\\\"Saturday\\\":\\\"11:0-20:30\\\",\\\"Sunday\\\":\\\"11:0-20:30\\\",\\\"Thursday\\\":\\\"11:0-20:30\\\",\\\"Tuesday\\\":\\\"11:0-20:30\\\",\\\"Wednesday\\\":\\\"11:0-20:30\\\"},\\\"name\\\":\\\"Gimeal Cafe\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2019-07-19 10:35:30\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"The worst Pork Cutlet Curry I've ever had. You can tell the pork cutlet is so aged and frozen by looking at the texture and the taste. If I were Gordon Ramsay, I will definitely put that cook under every single pressure test. Doubt whether is it a new Chinese money laundry business.\\\"},{\\\"review_date\\\":\\\"2019-05-21 00:18:29\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Considering the lack of Taiwanese food in the Santa Barbara area, this place is a godsend if you live here and miss food from Taiwan. If you're comparing to Taiwanese food in the bay area or LA though, this is probably just a 3-star place. \\\\n\\\\nI ordered the braised pork over rice bento box, which came with some fatty pieces of pork on white rice, half a soy sauce egg, sauteed cabbage, corn and ham, kimchi, and a small sausage (though not the Taiwanese sausage I was expecting). It was alright. It tasted like a lot of it was reheated in a microwave. The egg rolls were pretty standard, nothing to write home about, and the Szechuan spicy wings had a good kick to it but presentation could have used some work.\\\"},{\\\"review_date\\\":\\\"2019-05-11 23:09:43\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Thought we would try something new. This place did not disappoint. The popcorn chicken and bento box were out of this world. Too much food for two people...we brought food home. Popcorn chicken is fried and served with a curry mustard sauce (crazy good). The bento box had excellent kimchi to go with the chicken over rice...also corn, egg and seaweed salad. They serve beer. The decor is bland with only the largest tv I've seen in my life. Bathroom clean was a bonus. Nice staff though you order at the counter and they serve you. Really impressed.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Sure! Here's an objective overview of Gimeal Cafe based on the provided structured data:\\n\\nGimeal Cafe is a Chinese restaurant located in Goleta, CA, with a rating of 4.5 stars out of 5 based on 3 reviews. The restaurant offers a variety of dishes including Taiwanese cuisine, and its hours of operation are from 11:00 AM to 8:30 PM, Monday through Sunday. The restaurant has both indoor and outdoor seating, free Wi-Fi, and takeout options. The ambiance is casual and has no music or TVs. The restaurant does not accept reservations.\\n\\nAccording to the review info, the restaurant serves decent Taiwanese food, but some dishes may be reheated in a microwave. One reviewer found the pork cutlet to be aged and frozen, while another reviewer enjoyed the popcorn chicken and bento box. However, there was one negative review that described the pork cutlet as the worst they've ever had.\\n\\nOverall, Gimeal Cafe seems to be a decent option for those looking for Taiwanese cuisine in the Goleta area, but the quality of the food may vary depending on the dish and the day.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:1e9d212a2c3befaa9d644adda73a502a0e058034b5eb78426c8333bfd2803252",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18
+  ]
+}

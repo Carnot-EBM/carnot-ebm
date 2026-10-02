@@ -1,0 +1,125 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.2906048379954882,
+  "exclusion_reason": null,
+  "family_id": "sha256:e3193964ebf373babc378f7de1f0dcfadb97367a4b87773758bae355d03996a3",
+  "input_tokens": 658,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 658,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 682
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:262e3b3c36cf70a839101af195da88f0ca86b6e034d1e6b17077d96ba30ba58b",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832540,
+    "id": "chatcmpl-E0mNeIyelK5sUByu82y4QqwDVS6XeI5k",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 560.418,
+      "predicted_n": 24,
+      "predicted_per_second": 42.82517692151215,
+      "predicted_per_token_ms": 23.35075,
+      "prompt_ms": 592.669,
+      "prompt_n": 580,
+      "prompt_per_second": 978.6238186913774,
+      "prompt_per_token_ms": 1.0218431034482758
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 658,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 682
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:cheeky audacious, disrespectful, forward, fresh (informal) impertinent, impudent, insolent, insulting, lippy (U.S. & Canad. slang) pert, sassy (U.S. informal) saucy Antonyms civil, complaisant, courteous, decorous, deferential, mannerly, polite, respectful, well-behaved, well-mannered.\\\\n\\\\npassage 2:adj. brazen, insolent. 1  assuming. 2  audacious. 3  barefaced. 4  brash. 5  brassy. 6  cheeky. 7  coming on strong. 8  confident. 9  forward. 10  fresh. 11  gritty. 12  gutsy. 13  immodest. 14  impudent. 15  insolent. 16  nervy. 17  pert. 18  presumptuous. 19  rude. 20  sassy. 21  saucy. 22  shameless. 23  smart. 24  smart-alecky. 25  spunky.\\\\n\\\\npassage 3:Cheeky is a word used by english people like myself. 1. it is a word used to describe someone who does something or says something sort of disrespectful and sometimes rude, but says it in a cunning way. 2. can also be used in a more serious way i.e if you found out that one of your friends has been talking behind your back, you might say that she is a cheeky bitch.\\\\n\\\\n\\\",\\\"question\\\":\\\"define cheeky synonym\\\"}\", \"original_answer\": \"Based on the given passages, \\\"saucy\\\" can be considered as a synonym for \\\"cheeky\\\".\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:cefd4ab9c0ed610867df4d3d06f776a4917548cdd5e38db95c65f79bbe3ec0d3",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33
+  ]
+}

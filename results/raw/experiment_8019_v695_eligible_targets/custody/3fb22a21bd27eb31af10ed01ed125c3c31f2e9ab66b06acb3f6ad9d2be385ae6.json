@@ -1,0 +1,101 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.3967799120000564,
+  "exclusion_reason": null,
+  "family_id": "sha256:e7f411facd69e963e66e8f5d8ed1bfa9b82877cd4b8c69bdcccd96188f011cf1",
+  "input_tokens": 789,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 789,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 813
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:5213d2f3e440c64c776f961c87f843bc11392be3e472773065b016a5da7fc4cf",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832635,
+    "id": "chatcmpl-BUx60L7LNmPl2YXa8Fojyly1bnXKkbaQ",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.228,
+      "predicted_n": 24,
+      "predicted_per_second": 42.535996086688364,
+      "predicted_per_token_ms": 23.5095,
+      "prompt_ms": 707.538,
+      "prompt_n": 711,
+      "prompt_per_second": 1004.8930234135835,
+      "prompt_per_token_ms": 0.9951308016877637
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 789,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 813
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"794 Linden Ave\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":null,\\\"classy\\\":false,\\\"divey\\\":true,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":false,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Restaurants, Mexican, Food, Beer, Wine & Spirits\\\",\\\"city\\\":\\\"Carpinteria\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"8:0-22:0\\\",\\\"Monday\\\":\\\"8:0-21:0\\\",\\\"Saturday\\\":\\\"8:0-22:0\\\",\\\"Sunday\\\":\\\"8:0-21:0\\\",\\\"Thursday\\\":\\\"8:0-21:0\\\",\\\"Tuesday\\\":\\\"8:0-21:0\\\",\\\"Wednesday\\\":\\\"8:0-21:0\\\"},\\\"name\\\":\\\"Taco's To Go\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-03-26 15:07:10\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Best nachos in Carp! I usually get the nachos and my husband will get the torta. Large portions and tastes amazing. Must try if you are looking for easy, to-go Mexican food in the area.\\\"},{\\\"review_date\\\":\\\"2020-10-25 00:11:25\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"You can easily miss this place but it is Amazing. Whenever I visit somewhere I have to find good tacos & these are delicious. They are BIG. Not street tacos. The owner was so sweet, asked where I was from, how I was liking Carpinteria, etc. HIGHLY recommend\\\"},{\\\"review_date\\\":\\\"2020-07-28 21:24:56\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Coming here for three years and still love it! Great drink selection and the steak is always cooked perfectly\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Taco's To Go is a restaurant located at 794 Linden Ave in Carpinteria, California. It offers a variety of Mexican, food, beer, wine & spirits options. The restaurant has outdoor seating, takeout, and reservations are not available. Customers can park their cars on the street or in a lot. The restaurant has a casual ambiance, with no WiFi available. Based on customer reviews, Taco's To Go is known for its large portions and delicious nachos, which are highly recommended by customers who visit the area. The restaurant also offers a good selection of drinks and steak, which is cooked perfectly. Overall, Taco's To Go is a great option for easy, to-go Mexican food in the area.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:dffb99ed9968510c4add1a3b65ae69e2b52ebb3d6604bce4a8edd328c34996f8",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ]
+}

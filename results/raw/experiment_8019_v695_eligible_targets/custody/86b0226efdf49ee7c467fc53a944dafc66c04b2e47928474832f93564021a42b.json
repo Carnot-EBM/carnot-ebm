@@ -1,0 +1,108 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.6765855900011957,
+  "exclusion_reason": null,
+  "family_id": "sha256:cff9ac8029663c1d0acfd7ff299eba099bcbb616353c12c51d1aacd6d8840aea",
+  "input_tokens": 1073,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1073,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1097
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:94fdbeeee2515001e7e0df31d561e5a9a340e1252cb44d3242cfec5f113eaa3b",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832771,
+    "id": "chatcmpl-ZIyBB5r8XAnOGBUyWxdKNCROcPrTHynF",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 566.356,
+      "predicted_n": 24,
+      "predicted_per_second": 42.37617329029797,
+      "predicted_per_token_ms": 23.598166666666668,
+      "prompt_ms": 967.353,
+      "prompt_n": 995,
+      "prompt_per_second": 1028.5800529899634,
+      "prompt_per_token_ms": 0.9722140703517588
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1073,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1097
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"12 W Haley St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":null,\\\"classy\\\":null,\\\"divey\\\":null,\\\"hipster\\\":null,\\\"intimate\\\":false,\\\"romantic\\\":null,\\\"touristy\\\":null,\\\"trendy\\\":null,\\\"upscale\\\":null},\\\"BusinessParking\\\":null,\\\"Music\\\":\\\"{dj: False, live: None, jkebox: None, video: False, backgrond_msic: False, karaoke: None, no_msic: False}\\\",\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":null},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Bars, Cocktail Bars, Nightlife\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"17:0-2:0\\\",\\\"Monday\\\":\\\"17:0-2:0\\\",\\\"Saturday\\\":\\\"14:0-2:0\\\",\\\"Sunday\\\":\\\"14:0-2:0\\\",\\\"Thursday\\\":\\\"17:0-2:0\\\",\\\"Tuesday\\\":\\\"17:0-2:0\\\",\\\"Wednesday\\\":\\\"17:0-2:0\\\"},\\\"name\\\":\\\"Unbearable\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-07 07:44:59\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"I've been a few times for drinks and it has been great until now. I ordered a pizza and it was the worst I've ever had. My friend and I both tried a slice and then left it untouched. The bartender (Christine) wasn't very friendly and charged me for two drinks instead of one and added an \\\\\\\"entertainment district fee\\\\\\\". The total for my bill was $50 when all I ordered was a cocktail ($12) and pizza($14)... overall I'm very disappointed. The security was nice enough to help me get the second drink off of the bill, however the tip was not adjusted and neither was the \\\\\\\"entertainment district fee\\\\\\\".\\\"},{\\\"review_date\\\":\\\"2021-11-14 05:10:08\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Worst service :-) I get that Saturday nights are busy but all 3!! bartenders passed my boyfriend and I too many times in a 25-minute window and not one person helped us. We literally made eye contact too and they'd just look away or at each other. One of the bartender's Cassie/Kassie (first photo) and two other girls.\\\"},{\\\"review_date\\\":\\\"2021-11-01 02:18:55\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Looking for 12 TVs for football, ping pong, jinga and ski ball?? Unbearable has got you covered! Also I LOVE the food here! The portobello burger is one of my FAVORITES! The staff is so kind and warm. They treat you like a friend and call you by the first name. This is my football go to bar! #graceydogofthemonth\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Sure! Here's an objective overview of the local business \\\"Unbearable\\\" based on the provided structured data in JSON format:\\n\\nUnbearable is a bar located in Santa Barbara, CA that offers cocktail bars, nightlife, and bars. It is open from 5 pm to 2 am from Monday to Sunday. The business has an average rating of 4 stars out of 5 based on three customer reviews. The reviews mention mixed experiences with the service, with one reviewer expressing disappointment with the quality of the pizza and the service being unfriendly, while another reviewer had a negative experience with the service being slow and unresponsive. However, the third reviewer had a positive experience with the food and the staff being kind and welcoming. The business has attributes such as no business parking, no reservations, no outdoor seating, no WiFi, and no takeout. It is suitable for groups and has a casual ambiance. The music selection includes DJ and live music, and the prices are moderate. Overall, the reviews suggest that the service can be inconsistent, but the food and atmosphere are enjoyable.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:2fa5351a77c269115e77164abaf95130eba3d95463d9201702ba27558fd1cf78",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+  ]
+}

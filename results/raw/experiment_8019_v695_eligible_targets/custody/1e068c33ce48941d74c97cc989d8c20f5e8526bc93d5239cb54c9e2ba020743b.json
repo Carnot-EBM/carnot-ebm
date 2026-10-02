@@ -1,0 +1,99 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.1225486139883287,
+  "exclusion_reason": null,
+  "family_id": "sha256:a608459c62331eec71b34bfb0dc41c59ddf3d1efeac964bf4dc515b4b92af38b",
+  "input_tokens": 448,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 1,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 448,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 472
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:37d1b1a2214b0d29c8853b780e1acc2471fb752bbbd7083b6be0f9d3b26fc8e4",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 1\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832587,
+    "id": "chatcmpl-7aeeNGK0bcHcVU9RtR7wHkVMT8rzD11y",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 563.084,
+      "predicted_n": 24,
+      "predicted_per_second": 42.62241512811588,
+      "predicted_per_token_ms": 23.46183333333333,
+      "prompt_ms": 443.382,
+      "prompt_n": 370,
+      "prompt_per_second": 834.494859962741,
+      "prompt_per_token_ms": 1.1983297297297297
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 448,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 472
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Parts of Miami-Dade County's skyline was hidden from view Monday as smoke from a growing 1,850-acre wildfire loomed over portions of the Florida county. What started as a nonthreatening and seemingly shrinking grass fire on Sunday, consuming fewer than 100 acres according to Miami-Dade Fire Rescue Battalion Chief Al Cruz, grew to be more than 10 times that within the next 24 hours. By Monday night, the fire had burned nearly 2,000 acres and was 50% contained, the fire department said. High temperatures and gusty winds helped the fire spread, State Forester Jim Karels said. Several fire units and a helicopter with the capacity to drop 400 gallons of water at a time were battling the blaze, Cruz said. \\\"The Florida Forest Service and Miami-Dade Fire Rescue have worked around the clock to protect Southwest Miami-Dade County,\\\" Florida Agriculture Commissioner Adam H. Putnam said in a statement. Early Monday night, officials were considering road closures, and one school, Lincoln Marti, was evacuated as a precaution, according to the Fire Department.\\n\", \"original_answer\": \"A wildfire in Miami-Dade County, Florida, grew from 100 acres to 1,850 acres in 24 hours, with high temperatures and gusty winds fueling its spread. Firefighters are working to contain the blaze, with 50% containment achieved by Monday night.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "tune",
+  "source_cluster_id": "sha256:fe6e8864ed6e841f0daa42611f49fc36ad172c7a22b73dbd461f432cb86d4c0c",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ]
+}

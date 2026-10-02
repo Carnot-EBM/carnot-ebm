@@ -1,0 +1,105 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.3225049290340394,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:881564f3c48c34de3a18ad102d986003b717dff3dd307fd9148753af984dc908",
+  "input_tokens": 816,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 816,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 837
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:99f6977752baf655dbe7ba4ee924c9fd9e0266bb2e37ced83801520fb5de3725",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885866,
+    "id": "chatcmpl-xamHSK5ls7lv1LmAIaC985jc3elMDKrm",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 487.964,
+      "predicted_n": 21,
+      "predicted_per_second": 43.035961669303475,
+      "predicted_per_token_ms": 23.23638095238095,
+      "prompt_ms": 699.542,
+      "prompt_n": 738,
+      "prompt_per_second": 1054.9759699917947,
+      "prompt_per_token_ms": 0.9478888888888889
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 816,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 837
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"532 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":null,\\\"hipster\\\":null,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":null,\\\"trendy\\\":null,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":true,\\\"lot\\\":false,\\\"street\\\":null,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":null},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Restaurants, Latin American, Mexican, Tacos\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-20:0\\\",\\\"Saturday\\\":\\\"11:0-20:0\\\",\\\"Sunday\\\":\\\"11:0-20:0\\\",\\\"Thursday\\\":\\\"11:0-20:0\\\",\\\"Tuesday\\\":\\\"11:0-20:0\\\",\\\"Wednesday\\\":\\\"11:0-20:0\\\"},\\\"name\\\":\\\"Yona Redz\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-14 02:54:06\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Thomas was great customer service \\\\nFood was amazing came to give this place a second try since the first time was kinda funky thinking they would be like mexico tacos but today trying it again brought me memories thanks yona redz\\\"},{\\\"review_date\\\":\\\"2022-01-11 00:02:47\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Shoutout to the best michelada and birria tacos! This place is amazing. I came on Sunday and enjoyed their $15 deal. 1 michelada, 2 birria y queso tacos & consume. This was incredible. \\\\n\\\\nI highly recommend! Just the miche on its own is amazing and delicious!\\\"},{\\\"review_date\\\":\\\"2022-01-08 04:15:12\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Great tacos de birria.\\\\nFantastic Agua Fresca.\\\\nQue Mas do you want?\\\\nOutdoor dining table. \\\\nFree parking in the back. I highly recommend\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Yona Redz is a highly-rated (4.5 stars) Mexican restaurant located at 532 State St, Santa Barbara, CA, specializing in Latin American and Taco dishes. The restaurant is open six days a week from Tuesday to Sunday, between 11:00 am and 8:00 pm. Customers appreciate the amazing food, particularly the birria tacos and micheladas, and commend the excellent customer service. The restaurant offers a casual ambience with outdoor seating and is suitable for groups. It also offers takeout options. Reservations are not required. Parking is available in a garage, but there is no valet or lot parking. The restaurant does not offer validated parking. Customers also mention the convenience of free parking at the back.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "calibration",
+  "source_cluster_id": "79c19b87089b43e9800d52d0b3ece69e72ff009df34aee62f967f2173fc512f0",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ]
+}

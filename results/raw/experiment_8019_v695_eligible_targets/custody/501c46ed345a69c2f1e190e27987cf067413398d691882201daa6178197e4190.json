@@ -1,0 +1,104 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.180745346006006,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:f038f3eff61cb599807a367a5b2055dd7ffd4c5cadef792727f73e4230e5c585",
+  "input_tokens": 507,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 507,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 530
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:d2770da41fa6c0f56fe83a8c91d7044d8466c261465a88ccfe0f876798d2f3f2",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886286,
+    "id": "chatcmpl-FMiMLRh2jG0CtPV4yC4Ix9Mo8GdpawmM",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 548.346,
+      "predicted_n": 23,
+      "predicted_per_second": 41.94431982726235,
+      "predicted_per_token_ms": 23.84113043478261,
+      "prompt_ms": 497.56,
+      "prompt_n": 429,
+      "prompt_per_second": 862.2075729560254,
+      "prompt_per_token_ms": 1.1598135198135198
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 507,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 530
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Home treatments may be advised for mild, viral meningitis. Medications for headaches, pain killers, and anti-sickness drugs to prevent vomiting are enough for the patient to recover within 14 days. There s no need to continue taking antibiotics once viral meningitis is confirmed.\\\\n\\\\npassage 2:Avoid Liquid Food: When you get diagnosed with meningitis, the patients should avoid liquid food. Instead of that food, they should drink the juice of ORS (oral re-hydration salts). The better way on how to treat meningitis naturally is to mix the juice of ORS with the lukewarm water. This is the treatment for the first days.\\\\n\\\\npassage 3:1. Take A Good Sleep: As the way on how to treat meningitis, the doctors have suggested that the patients with meningitis need to take a good sleep for at least 8 hours a day. By putting the patients into the comfortable bed rest, this treatment will help them relieve the symptoms of meningitis such as headache.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to treat meningitis\\\"}\", \"original_answer\": \"Treatment for meningitis can include home treatments for mild, viral cases. This can involve medications for headaches, pain killers, and anti-sickness drugs to prevent vomiting. The patient should recover within 14 days and does not continue taking antibiotics once viral meningitis is confirmed. Patients should avoid liquid food and instead drink the juice of ORS (oral re-hydration salts) mixed with lukewarm water. This is suggested for the first few days. It is also advised that patients get a good sleep for at least 8 hours a day. Bed rest can help relieve symptoms such as headaches.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "9a8611000f3d0bda8c291eab3fe096d1d923ad3f26e59f3141ccff3c09d245b1",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ]
+}

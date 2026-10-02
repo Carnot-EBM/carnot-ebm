@@ -1,0 +1,119 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.3763993720058352,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:1089f27e2e7787249192a9b2ffef491f0f09edb1fe92435a4b81186b841a7f5d",
+  "input_tokens": 834,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 834,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 857
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:dbb755a20d822ccf842a70814263d7306c88486258917669cda467345aef1f3f",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885892,
+    "id": "chatcmpl-CwASr3GCorvouXMbT1mLZB7qqnfbffPY",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 537.886,
+      "predicted_n": 23,
+      "predicted_per_second": 42.7599900350632,
+      "predicted_per_token_ms": 23.386347826086954,
+      "prompt_ms": 720.167,
+      "prompt_n": 756,
+      "prompt_per_second": 1049.7565148083709,
+      "prompt_per_token_ms": 0.9526018518518519
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 834,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 857
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"New York  (CNN)New York's iconic Statue of Liberty and Liberty Island will reopen to the public Saturday -- one day after a bomb threat that led to its evacuation was declared unfounded, officials said. The NYPD bomb squad on Friday examined a locker thought to contain a suspicious package and found it was empty, a law enforcement official said. Police declared the scene clear at 3:15 p.m. Other lockers checked as a precautionary measure, the law enforcement source said. Images posted on social media showed crowds of visitors walking on ramps to awaiting ferries. All civilians were evacuated and only emergency personnel remained on Liberty Island, according to police. The fire department had EMS units there as a precaution. Mike Burke, the head of Statue Cruises, which operates the ferry to the island, said: \\\"Our first priority is the safety and well being of all of our visitors.\\\" Burke said about 2,700 people were safely transported from the island and offered full refunds. Service to Liberty Island is to resume at 8:30 a.m. Saturday. Shortly after 11 a.m., the National Park Service was informed that a 911 caller made a threat to blow up the Statue of Liberty -- which led to the evacuation, according to park service spokeswoman Mindi Rambo. A sweep by U.S. Park Police canine units \\\"alerted on an area of interest near the lockers at the base\\\" of the Statue of Liberty, Rambo said. Park police had notified the NYPD, which dispatched its bomb squad, officials said. It is not uncommon to get false positives from the bomb-sniffing dogs. \\\"Following their investigation, it was determined that there was not an explosive device,\\\" Rambo said. Approximately 3.5 million people visit the Statue of Liberty every year. Visitors must pass through security screening similar to airport security procedures, according to the National Park Service. Previously, the statue closed in November 2012 because of significant damage sustained from Superstorm Sandy. It reopened on July 4, 2013, with a ribbon cutting ceremony and long lines of tourists. The last time the island shut down to the public was in October 2013, when it closed for 12 days because of the a government shutdown. The statue was dedicated by President Grover Cleveland on October 28, 1886. It was a gift to the United States from the people of France to commemorate 100 years of Franco-American friendship as well as the centennial of America's independence.\\n\", \"original_answer\": \"The Statue of Liberty and Liberty Island will be reopened to the public today, following a bomb threat which led to their evacuation. NYPD declared the threat unfounded after a locker thought to contain a suspicious package was found to be empty. All civilians were evacuated and only emergency personnel remained on Liberty Island. Mike Burke, the head of Statue Cruises, which operates the ferry to Liberty Island, said that about 2,700 people were safely transported from the island and offered full refunds.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "calibration",
+  "source_cluster_id": "0c3e0b1be294d0383439cb4a386f4e62638bb73cf85ec27ed808e349308d43d8",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22
+  ]
+}

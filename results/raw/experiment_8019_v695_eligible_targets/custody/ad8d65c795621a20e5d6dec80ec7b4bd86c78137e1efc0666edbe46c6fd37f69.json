@@ -1,0 +1,107 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.494360640004743,
+  "exclusion_reason": null,
+  "family_id": "sha256:a7e80da50dedc32d92fd2125896393ec99fe8d3c408fe2e09e33fc78ea56b08f",
+  "input_tokens": 874,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 874,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 897
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:927763c58babf00ccfc133ab1d41258ebfe77f48cee177305ea71ad7bc905128",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832761,
+    "id": "chatcmpl-0p77KRHH0pqg1wS8H2v5yZwzZMt5rOuH",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.951,
+      "predicted_n": 23,
+      "predicted_per_second": 42.51771417374216,
+      "predicted_per_token_ms": 23.519608695652174,
+      "prompt_ms": 824.701,
+      "prompt_n": 796,
+      "prompt_per_second": 965.1982961097416,
+      "prompt_per_token_ms": 1.0360565326633167
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 874,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 897
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Multiply the length and the width to get the main area\u2019s measurement. Use a calculator to ensure this measurement is accurate. For instance, if the room is 12 feet wide and 12 feet long, the area of the floor is 144 square feet.easure the width and height of the wall. To calculate the area of a wall, use the standard (Width) x (Height) = Area formula. Using a measuring tape, measure the width and height of the wall.\\\\n\\\\npassage 2:Subtract the surface area of doors, including the frame, and windows when calculating how much paint you'll need. For example, in room whose wall surface area is 700 square feet, there are 2 doors and a window. 1 door, including frame, measures 4 feet (1.2 m) wide by 8 feet (2.4 m) tall.The other door is 10 feet by 8 feet. The window is 10 feet wide by 4 feet high. The total square footage of these areas is 152 (32+80+40=152).or example, in room whose wall surface area is 700 square feet, there are 2 doors and a window. 1 door, including frame, measures 4 feet (1.2 m) wide by 8 feet (2.4 m) tall. The other door is 10 feet by 8 feet. The window is 10 feet wide by 4 feet high. The total square footage of these areas is 152 (32+80+40=152).\\\\n\\\\npassage 3:Knowing how to correctly measure a room will make projects, like flooring, easier and more cost-effective. To determine your rooms dimensions, measure the area of a standard square or rectangular room, using this simple formula: Length x Width = Area.Record the length and width of the room then multiply them to get the total area of the room.If the room you're measuring has a recess or protrusion, such as a closet or bay window, measure the shortest length and width of the room first. Then multiply them to get the main area of the room.ecord the length and width of the room then multiply them to get the total area of the room. If the room you're measuring has a recess or protrusion, such as a closet or bay window, measure the shortest length and width of the room first.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to measure interior room dimensions\\\"}\", \"original_answer\": \"To measure interior room dimensions, follow these steps:\\n\\n1. Measure the length and width of the room to get its main area measurement.\\n2. Calculate the area of a wall by multiplying its width and height.\\n3. Subtract the surface area of doors and windows from the total wall surface area to determine how much paint is needed.\\n4. Record the length and width of the room and multiply them to get the total area of the room.\\n5. If the room has a recess or protrusion, such as a closet or bay window, measure the shortest length and width first.\\n\\nNote: In case the passages do not contain the necessary information to answer the question, it is unable to answer based on given passages.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:288dbe1265a4f5971bc1043b37778d0ba5eb9bf1d8c3c887ba8054efa1f9839e",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ]
+}

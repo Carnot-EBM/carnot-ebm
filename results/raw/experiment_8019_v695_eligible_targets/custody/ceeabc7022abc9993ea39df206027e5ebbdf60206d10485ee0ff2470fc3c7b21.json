@@ -1,0 +1,115 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.389843393000774,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:15f36f15dbad5d71466548e080c24fb27c705d6c6f1f55462fd47fe6a4c9daac",
+  "input_tokens": 794,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 794,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 817
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:89672815dbfeb38dbb8b08317a602abe7c9633403ac9fbc18e95d2f3180b8fc5",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886311,
+    "id": "chatcmpl-dr8sI7MZsu7bIeRUEyNj3CSODWkhaNAq",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.646,
+      "predicted_n": 23,
+      "predicted_per_second": 42.46315859435868,
+      "predicted_per_token_ms": 23.54982608695652,
+      "prompt_ms": 711.966,
+      "prompt_n": 716,
+      "prompt_per_second": 1005.6660009045376,
+      "prompt_per_token_ms": 0.9943659217877096
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 794,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 817
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Police in the Indian city of Malegaon, in the western state of Maharashtra, are requiring identity cards for an unusual group of residents: Cattle. Following a recent state-wide ban on the sale and consumption of beef, authorities in the city have asked residents to take a 'mugshot' of their cattle and submit it to the police. Along with the photograph, the residents have to give information about their animal's 'unique features,' such as the coloring and age of the cow, along with the length of its tail and other distinctive characteristics. Police officials believe this is the only way to solve cow slaughter cases and enforce the law. Cows are considered holy and revered by that state's majority Hindu population. \\\"We are creating a database. If we get an information of a cow slaughter, we can quickly go to the resident's place and check whether it is there or not\\\", Mahesh Sawai, Deputy Superintendent of Malegaon Police told CNN. \\\"I believe this will be very effective\\\" So far over 100 owners have complied with the police order and more are lining up outside police stations across the city to get their livestock photographed. The ruling came in the wake of a recent case of cow slaughter in Malegaon, where two men have been charged for killing the animal and and selling its meat. The Maharashtra Animal Preservation Bill now includes bans on the killing of bulls and bullocks in its list of non-bailable offenses. Even the consumption or sale of beef could now land you in prison for five years. The slaughter of buffaloes, however, is still permissible. However, beef traders in the country strongly reacted to the decision and called a month-long strike, which ended Wednesday. The traders refused to even slaughter buffaloes and deprive the state of all bovine meat. They have now vowed to file a case in the state's high court. Red meat lovers weren't too delighted either, arguing the government doesn't have a right to interfere in an individual's personal preference. Maharashtra is not the only Indian state to tighten its laws on cow slaughter. Haryana state has implemented a maximum punishment of 10 years in prison, the toughest penalty in the country. Rajnath Singh, India's Home Minister has promised that he would do all to devise a country-wide law against cow slaughter.\\n\", \"original_answer\": \"Police in Malegaon, India, have asked residents to photograph their cattle and provide their unique features, such as age and length of tail, to enforce a recent state-wide ban on the sale and consumption of beef. Over 100 owners have complied so far, with more lining up at police stations. \\\"We are creating a database,\\\" said Mahesh Sawai, Deputy Superintendent of Malegaon Police. \\\"If we get an information of a cow slaughter, we can quickly go to the resident's place and check whether it is there or not\\\". This ruling followed a recent case of cow slaughter in Malegaon.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "e62cb842b204056f4dc3ba111e124cd6ac9126214516bc4c16ee39f038c573cd",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18
+  ]
+}

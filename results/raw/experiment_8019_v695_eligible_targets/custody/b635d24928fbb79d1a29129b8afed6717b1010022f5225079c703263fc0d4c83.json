@@ -1,0 +1,127 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.653949547035154,
+  "exclusion_reason": null,
+  "family_id": "sha256:44cdaf01430143edb34e1272a1ef81e65219289aedf70e94eb32177e057f62cd",
+  "input_tokens": 1010,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 14,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 1010,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1035
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:672b3a6f9cfaecab0e3cd62019c1807b4a83b550f280c712b7817b177d303a63",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 14\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832667,
+    "id": "chatcmpl-LF2bUBIoEHbkcxnRqbhEbL2s1q7H2mAn",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 595.786,
+      "predicted_n": 25,
+      "predicted_per_second": 41.96137539317809,
+      "predicted_per_token_ms": 23.831439999999997,
+      "prompt_ms": 928.483,
+      "prompt_n": 932,
+      "prompt_per_second": 1003.7878991860917,
+      "prompt_per_token_ms": 0.9962263948497854
+    },
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 1010,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1035
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Cover with foil; place in oven and cook for 3 hours. 7. Remove from oven; uncover and cook for an additional 30 minutes. 8. Remove from oven. Take ribs out of sauce and keep warm in oven. Put sauce in a skillet and remove as much of the grease from the ribs as you can. Add 1 cup of water and bring to a boil.over with foil; place in oven and cook for 3 hours. 7. Remove from oven; uncover and cook for an additional 30 minutes. 8. Remove from oven. Take ribs out of sauce and keep warm in oven. Put sauce in a skillet and remove as much of the grease from the ribs as you can. Add 1 cup of water and bring to a boil.\\\\n\\\\npassage 2:1 Double wrap ribs in aluminum foil, place in a 9x13-inch baking dish and bake for 1 1/2 hours in a 350\u00b0F oven. 2  Remove ribs from the aluminum foil. 3  Place ribs and sauce in a roaster and bake uncovered for 45 minutes in a 350\u00b0F oven. Simmer for 45 minutes. 2  Double wrap ribs in aluminum foil, place in a 9x13-inch baking dish and bake for 1 1/2 hours in a 350\u00b0F oven. 3  Remove ribs from the aluminum foil.\\\\n\\\\npassage 3:Preheat oven to 350. Line a baking dish with aluminum foil. And lightly spray with cooking spray. Set aside. In a small bowl mix brown sugar, onion powder, garlic powder, salt, and pepper. This will create your dry rub. Coat ribs with the the dry rub, making sure to flip over and get both sides.Place coated ribs into the baking dish and into the oven. Bake for 45 minutes.Carefully slide your oven rack out a little so you can easily work with the baking dish. Coat ribs with half of the BBQ sauce. Flip ribs over. Return to oven and bake for an additional 30 minutes.Remove from oven and test temperature to make sure it is at 165-170. Allow ribs to sit in dish for 10 minutes. Slice ribs, most boneless ribs have cut grooves so you will just need to follow them.et aside. In a small bowl mix brown sugar, onion powder, garlic powder, salt, and pepper. This will create your dry rub. Coat ribs with the the dry rub, making sure to flip over and get both sides. Place coated ribs into the baking dish and into the oven.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to cook boneless bbq ribs in the oven\\\"}\", \"original_answer\": \"To cook boneless BBQ ribs in the oven, preheat the oven to 350\u00b0F. In a small bowl, mix brown sugar, onion powder, garlic powder, salt, and pepper to create a dry rub. Coat the ribs with the dry rub, ensuring both sides are covered. Line a baking dish with aluminum foil and lightly spray it with cooking spray. Place the coated ribs into the baking dish and bake for 45 minutes. Carefully slide out the oven rack and coat the ribs with half of the BBQ sauce. Flip the ribs over and return them to the oven for an additional 30 minutes. Remove the ribs from the oven and check the temperature, ensuring it reaches 165-170\u00b0F. Let the ribs sit in the dish for 10 minutes before slicing.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:a8eef278b14ea78348a1d4bfab2fca64c68bea34d148df2b0562703f4da8c1b1",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35
+  ]
+}

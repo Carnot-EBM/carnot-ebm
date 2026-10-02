@@ -1,0 +1,112 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.50427714898251,
+  "exclusion_reason": null,
+  "family_id": "sha256:ef1ecbcef3c38e2fcc7b5b4df423a1edb73639f249b6fd1e4af18b4c03763c92",
+  "input_tokens": 889,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 889,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 912
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:c0dcf1b1dbc2868282e9888db2dd60ac8b52bdc05053a5a46ec316e322052e73",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832874,
+    "id": "chatcmpl-Zdr7VH24X1WpDVaJBmCsDXvAPMln4tUL",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.706,
+      "predicted_n": 23,
+      "predicted_per_second": 42.4584553244749,
+      "predicted_per_token_ms": 23.552434782608696,
+      "prompt_ms": 846.888,
+      "prompt_n": 811,
+      "prompt_per_second": 957.623676330282,
+      "prompt_per_token_ms": 1.0442515413070284
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 889,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 912
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:5. Testing by Sight-Using Simi-chrome Polish. Simi-chrome Polish is a non-abrasive cream used to clean metals. You can also use it to test Bakelite for authenticity. Sparingly apply to a soft cloth and gently rub a small spot on the inside or back of the item being tested.If it's Bakelite, the cloth should turn yellow with ease. If a piece is lacquered, it may test negative. Black Bakelite pieces often fail this test as well.imi-chrome Polish is a non-abrasive cream used to clean metals. You can also use it to test Bakelite for authenticity. Sparingly apply to a soft cloth and gently rub a small spot on the inside or back of the item being tested.\\\\n\\\\npassage 2:Bakelite should offer a distinctive odor. If your piece does not offer a scent, it is probably not Bakelite. This test works well when you wish to test a piece of Bakelite that you do not (yet) own, at a flea market or estate sale, for example. Dip the possible piece of Bakelite into hot water for 15 to 30 seconds.Smell it. As with the rubbing test, the Bakelite should give off a distinctive scent.nstructions. Examine the possible piece of Bakelite closely. Look for any seams and examine the piece's color. Authentic Bakelite almost never has seams, and changes color with age. If the piece has seams or is bright white (rather than mustard-colored or at least dark ivory), it is probably not Bakelite.\\\\n\\\\npassage 3:This is how I test for Bakelite and tips/knowledge I have about Bakelite that helps me with purchasing and selling it. If you enjoyed this Testing Bakelite Video about Vintage/Antique Costume Jewelry Tips & Tricks to Buying & Selling, then please hit the like button and share with your friends.Nothing we say is a rule!There are no rules, think outside the box!Be your own boss.f you enjoyed this Testing Bakelite Video about Vintage/Antique Costume Jewelry Tips & Tricks to Buying & Selling, then please hit the like button and share with your friends. Nothing we say is a rule! There are no rules, think outside the box! Be your own boss.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to test bakelite\\\"}\", \"original_answer\": \"Based on the provided passages, here are some ways to test Bakelite:\\n\\n1. Testing by sight using Simi-chrome Polish: Apply the polish to a small area on the inside or back of the item and if it's Bakelite, it will turn yellow easily. However, black Bakelite may not show any color change, and lacquered items may test negative. (Passage 1)\\n2. Odor test: If the piece of Bakelite does not have a distinctive scent, it is likely not authentic. You can test the piece by dipping it into hot water for 15-30 seconds and smelling it. Authentic Bakelite gives off a unique scent. (Passage 2)\\n\\nUnfortunately, the passages do not provide sufficient information to perform the other tests mentioned in passage 3, such as testing for seams or using a magnet. Therefore, I am unable to answer the question based on the given passages.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:8468c575614c862672d47adba0eb50288b89c7b82dace1503035b891e73c2313",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20
+  ]
+}

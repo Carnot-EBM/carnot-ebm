@@ -89568,3 +89568,36 @@ of live planning. The reproduced Exp8017 retry defect used mutable command and
 primitive checkpoint names. The reader now retains content-addressed copies;
 original test assertions and historical primary bytes remain unchanged.
 An absent live V695 design stays terminal blocked and readiness zero.
+### REQ-REPORT-8019: Seal source roles separately from target eligibility
+
+Exp8019 SHALL bind the Exp8008 custody snapshot and preserve all 704 original
+fit/tune/calibration/stream/retention slots, exclusions and recorded exposures.
+Complete original response and annotation bytes SHALL determine binary target
+eligibility together with valid public inputs. Unknown or partial annotations
+SHALL remain unknown. Correctness values and model errors SHALL NOT select rows.
+Public shards SHALL contain no labels. Evaluator shards SHALL be private.
+Source groups SHALL be disjoint across roles. No model or small head SHALL run.
+
+### SCENARIO-REPORT-8019-MASK
+
+The real CLI SHALL retain missing targets, partial annotations and context
+exclusions. It SHALL reject role overlap, wrong roles and changed evidence bytes.
+Fit/tune support floors SHALL be 128/32 groups and 16/4 per class. Calibration
+SHALL retain 64 slots with floors of 48 groups and eight per class. Stream and
+retention SHALL retain 256/64 slots, feedback positions and missingness, with
+floors of 192/48 groups and 20/eight per class. Positive y means unsupported.
+Costs SHALL be accept unsupported=5, reject supported=1, escalate=0.5 and correct
+accept/reject=0. Support failures SHALL block only their dependent branch.
+
+### SCENARIO-REPORT-8019-PUBLICATION
+
+Methods, schemas, costs, roles, exclusions, commands and support gates SHALL be
+frozen before measurement. Content addressed public, evaluator and exclusion
+shards SHALL cold-reduce in a fresh CLI process. Owned checks SHALL include
+consumer tests, E2E-015, E2E-019, Ruff, strict mypy, spec checks and 100 percent
+new statement coverage, including CLI branches. One bounded full-suite health
+diagnostic SHALL preserve failures separately. Exact candidate bytes SHALL pass
+adversarial verification and strict row checks through the publication helper.
+Published references SHALL live below durable raw/. Readiness requires passing
+owned checks and all relevant support gates. Exposed development earns no
+natural learning credit. The conductor owns ops and traceability reconciliation.

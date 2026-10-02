@@ -1,0 +1,106 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.3671565920230933,
+  "exclusion_reason": null,
+  "family_id": "sha256:d4bb4c74708cc65843bc0805ce0ca38332cdb5bf2d2541187b442d04cd240914",
+  "input_tokens": 735,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 735,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 759
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:6a1d5386e76f987699461f72cfd2561d8c337e1dd068173e05dbe45e5bb91046",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832670,
+    "id": "chatcmpl-cGO3ER2ybiTr9pgw8bLpjylNepujaAJu",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.105,
+      "predicted_n": 24,
+      "predicted_per_second": 42.54527082723961,
+      "predicted_per_token_ms": 23.504375,
+      "prompt_ms": 667.862,
+      "prompt_n": 657,
+      "prompt_per_second": 983.7361610632138,
+      "prompt_per_token_ms": 1.0165327245053273
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 735,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 759
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Basics. Getting started selling on eBay Set up your seller account, and then create and manage your listing. Using the quick listing tool The quick listing tool helps you get your item up for sale quickly by providing guidance on how to price and ship your item.elling with a reserve price Learn how to set a minimum or reserve price on your item. [ more\u2026 ]. Selling multiple items Find out how to sell multiple items. Selling Get It Fast items Get quick sales when you give buyers the option to receive your item within one business day.\\\\n\\\\npassage 2:Many old items can be worth serious cash. But to really get the eBay cash rolling in, you need to know the etiquette and shortcuts. This is a crash course on how to sell. It explains how to cut fees, the best time to close auctions, profit from bizarre items you never thought you'd sell and more.any old items can be worth serious cash. But to really get the eBay cash rolling in, you need to know the etiquette and shortcuts. This is a crash course on how to sell. It explains how to cut fees, the best time to close auctions, profit from bizarre items you never thought you'd sell and more.\\\\n\\\\npassage 3:1 For example, if you're selling an iPod, put  MP3 player  in your title. 2  However, eBay's search will automatically account for variant phrasings; it will also sometimes check category names in addition to the auction title. 3  Do a search on specific terms and look at the titles of the auctions that come up.et your price according to how much you paid for the item, your time, eBay fees, and how much it costs to ship. Remember that once someone buys an item from you or the auction ends, it constitutes a binding agreement to sell, and it is difficult to get past this unless both parties agree to cancel the sale.\\\\n\\\\n\\\",\\\"question\\\":\\\"how do i sell stuff on ebay\\\"}\", \"original_answer\": \"To sell stuff on eBay, you need to first set up a seller account and then create and manage your listing. You can use the quick listing tool to quickly list your item by providing guidance on pricing and shipping. If you want to set a minimum or reserve price on your item, you can learn how to do so. Additionally, you can find out how to sell multiple items and offer Get It Fast options to attract quick sales. To optimize your listings, consider including relevant keywords in your title and researching similar auctions to set an appropriate price. It is important to note that once someone buys your item or the auction ends, it constitutes a binding agreement to sell, and canceling the sale would require mutual agreement.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:812983d73e122b3f92ee443ffc21240658f822360bf88d0638ad1bedf24bb55c",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ]
+}

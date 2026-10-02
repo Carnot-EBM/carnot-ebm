@@ -1,0 +1,99 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.3832047420437448,
+  "exclusion_reason": null,
+  "family_id": "sha256:f70a6cd287a43ca72c7580b266d033b0cdc8ea024c944b14391a84e8a6150760",
+  "input_tokens": 846,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 846,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 868
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:9f105de4aef29c114c1f7715f6557e42164ff7cbe2dbec14a43750a755cd1faf",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.95,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832793,
+    "id": "chatcmpl-s0zDbBnk8Z4eb0zE9JYATZrbyf2MOQII",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 517.133,
+      "predicted_n": 22,
+      "predicted_per_second": 42.542247352228536,
+      "predicted_per_token_ms": 23.506045454545458,
+      "prompt_ms": 733.616,
+      "prompt_n": 768,
+      "prompt_per_second": 1046.8692067784782,
+      "prompt_per_token_ms": 0.9552291666666667
+    },
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 846,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 868
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"2829 De La Vina St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Thai, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-21:0\\\",\\\"Monday\\\":\\\"11:0-21:0\\\",\\\"Saturday\\\":\\\"17:0-21:0\\\",\\\"Thursday\\\":\\\"11:0-21:0\\\",\\\"Tuesday\\\":\\\"11:0-21:0\\\",\\\"Wednesday\\\":\\\"11:0-21:0\\\"},\\\"name\\\":\\\"Bangkok Palace\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2014-02-04 02:20:15\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"Their food Is great but I'm really disappointed to find out that they've stopped doing delivery.\\\"},{\\\"review_date\\\":\\\"2014-01-20 21:22:31\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"Really quick service and very friendly, sweet staff:) Coconut soup is delicious.... but the pad thai is really oily:( But the waiter was incredibly attentive and smiley. Everyone who came in seemed to know him and he emanated a lovely, positive energy.\\\"},{\\\"review_date\\\":\\\"2013-12-24 03:22:29\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Best Thai food in town. Delivery is fast and always delivered hot. Such friendly people too. Yellow curry is the shit. Tried nearly all thai in sb. Hands down the best!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Bangkok Palace is a popular Thai restaurant located in Santa Barbara, CA. According to their structured data, they are open seven days a week, with hours from 11am to 9pm, except for Saturdays when they are open from 5pm to 9pm. They offer both dine-in and take-out options, and reservations are accepted. The restaurant has a casual atmosphere and provides free Wi-Fi to its customers.\\n\\nThe restaurant's data indicates that it has a 3.5-star rating based on customer reviews, with reviewers praising the quality of the food, particularly the yellow curry, which one reviewer described as \\\"the shit.\\\" However, some reviewers have noted that the Pad Thai can be quite oily. The staff is known for their friendliness and quick service, with one reviewer mentioning that the waiter was \\\"incredibly attentive and smiley.\\\"\\n\\nIn terms of parking, the restaurant does not have a garage or valet service, but street parking is available. Additionally, the restaurant does not have outdoor seating, and music is not mentioned in the data. Overall, Bangkok Palace seems like a solid option for those looking for good Thai food in a casual setting.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:bab64255af065a9021d685b9871e0d3028065499cb6b8b204f19d737d6eb348d",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ]
+}

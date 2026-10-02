@@ -1,0 +1,101 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.4451388930319808,
+  "exclusion_reason": null,
+  "family_id": "sha256:24bc3d2fefafeb3d66b7b6965694de64cc158e9e8d6850fb52bf877c51c86ae1",
+  "input_tokens": 866,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 866,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 887
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:79a3c2c8efcf1ddca395b91e2928b3298c0ceaef6ed7dbf7d3804b55c71874ec",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832693,
+    "id": "chatcmpl-EGu65AYk36QhNzrdqPdDGTihfvMStoUc",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 492.699,
+      "predicted_n": 21,
+      "predicted_per_second": 42.62237187410569,
+      "predicted_per_token_ms": 23.461857142857145,
+      "prompt_ms": 822.455,
+      "prompt_n": 788,
+      "prompt_per_second": 958.107130481303,
+      "prompt_per_token_ms": 1.0437246192893401
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 866,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 887
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"1096 Casitas Pass Rd\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":null,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":3.0,\\\"categories\\\":\\\"Restaurants, Mexican\\\",\\\"city\\\":\\\"Carpinteria\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"9:0-15:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"9:0-20:0\\\",\\\"Sunday\\\":\\\"9:0-20:0\\\",\\\"Thursday\\\":\\\"9:0-20:0\\\",\\\"Tuesday\\\":\\\"9:0-20:0\\\",\\\"Wednesday\\\":\\\"9:0-20:0\\\"},\\\"name\\\":\\\"El Taco Grande\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-10-19 00:48:54\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"A big WOW! I found El Taco Grande by accident, across the street from another taco shop that I've been to. I decided to try it and their food is excellent! So I wouldn't feel so stuffed, I went for their solo Chile Relleno and a crispy taco (not a combination plate). I also witnessed several others enjoying their food, noticeably carne asada burritos, a few other types of tacos, and Caldo 7 Mares (seven seas soup). YOU HAVE TO TRY THIS PLACE!\\\"},{\\\"review_date\\\":\\\"2021-07-26 04:53:11\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"We popped in here because it was close by, and we are so glad we did. Taco Grande serves up delicious food, generous portions, great prices, excellent service, and one of the best salsas I have ever eaten. We will definitely be back.\\\"},{\\\"review_date\\\":\\\"2021-04-20 04:48:15\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Was there in March. Nobody wears masks or says hello and it was empty. Went to rudys across the street and it was great.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"El Taco Grande is a casual Mexican restaurant located at 1096 Casitas Pass Rd in Carpinteria, CA. The restaurant is open from 9 AM to 8 PM from Tuesday to Thursday and Saturday to Sunday, while on Fridays it closes at 3 PM. It is closed on Mondays. El Taco Grande offers outdoor seating and is suitable for groups. It does not provide WiFi and does not accept reservations. The restaurant has a 3-star rating overall, but some customers rate it higher for its excellent food, generous portions, great prices, and excellent service. Signature dishes include the Chile Relleno, crispy tacos, carne asada burritos, and Caldo 7 Mares. However, one customer noted a lack of COVID-19 safety measures in place during their visit in March 2021.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:2884e8e5c7681fddcf62d9d3e935b93e8a4b3c2d0aff03c443095f5ea60ab0db",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ]
+}

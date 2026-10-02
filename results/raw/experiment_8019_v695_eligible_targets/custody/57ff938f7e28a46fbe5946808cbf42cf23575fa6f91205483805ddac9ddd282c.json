@@ -1,0 +1,111 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.5311653029639274,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:37761b4977b0645c1bb051149c2833fa58c53acf0efcd50ac1dd60d56b9b56ec",
+  "input_tokens": 951,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 951,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 974
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:3ede045e63705601fa0c7c3c75a33d71570c178b9bd63480ba3a7080038dabdf",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885991,
+    "id": "chatcmpl-9hNKRSkigDj37d5Q3d8ghcOJpu2WWI0q",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.316,
+      "predicted_n": 23,
+      "predicted_per_second": 42.48904521573351,
+      "predicted_per_token_ms": 23.535478260869567,
+      "prompt_ms": 877.728,
+      "prompt_n": 873,
+      "prompt_per_second": 994.6133654161655,
+      "prompt_per_token_ms": 1.0054158075601374
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 951,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 974
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"3313 State St, Ste B\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Restaurants, Event Planning & Services, American (Traditional), Venues & Event Spaces\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-21:0\\\",\\\"Monday\\\":\\\"11:0-21:0\\\",\\\"Saturday\\\":\\\"11:0-21:0\\\",\\\"Sunday\\\":\\\"11:0-21:0\\\",\\\"Thursday\\\":\\\"11:0-21:0\\\",\\\"Tuesday\\\":\\\"11:0-21:0\\\",\\\"Wednesday\\\":\\\"11:0-21:0\\\"},\\\"name\\\":\\\"Harry's Plaza Cafe\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-09 00:37:37\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"We came in really excited to try Harrys, as we saw great reviews on Facebook. Immediately as we came in we were ignored by the host. Our server started off decent but within minutes had a change of attitude. She was quick to snatch the menus out of our hands while we were in the middle of ordering. When asking for condiments, she slammed it down on our table and rushed away. Overall felt unwelcome and uncomfortable. \\\\n\\\\nAs for the food, it was all extremely under seasoned. Each item tasted very bland and some items were undercooked. We ordered the pork chops and spaghetti, neither of which were good at all. Definitely would not go again.\\\"},{\\\"review_date\\\":\\\"2022-01-08 03:20:17\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Classic Santa Barbara staple. Proper cocktails, Classic portions. Not fancy, just a great place!\\\"},{\\\"review_date\\\":\\\"2021-12-02 06:39:32\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Went in with the family this evening.  We go about once a week.  It never disappoints, food menu is all the classics and the drinks are large and strong.  If you don't like Harry's, it's you not them.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"\\\"Harry's Plaza Cafe\\\" is a traditional American restaurant located at 3313 State St, Ste B in Santa Barbara, CA. It also offers event planning services and is classified under venues and event spaces. It operates from 11:00 to 21:00 daily. The restaurant provides amenities such as outdoor seating, takeout options, and is suitable for group dining. However, it does not offer Wi-Fi and music. The ambiance is described as casual and classy. There is business parking available but no valet, garage, or street parking.\\n\\nReviews about Harry's Plaza Cafe vary significantly. Some customers praise it as a classic Santa Barbara staple, highlighting its proper cocktails, classic portions and consistent quality. However, there are negative reviews expressing disappointment with the service and food quality, citing issues like under seasoned and undercooked meals. Overall, the restaurant holds an average business star rating of 3.5.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "803b9de4d3658c709ca06ceeb65fcf8d30616e934ae6cc0140c89d23ec794665",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ]
+}

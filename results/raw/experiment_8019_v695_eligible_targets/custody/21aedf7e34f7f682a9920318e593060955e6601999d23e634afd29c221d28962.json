@@ -1,0 +1,105 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.7441233670106158,
+  "exclusion_reason": null,
+  "family_id": "sha256:5cccdb8114556baadbe31f4fcbe6276e9ff490fd5077fd099999f344dd8790b1",
+  "input_tokens": 1207,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1207,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1230
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:a7acb89456e44667abee5a7d6fc9c4185ffa8fa4103e89b93712efd51a4e9dfe",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832815,
+    "id": "chatcmpl-BtdJ8enG83olIMPHeQtf46L3VftRjOWA",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 542.019,
+      "predicted_n": 23,
+      "predicted_per_second": 42.43393681771303,
+      "predicted_per_token_ms": 23.56604347826087,
+      "prompt_ms": 1069.071,
+      "prompt_n": 1129,
+      "prompt_per_second": 1056.0570813351032,
+      "prompt_per_token_ms": 0.9469185119574844
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1207,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1230
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"1482 E Valley Rd\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":false,\\\"WiFi\\\":null},\\\"business_stars\\\":3.0,\\\"categories\\\":\\\"Specialty Food, Beer, Wine & Spirits, Grocery, Bakeries, Restaurants, Delis, Butcher, Food\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"7:0-20:0\\\",\\\"Monday\\\":\\\"7:0-20:0\\\",\\\"Saturday\\\":\\\"7:0-20:0\\\",\\\"Sunday\\\":\\\"7:0-20:0\\\",\\\"Thursday\\\":\\\"7:0-20:0\\\",\\\"Tuesday\\\":\\\"7:0-20:0\\\",\\\"Wednesday\\\":\\\"7:0-20:0\\\"},\\\"name\\\":\\\"Montecito Village Grocery\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-12-15 18:18:53\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Montecito Village Grocery  was apparently my husband's mother's go-to grocery store. Smaller with less inventory than the big chain groceries in town, but also an easier place to shop, as it never gets crowded. I've been to the Von's on Coast Village Road many times over the years--it's pretty convenient, after all, and impossible to miss if you spend any time in Montecito. By contrast, I'd never even seen this market until Matt B. suggested we go to pick up a few odd things we needed for the week.\\\\n\\\\nIt's a cute place with some comfortable neighborhood charm, and I enjoyed the ample parking and calm, quiet atmosphere. Obviously, the stock was more limited than at a supermarket--we couldn't find the pasta we wanted and did end up making a Von's run later in the week--but we picked up some of the items on our list, including a few bottles of wine. The wine selection was solid, with lots of local/regional wines. Definitely extensive enough that you'll walk away with what you need if you're not looking for anything too specific. (Our toddler, who was just learning his colors, pointed to a wall of reds and said, \\\\\\\"Red? Red?\\\\\\\") The cheese/deli section was pretty enticing, too.\\\\n\\\\nCheck-out was quick and easy and we went home with enough provisions to see us through dinner that night (mostly, we needed wine). I like Vons fine, but it's nice to have Montecito Village Grocery as a pleasant, less busy alternative.\\\"},{\\\"review_date\\\":\\\"2021-08-08 12:02:22\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"Bad service and expired products, its always hit or miss there, your better off going to Von's.\\\"},{\\\"review_date\\\":\\\"2019-09-10 15:53:32\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"This neighborhood grocery store has awesome European speciality items, not found elsewhere.  From the Deli to yogurt, olives, to plant-based products: it provides quality food at its finest.  We've become accustomed to settle for the adjacent and lower quality in our diets: not cool.  Treat yourself, this grocery store is Delectable.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Montecito Village Grocery is a local business located at 1482 E Valley Rd in Santa Barbara, CA. It offers a variety of products and services including specialty food, beer, wine & spirits, groceries, bakeries, restaurants, delis, butcher shops, and food. The store operates from 7:00 AM to 8:00 PM every day of the week.\\n\\nCustomers have mixed reviews about Montecito Village Grocery. One customer mentioned that it is a smaller store with less inventory compared to big chain groceries but is also less crowded, making it an easier place to shop. They appreciated the ample parking and calm atmosphere. The wine selection was described as solid, with a focus on local and regional wines. The cheese and deli section was also praised.\\n\\nHowever, another customer had a negative experience, citing bad service and expired products. They suggested going to Von's, a competing grocery store, instead.\\n\\nOn the other hand, a positive review highlighted the store's unique offerings, such as European specialty items and quality food. The reviewer mentioned the deli, yogurt, olives, and plant-based products as standout options.\\n\\nOverall, Montecito Village Grocery provides a convenient and less busy alternative to larger supermarkets in the area. It offers a range of products, including local wines and European specialty items, although some customers have reported issues with service and product quality.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:b852ff0d30c8837403569beee4bb1ccd20e8ada9c62caae057f1e8d1aeafabdd",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ]
+}

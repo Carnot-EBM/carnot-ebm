@@ -1,0 +1,104 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.5196153479628265,
+  "exclusion_reason": null,
+  "family_id": "sha256:30bb01f114228ed824f234555ea1844052793aa0db83f77261ed222bc9d00fe0",
+  "input_tokens": 897,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.05,
+    "schema_valid": true,
+    "source_sentence_id": 12,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 897,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 921
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:2d6ec892c238082aea40a47246a0058fca2e2c97a6dbb10a608f83b279ad906b",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.05,\n \"source_sentence_id\": 12\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832565,
+    "id": "chatcmpl-JpRBu5NkBdY6grtKlZ71ticcPqO5w12d",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 563.023,
+      "predicted_n": 24,
+      "predicted_per_second": 42.62703299865191,
+      "predicted_per_token_ms": 23.45929166666667,
+      "prompt_ms": 842.267,
+      "prompt_n": 819,
+      "prompt_per_second": 972.375743083844,
+      "prompt_per_token_ms": 1.0284090354090354
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 897,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 921
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"7024 Market Place Dr\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Mexican, Restaurants\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-21:0\\\",\\\"Monday\\\":\\\"11:0-21:0\\\",\\\"Saturday\\\":\\\"11:0-21:0\\\",\\\"Sunday\\\":\\\"11:0-21:0\\\",\\\"Thursday\\\":\\\"11:0-21:0\\\",\\\"Tuesday\\\":\\\"11:0-21:0\\\",\\\"Wednesday\\\":\\\"11:0-21:0\\\"},\\\"name\\\":\\\"New Baja Grill\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-02-01 05:20:19\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I don't know if you'll ever see this but, this place had the best torta de asada and salsa de aguacate. I have not been able to replace that craving when I go out looking for a torta. Any chance this place will ever make a comeback? I miss this place.\\\"},{\\\"review_date\\\":\\\"2014-08-31 21:16:26\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"This place is closed. Taking applications for new management is what the sign in the window says. I bet it's good, but never actually had the chance to try it. Maybe next time!\\\"},{\\\"review_date\\\":\\\"2014-08-16 04:12:18\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Although I like getting food here, occasionally, tonight I checked online to see what time they closed. Website says 9:30pm on Friday. I drove down to get some food to go, as I get there the guy is closing up the place and says they are closed. Either he doesn't know the hours of business or doesn't give a fu\u00a2|(. So I just told him the hours online say they close at 9:30pm and he said, we'll fix that. I think it'll be a long while until I'm back at this place. I guess now it makes sense why they are closing and a new restaurant is opening in its place.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"New Baja Grill is a Mexican restaurant located in Goleta, California. The business operates from Monday to Sunday from 11 am to 9 pm. It offers takeout services and outdoor seating. The restaurant has a rating of 4.0 stars out of 5.0 based on customer reviews. Customers have praised the quality of the torta de asada and salsa de aguacate served at the restaurant. However, some customers have noted that the restaurant closes early and the website does not reflect the correct hours of operation. Overall, based on customer feedback, New Baja Grill appears to be a casual Mexican restaurant with a limited menu of options.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:eba3ce527512c80828785f68079b36b7f10d25ea5b77d72b7a1e12ccf6cbe77c",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ]
+}

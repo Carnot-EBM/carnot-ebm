@@ -1,0 +1,118 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.3826094139367342,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:dd5b82578954585df64fa9023b60b64909c81666674e21d52ab642dece3a228a",
+  "input_tokens": 785,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 1,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 785,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 809
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:c8b9dcc54bb0b2ade638c64bd16719ecd03a7183dd44ebc3e45a43149c3d3f4c",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 1\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886345,
+    "id": "chatcmpl-khZiqM3UJt9GWJ3W1uz4L0H7vDwH9RsJ",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 566.011,
+      "predicted_n": 24,
+      "predicted_per_second": 42.402002787931686,
+      "predicted_per_token_ms": 23.583791666666666,
+      "prompt_ms": 696.718,
+      "prompt_n": 707,
+      "prompt_per_second": 1014.7577642604326,
+      "prompt_per_token_ms": 0.9854568599717114
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 785,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 809
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Washington (CNN)This week is the 100th anniversary of what many historians acknowledge as the Armenian genocide -- the Turkish massacre of an estimated 1.5 million Armenians. And it's also the seventh year in a row President Barack Obama has broken his promise to use the word \\\"genocide\\\" to describe the atrocity. It's a moral position taken by Pope Francis, actor George Clooney and even by the Kardashians. On the 2008 campaign trail, Obama promised to use the word \\\"genocide\\\" to describe the 1915 massacre by Turks of Armenians -- a pledge he made when seeking Armenian-American votes. Back then, he held up his willingness to call it a \\\"genocide\\\" as an example of why he was the kind of truth-telling candidate the nation needed. 8 things to know about the mass killings of Armenians 100 years ago. In 2006, after the U.S. Ambassador to Armenia was asked to resign for using the term Armenian genocide, then-Sen. Obama hammered the Bush administration for not taking a stand. \\\"The Armenian genocide is not an allegation, a personal opinion, or a point of view, but rather a widely documented fact supported by an overwhelming body of historical evidence,\\\" he said. But that was then. And now, as was the case with Bush, Obama regards Turkey -- the only Muslim majority country in NATO -- as a more crucial ally than Armenia. Turkey has the second-largest military in NATO, behind only the U.S., and is a crucial ally when it comes to Syria, ISIS, Iran and other Middle East issues. And Turkey denies this history. \\\"We cannot define what happened in 1915 as a genocide,\\\" Turkish Foreign Minister Mevlut Cavusoglu told CNN on Tuesday. Why Turkey won't say the G-word when it comes to the Armenians. In her Pulitzer Prize-winning book about genocide, Obama's current Ambassador to the United Nations Samantha Power hammered U.S. policy makers for not acknowledging or acting to stop such atrocities. \\\"No U.S. president has ever made genocide prevention a priority, and no U.S. president has ever suffered politically for his indifference to its occurrence. It is thus no coincidence that genocide rages on,\\\" she wrote.\\n\", \"original_answer\": \"President Obama has once again avoided using the term &lsquo;genocide&rsquo; to describe the Turkish massacre of an estimated 1.5 million Armenians in 1915. This marks the seventh year that the president has not used the term, despite having promised to do so during his 2008 election campaign. This decision sees Obama siding with Turkey, a key Middle Eastern ally, despite the massacre being widely acknowledged as a genocide by historians. Turkey continues to deny that the mass killing was a genocide.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "94e1d61909196d08fe40d61ce3ec4d7b50f0fc53e18771dc3e696d83075533cd",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21
+  ]
+}

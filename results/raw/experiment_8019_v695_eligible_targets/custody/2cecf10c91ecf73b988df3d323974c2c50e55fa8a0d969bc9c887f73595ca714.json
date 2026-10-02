@@ -1,0 +1,115 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.358191934064962,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:c4129505c0ecd170babf7914068b481835b55b559ee773582b7bb9dea83cda5d",
+  "input_tokens": 784,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 784,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 807
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:c9721f3d1268c3c4324b63c06226ed1eb6db00f49f96c48ccfe484d2a4640977",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886052,
+    "id": "chatcmpl-sW57H6PYSpR7pKctzpi6O23fJmjlYU3j",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.665,
+      "predicted_n": 23,
+      "predicted_per_second": 42.46166911282804,
+      "predicted_per_token_ms": 23.550652173913043,
+      "prompt_ms": 695.961,
+      "prompt_n": 706,
+      "prompt_per_second": 1014.4246588530104,
+      "prompt_per_token_ms": 0.9857804532577904
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 784,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 807
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Biden approves border walls\\nIMMIGRATION OFFICER at U.S.-Mexico border (U.S. Customs and Border Protection photo).\\nPresident Joe Biden\u2019s decision to allow 20 miles of extra border walls in south Texas is raising some questions.\\nAccording to the Associated Press, the president said he didn\u2019t believe that border walls were effective, but that the Republican-controlled Congress (at that time) approved the spending in 2019, before Biden took office.\\n\u201cThe money was appropriated for the border wall. I can\u2019t stop that,\u201d said Biden. To clear the way for construction over 20 federal rules and laws had to be waived, according to The New York Times.\\nAt the same time, the federal government announced it would begin deporting Venezuelans back to their home country. Fleeing political oppression, economic collapse and violence, thousands have made the trek \u2013 mostly on foot \u2013 from South America and through Mexico in the hope they could get asylum.\\nImmigration has become a major issue and not only among Republicans. Some of the immigrants have located in big cities with Democratic mayors, placing a burden on those municipal budgets to care for them.\\n\u201cAbsolute immunity\u201d for presidents?\\nTHE WHITE HOUSE (White House Photo)\\nFormer president Donald Trump claimed Thursday that the chief executive has \u201cabsolute immunity\u201d from civil and criminal charges.\\nIn a brief filed Thursday by his attorneys in U.S. District Court in Washington, D.C., it was alleged that \u201c234 years of precedent\u201d insulate presidents from legal action done while serving in that job, according to United Press International.\\nTrump is facing federal prosecution for interference in the 2020 presidential election, won by Joe Biden. Trump has alleged he was the real victor, but was the victim of \u201cmassive fraud.\u201d\\nWeather: Sun sneaking back in\\nContradicting yesterday\u2019s forecast, the outlook for our West Orange County area for Friday has been upgraded to sunny skies and a daytime high of 90 with an overnight low of 61. Saturday should be the beginning of partly cloudy conditions and a daytime high of 86 (62). There will be a bump to 88 (63) on Sunday, and then the temperatures will begin to slide \u2013 82 on Sunday, 76 on Tuesday, etc.\", \"original_answer\": \"President Joe Biden has permitted an additional 20 miles of border walls in south Texas, despite previously stating he didn't believe they were effective. Congress had approved the spending in 2019, before Biden's tenure. The federal government also announced it would start deporting Venezuelans back to their home country. Meanwhile, former President Donald Trump claimed that the chief executive has \u201cabsolute immunity\u201d from civil and criminal charges, as he faces federal prosecution for alleged interference in the 2020 presidential election.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "4c9226b20ac1a6dac210e0c3a81c5340ffca316969236ae24ce775a4af8087ef",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18
+  ]
+}

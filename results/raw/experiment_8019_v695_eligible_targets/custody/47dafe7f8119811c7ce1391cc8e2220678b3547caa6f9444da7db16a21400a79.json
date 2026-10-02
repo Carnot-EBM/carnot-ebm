@@ -1,0 +1,101 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.246561108971946,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:ff3bd7f103c2115eb58553f374576761f057fc026f4794155c9a45226d15c289",
+  "input_tokens": 705,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 705,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 726
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:5c9a4826cc4d9a9b2e5c188fa939491436ebfa7d1e727cd7fd4667e4bd836c23",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"unsupported_probability\": 0.0,\n\"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886137,
+    "id": "chatcmpl-qZHokribi6a4Fz78zxuO8RYeywkx53yv",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 492.247,
+      "predicted_n": 21,
+      "predicted_per_second": 42.66150936420131,
+      "predicted_per_token_ms": 23.440333333333335,
+      "prompt_ms": 635.655,
+      "prompt_n": 627,
+      "prompt_per_second": 986.3841234631994,
+      "prompt_per_token_ms": 1.013803827751196
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 705,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 726
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:The average BMI for an 8-year-old boy is 17.9, and girls of the same age have an average BMI of 18.3. By the age of 12, the average BMI for both girls and boys is 21.3, with a healthy range of about 15 to 21.8 for boys and 14.8 to 22.5 for girls.\\\\n\\\\npassage 2:For adults, the healthy BMI range is from 18.5 to 24.9, regardless of age or gender, and anything over this means you are considered overweight for your height. The average BMI for women age 20 and older is 28.7. Women 80 years and older have the lowest average BMI, at 26.7, followed by those between 20 and 29 years old, at 27.5, and women from 60 to 69 have the highest, at 29.6.\\\\n\\\\npassage 3:The average BMI for a 13-year-old boy is 21.9; for a girl of the same age it's slightly higher, at 22.1, The healthy BMI range for 13-year-olds is 15.5 to 22.6 for boys and 15.3 to 23.3 for girls. By the age of 18, the average BMI for a boy is 26.1, and for a girl, it's 24.6.\\\\n\\\\n\\\",\\\"question\\\":\\\"average bmi per age\\\"}\", \"original_answer\": \"Based on the passages, the average BMI per age is as follows: for an 8-year-old boy it is 17.9 and for girls of the same age it is 18.3. By the age of 12, the average BMI for both genders is 21.3. For a 13-year-old boy, the average BMI is 21.9 and for girls of the same age it is 22.1. By the age of 18, the average BMI for a boy is 26.1 and for a girl it is 24.6. The average BMI for women age 20 and older is 28.7, with women 80 years and older having the lowest average BMI at 26.7. The average BMI for women between 20 and 29 years old is 27.5, while women from 60 to 69 have the highest at 29.6.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "fd84605a4c0938993b574a0543b7fbd932666316ef89376f4b8191eae4548d90",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ]
+}

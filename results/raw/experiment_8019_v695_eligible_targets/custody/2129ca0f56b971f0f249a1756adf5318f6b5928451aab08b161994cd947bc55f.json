@@ -1,0 +1,104 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.257549449976068,
+  "exclusion_reason": null,
+  "family_id": "sha256:05e40eebae08101d469564317b253a94caa292d6716d160e49ae1ee8d3bf93d1",
+  "input_tokens": 601,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 601,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 624
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:a2de2d0aad364da62f92389d56727ca6b76cbd06f691f0867932be9f12a98551",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832801,
+    "id": "chatcmpl-R9VZRA7xVKjKOdDd6Qb7ACh9XZwbsidh",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.087,
+      "predicted_n": 23,
+      "predicted_per_second": 42.507027520528126,
+      "predicted_per_token_ms": 23.525521739130433,
+      "prompt_ms": 595.013,
+      "prompt_n": 523,
+      "prompt_per_second": 878.9723921998342,
+      "prompt_per_token_ms": 1.1376921606118549
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 601,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 624
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Using a diamond dust polish on your car will give it a long-lasting shine and protect it from scratches. Personal Care. The beauty industry also uses of diamond dust in ways to help us take good care of our bodies. Diamond dust particles are used in steel nail files to keep them sharp. Nail polish that strengthens nails and protects them from chipping include diamond dust as an important ingredient. Skin care is also known to use diamond dust, to remove old dead skin and invigorate the skin. Some jewelry is also made by combining diamond dust with quartz crystals. Every part of a diamond is useful, and all types of diamonds are valuable\u2013 even if they possess imperfections like industrial diamonds, and even when they are too tiny to see clearly like diamond dust. Learn also about diamond powder.\\\\n\\\\npassage 2:Apple Watch companion. Modern Combat 5: Blackout is the first game in the series that features an Apple Watch companion app. This app focuses on the multiplayer of the game. Launching it gives the user three different options to check out.\\\\n\\\\npassage 3:Diamond dust also is used as a coating to protect materials from abrasion, and also as a polish to add shine. Scratch-proof windows, surgical knives, heat sensors, stereo speakers and even cooking pots use a diamond dust coating for protection and to ensure long-lasting durability.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to use diamond dust\\\"}\", \"original_answer\": \"To use diamond dust, you can apply it to your car's surface using a diamond dust polish to give it a long-lasting shine and protect it from scratches. In addition, diamond dust particles are used in steel nail files to keep them sharp, and nail polish that strengthens nails and protects them from chipping includes diamond dust as an important ingredient. Skin care products may also use diamond dust to remove old dead skin and invigorate the skin. Diamond dust is also used as a coating to protect materials from abrasion and as a polish to add shine, and is commonly found in scratch-proof windows, surgical knives, heat sensors, stereo speakers, and cooking pots.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:788ae9839278ced2c9258c9aafd63b6e956e9eaae89e41203081fdb026df3caa",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ]
+}

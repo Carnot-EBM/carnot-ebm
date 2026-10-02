@@ -1,0 +1,112 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.2402820450952277,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:4b787ad50507ec598cdc4d2fb91fba63cd133e7c43eaa7fba7230f93f66e7e1d",
+  "input_tokens": 606,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 606,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 629
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:30fd99a4131921d59cede95cf16fe0eb5e67ecde3226fa0360a19a976ea51b39",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885953,
+    "id": "chatcmpl-TCw4KBsLOpqMVhsFvuZIE5hkfA9vWiXV",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.582,
+      "predicted_n": 23,
+      "predicted_per_second": 42.54673666529777,
+      "predicted_per_token_ms": 23.503565217391305,
+      "prompt_ms": 576.784,
+      "prompt_n": 528,
+      "prompt_per_second": 915.4206774113013,
+      "prompt_per_token_ms": 1.0923939393939395
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 606,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 629
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Fast-food outlet Burger King will sponsor the wedding of an Illinois couple. Not just any couple -- these are the nuptials of Joel Burger and Ashley King. They accepted the restaurant chain's offer to pay for their July affair on Monday. \\\"We are very appreciative of Burger King and can't thank them enough for their generosity!\\\" said King. It all started after their engagement in October. The couple had a little fun with the name coincidence and posed by a Burger King restaurant sign for a photo. They were interviewed by reporter Dave Bakke of the State Journal-Register in Springfield, the state capital. Burger King got wind of the article and was immediately interested in the happy couple, tweeting for help to locate them. They were invited on Skype on Monday to learn of a surprise: Burger King will pay for their whole wedding. \\\"We were shocked (and still are),\\\" said King. The fast food romance was many years in the making. Burger, now 24, and King, 23, met in kindergarten and grew up together in New Berlin. In fifth grade, classmates Joel Burger and Ashley King were asked to stand as student council representatives during an assembly with a motivational speaker. \\\"He said our names to the school,\\\" King told CNN, \\\"and then laughed and pronounced that together we were Burger King.\\\" The motivational speaker wasn't too far off -- a merger was in the works. The two became friends by high school, then dated in college. When the time came to propose, \\\"Joel took me out on his boat to go fishing, and he popped the question while we were on the water.\\\" Burger King's message for the happy couple: \\\"Congratulations, Joel and Ashley on falling in love your way.\\\"\\n\", \"original_answer\": \"Burger King is set to sponsor the wedding of a couple surnamed Burger and King. The couple, who announced their engagement in October, posed by a Burger King sign for a photo. The restaurant chain got wind of the article and offered to pay for their wedding. The couple, who met in kindergarten, were thrilled by the generous offer.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "9e62a88a7ba022109ab3970ebf3b8864194a7030dd18d823cbec6ce892989482",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ]
+}

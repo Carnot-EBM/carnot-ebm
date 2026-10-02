@@ -1,0 +1,101 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.4926333060138859,
+  "exclusion_reason": null,
+  "family_id": "sha256:840980e03a809d34159190b0bf1159a1f24641ea667fbd1ddeb67a7075d19930",
+  "input_tokens": 858,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 858,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 881
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:8daa232be8b0fbf38da82761e1be1dbfd6a9453ba4100def67791f5b72e4c51b",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832746,
+    "id": "chatcmpl-7J96tRYgeGstPQnVAqhn7GRmdNSVwwj0",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.182,
+      "predicted_n": 23,
+      "predicted_per_second": 42.49956576530631,
+      "predicted_per_token_ms": 23.529652173913043,
+      "prompt_ms": 820.387,
+      "prompt_n": 780,
+      "prompt_per_second": 950.770794759059,
+      "prompt_per_token_ms": 1.051778205128205
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 858,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 881
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"1759 S Jameson Ln\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":null,\\\"romantic\\\":true,\\\"touristy\\\":null,\\\"trendy\\\":null,\\\"upscale\\\":null},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":false,\\\"valet\\\":true,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Vegan, Restaurants, Italian\\\",\\\"city\\\":\\\"Montecito\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"17:30-21:0\\\",\\\"Monday\\\":\\\"17:30-21:0\\\",\\\"Saturday\\\":\\\"17:30-21:0\\\",\\\"Sunday\\\":\\\"17:30-21:0\\\",\\\"Thursday\\\":\\\"17:30-21:0\\\",\\\"Tuesday\\\":\\\"17:30-21:0\\\",\\\"Wednesday\\\":\\\"17:30-21:0\\\"},\\\"name\\\":\\\"Caruso's\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-19 05:26:39\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Five star service, location, and food! Thanks so much for making my husband's birthday and surprise dinner experience ultra special! That $344 spent was worth it for me. :D\\\"},{\\\"review_date\\\":\\\"2022-01-16 21:37:52\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Phenomenal staff, solid food, and you can't beat the location/atmosphere. Four course price fix was too much food, but we had a great time. Right on the water, waves crashing, fresh air, and uber friendly staff.\\\"},{\\\"review_date\\\":\\\"2022-01-16 16:03:42\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Definitely an experience! Service was top notch, the views were amazing. My husband surprised me without 4 course meal and it was so good! A little sticker shock from the price, but a night I will never forget! \\\\nMy favorites:\\\\nThe old fashioned, octopus, focaccia, budino!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Caruso's is a highly-rated Italian restaurant located in the picturesque town of Montecito, California. With a rating of 4.0 stars, this restaurant is known for its exceptional service, delicious food, and stunning views. The menu offers a variety of dishes, including vegan options, and the four-course price fixe menu is a popular choice among visitors. The atmosphere is upscale and romantic, with outdoor seating that takes advantage of the beautiful ocean views. The staff is friendly and attentive, making it a great spot for special occasions or a night out with loved ones. While the prices may be a bit steep, many customers have reported that the experience was well worth the cost. Free WiFi and valet parking are also available for guests' convenience. Overall, Caruso's is a must-visit destination for anyone looking for a high-quality dining experience in a beautiful setting.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:45cac968e3bdf0c1b85c8d9eefc9a9b8bd3bdeac7d2d9b2746cebafb9290a1a3",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ]
+}

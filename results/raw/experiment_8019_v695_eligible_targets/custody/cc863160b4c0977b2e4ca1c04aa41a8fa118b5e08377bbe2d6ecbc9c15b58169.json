@@ -1,0 +1,126 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.7562502280343324,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:1a01d76c4d2f242fb0e3643669c834a15e2bd7e8fb5396017924c6e8b2a5c0f7",
+  "input_tokens": 1224,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1224,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1247
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:afe04bdd23f50fc2ae207fa60915dc39227c07e833d5141a692c7a448d4b11f1",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886293,
+    "id": "chatcmpl-W89z3mnHEXTgjOrTdc1nKciomsykA4nv",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 542.086,
+      "predicted_n": 23,
+      "predicted_per_second": 42.42869212634157,
+      "predicted_per_token_ms": 23.568956521739132,
+      "prompt_ms": 1081.105,
+      "prompt_n": 1146,
+      "prompt_per_second": 1060.0265469126496,
+      "prompt_per_token_ms": 0.9433726003490401
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1224,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1247
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Atlanta (CNN)A judge, declaring he wasn't \\\"comfortable\\\" with seven-year prison terms given earlier to three educators in the Atlanta Public Schools cheating scandal, on Thursday reduced their sentences to three years in prison. \\\"I'm not comfortable with it,\\\" Fulton County Superior Court Judge Jerry Baxter said of the sentences he handed down to the three defendants April 14. \\\"When a judge goes home and he keeps thinking over and over that something's wrong, something is usually wrong.\\\" Tamara Cotman, Sharon Davis-Williams and Michael Pitts also were ordered Thursday to serve seven years on probation, pay $10,000 fines and work 2,000 hours in community service. Baxter had come under fire from some community leaders for giving prison sentences to eight teachers and administrators who stood trial and were convicted of racketeering. They'd been accused of taking part in an effort to raise tests scores at struggling schools by erasing wrong answers and putting in correct answers. Outside of court, Benjamin Davis, the lawyer for Cotman, questioned the judge's rationale in handing down heavy sentences a few weeks ago. \\\"I had never seen a judge conduct himself in that way,\\\" he said. \\\"What was going on with Judge Baxter?\\\" Davis-Williams said she was pleased judge Baxter changed his mind. Her attorney, Teresa Mann, added, \\\"We are happy. We are elated that judge Baxter took the opportunity to reflect.\\\" Cotman, Davis-Williams and Pitts, all school reform team executive directors, got the harshest sentences during an April 14 hearing: Seven years in prison, 13 years of probation and $25,000 fines. Baxter said of his change of mind: \\\"I'm going to put myself out to pasture in the not-too-distant future and I want to be out in the pasture without any regrets.\\\" During the earlier sentencing hearing, Baxter was frustrated when defendants didn't admit their guilt. \\\"Everybody knew cheating was going on and your client promoted it,\\\" Baxter said to an attorney representing Davis-Williams. At one point he said, \\\"These stories are incredible. These kids can't read.\\\" At a press conference held April 17, most of the convicted educators insisted they were innocent. \\\"I didn't cheat. I'm not a racketeer,\\\" said Diane Buckner-Webb, a former elementary teacher. All defendants sentenced to prison have appealed and are out on bond. The lower prison sentences given to other defendants -- ranging from one to two years -- have not been reduced. Prosecutors said the cheating is believed to date back to 2001, when scores on statewide aptitude tests improved greatly, according to a 2013 indictment. The indictment also states that for at least four years, between 2005 and 2009, test answers were altered, fabricated or falsely certified. Michael Bowers, a former Georgia attorney general who investigated the cheating scandal, said in 2013 that there were \\\"cheating parties,\\\" erasures in and out of classrooms, and teachers were told to make changes to student answers on tests. Bowers said he heard that educators cheated out of pride, to earn bonuses, to enhance their careers or to keep their jobs. Of 35 Atlanta educators indicted in 2013, more than 20 took a plea deal. Twelve educators went on trial six months ago, with 11 convicted and one acquitted on April 1. Of the 11 convicted, two took a deal in which they admitted guilt, waived their right to appeal and received much lighter sentences. One defendant was giving birth during the sentencing phase not been sentenced. On Thursday, Baxter urged the defendants to engage in community service while they're appealing. He said that might lighten the punishment if the convictions are upheld. The judge said he was tired of dealing with the Atlanta Public Schools cheating scandal, which he referred to as \\\"this mess.\\\" \\\"I'm ready to move on. So, anyway, adios,\\\" Baxter said, and ended the hearing.\\n\", \"original_answer\": \"The prison terms of three educators involved in the Atlanta Public Schools cheating scandal were reduced from seven to three years today by Fulton County Superior Court Judge Jerry Baxter. Tamara Cotman, Sharon Davis-Williams and Michael Pitts were convicted of racketeering, having been found guilty of participating in an effort to raise test scores at struggling schools by erasing wrong answers and putting in correct answers. They will also serve seven years on probation, pay $10,000 fines, and work 2,000 hours in community service. The judge made the decision after he realised he was not \\\"comfortable\\\" with the original sentences. The other defendants, who were given one to two year sentences, did not have their sentences reduced.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "d4dc45d11373c3bbd017811109a9c3f318f972e64a57fcc3e0890d6dd3340320",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29
+  ]
+}

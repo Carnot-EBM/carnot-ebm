@@ -1,0 +1,99 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.3679066069889814,
+  "exclusion_reason": null,
+  "family_id": "sha256:2c8bec275bea06289f821aa47746abac0f5509b3421342c6c70f3f72f0cc3b19",
+  "input_tokens": 818,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.05,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 818,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 841
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:41bf2bdd2e4366c04e3f532951203ac0dbe1b630af1018972dbf728dc92b6a12",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.05,\n \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832607,
+    "id": "chatcmpl-PAaSORuceu1432bzgTBHggkVxWeBNOf8",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.902,
+      "predicted_n": 23,
+      "predicted_per_second": 42.52156582893019,
+      "predicted_per_token_ms": 23.517478260869566,
+      "prompt_ms": 711.909,
+      "prompt_n": 740,
+      "prompt_per_second": 1039.4586948612814,
+      "prompt_per_token_ms": 0.9620391891891892
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 818,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 841
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"6533 Trigo Rd\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":null,\\\"divey\\\":false,\\\"hipster\\\":null,\\\"intimate\\\":null,\\\"romantic\\\":null,\\\"touristy\\\":null,\\\"trendy\\\":true,\\\"upscale\\\":null},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":null,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":null},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Japanese, Restaurants, Steakhouses, Asian Fusion\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-21:0\\\",\\\"Monday\\\":\\\"11:0-21:0\\\",\\\"Saturday\\\":\\\"11:0-21:0\\\",\\\"Sunday\\\":\\\"11:0-21:0\\\",\\\"Thursday\\\":\\\"11:0-21:0\\\",\\\"Tuesday\\\":\\\"11:0-21:0\\\",\\\"Wednesday\\\":\\\"11:0-21:0\\\"},\\\"name\\\":\\\"Sizzling Lunch\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-06 18:26:22\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Decent place for lunch and hanging out with friends.\\\\nDue to Covid-19, they have a monitor at each table that you can order everything from there, and the order will be sent straight to the kitchen. Friendly staff, fast service, great food. I love the chicken wings and sizzling rice. Plenty of options. Would love to come back again when visiting UCSB.\\\"},{\\\"review_date\\\":\\\"2022-01-02 02:08:12\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"Friendly service \\\\nThe food is fine (but not super )\\\\nPrice is pretty affordable \\\\nYou have to find a parking space in the street ( no private parking lot)\\\"},{\\\"review_date\\\":\\\"2021-12-15 20:57:45\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"Not enough beef. Didn't taste well. Don't want to buy the same food again. I could cook much better than it.\\\\n\\\\nI once also got a run after eating it\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Sizzling Lunch is a Japanese restaurant located in Goleta, CA, offering a variety of dishes including sushi, steak, and Asian fusion cuisine. The restaurant is known for its friendly staff, fast service, and great food, with popular items such as chicken wings and sizzling rice. The atmosphere is casual and trendy, with outdoor seating available. The restaurant accepts reservations and takeout orders, and has a 4.5-star rating based on customer reviews. Some customers have noted that the food is not exceptional, but the price is affordable. Street parking is available, but there is no private parking lot. Overall, Sizzling Lunch is a decent place for lunch or a casual dinner with friends, especially for those visiting UCSB.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "tune",
+  "source_cluster_id": "sha256:6d8a89c3571e1165ddc4556430c29f180108655215c376f1634451b7133fe674",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ]
+}

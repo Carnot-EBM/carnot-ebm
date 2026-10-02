@@ -1,0 +1,115 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.3289405530085787,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:84f88769a3a6ab8ca9cbe551b418e7e06e6d92a781728a91873900c1fda3888f",
+  "input_tokens": 754,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 754,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 777
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:976cbe837a66c9d34ccc45e5a32c35bc0675320c0f501a73f1af66618599eeb5",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885847,
+    "id": "chatcmpl-a0nQKgCN4BNBZ7XB52DJUfRhA6EgtFcD",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.561,
+      "predicted_n": 23,
+      "predicted_per_second": 42.54838954345578,
+      "predicted_per_token_ms": 23.502652173913045,
+      "prompt_ms": 652.882,
+      "prompt_n": 676,
+      "prompt_per_second": 1035.4091551000029,
+      "prompt_per_token_ms": 0.9658017751479289
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 754,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 777
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:A sick horse will usually seam lethargic. Will not be interested in food and may have a temperature. a normal temperature for a horse is between 99.8 F and 101.3 F. you should \u2026 also check its heart rate. normal resting heart rate should be below 50. Know How to Detect a Sick Horse Whether you are a professional horseman or horsewoman, or you are new to the equestrian world, you will want to know how to identify a sick horse and what you can do to provi\u2026. 2  Tips for Horse Feeding Proper nutrition is important for the health of your horse.\\\\n\\\\npassage 2:Instructions. Give your horse a brief visual exam every time you see him. Learn how to take your horse's temperature, heart rate and respiratory rate (see Related eHows). Perform a physical exam (see Related eHow) if a horse that's usually bright, alert and responsive is acting dull, slow and depressed.nstructions. Give your horse a brief visual exam every time you see him. Learn how to take your horse's temperature, heart rate and respiratory rate (see Related eHows). Perform a physical exam (see Related eHow) if a horse that's usually bright, alert and responsive is acting dull, slow and depressed.\\\\n\\\\npassage 3:1 To check your horse's respiratory rate, stand back and watch her chest movements. 2  One in-out movement of the chest counts as one breath. 3  Count how many times this happens in one minute. 4  It's best to do this check when your horse is resting so that this will be an indication of her normal respiratory rate.. Examine your horse's coat and skin. A dull coat is a sign that the horse is either in poor condition, suffering from a lack of nutrition or not grooming herself properly. If this is the only symptom, it is likely not an emergency, but you would do well to mention it to the vet the next time you see him.\\\\n\\\\n\\\",\\\"question\\\":\\\"how do you know if a horse is sick\\\"}\", \"original_answer\": \"A sick horse may seem lethargic, uninterested in food, and may have a temperature outside of the normal range of 99.8 F and 101.3 F. Additionally, its heart rate may be above 50. Other signs of a sick horse include a dull, slow, and depressed demeanor, as well as a dull coat, which may suggest poor condition, lack of nutrition, or improper grooming. Regular checks of the horse's temperature, heart rate, and respiratory rate are recommended, as well as observing its behavior and physical appearance.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "calibration",
+  "source_cluster_id": "9b4ebd5425051d9e6033ef74eacfefb3cf94409dd4c3decefa2eb061bb0c230b",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18
+  ]
+}

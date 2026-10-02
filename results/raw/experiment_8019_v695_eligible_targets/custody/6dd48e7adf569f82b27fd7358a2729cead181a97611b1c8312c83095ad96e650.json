@@ -1,0 +1,104 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.3384178599808365,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:91dc4cf88efac890892e9f0f3428bdd9c1098269f25f7a14a737e34a64ce0499",
+  "input_tokens": 749,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 749,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 772
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:e44c488a85e44451d1f70cac601647fbd4dbdcc35c4f684ab5a5a68e2c25d603",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886127,
+    "id": "chatcmpl-J5EAW5yd4IWZ5i7wBHRB59H68hekXcz9",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 548.19,
+      "predicted_n": 23,
+      "predicted_per_second": 41.95625604261296,
+      "predicted_per_token_ms": 23.834347826086958,
+      "prompt_ms": 671.56,
+      "prompt_n": 671,
+      "prompt_per_second": 999.166120674251,
+      "prompt_per_token_ms": 1.0008345752608048
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 749,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 772
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:A Roth IRA is an individual retirement account that offers tax-free growth and tax-free withdrawals in retirement. Roth IRA rules dictate that as long as you've owned your account for 5 years* and you're age 59\u00bd or older, you can withdraw your money when you want to and you won't owe any federal taxes. Roth IRA is an individual retirement account that offers tax-free growth and tax-free withdrawals in retirement. Roth IRA rules dictate that as long as you've owned your account for 5 years* and you're age 59\u00bd or older, you can withdraw your money when you want to and you won't owe any federal taxes.\\\\n\\\\npassage 2:Withdrawals of Roth IRA contributions are always both tax-free and penalty-free. But if you\u2019re under age 59\u00bd and your withdrawal dips into your earnings\u2014in other words, if you withdraw more than you've contributed in total\u2014you could be subject to both taxes and penalties on the earnings portion of the withdrawal.ithdrawals of both contributions and earnings received from a traditional IRA before age 59\u00bd may not be subject to the 10% federal penalty tax if they occur because: 1  The IRA owner is totally and permanently disabled. 2  The withdrawal is made to a beneficiary or the IRA owner's estate after the owner's death.\\\\n\\\\npassage 3:It is normally subject to taxes and a 10% early-withdrawal penalty if you\u2019re under age 59\u00bd when you take the money. If you\u2019re a first-time home buyer, however, you can withdraw up to $10,000 in earnings from your Roth IRA without the 10% early-withdrawal penalty, even if you\u2019re under age 59\u00bd.he tax and penalty situation is based on order-of-withdrawal rules. When you withdraw money from a Roth IRA, your contributions are counted first, then the conversions, and finally, the earnings.\\\\n\\\\n\\\",\\\"question\\\":\\\"roth ira rules for withdrawals\\\"}\", \"original_answer\": \"Roth IRA rules allow for tax-free growth and tax-free withdrawals in retirement as long as you've owned your account for 5 years and you're age 59\u00bd or older. If you withdraw your contributions, they are always tax-free and penalty-free. However, if you\u2019re under age 59\u00bd and your withdrawal includes your earnings (i.e., you withdraw more than you've contributed), you could be subject to taxes and penalties on the earnings portion. Exceptions are made in certain situations such as if the IRA owner is totally and permanently disabled, the withdrawal is made to a beneficiary or the owner's estate after their death, or if you\u2019re a first-time home buyer. In the latter case, you can withdraw up to $10,000 in earnings without the 10% early-withdrawal penalty.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "b1e67ff5062fc9be5843379f21f663c907939196f4ac4ed245c56af996c0e7a7",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ]
+}

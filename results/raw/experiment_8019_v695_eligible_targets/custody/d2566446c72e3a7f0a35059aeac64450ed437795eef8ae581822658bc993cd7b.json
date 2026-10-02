@@ -1,0 +1,111 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.6451070180046372,
+  "exclusion_reason": null,
+  "family_id": "sha256:49e5eefe0632367a8c96ac9315e1f3ee43de51bb4bfff78af0d8644b9bc8b51a",
+  "input_tokens": 1127,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 1127,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1148
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:d706d626ca012e615b3733a0eaa98419d338cdabefbc3e4fed3a6d96458fbfac",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832920,
+    "id": "chatcmpl-S92zElNhmXzKt6T4DLp4JNFaOwzfoRz0",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 492.254,
+      "predicted_n": 21,
+      "predicted_per_second": 42.66090270470123,
+      "predicted_per_token_ms": 23.44066666666667,
+      "prompt_ms": 1016.378,
+      "prompt_n": 1049,
+      "prompt_per_second": 1032.0963263667652,
+      "prompt_per_token_ms": 0.9689018112488085
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 1127,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1148
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"101 E Cabrillo Blvd\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":null,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":null,\\\"trendy\\\":null,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":true,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Tapas/Small Plates, Desserts, Restaurants, Breakfast & Brunch, Food, Seafood\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:30-22:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"10:0-22:0\\\",\\\"Sunday\\\":\\\"10:0-21:30\\\",\\\"Thursday\\\":\\\"11:30-21:30\\\",\\\"Tuesday\\\":\\\"11:30-21:30\\\",\\\"Wednesday\\\":\\\"11:30-21:30\\\"},\\\"name\\\":\\\"Santa Barbara FisHouse\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-18 01:46:40\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"We tried this restaurant for the first time and the food was delicious and our waitress Mayra was outstanding best service by far!! I also had a seasonal lemon lavender cocktail that was so wonderful. We definitely will be back!\\\"},{\\\"review_date\\\":\\\"2022-01-17 00:43:12\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Outdoor dinner facing the Pacific Ocean was a great ambiance. It was cool but not cold. Both our orders were delicious- blackened halibut and seafood combo. We ordered a seafood cocktail, and it was too much food considering we also\\\\nOrdered a house salad. The seafood combo was too much for one person. The fish and chips were the best on the combo. The coleslaw was second. \\\\n\\\\nThe halibut was dry, but the caper burre Blanc enhancers the halibut. \\\\nOur waitress was really sweet and interacted with us and we had. Nice short pleasant chat. \\\\nBerry Good mojito was ok and made with vodka and my second mojito was with rum. I liked the rum mojito. Overall we had a great dinner in a great atmosphere!\\\"},{\\\"review_date\\\":\\\"2022-01-16 08:59:56\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I was here three times and I always have a good time. The food is tasty. The craft cocktails are good and refreshing. The service is good. Staff are friendly and helpful. Highly recommended if you have a big group.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Santa Barbara FisHouse is a local business located at 101 E Cabrillo Blvd in Santa Barbara, CA. The establishment offers a variety of culinary experiences, including tapas/small plates, desserts, breakfast & brunch, and seafood. The restaurant has received positive reviews from customers who have praised the delicious food and excellent service.\\n\\nThe business operates from Monday to Sunday, with varying hours of operation. On weekdays, Santa Barbara FisHouse is open from 11:30 am to 9:30 pm, except for Fridays when it stays open until 10:00 pm. On Saturdays and Sundays, the restaurant opens earlier at 10:00 am and closes at 9:30 pm.\\n\\nIn terms of amenities, the business provides free WiFi and has outdoor seating available. Customers can also make reservations and take out their orders. The restaurant is suitable for groups, making it a great option for gatherings.\\n\\nParking options include a lot and valet service, while street parking and garage options are not available. The ambiance of the restaurant is described as casual, and it offers a pleasant atmosphere.\\n\\nOverall, Santa Barbara FisHouse has received a rating of 3.5 stars. Customers who have visited the establishment have consistently praised the tasty food, refreshing craft cocktails, and friendly and helpful staff. It is highly recommended, especially for those looking to dine with a big group.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "tune",
+  "source_cluster_id": "sha256:d401ac643194661a152e1d13242347ba23aa9965797da6ae5ab94b85fad80286",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ]
+}

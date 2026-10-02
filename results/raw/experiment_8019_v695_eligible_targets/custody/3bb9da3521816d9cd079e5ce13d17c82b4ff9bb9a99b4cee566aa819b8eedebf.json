@@ -1,0 +1,105 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.2073822600068524,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:f8564f561584f440c486dec3539f157de24aa4f757db669cc927b420d3477c87",
+  "input_tokens": 567,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 567,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 590
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:7728340fee71445b1925f35a40de1869990ff06783adf1f16426c488b1c42530",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886111,
+    "id": "chatcmpl-bH011SxAlpkgmc2Ishe6vaj949YdmFA7",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.31,
+      "predicted_n": 23,
+      "predicted_per_second": 42.4895161737267,
+      "predicted_per_token_ms": 23.535217391304347,
+      "prompt_ms": 532.723,
+      "prompt_n": 489,
+      "prompt_per_second": 917.9254509379172,
+      "prompt_per_token_ms": 1.0894130879345603
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 567,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 590
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:1 Using a sharp, heavy knife cut off the stem right to the bottom of the artichoke. 2  Then cut of the top 1/4 of the artichoke. 3  Pluck off any discolored or damaged leaves.  Using kitchen shears, trim the tips of all of the leaves until they are straight.\\\\n\\\\npassage 2:How to clean an artichoke: 1  Lay the artichoke on its side on a sturdy cutting board. 2  Using a sharp, heavy knife cut off the stem right to the bottom of the artichoke.  Then cut of the top 1/4 of the artichoke.\\\\n\\\\npassage 3:1 Using your hands pull out the prickly, purple tipped leaves and discard. 2  Using a small spoon, scoop out the fuzzy choke and discard. 3  The cavity should be smooth now.  Rub the entire artichoke with a lemon half to prevent it from oxidizing, or turning brown, and squeeze some juice into the cavity of the artichoke.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to clean artichokes\\\"}\", \"original_answer\": \"To clean an artichoke, first lay the artichoke on its side on a sturdy cutting board. Using a sharp, heavy knife, cut off the stem right to the bottom of the artichoke and then cut off the top 1/4 of the artichoke. Pluck off any discolored or damaged leaves. Using kitchen shears, trim the tips of all of the leaves until they are straight. Next, using your hands, pull out the prickly, purple tipped leaves and discard. Using a small spoon, scoop out the fuzzy choke and discard. The cavity should be smooth now. Finally, rub the entire artichoke with a lemon half to prevent it from oxidizing, or turning brown, and squeeze some juice into the cavity of the artichoke.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "41eae57f734d2e186665fc963e6c61d7076cbaf714fe06cf9ccc48a5229c9aa6",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ]
+}

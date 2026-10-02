@@ -1,0 +1,101 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.2985388480010442,
+  "exclusion_reason": null,
+  "family_id": "sha256:22687c8068a1157d4e490afe00a7000f0026820cb720ac13d584225524970146",
+  "input_tokens": 598,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 598,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 623
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:b5ab02f94d9b60749488af4a6273013e5e471d3647a10d7ed846f7c12b30593b",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832854,
+    "id": "chatcmpl-CpehmmlrotwDLsjBYzSLHpK6cXOQvTpx",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 589.266,
+      "predicted_n": 25,
+      "predicted_per_second": 42.42566175547206,
+      "predicted_per_token_ms": 23.570639999999997,
+      "prompt_ms": 577.19,
+      "prompt_n": 520,
+      "prompt_per_second": 900.9165092950327,
+      "prompt_per_token_ms": 1.1099807692307693
+    },
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 598,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 623
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Botswana Flag: The Botswana flag was officially adopted on September 30, 1966. The colors on the flag correspond to those on the national coat of arms. The blue represents water, the white-black-white bands depict the racial harmony of the people as well as the pluralist nature of the society. They are inspired by the coat of the zebra, the national animal. Larger Botswana flag Botswana Coat of Arms: Botswana's coat of arms was adopted on January 25, 1966, and contains a shield supported by two zebras. The zebras hold onto a tusk of ivory (symbolic of the former ivory trade) and an ear of sorghum (an important crop to the nation.\\\\n\\\\npassage 2:Botswana flag colors meaning, significance and symbolism - Presidential Standard of Botswana - The meaning of Botswana flag and What is the symbolism of the flag of Botswana Botswana flag colors symbolism\\\\n\\\\npassage 3:19. Botswana. Botswana used the UK flag as a protectorate till their independence in September 30, 1966. The flag is credited for being one of the African flags that did not take its meaning from the leading political party. Instead the flag designs and colors give cultural, political, and regional interpretations.\\\\n\\\\n\\\",\\\"question\\\":\\\"botswana flag color meanings\\\"}\", \"original_answer\": \"Sure! Here's my answer based on the given passages:\\n\\nThe Botswana flag has three horizontal stripes - blue, white, and black. The blue color represents water, specifically the Okavango Delta, which is a vital source of life and livelihood for many Batswana (the people of Botswana). The white stripe symbolizes peace and unity among the different ethnic groups in Botswana, and is also said to represent the salt pans found in the country. The black stripe stands for the fertile soil and the natural resources of the country.\\n\\nTherefore, the blue, white, and black colors on the Botswana flag represent water, peace and unity, and natural resources, respectively.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:bd91d3dba6f0a4c55f522ca7128e35720b7d52b4c1b0a1e6103d96f5d1752843",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ]
+}

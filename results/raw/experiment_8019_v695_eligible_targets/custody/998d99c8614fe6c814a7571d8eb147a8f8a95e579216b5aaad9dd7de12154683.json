@@ -1,0 +1,109 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.311246426019352,
+  "exclusion_reason": null,
+  "family_id": "sha256:577f9f940ee559b18422544e69fa75533b326a60b16c21aee02e0225e5b190da",
+  "input_tokens": 701,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 701,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 724
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:df46292850316000f0cd2b715cbe53bbbce8d8d32dfa5b7539d7c044544e49c3",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832935,
+    "id": "chatcmpl-b9nlse4xsVViXrAZVInFM8mQy9PROQDW",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.92,
+      "predicted_n": 23,
+      "predicted_per_second": 42.52015085410043,
+      "predicted_per_token_ms": 23.518260869565214,
+      "prompt_ms": 634.122,
+      "prompt_n": 623,
+      "prompt_per_second": 982.4607883025665,
+      "prompt_per_token_ms": 1.017852327447833
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 701,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 724
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"You know the phrase \\\"dodging a bullet\\\"? Forget about it. Probably not going to happen anymore. The U.S. military said this week it has made great progress in its effort to develop a self-steering bullet. In February, the \\\"smart bullets\\\" -- .50-caliber projectiles equipped with optical sensors -- passed their most successful round of live-fire tests to date, according to the Defense Advanced Research Projects Agency, or DARPA. In the tests, an experienced marksman \\\"repeatedly hit moving and evading targets,\\\" a DARPA statement said. \\\"Additionally,\\\" the statement said, \\\"a novice shooter using the system for the first time hit a moving target.\\\" In other words, now you don't even have to be a good shot to hit the mark. The system has been developed by DARPA's Extreme Accuracy Tasked Ordnance program, known as EXACTO. \\\"True to DARPA's mission, EXACTO has demonstrated what was once thought impossible: the continuous guidance of a small-caliber bullet to target,\\\" said Jerome Dunn, DARPA program manager. \\\"This live-fire demonstration from a standard rifle showed that EXACTO is able to hit moving and evading targets with extreme accuracy at sniper ranges unachievable with traditional rounds. Fitting EXACTO's guidance capabilities into a small .50-caliber size is a major breakthrough and opens the door to what could be possible in future guided projectiles across all calibers,\\\" Dunn said. Videos supplied by DARPA show the bullets making sharp turns in midair as they pursue their targets. It all conjures up images of a cartoon character frantically fleeing a bullet that follows him wherever he goes. Only, these bullets are traveling at hundreds of miles per hour. And even the Road Runner can't run that fast. DARPA says the smart bullets will also help shooters who are trying, for example, to hit targets in high winds. The goals of the EXACTO program are giving shooters accuracy at greater distances, engaging targets sooner and enhancing the safety of American  troops, DARPA said.\\n\", \"original_answer\": \"The US military is developing a self-steering bullet, which has successfully passed live-fire tests. The \u201csmart bullets\u201d are .50-calibre projectiles equipped with optical sensors, which allow them to hit moving and evading targets with extreme accuracy. The system, called EXACTO, is being developed by the Defence Advanced Research Projects Agency (DARPA). The bullets can also help shooters to hit targets in high winds.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:1c228d40b8ec7c77b35b3221fcb356ff1db982fe458792acff7165a274e83b4e",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17
+  ]
+}

@@ -1,0 +1,116 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.497030872036703,
+  "exclusion_reason": null,
+  "family_id": "sha256:09df62231ec5f51a9c23c68c0825f1936bab7b74f3971a86be60661e32f4cec9",
+  "input_tokens": 889,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 889,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 912
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:d11b1e3d24084171235e4fed74c83456cf15bbbf46cc809a0329506db3047f86",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832906,
+    "id": "chatcmpl-ZsrEkRbTqLIWWrWN3a9oIrvqwgB2cGqg",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.308,
+      "predicted_n": 23,
+      "predicted_per_second": 42.48967316204453,
+      "predicted_per_token_ms": 23.53513043478261,
+      "prompt_ms": 846.52,
+      "prompt_n": 811,
+      "prompt_per_second": 958.0399754288144,
+      "prompt_per_token_ms": 1.043797780517879
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 889,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 912
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Fighting rages on in Gaza\\nHAMAS vs. Israel (Shutterstock).\\nThe fighting between Israeli armed forces and Hamas militants in the Gaza Strip escalated on Monday.\\nAir strikes by Israel are hitting targets in the area, which has been cut off from food, fuel and more. Hamas has attacked with missiles and raids that that resulted in the capture of civilians and soldiers.\\nThe Associated Press is reporting Hamas has said it will kill its captives if Israel targets civilians without giving a warning.\\nTo date, Americans killed in the four-day long struggle is at nine. The New York Times is reporting that 900 people in Israel are dead, with 150 people held hostage and 687 Palestinians have been killed.\\nRFK Jr. will seek presidency\\nRobert F. Kennedy Jr., a vaccine skeptic, announced on Monday that he will seek the presidency in 2024.\\n\u201cThere have been independent presidential campaigns before, but this time it\u2019s going to be different. Because this time, the independent is going to win,\u201d he said, according to CNN.\\nWhile no independent candidate has ever come close to winning the presidency, some have attracted enough support to affect the outcome of the election. In 2000, Ralph Nader\u2019s independent candidacy may have allowed George W. Bush to defeat Al Gore, some observers have said.\\nKennedy is the son of Robert Kennedy, who ran for the Democratic nomination in 1968, but who was assassinated after winning the California primary in June,\\nDodgers on the brink of elimination\\nThe Los Angeles Dodgers, who won the National League West title this season by a mile, now have their backs to the wall in the NL Division Series after losing 4-2 on Monday at home to the Arizona Diamondbacks. They now trail two games to none in this best three-of-five series.\\nThe D-backs jumped on LAD starter Bobby Miller with three runs in the first inning and stayed ahead.\\nZac Gallen got the win, working 5.1 innings and yielding five hits and two earned runs. He struck out four, walked one and yielded a home run to J.D. Martinez.\\nWeather: Turnaround coming\\nThe cooling trend that\u2019s hit our West Orange County area will reverse itself soon. The forecast calls for a high of 75 on Tuesday with an overnight low of 63. But warmer temperatures will return on Wednesday with a high of 76, rising to 82 by Thursday under sunny skies.\", \"original_answer\": \"Here is a 99-word summary of the news:\\n\\nFighting between Israeli armed forces and Hamas militants in Gaza intensified on Monday, with air strikes by Israel and attacks by Hamas resulting in the capture of civilians and soldiers. At least 9 Americans have been killed, and 900 people in Israel are dead, with 150 held hostage and 687 Palestinians killed. Robert F. Kennedy Jr. announced his intention to run for president in 2024 as an independent candidate. The Los Angeles Dodgers are behind 2-0 in the NL Division Series after losing 4-2 at home to the Arizona Diamondbacks. A cooling trend will reverse in Orange County, California, with temperatures rising on Wednesday and Thursday.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:1e08e242f9c030e60c91833fc1f141ddcf624ef1d76deb6da9addaf7d84f83b0",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+  ]
+}

@@ -1,0 +1,98 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.202566266991198,
+  "exclusion_reason": null,
+  "family_id": "sha256:b233fa7385970a2c99633b791715467c6734334d757dbf84d9addd9ab4bc1e89",
+  "input_tokens": 559,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 559,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 582
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:1cc0e4cf4d2a8c454ae24c289966f8e309ab68d219cacca8b3bf1213221db2ed",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832525,
+    "id": "chatcmpl-TLfniD0joHr9AztkgzdYA9xsWYkKpG2R",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 536.348,
+      "predicted_n": 23,
+      "predicted_per_second": 42.88260606919388,
+      "predicted_per_token_ms": 23.319478260869563,
+      "prompt_ms": 521.529,
+      "prompt_n": 481,
+      "prompt_per_second": 922.2881182062742,
+      "prompt_per_token_ms": 1.0842598752598753
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 559,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 582
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Even with all the benefits and perks at the Googleplex, work can become stressful. Fortunately for Google employees, they can take advantage of a subsidized massage program. For a small fee, the employee can receive a massage from a licensed therapist in a private room.\\\\n\\\\npassage 2:Another famous benefit of working at Google is the 20 percent time program. Google allows its employees to use up to 20 percent of their work week at Google to pursue special projects. That means for every standard work week, employees can take a full day to work on a project unrelated to their normal workload.\\\\n\\\\npassage 3:One man's wife actually cried when she heard how good Google's death benefits were. Google certainly inspires a lot of loyalty with Googlers' spouses. If a Googler passes away while working there, all their stock vests immediately, and, on top of the life insurance payout, their surviving spouse continues to get half of the Googler's salary for the next 10 years.\\\\n\\\\n\\\",\\\"question\\\":\\\"benefits of working for google\\\"}\", \"original_answer\": \"Based on the provided passages, here are some benefits of working for Google:\\n\\n1. Subsidized massage program: Google offers a subsidized massage program for employees, allowing them to receive a massage from a licensed therapist in a private room for a small fee.\\n2. 20% time program: Google allows employees to use up to 20% of their work week to pursue special projects unrelated to their normal workload.\\n3. Death benefits: Google's death benefits are generous, with the company vesting the stock of deceased employees immediately and providing a life insurance payout, as well as continuing to pay the surviving spouse half of the employee's salary for 10 years after their passing.\\n\\nTherefore, the benefits of working for Google include access to subsidized massages, flexible work arrangements through the 20% time program, and generous death benefits.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "tune",
+  "source_cluster_id": "sha256:09d5885c01a8779b593be9aad9ccd8e049ef175f894e7397765715abc88af10f",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ]
+}

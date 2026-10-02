@@ -1,0 +1,138 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 2.0340383099974133,
+  "exclusion_reason": null,
+  "family_id": "sha256:6a46400960f26e2ec7ba0b7cc66e78b9396af8e72f9975e83c3ab1cf81b2e897",
+  "input_tokens": 1615,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1615,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1639
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:d1c0ca6ac74d33fab96c5539e0446c32b4ed7b908ce4504d76fe5f474f4fa903",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832909,
+    "id": "chatcmpl-SWUCo0U6ZGvPujdRJVMdLADkkeThcGNh",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 567.283,
+      "predicted_n": 24,
+      "predicted_per_second": 42.30692617265104,
+      "predicted_per_token_ms": 23.636791666666667,
+      "prompt_ms": 1354.736,
+      "prompt_n": 1537,
+      "prompt_per_second": 1134.5383897674528,
+      "prompt_per_token_ms": 0.8814157449577099
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1615,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1639
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"28 W Figueroa St\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":null,\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":null},\\\"business_stars\\\":3.0,\\\"categories\\\":\\\"Sushi Bars, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":null,\\\"name\\\":\\\"Sushi Cafe\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2017-04-26 20:47:58\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"PLEASE DO NOT EAT HERE!!!!!! \\\\n\\\\nI ordered 2 sushi rolls to go and it took 30 minutes for me to get my food. I paid $27 for both of the rolls ($12-$13 each) and guess what? There was a piece of hair in one of the sushi rolls.  I called to tell them and to get my refund on one of the sushi rolls and they did not acknowledge me at all! I am so disappointed, I will never return here. \\\\n\\\\nI called the store and I kindly complained that there was a piece of hair in one of my sushi rolls. The employee asked if I ordered today and I said yes, told her who I was and she did not understand me. I was the last person in their restaurant. I was waiting for a few minutes by myself because the restaurant was emptied, they had no customers after I ordered! It was obvious that employee did not understand me and could not speak English very well so she told me to \\\\\\\"hold on\\\\\\\". \\\\n\\\\nAnother employee picked up the phone (probably the owner) and I explained that there was a piece of hair (about 3 inches long) rolled into one of my sushi rolls. He told me that he did not see the hair in my sushi roll so he does not know what I'm talking about. Seriously?!! Shitty ass customer service! I calmly told him that he wouldn't have seen it because he probably didn't make my sushi. Then he asked me how long the hair was, what color was the hair and I told him. He made the dumbest excuse ever - \\\\\\\"It's very windy, so the hair flew into your sushi.\\\\\\\" There was no wind inside the restaurant! Are you kidding me?! They have a tall counter blocking the sushi station in the front. The hair was inside my sushi roll- mixed into the spicy tuna and was rolled with the avocado and shrimp tempura! No on top of my sushi! He said he did not see it, so it did not happen. I just wanted to refund for one of the rolls! I waited 30 minutes to get 2 sushi rolls and found a piece of hair rolled into the sushi and he tells me that it was the wind! He said he does not believe me and cannot do anything about it except if I go back, they will make me a new sushi roll. Unbelievable! Why would I want to get another roll?!!!! Ridiculous! Do not eat here! Don't waste your money here! Poor customer service! I would rate 0 if I could!\\\"},{\\\"review_date\\\":\\\"2017-02-02 19:27:59\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Far and away the best poke bowls in Santa Barbara. Reasonably priced (I think they mostly run around $12) with avocado, seaweed, cucumber, lots of other toppings, and a ton of fish. The sauce they toss the fish in is really flavorful but not as gloppy or overpowering as what most other places in town use. They have fewer options than other places in town but each component - the rice, the fish, the sauce, etc. - is of way higher quality than anywhere else. The employees are really fast and nice, and take to-go orders in person or over the phone.\\\\n\\\\nI don't know what to say about the reviewer below who had a bad experience with kimchi here, I've never had kimchi in a poke bowl from Sushi Cafe and each one I've ordered has been delicious.\\\"},{\\\"review_date\\\":\\\"2016-09-28 21:21:10\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Being that I'm a local Hawaiian who's always looking for a good poke bowl, this is going to be their most accurate feedback, for my dish anyway. \\\\nI ordered the ahi poke bowl. The ahi tuna was fresh but they sprinkled a lot of semi-crunchy fried onion flakes on it which didn't taste good and the crunch in every bite wasn't normal. The rice was sushi rice instead of regular sticky rice and it was loaded with vinegar mix. They had seaweed salad, cucumber and pieces of avocado in the bowl which is nice but the overwhelming vinegar taste and onion bit crunches didn't make the meal enjoyable. I left 2/3 of it behind. I've walked by this place a few times and wanted to try it. I'm glad I did as how else would you know? The other stuff may be good, I won't know. But their poke dish isn't good nor do they know how to make sushi rice, which is pretty simple to do if you've grown up eating it and know what it's supposed to taste like.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Sushi Cafe is a small, casual sushi restaurant located in downtown Santa Barbara. Based on the reviews, it seems that the restaurant has a loyal customer base, with many positive reviews praising the quality and freshness of their sushi. However, there have been some complaints about the customer service, with one reviewer reporting a negative experience with finding a piece of hair in their sushi roll and feeling dismissed by the staff when they tried to report the issue. Another reviewer also had a negative experience with the taste of the sushi rice and the overwhelming flavor of vinegar. Despite these issues, many reviewers have praised the restaurant's reasonable prices, generous portions, and fresh ingredients. Overall, Sushi Cafe appears to be a solid option for sushi lovers in the area, but may benefit from improving their customer service and addressing some of the criticisms regarding the taste of their dishes.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "tune",
+  "source_cluster_id": "sha256:e9c9376728f8a3380dea2aa985187d2f83118f135812ef18fb2ad1d55f63289a",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46
+  ]
+}

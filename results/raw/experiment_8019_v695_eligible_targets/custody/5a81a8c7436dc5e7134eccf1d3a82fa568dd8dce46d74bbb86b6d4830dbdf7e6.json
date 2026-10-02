@@ -1,0 +1,117 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.3091063250321895,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:243441ba8c8ab039c69593ab85e120051006d2310385dfaa29b055fae919627d",
+  "input_tokens": 713,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 713,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 736
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:66899221b8acc85eb3c00f5eb3767dff4f5b3a81165f71d0df4c45d5d7496505",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886357,
+    "id": "chatcmpl-lMJbtKmG7UWrTC4v1fjR4OSjlayhiluV",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 542.328,
+      "predicted_n": 23,
+      "predicted_per_second": 42.40975940759098,
+      "predicted_per_token_ms": 23.579478260869564,
+      "prompt_ms": 644.829,
+      "prompt_n": 635,
+      "prompt_per_second": 984.7571991954457,
+      "prompt_per_token_ms": 1.0154787401574803
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 713,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 736
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Sky watchers in western North America are in for a treat: a nearly five-minute total lunar eclipse this morning. Here's how it's unfolding:. It started at 3:16 a.m. Pacific Daylight Time, when the moon began moving into Earth's shadow.  For the next hour and 45 minutes, that shadow will move across the moon and engulf it at 4:58 a.m. Pacific Time. The total eclipse will only last four minutes and 43 seconds, and NASA says that makes it the shortest one of the century. Watch it live on NASA TV. While people west of the Mississippi River will have the best view, at least a partial eclipse will be visible across the nation. But sunrise will interrupt the show on the East Coast. Parts of South America, India, China and Russia also will be able to see the eclipse, but it won't be visible in Greenland, Iceland, Europe, Africa or the Middle East. A lunar eclipse happens when the sun, Earth and moon form a straight line in space, with the Earth smack in the middle. The sun shines on the Earth and creates a shadow. As the moon moves deeper into that shadow, it appears to turn dark and may even appear to be a reddish color.  Why red? Because Earth's atmosphere is filtering out most of the blue light. Some people have nicknamed the effect the \\\"blood moon.\\\" NASA says lunar eclipses typically happen at least twice a year, but this eclipse is the third in a series of four in a row, known as a \\\"tetrad.\\\"  The first was on April 15, 2014. The second was in September 2014, the next is Saturday and there will be one more, on September 28. If you want to learn more about the eclipse, NASA astronomer Mitzi Adams will take questions on Twitter @NASA_Marshall. Did you see the total lunar eclipse? Share your photos with CNN iReport.\\n\", \"original_answer\": \"Sky watchers in western North America have been treated to a nearly five-minute total lunar eclipse, the shortest one of the century, according to NASA. The lunar eclipse happens when the sun, Earth and moon form a straight line in space, with the Earth in the middle. The sun shines on the Earth and creates a shadow. As the moon moves deeper into that shadow, it appears to turn dark and may even appear to be a reddish color due to Earth's atmosphere filtering out most of the blue light.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "7a603202a47e8718042908884e76bec965ae26b2848f1f1928a3039b73191346",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20
+  ]
+}

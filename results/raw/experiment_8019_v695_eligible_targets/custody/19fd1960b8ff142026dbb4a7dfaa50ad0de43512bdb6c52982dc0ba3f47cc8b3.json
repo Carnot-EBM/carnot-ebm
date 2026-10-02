@@ -1,0 +1,103 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.5403257670113817,
+  "exclusion_reason": null,
+  "family_id": "sha256:326dd9e7a294dce4ac3f58b8aa9c6d09f7007d6f79a7086ed114340fe760b21b",
+  "input_tokens": 968,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 968,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 991
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:e13f5a74ff5cf5895e9ed5bdb488e1bfa320d724e304f0705af11e91896f38d0",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832942,
+    "id": "chatcmpl-FExYfuStPxrA2OhplbpOw7SiQpfCGZZS",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.121,
+      "predicted_n": 23,
+      "predicted_per_second": 42.5043566965614,
+      "predicted_per_token_ms": 23.526999999999997,
+      "prompt_ms": 882.4,
+      "prompt_n": 890,
+      "prompt_per_second": 1008.6128739800544,
+      "prompt_per_token_ms": 0.9914606741573033
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 968,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 991
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"315 Meigs Rd, Ste F\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"American (New), American (Traditional), Bars, Restaurants, Salad, Burgers, Ice Cream & Frozen Yogurt, Food, Nightlife, Beer, Wine & Spirits, Beer Bar, Chicken Shop\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-15:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"11:0-15:0\\\",\\\"Sunday\\\":\\\"11:0-20:0\\\",\\\"Thursday\\\":\\\"11:0-20:0\\\",\\\"Tuesday\\\":\\\"11:0-20:0\\\",\\\"Wednesday\\\":\\\"11:0-20:0\\\"},\\\"name\\\":\\\"Mesa Burger - Santa Barbara\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-06 01:11:59\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Very unhappy with the young manager who refused to honor the discount from our Axxess 2022 card. He claimed that they don't honor Axxess deals but when we called Axxess, they've confirmed that they have a contract with Mesa Burger for 2022 and that they should have honored it. He was very annoyed with me when I showed him the Axxess deal saying that because of Axxess they lost money last year. But I paid $40 for an Axxess card so I feel that I've been lied by both Axxess and the restaurant. Never going back there.\\\"},{\\\"review_date\\\":\\\"2022-01-04 05:21:49\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I really liked the burger I had here. Quality food and no complaints. Love how this place also has sweet potato fries.\\\"},{\\\"review_date\\\":\\\"2021-11-27 22:04:33\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"They served 15 of us quiche!  We all LOVED our food!  9.75/10 !!!  Only issue was parking.  Worth all efforts!!!\\\\nWe all cleaned our trays!!! Hope Ranch\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Mesa Burger - Santa Barbara, located at 315 Meigs Rd, Ste F, is a popular local business in Santa Barbara, CA. The restaurant offers a variety of foods and beverages, including American (New), American (Traditional), burgers, salads, ice cream, and beer. It also falls under the categories of Bars, Restaurants, Nightlife, Chicken Shop, and Beer Bar. While the restaurant does not offer WiFi or valet parking, it does provide street and lot parking. It also has outdoor seating and is good for groups. Mesa Burger - Santa Barbara is open from Tuesday to Sunday, with varying hours. The business has an overall rating of 4 stars. However, the reviews are mixed. Some customers had a positive experience, enjoying the quality of the food, particularly the burgers and sweet potato fries. On the other hand, some were disappointed due to issues with honoring discount cards. Despite these issues, the restaurant\u2019s casual and classy ambiance seems to be well-received.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:281866c7f8d1782f1202b4f8bd323e2e7c34ffbfa66e2d63bc933d2d769ddf16",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]
+}

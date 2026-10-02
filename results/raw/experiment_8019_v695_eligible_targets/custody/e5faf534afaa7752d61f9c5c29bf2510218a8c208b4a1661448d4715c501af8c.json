@@ -1,0 +1,93 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.1582698359852657,
+  "exclusion_reason": null,
+  "family_id": "sha256:c259aca72ad4a51d23e8ffa7f2de6dbb71b970516aac478dcb4bcb187e164df3",
+  "input_tokens": 406,
+  "parsed": {
+    "citation_valid": false,
+    "completed": false,
+    "finish_reason": "stop",
+    "probability": null,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "invalid_citation",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 406,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 431
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:a4b9f4d31d553bff5d7557cbc40c44f6de589f2251342bee135ece5a8ad04737",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": 2\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832811,
+    "id": "chatcmpl-wR4d3E8MXZj2VCuGqjtTqAsLZjMYvC8F",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 588.594,
+      "predicted_n": 25,
+      "predicted_per_second": 42.47409929425036,
+      "predicted_per_token_ms": 23.543760000000002,
+      "prompt_ms": 417.693,
+      "prompt_n": 328,
+      "prompt_per_second": 785.2657334453774,
+      "prompt_per_token_ms": 1.2734542682926828
+    },
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 406,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 431
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:The Euro crisis may seem a bit baffling to some but actually the Euro crisis is no different from the debt crisis being faced by millions of people today.\\\\n\\\\npassage 2:Eurozone crisis was one of the most used terms through 2011, but few really comprehended what the debt crisis was all about. So here is a simple Q&A to cut through the jargon.\\\\n\\\\npassage 3:Also known as Eurozone debt crisis or Eurozone sovereign debt crisis, the term indicates the financial woes caused due to overspending by some European countries.\\\\n\\\\n\\\",\\\"question\\\":\\\"what is the eurozone crisis in simple terms\\\"}\", \"original_answer\": \"Sure! Based on the given passages, here's a simple explanation of the Eurozone crisis:\\n\\nThe Eurozone crisis, also known as the Eurozone debt crisis or Eurozone sovereign debt crisis, refers to the financial difficulties faced by several European countries that use the Euro as their currency. These countries, such as Greece, Portugal, Ireland, Italy, and Spain, have struggled with high levels of government debt and budget deficits, which has led to financial instability and economic challenges. The crisis has been ongoing since 2009 and has had significant impacts on the economies of these countries and the global economy as a whole.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:c0ececa3eb8bcf82fc4807f3022bac373d144c849e1337f10abc3d76f3a4f84b",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1
+  ]
+}

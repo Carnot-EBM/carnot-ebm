@@ -1,0 +1,148 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.8954377500340343,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:ca27c7a75a658b282767a2b84a205fabf487cecdfaf32271c63f7c4aeb6f3c72",
+  "input_tokens": 1394,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1394,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1417
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:18b2d08dfa91db98e6756d4a1fcbd513c6a94d8a241182c583d3abf523b8e833",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886389,
+    "id": "chatcmpl-652DYGDpyfmkij1JcMmKp12yETEZl9Yo",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 542.405,
+      "predicted_n": 23,
+      "predicted_per_second": 42.403738903586806,
+      "predicted_per_token_ms": 23.58282608695652,
+      "prompt_ms": 1209.993,
+      "prompt_n": 1316,
+      "prompt_per_second": 1087.6095977414745,
+      "prompt_per_token_ms": 0.9194475683890577
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1394,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1417
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Robert Bates, 73, shot and killed a man while playing cops and robbers with real police. Bates was a reserve deputy sheriff, which allowed him to \\\"work full time jobs in the community and volunteer ... time in a myriad of events such as the Special Olympics and Tulsa State Fair,\\\" according to the Tulsa County Sheriff Office's website. But Bates wasn't limited to crowd control at sporting events for the disabled. He had taken part in more than 100 operations with the violent crimes task force, according to his lawyer.  On April 2, Bates thought he was going to use a Taser on Eric Harris, who deputies had just tackled after he sold an undercover officer a Lugar pistol and then took off running. But Bates wasn't holding a Taser. He was holding his gun. He fired one shot and killed Harris. From a policing perspective, there wasn't even good reason to use a Taser against Harris. Cops were on scene. Harris wasn't getting the upper hand. He wasn't going anywhere. And despite what Bates would later claim, Harris was not running like a man with a gun. In fact, Harris was running fast and his arms were pumping very much like a man who is not protecting a gun in his waistband. What was Bates, an insurance company CEO, doing there in the first place? It certainly looks like Bates was given special access to \\\"real\\\" policing. Harris had given $2,500 to Sheriff Stanley Glanz's re-election campaign. He donated cars to the department. He gave equipment. So it would be noteworthy if Bates ends up being convicted based on evidence provided by \\\"sunglass cameras\\\" that he may have purchased for the department. A Tulsa police official said the agency has 130 reserve deputies, many of them wealthy people who make donations to the police. \\\"That's not unusual at all,\\\" he told the Tulsa World. Maybe Bates could have been a reserve deputy without donating anything. But I doubt there are many volunteer septuagenarians working with the violent crimes task force. He was too old to be policing the streets. Tulsa police said that Bates had served a year in 1964 as a police officer. Most police departments have mandatory retirement ages. Federal law-enforcement officers, for instance, retire at 57. How easy is it to confuse a gun for a Taser? Police officers generally look with a skeptical eye toward volunteers. For one thing, it makes it tougher to push for a pay raise when people are offering to do your job for free. But departments also know that you get what you pay for. What is the point of background checks, psychological tests and the professional training police undergo if a person can donate a few grand and go out on patrol? Some people are a little too eager to be police officers. These people perhaps buy a police-like car for their personal car. Maybe they put in a police light or two. Some have actually made car stops. Police departments hate cop impersonators (it's illegal, by the way) and try and weed them during the hiring process. You want workers who like the job, but not too much; there's a fine line between passion and fanaticism. That said, there are good volunteer police officers. New York City, for example, has auxiliary police. These officers received more limited training and they help with neighborhood events and other nonenforcement activities. They wear an NYPD uniform but do not carry a gun. Auxiliary police and similar programs reinforce the notion that the police are the public and the public are the police. Volunteers remind us all that policing is a noble public calling, and most police work does not have to be done by overly militarized SWAT officers. An auxiliary program also allows young recruits a way to dip their foot into the police world before taking the plunge. It can be a great benefit to everybody when potential officers discover the job isn't for them before they are locked into a 20-year commitment. What happened in Tulsa County is a disgrace to police professionalism, and the fallout from this disaster may push police departments to end these kinds of programs. That would be a mistake. Police departments should encourage more productive interactions between police and the public. But a line does need to be drawn.\\n\", \"original_answer\": \"On April 2, 73-year old Robert Bates, a reserve deputy sheriff, shot and killed a man while participating in a real police operation. Bates, also an insurance company CEO, was involved in more than 100 operations with the violent crimes task force. During the incident, Bates thought he was going to use a Taser on Eric Harris, who deputies had just tackled after he sold an undercover officer a pistol and then ran away. However, Bates was holding his gun instead of a Taser. He fired one shot and killed Harris. Bates had donated $2,500 to Sheriff Stanley Glanz's re-election campaign, cars to the department and equipment, leading to speculation that he was given special access to real policing. The Tulsa police department has 130 reserve deputies, many of whom are wealthy individuals who make donations to the police. Bates' involvement in police operations and his fatal mistake have raised questions about the role and training of volunteer police officers.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "a191ffd953e60e2153a165f14b7282626122a3f36743dc050d28df11640150b5",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51
+  ]
+}

@@ -1,0 +1,110 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.4785094209946692,
+  "exclusion_reason": null,
+  "family_id": "sha256:f6dcad272741d87fb5d3a7f08f983564ecf5763521d2bd760a7a44a66f5ded4b",
+  "input_tokens": 918,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 918,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 941
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:159adf636f46e29d0de6b935872cd7c5a33d3d09720468641de5e2386b7b9edc",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832512,
+    "id": "chatcmpl-aoXc2TAwf8o1tScwSKbRtQyfEepQ7tiE",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 535.627,
+      "predicted_n": 23,
+      "predicted_per_second": 42.94032974439302,
+      "predicted_per_token_ms": 23.288130434782605,
+      "prompt_ms": 833.279,
+      "prompt_n": 840,
+      "prompt_per_second": 1008.0657258853277,
+      "prompt_per_token_ms": 0.9919988095238095
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 918,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 941
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Boil the eggs. The method you use to boil your eggs can have a significant impact on how easily you'll be able to peel them. Place your eggs in a saucepan and cover with cold water.There should be about two inches of water over the top of the eggs. Add a teaspoon of bicarbonate of soda to the water, then bring the pan to a gentle simmer and cook for approximately 12 minutes.rack the shell at each end. Once the eggs have cooled, remove them from the water and pat dry with some paper towel. Take an egg and firmly tap each end on a hard surface, such as a counter top, to crack the shell. Do one end, and then the other.\\\\n\\\\npassage 2:First, place the cold eggs in a single layer in a pan with enough cold water to cover them by about 1 inch. Then, place the pan on the stove over high heat. Shutterstock. As soon as the water comes to a boil turn the heat off, cover the pan, and remove it from the heat.Allow the eggs to sit in the water until they are cooked; about 9 minutes for a medium egg, 12 minutes for a large egg, and 15 minutes for an extra-large egg.irst, place the cold eggs in a single layer in a pan with enough cold water to cover them by about 1 inch. Then, place the pan on the stove over high heat. Shutterstock. As soon as the water comes to a boil turn the heat off, cover the pan, and remove it from the heat.\\\\n\\\\npassage 3:Instructions. After cooking, place hard-boiled eggs immediately under cold running water or in a bowl of ice water. Hard-boiled eggs are easier to peel right after they cool down.Wait until the eggs feel cool before peeling. Tap the egg gently on the counter top all over until the entire shell is cracked.Roll the egg between your hands or along the top of the counter top until the shell starts to loosen from the egg.Place the egg under cold running water to help loosen bits of shell that cling to the egg. Peel, starting from one end and work slowly until the shell is completely removed.oll the egg between your hands or along the top of the counter top until the shell starts to loosen from the egg. Place the egg under cold running water to help loosen bits of shell that cling to the egg. Peel, starting from one end and work slowly until the shell is completely removed.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to successfully peel a boiled egg\\\"}\", \"original_answer\": \"Based on the given passages, here's how to successfully peel a boiled egg:\\n\\n1. Start by boiling the eggs using a gentle simmer method, adding a teaspoon of bicarbonate of soda to the water, and cooling the eggs in an ice bath after cooking.\\n2. Once the eggs have cooled, tap each end of the egg firmly on a hard surface to crack the shell.\\n3. Roll the egg between your hands or along the top of a counter to loosen the shell from the egg.\\n4. Place the egg under cold running water to help loosen any remaining bits of shell that cling to the egg.\\n5. Peel the egg starting from one end, working slowly until the shell is completely removed.\\n\\nSo, to successfully peel a boiled egg, it's important to cook the egg gently, cool it quickly, and then use a combination of tapping, rolling, and peeling to remove the shell in sections.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:83903f036baef071c1a0eaf79d2bbe870a0742670b7ebaa792623429c09d06d6",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18
+  ]
+}

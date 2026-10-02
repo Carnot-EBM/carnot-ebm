@@ -1,0 +1,114 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.4100312029477209,
+  "exclusion_reason": null,
+  "family_id": "sha256:990339ba5c23947052da5264c649a2b7838e3fb6142016d4e2c204d03e0fd16c",
+  "input_tokens": 836,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 836,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 859
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:a898e39f4e4c3ff3feb79b83d827ea6a6d66462509e05dffef5ed6aee10657e0",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832816,
+    "id": "chatcmpl-UDUpzAnZTtw4MT2u877kppnxiHqdxnL9",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.209,
+      "predicted_n": 23,
+      "predicted_per_second": 42.497445533980404,
+      "predicted_per_token_ms": 23.53082608695652,
+      "prompt_ms": 729.674,
+      "prompt_n": 758,
+      "prompt_per_second": 1038.8200758146788,
+      "prompt_per_token_ms": 0.9626306068601583
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 836,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 859
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Kelly Ripa celebrates landmark occasion with a risque Mark Consuelos claim\\nKelly Ripa turned 53 on Monday October 2. On her show, Live with Kelly and Mark, her real-life husband, Mark Consuelos, greeted her and the audience with an enthusiastic, \u201cGood morning!\u201d\\nAs he kissed Kelly on the cheek in greeting, he proclaimed in a sexy way, \u201cI wore my birthday suit for you today!\u201d\\nIt is commonly known that \u201cwearing your birthday suit\u201d means to have no clothes on. Certainly, his claim was a double meaning as he wore a very handsome suit.\\nIn the back-and-forth banter between the long-married couple, Kelly reminded Mark that it is also their niece\u2019s birthday and they celebrate that instead of her own these last 23 years.\\nKelly made sure to flirt back to Mark with her own double-meaning comment, \u201cI love your birthday suit.\\nThis celebrity couple remain close as they co-host Live with Kelly and Mark. They are often seen holding hands and finishing each other\u2019s sentences.\\nMark loves hosting the show with Kelly\\nKelly Ripa was first the co-host to the legendary Regis Philbin. Once he retired she co-hosted with Michael Strahan and then Ryan Seacrest.\\nNowadays her husband Mark is constantly at her side. This makes for a bright and easy flowing host segment where they chat and share tidbits about their life.\\nVery recently Mark was sick and still wanted to come host the show. Kelly shared that despite his sickness, he still was looking forward to hosting.\\nKelly is always an attentive wife and lovingly takes care of Mark\u2019s needs. The couple has been married since 1996 and have three children together.\\nKelly and Mark\u2019s intimacy bleeds over into Live with Kelly and Mark\\nIn the most real and at-home opening montage that the talk show had ever had, the couple are shown getting ready for their day.\\nIn the clip, the couple brush their teeth before Mark puts his arm around Kelly and they walk out together in what they want viewers to imagine to be their New York City apartment.\\nThe couple have an easygoing demeanor and ease that is uncommon on talk shows today. Kelly feels relaxed enough to continue a light and breezy interview style with her guests. Evidence of this happened as she interviewed the Golden Bachelor, Gerry Turner. She even flirted with him a bit in front of Mark.\\nHappy Birthday Kelly Ripa, may you have many more!\\nLive with Kelly and Mark airs weekdays on ABC.\", \"original_answer\": \"Happy Birthday to Kelly Ripa! To celebrate her special day, her husband Mark Consuelos gave her a double-edged compliment by claiming to have worn \\\"his birthday suit\\\" for her on their show Live with Kelly and Mark. Kelly playfully responded with her own double-meaning comment. Despite a recent illness, Mark still came to work to host the show alongside Kelly, who has been his co-host for many years now. Their intimate relationship shines through in their daily interactions and banter with each other.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:14485d9a322b904e0b7ebec8ec0bb41a74986d745028cb24ef979abff706e765",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22
+  ]
+}

@@ -1,0 +1,109 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.4041105310316198,
+  "exclusion_reason": null,
+  "family_id": "sha256:dbcc82aac038361c345ae449d6eab6eed775b95b4ad2846da7b50978d26bbfaf",
+  "input_tokens": 838,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 838,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 862
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:a1470098669cbd3e9e73a8b0c7cedeb4a2beb3e5f8c9d0d748033aa3496518ae",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832798,
+    "id": "chatcmpl-2CJqQq5kizefZawupqRZoxNVj9Iwj7ZH",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.609,
+      "predicted_n": 24,
+      "predicted_per_second": 42.43213951687473,
+      "predicted_per_token_ms": 23.567041666666668,
+      "prompt_ms": 730.978,
+      "prompt_n": 760,
+      "prompt_per_second": 1039.7029732768974,
+      "prompt_per_token_ms": 0.9618131578947368
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 838,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 862
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Instructions. Grow the dwarf banana plant in well-draining soil with a pH between 5.5 and 7.0. Expose it to at least four hours of direct sunlight every day. Amend the planting site with organic matter such as compost or peat.eed outdoor dwarf banana plant 2 lb. of an 8-10-8 fertilizer every month during the summer. Spread the fertilizer in a circle around the plant, 3 to 4 feet away from the trunk to prevent direct contact. Fertilize container-grown bananas with half the amount of fertilizer.\\\\n\\\\npassage 2:Dwarf bananas, such as the dwarf cavendish, require the same care as their taller cousins. The only difference between the two varieties is their height. Dwarf bananas reach a height of anywhere between 4 to 7 feet, while taller varieties can grow 12 to 18 feet tall.Being a tropical fruit, bananas require warm conditions to grow. Plant outside in zones 9 and 10.ertilize outdoor dwarf banana plants once per month with an 8-10-8 fertilizer. Apply at a rate of 2 pounds per plant. Spread the fertilizer in a circle extending approximately 4 feet from the banana's trunk. Do not allow the fertilizer to touch the trunk.\\\\n\\\\npassage 3:Dwarf bananas grow between 4 and 8 feet tall, while taller varieties grow 10 to 15 feet high. The plant grows outdoors and indoors in containers to provide a tropical touch to the setting. Sensitive to cold climates, the tropical plants thrive in areas with temperatures above 55 degrees Fahrenheit.eed outdoor dwarf banana plant 2 lb. of an 8-10-8 fertilizer every month during the summer. Spread the fertilizer in a circle around the plant, 3 to 4 feet away from the trunk to prevent direct contact. Fertilize container-grown bananas with half the amount of fertilizer.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to grow dwarf banana trees\\\"}\", \"original_answer\": \"Based on the given passages, here are the steps to grow dwarf banana trees:\\n\\n1. Choose a location with well-draining soil and a pH between 5.5 and 7.0.\\n2. Provide at least four hours of direct sunlight per day.\\n3. Amend the soil with organic matter such as compost or peat.\\n4. Fertilize the plant with 2 lb of an 8-10-8 fertilizer every month during the summer, spreading it in a circle around the plant at a distance of 3 to 4 feet from the trunk.\\n5. Water the plant regularly, but avoid overwatering.\\n6. Dwarf bananas grow between 4 and 8 feet tall, while taller varieties can grow up to 15 feet tall.\\n7. The plant is sensitive to cold climates and thrives in areas with temperatures above 55 degrees Fahrenheit.\\n\\nNote: It is important to follow the specific instructions for fertilizing container-grown bananas, which is to use half the amount of fertilizer as for outdoor plants.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:c89e1811e2f7668d1fad385b9899319285299b4f44afb090a838fdb0083cd993",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17
+  ]
+}

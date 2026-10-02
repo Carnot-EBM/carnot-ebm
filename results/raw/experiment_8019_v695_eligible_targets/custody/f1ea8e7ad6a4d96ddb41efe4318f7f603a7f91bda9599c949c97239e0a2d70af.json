@@ -1,0 +1,101 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.2300761780352332,
+  "exclusion_reason": null,
+  "family_id": "sha256:8c55dabd198a0dbd669c758d03ba62731e503d4fe6e62bc8cf254cfbc9695041",
+  "input_tokens": 580,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 1.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 580,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 603
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:b3b6b1d1f3a9dce7bc6fd95306eaf0184216a7a8623e8677b645addca1e0ec89",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 1.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832848,
+    "id": "chatcmpl-SzXsjpIo3j4uELviHgBrgUGbd8WOPG3W",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.075,
+      "predicted_n": 23,
+      "predicted_per_second": 42.507970244420825,
+      "predicted_per_token_ms": 23.525000000000002,
+      "prompt_ms": 535.743,
+      "prompt_n": 502,
+      "prompt_per_second": 937.0164425853441,
+      "prompt_per_token_ms": 1.0672171314741037
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 580,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 603
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:For example, get them to help with setting or clearing the table. Jobs like these are more likely to promote a sense of responsibility and participation. If your children are old enough, you can have a family discussion. This can reinforce that the whole family contributes to how the household runs.\\\\n\\\\npassage 2:For example: A nursing career is many-fold. A nurse can work in hospitals, clinics, or schools, and every location will be different. At a hospital, there are different nursing specialties, such as emergency nursing or surgical nursing. This kind of variety will make sure you do not get bored.\\\\n\\\\npassage 3:Jobs like these are more likely to promote a sense of responsibility and participation. If your children are old enough, you can have a family discussion. This can reinforce that the whole family contributes to how the household runs. Children over six years old can help decide which chores they\u2019d prefer.\\\\n\\\\n\\\",\\\"question\\\":\\\"what are the different careers that you can have with children\\\"}\", \"original_answer\": \"Based on the given passages, here are some careers that involve working with children:\\n\\n1. Nursing - specifically, pediatric nursing or school nursing\\n2. Teaching - including roles in elementary, middle, and high schools, as well as special education\\n3. Childcare worker - including daycare workers, babysitters, and nannies\\n4. Youth counselor - including roles in summer camps, after-school programs, and youth organizations\\n5. Pediatrician - a medical doctor who specializes in the health and well-being of children\\n6. Social worker - including roles in child protective services, foster care, and adoption agencies\\n7. Child development specialist - including roles in research, policy, and advocacy related to child development and early childhood education\\n8. Play therapist - a mental health professional who works with children using play therapy techniques to help them cope with emotional and behavioral challenges.\\n\\nIt's worth noting that these are just a few examples, and there are many other careers that involve working with children in various capacities.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:0b7f8340f3a58a0f72ba1253ebf82faf40590e6b3f3e598db353ac3fda5cd221",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ]
+}

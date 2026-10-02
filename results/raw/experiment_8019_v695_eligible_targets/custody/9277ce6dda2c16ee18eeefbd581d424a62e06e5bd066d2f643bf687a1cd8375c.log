@@ -1,0 +1,65 @@
+....F.                                                                   [100%]
+=================================== FAILURES ===================================
+______________________ test_prior_custody_and_development ______________________
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261002T060618-1150623-ee535484/test_prior_custody_and_develop0')
+
+    def test_prior_custody_and_development(tmp_path):
+        """SCENARIO-REPORT-8008-ISOLATION: checked roles survive durable relocation."""
+        bundle = fixture()
+        path = tmp_path / "source" / "bundle.json"
+        atomic_json(path, bundle)
+        primary = tmp_path / "results" / "experiment_8007_v694_conditioning_diagnosis.json"
+        value = e.prior.base([])
+        value.update(methods_ready_score=1, checkpoints=dict(bundle=e.reference(path)))
+        atomic_json(primary, value)
+        loaded, failures = e.load_bundle(tmp_path, tmp_path / "raw")
+        assert not failures and loaded["data"] == bundle["data"]
+        assert e.development(loaded, "calibration") == bundle["development"]["calibration"]
+        extra = tmp_path / "extra.json"
+        atomic_json(extra, dict(value=1))
+        loaded["nested"] = dict(checked=e.reference(extra), plain=["constant"])
+        atomic_json(path, loaded)
+        value["checkpoints"]["bundle"] = e.reference(path)
+        atomic_json(primary, value)
+>       loaded, failures = e.load_bundle(tmp_path, tmp_path / "raw")
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_conditioned_energy_8008.py:213: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/experiment_8008_v694_conditioned_energy_fit.py:422: in load_bundle
+    bundle = relocate(bundle)
+             ^^^^^^^^^^^^^^^^
+python/carnot/experiment_8008_v694_conditioned_energy_fit.py:417: in relocate
+    return {k: relocate(v) for k, v in node.items()}
+               ^^^^^^^^^^^
+python/carnot/experiment_8008_v694_conditioned_energy_fit.py:419: in relocate
+    return [relocate(v) for v in node]
+            ^^^^^^^^^^^
+python/carnot/experiment_8008_v694_conditioned_energy_fit.py:416: in relocate
+    return dict(node, **prior.copy_evidence(node, raw))
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+python/carnot/experiment_8007_v694_conditioning_diagnosis.py:120: in copy_evidence
+    shutil.copyfile(source, target)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+src = PosixPath('/tmp/pytest-carnot-ianblenke/20261002T060618-1150623-ee535484/test_prior_custody_and_develop0/raw/custody/5cdb91587af717e3552e99f0e1baa40b3ef2eac5a711c12cf7026d27b3a5058c.json')
+dst = PosixPath('/tmp/pytest-carnot-ianblenke/20261002T060618-1150623-ee535484/test_prior_custody_and_develop0/raw/custody/5cdb91587af717e3552e99f0e1baa40b3ef2eac5a711c12cf7026d27b3a5058c.json')
+
+    def copyfile(src, dst, *, follow_symlinks=True):
+        """Copy data from src to dst in the most efficient way possible.
+    
+        If follow_symlinks is not set and src is a symbolic link, a new
+        symlink will be created instead of copying the file it points to.
+    
+        """
+        sys.audit("shutil.copyfile", src, dst)
+    
+        if _samefile(src, dst):
+>           raise SameFileError("{!r} and {!r} are the same file".format(src, dst))
+E           shutil.SameFileError: PosixPath('/tmp/pytest-carnot-ianblenke/20261002T060618-1150623-ee535484/test_prior_custody_and_develop0/raw/custody/5cdb91587af717e3552e99f0e1baa40b3ef2eac5a711c12cf7026d27b3a5058c.json') and PosixPath('/tmp/pytest-carnot-ianblenke/20261002T060618-1150623-ee535484/test_prior_custody_and_develop0/raw/custody/5cdb91587af717e3552e99f0e1baa40b3ef2eac5a711c12cf7026d27b3a5058c.json') are the same file
+
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/shutil.py:240: SameFileError
+=========================== short test summary info ============================
+FAILED tests/python/test_conditioned_energy_8008.py::test_prior_custody_and_development
+1 failed, 5 passed in 31.14s

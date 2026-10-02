@@ -1,0 +1,107 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.3018147150287405,
+  "exclusion_reason": null,
+  "family_id": "sha256:d0d5071201b8e6b11679cfe7bca1201fc84706a8907e429235205f55a2f899ac",
+  "input_tokens": 714,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 714,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 737
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:81fed513639a8659d9eeec0e1279159824b66265f5d15376f13bd7d42eb3a272",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832714,
+    "id": "chatcmpl-seXtn8iWK2gmeFFfuwTYbqbvITZzaBw4",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.547,
+      "predicted_n": 23,
+      "predicted_per_second": 42.54949153357617,
+      "predicted_per_token_ms": 23.50204347826087,
+      "prompt_ms": 641.434,
+      "prompt_n": 636,
+      "prompt_per_second": 991.5283567755996,
+      "prompt_per_token_ms": 1.0085440251572326
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 714,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 737
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:These other plantings compete for nutrients, water and sunlight. Semi-dwarf trees need less space than standard apples, but more space than dwarfs. How much space your semi-dwarf apple tree needs depends on the variety and the root stock, but in general, space semi-dwarf apple trees 14 to 20 feet apart.ariety Selection. Most semi-dwarf apple trees aren't self-pollinating. You'll need to plant at least two trees to produce fruit. Select varieties that bloom at the same time and are known as good pollinators.\\\\n\\\\npassage 2:Choose an apple tree variety known to grow well in your region. Thanks to modern grafting techniques, apple trees come in three sizes: standard, semi-dwarf and dwarf. Semi-dwarf trees grow between 10 and 16 feet tall and bear fruit within four to five years.ariety Selection. Most semi-dwarf apple trees aren't self-pollinating. You'll need to plant at least two trees to produce fruit. Select varieties that bloom at the same time and are known as good pollinators.\\\\n\\\\npassage 3:Step 1. Locate a site for the dwarf apple tree where it will get at least six hours or more of full sun during the day. The soil will need to drain well, as the apple tree will slowly die in soggy soil.Clear away all the weeds, and mark a circle at least 2 feet wider than the root ball of the tree.tep 3. Set your stake into the hole just off center. It will need to be secured at least a foot into the ground, so pound it in with a sledge hammer. For many dwarf apple trees, this stake will need to remain in place for the life of the tree to help support the weight of the fruit.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to plant dwarf apple trees\\\"}\", \"original_answer\": \"To plant dwarf apple trees, first, select a variety that is known to grow well in your area and is a good pollinator. You will need to plant at least two trees for fruit production. Choose a location where the tree will receive at least six hours of full sun a day, with well-draining soil. Clear away weeds, marking a circle at least 2 feet wider than the root ball of the tree. Set a stake into the hole just off center, securing it at least a foot into the ground to help support the weight of the fruit as the tree matures. The stake will likely need to remain in place for the life of the tree.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:e2598759794e09804b9db2e8d4b0e14a8d7b2c0777d95174b452fce461b3bdf9",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ]
+}

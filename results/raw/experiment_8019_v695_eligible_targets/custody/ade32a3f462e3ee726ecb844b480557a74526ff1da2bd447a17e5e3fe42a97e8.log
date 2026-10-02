@@ -1,0 +1,660 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_________________________ test_isolation_and_reduction _________________________
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261002T060931-1151376-d2acd86c/test_isolation_and_reduction0')
+
+    def test_isolation_and_reduction(tmp_path):
+        """SCENARIO-REPORT-8008-ISOLATION: reserved targets cannot change base fitting."""
+        bundle = fixture()
+        fitted = e.train(bundle["data"], bundle["heads"], tmp_path)
+>       assert all(h["linear_initialization"]["converged"] for h in fitted["heads"]
+                   if h["arm"] == "conditioned_energy")
+
+tests/python/test_conditioned_energy_8008.py:88: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+.0 = <list_iterator object at 0x7ff066299120>
+
+>   assert all(h["linear_initialization"]["converged"] for h in fitted["heads"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+               if h["arm"] == "conditioned_energy")
+E   KeyError: 'linear_initialization'
+
+tests/python/test_conditioned_energy_8008.py:88: KeyError
+----------------------------- Captured stdout call -----------------------------
+[exp8008] phase=benchmark_before_conditioned_energy elapsed_s=0.019 units=17 pending=0
+[exp8008] phase=benchmark_before_conditioned_energy_seed_17_l2_0.0001 elapsed_s=0.019 units=0 pending=0
+[exp8008] epoch=0 seed=17 loss=0.693148176596 gradient=0.250002 elapsed_s=0.020 pending_steps=2000
+[exp8008] epoch=1 seed=17 loss=0.12707565108 gradient=0.0595725 elapsed_s=0.021 pending_steps=1999
+[exp8008] epoch=2 seed=17 loss=0.042888351626 gradient=0.0207949 elapsed_s=0.022 pending_steps=1998
+[exp8008] epoch=3 seed=17 loss=0.0157410938453 gradient=0.00749043 elapsed_s=0.022 pending_steps=1997
+[exp8008] epoch=4 seed=17 loss=0.00633674147157 gradient=0.00269699 elapsed_s=0.022 pending_steps=1996
+[exp8008] epoch=5 seed=17 loss=0.00313009799364 gradient=0.00094245 elapsed_s=0.023 pending_steps=1995
+[exp8008] epoch=6 seed=17 loss=0.00215721030337 gradient=0.000298038 elapsed_s=0.023 pending_steps=1994
+[exp8008] epoch=7 seed=17 loss=0.00194898833931 gradient=7.01119e-05 elapsed_s=0.024 pending_steps=1993
+[exp8008] epoch=8 seed=17 loss=0.00193046377211 gradient=7.27308e-06 elapsed_s=0.024 pending_steps=1992
+[exp8008] epoch=9 seed=17 loss=0.00193022903261 gradient=1.02321e-07 elapsed_s=0.025 pending_steps=1991
+[exp8008] epoch=10 seed=17 loss=0.00193022898525 gradient=2.09795e-11 elapsed_s=0.025 pending_steps=1990
+[exp8008] phase=benchmark_after_conditioned_energy_seed_17_l2_0.0001 elapsed_s=0.027 units=0 pending=0
+[exp8008] phase=benchmark_before_conditioned_energy_seed_17_l2_0.001 elapsed_s=0.027 units=0 pending=0
+[exp8008] epoch=0 seed=17 loss=0.693148176607 gradient=0.250002 elapsed_s=0.027 pending_steps=2000
+[exp8008] epoch=1 seed=17 loss=0.12840072042 gradient=0.0593123 elapsed_s=0.027 pending_steps=1999
+[exp8008] epoch=2 seed=17 loss=0.0457625048646 gradient=0.0204247 elapsed_s=0.028 pending_steps=1998
+[exp8008] epoch=3 seed=17 loss=0.0204869681913 gradient=0.00703774 elapsed_s=0.028 pending_steps=1997
+[exp8008] epoch=4 seed=17 loss=0.0130919212596 gradient=0.00220309 elapsed_s=0.028 pending_steps=1996
+[exp8008] epoch=5 seed=17 loss=0.0115589283548 gradient=0.000504373 elapsed_s=0.028 pending_steps=1995
+[exp8008] epoch=6 seed=17 loss=0.0114323102428 gradient=4.82887e-05 elapsed_s=0.028 pending_steps=1994
+[exp8008] epoch=7 seed=17 loss=0.0114309638142 gradient=5.63738e-07 elapsed_s=0.029 pending_steps=1993
+[exp8008] epoch=8 seed=17 loss=0.0114309636277 gradient=7.9067e-11 elapsed_s=0.029 pending_steps=1992
+[exp8008] phase=benchmark_after_conditioned_energy_seed_17_l2_0.001 elapsed_s=0.029 units=0 pending=0
+[exp8008] phase=benchmark_before_conditioned_energy_seed_17_l2_0.01 elapsed_s=0.029 units=0 pending=0
+[exp8008] epoch=0 seed=17 loss=0.693148176718 gradient=0.250002 elapsed_s=0.030 pending_steps=2000
+[exp8008] epoch=1 seed=17 loss=0.141295864038 gradient=0.0567891 elapsed_s=0.030 pending_steps=1999
+[exp8008] epoch=2 seed=17 loss=0.0722707637331 gradient=0.0171169 elapsed_s=0.030 pending_steps=1998
+[exp8008] epoch=3 seed=17 loss=0.0591338582672 gradient=0.00388145 elapsed_s=0.030 pending_steps=1997
+[exp8008] epoch=4 seed=17 loss=0.0580732793392 gradient=0.000365664 elapsed_s=0.031 pending_steps=1996
+[exp8008] epoch=5 seed=17 loss=0.0580623916302 gradient=4.1006e-06 elapsed_s=0.031 pending_steps=1995
+[exp8008] epoch=6 seed=17 loss=0.05806239024 gradient=5.29743e-10 elapsed_s=0.031 pending_steps=1994
+[exp8008] phase=benchmark_after_conditioned_energy_seed_17_l2_0.01 elapsed_s=0.031 units=0 pending=0
+[exp8008] epoch=0 seed=17 loss=0.693148176596 gradient=0.250002 elapsed_s=0.039 pending_steps=10
+[exp8008] epoch=1 seed=17 loss=0.683198165938 gradient=0.247501 elapsed_s=0.039 pending_steps=9
+[exp8008] epoch=2 seed=17 loss=0.673446185213 gradient=0.245026 elapsed_s=0.039 pending_steps=8
+[exp8008] epoch=3 seed=17 loss=0.663888245535 gradient=0.242577 elapsed_s=0.039 pending_steps=7
+[exp8008] epoch=4 seed=17 loss=0.654520403089 gradient=0.240154 elapsed_s=0.040 pending_steps=6
+[exp8008] epoch=5 seed=17 loss=0.645338761465 gradient=0.237756 elapsed_s=0.040 pending_steps=5
+[exp8008] epoch=6 seed=17 loss=0.636339473771 gradient=0.235385 elapsed_s=0.040 pending_steps=4
+[exp8008] epoch=7 seed=17 loss=0.627518744518 gradient=0.23304 elapsed_s=0.040 pending_steps=3
+[exp8008] epoch=8 seed=17 loss=0.618872831312 gradient=0.230722 elapsed_s=0.040 pending_steps=2
+[exp8008] epoch=9 seed=17 loss=0.610398046328 gradient=0.228429 elapsed_s=0.040 pending_steps=1
+[exp8008] epoch=10 seed=17 loss=0.60209075761 gradient=0.226163 elapsed_s=0.041 pending_steps=0
+[exp8008] phase=benchmark_after_conditioned_energy elapsed_s=0.041 units=17 pending=0
+[exp8008] phase=benchmark_before_conditioned_energy elapsed_s=0.041 units=29 pending=0
+[exp8008] phase=benchmark_before_conditioned_energy_seed_29_l2_0.0001 elapsed_s=0.041 units=0 pending=0
+[exp8008] epoch=0 seed=29 loss=0.693138908534 gradient=0.250004 elapsed_s=0.041 pending_steps=2000
+[exp8008] epoch=1 seed=29 loss=0.127075650938 gradient=0.0595725 elapsed_s=0.041 pending_steps=1999
+[exp8008] epoch=2 seed=29 loss=0.0428883515832 gradient=0.0207949 elapsed_s=0.041 pending_steps=1998
+[exp8008] epoch=3 seed=29 loss=0.0157410938307 gradient=0.00749043 elapsed_s=0.042 pending_steps=1997
+[exp8008] epoch=4 seed=29 loss=0.00633674146648 gradient=0.00269699 elapsed_s=0.042 pending_steps=1996
+[exp8008] epoch=5 seed=29 loss=0.00313009799199 gradient=0.00094245 elapsed_s=0.042 pending_steps=1995
+[exp8008] epoch=6 seed=29 loss=0.00215721030294 gradient=0.000298038 elapsed_s=0.042 pending_steps=1994
+[exp8008] epoch=7 seed=29 loss=0.00194898833925 gradient=7.01119e-05 elapsed_s=0.042 pending_steps=1993
+[exp8008] epoch=8 seed=29 loss=0.00193046377211 gradient=7.27308e-06 elapsed_s=0.043 pending_steps=1992
+[exp8008] epoch=9 seed=29 loss=0.00193022903261 gradient=1.02321e-07 elapsed_s=0.043 pending_steps=1991
+[exp8008] epoch=10 seed=29 loss=0.00193022898525 gradient=2.09795e-11 elapsed_s=0.043 pending_steps=1990
+[exp8008] phase=benchmark_after_conditioned_energy_seed_29_l2_0.0001 elapsed_s=0.044 units=0 pending=0
+[exp8008] phase=benchmark_before_conditioned_energy_seed_29_l2_0.001 elapsed_s=0.044 units=0 pending=0
+[exp8008] epoch=0 seed=29 loss=0.693138908546 gradient=0.250004 elapsed_s=0.044 pending_steps=2000
+[exp8008] epoch=1 seed=29 loss=0.128400720279 gradient=0.0593123 elapsed_s=0.044 pending_steps=1999
+[exp8008] epoch=2 seed=29 loss=0.0457625048235 gradient=0.0204247 elapsed_s=0.044 pending_steps=1998
+[exp8008] epoch=3 seed=29 loss=0.0204869681785 gradient=0.00703774 elapsed_s=0.045 pending_steps=1997
+[exp8008] epoch=4 seed=29 loss=0.0130919212564 gradient=0.00220309 elapsed_s=0.045 pending_steps=1996
+[exp8008] epoch=5 seed=29 loss=0.0115589283543 gradient=0.000504373 elapsed_s=0.045 pending_steps=1995
+[exp8008] epoch=6 seed=29 loss=0.0114323102428 gradient=4.82887e-05 elapsed_s=0.045 pending_steps=1994
+[exp8008] epoch=7 seed=29 loss=0.0114309638142 gradient=5.63738e-07 elapsed_s=0.046 pending_steps=1993
+[exp8008] epoch=8 seed=29 loss=0.0114309636277 gradient=7.9067e-11 elapsed_s=0.046 pending_steps=1992
+[exp8008] phase=benchmark_after_conditioned_energy_seed_29_l2_0.001 elapsed_s=0.046 units=0 pending=0
+[exp8008] phase=benchmark_before_conditioned_energy_seed_29_l2_0.01 elapsed_s=0.046 units=0 pending=0
+[exp8008] epoch=0 seed=29 loss=0.693138908664 gradient=0.250004 elapsed_s=0.047 pending_steps=2000
+[exp8008] epoch=1 seed=29 loss=0.141295863908 gradient=0.0567891 elapsed_s=0.047 pending_steps=1999
+[exp8008] epoch=2 seed=29 loss=0.0722707637048 gradient=0.0171169 elapsed_s=0.047 pending_steps=1998
+[exp8008] epoch=3 seed=29 loss=0.0591338582638 gradient=0.00388145 elapsed_s=0.047 pending_steps=1997
+[exp8008] epoch=4 seed=29 loss=0.0580732793392 gradient=0.000365664 elapsed_s=0.048 pending_steps=1996
+[exp8008] epoch=5 seed=29 loss=0.0580623916302 gradient=4.1006e-06 elapsed_s=0.048 pending_steps=1995
+[exp8008] epoch=6 seed=29 loss=0.05806239024 gradient=5.29743e-10 elapsed_s=0.048 pending_steps=1994
+[exp8008] phase=benchmark_after_conditioned_energy_seed_29_l2_0.01 elapsed_s=0.048 units=0 pending=0
+[exp8008] epoch=0 seed=29 loss=0.693138908534 gradient=0.250004 elapsed_s=0.055 pending_steps=10
+[exp8008] epoch=1 seed=29 loss=0.683189082341 gradient=0.247503 elapsed_s=0.055 pending_steps=9
+[exp8008] epoch=2 seed=29 loss=0.673437282383 gradient=0.245028 elapsed_s=0.055 pending_steps=8
+[exp8008] epoch=3 seed=29 loss=0.663879519814 gradient=0.242579 elapsed_s=0.056 pending_steps=7
+[exp8008] epoch=4 seed=29 loss=0.654511850862 gradient=0.240156 elapsed_s=0.056 pending_steps=6
+[exp8008] epoch=5 seed=29 loss=0.645330379162 gradient=0.237758 elapsed_s=0.056 pending_steps=5
+[exp8008] epoch=6 seed=29 loss=0.636331257866 gradient=0.235387 elapsed_s=0.056 pending_steps=4
+[exp8008] epoch=7 seed=29 loss=0.627510691537 gradient=0.233042 elapsed_s=0.056 pending_steps=3
+[exp8008] epoch=8 seed=29 loss=0.618864937828 gradient=0.230723 elapsed_s=0.056 pending_steps=2
+[exp8008] epoch=9 seed=29 loss=0.610390308967 gradient=0.228431 elapsed_s=0.057 pending_steps=1
+[exp8008] epoch=10 seed=29 loss=0.602083173048 gradient=0.226165 elapsed_s=0.057 pending_steps=0
+[exp8008] phase=benchmark_after_conditioned_energy elapsed_s=0.057 units=29 pending=0
+[exp8008] phase=benchmark_before_conditioned_energy elapsed_s=0.057 units=43 pending=0
+[exp8008] phase=benchmark_before_conditioned_energy_seed_43_l2_0.0001 elapsed_s=0.057 units=0 pending=0
+[exp8008] epoch=0 seed=43 loss=0.693140203815 gradient=0.250001 elapsed_s=0.057 pending_steps=2000
+[exp8008] epoch=1 seed=43 loss=0.127075651049 gradient=0.0595725 elapsed_s=0.057 pending_steps=1999
+[exp8008] epoch=2 seed=43 loss=0.0428883516166 gradient=0.0207949 elapsed_s=0.058 pending_steps=1998
+[exp8008] epoch=3 seed=43 loss=0.0157410938421 gradient=0.00749043 elapsed_s=0.058 pending_steps=1997
+[exp8008] epoch=4 seed=43 loss=0.00633674147045 gradient=0.00269699 elapsed_s=0.058 pending_steps=1996
+[exp8008] epoch=5 seed=43 loss=0.00313009799328 gradient=0.00094245 elapsed_s=0.058 pending_steps=1995
+[exp8008] epoch=6 seed=43 loss=0.00215721030328 gradient=0.000298038 elapsed_s=0.058 pending_steps=1994
+[exp8008] epoch=7 seed=43 loss=0.00194898833929 gradient=7.01119e-05 elapsed_s=0.059 pending_steps=1993
+[exp8008] epoch=8 seed=43 loss=0.00193046377211 gradient=7.27308e-06 elapsed_s=0.059 pending_steps=1992
+[exp8008] epoch=9 seed=43 loss=0.00193022903261 gradient=1.02321e-07 elapsed_s=0.059 pending_steps=1991
+[exp8008] epoch=10 seed=43 loss=0.00193022898525 gradient=2.09795e-11 elapsed_s=0.059 pending_steps=1990
+[exp8008] phase=benchmark_after_conditioned_energy_seed_43_l2_0.0001 elapsed_s=0.060 units=0 pending=0
+[exp8008] phase=benchmark_before_conditioned_energy_seed_43_l2_0.001 elapsed_s=0.060 units=0 pending=0
+[exp8008] epoch=0 seed=43 loss=0.693140203825 gradient=0.250001 elapsed_s=0.060 pending_steps=2000
+[exp8008] epoch=1 seed=43 loss=0.128400720389 gradient=0.0593123 elapsed_s=0.061 pending_steps=1999
+[exp8008] epoch=2 seed=43 loss=0.0457625048556 gradient=0.0204247 elapsed_s=0.061 pending_steps=1998
+[exp8008] epoch=3 seed=43 loss=0.0204869681885 gradient=0.00703774 elapsed_s=0.061 pending_steps=1997
+[exp8008] epoch=4 seed=43 loss=0.0130919212589 gradient=0.00220309 elapsed_s=0.061 pending_steps=1996
+[exp8008] epoch=5 seed=43 loss=0.0115589283547 gradient=0.000504373 elapsed_s=0.061 pending_steps=1995
+[exp8008] epoch=6 seed=43 loss=0.0114323102428 gradient=4.82887e-05 elapsed_s=0.062 pending_steps=1994
+[exp8008] epoch=7 seed=43 loss=0.0114309638142 gradient=5.63738e-07 elapsed_s=0.062 pending_steps=1993
+[exp8008] epoch=8 seed=43 loss=0.0114309636277 gradient=7.9067e-11 elapsed_s=0.062 pending_steps=1992
+[exp8008] phase=benchmark_after_conditioned_energy_seed_43_l2_0.001 elapsed_s=0.062 units=0 pending=0
+[exp8008] phase=benchmark_before_conditioned_energy_seed_43_l2_0.01 elapsed_s=0.062 units=0 pending=0
+[exp8008] epoch=0 seed=43 loss=0.693140203929 gradient=0.250001 elapsed_s=0.063 pending_steps=2000
+[exp8008] epoch=1 seed=43 loss=0.141295864009 gradient=0.0567891 elapsed_s=0.063 pending_steps=1999
+[exp8008] epoch=2 seed=43 loss=0.0722707637269 gradient=0.0171169 elapsed_s=0.063 pending_steps=1998
+[exp8008] epoch=3 seed=43 loss=0.0591338582665 gradient=0.00388145 elapsed_s=0.064 pending_steps=1997
+[exp8008] epoch=4 seed=43 loss=0.0580732793392 gradient=0.000365664 elapsed_s=0.064 pending_steps=1996
+[exp8008] epoch=5 seed=43 loss=0.0580623916302 gradient=4.1006e-06 elapsed_s=0.064 pending_steps=1995
+[exp8008] epoch=6 seed=43 loss=0.05806239024 gradient=5.29743e-10 elapsed_s=0.064 pending_steps=1994
+[exp8008] phase=benchmark_after_conditioned_energy_seed_43_l2_0.01 elapsed_s=0.065 units=0 pending=0
+[exp8008] epoch=0 seed=43 loss=0.693140203815 gradient=0.250001 elapsed_s=0.071 pending_steps=10
+[exp8008] epoch=1 seed=43 loss=0.683190351843 gradient=0.2475 elapsed_s=0.072 pending_steps=9
+[exp8008] epoch=2 seed=43 loss=0.673438526623 gradient=0.245026 elapsed_s=0.072 pending_steps=8
+[exp8008] epoch=3 seed=43 loss=0.663880739304 gradient=0.242576 elapsed_s=0.072 pending_steps=7
+[exp8008] epoch=4 seed=43 loss=0.654513046107 gradient=0.240153 elapsed_s=0.072 pending_steps=6
+[exp8008] epoch=5 seed=43 loss=0.64533155066 gradient=0.237756 elapsed_s=0.072 pending_steps=5
+[exp8008] epoch=6 seed=43 loss=0.636332406111 gradient=0.235384 elapsed_s=0.072 pending_steps=4
+[exp8008] epoch=7 seed=43 loss=0.627511817014 gradient=0.23304 elapsed_s=0.073 pending_steps=3
+[exp8008] epoch=8 seed=43 loss=0.618866041015 gradient=0.230721 elapsed_s=0.073 pending_steps=2
+[exp8008] epoch=9 seed=43 loss=0.610391390336 gradient=0.228429 elapsed_s=0.073 pending_steps=1
+[exp8008] epoch=10 seed=43 loss=0.602084233064 gradient=0.226163 elapsed_s=0.073 pending_steps=0
+[exp8008] phase=benchmark_after_conditioned_energy elapsed_s=0.073 units=43 pending=0
+[exp8008] phase=benchmark_before_conditioned_energy elapsed_s=0.073 units=71 pending=0
+[exp8008] phase=benchmark_before_conditioned_energy_seed_71_l2_0.0001 elapsed_s=0.073 units=0 pending=0
+[exp8008] epoch=0 seed=71 loss=0.693149940053 gradient=0.250004 elapsed_s=0.074 pending_steps=2000
+[exp8008] epoch=1 seed=71 loss=0.127075651036 gradient=0.0595725 elapsed_s=0.074 pending_steps=1999
+[exp8008] epoch=2 seed=71 loss=0.0428883516128 gradient=0.0207949 elapsed_s=0.074 pending_steps=1998
+[exp8008] epoch=3 seed=71 loss=0.0157410938408 gradient=0.00749043 elapsed_s=0.074 pending_steps=1997
+[exp8008] epoch=4 seed=71 loss=0.00633674147 gradient=0.00269699 elapsed_s=0.074 pending_steps=1996
+[exp8008] epoch=5 seed=71 loss=0.00313009799313 gradient=0.00094245 elapsed_s=0.075 pending_steps=1995
+[exp8008] epoch=6 seed=71 loss=0.00215721030324 gradient=0.000298038 elapsed_s=0.075 pending_steps=1994
+[exp8008] epoch=7 seed=71 loss=0.00194898833929 gradient=7.01119e-05 elapsed_s=0.075 pending_steps=1993
+[exp8008] epoch=8 seed=71 loss=0.00193046377211 gradient=7.27308e-06 elapsed_s=0.075 pending_steps=1992
+[exp8008] epoch=9 seed=71 loss=0.00193022903261 gradient=1.02321e-07 elapsed_s=0.075 pending_steps=1991
+[exp8008] epoch=10 seed=71 loss=0.00193022898525 gradient=2.09795e-11 elapsed_s=0.076 pending_steps=1990
+[exp8008] phase=benchmark_after_conditioned_energy_seed_71_l2_0.0001 elapsed_s=0.076 units=0 pending=0
+[exp8008] phase=benchmark_before_conditioned_energy_seed_71_l2_0.001 elapsed_s=0.076 units=0 pending=0
+[exp8008] epoch=0 seed=71 loss=0.69314994006 gradient=0.250004 elapsed_s=0.077 pending_steps=2000
+[exp8008] epoch=1 seed=71 loss=0.128400720376 gradient=0.0593123 elapsed_s=0.077 pending_steps=1999
+[exp8008] epoch=2 seed=71 loss=0.0457625048519 gradient=0.0204247 elapsed_s=0.077 pending_steps=1998
+[exp8008] epoch=3 seed=71 loss=0.0204869681873 gradient=0.00703774 elapsed_s=0.077 pending_steps=1997
+[exp8008] epoch=4 seed=71 loss=0.0130919212586 gradient=0.00220309 elapsed_s=0.078 pending_steps=1996
+[exp8008] epoch=5 seed=71 loss=0.0115589283546 gradient=0.000504373 elapsed_s=0.078 pending_steps=1995
+[exp8008] epoch=6 seed=71 loss=0.0114323102428 gradient=4.82887e-05 elapsed_s=0.078 pending_steps=1994
+[exp8008] epoch=7 seed=71 loss=0.0114309638142 gradient=5.63738e-07 elapsed_s=0.078 pending_steps=1993
+[exp8008] epoch=8 seed=71 loss=0.0114309636277 gradient=7.9067e-11 elapsed_s=0.078 pending_steps=1992
+[exp8008] phase=benchmark_after_conditioned_energy_seed_71_l2_0.001 elapsed_s=0.079 units=0 pending=0
+[exp8008] phase=benchmark_before_conditioned_energy_seed_71_l2_0.01 elapsed_s=0.079 units=0 pending=0
+[exp8008] epoch=0 seed=71 loss=0.693149940121 gradient=0.250004 elapsed_s=0.079 pending_steps=2000
+[exp8008] epoch=1 seed=71 loss=0.141295863998 gradient=0.0567891 elapsed_s=0.079 pending_steps=1999
+[exp8008] epoch=2 seed=71 loss=0.0722707637244 gradient=0.0171169 elapsed_s=0.080 pending_steps=1998
+[exp8008] epoch=3 seed=71 loss=0.0591338582662 gradient=0.00388145 elapsed_s=0.080 pending_steps=1997
+[exp8008] epoch=4 seed=71 loss=0.0580732793392 gradient=0.000365664 elapsed_s=0.080 pending_steps=1996
+[exp8008] epoch=5 seed=71 loss=0.0580623916302 gradient=4.1006e-06 elapsed_s=0.080 pending_steps=1995
+[exp8008] epoch=6 seed=71 loss=0.05806239024 gradient=5.29743e-10 elapsed_s=0.081 pending_steps=1994
+[exp8008] phase=benchmark_after_conditioned_energy_seed_71_l2_0.01 elapsed_s=0.081 units=0 pending=0
+[exp8008] epoch=0 seed=71 loss=0.693149940053 gradient=0.250004 elapsed_s=0.088 pending_steps=10
+[exp8008] epoch=1 seed=71 loss=0.683199894295 gradient=0.247504 elapsed_s=0.088 pending_steps=9
+[exp8008] epoch=2 seed=71 loss=0.673447879174 gradient=0.245029 elapsed_s=0.088 pending_steps=8
+[exp8008] epoch=3 seed=71 loss=0.663889905796 gradient=0.24258 elapsed_s=0.088 pending_steps=7
+[exp8008] epoch=4 seed=71 loss=0.654522030337 gradient=0.240156 elapsed_s=0.088 pending_steps=6
+[exp8008] epoch=5 seed=71 loss=0.64534035638 gradient=0.237759 elapsed_s=0.089 pending_steps=5
+[exp8008] epoch=6 seed=71 loss=0.636341037023 gradient=0.235388 elapsed_s=0.089 pending_steps=4
+[exp8008] epoch=7 seed=71 loss=0.62752027677 gradient=0.233043 elapsed_s=0.089 pending_steps=3
+[exp8008] epoch=8 seed=71 loss=0.618874333214 gradient=0.230724 elapsed_s=0.089 pending_steps=2
+[exp8008] epoch=9 seed=71 loss=0.610399518523 gradient=0.228432 elapsed_s=0.089 pending_steps=1
+[exp8008] epoch=10 seed=71 loss=0.602092200731 gradient=0.226166 elapsed_s=0.089 pending_steps=0
+[exp8008] phase=benchmark_after_conditioned_energy elapsed_s=0.089 units=71 pending=0
+[exp8008] phase=benchmark_before_conditioned_energy elapsed_s=0.089 units=101 pending=0
+[exp8008] phase=benchmark_before_conditioned_energy_seed_101_l2_0.0001 elapsed_s=0.089 units=0 pending=0
+[exp8008] epoch=0 seed=101 loss=0.693150820564 gradient=0.250005 elapsed_s=0.090 pending_steps=2000
+[exp8008] epoch=1 seed=101 loss=0.12707565103 gradient=0.0595725 elapsed_s=0.090 pending_steps=1999
+[exp8008] epoch=2 seed=101 loss=0.0428883516109 gradient=0.0207949 elapsed_s=0.090 pending_steps=1998
+[exp8008] epoch=3 seed=101 loss=0.0157410938401 gradient=0.00749043 elapsed_s=0.091 pending_steps=1997
+[exp8008] epoch=4 seed=101 loss=0.00633674146978 gradient=0.00269699 elapsed_s=0.091 pending_steps=1996
+[exp8008] epoch=5 seed=101 loss=0.00313009799306 gradient=0.00094245 elapsed_s=0.091 pending_steps=1995
+[exp8008] epoch=6 seed=101 loss=0.00215721030322 gradient=0.000298038 elapsed_s=0.091 pending_steps=1994
+[exp8008] epoch=7 seed=101 loss=0.00194898833928 gradient=7.01119e-05 elapsed_s=0.091 pending_steps=1993
+[exp8008] epoch=8 seed=101 loss=0.00193046377211 gradient=7.27308e-06 elapsed_s=0.092 pending_steps=1992
+[exp8008] epoch=9 seed=101 loss=0.00193022903261 gradient=1.02321e-07 elapsed_s=0.092 pending_steps=1991
+[exp8008] epoch=10 seed=101 loss=0.00193022898525 gradient=2.09795e-11 elapsed_s=0.092 pending_steps=1990
+[exp8008] phase=benchmark_after_conditioned_energy_seed_101_l2_0.0001 elapsed_s=0.092 units=0 pending=0
+[exp8008] phase=benchmark_before_conditioned_energy_seed_101_l2_0.001 elapsed_s=0.092 units=0 pending=0
+[exp8008] epoch=0 seed=101 loss=0.693150820576 gradient=0.250005 elapsed_s=0.093 pending_steps=2000
+[exp8008] epoch=1 seed=101 loss=0.12840072037 gradient=0.0593123 elapsed_s=0.093 pending_steps=1999
+[exp8008] epoch=2 seed=101 loss=0.0457625048501 gradient=0.0204247 elapsed_s=0.093 pending_steps=1998
+[exp8008] epoch=3 seed=101 loss=0.0204869681868 gradient=0.00703774 elapsed_s=0.094 pending_steps=1997
+[exp8008] epoch=4 seed=101 loss=0.0130919212585 gradient=0.00220309 elapsed_s=0.094 pending_steps=1996
+[exp8008] epoch=5 seed=101 loss=0.0115589283546 gradient=0.000504373 elapsed_s=0.094 pending_steps=1995
+[exp8008] epoch=6 seed=101 loss=0.0114323102428 gradient=4.82887e-05 elapsed_s=0.094 pending_steps=1994
+[exp8008] epoch=7 seed=101 loss=0.0114309638142 gradient=5.63738e-07 elapsed_s=0.094 pending_steps=1993
+[exp8008] epoch=8 seed=101 loss=0.0114309636277 gradient=7.9067e-11 elapsed_s=0.095 pending_steps=1992
+[exp8008] phase=benchmark_after_conditioned_energy_seed_101_l2_0.001 elapsed_s=0.095 units=0 pending=0
+[exp8008] phase=benchmark_before_conditioned_energy_seed_101_l2_0.01 elapsed_s=0.095 units=0 pending=0
+[exp8008] epoch=0 seed=101 loss=0.693150820692 gradient=0.250005 elapsed_s=0.096 pending_steps=2000
+[exp8008] epoch=1 seed=101 loss=0.141295863992 gradient=0.0567891 elapsed_s=0.096 pending_steps=1999
+[exp8008] epoch=2 seed=101 loss=0.0722707637231 gradient=0.0171169 elapsed_s=0.096 pending_steps=1998
+[exp8008] epoch=3 seed=101 loss=0.059133858266 gradient=0.00388145 elapsed_s=0.096 pending_steps=1997
+[exp8008] epoch=4 seed=101 loss=0.0580732793392 gradient=0.000365664 elapsed_s=0.096 pending_steps=1996
+[exp8008] epoch=5 seed=101 loss=0.0580623916302 gradient=4.1006e-06 elapsed_s=0.097 pending_steps=1995
+[exp8008] epoch=6 seed=101 loss=0.05806239024 gradient=5.29743e-10 elapsed_s=0.097 pending_steps=1994
+[exp8008] phase=benchmark_after_conditioned_energy_seed_101_l2_0.01 elapsed_s=0.097 units=0 pending=0
+[exp8008] epoch=0 seed=101 loss=0.693150820564 gradient=0.250005 elapsed_s=0.104 pending_steps=10
+[exp8008] epoch=1 seed=101 loss=0.68320075728 gradient=0.247504 elapsed_s=0.104 pending_steps=9
+[exp8008] epoch=2 seed=101 loss=0.673448724985 gradient=0.245029 elapsed_s=0.104 pending_steps=8
+[exp8008] epoch=3 seed=101 loss=0.66389073478 gradient=0.24258 elapsed_s=0.105 pending_steps=7
+[exp8008] epoch=4 seed=101 loss=0.654522842838 gradient=0.240157 elapsed_s=0.105 pending_steps=6
+[exp8008] epoch=5 seed=101 loss=0.645341152738 gradient=0.237759 elapsed_s=0.105 pending_steps=5
+[exp8008] epoch=6 seed=101 loss=0.636341817571 gradient=0.235388 elapsed_s=0.105 pending_steps=4
+[exp8008] epoch=7 seed=101 loss=0.627521041839 gradient=0.233043 elapsed_s=0.105 pending_steps=3
+[exp8008] epoch=8 seed=101 loss=0.61887508313 gradient=0.230724 elapsed_s=0.105 pending_steps=2
+[exp8008] epoch=9 seed=101 loss=0.610400253607 gradient=0.228432 elapsed_s=0.106 pending_steps=1
+[exp8008] epoch=10 seed=101 loss=0.602092921297 gradient=0.226166 elapsed_s=0.106 pending_steps=0
+[exp8008] phase=benchmark_after_conditioned_energy elapsed_s=0.106 units=101 pending=0
+[exp8008] phase=benchmark_before_linear elapsed_s=0.106 units=17 pending=0
+[exp8008] phase=benchmark_before_linear_seed_17_l2_0.0001 elapsed_s=0.106 units=0 pending=0
+[exp8008] epoch=0 seed=17 loss=0.693160286876 gradient=0.250007 elapsed_s=0.106 pending_steps=2000
+[exp8008] epoch=1 seed=17 loss=0.127811964258 gradient=0.0595435 elapsed_s=0.106 pending_steps=1999
+[exp8008] epoch=2 seed=17 loss=0.0444862006102 gradient=0.0207536 elapsed_s=0.106 pending_steps=1998
+[exp8008] epoch=3 seed=17 loss=0.0183829033378 gradient=0.00743931 elapsed_s=0.106 pending_steps=1997
+[exp8008] epoch=4 seed=17 loss=0.0101093606417 gradient=0.00263888 elapsed_s=0.106 pending_steps=1996
+[exp8008] epoch=5 seed=17 loss=0.00786947956384 gradient=0.000883681 elapsed_s=0.106 pending_steps=1995
+[exp8008] epoch=6 seed=17 loss=0.00742034565838 gradient=0.000249842 elapsed_s=0.106 pending_steps=1994
+[exp8008] epoch=7 seed=17 loss=0.00736055436506 gradient=4.40451e-05 elapsed_s=0.106 pending_steps=1993
+[exp8008] epoch=8 seed=17 loss=0.00735800928263 gradient=2.22094e-06 elapsed_s=0.106 pending_steps=1992
+[exp8008] epoch=9 seed=17 loss=0.00735800232144 gradient=6.44361e-09 elapsed_s=0.106 pending_steps=1991
+[exp8008] phase=benchmark_after_linear_seed_17_l2_0.0001 elapsed_s=0.106 units=0 pending=0
+[exp8008] phase=benchmark_before_linear_seed_17_l2_0.001 elapsed_s=0.106 units=0 pending=0
+[exp8008] epoch=0 seed=17 loss=0.693160286877 gradient=0.250007 elapsed_s=0.107 pending_steps=2000
+[exp8008] epoch=1 seed=17 loss=0.135580248953 gradient=0.0590295 elapsed_s=0.107 pending_steps=1999
+[exp8008] epoch=2 seed=17 loss=0.0605825911143 gradient=0.0200418 elapsed_s=0.107 pending_steps=1998
+[exp8008] epoch=3 seed=17 loss=0.0422862718796 gradient=0.00662782 elapsed_s=0.107 pending_steps=1997
+[exp8008] epoch=4 seed=17 loss=0.0387729951511 gradient=0.00186752 elapsed_s=0.107 pending_steps=1996
+[exp8008] epoch=5 seed=17 loss=0.0383113155145 gradient=0.000329415 elapsed_s=0.107 pending_steps=1995
+[exp8008] epoch=6 seed=17 loss=0.0382915961912 gradient=1.66139e-05 elapsed_s=0.107 pending_steps=1994
+[exp8008] epoch=7 seed=17 loss=0.038291542237 gradient=4.81493e-08 elapsed_s=0.107 pending_steps=1993
+[exp8008] epoch=8 seed=17 loss=0.0382915422365 gradient=4.07403e-13 elapsed_s=0.107 pending_steps=1992
+[exp8008] phase=benchmark_after_linear_seed_17_l2_0.001 elapsed_s=0.107 units=0 pending=0
+[exp8008] phase=benchmark_before_linear_seed_17_l2_0.01 elapsed_s=0.107 units=0 pending=0
+[exp8008] epoch=0 seed=17 loss=0.693160286884 gradient=0.250007 elapsed_s=0.107 pending_steps=2000
+[exp8008] epoch=1 seed=17 loss=0.198482654681 gradient=0.0544994 elapsed_s=0.107 pending_steps=1999
+[exp8008] epoch=2 seed=17 loss=0.160650094047 gradient=0.0150145 elapsed_s=0.107 pending_steps=1998
+[exp8008] epoch=3 seed=17 loss=0.156127789577 gradient=0.00279745 elapsed_s=0.107 pending_steps=1997
+[exp8008] epoch=4 seed=17 loss=0.155905866252 gradient=0.00016569 elapsed_s=0.107 pending_steps=1996
+[exp8008] epoch=5 seed=17 loss=0.155905017037 gradient=6.77815e-07 elapsed_s=0.107 pending_steps=1995
+[exp8008] epoch=6 seed=17 loss=0.155905017023 gradient=1.14611e-11 elapsed_s=0.107 pending_steps=1994
+[exp8008] phase=benchmark_after_linear_seed_17_l2_0.01 elapsed_s=0.107 units=0 pending=0
+[exp8008] phase=benchmark_after_linear elapsed_s=0.107 units=17 pending=0
+[exp8008] phase=benchmark_before_linear elapsed_s=0.107 units=29 pending=0
+[exp8008] phase=benchmark_before_linear_seed_29_l2_0.0001 elapsed_s=0.107 units=0 pending=0
+[exp8008] epoch=0 seed=29 loss=0.693146256148 gradient=0.25 elapsed_s=0.108 pending_steps=2000
+[exp8008] epoch=1 seed=29 loss=0.12781196434 gradient=0.0595435 elapsed_s=0.108 pending_steps=1999
+[exp8008] epoch=2 seed=29 loss=0.0444862006346 gradient=0.0207536 elapsed_s=0.108 pending_steps=1998
+[exp8008] epoch=3 seed=29 loss=0.0183829033461 gradient=0.00743931 elapsed_s=0.108 pending_steps=1997
+[exp8008] epoch=4 seed=29 loss=0.0101093606444 gradient=0.00263888 elapsed_s=0.108 pending_steps=1996
+[exp8008] epoch=5 seed=29 loss=0.00786947956466 gradient=0.000883681 elapsed_s=0.108 pending_steps=1995
+[exp8008] epoch=6 seed=29 loss=0.00742034565855 gradient=0.000249842 elapsed_s=0.108 pending_steps=1994
+[exp8008] epoch=7 seed=29 loss=0.00736055436508 gradient=4.40451e-05 elapsed_s=0.108 pending_steps=1993
+[exp8008] epoch=8 seed=29 loss=0.00735800928263 gradient=2.22094e-06 elapsed_s=0.108 pending_steps=1992
+[exp8008] epoch=9 seed=29 loss=0.00735800232144 gradient=6.44361e-09 elapsed_s=0.108 pending_steps=1991
+[exp8008] phase=benchmark_after_linear_seed_29_l2_0.0001 elapsed_s=0.108 units=0 pending=0
+[exp8008] phase=benchmark_before_linear_seed_29_l2_0.001 elapsed_s=0.108 units=0 pending=0
+[exp8008] epoch=0 seed=29 loss=0.693146256148 gradient=0.25 elapsed_s=0.108 pending_steps=2000
+[exp8008] epoch=1 seed=29 loss=0.135580249033 gradient=0.0590295 elapsed_s=0.108 pending_steps=1999
+[exp8008] epoch=2 seed=29 loss=0.060582591137 gradient=0.0200418 elapsed_s=0.108 pending_steps=1998
+[exp8008] epoch=3 seed=29 loss=0.042286271886 gradient=0.00662782 elapsed_s=0.108 pending_steps=1997
+[exp8008] epoch=4 seed=29 loss=0.0387729951524 gradient=0.00186752 elapsed_s=0.108 pending_steps=1996
+[exp8008] epoch=5 seed=29 loss=0.0383113155146 gradient=0.000329415 elapsed_s=0.108 pending_steps=1995
+[exp8008] epoch=6 seed=29 loss=0.0382915961912 gradient=1.66139e-05 elapsed_s=0.108 pending_steps=1994
+[exp8008] epoch=7 seed=29 loss=0.038291542237 gradient=4.81493e-08 elapsed_s=0.108 pending_steps=1993
+[exp8008] epoch=8 seed=29 loss=0.0382915422365 gradient=4.07402e-13 elapsed_s=0.108 pending_steps=1992
+[exp8008] phase=benchmark_after_linear_seed_29_l2_0.001 elapsed_s=0.109 units=0 pending=0
+[exp8008] phase=benchmark_before_linear_seed_29_l2_0.01 elapsed_s=0.109 units=0 pending=0
+[exp8008] epoch=0 seed=29 loss=0.693146256148 gradient=0.25 elapsed_s=0.109 pending_steps=2000
+[exp8008] epoch=1 seed=29 loss=0.198482654751 gradient=0.0544994 elapsed_s=0.109 pending_steps=1999
+[exp8008] epoch=2 seed=29 loss=0.16065009406 gradient=0.0150145 elapsed_s=0.109 pending_steps=1998
+[exp8008] epoch=3 seed=29 loss=0.156127789578 gradient=0.00279745 elapsed_s=0.109 pending_steps=1997
+[exp8008] epoch=4 seed=29 loss=0.155905866252 gradient=0.00016569 elapsed_s=0.109 pending_steps=1996
+[exp8008] epoch=5 seed=29 loss=0.155905017037 gradient=6.77815e-07 elapsed_s=0.109 pending_steps=1995
+[exp8008] epoch=6 seed=29 loss=0.155905017023 gradient=1.14612e-11 elapsed_s=0.109 pending_steps=1994
+[exp8008] phase=benchmark_after_linear_seed_29_l2_0.01 elapsed_s=0.109 units=0 pending=0
+[exp8008] phase=benchmark_after_linear elapsed_s=0.109 units=29 pending=0
+[exp8008] phase=benchmark_before_linear elapsed_s=0.109 units=43 pending=0
+[exp8008] phase=benchmark_before_linear_seed_43_l2_0.0001 elapsed_s=0.109 units=0 pending=0
+[exp8008] epoch=0 seed=43 loss=0.69315317421 gradient=0.250003 elapsed_s=0.109 pending_steps=2000
+[exp8008] epoch=1 seed=43 loss=0.127811964323 gradient=0.0595435 elapsed_s=0.109 pending_steps=1999
+[exp8008] epoch=2 seed=43 loss=0.0444862006296 gradient=0.0207536 elapsed_s=0.109 pending_steps=1998
+[exp8008] epoch=3 seed=43 loss=0.0183829033444 gradient=0.00743931 elapsed_s=0.109 pending_steps=1997
+[exp8008] epoch=4 seed=43 loss=0.0101093606439 gradient=0.00263888 elapsed_s=0.109 pending_steps=1996
+[exp8008] epoch=5 seed=43 loss=0.00786947956449 gradient=0.000883681 elapsed_s=0.109 pending_steps=1995
+[exp8008] epoch=6 seed=43 loss=0.00742034565852 gradient=0.000249842 elapsed_s=0.109 pending_steps=1994
+[exp8008] epoch=7 seed=43 loss=0.00736055436507 gradient=4.40451e-05 elapsed_s=0.109 pending_steps=1993
+[exp8008] epoch=8 seed=43 loss=0.00735800928263 gradient=2.22094e-06 elapsed_s=0.109 pending_steps=1992
+[exp8008] epoch=9 seed=43 loss=0.00735800232144 gradient=6.44361e-09 elapsed_s=0.110 pending_steps=1991
+[exp8008] phase=benchmark_after_linear_seed_43_l2_0.0001 elapsed_s=0.110 units=0 pending=0
+[exp8008] phase=benchmark_before_linear_seed_43_l2_0.001 elapsed_s=0.110 units=0 pending=0
+[exp8008] epoch=0 seed=43 loss=0.693153174211 gradient=0.250003 elapsed_s=0.110 pending_steps=2000
+[exp8008] epoch=1 seed=43 loss=0.135580249017 gradient=0.0590295 elapsed_s=0.110 pending_steps=1999
+[exp8008] epoch=2 seed=43 loss=0.0605825911323 gradient=0.0200418 elapsed_s=0.110 pending_steps=1998
+[exp8008] epoch=3 seed=43 loss=0.0422862718847 gradient=0.00662782 elapsed_s=0.110 pending_steps=1997
+[exp8008] epoch=4 seed=43 loss=0.0387729951521 gradient=0.00186752 elapsed_s=0.110 pending_steps=1996
+[exp8008] epoch=5 seed=43 loss=0.0383113155145 gradient=0.000329415 elapsed_s=0.110 pending_steps=1995
+[exp8008] epoch=6 seed=43 loss=0.0382915961912 gradient=1.66139e-05 elapsed_s=0.110 pending_steps=1994
+[exp8008] epoch=7 seed=43 loss=0.038291542237 gradient=4.81493e-08 elapsed_s=0.110 pending_steps=1993
+[exp8008] epoch=8 seed=43 loss=0.0382915422365 gradient=4.07406e-13 elapsed_s=0.110 pending_steps=1992
+[exp8008] phase=benchmark_after_linear_seed_43_l2_0.001 elapsed_s=0.110 units=0 pending=0
+[exp8008] phase=benchmark_before_linear_seed_43_l2_0.01 elapsed_s=0.110 units=0 pending=0
+[exp8008] epoch=0 seed=43 loss=0.693153174217 gradient=0.250003 elapsed_s=0.110 pending_steps=2000
+[exp8008] epoch=1 seed=43 loss=0.198482654737 gradient=0.0544994 elapsed_s=0.110 pending_steps=1999
+[exp8008] epoch=2 seed=43 loss=0.160650094057 gradient=0.0150145 elapsed_s=0.110 pending_steps=1998
+[exp8008] epoch=3 seed=43 loss=0.156127789578 gradient=0.00279745 elapsed_s=0.110 pending_steps=1997
+[exp8008] epoch=4 seed=43 loss=0.155905866252 gradient=0.00016569 elapsed_s=0.111 pending_steps=1996
+[exp8008] epoch=5 seed=43 loss=0.155905017037 gradient=6.77815e-07 elapsed_s=0.111 pending_steps=1995
+[exp8008] epoch=6 seed=43 loss=0.155905017023 gradient=1.14612e-11 elapsed_s=0.111 pending_steps=1994
+[exp8008] phase=benchmark_after_linear_seed_43_l2_0.01 elapsed_s=0.111 units=0 pending=0
+[exp8008] phase=benchmark_after_linear elapsed_s=0.111 units=43 pending=0
+[exp8008] phase=benchmark_before_linear elapsed_s=0.111 units=71 pending=0
+[exp8008] phase=benchmark_before_linear_seed_71_l2_0.0001 elapsed_s=0.111 units=0 pending=0
+[exp8008] epoch=0 seed=71 loss=0.693147964127 gradient=0.25 elapsed_s=0.111 pending_steps=2000
+[exp8008] epoch=1 seed=71 loss=0.12781196434 gradient=0.0595435 elapsed_s=0.111 pending_steps=1999
+[exp8008] epoch=2 seed=71 loss=0.0444862006347 gradient=0.0207536 elapsed_s=0.111 pending_steps=1998
+[exp8008] epoch=3 seed=71 loss=0.0183829033461 gradient=0.00743931 elapsed_s=0.111 pending_steps=1997
+[exp8008] epoch=4 seed=71 loss=0.0101093606444 gradient=0.00263888 elapsed_s=0.111 pending_steps=1996
+[exp8008] epoch=5 seed=71 loss=0.00786947956466 gradient=0.000883681 elapsed_s=0.111 pending_steps=1995
+[exp8008] epoch=6 seed=71 loss=0.00742034565855 gradient=0.000249842 elapsed_s=0.111 pending_steps=1994
+[exp8008] epoch=7 seed=71 loss=0.00736055436508 gradient=4.40451e-05 elapsed_s=0.111 pending_steps=1993
+[exp8008] epoch=8 seed=71 loss=0.00735800928263 gradient=2.22094e-06 elapsed_s=0.111 pending_steps=1992
+[exp8008] epoch=9 seed=71 loss=0.00735800232144 gradient=6.44361e-09 elapsed_s=0.111 pending_steps=1991
+[exp8008] phase=benchmark_after_linear_seed_71_l2_0.0001 elapsed_s=0.111 units=0 pending=0
+[exp8008] phase=benchmark_before_linear_seed_71_l2_0.001 elapsed_s=0.111 units=0 pending=0
+[exp8008] epoch=0 seed=71 loss=0.693147964127 gradient=0.25 elapsed_s=0.111 pending_steps=2000
+[exp8008] epoch=1 seed=71 loss=0.135580249033 gradient=0.0590295 elapsed_s=0.111 pending_steps=1999
+[exp8008] epoch=2 seed=71 loss=0.060582591137 gradient=0.0200418 elapsed_s=0.111 pending_steps=1998
+[exp8008] epoch=3 seed=71 loss=0.042286271886 gradient=0.00662782 elapsed_s=0.112 pending_steps=1997
+[exp8008] epoch=4 seed=71 loss=0.0387729951524 gradient=0.00186752 elapsed_s=0.112 pending_steps=1996
+[exp8008] epoch=5 seed=71 loss=0.0383113155146 gradient=0.000329415 elapsed_s=0.112 pending_steps=1995
+[exp8008] epoch=6 seed=71 loss=0.0382915961912 gradient=1.66139e-05 elapsed_s=0.112 pending_steps=1994
+[exp8008] epoch=7 seed=71 loss=0.038291542237 gradient=4.81493e-08 elapsed_s=0.112 pending_steps=1993
+[exp8008] epoch=8 seed=71 loss=0.0382915422365 gradient=4.07404e-13 elapsed_s=0.112 pending_steps=1992
+[exp8008] phase=benchmark_after_linear_seed_71_l2_0.001 elapsed_s=0.112 units=0 pending=0
+[exp8008] phase=benchmark_before_linear_seed_71_l2_0.01 elapsed_s=0.112 units=0 pending=0
+[exp8008] epoch=0 seed=71 loss=0.69314796413 gradient=0.250001 elapsed_s=0.112 pending_steps=2000
+[exp8008] epoch=1 seed=71 loss=0.198482654751 gradient=0.0544994 elapsed_s=0.112 pending_steps=1999
+[exp8008] epoch=2 seed=71 loss=0.16065009406 gradient=0.0150145 elapsed_s=0.112 pending_steps=1998
+[exp8008] epoch=3 seed=71 loss=0.156127789578 gradient=0.00279745 elapsed_s=0.112 pending_steps=1997
+[exp8008] epoch=4 seed=71 loss=0.155905866252 gradient=0.00016569 elapsed_s=0.112 pending_steps=1996
+[exp8008] epoch=5 seed=71 loss=0.155905017037 gradient=6.77815e-07 elapsed_s=0.112 pending_steps=1995
+[exp8008] epoch=6 seed=71 loss=0.155905017023 gradient=1.14612e-11 elapsed_s=0.112 pending_steps=1994
+[exp8008] phase=benchmark_after_linear_seed_71_l2_0.01 elapsed_s=0.112 units=0 pending=0
+[exp8008] phase=benchmark_after_linear elapsed_s=0.112 units=71 pending=0
+[exp8008] phase=benchmark_before_linear elapsed_s=0.112 units=101 pending=0
+[exp8008] phase=benchmark_before_linear_seed_101_l2_0.0001 elapsed_s=0.112 units=0 pending=0
+[exp8008] epoch=0 seed=101 loss=0.693140057019 gradient=0.249996 elapsed_s=0.112 pending_steps=2000
+[exp8008] epoch=1 seed=101 loss=0.127811964316 gradient=0.0595435 elapsed_s=0.112 pending_steps=1999
+[exp8008] epoch=2 seed=101 loss=0.0444862006275 gradient=0.0207536 elapsed_s=0.113 pending_steps=1998
+[exp8008] epoch=3 seed=101 loss=0.0183829033436 gradient=0.00743931 elapsed_s=0.113 pending_steps=1997
+[exp8008] epoch=4 seed=101 loss=0.0101093606436 gradient=0.00263888 elapsed_s=0.113 pending_steps=1996
+[exp8008] epoch=5 seed=101 loss=0.00786947956442 gradient=0.000883681 elapsed_s=0.113 pending_steps=1995
+[exp8008] epoch=6 seed=101 loss=0.0074203456585 gradient=0.000249842 elapsed_s=0.113 pending_steps=1994
+[exp8008] epoch=7 seed=101 loss=0.00736055436507 gradient=4.40451e-05 elapsed_s=0.113 pending_steps=1993
+[exp8008] epoch=8 seed=101 loss=0.00735800928263 gradient=2.22094e-06 elapsed_s=0.113 pending_steps=1992
+[exp8008] epoch=9 seed=101 loss=0.00735800232144 gradient=6.44361e-09 elapsed_s=0.113 pending_steps=1991
+[exp8008] phase=benchmark_after_linear_seed_101_l2_0.0001 elapsed_s=0.113 units=0 pending=0
+[exp8008] phase=benchmark_before_linear_seed_101_l2_0.001 elapsed_s=0.113 units=0 pending=0
+[exp8008] epoch=0 seed=101 loss=0.69314005702 gradient=0.249996 elapsed_s=0.113 pending_steps=2000
+[exp8008] epoch=1 seed=101 loss=0.13558024901 gradient=0.0590295 elapsed_s=0.113 pending_steps=1999
+[exp8008] epoch=2 seed=101 loss=0.0605825911303 gradient=0.0200418 elapsed_s=0.113 pending_steps=1998
+[exp8008] epoch=3 seed=101 loss=0.0422862718841 gradient=0.00662782 elapsed_s=0.113 pending_steps=1997
+[exp8008] epoch=4 seed=101 loss=0.038772995152 gradient=0.00186752 elapsed_s=0.113 pending_steps=1996
+[exp8008] epoch=5 seed=101 loss=0.0383113155145 gradient=0.000329415 elapsed_s=0.113 pending_steps=1995
+[exp8008] epoch=6 seed=101 loss=0.0382915961912 gradient=1.66139e-05 elapsed_s=0.113 pending_steps=1994
+[exp8008] epoch=7 seed=101 loss=0.038291542237 gradient=4.81493e-08 elapsed_s=0.113 pending_steps=1993
+[exp8008] epoch=8 seed=101 loss=0.0382915422365 gradient=4.07405e-13 elapsed_s=0.113 pending_steps=1992
+[exp8008] phase=benchmark_after_linear_seed_101_l2_0.001 elapsed_s=0.113 units=0 pending=0
+[exp8008] phase=benchmark_before_linear_seed_101_l2_0.01 elapsed_s=0.113 units=0 pending=0
+[exp8008] epoch=0 seed=101 loss=0.69314005703 gradient=0.249997 elapsed_s=0.114 pending_steps=2000
+[exp8008] epoch=1 seed=101 loss=0.198482654731 gradient=0.0544994 elapsed_s=0.114 pending_steps=1999
+[exp8008] epoch=2 seed=101 loss=0.160650094056 gradient=0.0150145 elapsed_s=0.114 pending_steps=1998
+[exp8008] epoch=3 seed=101 loss=0.156127789577 gradient=0.00279745 elapsed_s=0.114 pending_steps=1997
+[exp8008] epoch=4 seed=101 loss=0.155905866252 gradient=0.00016569 elapsed_s=0.114 pending_steps=1996
+[exp8008] epoch=5 seed=101 loss=0.155905017037 gradient=6.77815e-07 elapsed_s=0.114 pending_steps=1995
+[exp8008] epoch=6 seed=101 loss=0.155905017023 gradient=1.14612e-11 elapsed_s=0.114 pending_steps=1994
+[exp8008] phase=benchmark_after_linear_seed_101_l2_0.01 elapsed_s=0.114 units=0 pending=0
+[exp8008] phase=benchmark_after_linear elapsed_s=0.114 units=101 pending=0
+[exp8008] phase=benchmark_before_intercept_only elapsed_s=0.114 units=17 pending=0
+[exp8008] phase=benchmark_before_intercept_only_seed_17_l2_0.0001 elapsed_s=0.114 units=0 pending=0
+[exp8008] epoch=0 seed=17 loss=0.69314718056 gradient=0 elapsed_s=0.114 pending_steps=2000
+[exp8008] phase=benchmark_after_intercept_only_seed_17_l2_0.0001 elapsed_s=0.114 units=0 pending=0
+[exp8008] phase=benchmark_before_intercept_only_seed_17_l2_0.001 elapsed_s=0.114 units=0 pending=0
+[exp8008] epoch=0 seed=17 loss=0.69314718056 gradient=0 elapsed_s=0.114 pending_steps=2000
+[exp8008] phase=benchmark_after_intercept_only_seed_17_l2_0.001 elapsed_s=0.114 units=0 pending=0
+[exp8008] phase=benchmark_before_intercept_only_seed_17_l2_0.01 elapsed_s=0.114 units=0 pending=0
+[exp8008] epoch=0 seed=17 loss=0.69314718056 gradient=0 elapsed_s=0.114 pending_steps=2000
+[exp8008] phase=benchmark_after_intercept_only_seed_17_l2_0.01 elapsed_s=0.115 units=0 pending=0
+[exp8008] phase=benchmark_after_intercept_only elapsed_s=0.115 units=17 pending=0
+[exp8008] phase=benchmark_before_intercept_only elapsed_s=0.115 units=29 pending=0
+[exp8008] phase=benchmark_before_intercept_only_seed_29_l2_0.0001 elapsed_s=0.115 units=0 pending=0
+[exp8008] epoch=0 seed=29 loss=0.69314718056 gradient=0 elapsed_s=0.115 pending_steps=2000
+[exp8008] phase=benchmark_after_intercept_only_seed_29_l2_0.0001 elapsed_s=0.115 units=0 pending=0
+[exp8008] phase=benchmark_before_intercept_only_seed_29_l2_0.001 elapsed_s=0.115 units=0 pending=0
+[exp8008] epoch=0 seed=29 loss=0.69314718056 gradient=0 elapsed_s=0.115 pending_steps=2000
+[exp8008] phase=benchmark_after_intercept_only_seed_29_l2_0.001 elapsed_s=0.115 units=0 pending=0
+[exp8008] phase=benchmark_before_intercept_only_seed_29_l2_0.01 elapsed_s=0.115 units=0 pending=0
+[exp8008] epoch=0 seed=29 loss=0.69314718056 gradient=0 elapsed_s=0.115 pending_steps=2000
+[exp8008] phase=benchmark_after_intercept_only_seed_29_l2_0.01 elapsed_s=0.115 units=0 pending=0
+[exp8008] phase=benchmark_after_intercept_only elapsed_s=0.115 units=29 pending=0
+[exp8008] phase=benchmark_before_intercept_only elapsed_s=0.115 units=43 pending=0
+[exp8008] phase=benchmark_before_intercept_only_seed_43_l2_0.0001 elapsed_s=0.115 units=0 pending=0
+[exp8008] epoch=0 seed=43 loss=0.69314718056 gradient=0 elapsed_s=0.115 pending_steps=2000
+[exp8008] phase=benchmark_after_intercept_only_seed_43_l2_0.0001 elapsed_s=0.115 units=0 pending=0
+[exp8008] phase=benchmark_before_intercept_only_seed_43_l2_0.001 elapsed_s=0.115 units=0 pending=0
+[exp8008] epoch=0 seed=43 loss=0.69314718056 gradient=0 elapsed_s=0.115 pending_steps=2000
+[exp8008] phase=benchmark_after_intercept_only_seed_43_l2_0.001 elapsed_s=0.116 units=0 pending=0
+[exp8008] phase=benchmark_before_intercept_only_seed_43_l2_0.01 elapsed_s=0.116 units=0 pending=0
+[exp8008] epoch=0 seed=43 loss=0.69314718056 gradient=0 elapsed_s=0.116 pending_steps=2000
+[exp8008] phase=benchmark_after_intercept_only_seed_43_l2_0.01 elapsed_s=0.116 units=0 pending=0
+[exp8008] phase=benchmark_after_intercept_only elapsed_s=0.116 units=43 pending=0
+[exp8008] phase=benchmark_before_intercept_only elapsed_s=0.116 units=71 pending=0
+[exp8008] phase=benchmark_before_intercept_only_seed_71_l2_0.0001 elapsed_s=0.116 units=0 pending=0
+[exp8008] epoch=0 seed=71 loss=0.69314718056 gradient=0 elapsed_s=0.116 pending_steps=2000
+[exp8008] phase=benchmark_after_intercept_only_seed_71_l2_0.0001 elapsed_s=0.116 units=0 pending=0
+[exp8008] phase=benchmark_before_intercept_only_seed_71_l2_0.001 elapsed_s=0.116 units=0 pending=0
+[exp8008] epoch=0 seed=71 loss=0.69314718056 gradient=0 elapsed_s=0.116 pending_steps=2000
+[exp8008] phase=benchmark_after_intercept_only_seed_71_l2_0.001 elapsed_s=0.116 units=0 pending=0
+[exp8008] phase=benchmark_before_intercept_only_seed_71_l2_0.01 elapsed_s=0.116 units=0 pending=0
+[exp8008] epoch=0 seed=71 loss=0.69314718056 gradient=0 elapsed_s=0.116 pending_steps=2000
+[exp8008] phase=benchmark_after_intercept_only_seed_71_l2_0.01 elapsed_s=0.116 units=0 pending=0
+[exp8008] phase=benchmark_after_intercept_only elapsed_s=0.116 units=71 pending=0
+[exp8008] phase=benchmark_before_intercept_only elapsed_s=0.116 units=101 pending=0
+[exp8008] phase=benchmark_before_intercept_only_seed_101_l2_0.0001 elapsed_s=0.116 units=0 pending=0
+[exp8008] epoch=0 seed=101 loss=0.69314718056 gradient=0 elapsed_s=0.116 pending_steps=2000
+[exp8008] phase=benchmark_after_intercept_only_seed_101_l2_0.0001 elapsed_s=0.117 units=0 pending=0
+[exp8008] phase=benchmark_before_intercept_only_seed_101_l2_0.001 elapsed_s=0.117 units=0 pending=0
+[exp8008] epoch=0 seed=101 loss=0.69314718056 gradient=0 elapsed_s=0.117 pending_steps=2000
+[exp8008] phase=benchmark_after_intercept_only_seed_101_l2_0.001 elapsed_s=0.117 units=0 pending=0
+[exp8008] phase=benchmark_before_intercept_only_seed_101_l2_0.01 elapsed_s=0.117 units=0 pending=0
+[exp8008] epoch=0 seed=101 loss=0.69314718056 gradient=0 elapsed_s=0.117 pending_steps=2000
+[exp8008] phase=benchmark_after_intercept_only_seed_101_l2_0.01 elapsed_s=0.117 units=0 pending=0
+[exp8008] phase=benchmark_after_intercept_only elapsed_s=0.117 units=101 pending=0
+[exp8008] phase=benchmark_before_equal_information_spline elapsed_s=0.117 units=17 pending=0
+[exp8008] phase=benchmark_before_equal_information_spline_seed_17_l2_0.0001 elapsed_s=0.117 units=0 pending=0
+[exp8008] epoch=0 seed=17 loss=0.693148176596 gradient=0.250002 elapsed_s=0.117 pending_steps=2000
+[exp8008] epoch=1 seed=17 loss=0.12707565108 gradient=0.0595725 elapsed_s=0.118 pending_steps=1999
+[exp8008] epoch=2 seed=17 loss=0.042888351626 gradient=0.0207949 elapsed_s=0.118 pending_steps=1998
+[exp8008] epoch=3 seed=17 loss=0.0157410938453 gradient=0.00749043 elapsed_s=0.118 pending_steps=1997
+[exp8008] epoch=4 seed=17 loss=0.00633674147157 gradient=0.00269699 elapsed_s=0.118 pending_steps=1996
+[exp8008] epoch=5 seed=17 loss=0.00313009799364 gradient=0.00094245 elapsed_s=0.118 pending_steps=1995
+[exp8008] epoch=6 seed=17 loss=0.00215721030337 gradient=0.000298038 elapsed_s=0.119 pending_steps=1994
+[exp8008] epoch=7 seed=17 loss=0.00194898833931 gradient=7.01119e-05 elapsed_s=0.119 pending_steps=1993
+[exp8008] epoch=8 seed=17 loss=0.00193046377211 gradient=7.27308e-06 elapsed_s=0.119 pending_steps=1992
+[exp8008] epoch=9 seed=17 loss=0.00193022903261 gradient=1.02321e-07 elapsed_s=0.119 pending_steps=1991
+[exp8008] epoch=10 seed=17 loss=0.00193022898525 gradient=2.09795e-11 elapsed_s=0.120 pending_steps=1990
+[exp8008] phase=benchmark_after_equal_information_spline_seed_17_l2_0.0001 elapsed_s=0.120 units=0 pending=0
+[exp8008] phase=benchmark_before_equal_information_spline_seed_17_l2_0.001 elapsed_s=0.120 units=0 pending=0
+[exp8008] epoch=0 seed=17 loss=0.693148176607 gradient=0.250002 elapsed_s=0.120 pending_steps=2000
+[exp8008] epoch=1 seed=17 loss=0.12840072042 gradient=0.0593123 elapsed_s=0.121 pending_steps=1999
+[exp8008] epoch=2 seed=17 loss=0.0457625048646 gradient=0.0204247 elapsed_s=0.121 pending_steps=1998
+[exp8008] epoch=3 seed=17 loss=0.0204869681913 gradient=0.00703774 elapsed_s=0.121 pending_steps=1997
+[exp8008] epoch=4 seed=17 loss=0.0130919212596 gradient=0.00220309 elapsed_s=0.121 pending_steps=1996
+[exp8008] epoch=5 seed=17 loss=0.0115589283548 gradient=0.000504373 elapsed_s=0.122 pending_steps=1995
+[exp8008] epoch=6 seed=17 loss=0.0114323102428 gradient=4.82887e-05 elapsed_s=0.122 pending_steps=1994
+[exp8008] epoch=7 seed=17 loss=0.0114309638142 gradient=5.63738e-07 elapsed_s=0.122 pending_steps=1993
+[exp8008] epoch=8 seed=17 loss=0.0114309636277 gradient=7.9067e-11 elapsed_s=0.122 pending_steps=1992
+[exp8008] phase=benchmark_after_equal_information_spline_seed_17_l2_0.001 elapsed_s=0.123 units=0 pending=0
+[exp8008] phase=benchmark_before_equal_information_spline_seed_17_l2_0.01 elapsed_s=0.123 units=0 pending=0
+[exp8008] epoch=0 seed=17 loss=0.693148176718 gradient=0.250002 elapsed_s=0.123 pending_steps=2000
+[exp8008] epoch=1 seed=17 loss=0.141295864038 gradient=0.0567891 elapsed_s=0.123 pending_steps=1999
+[exp8008] epoch=2 seed=17 loss=0.0722707637331 gradient=0.0171169 elapsed_s=0.124 pending_steps=1998
+[exp8008] epoch=3 seed=17 loss=0.0591338582672 gradient=0.00388145 elapsed_s=0.124 pending_steps=1997
+[exp8008] epoch=4 seed=17 loss=0.0580732793392 gradient=0.000365664 elapsed_s=0.124 pending_steps=1996
+[exp8008] epoch=5 seed=17 loss=0.0580623916302 gradient=4.1006e-06 elapsed_s=0.124 pending_steps=1995
+[exp8008] epoch=6 seed=17 loss=0.05806239024 gradient=5.29743e-10 elapsed_s=0.124 pending_steps=1994
+[exp8008] phase=benchmark_after_equal_information_spline_seed_17_l2_0.01 elapsed_s=0.125 units=0 pending=0
+[exp8008] phase=benchmark_after_equal_information_spline elapsed_s=0.125 units=17 pending=0
+[exp8008] phase=benchmark_before_equal_information_spline elapsed_s=0.125 units=29 pending=0
+[exp8008] phase=benchmark_before_equal_information_spline_seed_29_l2_0.0001 elapsed_s=0.125 units=0 pending=0
+[exp8008] epoch=0 seed=29 loss=0.693138908534 gradient=0.250004 elapsed_s=0.125 pending_steps=2000
+[exp8008] epoch=1 seed=29 loss=0.127075650938 gradient=0.0595725 elapsed_s=0.125 pending_steps=1999
+[exp8008] epoch=2 seed=29 loss=0.0428883515832 gradient=0.0207949 elapsed_s=0.126 pending_steps=1998
+[exp8008] epoch=3 seed=29 loss=0.0157410938307 gradient=0.00749043 elapsed_s=0.126 pending_steps=1997
+[exp8008] epoch=4 seed=29 loss=0.00633674146648 gradient=0.00269699 elapsed_s=0.126 pending_steps=1996
+[exp8008] epoch=5 seed=29 loss=0.00313009799199 gradient=0.00094245 elapsed_s=0.126 pending_steps=1995
+[exp8008] epoch=6 seed=29 loss=0.00215721030294 gradient=0.000298038 elapsed_s=0.127 pending_steps=1994
+[exp8008] epoch=7 seed=29 loss=0.00194898833925 gradient=7.01119e-05 elapsed_s=0.127 pending_steps=1993
+[exp8008] epoch=8 seed=29 loss=0.00193046377211 gradient=7.27308e-06 elapsed_s=0.127 pending_steps=1992
+[exp8008] epoch=9 seed=29 loss=0.00193022903261 gradient=1.02321e-07 elapsed_s=0.127 pending_steps=1991
+[exp8008] epoch=10 seed=29 loss=0.00193022898525 gradient=2.09795e-11 elapsed_s=0.127 pending_steps=1990
+[exp8008] phase=benchmark_after_equal_information_spline_seed_29_l2_0.0001 elapsed_s=0.128 units=0 pending=0
+[exp8008] phase=benchmark_before_equal_information_spline_seed_29_l2_0.001 elapsed_s=0.128 units=0 pending=0
+[exp8008] epoch=0 seed=29 loss=0.693138908546 gradient=0.250004 elapsed_s=0.128 pending_steps=2000
+[exp8008] epoch=1 seed=29 loss=0.128400720279 gradient=0.0593123 elapsed_s=0.128 pending_steps=1999
+[exp8008] epoch=2 seed=29 loss=0.0457625048235 gradient=0.0204247 elapsed_s=0.129 pending_steps=1998
+[exp8008] epoch=3 seed=29 loss=0.0204869681785 gradient=0.00703774 elapsed_s=0.129 pending_steps=1997
+[exp8008] epoch=4 seed=29 loss=0.0130919212564 gradient=0.00220309 elapsed_s=0.129 pending_steps=1996
+[exp8008] epoch=5 seed=29 loss=0.0115589283543 gradient=0.000504373 elapsed_s=0.129 pending_steps=1995
+[exp8008] epoch=6 seed=29 loss=0.0114323102428 gradient=4.82887e-05 elapsed_s=0.130 pending_steps=1994
+[exp8008] epoch=7 seed=29 loss=0.0114309638142 gradient=5.63738e-07 elapsed_s=0.130 pending_steps=1993
+[exp8008] epoch=8 seed=29 loss=0.0114309636277 gradient=7.9067e-11 elapsed_s=0.130 pending_steps=1992
+[exp8008] phase=benchmark_after_equal_information_spline_seed_29_l2_0.001 elapsed_s=0.130 units=0 pending=0
+[exp8008] phase=benchmark_before_equal_information_spline_seed_29_l2_0.01 elapsed_s=0.130 units=0 pending=0
+[exp8008] epoch=0 seed=29 loss=0.693138908664 gradient=0.250004 elapsed_s=0.131 pending_steps=2000
+[exp8008] epoch=1 seed=29 loss=0.141295863908 gradient=0.0567891 elapsed_s=0.131 pending_steps=1999
+[exp8008] epoch=2 seed=29 loss=0.0722707637048 gradient=0.0171169 elapsed_s=0.131 pending_steps=1998
+[exp8008] epoch=3 seed=29 loss=0.0591338582638 gradient=0.00388145 elapsed_s=0.132 pending_steps=1997
+[exp8008] epoch=4 seed=29 loss=0.0580732793392 gradient=0.000365664 elapsed_s=0.132 pending_steps=1996
+[exp8008] epoch=5 seed=29 loss=0.0580623916302 gradient=4.1006e-06 elapsed_s=0.132 pending_steps=1995
+[exp8008] epoch=6 seed=29 loss=0.05806239024 gradient=5.29743e-10 elapsed_s=0.132 pending_steps=1994
+[exp8008] phase=benchmark_after_equal_information_spline_seed_29_l2_0.01 elapsed_s=0.133 units=0 pending=0
+[exp8008] phase=benchmark_after_equal_information_spline elapsed_s=0.133 units=29 pending=0
+[exp8008] phase=benchmark_before_equal_information_spline elapsed_s=0.133 units=43 pending=0
+[exp8008] phase=benchmark_before_equal_information_spline_seed_43_l2_0.0001 elapsed_s=0.133 units=0 pending=0
+[exp8008] epoch=0 seed=43 loss=0.693140203815 gradient=0.250001 elapsed_s=0.133 pending_steps=2000
+[exp8008] epoch=1 seed=43 loss=0.127075651049 gradient=0.0595725 elapsed_s=0.133 pending_steps=1999
+[exp8008] epoch=2 seed=43 loss=0.0428883516166 gradient=0.0207949 elapsed_s=0.134 pending_steps=1998
+[exp8008] epoch=3 seed=43 loss=0.0157410938421 gradient=0.00749043 elapsed_s=0.134 pending_steps=1997
+[exp8008] epoch=4 seed=43 loss=0.00633674147045 gradient=0.00269699 elapsed_s=0.134 pending_steps=1996
+[exp8008] epoch=5 seed=43 loss=0.00313009799328 gradient=0.00094245 elapsed_s=0.134 pending_steps=1995
+[exp8008] epoch=6 seed=43 loss=0.00215721030328 gradient=0.000298038 elapsed_s=0.134 pending_steps=1994
+[exp8008] epoch=7 seed=43 loss=0.00194898833929 gradient=7.01119e-05 elapsed_s=0.135 pending_steps=1993
+[exp8008] epoch=8 seed=43 loss=0.00193046377211 gradient=7.27308e-06 elapsed_s=0.135 pending_steps=1992
+[exp8008] epoch=9 seed=43 loss=0.00193022903261 gradient=1.02321e-07 elapsed_s=0.135 pending_steps=1991
+[exp8008] epoch=10 seed=43 loss=0.00193022898525 gradient=2.09795e-11 elapsed_s=0.135 pending_steps=1990
+[exp8008] phase=benchmark_after_equal_information_spline_seed_43_l2_0.0001 elapsed_s=0.136 units=0 pending=0
+[exp8008] phase=benchmark_before_equal_information_spline_seed_43_l2_0.001 elapsed_s=0.136 units=0 pending=0
+[exp8008] epoch=0 seed=43 loss=0.693140203825 gradient=0.250001 elapsed_s=0.136 pending_steps=2000
+[exp8008] epoch=1 seed=43 loss=0.128400720389 gradient=0.0593123 elapsed_s=0.136 pending_steps=1999
+[exp8008] epoch=2 seed=43 loss=0.0457625048556 gradient=0.0204247 elapsed_s=0.137 pending_steps=1998
+[exp8008] epoch=3 seed=43 loss=0.0204869681885 gradient=0.00703774 elapsed_s=0.137 pending_steps=1997
+[exp8008] epoch=4 seed=43 loss=0.0130919212589 gradient=0.00220309 elapsed_s=0.137 pending_steps=1996
+[exp8008] epoch=5 seed=43 loss=0.0115589283547 gradient=0.000504373 elapsed_s=0.137 pending_steps=1995
+[exp8008] epoch=6 seed=43 loss=0.0114323102428 gradient=4.82887e-05 elapsed_s=0.137 pending_steps=1994
+[exp8008] epoch=7 seed=43 loss=0.0114309638142 gradient=5.63738e-07 elapsed_s=0.138 pending_steps=1993
+[exp8008] epoch=8 seed=43 loss=0.0114309636277 gradient=7.9067e-11 elapsed_s=0.138 pending_steps=1992
+[exp8008] phase=benchmark_after_equal_information_spline_seed_43_l2_0.001 elapsed_s=0.138 units=0 pending=0
+[exp8008] phase=benchmark_before_equal_information_spline_seed_43_l2_0.01 elapsed_s=0.138 units=0 pending=0
+[exp8008] epoch=0 seed=43 loss=0.693140203929 gradient=0.250001 elapsed_s=0.139 pending_steps=2000
+[exp8008] epoch=1 seed=43 loss=0.141295864009 gradient=0.0567891 elapsed_s=0.139 pending_steps=1999
+[exp8008] epoch=2 seed=43 loss=0.0722707637269 gradient=0.0171169 elapsed_s=0.139 pending_steps=1998
+[exp8008] epoch=3 seed=43 loss=0.0591338582665 gradient=0.00388145 elapsed_s=0.139 pending_steps=1997
+[exp8008] epoch=4 seed=43 loss=0.0580732793392 gradient=0.000365664 elapsed_s=0.140 pending_steps=1996
+[exp8008] epoch=5 seed=43 loss=0.0580623916302 gradient=4.1006e-06 elapsed_s=0.140 pending_steps=1995
+[exp8008] epoch=6 seed=43 loss=0.05806239024 gradient=5.29743e-10 elapsed_s=0.140 pending_steps=1994
+[exp8008] phase=benchmark_after_equal_information_spline_seed_43_l2_0.01 elapsed_s=0.140 units=0 pending=0
+[exp8008] phase=benchmark_after_equal_information_spline elapsed_s=0.140 units=43 pending=0
+[exp8008] phase=benchmark_before_equal_information_spline elapsed_s=0.140 units=71 pending=0
+[exp8008] phase=benchmark_before_equal_information_spline_seed_71_l2_0.0001 elapsed_s=0.140 units=0 pending=0
+[exp8008] epoch=0 seed=71 loss=0.693149940053 gradient=0.250004 elapsed_s=0.141 pending_steps=2000
+[exp8008] epoch=1 seed=71 loss=0.127075651036 gradient=0.0595725 elapsed_s=0.141 pending_steps=1999
+[exp8008] epoch=2 seed=71 loss=0.0428883516128 gradient=0.0207949 elapsed_s=0.141 pending_steps=1998
+[exp8008] epoch=3 seed=71 loss=0.0157410938408 gradient=0.00749043 elapsed_s=0.142 pending_steps=1997
+[exp8008] epoch=4 seed=71 loss=0.00633674147 gradient=0.00269699 elapsed_s=0.142 pending_steps=1996
+[exp8008] epoch=5 seed=71 loss=0.00313009799313 gradient=0.00094245 elapsed_s=0.142 pending_steps=1995
+[exp8008] epoch=6 seed=71 loss=0.00215721030324 gradient=0.000298038 elapsed_s=0.142 pending_steps=1994
+[exp8008] epoch=7 seed=71 loss=0.00194898833929 gradient=7.01119e-05 elapsed_s=0.142 pending_steps=1993
+[exp8008] epoch=8 seed=71 loss=0.00193046377211 gradient=7.27308e-06 elapsed_s=0.143 pending_steps=1992
+[exp8008] epoch=9 seed=71 loss=0.00193022903261 gradient=1.02321e-07 elapsed_s=0.143 pending_steps=1991
+[exp8008] epoch=10 seed=71 loss=0.00193022898525 gradient=2.09795e-11 elapsed_s=0.143 pending_steps=1990
+[exp8008] phase=benchmark_after_equal_information_spline_seed_71_l2_0.0001 elapsed_s=0.144 units=0 pending=0
+[exp8008] phase=benchmark_before_equal_information_spline_seed_71_l2_0.001 elapsed_s=0.144 units=0 pending=0
+[exp8008] epoch=0 seed=71 loss=0.69314994006 gradient=0.250004 elapsed_s=0.144 pending_steps=2000
+[exp8008] epoch=1 seed=71 loss=0.128400720376 gradient=0.0593123 elapsed_s=0.144 pending_steps=1999
+[exp8008] epoch=2 seed=71 loss=0.0457625048519 gradient=0.0204247 elapsed_s=0.144 pending_steps=1998
+[exp8008] epoch=3 seed=71 loss=0.0204869681873 gradient=0.00703774 elapsed_s=0.145 pending_steps=1997
+[exp8008] epoch=4 seed=71 loss=0.0130919212586 gradient=0.00220309 elapsed_s=0.145 pending_steps=1996
+[exp8008] epoch=5 seed=71 loss=0.0115589283546 gradient=0.000504373 elapsed_s=0.145 pending_steps=1995
+[exp8008] epoch=6 seed=71 loss=0.0114323102428 gradient=4.82887e-05 elapsed_s=0.145 pending_steps=1994
+[exp8008] epoch=7 seed=71 loss=0.0114309638142 gradient=5.63738e-07 elapsed_s=0.145 pending_steps=1993
+[exp8008] epoch=8 seed=71 loss=0.0114309636277 gradient=7.9067e-11 elapsed_s=0.146 pending_steps=1992
+[exp8008] phase=benchmark_after_equal_information_spline_seed_71_l2_0.001 elapsed_s=0.146 units=0 pending=0
+[exp8008] phase=benchmark_before_equal_information_spline_seed_71_l2_0.01 elapsed_s=0.146 units=0 pending=0
+[exp8008] epoch=0 seed=71 loss=0.693149940121 gradient=0.250004 elapsed_s=0.147 pending_steps=2000
+[exp8008] epoch=1 seed=71 loss=0.141295863998 gradient=0.0567891 elapsed_s=0.147 pending_steps=1999
+[exp8008] epoch=2 seed=71 loss=0.0722707637244 gradient=0.0171169 elapsed_s=0.147 pending_steps=1998
+[exp8008] epoch=3 seed=71 loss=0.0591338582662 gradient=0.00388145 elapsed_s=0.147 pending_steps=1997
+[exp8008] epoch=4 seed=71 loss=0.0580732793392 gradient=0.000365664 elapsed_s=0.147 pending_steps=1996
+[exp8008] epoch=5 seed=71 loss=0.0580623916302 gradient=4.1006e-06 elapsed_s=0.148 pending_steps=1995
+[exp8008] epoch=6 seed=71 loss=0.05806239024 gradient=5.29743e-10 elapsed_s=0.148 pending_steps=1994
+[exp8008] phase=benchmark_after_equal_information_spline_seed_71_l2_0.01 elapsed_s=0.148 units=0 pending=0
+[exp8008] phase=benchmark_after_equal_information_spline elapsed_s=0.148 units=71 pending=0
+[exp8008] phase=benchmark_before_equal_information_spline elapsed_s=0.148 units=101 pending=0
+[exp8008] phase=benchmark_before_equal_information_spline_seed_101_l2_0.0001 elapsed_s=0.148 units=0 pending=0
+[exp8008] epoch=0 seed=101 loss=0.693150820564 gradient=0.250005 elapsed_s=0.149 pending_steps=2000
+[exp8008] epoch=1 seed=101 loss=0.12707565103 gradient=0.0595725 elapsed_s=0.149 pending_steps=1999
+[exp8008] epoch=2 seed=101 loss=0.0428883516109 gradient=0.0207949 elapsed_s=0.149 pending_steps=1998
+[exp8008] epoch=3 seed=101 loss=0.0157410938401 gradient=0.00749043 elapsed_s=0.149 pending_steps=1997
+[exp8008] epoch=4 seed=101 loss=0.00633674146978 gradient=0.00269699 elapsed_s=0.150 pending_steps=1996
+[exp8008] epoch=5 seed=101 loss=0.00313009799306 gradient=0.00094245 elapsed_s=0.150 pending_steps=1995
+[exp8008] epoch=6 seed=101 loss=0.00215721030322 gradient=0.000298038 elapsed_s=0.150 pending_steps=1994
+[exp8008] epoch=7 seed=101 loss=0.00194898833928 gradient=7.01119e-05 elapsed_s=0.150 pending_steps=1993
+[exp8008] epoch=8 seed=101 loss=0.00193046377211 gradient=7.27308e-06 elapsed_s=0.151 pending_steps=1992
+[exp8008] epoch=9 seed=101 loss=0.00193022903261 gradient=1.02321e-07 elapsed_s=0.151 pending_steps=1991
+[exp8008] epoch=10 seed=101 loss=0.00193022898525 gradient=2.09795e-11 elapsed_s=0.151 pending_steps=1990
+[exp8008] phase=benchmark_after_equal_information_spline_seed_101_l2_0.0001 elapsed_s=0.151 units=0 pending=0
+[exp8008] phase=benchmark_before_equal_information_spline_seed_101_l2_0.001 elapsed_s=0.151 units=0 pending=0
+[exp8008] epoch=0 seed=101 loss=0.693150820576 gradient=0.250005 elapsed_s=0.152 pending_steps=2000
+[exp8008] epoch=1 seed=101 loss=0.12840072037 gradient=0.0593123 elapsed_s=0.152 pending_steps=1999
+[exp8008] epoch=2 seed=101 loss=0.0457625048501 gradient=0.0204247 elapsed_s=0.152 pending_steps=1998
+[exp8008] epoch=3 seed=101 loss=0.0204869681868 gradient=0.00703774 elapsed_s=0.152 pending_steps=1997
+[exp8008] epoch=4 seed=101 loss=0.0130919212585 gradient=0.00220309 elapsed_s=0.153 pending_steps=1996
+[exp8008] epoch=5 seed=101 loss=0.0115589283546 gradient=0.000504373 elapsed_s=0.153 pending_steps=1995
+[exp8008] epoch=6 seed=101 loss=0.0114323102428 gradient=4.82887e-05 elapsed_s=0.153 pending_steps=1994
+[exp8008] epoch=7 seed=101 loss=0.0114309638142 gradient=5.63738e-07 elapsed_s=0.153 pending_steps=1993
+[exp8008] epoch=8 seed=101 loss=0.0114309636277 gradient=7.9067e-11 elapsed_s=0.154 pending_steps=1992
+[exp8008] phase=benchmark_after_equal_information_spline_seed_101_l2_0.001 elapsed_s=0.154 units=0 pending=0
+[exp8008] phase=benchmark_before_equal_information_spline_seed_101_l2_0.01 elapsed_s=0.154 units=0 pending=0
+[exp8008] epoch=0 seed=101 loss=0.693150820692 gradient=0.250005 elapsed_s=0.154 pending_steps=2000
+[exp8008] epoch=1 seed=101 loss=0.141295863992 gradient=0.0567891 elapsed_s=0.155 pending_steps=1999
+[exp8008] epoch=2 seed=101 loss=0.0722707637231 gradient=0.0171169 elapsed_s=0.155 pending_steps=1998
+[exp8008] epoch=3 seed=101 loss=0.059133858266 gradient=0.00388145 elapsed_s=0.155 pending_steps=1997
+[exp8008] epoch=4 seed=101 loss=0.0580732793392 gradient=0.000365664 elapsed_s=0.155 pending_steps=1996
+[exp8008] epoch=5 seed=101 loss=0.0580623916302 gradient=4.1006e-06 elapsed_s=0.156 pending_steps=1995
+[exp8008] epoch=6 seed=101 loss=0.05806239024 gradient=5.29743e-10 elapsed_s=0.156 pending_steps=1994
+[exp8008] phase=benchmark_after_equal_information_spline_seed_101_l2_0.01 elapsed_s=0.156 units=0 pending=0
+[exp8008] phase=benchmark_after_equal_information_spline elapsed_s=0.156 units=101 pending=0
+[exp8008] phase=benchmark_before_isotonic elapsed_s=0.156 units=0 pending=0
+[exp8008] phase=benchmark_after_isotonic elapsed_s=0.157 units=0 pending=0
+=========================== short test summary info ============================
+FAILED tests/python/test_conditioned_energy_8008.py::test_isolation_and_reduction
+1 failed in 1.77s

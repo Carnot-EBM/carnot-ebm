@@ -1,0 +1,108 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.6083584440057166,
+  "exclusion_reason": null,
+  "family_id": "sha256:ae240b6443ffb0f5a3cc13fda6703849f7f61f5bd94ee9ffdaeb52e28d33ab7d",
+  "input_tokens": 1039,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1039,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1062
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:92f5d8bb1cb48eeb0cd495d484fc9c3f13baf8a9bfbab6a5d0b17a311d345a4e",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832763,
+    "id": "chatcmpl-QPKYQH2xv1bzNj2DUcmsJODveKkyRVPB",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.981,
+      "predicted_n": 23,
+      "predicted_per_second": 42.436911995069934,
+      "predicted_per_token_ms": 23.564391304347826,
+      "prompt_ms": 936.755,
+      "prompt_n": 961,
+      "prompt_per_second": 1025.8819008171827,
+      "prompt_per_token_ms": 0.9747710718002082
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1039,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1062
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"1533 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":false,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":3.0,\\\"categories\\\":\\\"Food, Breakfast & Brunch, Grocery, Sandwiches, Beer, Wine & Spirits, Meat Shops, Delis, Specialty Food, Restaurants, Health Markets\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"7:0-19:45\\\",\\\"Monday\\\":\\\"6:15-21:0\\\",\\\"Saturday\\\":\\\"7:0-21:0\\\",\\\"Sunday\\\":\\\"7:0-20:0\\\",\\\"Thursday\\\":\\\"7:0-17:45\\\",\\\"Tuesday\\\":\\\"6:15-21:0\\\",\\\"Wednesday\\\":\\\"6:15-21:0\\\"},\\\"name\\\":\\\"Cantwell's Market & Deli\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-12-19 21:04:23\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Well, we placed an order for five items online. When we went to pick it up, they hadn't even checked for the order, so the person picking up for us had to stand there and wait. Get home, order was shorted one sandwich. Went back and the staff was so utterly rude it was unbelievable. The woman behind the counter insisted that she packed four items, but as i just said, there were five. We ordered two of the Italian sandwich and we were shorted one of those because they probably didn't read the order carefully. So the woman made the second sandwich, then practically threw it at our picker-upper. Seriously? He wasn't rude to her or anything, and while we would have just chalked it up to an oversight, the deli worker who unloaded on us made everything worse. Food was fine, but the service today means we are no longer customers. Yikes! Happy freaking holidays.\\\"},{\\\"review_date\\\":\\\"2021-10-14 20:16:52\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"What happened, Cantwell's? You used to be the go to for big tasty sandwiches? The market is still great but the quality and size of your sandwiches are the same as a supermarket deli. Very sad!\\\"},{\\\"review_date\\\":\\\"2021-10-10 15:35:37\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"We stayed in a hotel across the street and Cantwell was our place to grab a sandwich and drinks to go before heading out.\\\\n\\\\nService is fast and the sandwiches were tasty! The people behind the counter were friendly and efficient. The perfect place to grab a bite or a bottle of wine.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Cantwell's Market & Deli is a local food establishment located in Santa Barbara, California, offering a variety of products and services. They have a wide selection of groceries, meat, and specialty foods, as well as a deli serving breakfast, lunch, and dinner. The market is open seven days a week, with extended hours on weekends, and offers free Wi-Fi and outdoor seating. However, their customer service has been criticized by some patrons, with reports of slow and rude service. The quality and size of their sandwiches have also been complained about, with some customers expressing disappointment. On the other hand, some reviews praise the efficiency and friendliness of the staff and the taste of their sandwiches. Overall, Cantwell's seems to be a convenient spot for grabbing a quick bite or shopping for groceries, but customers may want to be prepared for potential service issues.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:9bc816836e48dc5da2d7d81cbb4d80d7348dca522d7ae1fd8914eaac5a99f59d",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+  ]
+}

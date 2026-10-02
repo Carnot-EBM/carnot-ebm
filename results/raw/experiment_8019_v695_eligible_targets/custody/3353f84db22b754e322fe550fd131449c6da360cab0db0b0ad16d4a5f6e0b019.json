@@ -1,0 +1,131 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 2.0229099729913287,
+  "exclusion_reason": null,
+  "family_id": "sha256:b11310fbdf0deb4c06ad79521aab4380995de5008a9f7fd9579f50eeb776502f",
+  "input_tokens": 1542,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1542,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1566
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:7cccced23523471e3929ffbe3951ae1eceeae58ef80219edb745da8ac2a032e6",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832700,
+    "id": "chatcmpl-IbpOiJh53dYMJD0bJ8tDNqOqUxn05YbJ",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 566.735,
+      "predicted_n": 24,
+      "predicted_per_second": 42.34783452583659,
+      "predicted_per_token_ms": 23.613958333333333,
+      "prompt_ms": 1315.585,
+      "prompt_n": 1464,
+      "prompt_per_second": 1112.8129311294974,
+      "prompt_per_token_ms": 0.8986236338797814
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1542,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1566
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Baghdad, Iraq (CNN)Izzat Ibrahim al-Douri, a former top deputy to Saddam Hussein and more recently a key figure in Sunni extremist groups battling the Iraqi government, has been killed in a security operation in that country, Iraqi state-run television reported Friday. Al-Douri was the highest-ranking member of Hussein's regime to evade capture -- the \\\"King of Clubs\\\" in a deck of playing cards used by American troops to identify the most-wanted regime officials. He also was a man thought to have led the post-Hussein Sunni extremist group Naqshbandi Army. Military analysis website Globalsecurity.org says the Naqshbandi Army supports ISIS, which has taken over parts of Iraq and Syria. Al-Douri was killed in an operation by Iraqi security forces and Shia militia members in the Hamrin Mountains between Tikrit and Kirkuk, Iraq, Shia militia commander Hadi al-Ameri said. That militia is a predominantly Shiite fighting group that worked with Iraqi troops earlier this month to liberate the Iraqi city of Tikrit from ISIS. The death of al-Douri was also reported by the governor of Salahuddin province, Raid al-Jubouri, who spoke by phone on Iraqi television. Al-Douri's body arrived Friday in Baghdad, where DNA samples were taken to confirm the identity, said the spokesman of another Shiite militia called Hashd Shaabi in an interview with state-run Iraqiya TV. DNA test results could be available in 48 hours, Hashd Shaabi spokesman Yousuf al-Kilabi told the outlet. The U.S. military is aware of the media reports but doesn't have further information to evaluate them, said Col. Patrick Ryder, spokesman for U.S. Central Command. While officials are aware of al-Douri's role in the Hussein regime, Ryder declined to comment about whether the United States or the coalition was targeting any specific individuals. Al-Douri was a military commander and vice chairman of the country's revolutionary command council in Hussein's Sunni-dominated regime -- effectively Hussein's No. 2 man. Hussein's regime fell during a U.S.-led invasion in 2003. The U.S. military had said that after the Iraqi leader's fall, al-Douri helped finance a Sunni insurgency with money he transferred to Syria before the government collapsed. A month before the invasion, al-Douri presided over a military parade in Mosul, an event covered by CNN, and his participation became one of the last times he was seen in public, covered by CNN. Al-Douri saluted troops from the reviewing stand as they marched by. Then, just days before the U.S. invasion, al-Douri addressed an emergency summit of the Organization of the Islamic Conference to discuss ultimately unsuccessful ways to avert the war. Al-Douri accused the United States of aggression and blamed Kuwait for his country's suffering, calling leaders of the neighboring Gulf state \\\"traitors\\\" for cooperating with the United States and Israel. That comment prompted the Kuwaiti representative to stand up and protest, to which al-Douri countered, \\\"Shut up, sit down you small agent [of the U.S.], you monkey!\\\" Kuwaiti television cut away from the heated exchange and rejoined the conference later. Al-Douri's efforts were all in vain. The United States invaded Iraq on March 19, 2003, ousting Hussein, al-Douri and the entire regime. In subsequent years, several claims asserted that al-Douri was either killed or captured during the war and its aftermath. At the same time, a man claiming to be al-Douri released a number of audio messages over the years taunting Iraqi and U.S. officials. In 2012, a series of videos appeared online purporting to show al-Douri deriding the Shiite-led government that took over Iraq after Hussein's ouster. CNN couldn't independently verify the authenticity of those videos on YouTube or the identity of the man speaking, though he bore a striking resemblance to al-Douri. In the clips, the man who claimed to be al-Douri wore an olive military uniform and sat behind a desk with an Iraqi flag in the background. He derided Iraq's Shiite-dominated government, led by then-Prime Minister Nuri al-Maliki, as well as what he described as meddling by neighboring Iran. Al-Maliki's Dawa party, says al-Douri, \\\"has announced Iraq as the Shiite capital.\\\" At that time, nine years had passed since the invasion and, al-Douri claimed that Iraq was still in peril. \\\"Everyone can hear the sounds of danger echoing daily and threatening the country,\\\" he said. The videos were posted on what was the 65th anniversary of the Arab Socialist Baath Party, a political party founded in Syria that later provided the political basis for Hussein's now outlawed Baath Party. CNN's Hamdi Alkhshali reported from Baghdad. CNN's Jason Hanna wrote from Atlanta and Michael Martinez from Los Angeles. CNN's Jamie Crawford contributed from Washington, D.C.\\n\", \"original_answer\": \"Izzat Ibrahim al-Douri, the highest-ranking figure of Saddam Hussein's regime who had evaded capture, has been killed in a security operation in Iraq. This news was confirmed through Iraqi state-run television and other sources. The death of al-Douri was also reported by provincial authorities and officials. Al-Douri played a significant role in Sunni extremist groups battling the Iraqi government, including the Naqshbandi Army, which is believed to support ISIS. He was killed in an operation by Iraqi security forces and Shia militia members in the Hamrin Mountains.\\n\\nThe Shia militia commander Hadi al-Ameri said that the operation involved military analysis and intelligence work that led to the identification of al-Douri's location. There have been conflicting reports about the nature of the operation and whether it was carried out by the Iraqi government or by international forces. Some sources suggest that the U.S. military may have targeted al-Douri because of his association with ISIS and other extremist groups. The Iraqi government has not commented on the matter, but there have been celebrations on the streets of Baghdad and other Iraqi cities in response to al-Douri's death.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "tune",
+  "source_cluster_id": "sha256:1675d5453096998807ad939eef9be16620d92b48926cac0a55732a8427262397",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39
+  ]
+}

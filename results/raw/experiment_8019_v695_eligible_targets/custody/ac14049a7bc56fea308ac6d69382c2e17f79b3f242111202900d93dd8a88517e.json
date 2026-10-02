@@ -1,0 +1,73 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 0.0,
+  "exclusion_reason": "answer_units_over_budget",
+  "family_id": "sha256:1a21d4a1223985099524f60f74caca67149bc19edbc84c67cbd4dd9addf4dc19",
+  "input_tokens": null,
+  "parsed": {
+    "citation_valid": false,
+    "completed": false,
+    "finish_reason": null,
+    "probability": null,
+    "schema_valid": false,
+    "source_sentence_id": null,
+    "status": "invalid_envelope",
+    "syntax_valid": false,
+    "usage": {}
+  },
+  "public_eligible": false,
+  "public_hash": "sha256:5ee844440c8e5b9ff26cbf179df36697b03000cbe1e73474a0c1a952b0ae2454",
+  "raw_response": {},
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"177 S Turnpike Rd\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Restaurants, Coffee & Tea, Breakfast & Brunch, Gluten-Free, Food, Sandwiches, Bagels\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"7:0-15:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"7:0-15:0\\\",\\\"Sunday\\\":\\\"7:0-15:0\\\",\\\"Thursday\\\":\\\"7:0-13:0\\\",\\\"Tuesday\\\":\\\"7:0-15:0\\\",\\\"Wednesday\\\":\\\"7:0-15:0\\\"},\\\"name\\\":\\\"Goleta Coffee Co and Loca Vivant Kitchen\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-09 17:45:28\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Warm inviting locals cafe.  Especially great if you want plant-based, vegan, gluten-free options. They really aim to please. This place is always a favorite in part because of the commitment to offering many options and no up charge for non-cow pus milk. \\\\n\\\\nAlso a thank you shout  out to the staff like Carly. You can appreciate her smile through her eyes. They really know service even though you order and usually pick it up at the counter, but they will bring it to you as well sometimes. \\\\n\\\\nThey've got a lot of super food lattes. There's outdoor seating and shade or sun. They leave the doors open so there's good airflow. And there's also wonderful shirts on the wall honoring first responders and celebrating different fire stations.\\\\n\\\\nThey have fresh soup of the day and seasonal additions to the menu. We've had about three different types of the avocado toast. Today I had the savory seed one which was delicious and I feel so healthy after indulging in it\\\"},{\\\"review_date\\\":\\\"2022-01-08 19:28:43\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"used to love it here before the menu changed but I stopped in today just for 2 pastries and ended up waiting 8 minutes. Usually no issue with waiting I understand rushes especially in coffee shops but I didn't order coffee so it kind of made me feel like they didn't keep a good track of orders. I had to ask someone about my order and she said \\\\\\\"oh they forgot\\\\\\\" and directed me to the bakery end. My only issue is that once I asked , they had attitude and quickly handed my order to me & then I found a hair in my pastries. Sooo disappointed in customer service and just baffled in the way they handled forgetting my order.  won't be going back any time soon\\\"},{\\\"review_date\\\":\\\"2021-12-30 21:23:48\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"1. Friendly service.\\\\n2. Lots of delicious options that are plant-based. Take a look at all the different specialty Taos.\\\\n3. And no up charge for nondairy milk crate I love that. It's so great that they don't penalize people who are lactose intolerant. Or if you choose not to contribute to the dairy industry.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Goleta Coffee Co and Loca Vivant Kitchen is a local business located at 177 S Turnpike Rd in Santa Barbara, CA. It falls under the categories of restaurants, coffee & tea, breakfast & brunch, gluten-free, food, sandwiches, and bagels. The business has a rating of 4.0 stars. \\n\\nBased on customer reviews, the business is known for its warm and inviting atmosphere. It offers a variety of plant-based, vegan, and gluten-free options, catering to different dietary preferences. Customers appreciate the commitment of the staff to provide many options without any additional charges for non-cow pus milk. The service is highly praised, with specific mention of Carly, who is known for her friendly and attentive service.\\n\\nThe business has outdoor seating available, allowing customers to enjoy their meals in a comfortable environment. The establishment is known for its superfood lattes and fresh soup of the day. The menu also features seasonal additions, providing customers with a diverse range of choices. The ambiance is described as casual, with doors left open for good airflow.\\n\\nHowever, there are also negative reviews regarding customer service. One customer had to wait for 8 minutes for their order, and upon inquiry, they were met with attitude from the staff. Additionally, the customer found a hair in their pastries, which led to disappointment.\\n\\nOverall, Goleta Coffee Co and Loca Vivant Kitchen offers a wide selection of food and beverages, with a focus on accommodating different dietary needs. The business is praised for its friendly service and commitment to providing options for lactose intolerant individuals. However, improvements in customer service and order management may be necessary based on the negative feedback received.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 0,
+  "role": "fit",
+  "source_cluster_id": "sha256:569394cfe571cb7883e10c2b094db5fd295dfd447d710b6d6dd52e96a1e1c9f2",
+  "started": false,
+  "status": "excluded",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23
+  ]
+}

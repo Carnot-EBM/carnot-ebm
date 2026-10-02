@@ -1,0 +1,111 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.3600234650075436,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:8cd1229dd59e0cef2fb1ecb4f40ecf0327ad749851696c19de47d3daf4f58c4d",
+  "input_tokens": 840,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 840,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 861
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:426230a4daced0a16a987a2759b01e51a7dc3b5f71f4d84328c5fcbfeebd8eb0",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886363,
+    "id": "chatcmpl-4sKjJoGFz26iFirGyYcXv4XQdByyem0k",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 493.091,
+      "predicted_n": 21,
+      "predicted_per_second": 42.58848772336141,
+      "predicted_per_token_ms": 23.48052380952381,
+      "prompt_ms": 733.516,
+      "prompt_n": 762,
+      "prompt_per_second": 1038.8321454474067,
+      "prompt_per_token_ms": 0.9626194225721785
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 840,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 861
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"4444 Hollister Ave\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":null},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Barbeque, Restaurants\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":null,\\\"name\\\":\\\"JR's BBQ\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2009-01-22 05:51:02\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Jeez, is this really closed? I tried it for the first time a few weeks ago. Wth? Was it me? I was really looking forward to trying it again since it is near the home front. Maybe I can actually order their food at Creekside next door.\\\\n\\\\nAs I write, the Carl's Jr commercial pushing their steak sandwich as something akin to fine steak is on. The irony. The sad irony.\\\\n\\\\nWell maybe it's ok, who knows?\\\"},{\\\"review_date\\\":\\\"2009-01-20 07:02:23\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"i'm so sad!!!!!!!!!! they closed?!?!!!\\\\n\\\\nthis place was the best bbq in sb, hands down! and now they are closed?\\\\n\\\\nyou will be greatly missed jr's!!\\\"},{\\\"review_date\\\":\\\"2009-01-13 03:15:07\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Are people not paying attention to my reviews??\\\\n\\\\nJR's BBQ has closed and it's all your fault for not giving them patronage.\\\\nI swear, the best beef ribs in town. The best bbq in SB. The best sweet potato fries.\\\\n\\\\nSeriously, what is up with you, Santa Barbara. I don't want to hear any whinging about lack of money in this economy, this place had awesome specials.\\\\n\\\\nI almost regret throwing out my last to-go container this weekend. It was all I had left of JR's.  \\\\n\\\\nI think I am going to cry.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"JR's BBQ, located at 4444 Hollister Ave, Goleta, CA, is a restaurant that specializes in Barbeque. Despite not offering reservations or wifi, the restaurant is known for its outdoor seating and takeout services, making it a good spot for groups. Unfortunately, it appears that JR's BBQ has closed down, much to the disappointment of its customers. The restaurant had received an overall business rating of 4.0 stars. Customers praised its beef ribs, BBQ, and sweet potato fries as the best in Santa Barbara. They also appreciated the restaurant's special deals. Despite its closure, JR's BBQ has left a significant impression on its customers, who regretted not patronizing it more frequently.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "d5595fdc2dac26d37c3433522367f9ff29513f4cebd8ec705ff591da82752cb3",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ]
+}

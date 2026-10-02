@@ -1,0 +1,102 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.474662023014389,
+  "exclusion_reason": null,
+  "family_id": "sha256:fc74e98a77cd44b5267a59628a32365d9a41fda27e5531a78df92f8546d4be86",
+  "input_tokens": 853,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 853,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 876
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:9058fc5faabb9c1f10e38cd13c23ad557a2d0a1340155ebaf719b3f8b5ac2656",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832753,
+    "id": "chatcmpl-pI9hUWentjGApMPnVKg6AQmPpfmrpQak",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.447,
+      "predicted_n": 23,
+      "predicted_per_second": 42.47876523463977,
+      "predicted_per_token_ms": 23.54117391304348,
+      "prompt_ms": 820.23,
+      "prompt_n": 775,
+      "prompt_per_second": 944.856930373188,
+      "prompt_per_token_ms": 1.0583612903225808
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 853,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 876
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"1129 A State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":true,\\\"lot\\\":false,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":false,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Local Flavor, Bars, Food, Nightlife, Beer Bar, Lounges, Wine Bars, Beer, Wine & Spirits\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"13:0-23:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"13:0-23:0\\\",\\\"Sunday\\\":\\\"13:0-19:0\\\",\\\"Thursday\\\":\\\"13:0-21:0\\\",\\\"Tuesday\\\":\\\"13:0-21:0\\\",\\\"Wednesday\\\":\\\"13:0-21:0\\\"},\\\"name\\\":\\\"Armada Wine & Beer Merchant\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2020-10-15 06:05:38\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"I love armada but tonight was a disappointment. I ordered a bottle of rose. Without mentioning anything, the girl working grabbed a bottle off the shelf and poured me 2 glasses of warm rose. I definitely would have picked something else if she would've mentioned that she didn't have any chilled. I proceeded to ask her if she even had any ice (she didn't) then she handed me the warm bottle to take outside, rather than offering to chill it. Will come back to see if this was a fluke or if they just have poorly trained staff in general :(\\\"},{\\\"review_date\\\":\\\"2020-10-03 16:47:28\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Wine selection is great. It is hidden but its a must stop. Carlos is the best and he knows so much about wine. Highly recommend you stop in grab some wine or a drink and sit in the beautiful courtyard.\\\"},{\\\"review_date\\\":\\\"2020-03-15 03:14:54\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"This place is an absolute haven. Amir  attends to his customers with care and compassion. Definitely worth the drop in and the wine club is a steal for what it's worth\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Armada Wine & Beer Merchant is a popular local business located at 1129 A State St, Santa Barbara, CA. This place offers a variety of services and falls under multiple categories such as Local Flavor, Bars, Food, Nightlife, Beer Bar, Lounges, Wine Bars, Beer, Wine & Spirits. It's open every day of the week with extended hours on Fridays and Saturdays. The place offers free WiFi, outdoor seating and is good for groups. However, it doesn't offer take-out service. It has an average star rating of 4.5. Customers highlighted the great wine selection and the knowledgeable staff. An issue was raised about a lack of chilled wine and ice but overall reviews suggest that the experience at Armada Wine & Beer Merchant is usually positive.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:771f26e896d3283aec6deb6b3167b5187d1330299bbe4af18cde4533424b4c83",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ]
+}

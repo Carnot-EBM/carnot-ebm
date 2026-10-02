@@ -1,0 +1,114 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.8109797090291977,
+  "exclusion_reason": null,
+  "family_id": "sha256:7be3f616fed85512a056d0c984dd671cb866ca469bd6a1a6341aae7e502a07c9",
+  "input_tokens": 1243,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1243,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1267
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:57a4614a87d010ad3a314e41cf48229e3796ee3926ae0a8e89a6798a1fb51933",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832646,
+    "id": "chatcmpl-dHtYJI0wVh8dNLABlodUhW7V7ZV5VvEm",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.194,
+      "predicted_n": 24,
+      "predicted_per_second": 42.46329578870264,
+      "predicted_per_token_ms": 23.54975,
+      "prompt_ms": 1107.195,
+      "prompt_n": 1165,
+      "prompt_per_second": 1052.2085088895815,
+      "prompt_per_token_ms": 0.950381974248927
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1243,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1267
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"3860 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":null,\\\"classy\\\":false,\\\"divey\\\":null,\\\"hipster\\\":false,\\\"intimate\\\":null,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":3.0,\\\"categories\\\":\\\"American (Traditional), Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"6:0-21:0\\\",\\\"Monday\\\":\\\"6:0-21:0\\\",\\\"Saturday\\\":\\\"6:0-21:0\\\",\\\"Sunday\\\":\\\"6:0-21:0\\\",\\\"Thursday\\\":\\\"6:0-21:0\\\",\\\"Tuesday\\\":\\\"6:0-21:0\\\",\\\"Wednesday\\\":\\\"6:0-21:0\\\"},\\\"name\\\":\\\"Treehouse Restaurant\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2020-01-24 06:36:45\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"Ate with party of nine, which group they could not seat in one place, so broke into groups of 5 an 4. OK, our bad, only so many seats and booths, no reservation. I had the broiled salmon. Fairly small piece, very thin, but tasty, offered with carrots, which I did not want, substituted cole slaw, which was good, Also served with home fries, which were good. Spouse had Beef Stroganov. Rated it 'OK' also served with carrots, not a fav. Two had corned beef and cabbage, rated it good, and took some home. One complained the cabbage wasn't properly done. Another had pork chops; tasted OK but were very thin, a little dry. \\\\nDidn't get reports from the other table. In my view the food was OK, not memorable. My Salmon dinner was over-priced at $33. Heck of a better deal at Pepe's Mexican at $15.95, bigger piece of fish, Chile Relleno and with a better side and fruit salsa. And the carrots? No broccoli, no green beans just boiled carrots the only veggie?. \\\\nThe only plus was a great server - sorry I didn't get her name.\\\"},{\\\"review_date\\\":\\\"2020-01-16 14:50:32\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"Traditional Coffee Shop, it looks like a Denny's and the food is comparable. A little on the bland and greasy side of the aisle. I ordered Cinnamon Raisin French Toast and hashbrowns.\\\\n\\\\nFrench Toast - came out flat and mushy.\\\\nHashbrowns with cheese - greasy and only crisp on top.\\\\n\\\\nCoffee was good and service was pleasant. \\\\n\\\\nNot worth a stop in my opinion!\\\"},{\\\"review_date\\\":\\\"2020-01-03 19:29:28\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"Waitress is the only reason this place gets any stars! For 2 adults and a child it was $60! We could've gone to a steakhouse. The food was crap- soggy hashbrowns, chewy pancakes, watery coffee. Skip this place!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Sure! Here's an objective overview of Treehouse Restaurant based on the provided structured data in JSON format:\\n\\nTreehouse Restaurant is a casual American restaurant located in Santa Barbara, CA. It has a rating of 3.0 out of 5 stars based on three reviews. The menu offers a variety of options including salmon, beef stroganov, corned beef and cabbage, and pork chops. The restaurant has both indoor and outdoor seating, but no WiFi or reservations are available. The ambiance is described as casual and intimate, with no trendy or upscale atmosphere.\\n\\nOne reviewer enjoyed their meal, particularly the home fries and cole slaw, but found the salmon to be overpriced at $33. Another reviewer had a negative experience with the food, describing it as bland and greasy, and mentioning that the French toast was flat and mushy. The third reviewer had a similar negative experience, finding the food to be subpar and overpriced, and stating that the waitress was the only redeeming aspect of their visit.\\n\\nOverall, the reviews suggest that the quality of the food and service at Treehouse Restaurant can vary, and that the prices may be a bit high for the value. However, the ambiance is described as cozy and inviting, and the staff is friendly and attentive.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:5f89f384724921fd71db22b5c64984c2066633cc80afc5ae54ee180e35ea21f1",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22
+  ]
+}

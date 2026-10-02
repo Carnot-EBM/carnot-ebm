@@ -1,0 +1,112 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.7846126719960012,
+  "exclusion_reason": null,
+  "family_id": "sha256:6254160d32d63610dcde958ba9d9aa6b5c39c8d77ebe6cdc2f07edd1e919aaec",
+  "input_tokens": 1260,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1260,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1284
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:2862ca8762be784eeb38a48ba2093d58022dc54e1aa1b893de377d34cf27fa67",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832555,
+    "id": "chatcmpl-ufMwkeGr3ymoXgz1pcz9WYkjw8mUglbJ",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 569.954,
+      "predicted_n": 24,
+      "predicted_per_second": 42.10866140074462,
+      "predicted_per_token_ms": 23.74808333333333,
+      "prompt_ms": 1096.905,
+      "prompt_n": 1182,
+      "prompt_per_second": 1077.5773654053905,
+      "prompt_per_token_ms": 0.928007614213198
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1260,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1284
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"509 Linden Ave\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":null,\\\"romantic\\\":null,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Restaurants, Thai\\\",\\\"city\\\":\\\"Carpinteria\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"17:0-21:30\\\",\\\"Saturday\\\":\\\"12:0-21:30\\\",\\\"Sunday\\\":\\\"12:0-21:30\\\",\\\"Thursday\\\":\\\"17:0-21:30\\\",\\\"Tuesday\\\":\\\"17:0-21:30\\\",\\\"Wednesday\\\":\\\"17:0-21:30\\\"},\\\"name\\\":\\\"Siam Elephant\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-17 05:30:32\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"This place is incredible!\\\\n\\\\nSo clean!  Fresh food, wonderful choices.\\\\n\\\\nSo coming back there!\\\\n\\\\nBeautiful located, a choice of sitting inside or outside.  THANK YOU!\\\"},{\\\"review_date\\\":\\\"2021-12-29 02:18:28\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"I think fusion-style Thai food.\\\\nI found something in the food and they changed immediately. But not too sorry and not offer anything. I wanted to refund but just eat.\\\\nAnyway, every food is fine.\\\"},{\\\"review_date\\\":\\\"2021-12-20 16:18:40\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Well Date of Visit : December 19, 2021 and searching for an open Restaurant in Santa Barbara after 8:00pm is kind of difficult !! So what I noticed is lots of restaurants close fairly early and driving up and down the street plus walking in asking if restaurants are opened !! And most close early !! So Finally found this Thai Restaurant opened past 8:30pm and I walk in and was seated right away and it was really slow because it was 43 degrees outside and freezing so I guess no one wants to be outside eating !! Well for us we were fairly hungry and needed some food in our stomach !! As a foodie I always enjoy trying new restaurants and eating at new places !! So I Decided on ordering the Pan Thai Noodles and I have to say it is one of the more popular dishes here !! Cooked well and flavorful !! Next I got some appetizers which were the delicious Spring Rolls which they cut in pieces for you to dip into there delicious Peanut Sauce which comes on the side !! Those spring rolls were yummy !! Last I got the Red meat Wonton Soup which hit the spot !! Tasted pretty dang good !! I also noticed the decor was decorated with a lot of elephants around and I guess it's the symbol for this Restaurant !! But I do suggest you give it a try and enjoy the delicious Thai food they serve here !! One more thing the parking was not bad but you have to park on the side street and the first 90 Minutes are Free !! Well my overall experience was good and I definitely recommend this Restaurant to everyone to try  !! And if I happen to be in Santa Barbara again I might have to stop in once again !!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Sure! Here's an objective overview of Siam Elephant based on the provided structured data:\\n\\nSiam Elephant is a Thai restaurant located in Carpinteria, California that serves fresh and flavorful Thai cuisine. The restaurant has a cozy atmosphere with indoor and outdoor seating options, and it is open for lunch and dinner. The menu offers a variety of dishes, including noodle and rice dishes, soups, salads, and appetizers. The restaurant accepts reservations and offers takeout and delivery options.\\n\\nAccording to customer reviews, the service is friendly and attentive, and the food is fresh and delicious. Some reviewers praised the Pad Thai and the spring rolls, while others enjoyed the wonton soup and the peanut sauce. The restaurant has a 4.5-star rating based on several reviews, indicating a high level of customer satisfaction.\\n\\nOne reviewer particularly appreciated the cleanliness of the restaurant and the freshness of the food, while another reviewer noted that the service was quick and friendly. However, one reviewer had a negative experience with finding the restaurant open late, as many other restaurants in the area were closed early.\\n\\nOverall, Siam Elephant seems like a great option for those looking for delicious Thai cuisine in a cozy and welcoming environment. The restaurant's commitment to fresh ingredients and friendly service is evident in the positive customer reviews.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:b10b8272b3f9daf447fa2c00166f2f2a5b99cadbfe718aa3f54640d623d6b266",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20
+  ]
+}

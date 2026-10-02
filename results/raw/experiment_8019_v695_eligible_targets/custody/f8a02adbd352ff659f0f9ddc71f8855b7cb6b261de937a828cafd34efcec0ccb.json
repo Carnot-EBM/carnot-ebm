@@ -1,0 +1,101 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.1685868300264701,
+  "exclusion_reason": null,
+  "family_id": "sha256:cff33442967fc9d85044a1e4008b5ec09726e13cc81de9ee4be8c7681a96f23f",
+  "input_tokens": 497,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 497,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 521
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:14351830e271a210591ae1c373483caee1c65c9a07d528d91c8265ba0c094eba",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832509,
+    "id": "chatcmpl-mE7kcV1nLWZbU05o7h3L7gLWZGIbgfLr",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.292,
+      "predicted_n": 24,
+      "predicted_per_second": 42.45593427821373,
+      "predicted_per_token_ms": 23.553833333333333,
+      "prompt_ms": 483.188,
+      "prompt_n": 419,
+      "prompt_per_second": 867.1572969527389,
+      "prompt_per_token_ms": 1.1531933174224342
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 497,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 521
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Beijing (CNN)Chinese police on Monday released five female activists who were detained last month, family and friends of the women tell CNN. Wei Tingting, Wang Man, Zheng Churan, Li Tingting and Wu Rongrong were freed. The women will be under police surveillance for a year and have their movements and activities restricted, attorney Liang Xiaojun said. Police can summon the women for questioning at any time, he added. The five members of China's Women's Rights Action Group were detained in Beijing, Guangzhou and Hangzhou a few days before events planned for International Women's Day on March 8. The United States had urged China to free them, and the international community harshly criticized keeping the women in custody. \\\"Each and every one of us has the right to speak out against sexual harassment and the many other injustices that millions of women and girls suffer around the world,\\\" U.S. Secretary of State John Kerry said in a statement Friday. \\\"We strongly support the efforts of these activists to make progress on these challenging issues, and we believe that Chinese authorities should also support them, not silence them.\\\" \\\"Free the five\\\" became a Twitter hashtag. Wang Qiushi, a lawyer for Wei, said police recommended last week that prosecutors press charges of \\\"assembling a crowd to disturb public order.\\\"\\n\", \"original_answer\": \"Beijing police release five female activists after pressure from the US government and international community. The women will be under police surveillance for a year with restrictions on their movements and activities. They were part of the Women's Rights Action Group and planned events for International Women's Day. The incident has raised criticism about China's treatment of women's rights activists.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:defff4ba1573a0d955b7fab83405d6627b1d150856348a95ad10ffd78ccb8bf1",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ]
+}

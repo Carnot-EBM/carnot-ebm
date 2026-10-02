@@ -1,0 +1,107 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.356606152956374,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:26fda7230f70ff58aaf3a45090e4fb671e5c447ca112f5731fb8eb477d2c7d66",
+  "input_tokens": 748,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 748,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 771
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:1059cf543a07362dc3fda2abec78ef74c5e5eb87c1d236724ffaefad7f7ce2fb",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886211,
+    "id": "chatcmpl-vgIhZdqHwN5N3nNH6IfbaXA8aNZV1oho",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 548.233,
+      "predicted_n": 23,
+      "predicted_per_second": 41.952965253824566,
+      "predicted_per_token_ms": 23.836217391304345,
+      "prompt_ms": 672.036,
+      "prompt_n": 670,
+      "prompt_per_second": 996.9704003952171,
+      "prompt_per_token_ms": 1.0030388059701492
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 748,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 771
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:[\u2026] Plastic Vase \u2013 you\u2019re probably thinking \u201cright, lop off top of bottle, stick water and flowers in.\u201d Nope, this tutorial guides you to make a stunning looking plastic vase that absolutely passes for glass.\u2026] Plastic Vase \u2013 you\u2019re probably thinking \u201cright, lop off top of bottle, stick water and flowers in.\u201d Nope, this tutorial guides you to make a stunning looking plastic vase that absolutely passes for glass.\\\\n\\\\npassage 2:This is how we make plastic bottle flower vase : The procedure to making your own plastic bottle flower vases is fairly easy and requires just a few steps. 1  Take your Cutter and carefully cut the mouth of the bottle, make sure the cutter is sharp enough to get a neat cut. The strips should be about 3/4th of the length of the bottle (not all the way down). 2  Once again, make sure the scissor is sharp for a clean cut.If it\u2019s not, heat it the same way as mentioned in step one. 3  Fold the strips like in the diagram and hold the position for a while.\\\\n\\\\npassage 3:1 Because the plastic will be very lightweight, add marbles, beach glass, or decorative stones in the vase to provide a weighted base. 2  Heating the bottle can ensure your folds do not come apart.3  Be sure to maintain the regularity of the creases.arefully press and fold all the strips outward to make a level edge all the way around. 4. Press the bottle upside down on a flat surface to ensure an even edge. 5. Weave the tip of a strip over the next one and under the next two. Fold and crease it so that the tip is at the place shown here by the arrow.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to make a flower vase out of plastic bottle\\\"}\", \"original_answer\": \"To make a plastic bottle flower vase, start by using a sharp cutter to cut the mouth of the bottle. You need to cut strips that are about 3/4th of the length of the bottle. Make sure your scissor is sharp for a clean cut. If it\u2019s not, heat it the same way as mentioned in step one. Fold the strips like in the diagram and hold the position for a while. Add marbles, beach glass, or decorative stones in the vase to provide a weighted base. Heating the bottle can ensure your folds do not come apart. Maintain the regularity of the creases and press and fold all the strips outward to make a level edge all the way around. Press the bottle upside down on a flat surface to ensure an even edge. Weave the tip of a strip over the next one and under the next two. Fold and crease it so that the tip is at the place shown here by the arrow.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "73ba7bac81f5ab039e0c7b18139e9a2b784039da5307919b5e94c18040fb7bea",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ]
+}

@@ -1,0 +1,106 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.3384208139614202,
+  "exclusion_reason": null,
+  "family_id": "sha256:a41eead3fdc35a848b93657ba210f85a31244e9e46069984f3a20a0002d7c3c7",
+  "input_tokens": 730,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 730,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 754
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:27ecc94562a2c6a78239c6731cd81fe412ddbb9faf38be77f2132819aef3ca7f",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832549,
+    "id": "chatcmpl-MmSgC0OwoXmRquDpmp93w3uv339kSC6g",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 561.871,
+      "predicted_n": 24,
+      "predicted_per_second": 42.71443089250024,
+      "predicted_per_token_ms": 23.411291666666667,
+      "prompt_ms": 658.55,
+      "prompt_n": 652,
+      "prompt_per_second": 990.053906309316,
+      "prompt_per_token_ms": 1.0100460122699386
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 730,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 754
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Gaza Crying for Help: Why Isn't Egypt Offering Refuge Amid Israeli Strikes?\\nAs Israeli military aircraft strike Gaza, sabotaging constructions in response to the Hamas\u2019 shock attack at the music fest last weekend, Egypt becomes concerned that Israeli bombardments will drive displacement.\\nEgypt closed the Rafah Border Crossing, which is the main point of exit to the outside world for Gazans after the Israeli assault.\\nFatalities Rise Above 1,500!\\nAfter the Hamas attack, Israel\u2019s leadership has recurrently advised civilians to abscond the region while they still can, before the Israel government unleashes the complete power of the military in the land.\\nThe death toll after Israeli air strikes. The only practical exit is the Rafah Border Crossing into Egypt, but Egypt is keeping it inflexibly closed.\\nIsrael Says It has Dropped 6000 Bombs on Gaza\\nPresident el-Sisi urges Gazans to stay in their land\\nIsrael forces ahead with a brutal siege that is swiftly intensifying into an awful humanitarian crisis. President Abdel Fattah el-Sisi said on Thursday in response to growing calls that the people of Gaza must \u201cstay steadfast\u201d and that they should \u201cremain on their land\u201d.\\nIt is noted that this was President el-Sisi\u2019s response not only to the Gazans but also to the American officials when they pleaded with Cairo to permit a secure course for civilians fleeing Gaza.\\nWill the UN be able to evacuate 1,100,000 residents?\\nIsrael cut down the electric supply and barred food, fuel, and water supplies from entering Gaza after proclaiming a \\\"complete siege\\\" of the commune, which had already been under a stringent Israeli restriction, supported by Egypt, for the last sixteen years. More than 263,900 people have been displaced in Gaza since the 2023 war began.\\nIsrael has told the UN to move 1.1 million residents out of north Gaza within 24 hours, as 27 Americans died as a result of the war. Biden has claimed to have told he told Benjamin Netanyahu that with all the rage and frustration, it is vital that Israel acts according to the rules of war in its operations in Gaza.\", \"original_answer\": \"Here is a summary of the article in 86 words:\\n\\nAs Israel continues to strike Gaza, Egypt has kept the Rafah Border Crossing closed despite the increasing number of fatalities and displacement. The UN has appealed to evacuate 1.1 million residents, but Israel has refused to allow safe passage. The situation has intensified into a humanitarian crisis, with over 263,900 people displaced and 27 Americans killed in the conflict.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:12006b769fd009f188ead237877852c2fae0bfc7c161efaa6bd14641f790c27a",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ]
+}

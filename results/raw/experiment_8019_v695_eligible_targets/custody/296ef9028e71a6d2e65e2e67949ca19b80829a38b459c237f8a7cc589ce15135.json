@@ -1,0 +1,99 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.2275929300230928,
+  "exclusion_reason": null,
+  "family_id": "sha256:4acc2beeb2ac7b6e42b80e0445219f183b1d75136be5e544b96d6dde6e7246ea",
+  "input_tokens": 648,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 648,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 670
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:56696eab23c1ede155951634cc284ba84b2a17cdd9b6515cef423f1350f0b89d",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.95,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832641,
+    "id": "chatcmpl-1JI7ENKSPIMom8XcBz29UfhiJfEy1KW1",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 515.406,
+      "predicted_n": 22,
+      "predicted_per_second": 42.684796063685724,
+      "predicted_per_token_ms": 23.427545454545452,
+      "prompt_ms": 598.007,
+      "prompt_n": 570,
+      "prompt_per_second": 953.166100062374,
+      "prompt_per_token_ms": 1.0491350877192982
+    },
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 648,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 670
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:The goals of treatment for COPD are to: 1  Slow down the disease by quitting smoking and avoiding triggers, such as air pollution. 2  Limit your symptoms, such as shortness of breath, with medicines. 3  Increase your overall health with regular activity.  Prevent and treat flare-ups with medicines and other treatment.\\\\n\\\\npassage 2:COPD is characterized by a longstanding (chronic) obstruction to air flow out of the lungs. It can take different forms and have different symptoms. Symptoms of COPD can also vary in severity. COPD Symptoms include: a chronic cough, shortness of breath, and frequent respiratory infections.\\\\n\\\\npassage 3:Common signs and symptoms of COPD include: 1  An ongoing cough or a cough that produces a lot of mucus (often called smoker's cough) 2  Shortness of breath, especially with physical activity. 3  Wheezing (a whistling or squeaky sound when you breathe)  Chest tightness.\\\\n\\\\n\\\",\\\"question\\\":\\\"what is copd and what are the symptoms and treatment\\\"}\", \"original_answer\": \"Based on the provided passages, here is the answer to the question:\\n\\nWhat is COPD?\\n\\nCOPD stands for Chronic Obstructive Pulmonary Disease. It is a chronic lung disease that makes it difficult to breathe and can cause long-term disability. The term COPD includes two main conditions: chronic bronchitis and emphysema. (Passage 2)\\n\\nSymptoms of COPD:\\n\\nThe common symptoms of COPD include an ongoing cough or a cough that produces a lot of mucus, shortness of breath, wheezing, and chest tightness. These symptoms can vary in severity. (Passages 1, 2, and 3)\\n\\nTreatment of COPD:\\n\\nThe goals of treatment for COPD are to slow down the disease by quitting smoking and avoiding triggers, limit symptoms with medications, increase overall health through regular activity, and prevent and treat flare-ups with medications and other treatments. Treatment may also include pulmonary rehabilitation, which can help improve lung function and overall health. (Passage 1)\\n\\nUnable to answer based on given passages:\\n\\nThe passages do not provide detailed information on the causes of COPD, so I cannot answer the question about its causes.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "tune",
+  "source_cluster_id": "sha256:8fe321ca98bdfb14da4b7ddcaa825b4d88b4dbc4f2c041457fbbd0dad182ee00",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ]
+}

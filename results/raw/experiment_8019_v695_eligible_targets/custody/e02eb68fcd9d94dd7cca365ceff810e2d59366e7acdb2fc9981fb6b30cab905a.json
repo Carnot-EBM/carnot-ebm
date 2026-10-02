@@ -1,0 +1,149 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 2.310113886022009,
+  "exclusion_reason": null,
+  "family_id": "sha256:6faf7eac410fc8e2c2e7f555ef6260e2bda2265b2fbba430e9df2aed0ebd5927",
+  "input_tokens": 1999,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1999,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 2022
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:db11dbce782989d53ddab5f4311637aff4e8e79a70baabd0fbbeb7cb1d67f4fb",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832930,
+    "id": "chatcmpl-UH1iAjBdhMbcC7bcYUaJYqz3WJ2P65e8",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 542.955,
+      "predicted_n": 23,
+      "predicted_per_second": 42.36078496376311,
+      "predicted_per_token_ms": 23.606739130434786,
+      "prompt_ms": 1650.568,
+      "prompt_n": 1921,
+      "prompt_per_second": 1163.8417805264612,
+      "prompt_per_token_ms": 0.8592233211868818
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1999,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 2022
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"It took prosecutors months to present 131 witnesses to support their claim that former NFL star Aaron Hernandez killed semi-pro player Odin Lloyd. On Monday, Hernandez's defense gave its side of the story, wrapping up its witnesses in less than a day. Hernandez, 25, is on trial for the shooting death of Lloyd, whose body was found in a Massachusetts industrial park in June 2013. Now that the defense has rested, it won't be long before the jury begins deliberating. Much of the evidence in the former New England Patriots' case is circumstantial. Here are some key points jurors will have to consider after each side makes closing arguments on Tuesday:. As news spread that Hernandez was under investigation in June 2013, Patriots owner Robert Kraft called in the tight end for a meeting two days after Lloyd's death. \\\"He said he was not involved,\\\" Kraft testified last week. \\\"He said he was innocent, and that he hoped that the time of the murder incident came out because he said he was in a club.\\\" There's only one potential problem with that claim: The time Lloyd was killed hadn't been made public yet by the time Hernandez met with Kraft. So how could Hernandez have known when Lloyd was killed? \\\"What a great, great witness for the prosecution,\\\" CNN legal analyst Mel Robbins said. \\\"Basically what happened is Aaron Hernandez lied to his boss. And the only way you rebut it is if you put him on the stand.\\\" When questioned by a defense attorney, Kraft said that he'd never had any problems with Hernandez and that the player was always respectful to him. Hernandez's fiancee, Shayanna Jenkins, revealed for the first time last week that Hernandez told her to dispose of a box from the couple's home that she said reeked of marijuana. She also said she didn't know what was in the box. That revelation may contradict the prosecution's contention that the weapon used in the killing was in the box. The murder weapon in the case has not been recovered. During cross-examination by the defense, Jenkins testified that she suspected marijuana because the box smelled \\\"skunky.\\\" Earlier, she told prosecutors during direct examination that she didn't know what was in the box. She said Hernandez never told her, and she never looked. After concealing the box with her daughter's clothing, Jenkins said she threw it away in \\\"a random dumpster\\\" but could not remember exactly where. Much testimony has focused on the shoes Hernandez wore the night Lloyd was shot. A Nike consultant testified that Hernandez was wearing Nike Air Jordan Retro 11 Lows. About 93,000 pairs of that shoe were made, significantly fewer in a size 13. The shoe's sole makes a distinct impression, said Lt. Steven Bennett of the Massachusetts State Police. The consultant testified under questioning from defense attorney Jamie Sultan that other Nike shoes -- more than 3 million -- make the same impression. Yet Bennett, who works in crime scene services, testified that the footprint left near Lloyd's body was \\\"in agreement\\\" or consistent with the Air Jordan Retro 11 Lows size 13. Although he did not have the shoes that Hernandez wore that night, he used an identical pair to make his determination. Bennett did so by creating a transparency of the sole and laying it over a photo of the footwear impression. Jurors watched as he drew lines showing how the sole aligned with the impression. What may have been a key moment for the prosecution was quickly derailed by defense attorney Jamie Sultan. Sultan questioned the science behind analyzing footprints. He introduced a March 2014 investigative report written by Bennett saying the partial footwear impression lacked certain detail and quality to be able to make a comparison. Prosecutors used grainy footage from Hernandez's home security system to suggest he was holding a .45-caliber handgun -- the same kind of gun police said was used to kill Lloyd. Hernandez could be seen on camera pulling into his driveway minutes after Lloyd was shot to death in an industrial park about a mile from Hernandez's home. \\\"In my opinion, the firearm shown in the video stills is a Glock pistol,\\\" Glock sales manager Kyle Aspinwall testified. The video is time-stamped minutes after workers in a nearby industrial park describe hearing loud noises like fireworks -- the moment prosecutors say Lloyd was gunned down after getting out of a car Hernandez was driving. Hernandez's lawyers then showed a different part of the video time-stamped a few seconds earlier with Hernandez holding what appeared to be a shiny object in one hand, suggesting it may be an iPad. \\\"Glock pistols don't have white glows to them, do they?\\\" defense attorney James Sultan asked. \\\"No, they do not,\\\" Aspinwall answered. Sultan then displayed a soft-pellet gun similar in shape to a Glock, suggesting it could also be the object Hernandez is holding. Hernandez has pleaded not guilty in Lloyd's death. But already, his arrest has led to deep consequences, including his release from the New England Patriots and the loss of millions of dollars in expected earnings. So what might make a young man who had signed a $40 million contract risk everything? Prosecutors have said Lloyd might have done or said something that didn't sit well with Hernandez. They claimed Hernandez rounded up some friends and orchestrated a hit to settle the score. Hernandez's co-defendants, Ernest Wallace and Carlos Ortiz, also pleaded not guilty and will be tried separately. But the case gets more complicated. Evidence collected in Lloyd's death investigation led to two more murder charges against Hernandez in a separate case in Boston. Hernandez is also accused of shooting Daniel de Abreu and Safiro Furtado, allegedly over a spilled drink at a nightclub. That double shooting took place in July 2012, almost a year before Lloyd was killed. Prosecutors have said in pretrial hearings that Hernandez may have been mad at himself for possibly showing Lloyd the spot where that double murder happened. During trial, prosecutors suggest a text written by Hernandez the day before the murder saying he was \\\"buggin\\\" for showing Lloyd \\\"the spot\\\" may have played a role in plotting to kill Lloyd. The judge has banned any mention of the double murder in Lloyd's trial, ruling it is prejudicial. Hernandez has pleaded not guilty in those deaths as well. But when the Lloyd trial ends, that murder trial awaits him. CNN's Jason Hanna, Lawrence Crook, Laura Dolan and Catherine E. Shoichet contributed to this report.\\n\", \"original_answer\": \"Former NFL star Aaron Hernandez's defense has rested its case in the trial for the shooting death of semi-pro player Odin Lloyd. The defense presented its witnesses in less than a day, in contrast to the months it took for the prosecution to present its case. One key point that the jury will have to consider is Hernandez's meeting with Patriots owner Robert Kraft after news of the investigation broke. Kraft testified that Hernandez claimed he was innocent and that he hoped the time of the murder incident came out because he said he was in a club. However, the time of Lloyd's death had not been made public yet, raising questions about how Hernandez could have known when Lloyd was killed. Hernandez's fianc\u00e9e, Shayanna Jenkins, also provided new information in her testimony, saying that Hernandez told her to dispose of a box from their home that smelled of marijuana. This contradicts the prosecution's claim that the murder weapon was in the box. The murder weapon has not been recovered. Testimony also focused on the shoes Hernandez wore the night of the shooting, with a Nike consultant testifying that the footprint left near Lloyd's body was consistent with the Air Jordan Retro 11 Lows size 13, which Hernandez was wearing. However, the defense questioned the reliability of analyzing footprints. Prosecutors also used footage from Hernandez's home security system to suggest he was holding a gun similar to the one used to kill Lloyd, but the defense argued that the object could have been an iPad or a soft-pellet gun. Hernandez has pleaded not guilty in Lloyd's death, but he also faces separate murder charges in a different case.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "tune",
+  "source_cluster_id": "sha256:5fcc6d6254a6c893de44ee8c48179d2714c2b126577d0ce5693e79081854cdbb",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51,
+    52,
+    53,
+    54,
+    55,
+    56,
+    57
+  ]
+}

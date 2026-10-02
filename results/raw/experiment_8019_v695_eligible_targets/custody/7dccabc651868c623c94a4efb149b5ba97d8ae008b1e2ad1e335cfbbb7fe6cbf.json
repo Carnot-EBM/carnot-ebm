@@ -1,0 +1,114 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.3523704300168902,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:8a5bab8003d6c3734bc82cb9043ed570da00aa5ef9e950141360ce64b4c90ab2",
+  "input_tokens": 843,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 843,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 864
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:8f3ed8a5696bcc30917ff23b172ce19a7c0ca66a3eb265ba0e0b6a38c0327e46",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885928,
+    "id": "chatcmpl-qit1KtcXEqVW79KppNqPITocnERTZux0",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 491.525,
+      "predicted_n": 21,
+      "predicted_per_second": 42.72417476221962,
+      "predicted_per_token_ms": 23.405952380952378,
+      "prompt_ms": 729.897,
+      "prompt_n": 765,
+      "prompt_per_second": 1048.0930871068108,
+      "prompt_per_token_ms": 0.9541137254901961
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 843,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 864
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"The Louisiana Poter Accused Of Kissing The Wrong Woman Mysteriously Disappeared On July 12, 1964\\nVanished Without a Trace: The Mysterious Case of Joseph Edwards\\nIn the small town of Vidalia, Louisiana, the enigmatic disappearance of 25-year-old Joseph Edwards continues to haunt the community, even decades later. Edwards, a porter at the notorious Shamrock Motel, a known gathering spot for Ku Klux Klan members, vanished under mysterious circumstances on the night of July 12, 1964.\\nEdwards, who drove to work that evening in his 1958 blue and beige Buick, became the center of a controversial incident when a white woman, Iona Perry, accused him of kissing her. Perry, involved with a married man named James Buford Goss, a probation officer, confided in Goss about the incident. Goss assured Perry he would handle the situation with Edwards himself.\\nOn that fateful evening, Edwards' cousin, Carl, along with three of his friends, found themselves subjected to violence, detained and beaten at the Ferriday Jail. The group later claimed that two deputies, both affiliated with the Ku Klux Klan, transported them to the Vidalia Parish Jail. During the journey, they stumbled upon Edwards\u2019 deserted vehicle. Carl recounted a chilling warning from one of the deputies, stating that they would learn a harsh lesson and meet a fate similar to Edwards.\\nThe discovery of Edwards\u2019 abandoned car behind a bowling alley on the Ferriday-Vidalia Highway only deepened the mystery. Inside, investigators found a necktie fashioned into a noose, hanging on the steering wheel, a grim and ominous symbol.\\nThe investigation revealed seven individuals potentially implicated in Edwards\u2019 disappearance. Among them were Raleigh Jackson \u201cRed\u201d Glover, Kenneth Norman Head, and Homer James \u201cBuck\u201d Horton. Additionally, four law enforcement officers were under scrutiny: Frank DeLaughter and Bill Ogden from the Concordia Parish Sheriff\u2019s Office, probation officer James Buford Gross, and Vidalia Police Chief J.L. \u201cBud\u201d Spinks.\\nDespite the cloud of suspicion that hung over these individuals, all of them have since passed away, leaving many questions unanswered. In 2016, the Federal Bureau of Investigation officially closed the case, yet Edwards\u2019 fate remains unknown.\\nThe haunting legacy of Joseph Edwards serves as a stark reminder of a dark period in our nation\u2019s history, where justice remained elusive and the truth, potentially buried with those who took their secrets to the grave.\", \"original_answer\": \"The mysterious disappearance of 25-year-old Joseph Edwards in 1964 continues to puzzle the community of Vidalia, Louisiana. Edwards, a porter at the infamous Shamrock Motel, vanished after a white woman, Iona Perry, accused him of kissing her. The mystery deepened when Edwards' abandoned car was discovered with a necktie fashioned into a noose. Seven individuals, including four law enforcement officers, were suspected of involvement in his disappearance, but all have since died. The FBI closed the case in 2016, but Edwards' fate remains unknown, serving as a reminder of a dark period in US history.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "d8324c134bf16d359bf93984dc827fc3c6deeb0c7b22f51f33708c9c36eed1ac",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17
+  ]
+}

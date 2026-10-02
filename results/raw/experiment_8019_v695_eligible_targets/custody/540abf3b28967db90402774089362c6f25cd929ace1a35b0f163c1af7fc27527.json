@@ -1,0 +1,110 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.3977660749806091,
+  "exclusion_reason": null,
+  "family_id": "sha256:f25cb424f0ea71352f49c31174f109b531c7636f137aa0352c25d56295d30209",
+  "input_tokens": 778,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 778,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 802
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:b188b90cf311c1e87dafbe5f73041f3a7230b3bd51fa5b1dbf970248b432e269",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832839,
+    "id": "chatcmpl-H8uu2qAOU2pYjzbMhCH1og03GkosamZ8",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.495,
+      "predicted_n": 24,
+      "predicted_per_second": 42.440693551667124,
+      "predicted_per_token_ms": 23.562291666666667,
+      "prompt_ms": 692.171,
+      "prompt_n": 700,
+      "prompt_per_second": 1011.3107888079679,
+      "prompt_per_token_ms": 0.9888157142857144
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 778,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 802
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:1 With the pencil, carefully poke a small hole in the bottom of each plastic cup. 2  Tie the paper clip to one end of the string. 3  Thread the other end of the string through the hole in the bottom of one of the cups. 4  Be sure to thread it from the inside of the cup. Be sure to thread it from the inside of the cup. 2  The paperclip will keep the string from going all the way through the hole. 3  Then thread the string through the hole in the second cup, but this time do it from the outside of the cup. 4  Tie the second paper clip to the other end of the string.\\\\n\\\\npassage 2:I will show you how to make a string phone. You talk into the cup on your end of the string and the sound comes out through the other cup and only your friend can hear you.Take two paper cups and poke a small hole through the center of the bottom of each cup; a pencil tip will work for this. will show you how to make a string phone. You talk into the cup on your end of the string and the sound comes out through the other cup and only your friend can hear you.\\\\n\\\\npassage 3:Instructions. Poke a small hole in the bottom of each cup with the push pin. Do not make the hole too large, or the string telephone will not work properly. Thread one end of the string through the hole in the bottom of one cup.Tie that end of the string to a paper clip. This prevents the string from falling out. Repeat this process with the other end of the string and the other cup.nstructions. Poke a small hole in the bottom of each cup with the push pin. Do not make the hole too large, or the string telephone will not work properly. Thread one end of the string through the hole in the bottom of one cup.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to make telephone with two plastic cups\\\"}\", \"original_answer\": \"To make a telephone using two plastic cups, follow these steps:\\n\\n1. Use a pencil to carefully poke a small hole in the bottom of each plastic cup.\\n2. Tie a paper clip to one end of a string.\\n3. Thread the other end of the string through the hole in the bottom of one of the cups (from the inside).\\n4. The paperclip will prevent the string from going all the way through the hole.\\n5. Thread the string through the hole in the second cup (from the outside).\\n6. Tie another paper clip to the other end of the string.\\n\\nNow you have a basic string phone! Talk into one of the cups and the sound will come out through the other cup, allowing only the person on the other end to hear you.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:fcfb10621e5989c1be30e26cc99976094fddc6f0645b1495d27c3e8bf7b0f312",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18
+  ]
+}

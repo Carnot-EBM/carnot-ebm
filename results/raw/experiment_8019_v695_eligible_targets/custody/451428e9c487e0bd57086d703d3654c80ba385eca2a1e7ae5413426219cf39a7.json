@@ -1,0 +1,118 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.2368242660304531,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:5f19c37f0ee9a6c34ef07834fc5ea3dda7b2d6e3f9e5da902f8f0bb9532bc0de",
+  "input_tokens": 602,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 602,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 625
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:cff78a3a0373633ba3ed7e54d4f38ae6c728f39c7bd7bcc4f1783dbb8a3be591",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885880,
+    "id": "chatcmpl-jF4tanKVTQkit8tlNij2KwcNt4KHAWUK",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 536.143,
+      "predicted_n": 23,
+      "predicted_per_second": 42.89900269144612,
+      "predicted_per_token_ms": 23.310565217391307,
+      "prompt_ms": 588.912,
+      "prompt_n": 524,
+      "prompt_per_second": 889.7764012280272,
+      "prompt_per_token_ms": 1.12387786259542
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 602,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 625
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Setting Achievable Goals. 1  1. Determine your life goals. Ask yourself some important questions about what you want for your life. 2  2. Break the big picture down into smaller and more specific goals. Consider areas of your life that you either want to change or that you feel you would like to develop with time. 3  3. Write goals for the short term.\\\\n\\\\npassage 2:Setting Achievable Goals. 1  1. Determine your life goals. 2  2. Break the big picture down into smaller and more specific goals. 3  3. Write goals for the short term.  4. Make your goals smaller steps that move you towards larger life 1  goals. 5. Adjust your goals periodically.\\\\n\\\\npassage 3:Personal Success 80/20 Rule. The 80/20 rule is one of the most helpful concepts for life and time management. According to this principle: 20 percent of your activities will account for 80 percent of your results. It can change the way you set goals forever.\\\\n\\\\n\\\",\\\"question\\\":\\\"everything about how to set goals\\\"}\", \"original_answer\": \"Setting goals involves determining your life goals, which requires asking yourself important questions about what you want in your life. To make these more manageable, you should break down the big picture into smaller, more specific goals. These could be areas of your life you want to change or develop over time. You should also write down short-term goals, which are smaller steps that move you towards your larger life goals. Your goals should be achievable, and you should adjust them periodically as needed. The 80/20 rule, which suggests that 20 percent of your activities will account for 80 percent of your results, can be a useful principle to apply in goal setting.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "calibration",
+  "source_cluster_id": "ac116a1cca1d73896ab6d86b3ab49539f7c7a67775451b361fda628ff6fd9d99",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21
+  ]
+}

@@ -1,0 +1,112 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.4250349490903318,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:665733af76e1a095ed7d1ad429aeacbcbbca04496c050558bcd168936321c8ab",
+  "input_tokens": 875,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 875,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 896
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:1b7df6b716db98ab6d910c0ed5eaa0dd6cf41e1feee64bc0280bda832fa8985c",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885906,
+    "id": "chatcmpl-NTyXN35xtdXuzATxni6HnfWPU6DFFEBt",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 490.174,
+      "predicted_n": 21,
+      "predicted_per_second": 42.84192960050921,
+      "predicted_per_token_ms": 23.341619047619048,
+      "prompt_ms": 816.169,
+      "prompt_n": 797,
+      "prompt_per_second": 976.5134426816015,
+      "prompt_per_token_ms": 1.024051442910916
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 875,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 896
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"149 N Fairview Ave\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":null},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Delis, Restaurants\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":null,\\\"name\\\":\\\"European Deli\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2019-03-24 03:34:54\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"RIP European Deli. I really enjoyed you. \\\\nGoing through old receipts, it looks like the owner's name may have been Evelyn. Vielen Dank :)\\\"},{\\\"review_date\\\":\\\"2012-09-19 15:53:45\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I agree with the review below me and although this restaurant may be long gone, I still need to leave 5 stars review for European deli!\\\\n\\\\nThis was a family owned business. The older lady that was in charge was so nice and she was very patient with me as I slowly browsed through all their menu and each and every single type of sausage they had. My boyfriend opted for the bratwurst combo meal and I always got their sandwich. I forgot what kind of sandwich I got but I remember it being super good. They served their homemade potato salad and sauerkraut. I'm not a big fan of their sauerkraut but my boyfriend loved it! We both equally enjoyed their potato salad because it tasted like authentic european potato salad with big potato chunks!\\\\n\\\\nI really wish European deli would open up again. :( I was so broken hearted when I found out they closed.. still reminiscing even though I'm 100 miles away! Hope the family that ran the restaurant is doing well!\\\"},{\\\"review_date\\\":\\\"2012-01-18 06:06:55\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I don't think I have ever been more disappointed to hear of a restaurant closing. It deserves a final review as having the very best German potato salad and roast beef I have ever had. I am still trying to find someplace in LA/OC even close. Let me know if anyone has a favorite place.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"European Deli, situated at 149 N Fairview Ave, Goleta, CA, is a highly-rated restaurant specializing in Deli cuisine. The restaurant holds a commendable 4.5-star rating and is renowned for its take-out service and suitability for groups. The Deli offers outdoor seating and has provided a parking lot for the convenience of its customers. In the reviews, customers have lavished praise on the restaurant, expressing their deep disappointment at its closure. They fondly remember the owner, possibly named Evelyn, and the fantastic menu options. Notably, the homemade potato salad and roast beef were beloved by many, as were the variety of sausages and sandwiches. Customers have also appreciated the restaurant's authentic European style cuisine and have expressed hopes for its reopening.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "calibration",
+  "source_cluster_id": "1d6619be44b083caee8b18b1d605dadf9d383448e3d862e7b9faa883d937d948",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ]
+}

@@ -1,0 +1,99 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.0968755620415322,
+  "exclusion_reason": null,
+  "family_id": "sha256:f68577d3993a33fcc6ecf5ea0d940f6de1a1df8c4af36a56745f9a7748f28acf",
+  "input_tokens": 395,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 395,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 419
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:8a98849c141274fff2d723d0b77bff3495403b3434f11e9a7a975912782bc500",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832735,
+    "id": "chatcmpl-9gEwTA6H3o1T6jHUkf9VBYeZmPRK3PTS",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.468,
+      "predicted_n": 24,
+      "predicted_per_second": 42.517910669869686,
+      "predicted_per_token_ms": 23.519499999999997,
+      "prompt_ms": 415.508,
+      "prompt_n": 317,
+      "prompt_per_second": 762.9215321967326,
+      "prompt_per_token_ms": 1.310750788643533
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 395,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 419
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"At least 21 people were killed during a shipwreck off the northern coast of Haiti, the country's civil protection directorate told CNN on Thursday. A small boat carrying about 50 migrants left from the area of Le Borgne, west of Cap-Haitien, on Wednesday night. It began to sail toward the island of Providenciales in the Turks and Caicos when it was caught in bad weather, civil protection spokesman Joseph Edgar Celestin said. The vessel hit a reef and sank as it tried to return to shore near Le Borgne. Rescuers, most of them volunteers from the town of Le Borgne and surrounding communities, were dispatched to the scene  and rescued at least 12 people, Celestin said. The search for survivors is ongoing, Celestin added. So far, 11 victims -- eight men and three women -- have been identified, Celestin said. Haiti's government urged migrants not to board clandestine ships and condemned those organizing these illegal journeys.\\n\", \"original_answer\": \"At least 21 people died in a shipwreck off the northern coast of Haiti while trying to reach the Dominican Republic via a small boat that hit a reef. Rescue efforts are underway.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "tune",
+  "source_cluster_id": "sha256:0b29be4df3ccd698479f88e74320f3fd28852ae4a7cdd13d411db5440e4f68bd",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ]
+}

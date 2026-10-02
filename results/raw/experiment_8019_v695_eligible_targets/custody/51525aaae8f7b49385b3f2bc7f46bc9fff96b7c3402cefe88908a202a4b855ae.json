@@ -1,0 +1,109 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.20520875393413,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:88c78c179244222835ed0a27f45db296e1de9d35f88935a77cfb72369fc58f7c",
+  "input_tokens": 566,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 566,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 589
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:f5a90f363836f53d52646494c079b24194e853aeced9195786dd09c82edf521a",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886068,
+    "id": "chatcmpl-OE8iGf1cZvOK770i66gdqs5UUSIftHc7",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.956,
+      "predicted_n": 23,
+      "predicted_per_second": 42.51732118693572,
+      "predicted_per_token_ms": 23.519826086956524,
+      "prompt_ms": 531.724,
+      "prompt_n": 488,
+      "prompt_per_second": 917.7693690711722,
+      "prompt_per_token_ms": 1.0895983606557378
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 566,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 589
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Lost, found and stray dogs. If you\u2019ve lost your dog, or found a lost dog, follow our advice to help reunite pets with their owners. Top tips to help find your lost dog: Your dog\u2019s microchip - phone the database they\u2019re registered with and report them as missing. Contact your local dog warden.\\\\n\\\\npassage 2:Report the stray dog to the council. Ring local vets and rescue centres. If it\u2019s safe, check whether the dog is wearing a tag, call the number and leave a message. Ask local vets to scan them for a microchip. Create a found poster and place around the local area. Check listings and add details on missing pet websites.\\\\n\\\\npassage 3:phone alert features. 1  Phone your Lost Pet Voice Recording Right to Local Neighbors/Residents. 2  Alert the Neighborhood Before your Pet Roams Farther Away from Home. 3  Most Accurate/Largest Database of Residential Phone Numbers in the USA/Canada. 4  Pet Detectives will Review your Local Area Map and Target Areas Where Pets Roam.\\\\n\\\\n\\\",\\\"question\\\":\\\"what to do when you find a lost dog\\\"}\", \"original_answer\": \"When you find a lost dog, you should initially check if it's safe, and see if the dog is wearing a tag. If so, call the number on the tag and leave a message. If not, take the dog to local vets to have them scanned for a microchip. Report the found dog to your council and local dog warden. Contact local vet offices and rescue centers to inform them about the found dog. You can also make a 'found' poster and place it around the local area. Additionally, check and add details to missing pet websites. Use phone alert features to notify local neighbors and residents. Pet detectives can also review your local area map and target areas where pets typically roam.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "ae77f01ae516f6c7a3296cb5a01ea8aec7d3082654ec78fcf811e957cbb95e9e",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ]
+}

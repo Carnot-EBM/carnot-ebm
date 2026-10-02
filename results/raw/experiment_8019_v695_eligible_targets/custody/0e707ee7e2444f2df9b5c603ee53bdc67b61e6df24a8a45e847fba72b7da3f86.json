@@ -1,0 +1,114 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.227734473068267,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:6f190097d9e260aaee9e93ce71e9ba0e23129929005ad0afc56861237ca516c3",
+  "input_tokens": 658,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 658,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 681
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:13a3093a2f22f74e8551f8db47ea623c3549928bd51de2f2e4eb378c5648f3e2",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885849,
+    "id": "chatcmpl-DQ9aSSzJLi2d0tqZFbiIV4lqfLPqrUqH",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 533.633,
+      "predicted_n": 23,
+      "predicted_per_second": 43.100782747693636,
+      "predicted_per_token_ms": 23.201434782608697,
+      "prompt_ms": 584.331,
+      "prompt_n": 580,
+      "prompt_per_second": 992.5881050295123,
+      "prompt_per_token_ms": 1.0074672413793104
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 658,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 681
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"'Bold and the Beautiful' Spoilers: Deacon Pressures Finn To Forgive Sheila\\nThe Bold and the Beautiful (B&B) spoilers tease that Deacon Sharpe (Sean Kanan) will put pressure on John 'Finn' Finnegan (Tanner Novlan) to forgive Sheila Carter (Kimberlin Brown) for her past wrongdoings. She Knows Soaps reports that Deacon works to reunite Finn and Sheila, urging the doctor to welcome his fiance into his life.\\nDeacon asked Sheila to marry him on Monday's (October 2) episode. After some thinking, she gladly accepted his proposal. Sheila told Deacon it was a dream come true for someone like Deacon to fall in love with her. Now, she must convince her son to give her another chance to prove herself.\\nB&B spoilers say that Deacon decides to visit Finn to talk about Sheila. He tells the doctor that he asked Sheila to marry him. Deacon shares that Sheila has changed her life and is no longer a risk to his or Steffy Forrester's (Jacqueline MacInnes Wood) safety.\\nFinn wants to believe that Sheila has changed and the harassment will stop. But he doesn't buy it. He thinks she's evil to the core and refuses to give her a chance, knowing that would destroy his marriage.\\nThe Bold and the Beautiful spoilers say that Deacon insists that Sheila is not a threat to his family. He urges him to consider getting to know his birth mom to make an informed decision on his relationship with her.\\nB&B fans, will Finn agree to speak to Sheila and consider a relationship with her? Keep watching The Bold and the Beautiful, airing on CBS and streaming on Paramount Plus. Please share your thoughts with me in the comments section below. Remember to follow me to read more of my content.\", \"original_answer\": \"In the soap opera The Bold and the Beautiful, Deacon Sharpe pressures John 'Finn' Finnegan to forgive Sheila Carter for her past. Deacon, who recently proposed to Sheila, attempts to convince Finn that Sheila has changed and no longer poses any risk. However, Finn remains skeptical, fearing that giving Sheila another chance could ruin his marriage. Deacon advises Finn to get to know Sheila better before making a final decision on their relationship.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "calibration",
+  "source_cluster_id": "954aad6a2fcea2e442968a0a54854ec03db82a92eaec0c49f4c484983ec27166",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17
+  ]
+}

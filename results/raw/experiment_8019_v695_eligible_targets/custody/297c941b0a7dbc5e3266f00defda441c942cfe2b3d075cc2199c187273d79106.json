@@ -1,0 +1,100 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 0.9539036680944264,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:982d577b6b44e75352477bafaf38297cfb21573d7a13b39594056f783c14fbaa",
+  "input_tokens": 384,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 17,
+      "prompt_tokens": 384,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 401
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:939484940b359993ee558cc2a3f5b84e1797871295e2bf32ac845a63b25edb3e",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\"unsupported_probability\": 0.0, \"source_sentence_id\": null}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886143,
+    "id": "chatcmpl-fLKQfNdZXI0wvD0euva280rfvcBOktKJ",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 395.328,
+      "predicted_n": 17,
+      "predicted_per_second": 43.00226647239761,
+      "predicted_per_token_ms": 23.254588235294115,
+      "prompt_ms": 412.422,
+      "prompt_n": 306,
+      "prompt_per_second": 741.9584794215633,
+      "prompt_per_token_ms": 1.3477843137254903
+    },
+    "usage": {
+      "completion_tokens": 17,
+      "prompt_tokens": 384,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 401
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:But if you claim your son as a dependent on your tax return, your family\u2019s income would have to be no more than 138 percent of poverty in order for him to qualify, says Edwin Park, vice president for health policy at the Center on Budget and Policy Priorities.\\\\n\\\\npassage 2:This year, parents are eligible to claim a new credit on their taxes for all of their children\u2019s arts-related activities in 2011. Similar to the fitness credit, you can claim up to $500 per child, which can result in a maximum $75 savings.\\\\n\\\\npassage 3:If you have no tax. Credits, such as the child tax credit or the child and dependent care credit, are used to reduce tax. If your tax on Form 1040, line 47, or Form 1040A, line 30, is zero, do not figure the child tax credit because there is no tax to reduce.\\\\n\\\\n\\\",\\\"question\\\":\\\"does our 21 year son stay on our taxes\\\"}\", \"original_answer\": \"Unable to answer based on given passages.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "68a842ed23caa77fd0dad646193af12582cd31313afd1726ff92cee71a8485a1",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3
+  ]
+}

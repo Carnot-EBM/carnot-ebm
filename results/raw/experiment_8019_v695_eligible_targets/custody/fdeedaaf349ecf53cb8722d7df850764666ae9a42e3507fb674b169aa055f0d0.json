@@ -1,0 +1,110 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.3157200700370595,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:ee89dc342ea6345bca0e6827f13dbe8216901bed16309fc030ac750de8c31ea8",
+  "input_tokens": 692,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 692,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 715
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:55adc0a021be4603f3bc89e75e28cbfcf66e4ff3635ae009743c83298c55a541",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886170,
+    "id": "chatcmpl-63ype0YAfyxm8fI3QW8i9fiD8uy6MBVC",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.18,
+      "predicted_n": 23,
+      "predicted_per_second": 42.49972282789461,
+      "predicted_per_token_ms": 23.5295652173913,
+      "prompt_ms": 631.241,
+      "prompt_n": 614,
+      "prompt_per_second": 972.6871353413356,
+      "prompt_per_token_ms": 1.0280798045602606
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 692,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 715
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:How to save my Gmail account in password database. To save a Gmail account using Password Manager in Kaspersky PURE 2.0, do the following: 1  Start Password Manager 2  : Right-click the Kaspersky PURE 2.0 icon at the bottom right corner of the screen and select Unlock Password Manager. On the Password Manager window enter a master password and click the Unlock button. 2  Open the authorization page of Gmail and enter your e-mail address and password. 3  Press Enter on the keyboard. 4  On the Password Manager window click the Add button to add an account to the password database.\\\\n\\\\npassage 2:1 Touch Yes if you want Chrome to remember your sign-in credentials. 2  Chrome will automatically complete the sign-in fields for you when you visit the websites again. 3  Touch Never if you don\u2019t want Chrome to save your username and password for the website you\u2019re on.anage password prompts. If you let Chrome save your passwords, you\u2019ll get a prompt every time when you sign in to a new website. 1  Touch Yes if you want Chrome to remember your sign-in credentials.\\\\n\\\\npassage 3:1 To have Firefox remember your username and password, click Remember Password. 2  The next time you visit the website, Firefox will automatically enter your username and password for you. 3  If you've stored the wrong username or password, just type the right one into the website and Firefox will prompt you to save it.ip: Clicking outside of the Remember Password prompt will hide it. To bring it back, just click the key icon on the left side of the location bar. If Firefox does not prompt you to save passwords, see the article Usernames and passwords are not saved.\\\\n\\\\n\\\",\\\"question\\\":\\\"saving password to gmail\\\"}\", \"original_answer\": \"To save your Gmail password, you can use a password manager like Kaspersky PURE 2.0. Start the password manager, unlock it, open the Gmail authorization page, enter your email and password, then add the account to the password database.  Alternatively, if using Chrome or Firefox, when you enter your Gmail credentials, select 'Yes' when asked if you want the browser to remember your sign-in credentials. The browser will automatically complete sign-in fields for you the next time you visit Gmail. If you've stored the wrong username or password, just type the right one into the website and the browser will prompt you to save it.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "adaf340c1a6990ae494318e3862c1effadb80f4bc6a814705086fc07ce674293",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ]
+}

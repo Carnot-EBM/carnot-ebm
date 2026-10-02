@@ -1,0 +1,106 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.5491825659992173,
+  "exclusion_reason": null,
+  "family_id": "sha256:8bb4dd4012f9a8daca54161de0b6a33afbbc5668d165ab94642b3dc49bc5e561",
+  "input_tokens": 906,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 906,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 930
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:3ef1975aa54fb8e425fe3f866476b96b763b4a70c9b6d12a844b1fa08c1db07a",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832598,
+    "id": "chatcmpl-WiSddMEPY0IKwZIrgfsIPdGFp2YikZMs",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.382,
+      "predicted_n": 24,
+      "predicted_per_second": 42.52438950923312,
+      "predicted_per_token_ms": 23.515916666666666,
+      "prompt_ms": 846.236,
+      "prompt_n": 828,
+      "prompt_per_second": 978.4504559011907,
+      "prompt_per_token_ms": 1.022024154589372
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 906,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 930
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"409 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":null,\\\"Music\\\":true,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":null},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Nightlife, Bars, American (New), Restaurants, Cocktail Bars\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"16:0-1:0\\\",\\\"Saturday\\\":\\\"10:0-1:0\\\",\\\"Sunday\\\":\\\"10:0-1:0\\\",\\\"Thursday\\\":\\\"16:0-1:0\\\",\\\"Tuesday\\\":\\\"16:0-1:0\\\",\\\"Wednesday\\\":\\\"16:0-1:0\\\"},\\\"name\\\":\\\"Blind Tiger\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2016-04-10 03:56:06\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Saw the DTease last night and was blown away !! The club is not your usual dive it's has a great design and feel!! The show was amazing with great sound talented artist with great originals can't understand why the place was not sold out !!\\\"},{\\\"review_date\\\":\\\"2015-11-01 04:54:45\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"First time in Blind Tiger to check out the open mic on Wednesday. Very clean, no rank smell - this is important - and tasteful comfortable furnishings. The stage is very pro w good sound system and lighting. When I went to the bar the server was very friendly and relaxed - I liked that too. Our non-alcoholic drinks were tasty and imaginative and he offered us free refills! Not all the acts were great, but a couple really were good and the in house MC was also a strong performer. We'll be back for sure.\\\"},{\\\"review_date\\\":\\\"2015-09-01 16:09:43\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I just moved here and this is my first yelp review. I decided to make one and start with a review of Blind Tiger. I've been to 3 different bars since I got into town and Blind Tiger was definitely my favorite. \\\\n\\\\nI came on with one of my girlfriends on Saturday. There was a $10 cover but the accommodating staff and great crowd made it all worth it. Brandon was so informative and fun and made our entire experience memorable. \\\\n\\\\nWe will definitely be back to dance and party with everyone!!!!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Blind Tiger is a popular Nightlife spot in Santa Barbara, CA, offering a unique atmosphere and great live music performances. According to customer reviews, the venue has a cozy and intimate setting with a small stage for live acts and a friendly staff. Customers have praised the sound and lighting quality, as well as the relaxed and welcoming atmosphere. Some have noted that the place can get crowded and loud, but overall, Blind Tiger has received high marks for its entertainment value and customer service. With a rating of 3.5 stars and multiple positive reviews, Blind Tiger is a great spot for those looking for a lively night out in Santa Barbara.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:023cd396bf34bab48dbe3595405e09486d28fcbc33f8122e9083d7687f50ac1d",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ]
+}

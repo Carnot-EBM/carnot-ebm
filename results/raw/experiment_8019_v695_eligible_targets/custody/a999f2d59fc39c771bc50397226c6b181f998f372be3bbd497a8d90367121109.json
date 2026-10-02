@@ -1,0 +1,106 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.2037350919563323,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:b6340b801d84bec03258d2acb1631aa5d15650f5c0876fe2f7c804f1278df410",
+  "input_tokens": 646,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 646,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 667
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:246147cea763e1f3a51785303682e266a5d23a6a1bef8ba1a887b97fc214cd17",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"unsupported_probability\": 0.0,\n\"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886009,
+    "id": "chatcmpl-q0WsyBHwpTWb59wOFNBVjvEmjYsJogm1",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 492.49,
+      "predicted_n": 21,
+      "predicted_per_second": 42.640459704765576,
+      "predicted_per_token_ms": 23.451904761904764,
+      "prompt_ms": 597.273,
+      "prompt_n": 568,
+      "prompt_per_second": 950.9889112683815,
+      "prompt_per_token_ms": 1.051536971830986
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 646,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 667
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Grilling is often synonymous with barbecuing and refers to cooking meat or vegetables on a grate over hot coals or another heat source. From burgers to chops, grilling is the perfect way to eat more lamb and spend less time cooking and cleaning up. Grilled lamb is a fast, delicious, practical weeknight option. Dry brine your lamb chops. If you have time, salt lamb chops 40 minutes to an hour before grilling them, to release moisture and break down proteins in a way that allows the chops to reabsorb the liquid.\\\\n\\\\npassage 2:1 Dip each lamb chop in the sauce and then lightly dredge in the bread crumbs. 2  Then arrange them in a 9x13-inch baking dish. 3  Bake at 375 degrees F (190 degrees C) for 20 minutes, turn chops over, and cook for 20 more minutes, or to desired doneness.\\\\n\\\\npassage 3:1 Preheat oven to 375 degrees F (190 degrees C). 2  In a medium bowl, combine the eggs and the Worcestershire sauce; stir well. 3  Dip each lamb chop in the sauce and then lightly dredge in the bread crumbs. 4  Then arrange them in a 9x13-inch baking dish.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to cook lamb chops recipes\\\"}\", \"original_answer\": \"Based on the passages, there are two methods to cook lamb chops. The first method is grilling. You should dry brine your lamb chops by salting them 40 minutes to an hour before grilling. This allows the chops to release moisture and break down proteins, and then reabsorb the liquid. Grilling the chops is a fast and practical option.\\n\\nThe second method is baking. Preheat your oven to 375 degrees F (or 190 degrees C). In a medium bowl, combine eggs and Worcestershire sauce. Dip each lamb chop in this sauce and then lightly coat them with bread crumbs. Arrange the lamb chops in a 9x13-inch baking dish and bake for 20 minutes. After this, turn the chops over and bake for another 20 minutes, or until they're cooked to your preferred level of doneness.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "631f835e91b893f346785a935a5729d5f90bd3d9dcdd1262bd2b7ef7dfb62f5d",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ]
+}
