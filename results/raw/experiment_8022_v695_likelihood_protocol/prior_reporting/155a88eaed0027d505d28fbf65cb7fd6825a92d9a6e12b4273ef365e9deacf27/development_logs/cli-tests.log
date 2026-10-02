@@ -1,0 +1,64 @@
+....F.                                                                   [100%]
+=================================== FAILURES ===================================
+_________________ test_private_cli_publication_and_cold_drift __________________
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261002T121423-1309213-1a5c13a4/test_private_cli_publication_a0')
+
+    def test_private_cli_publication_and_cold_drift(tmp_path):
+        """SCENARIO-REPORT-8022-SEAL: scripted private bytes cannot claim live readiness."""
+        fixture = tmp_path / "fixture.json"
+        atomic_json(fixture, dict(plan=dict(checks=[], references=[], public=public()), result={}))
+        output = tmp_path / "results" / (e.NAME + ".json")
+        run = cli(["--fixture", fixture, "--output", output], tmp_path)
+>       assert run.returncode == 0, run.stdout + run.stderr
+E       AssertionError: [exp8022] phase=start elapsed_s=0.000 completed=0 pending=0
+E         [exp8022] phase=before_runtime_subprocess elapsed_s=0.001 completed=0 pending=8
+E         [exp8022] phase=after_runtime_before_owned_checks elapsed_s=0.001 completed=0 pending=0
+E         [exp8022] phase=before_cold_reduction elapsed_s=0.002 completed=0 pending=0
+E         [exp7303-validation] before_subprocess cold_reduction elapsed_s=0.000 unit=1/1
+E         [exp7303-validation:cold_reduction] [exp8022] phase=start elapsed_s=0.000 completed=0 pending=0
+E         [exp7303-validation:cold_reduction] [exp8022] phase=cold_replay_passed elapsed_s=0.001 completed=0 pending=0
+E         [exp7303-validation] after_subprocess cold_reduction elapsed_s=1.309 exit=0 unit=1/1
+E         [exp7303-validation] before_subprocess adversarial elapsed_s=0.000 unit=1/2
+E         [exp7303-validation:adversarial] {
+E         [exp7303-validation:adversarial]   "reports": [
+E         [exp7303-validation:adversarial]     {
+E         [exp7303-validation:adversarial]       "artifact": "/tmp/pytest-carnot-ianblenke/20261002T121423-1309213-1a5c13a4/test_private_cli_publication_a0/results/raw/experiment_8022_v695_likelihood_protocol/terminal_candidate.json",
+E         [exp7303-validation:adversarial]       "loaded": true,
+E         [exp7303-validation:adversarial]       "exp_id": 8022,
+E         [exp7303-validation:adversarial]       "title": "",
+E         [exp7303-validation:adversarial]       "honest_verdict": "complete_blocked_likelihood_protocol",
+E         [exp7303-validation:adversarial]       "flag_count": 2,
+E         [exp7303-validation:adversarial]       "max_severity": 2,
+E         [exp7303-validation:adversarial]       "flags": [
+E         [exp7303-validation:adversarial]         {
+E         [exp7303-validation:adversarial]           "kind": "SUBSTRATE_CLASS_MISMATCH",
+E         [exp7303-validation:adversarial]           "severity": "critical",
+E         [exp7303-validation:adversarial]           "detail": "inference_substrate_class=model_load_no_generation claims a model ran, but honest_verdict='complete_blocked_likelihood_protocol' is a blocked_* verdict. Declare blocked_no_run when preconditions failed."
+E         [exp7303-validation:adversarial]         },
+E         [exp7303-validation:adversarial]         {
+E         [exp7303-validation:adversarial]           "kind": "SUBSTRATE_CLASS_MISMATCH",
+E         [exp7303-validation:adversarial]           "severity": "critical",
+E         [exp7303-validation:adversarial]           "detail": "inference_substrate_class=model_load_no_generation claims a model ran, but typed invocation evidence says it did not (['generation_calls_attempted', 'generation_calls_completed', 'model_loads_attempted', 'model_loads_completed']). Contradictory."
+E         [exp7303-validation:adversarial]         }
+E         [exp7303-validation:adversarial]       ],
+E         [exp7303-validation:adversarial]       "gate_version": "197e0a5eacacb09ce6607ae8bdfd507498082857f0d02ec2003a62c251b69a24"
+E         [exp7303-validation:adversarial]     }
+E         [exp7303-validation:adversarial]   ],
+E         [exp7303-validation:adversarial]   "flagged_count": 1
+E         [exp7303-validation:adversarial] }
+E         [exp7303-validation] after_subprocess adversarial elapsed_s=0.530 exit=1 unit=1/2
+E         [exp7303-validation] before_subprocess strict_rows elapsed_s=0.000 unit=2/2
+E         [exp7303-validation:strict_rows] 
+E         [exp7303-validation:strict_rows] verdict-row-consistency: checked 0, skipped 1 (no per-unit rows), unreadable 0.
+E         [exp7303-validation:strict_rows]   NOTE: most artifacts carry no per-unit row container, so their headline claims are not falsifiable from the artifact alone. That is a reporting-shape gap in those experiments, not a clean bill of health from this tool.
+E         [exp7303-validation] after_subprocess strict_rows elapsed_s=0.023 exit=0 unit=2/2
+E         [exp8022] rejected=ValueError:candidate_rejected
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '/home/ianblenke/github.com/ian...subprocess strict_rows elapsed_s=0.023 exit=0 unit=2/2\n[exp8022] rejected=ValueError:candidate_rejected\n', stderr='').returncode
+
+tests/python/test_likelihood_protocol_8022.py:147: AssertionError
+=========================== short test summary info ============================
+FAILED tests/python/test_likelihood_protocol_8022.py::test_private_cli_publication_and_cold_drift
+1 failed, 5 passed in 5.04s
