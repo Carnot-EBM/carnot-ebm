@@ -90419,3 +90419,56 @@ is `scripts/experiments/experiment_8040_v696_native_transaction_cost.py`.
 Traced tests are `tests/python/test_native_transaction_8040.py`. Current
 measurements and terminal byte validation live in the Exp8040 primary and raw
 invocation directory. Readiness and NFR-01 remain separate fields.
+
+
+## REQ-REPORT-8041: Bind the V696 supervisor delta to Exp8028
+
+Exp8041 SHALL use Exp8028's immutable primary and durable content frontier on
+20261002 at milestone 2026.10.696. Reuse the qualified scanner and primary
+publication helper. Freeze source hashes, identity, curated arms, zero model
+and game budgets, a 120-second scan cap and validation commands before scanning.
+Calendar midnight SHALL NOT create evidence. Registry levels SHALL be checked
+before any discussion of solves. Imported live events alone retain
+live_agent_self_discovery provenance; this invocation claims no new solves.
+
+### SCENARIO-REPORT-8041-FRONTIER
+
+An empty authenticated delta SHALL publish complete_null_no_new_outcomes with
+zero model/game calls, generalized_learning_benefit_score=0, no refinement and
+arc_delta_ready_score=1 after all owned checks pass. Missing or changed bytes,
+wrapper/frame authentication or event clocks SHALL be terminal blocked. Record
+exact path, hash, field, expected, observed, check and passed=false operands.
+New event identities SHALL retain game, seed, arm, resolution, action distance,
+censoring and unredirected stagnation. Retries SHALL NOT increase independent n.
+Authenticated clocks use Exp8028's finished_at boundary when the shared reader
+cannot classify chronology. Preserve historical failures and exclusions.
+
+### SCENARIO-REPORT-8041-SUPPORT
+
+At least ten completed firings per arm across three distinct games SHALL be
+required for a bounded curated-arm selection proposal. Lower support remains
+descriptive. Observational counts SHALL NOT establish causal benefit. Explain
+transfer through E3AgentPolicy/make_carnot_agent. Persistent evidence, mechanical
+supervision and verifier-driven curated selection survive on pinned local27B;
+open-ended model-generated arms do not. Keep production defaults fixed.
+
+### SCENARIO-REPORT-8041-SEAL
+
+Write traced failing tests first. Require all task-owned and consumer tests,
+Ruff check/format, strict mypy, spec coverage and 100 percent new statement
+coverage including real CLI branches. Run E2E-017 private empty/new/malformed
+CLI and frontier replay. Keep artifact guards enabled and scratch outside
+results. Record one bounded full Python suite as separate repository health;
+never hide its failures or rerun unrelated health to qualify science. Cold
+reduce durable rows/checkpoints in a fresh process. Adversarial and strict row
+validators SHALL check candidate and published bytes. Durable validation and
+checkpoint references SHALL reside under this experiment's raw directory.
+Ops/status/traceability reconciliation is conductor-owned for this invocation.
+
+Implementation for REQ-REPORT-8041: the V696 reporting adapter and thin CLI
+reuse the qualified scanner, private validation runner and primary publication
+helper. Eleven traced tests cover frontier authentication, retries, missing
+operands, arm support, durable replay and private CLI routes. New code has
+89 measured statements with complete coverage before final invocation.
+The final primary and durable validation receipts record the measured outcome.
+Conductor-owned ops and traceability reconciliation remains separate.
