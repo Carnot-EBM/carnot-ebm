@@ -21262,3 +21262,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 
 - 2026-10-02: Freeze thirteen tasks and qualify immutable terminal readers (⚠️ Blocked) — honest_verdict=complete_blocked_authority; results/experiment_8018_v695_contract_methods.json
 - 2026-10-02: Freeze complete-label eligibility before fitting or evaluation (⚠️ Research Finding) — honest_verdict=complete_disqualified_eligible_targets; results/experiment_8019_v695_eligible_targets.json
+- 2026-10-02: Fit calibrated source energies on the sealed eligible cohort (⚠️ Research Finding) — honest_verdict=complete_null_qualified_energy_fit; results/experiment_8020_v695_qualified_energy_fit.json
