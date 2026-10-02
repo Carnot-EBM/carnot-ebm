@@ -89952,3 +89952,41 @@ timings and primary evidence remain unchanged and pass cold/terminal readers.
 Current source hashes and receipts are retained in the Exp8027 raw
 `fixgate-validation/` directory. Global traceability/formatting debt and the
 prior failed bounded repository-health diagnostic are not scoped successes.
+
+
+## REQ-REPORT-8028: Advance Exp8014's authenticated supervisor frontier
+
+Exp8028 SHALL run on 20261002 at milestone 2026.10.695 using the existing
+parameterized supervisor runner. Pin the Exp8014 primary, durable inventory,
+seen-receipt and outcome hashes, and solve registry before reading any delta.
+Freeze source roles, existing curated arms, exclusions, zero model/game budgets,
+a 120-second scan cap and acceptance gates before measurement. Inspect unseen
+outcome bytes only; calendar duplicates and unknown chronology add no evidence.
+Preserve original solve provenance and claim zero new solves. No production
+policy, new arm, game execution, offline oracle, registry solve or publication
+outside this checkout is authorized.
+
+### SCENARIO-REPORT-8028-DELTA
+
+An authenticated empty frontier delta SHALL terminate
+complete_null_no_new_outcomes with zero current calls, game runs and generalized
+learning benefit, null solve provenance and no change proposal. Missing or
+changed prerequisite bytes SHALL be terminal blocked with exact failed operands
+including passed=false. New authenticated observations retain game/seed/arm,
+level-up resolution, action distance and unredirected stagnation; associations
+supply no causal benefit. Unknown chronology SHALL remain excluded.
+
+### SCENARIO-REPORT-8028-SEAL
+
+Write traced failing tests before implementation. Cover every added statement
+including direct private CLI, missing arguments and tampered replay. Reuse
+existing E2E-017, qualified reader controls, scoped consumers, Ruff, strict mypy,
+spec coverage and exact-byte publication helpers. Keep the artifact guard on
+and mutable test/coverage/child scratch outside results. Preserve one bounded
+full-suite repository-health diagnostic separately from required owned checks.
+Freeze actual argv, exit codes and durable log hashes. Fresh-process cold
+reduction, adversarial verification and strict row lint SHALL bind the exact
+candidate and published bytes. Checkpoint references SHALL reside under this
+task's durable raw directory. arc_delta_ready_score is 1 only for a valid
+terminal measurement with passing owned checks, otherwise 0; it is not benefit.
+Ops/status/traceability reconciliation is conductor-owned for this invocation.
