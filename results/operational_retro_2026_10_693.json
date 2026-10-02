@@ -1,0 +1,59 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.10.693",
+  "generated_at": "2026-10-02T03:33:38Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 198.6,
+  "experiments_completed": 13,
+  "compute_bound_experiments_count": 13,
+  "slowest_experiments": [
+    {
+      "experiment": "Capture bounded Qwen judgments with owned call receipts",
+      "duration_minutes": 27.98,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Independently audit later benefit retention and recovery",
+      "duration_minutes": 24.81,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Measure complete service cost and sparse durable updates",
+      "duration_minutes": 23.05,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Train a local spline energy head for incremental updates",
+      "duration_minutes": 20.55,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Measure frozen typed decisions on the new development stream",
+      "duration_minutes": 19.83,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.10.693 completed 13 experiments (all 13 compute-bound) totaling 198.6 wall-time minutes (averaging 15 minutes per experiment) reconstructed from disk modification timestamps. The longest-running experiments were 'Capture bounded Qwen judgments with owned call receipts' at 27.98 minutes, 'Independently audit later benefit retention and recovery' at 24.81 minutes, 'Measure complete service cost and sparse durable updates' at 23.05 minutes, 'Train a local spline energy head for incremental updates' at 20.55 minutes, and 'Measure frozen typed decisions on the new development stream' at 19.83 minutes. While point-in-time monitor telemetry observed both RTX 3090 GPUs at 0% utilization with 4MB allocated outside execution, active execution-window hardware traces were not captured and the locked indicator gpu_idle_on_compute_bound_tasks is false.",
+  "bottlenecks_identified": [
+    "Execution wall time was heavily concentrated in the top compute-bound tasks: 'Capture bounded Qwen judgments with owned call receipts' (27.98 minutes), 'Independently audit later benefit retention and recovery' (24.81 minutes), and 'Measure complete service cost and sparse durable updates' (23.05 minutes), which together accounted for 75.84 of 198.6 total wall-time minutes (38.2%), with the top five tasks accounting for 116.22 minutes (58.5%).",
+    "Milestone timing relied on disk-mtime fallback reconstruction following zero commits on the live git-log path, leaving phase-level stage attribution (setup, data preparation, forward inference/training, and artifact serialization) uninstrumented.",
+    "Absence of continuous time-series accelerator telemetry across active execution windows leaves hardware processor-memory interactions, kernel saturation, and concurrency profiling unmeasured during compute-bound runs."
+  ],
+  "improvements_suggested": [
+    "Instrument experiment runners with monotonic sub-phase timers to measure latency across environment setup, data preparation, model loading, compute passes, and artifact validation.",
+    "Deploy continuous, lightweight GPU sampling throughout task execution rather than relying solely on discrete point-in-time monitor checkpoints.",
+    "Profile and optimize the longest-running LLM judgment capture and causal audit workflows ('Capture bounded Qwen judgments...' and 'Independently audit later benefit...'), which accounted for over 52 minutes of wall time.",
+    "Restrict DualGPURunner orchestration strictly to parallel executions involving two or more distinct models, avoiding overhead or invalid dispatch on single-model inference jobs.",
+    "Preserve and maintain failure_ledger pre-launch checks to ensure doomed reruns continue to be blocked in sub-second time without consuming compute budget."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add granular sub-phase execution timing to experiment runners to measure setup, compute, training iterations, and artifact validation overhead.",
+    "Implement active-window GPU utilization and memory timeseries logging to assess hardware efficiency during compute-bound tasks.",
+    "Profile the longest-running Qwen judgment capture (27.98 minutes) and causal audit (24.81 minutes) workflows to identify optimization, batching, or memoization opportunities."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Milestone 2026.10.693 completed 13 compute-bound experiments totaling 198.6 wall-time minutes, dominated by Qwen judgment capture (27.98 minutes), causal benefit audit (24.81 minutes), service cost measurement (23.05 minutes), and spline energy head training (20.55 minutes). While static monitor telemetry observed both RTX 3090 GPUs at 0% utilization with 4MB allocated outside execution, the locked field records gpu_idle_on_compute_bound_tasks as false and no continuous in-flight telemetry exists. Estimated time savings remain at 0% pending empirical measurement of intra-task phases and verified accelerator execution traces."
+}
