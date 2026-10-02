@@ -90046,3 +90046,53 @@ maximum drift 0.0013333509694702927 and one action disagreement; saturation is
 zero and restart states agree. Custody is independently valid. Added statement
 coverage is 296/296. Candidate and published cold/adversarial/strict readers pass.
 Unrelated bounded repository health remains separate.
+
+## REQ-REPORT-8030: Independently decide V695 terminal outcomes
+
+Exp8030 SHALL bind the immutable Exp8018 invocation authority for exactly thirteen
+tasks, Exp8018 through Exp8030. Missing V695 table, JSON or digest remains blocked.
+Read declared primaries and actual conductor skips separately. Preserve failed
+checks, original primitive hashes, label exclusions and historical claim limits.
+Count the capstone once, only after owned terminal validation.
+
+### SCENARIO-REPORT-8030-REDUCTION
+
+Recompute static costs from sealed predictions and complete human targets. Reuse
+the independent checkpoint audit for issued learning decisions and retention.
+Recompute source features from complete answer token rows and frozen heads when
+the evaluation exists. Missing evaluation is unmeasured, with p=1. Producer
+disqualification cannot support a positive claim. Never replace original seals.
+Average seeds before inference; sources or chronological blocks define units.
+Apply the frozen three-primary Holm family using bootstrap test inversion.
+Unadjusted intervals remain descriptive. Private valid/null/blocked/tampered
+controls establish reader correctness only.
+
+### SCENARIO-REPORT-8030-BOUNDARIES
+
+Decide FR-12 verification, FR-11 learning and FR-05/08 plus NFR-01 deployment
+separately. Keep historical G1-G4 and paper readiness separate from science.
+Generalized learning benefit is zero. Authenticate exact prior verdicts before
+scoped retirement; reopening requires changed prerequisites, information or a
+mechanism. Unchanged external failures are terminal blocked. Partial means
+unfinished owned work. Readiness is zero for blocked or disqualified results.
+
+### SCENARIO-REPORT-8030-SEAL
+
+Traced tests precede implementation and cover every added statement, including
+direct CLI. Reuse command supervision, publication and terminal consumers.
+Keep test scratch and coverage outside results with the artifact guard enabled.
+Record argv, exits and log hashes. Run one bounded repository-health diagnostic
+separately. Cold-reduce durable operands in a fresh process; run adversarial and
+strict row readers on candidate and published bytes. E2E-018 uses private CLI
+fixtures. Ops/status/traceability reconciliation is conductor-owned here.
+
+Exp8030 is implemented in `python/carnot/reporting/v695_capstone.py` and
+`v695_capstone_reduction.py`, with a thin direct CLI and traced
+`test_experiment_8030_v695_capstone.py` tests. The owned run passes all 16 tests,
+private source/learning cold CLI controls, E2E-018/consumer checks, Ruff, strict
+mypy and scoped spec coverage. Added statement coverage is 396/396. Static
+source-averaged gain is -0.18110236220472442. Source evaluation is absent. Later
+learning gain is 0.008080808080808077 in one environment; retention is
+disqualified. External failures require terminal blocked, readiness zero and
+generalized benefit zero. Historical primary bytes and failed checks remain
+unchanged. Repository-wide health is a separate bounded diagnostic.
