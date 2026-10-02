@@ -90294,3 +90294,68 @@ Readiness is integer one only for valid trajectories and all owned checks,
 independent of benefit. Generalized benefit remains zero. Keep production
 defaults fixed and make no external publication. The conductor owns ops and
 traceability reconciliation for this task.
+# Exp8039 independent learning benefit audit — 2026-10-02
+
+## REQ-REPORT-8039: independent later loss, retention and process recovery
+
+Authenticate Exp8032 protocol and Exp8038 prediction, checkpoint and terminal
+seals before evaluator access. Freeze this invocation's code, inputs, budgets,
+identity and acceptance rules before measurement. Preserve all prior exposure
+and V695 failures. A new invocation cannot restore unseen status.
+
+## SCENARIO-REPORT-8039-REPLAY
+
+Rebuild every issued probability and update from primitive public features and
+released labels without the producer reducer. Require coefficient and probability
+agreement at most 1e-10, identical actions and commit identities. Reject altered
+updates, reordered feedback, duplicate commits and future-label influence.
+
+## SCENARIO-REPORT-8039-RETENTION
+
+Freeze fit-only overlap strata and initial/final retention predictions before
+opening retention targets. Reject current prefreeze evaluator access. H3 compares
+recent64 with cumulative on decisions issued after the first update. Require cost
+gain at least .02, no extra false accepts, retention Brier drift at most .01 and
+cost drift at most .02 for each arm from its own start. These task limits override
+the stricter historical Exp8032 diagnostic limits without changing that artifact.
+Require 192 eligible stream groups and 20 per class, 160 later decisions, five
+beneficial changed natural source groups, and 48 retention groups with eight per
+class. Newest16 and frozen no-write are secondary comparisons.
+
+## SCENARIO-REPORT-8039-INFERENCE
+
+Average paired algorithm seeds within original source/time slots. Use 10000
+moving-block draws with length32 and 16/64 sensitivity, testing the .02 margin.
+Keep missing slots and report conditional finite-trajectory uncertainty with
+effective independent streams equal to one. Export H3 for Holm .05 with H1/H2
+in capstone; this audit alone cannot grant family or generalization credit.
+
+## SCENARIO-REPORT-8039-RECOVERY
+
+Kill only task-owned real learner children immediately before and after a FULL
+synchronous durable commit in guarded private fixtures. Restart the real CLI and
+compare next predictions and exactly-once IDs with uninterrupted controls. Copy
+fixture records and logs under the task raw directory; recovery gives no benefit.
+
+## SCENARIO-REPORT-8039-PUBLICATION
+
+Keep benefit, retention, validity, readiness and recovery separate. Complete valid
+negatives are terminal null; missing external trajectories are terminal blocked.
+Run traced unit and consumer tests, all-Python health once with a bound, Ruff,
+strict mypy and spec coverage. Require 100 percent statement coverage of added
+modules and real CLI routes. Cold-reduce durable evidence in a fresh process.
+Validate candidate and published bytes with adversarial and strict row readers,
+publish with the primary helper, and retain argv, exit and log hashes. Ops and
+traceability reconciliation belong to the conductor per the task instruction.
+
+Implementation: `python/carnot/verify/learning_benefit_8039.py` reconstructs
+primitive updates, later decisions, retention strata and margin uncertainty.
+`python/carnot/experiment_8039_v696_learning_benefit_audit.py` owns admission,
+private process recovery, validation and atomic publication. The thin script and
+`tests/python/test_learning_benefit_8039.py` exercise real CLI routes.
+The frozen 20261002 measurement finds H3 gain .0020202020202020185 over 198
+eligible later slots. Margin, false-accept and retention gates fail. Six private
+crash/restart cases pass. These findings remain finite exposed-development replay.
+Owned validation passes 57 task and consumer tests, 535/535 added statements,
+Ruff check and format, strict mypy and traced spec coverage. Repository health
+is a separate bounded receipt and cannot supply or remove scientific benefit.
