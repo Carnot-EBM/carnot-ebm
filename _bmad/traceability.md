@@ -1,6 +1,24 @@
 # Carnot — Traceability Matrix
 
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-02
+**Operational Note:** REQ-PYBIND-8027, SCENARIO-PYBIND-8027-SHUTDOWN and
+REQ-REPORT-8027 map the staged atomic extension copy to
+`python/carnot/experiment_8027_v695_native_update_cost.py` and the repeated-load
+subprocess/interrupted-copy regressions to `tests/python/test_native_update_8027.py`.
+The original passing-summary shutdown crash is reproduced before repair;
+the repaired 92-test subset exits normally. All original test/helper definitions
+are unchanged. Python and CLI coverage measure 437/437 statements, 40 downstream
+learning/fix-gate consumers and 42 adjacent tests pass, and scoped Ruff, strict
+mypy, spec traceability and E2E-003/004/015/019 pass. The published measurement
+passes cold replay and terminal readers with original timings preserved.
+All 17 owned command receipts pass, including 48 unit/consumer/E2E tests and
+244/244 native executable source lines; raw LLVM generated entries are retained.
+Evidence: `results/raw/experiment_8027_v695_native_update_cost/fixgate-validation/`.
+Global spec traceability retains 1,142 legacy gaps and unrelated Rust files
+retain workspace formatting differences; the prior full-suite health timeout
+remains failed. `scripts/research_conductor.py` is unchanged.
+Final reconciliation passes documentation freshness and reports only the
+existing global spec-traceability gaps.
 **Operational Note:** REQ-REPORT-7992-V693, REQ-VERIFY-7992-V693 and
 SCENARIO-REPORT-7992-FROZEN-FIXTURE map to the V693 contract methods/validation
 modules, Exp7992 CLI, immutable `tests/fixtures/v693/active.yaml.gz`, and

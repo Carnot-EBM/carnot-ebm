@@ -1,0 +1,314 @@
+..F..F                                                                   [100%]
+=================================== FAILURES ===================================
+_________________ test_req_report_8027_measurement_and_replay __________________
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261002T143958-1374326-058b46a8/test_req_report_8027_measureme0')
+native = <module 'carnot._rust' from '/home/ianblenke/github.com/ianblenke/carnot/target/experiment-8027-load/_rust.cpython-312-x86_64-linux-gnu.so'>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f443f762ff0>
+
+    def test_req_report_8027_measurement_and_replay(tmp_path, native, monkeypatch):
+        """REQ-REPORT-8027: natural equations and durable timing reduce cold."""
+        data = fixture_data()
+        parity = e.parity(data, native, tmp_path)
+        assert parity["parity_passed"]
+        cost = e.benchmark(data, native, tmp_path)
+        assert len(cost["timing_rows"]) == 180
+        assert all(r["acquisition_matched"] for r in cost["timing_rows"])
+        value = e.base([])
+        value.update(
+            parity, **cost, raw_directory=str(tmp_path), loaded_extension_receipt=e.extension()[1]
+        )
+        value["acceptance_gate_results"]["measurement"] = True
+        e.atomic_json(tmp_path / "replay_inputs.json", data)
+        path = tmp_path / "candidate.json"
+        e.atomic_json(path, value)
+        assert e.replay(path)["passed"]
+        for field, error in [("kernel_speedup", "reduction_drift"), ("parity_rows", "parity_drift")]:
+            altered = copy.deepcopy(value)
+            altered[field] = {} if field == "kernel_speedup" else []
+            e.atomic_json(path, altered)
+            with pytest.raises(ValueError, match=error):
+                e.replay(path)
+        altered = copy.deepcopy(value)
+        altered["loaded_extension_receipt"]["sha256"] = "wrong"
+        e.atomic_json(path, altered)
+        with pytest.raises(ValueError, match="binary_drift"):
+            e.replay(path)
+        e.atomic_json(path, value)
+        with monkeypatch.context() as patch:
+            patch.setattr(e, "parity", lambda *args: dict(parity_rows=[]))
+            with pytest.raises(ValueError, match="cold_equation_drift"):
+                e.replay(path)
+        value["checkpoint_references"] = parity["checkpoint_references"]
+        e.atomic_json(path, value)
+        with monkeypatch.context() as patch:
+            patch.setattr(e, "coefficients", lambda h: np.ones(110) * 200)
+            with pytest.raises(ValueError, match="restart_drift"):
+>               e.replay(path)
+
+tests/python/test_native_update_8027.py:165: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+path = PosixPath('/tmp/pytest-carnot-ianblenke/20261002T143958-1374326-058b46a8/test_req_report_8027_measureme0/candidate.json')
+
+    def replay(path: Path) -> Json:
+        """Cold reduction reads durable rows and reopens the actual binary state."""
+        value = json.loads(path.read_text())
+        for ref in (
+            value["raw_shard_hashes"] + value["code_config_hashes"] + value["checkpoint_references"]
+        ):
+            checked(ref)
+        if value["acceptance_gate_results"]["measurement"]:
+            raw = Path(value["raw_directory"])
+            timing = json.loads((raw / "timing_rows.json").read_text())["rows"]
+            for k, v in timing_summary(timing).items():
+                if value[k] != v:
+                    raise ValueError("reduction_drift:" + k)
+            rows = json.loads((raw / "parity_rows.json").read_text())["rows"]
+            if rows != value["parity_rows"] or not all(
+                r["action_equal"]
+                and r["probability_error"] <= 1e-10
+                and r["coefficient_error"] <= 1e-10
+                for r in rows
+            ):
+                raise ValueError("parity_drift")
+            os.environ["CARNOT_8027_EXTENSION"] = value["loaded_extension_receipt"]["path"]
+            native, receipt = extension()
+            if receipt["sha256"] != value["loaded_extension_receipt"]["sha256"]:
+                raise ValueError("binary_drift")
+            with tempfile.TemporaryDirectory(prefix="carnot-8027-cold-") as temporary:
+                cold = parity(
+                    json.loads((raw / "replay_inputs.json").read_text()), native, Path(temporary)
+                )
+                if cold["parity_rows"] != rows:
+>                   raise ValueError("cold_equation_drift")
+E                   ValueError: cold_equation_drift
+
+python/carnot/experiment_8027_v695_native_update_cost.py:601: ValueError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261002T143958-1374326-058b46a8/test_req_report_8027_measureme0')
+native = <module 'carnot._rust' from '/home/ianblenke/github.com/ianblenke/carnot/target/experiment-8027-load/_rust.cpython-312-x86_64-linux-gnu.so'>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f443f762ff0>
+
+    def test_req_report_8027_measurement_and_replay(tmp_path, native, monkeypatch):
+        """REQ-REPORT-8027: natural equations and durable timing reduce cold."""
+        data = fixture_data()
+        parity = e.parity(data, native, tmp_path)
+        assert parity["parity_passed"]
+        cost = e.benchmark(data, native, tmp_path)
+        assert len(cost["timing_rows"]) == 180
+        assert all(r["acquisition_matched"] for r in cost["timing_rows"])
+        value = e.base([])
+        value.update(
+            parity, **cost, raw_directory=str(tmp_path), loaded_extension_receipt=e.extension()[1]
+        )
+        value["acceptance_gate_results"]["measurement"] = True
+        e.atomic_json(tmp_path / "replay_inputs.json", data)
+        path = tmp_path / "candidate.json"
+        e.atomic_json(path, value)
+        assert e.replay(path)["passed"]
+        for field, error in [("kernel_speedup", "reduction_drift"), ("parity_rows", "parity_drift")]:
+            altered = copy.deepcopy(value)
+            altered[field] = {} if field == "kernel_speedup" else []
+            e.atomic_json(path, altered)
+            with pytest.raises(ValueError, match=error):
+                e.replay(path)
+        altered = copy.deepcopy(value)
+        altered["loaded_extension_receipt"]["sha256"] = "wrong"
+        e.atomic_json(path, altered)
+        with pytest.raises(ValueError, match="binary_drift"):
+            e.replay(path)
+        e.atomic_json(path, value)
+        with monkeypatch.context() as patch:
+            patch.setattr(e, "parity", lambda *args: dict(parity_rows=[]))
+            with pytest.raises(ValueError, match="cold_equation_drift"):
+                e.replay(path)
+        value["checkpoint_references"] = parity["checkpoint_references"]
+        e.atomic_json(path, value)
+        with monkeypatch.context() as patch:
+            patch.setattr(e, "coefficients", lambda h: np.ones(110) * 200)
+>           with pytest.raises(ValueError, match="restart_drift"):
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AssertionError: Regex pattern did not match.
+E             Expected regex: 'restart_drift'
+E             Actual message: 'cold_equation_drift'
+
+tests/python/test_native_update_8027.py:164: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8027] phase=parity_before elapsed_s=0.017 completed=0 pending=260
+[exp8027] phase=parity_natural elapsed_s=0.069 completed=1 pending=3
+[exp8027] phase=parity_after elapsed_s=0.085 completed=260 pending=0
+[exp8027] phase=benchmark_before elapsed_s=0.085 completed=0 pending=180
+[exp8027] phase=benchmark_block_after elapsed_s=0.087 completed=2 pending=178
+[exp8027] phase=benchmark_block_after elapsed_s=0.089 completed=4 pending=176
+[exp8027] phase=benchmark_block_after elapsed_s=0.090 completed=6 pending=174
+[exp8027] phase=benchmark_block_after elapsed_s=0.092 completed=8 pending=172
+[exp8027] phase=benchmark_block_after elapsed_s=0.094 completed=10 pending=170
+[exp8027] phase=benchmark_block_after elapsed_s=0.095 completed=12 pending=168
+[exp8027] phase=benchmark_block_after elapsed_s=0.097 completed=14 pending=166
+[exp8027] phase=benchmark_block_after elapsed_s=0.098 completed=16 pending=164
+[exp8027] phase=benchmark_block_after elapsed_s=0.100 completed=18 pending=162
+[exp8027] phase=benchmark_block_after elapsed_s=0.102 completed=20 pending=160
+[exp8027] phase=benchmark_block_after elapsed_s=0.103 completed=22 pending=158
+[exp8027] phase=benchmark_block_after elapsed_s=0.105 completed=24 pending=156
+[exp8027] phase=benchmark_block_after elapsed_s=0.106 completed=26 pending=154
+[exp8027] phase=benchmark_block_after elapsed_s=0.108 completed=28 pending=152
+[exp8027] phase=benchmark_block_after elapsed_s=0.109 completed=30 pending=150
+[exp8027] phase=benchmark_block_after elapsed_s=0.111 completed=32 pending=148
+[exp8027] phase=benchmark_block_after elapsed_s=0.113 completed=34 pending=146
+[exp8027] phase=benchmark_block_after elapsed_s=0.114 completed=36 pending=144
+[exp8027] phase=benchmark_block_after elapsed_s=0.116 completed=38 pending=142
+[exp8027] phase=benchmark_block_after elapsed_s=0.117 completed=40 pending=140
+[exp8027] phase=benchmark_block_after elapsed_s=0.119 completed=42 pending=138
+[exp8027] phase=benchmark_block_after elapsed_s=0.120 completed=44 pending=136
+[exp8027] phase=benchmark_block_after elapsed_s=0.122 completed=46 pending=134
+[exp8027] phase=benchmark_block_after elapsed_s=0.124 completed=48 pending=132
+[exp8027] phase=benchmark_block_after elapsed_s=0.125 completed=50 pending=130
+[exp8027] phase=benchmark_block_after elapsed_s=0.127 completed=52 pending=128
+[exp8027] phase=benchmark_block_after elapsed_s=0.128 completed=54 pending=126
+[exp8027] phase=benchmark_block_after elapsed_s=0.130 completed=56 pending=124
+[exp8027] phase=benchmark_block_after elapsed_s=0.132 completed=58 pending=122
+[exp8027] phase=benchmark_block_after elapsed_s=0.133 completed=60 pending=120
+[exp8027] phase=benchmark_block_after elapsed_s=0.142 completed=62 pending=118
+[exp8027] phase=benchmark_block_after elapsed_s=0.150 completed=64 pending=116
+[exp8027] phase=benchmark_block_after elapsed_s=0.159 completed=66 pending=114
+[exp8027] phase=benchmark_block_after elapsed_s=0.167 completed=68 pending=112
+[exp8027] phase=benchmark_block_after elapsed_s=0.176 completed=70 pending=110
+[exp8027] phase=benchmark_block_after elapsed_s=0.184 completed=72 pending=108
+[exp8027] phase=benchmark_block_after elapsed_s=0.192 completed=74 pending=106
+[exp8027] phase=benchmark_block_after elapsed_s=0.201 completed=76 pending=104
+[exp8027] phase=benchmark_block_after elapsed_s=0.209 completed=78 pending=102
+[exp8027] phase=benchmark_block_after elapsed_s=0.218 completed=80 pending=100
+[exp8027] phase=benchmark_block_after elapsed_s=0.226 completed=82 pending=98
+[exp8027] phase=benchmark_block_after elapsed_s=0.235 completed=84 pending=96
+[exp8027] phase=benchmark_block_after elapsed_s=0.243 completed=86 pending=94
+[exp8027] phase=benchmark_block_after elapsed_s=0.252 completed=88 pending=92
+[exp8027] phase=benchmark_block_after elapsed_s=0.260 completed=90 pending=90
+[exp8027] phase=benchmark_block_after elapsed_s=0.269 completed=92 pending=88
+[exp8027] phase=benchmark_block_after elapsed_s=0.277 completed=94 pending=86
+[exp8027] phase=benchmark_block_after elapsed_s=0.285 completed=96 pending=84
+[exp8027] phase=benchmark_block_after elapsed_s=0.294 completed=98 pending=82
+[exp8027] phase=benchmark_block_after elapsed_s=0.302 completed=100 pending=80
+[exp8027] phase=benchmark_block_after elapsed_s=0.311 completed=102 pending=78
+[exp8027] phase=benchmark_block_after elapsed_s=0.319 completed=104 pending=76
+[exp8027] phase=benchmark_block_after elapsed_s=0.328 completed=106 pending=74
+[exp8027] phase=benchmark_block_after elapsed_s=0.336 completed=108 pending=72
+[exp8027] phase=benchmark_block_after elapsed_s=0.345 completed=110 pending=70
+[exp8027] phase=benchmark_block_after elapsed_s=0.353 completed=112 pending=68
+[exp8027] phase=benchmark_block_after elapsed_s=0.361 completed=114 pending=66
+[exp8027] phase=benchmark_block_after elapsed_s=0.370 completed=116 pending=64
+[exp8027] phase=benchmark_block_after elapsed_s=0.378 completed=118 pending=62
+[exp8027] phase=benchmark_block_after elapsed_s=0.387 completed=120 pending=60
+[exp8027] phase=benchmark_block_after elapsed_s=0.417 completed=122 pending=58
+[exp8027] phase=benchmark_block_after elapsed_s=0.447 completed=124 pending=56
+[exp8027] phase=benchmark_block_after elapsed_s=0.476 completed=126 pending=54
+[exp8027] phase=benchmark_block_after elapsed_s=0.506 completed=128 pending=52
+[exp8027] phase=benchmark_block_after elapsed_s=0.536 completed=130 pending=50
+[exp8027] phase=benchmark_block_after elapsed_s=0.566 completed=132 pending=48
+[exp8027] phase=benchmark_block_after elapsed_s=0.596 completed=134 pending=46
+[exp8027] phase=benchmark_block_after elapsed_s=0.626 completed=136 pending=44
+[exp8027] phase=benchmark_block_after elapsed_s=0.656 completed=138 pending=42
+[exp8027] phase=benchmark_block_after elapsed_s=0.686 completed=140 pending=40
+[exp8027] phase=benchmark_block_after elapsed_s=0.716 completed=142 pending=38
+[exp8027] phase=benchmark_block_after elapsed_s=0.746 completed=144 pending=36
+[exp8027] phase=benchmark_block_after elapsed_s=0.776 completed=146 pending=34
+[exp8027] phase=benchmark_block_after elapsed_s=0.806 completed=148 pending=32
+[exp8027] phase=benchmark_block_after elapsed_s=0.836 completed=150 pending=30
+[exp8027] phase=benchmark_block_after elapsed_s=0.866 completed=152 pending=28
+[exp8027] phase=benchmark_block_after elapsed_s=0.896 completed=154 pending=26
+[exp8027] phase=benchmark_block_after elapsed_s=0.926 completed=156 pending=24
+[exp8027] phase=benchmark_block_after elapsed_s=0.956 completed=158 pending=22
+[exp8027] phase=benchmark_block_after elapsed_s=0.986 completed=160 pending=20
+[exp8027] phase=benchmark_block_after elapsed_s=1.016 completed=162 pending=18
+[exp8027] phase=benchmark_block_after elapsed_s=1.046 completed=164 pending=16
+[exp8027] phase=benchmark_block_after elapsed_s=1.076 completed=166 pending=14
+[exp8027] phase=benchmark_block_after elapsed_s=1.106 completed=168 pending=12
+[exp8027] phase=benchmark_block_after elapsed_s=1.136 completed=170 pending=10
+[exp8027] phase=benchmark_block_after elapsed_s=1.166 completed=172 pending=8
+[exp8027] phase=benchmark_block_after elapsed_s=1.196 completed=174 pending=6
+[exp8027] phase=benchmark_block_after elapsed_s=1.226 completed=176 pending=4
+[exp8027] phase=benchmark_block_after elapsed_s=1.256 completed=178 pending=2
+[exp8027] phase=benchmark_block_after elapsed_s=1.286 completed=180 pending=0
+[exp8027] phase=benchmark_after elapsed_s=1.367 completed=180 pending=0
+[exp8027] phase=extension_load_before elapsed_s=1.371 completed=0 pending=0
+[exp8027] phase=extension_load_after elapsed_s=1.375 completed=0 pending=0
+[exp8027] phase=extension_load_before elapsed_s=1.486 completed=0 pending=0
+[exp8027] phase=extension_load_after elapsed_s=1.489 completed=0 pending=0
+[exp8027] phase=parity_before elapsed_s=1.489 completed=0 pending=260
+[exp8027] phase=parity_natural elapsed_s=1.541 completed=1 pending=3
+[exp8027] phase=parity_after elapsed_s=1.557 completed=260 pending=0
+[exp8027] phase=extension_load_before elapsed_s=1.957 completed=0 pending=0
+[exp8027] phase=extension_load_after elapsed_s=1.960 completed=0 pending=0
+[exp8027] phase=extension_load_before elapsed_s=2.066 completed=0 pending=0
+[exp8027] phase=extension_load_after elapsed_s=2.069 completed=0 pending=0
+[exp8027] phase=extension_load_before elapsed_s=2.176 completed=0 pending=0
+[exp8027] phase=extension_load_after elapsed_s=2.179 completed=0 pending=0
+[exp8027] phase=parity_before elapsed_s=2.180 completed=0 pending=260
+[exp8027] phase=parity_natural elapsed_s=2.231 completed=1 pending=3
+[exp8027] phase=parity_after elapsed_s=2.247 completed=260 pending=0
+_________________ test_req_pybind_8027_build_and_failure_paths _________________
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261002T143958-1374326-058b46a8/test_req_pybind_8027_build_and0')
+native = <module 'carnot._rust' from '/home/ianblenke/github.com/ianblenke/carnot/target/experiment-8027-load/_rust.cpython-312-x86_64-linux-gnu.so'>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f443ec5e420>
+
+    def test_req_pybind_8027_build_and_failure_paths(tmp_path, native, monkeypatch):
+        """REQ-PYBIND-8027: build, conversion and restart failures retain zero claim."""
+        from types import SimpleNamespace
+    
+>       module, receipt = e.extension()
+                          ^^^^^^^^^^^^^
+
+tests/python/test_native_update_8027.py:265: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/experiment_8027_v695_native_update_cost.py:105: in extension
+    sha256=sha256_file(path),
+           ^^^^^^^^^^^^^^^^^
+python/carnot/reporting/current_work_receipt.py:52: in sha256_file
+    with path.open("rb") as stream:
+         ^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file = PosixPath('/tmp/pytest-carnot-ianblenke/20261002T143958-1374326-058b46a8/test_req_report_8027_cli_and_v0/failed/raw/experiment_8027_v695_native_update_cost/extension/_rust.cpython-312-x86_64-linux-gnu.so')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+closefd = True, opener = None
+
+    def _compat_io_open(
+        file: object,
+        mode: str = "r",
+        buffering: int = -1,
+        encoding: str | None = None,
+        errors: str | None = None,
+        newline: str | None = None,
+        closefd: bool = True,
+        opener: Any | None = None,
+    ) -> Any:
+        target = (
+            _redirect_legacy_write_path(file, "io.open", ensure_parent=True)
+            if _is_write_intent(mode, None)
+            else file
+        )
+>       return _ORIGINAL_IO_OPEN(
+            target,
+            mode,
+            buffering,
+            encoding,
+            errors,
+            newline,
+            closefd,
+            opener,
+        )
+E       FileNotFoundError: [Errno 2] No such file or directory: '/tmp/pytest-carnot-ianblenke/20261002T143958-1374326-058b46a8/test_req_report_8027_cli_and_v0/failed/raw/experiment_8027_v695_native_update_cost/extension/_rust.cpython-312-x86_64-linux-gnu.so'
+
+python/carnot/testing/tracked_results_guard.py:175: FileNotFoundError
+----------------------------- Captured stdout call -----------------------------
+[exp8027] phase=extension_load_before elapsed_s=2.791 completed=0 pending=0
+=========================== short test summary info ============================
+FAILED tests/python/test_native_update_8027.py::test_req_report_8027_measurement_and_replay
+FAILED tests/python/test_native_update_8027.py::test_req_pybind_8027_build_and_failure_paths
+2 failed, 4 passed in 5.90s

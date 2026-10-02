@@ -131,3 +131,41 @@ And a stale, missing, or differently built extension blocks score consumption.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-PYBIND-7340 and SCENARIO-PYBIND-7340-* | Implemented in the Exp7340 complete-boundary measurement; no binding code change is required. | `tests/python/test_experiment_7340_v644_native_cost.py` and measured E2E-003 evidence cover the boundary. |
+
+### REQ-PYBIND-8027: Opt-in calibrated numerical update
+
+The prototype SHALL port only the frozen nine-input scale/cubic basis, calibrated
+110-coefficient sparse update and JSON lazy-decay state. Reject nonfinite inputs,
+malformed geometry, invalid labels and shape mismatches before mutation. Preserve
+exact eligibility masks and typed action ties. Do not change production defaults.
+
+#### SCENARIO-PYBIND-8027-PARITY
+
+Tests SHALL first fail without the implementation. The actual task-owned loaded
+PyO3 binary SHALL replay every natural update and at least 256 separate boundary
+and random fixtures. Float64 probability and effective coefficient errors SHALL
+be at most 1e-10. Disclose non-bitwise arithmetic. Serialized decay state SHALL
+survive a fresh-process restart. E2E-003 and E2E-004 require binary hashes.
+
+REQ-PYBIND-8027 implementation: `crates/carnot-core/src/numerical_update_8027.rs`
+owns float64 geometry and sparse arithmetic. The matching carnot-python module
+exposes explicit construction, feature design, update, effective coefficients
+and serialized lazy state. Traced Rust and Python tests exercise the actual
+extension. LLVM source-statement receipts retain generated PyO3 attribute
+expansions separately; Python and CLI statements are measured with coverage.py.
+Final numerical readiness is determined by the Exp8027 artifact gates.
+
+#### SCENARIO-PYBIND-8027-SHUTDOWN
+
+Repeated construction and publication SHALL preserve already loaded shared
+library mappings. Copy a replacement binary to a new inode and atomically
+replace its destination; never truncate an imported extension in place.
+A fresh Python process SHALL load the same destination twice, execute the
+numerical entrypoint, and exit normally. Failed copies SHALL preserve the
+previous binary bytes and clean up temporary files.
+
+Implemented by `copy_extension` in the Exp8027 producer for build and evidence
+copies. The fresh-process repeated-load regression fails with SIGSEGV before
+the repair and exits zero afterward. The original numerical Rust implementation
+and all 13 original Python test/helper definitions remain intact. New regressions
+also retain the previous open inode and verify cleanup after a partial copy.

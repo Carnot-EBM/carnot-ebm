@@ -1,0 +1,48 @@
+.....F                                                                   [100%]
+=================================== FAILURES ===================================
+_________________ test_req_pybind_8027_build_and_failure_paths _________________
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261002T144116-1374830-92b691f5/test_req_pybind_8027_build_and0')
+native = <module 'carnot._rust' from '/home/ianblenke/github.com/ianblenke/carnot/target/experiment-8027-load/_rust.cpython-312-x86_64-linux-gnu.so'>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fc36cfcf7d0>
+
+    def test_req_pybind_8027_build_and_failure_paths(tmp_path, native, monkeypatch):
+        """REQ-PYBIND-8027: build, conversion and restart failures retain zero claim."""
+        from types import SimpleNamespace
+    
+        module, receipt = e.extension()
+        monkeypatch.delenv("CARNOT_8027_EXTENSION", raising=False)
+        monkeypatch.setattr(e.build, "build_native_extension", lambda root: (Path(receipt["path"]), {}))
+>       assert e.extension()[1]["actual_loaded"]
+               ^^^^^^^^^^^^^
+
+tests/python/test_native_update_8027.py:275: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/experiment_8027_v695_native_update_cost.py:96: in extension
+    shutil.copyfile(path, destination)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+src = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/target/experiment-8027-load/_rust.cpython-312-x86_64-linux-gnu.so')
+dst = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/target/experiment-8027-load/_rust.cpython-312-x86_64-linux-gnu.so')
+
+    def copyfile(src, dst, *, follow_symlinks=True):
+        """Copy data from src to dst in the most efficient way possible.
+    
+        If follow_symlinks is not set and src is a symbolic link, a new
+        symlink will be created instead of copying the file it points to.
+    
+        """
+        sys.audit("shutil.copyfile", src, dst)
+    
+        if _samefile(src, dst):
+>           raise SameFileError("{!r} and {!r} are the same file".format(src, dst))
+E           shutil.SameFileError: PosixPath('/home/ianblenke/github.com/ianblenke/carnot/target/experiment-8027-load/_rust.cpython-312-x86_64-linux-gnu.so') and PosixPath('/home/ianblenke/github.com/ianblenke/carnot/target/experiment-8027-load/_rust.cpython-312-x86_64-linux-gnu.so') are the same file
+
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/shutil.py:240: SameFileError
+----------------------------- Captured stdout call -----------------------------
+[exp8027] phase=extension_load_before elapsed_s=3.753 completed=0 pending=0
+[exp8027] phase=extension_load_after elapsed_s=3.756 completed=0 pending=0
+[exp8027] phase=build_before elapsed_s=3.756 completed=0 pending=0
+=========================== short test summary info ============================
+FAILED tests/python/test_native_update_8027.py::test_req_pybind_8027_build_and_failure_paths
+1 failed, 5 passed in 7.96s

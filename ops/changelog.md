@@ -1,5 +1,22 @@
 # Carnot — Changelog
 
+## 2026-10-02 — Exp8027 extension copy and shutdown repair
+
+- Fix SIGSEGV after a passing pytest summary by atomically replacing copied
+  extension files instead of truncating loaded shared library inodes.
+- Apply the same copy helper to build outputs and published binary evidence.
+  Add subprocess shutdown and interrupted-copy regressions; preserve all
+  original tests and the conductor source.
+- Verify 92 subset tests, 40 downstream/fix-gate tests, 42 adjacent tests,
+  437/437 Python/CLI statements, scoped lint/type/spec checks and applicable
+  native/CLI E2E checks. Cold replay and terminal readers pass against the
+  preserved published measurement.
+- All 17 owned validation commands pass, including 48 unit/consumer/E2E tests
+  and 244/244 native executable source lines (raw LLVM macro counts retained).
+- Retain validation evidence in the Exp8027 `fixgate-validation/` directory.
+  Global spec gaps, unrelated workspace formatting differences and the prior
+  failed full-suite health diagnostic remain recorded separately.
+
 ## 2026-10-01 — Exp7967 blocked-source custody and private storage repair
 
 - Handle missing or malformed historical source JSON while retaining blocked

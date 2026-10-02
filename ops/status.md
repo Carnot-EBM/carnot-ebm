@@ -1,6 +1,36 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-02
+
+## 2026-10-02 — Exp8027 native library shutdown repair
+
+The original 90-test subset passed its assertions but crashed with exit 139
+during ELF finalization. Repeated copies truncated an already loaded extension
+inode. Build and publication copies now stage a new inode and replace the
+destination atomically, preserving live mappings and previous bytes if a copy
+fails. A new subprocess regression reproduced SIGSEGV before the repair.
+All original test/helper definitions remain unchanged.
+
+The repaired subset passes 92 tests with a normal exit (one existing ast.Num
+deprecation warning). Downstream learning/retention/fix-gate consumers pass
+40 tests; adjacent eligibility/decision checks pass 42 tests. Combined Python
+and direct CLI coverage measures 437/437 statements. All 17 owned validation
+commands pass, including 48 unit/consumer/E2E tests; native coverage measures
+244/244 executable source lines with raw generated-macro counters retained.
+Scoped Ruff, formatting,
+strict mypy and spec traceability pass, as do E2E-003/004 and E2E-015/019.
+The published numerical measurement passes cold replay, adversarial verification
+and strict row consistency; its original timings and scientific verdict remain
+preserved. Evidence is retained under
+`results/raw/experiment_8027_v695_native_update_cost/fixgate-validation/`.
+
+The Rust workspace tests pass. Repository-wide spec traceability retains 1,142
+existing gaps; full-workspace formatting still reports differences in untouched
+Rust files. The prior bounded full-suite diagnostic remains a failed, timed-out
+health check. These scoped results do not establish a repository-wide pass.
+`scripts/research_conductor.py` is byte-identical to HEAD.
+Final reconciliation passes documentation freshness and reports only the
+existing repository-wide spec-traceability gaps.
 
 ## 2026-10-01 — Exp7992 test repair
 

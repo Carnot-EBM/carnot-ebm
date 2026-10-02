@@ -89901,3 +89901,54 @@ commit/restart CLI. The thin experiment script runs the same entry point.
 Traced tests cover 552 added statements, including direct CLI and failure paths.
 The 20261002 audit preserves its early retention annotation preview and grants
 no inferential readiness or benefit credit from that invocation.
+
+# REQ-REPORT-8027: Native update cost on current qualified state
+
+Freeze methods before measurement. Require Exp8020 energy_fit_ready_score and
+Exp8025 learning_measurement_ready_score equal one, terminal valid verdicts and
+unflagged evidence. A complete null trajectory qualifies numerical parity only.
+Use all natural updates with original source/arm/seed identities; seeds do not
+increase independent n. Stress fixtures supply no learning credit. Measure 30
+matched repetitions for batches 1/16/64 under identical affinity and thread
+settings. Retain Python/Rust hot kernel, arithmetic, FFI baseline, feature,
+serialization, fsync, restart and complete transaction distributions and bytes.
+Report NFR-01 10x complete transaction throughput and Tier-1 1000ns arithmetic
+as pass/fail. Hash imported acquisition/load spans separately and join only
+matching sources; missing acquisition stays excluded from full-service estimates.
+Keep generalized benefit zero, default_enabled false and hardware claims absent.
+
+## SCENARIO-REPORT-8027-CUSTODY
+
+Durable raw rows, all checkpoints, binary/source/config hashes and command argv,
+exits and log hashes SHALL support cold reduction in a fresh process. Publish
+through the existing primary helper after cold replay, adversarial verification
+and strict row lint, then check final bytes with the same readers. Missing
+external gates give terminal blocked readiness zero. Owned failures disqualify.
+Require scoped tests, direct CLI branches, 100 percent added statement coverage,
+Ruff, strict mypy, spec coverage, focused cargo tests/fmt/clippy and E2E-003/004.
+One bounded full-suite health diagnostic stays separate; preserve its failures.
+The conductor owns ops/status/changelog and BMAD traceability reconciliation.
+
+REQ-REPORT-8027 implementation: `python/carnot/experiment_8027_v695_native_update_cost.py`
+uses the existing interpreter-bound extension helper, bounded validation runner
+and primary publication helper. Its thin CLI retains all natural updates and
+separate stress rows. Complete transaction timing includes state construction,
+public byte features, binding, serialization, file and directory fsync, and
+state reopen. Original capture spans remain hashed historical imports.
+Traced tests: `tests/python/test_native_update_8027.py`. Final gates are recorded
+in `results/experiment_8027_v695_native_update_cost.json`; numerical readiness
+never promotes the null learner. The conductor owns the remaining reconciliation.
+
+SCENARIO-PYBIND-8027-SHUTDOWN also governs the task-owned build copy and the
+published evidence copy. Validation success requires a normal process exit
+after the passing pytest summary, including native library finalization.
+
+The 2026-10-02 repair passes all 17 owned validation commands, including
+48 unit/consumer/E2E tests and 437/437 Python/CLI statements. Native source
+coverage is 143/143 core and 101/101 binding executable lines; raw LLVM counters
+retain generated PyO3 expansion entries separately. The 92-test conductor
+subset exits zero and preserves its existing deprecation warning. Original
+timings and primary evidence remain unchanged and pass cold/terminal readers.
+Current source hashes and receipts are retained in the Exp8027 raw
+`fixgate-validation/` directory. Global traceability/formatting debt and the
+prior failed bounded repository-health diagnostic are not scoped successes.

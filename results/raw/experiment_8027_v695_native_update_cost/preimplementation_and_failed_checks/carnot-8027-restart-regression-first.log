@@ -1,0 +1,109 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_______________ test_req_pybind_8027_natural_serialized_restart ________________
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261002T150402-1392926-24d08121/test_req_pybind_8027_natural_s0')
+native = <module 'carnot._rust' from '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8027_v695_native_update_cost/extension/_rust.cpython-312-x86_64-linux-gnu.so'>
+
+    def test_req_pybind_8027_natural_serialized_restart(tmp_path,native):
+        """SCENARIO-PYBIND-8027-PARITY: natural JSON differences stay within the frozen float64 gate."""
+        data=json.loads((e.ROOT/"results/raw"/e.upstream.NAME/"inputs.json").read_text())
+        db=e.sqlite3.connect("file:"+str(e.ROOT/"results/raw"/e.upstream.NAME/"ledger.sqlite")+"?mode=ro",uri=True)
+        updates=[json.loads(r[0]) for r in db.execute("SELECT payload FROM events WHERE kind='update' ORDER BY seq")]
+        db.close()
+        data["updates"]=[r for r in updates if r["arm"]=="uniform" and r["seed"]==101]
+>       result=e.parity(data,native,tmp_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_native_update_8027.py:379: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+data = {'head': {'arm': 'conditioned_energy', 'calibration': [1.1982181222673671, 2.095618497718696], 'decay_scale': 1.0, 'ge...er_head_hash': 'sha256:8b41c2f699dd075b2387d3deaac91ee4b03c61c7c96f88bba52b58621d94c16f', 'arm': 'uniform', ...}, ...]}
+native = <module 'carnot._rust' from '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8027_v695_native_update_cost/extension/_rust.cpython-312-x86_64-linux-gnu.so'>
+raw = PosixPath('/tmp/pytest-carnot-ianblenke/20261002T150402-1392926-24d08121/test_req_pybind_8027_natural_s0')
+
+    def parity(data: Json, native: Any, raw: Path) -> Json:
+        """Replay all natural updates and isolated stress while retaining original masks."""
+        progress("parity_before", 0, len(data["updates"]) + 256)
+        h = data["head"]
+        random = np.random.default_rng(CONFIG["seed"]).uniform(-0.2, 1.2, (256, 9))
+        random[:10] = np.arange(10)[:, None] / 9
+        atomic_json(raw / "stress.json", dict(inputs=random.tolist(), scope="numerical_fixture"))
+        rows, states = [], {}
+        vectors = python_design(h, random)
+        n = native.RustNumericalUpdate8027(json.dumps(h))
+        native_vectors = np.asarray(n.design(random.tolist()))
+        for i, x in enumerate(vectors):
+            stress_head = copy.deepcopy(h)
+            stress_native = native.RustNumericalUpdate8027(json.dumps(h))
+            p = python_batch(stress_head, x[None, :], [i % 2])[0][0]
+            q = stress_native.update_batch([native_vectors[i].tolist()], [i % 2])[0][0]
+            rows.append(
+                dict(
+                    kind="stress",
+                    index=i,
+                    probability_error=abs(p - q),
+                    basis_error=float(np.max(np.abs(x - native_vectors[i]))),
+                    action_equal=action(p) == action(q),
+                    coefficient_error=float(
+                        np.max(np.abs(coefficients(stress_head) - stress_native.effective()))
+                    ),
+                    eligible=False,
+                    numerator=abs(p - q),
+                    denominator=1,
+                    exclusion_reason="stress_not_natural",
+                )
+            )
+        checkpoints = []
+        for i, update in enumerate(data["updates"]):
+            identity = f"{update['arm']}/{update['seed']}"
+            if identity not in states:
+                states[identity] = native.RustNumericalUpdate8027(json.dumps(h))
+            current = states[identity]
+            source = data["sources"][update["origin_slot"]]
+            x = causal.design(h, source)
+            nx = np.asarray(current.design([[source["q"], *source["features"]]])[0])
+            before = copy.deepcopy(h)
+            before.update(parameters=update["before_coefficients"], decay_scale=1.0)
+            expected = causal.probability(before, x)
+            observed = current.update_batch([nx.tolist()], [update["y"]])[0][0]
+            error = float(
+                np.max(np.abs(np.asarray(current.effective()) - update["after_coefficients"]))
+            )
+            rows.append(
+                dict(
+                    kind="natural",
+                    arm=update["arm"],
+                    seed=update["seed"],
+                    index=update["update_index"],
+                    family_id=update["family_id"],
+                    probability_error=abs(expected - observed),
+                    basis_error=float(np.max(np.abs(x - nx))),
+                    action_equal=action(expected) == action(observed),
+                    coefficient_error=error,
+                    eligible=source["public_eligible"],
+                    numerator=abs(expected - observed),
+                    denominator=1,
+                    exclusion_reason=None,
+                )
+            )
+            if i % 512 == 0:
+                progress("parity_natural", i + 1, len(data["updates"]) - i - 1)
+        for identity, current in states.items():
+            path = raw / "checkpoints" / (identity.replace("/", "-") + ".json")
+            atomic_json(path, json.loads(current.state_json()))
+            restored = native.RustNumericalUpdate8027(path.read_text())
+            if restored.effective() != current.effective():
+>               raise ValueError("restart_coefficients")
+E               ValueError: restart_coefficients
+
+python/carnot/experiment_8027_v695_native_update_cost.py:319: ValueError
+---------------------------- Captured stdout setup -----------------------------
+[exp8027] phase=extension_load_before elapsed_s=0.002 completed=0 pending=0
+[exp8027] phase=extension_load_after elapsed_s=0.005 completed=0 pending=0
+----------------------------- Captured stdout call -----------------------------
+[exp8027] phase=parity_before elapsed_s=0.479 completed=0 pending=312
+[exp8027] phase=parity_natural elapsed_s=0.515 completed=1 pending=55
+=========================== short test summary info ============================
+FAILED tests/python/test_native_update_8027.py::test_req_pybind_8027_natural_serialized_restart
+1 failed in 2.20s

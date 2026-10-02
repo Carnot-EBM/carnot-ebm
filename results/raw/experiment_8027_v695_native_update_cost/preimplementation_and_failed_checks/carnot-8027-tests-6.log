@@ -1,0 +1,21 @@
+......F                                                                  [100%]
+=================================== FAILURES ===================================
+__________________ test_req_pybind_8027_negative_and_terminal __________________
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261002T144559-1384046-339a1030/test_req_pybind_8027_negative_0')
+native = <module 'carnot._rust' from '/tmp/carnot-8027-rust-coverage/release/libcarnot_python.so'>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f390012af30>
+
+    def test_req_pybind_8027_negative_and_terminal(tmp_path, native, monkeypatch):
+        """REQ-PYBIND-8027: stable negative logits and the terminal adapter run directly."""
+        h = head()
+        h["parameters"][0] = -100.0
+        n = native.RustNumericalUpdate8027(json.dumps(h))
+        x = e.python_design(h, np.full((1, 9), 0.5))
+>       assert 0 < n.update_batch(x.tolist(), [None])[0][0] < 1e-40
+E       assert 3.996039396660641e-40 < 1e-40
+
+tests/python/test_native_update_8027.py:333: AssertionError
+=========================== short test summary info ============================
+FAILED tests/python/test_native_update_8027.py::test_req_pybind_8027_negative_and_terminal
+1 failed, 6 passed in 6.60s

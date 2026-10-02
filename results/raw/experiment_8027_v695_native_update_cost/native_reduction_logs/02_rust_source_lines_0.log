@@ -1,0 +1,470 @@
+    1|       |//! REQ-PYBIND-8027: tests precede the calibrated numerical primitive.
+    2|       |
+    3|       |#[cfg(test)]
+    4|       |mod tests {
+    5|       |    use super::*;
+    6|       |
+    7|       |    #[test]
+    8|      1|    fn test_lazy_update_restart() {
+    9|       |        // SCENARIO-PYBIND-8027-PARITY: decay survives JSON round trip.
+   10|      1|        let mut s = State::fixture();
+   11|      1|        let mut x = vec![0.0; 110];
+   12|      1|        x[0] = 1.0;
+   13|      1|        let p = s.probability(&x);
+   14|      1|        s.step(&x, 1, p);
+   15|      1|        let restored: State = serde_json::from_str(&serde_json::to_string(&s).unwrap()).unwrap();
+   16|      1|        assert_eq!(s.effective(), restored.effective());
+   17|      1|        assert!((s.decay_scale - 0.99998).abs() < 1e-15);
+   18|      1|    }
+   19|       |
+   20|       |    #[test]
+   21|      1|    fn test_valid_state_and_negative_probability() {
+   22|       |        // REQ-PYBIND-8027: valid state and negative stable logits execute fully.
+   23|      1|        let mut s = State::fixture();
+   24|      1|        s.validate().unwrap();
+   25|      1|        s.calibration = [-20.0, 1.0];
+   26|      1|        let x = s.design(&[0.0; 9]).unwrap();
+   27|      1|        assert!(s.probability(&x) > 0.0);
+   28|      1|        assert!(s.probability(&x) < 1e-7);
+   29|      1|        s.geometry.scaler.maximum[0] = 0.0;
+   30|    110|        assert!(s.design(&[0.0; 9]).unwrap().iter().all(|v| v.is_finite()));
+   31|      1|    }
+   32|       |
+   33|       |    #[test]
+   34|      1|    fn test_basis_boundaries_and_nonfinite() {
+   35|       |        // REQ-PYBIND-8027: endpoints retain partition of unity; NaN fails.
+   36|      1|        let s = State::fixture();
+   37|      4|        for value in [0.0, 1.0 / 9.0, 0.5, 1.0] {
+   38|      4|            let x = s.design(&[value; 9]).unwrap();
+   39|     36|            for j in 0..9 {
+   40|     36|                assert!((x[2 + j * 12..2 + (j + 1) * 12].iter().sum::<f64>() - 1.0).abs() < 1e-12);
+   41|       |            }
+   42|       |        }
+   43|      1|        assert!(s.design(&[f64::NAN; 9]).is_err());
+   44|      1|        let mut invalid = s;
+   45|      1|        invalid.decay_scale = 0.0;
+   46|      1|        assert!(invalid.validate().is_err());
+   47|      1|    }
+   48|       |}
+   49|       |
+   50|       |use serde::{Deserialize, Serialize};
+   51|       |
+   52|       |/// Float64 state retains the multiplier so a restart does not alter regularization.
+   53|       |#[derive(Clone, Serialize, Deserialize)]
+   54|       |pub struct State {
+   55|       |    pub arm: String,
+   56|       |    pub parameters: Vec<f64>,
+   57|       |    pub decay_scale: f64,
+   58|       |    pub calibration: [f64; 2],
+   59|       |    pub geometry: Geometry,
+   60|       |}
+   61|       |
+   62|       |#[derive(Clone, Serialize, Deserialize)]
+   63|       |pub struct Geometry {
+   64|       |    pub scaler: Scaler,
+   65|       |    pub logit_center: f64,
+   66|       |    pub logit_scale: f64,
+   67|       |    pub knots: Vec<f64>,
+   68|       |}
+   69|       |
+   70|       |#[derive(Clone, Serialize, Deserialize)]
+   71|       |pub struct Scaler {
+   72|       |    pub minimum: Vec<f64>,
+   73|       |    pub maximum: Vec<f64>,
+   74|       |}
+   75|       |
+   76|       |impl State {
+   77|       |    /// Reject malformed state before any arithmetic can mutate coefficients.
+   78|      4|    pub fn validate(&self) -> Result<(), String> {
+   79|      4|        let g = &self.geometry;
+   80|      4|        let finite = self
+   81|      4|            .parameters
+   82|      4|            .iter()
+   83|      4|            .chain(&self.calibration)
+   84|      4|            .chain(&g.knots)
+   85|      4|            .chain(&g.scaler.minimum)
+   86|      4|            .chain(&g.scaler.maximum)
+   87|    584|            .all(|v| v.is_finite());
+  ------------------
+  | _RNCNvMNtCseWPhmGwgvbB_11carnot_core21numerical_update_8027NtB4_5State8validate0B6_:
+  |   87|    292|            .all(|v| v.is_finite());
+  ------------------
+  | _RNCNvMNtCs6w7qzjj18wm_11carnot_core21numerical_update_8027NtB4_5State8validate0B6_:
+  |   87|    292|            .all(|v| v.is_finite());
+  ------------------
+   88|      4|        if !finite
+   89|      4|            || self.arm != "conditioned_energy"
+   90|      4|            || self.parameters.len() != 110
+   91|      4|            || !self.decay_scale.is_finite()
+   92|      4|            || self.decay_scale <= 0.0
+   93|      3|            || !g.logit_center.is_finite()
+   94|      3|            || !g.logit_scale.is_finite()
+   95|      3|            || g.logit_scale <= 0.0
+   96|      3|            || g.scaler.minimum.len() != 9
+   97|      3|            || g.scaler.maximum.len() != 9
+   98|      3|            || g.knots != knots()
+   99|       |        {
+  100|      1|            return Err("state_contract".into());
+  101|      3|        }
+  102|      3|        Ok(())
+  103|      4|    }
+  ------------------
+  | _RNvMNtCseWPhmGwgvbB_11carnot_core21numerical_update_8027NtB2_5State8validate:
+  |   78|      2|    pub fn validate(&self) -> Result<(), String> {
+  |   79|      2|        let g = &self.geometry;
+  |   80|      2|        let finite = self
+  |   81|      2|            .parameters
+  |   82|      2|            .iter()
+  |   83|      2|            .chain(&self.calibration)
+  |   84|      2|            .chain(&g.knots)
+  |   85|      2|            .chain(&g.scaler.minimum)
+  |   86|      2|            .chain(&g.scaler.maximum)
+  |   87|      2|            .all(|v| v.is_finite());
+  |   88|      2|        if !finite
+  |   89|      2|            || self.arm != "conditioned_energy"
+  |   90|      2|            || self.parameters.len() != 110
+  |   91|      2|            || !self.decay_scale.is_finite()
+  |   92|      2|            || self.decay_scale <= 0.0
+  |   93|      1|            || !g.logit_center.is_finite()
+  |   94|      1|            || !g.logit_scale.is_finite()
+  |   95|      1|            || g.logit_scale <= 0.0
+  |   96|      1|            || g.scaler.minimum.len() != 9
+  |   97|      1|            || g.scaler.maximum.len() != 9
+  |   98|      1|            || g.knots != knots()
+  |   99|       |        {
+  |  100|      1|            return Err("state_contract".into());
+  |  101|      1|        }
+  |  102|      1|        Ok(())
+  |  103|      2|    }
+  ------------------
+  | _RNvMNtCs6w7qzjj18wm_11carnot_core21numerical_update_8027NtB2_5State8validate:
+  |   78|      2|    pub fn validate(&self) -> Result<(), String> {
+  |   79|      2|        let g = &self.geometry;
+  |   80|      2|        let finite = self
+  |   81|      2|            .parameters
+  |   82|      2|            .iter()
+  |   83|      2|            .chain(&self.calibration)
+  |   84|      2|            .chain(&g.knots)
+  |   85|      2|            .chain(&g.scaler.minimum)
+  |   86|      2|            .chain(&g.scaler.maximum)
+  |   87|      2|            .all(|v| v.is_finite());
+  |   88|      2|        if !finite
+  |   89|      2|            || self.arm != "conditioned_energy"
+  |   90|      2|            || self.parameters.len() != 110
+  |   91|      2|            || !self.decay_scale.is_finite()
+  |   92|      2|            || self.decay_scale <= 0.0
+  |   93|      2|            || !g.logit_center.is_finite()
+  |   94|      2|            || !g.logit_scale.is_finite()
+  |   95|      2|            || g.logit_scale <= 0.0
+  |   96|      2|            || g.scaler.minimum.len() != 9
+  |   97|      2|            || g.scaler.maximum.len() != 9
+  |   98|      2|            || g.knots != knots()
+  |   99|       |        {
+  |  100|      0|            return Err("state_contract".into());
+  |  101|      2|        }
+  |  102|      2|        Ok(())
+  |  103|      2|    }
+  ------------------
+  104|       |
+  105|      4|    pub fn effective(&self) -> Vec<f64> {
+  106|      4|        self.parameters
+  107|      4|            .iter()
+  108|    440|            .map(|v| v * self.decay_scale)
+  ------------------
+  | _RNCNvMNtCseWPhmGwgvbB_11carnot_core21numerical_update_8027NtB4_5State9effective0B6_:
+  |  108|    220|            .map(|v| v * self.decay_scale)
+  ------------------
+  | _RNCNvMNtCs6w7qzjj18wm_11carnot_core21numerical_update_8027NtB4_5State9effective0B6_:
+  |  108|    220|            .map(|v| v * self.decay_scale)
+  ------------------
+  109|      4|            .collect()
+  110|      4|    }
+  ------------------
+  | _RNvMNtCseWPhmGwgvbB_11carnot_core21numerical_update_8027NtB2_5State9effective:
+  |  105|      2|    pub fn effective(&self) -> Vec<f64> {
+  |  106|      2|        self.parameters
+  |  107|      2|            .iter()
+  |  108|      2|            .map(|v| v * self.decay_scale)
+  |  109|      2|            .collect()
+  |  110|      2|    }
+  ------------------
+  | _RNvMNtCs6w7qzjj18wm_11carnot_core21numerical_update_8027NtB2_5State9effective:
+  |  105|      2|    pub fn effective(&self) -> Vec<f64> {
+  |  106|      2|        self.parameters
+  |  107|      2|            .iter()
+  |  108|      2|            .map(|v| v * self.decay_scale)
+  |  109|      2|            .collect()
+  |  110|      2|    }
+  ------------------
+  111|       |
+  112|       |    /// Cox recursion uses the same clamped cubic knots as the Python design.
+  113|      9|    pub fn design(&self, raw: &[f64]) -> Result<Vec<f64>, String> {
+  114|     73|        if raw.len() != 9 || raw.iter().any(|v| !v.is_finite()) {
+  ------------------
+  | _RNCNvMNtCseWPhmGwgvbB_11carnot_core21numerical_update_8027NtB4_5State6design0B6_:
+  |  114|     55|        if raw.len() != 9 || raw.iter().any(|v| !v.is_finite()) {
+  ------------------
+  | _RNCNvMNtCs6w7qzjj18wm_11carnot_core21numerical_update_8027NtB4_5State6design0B6_:
+  |  114|     18|        if raw.len() != 9 || raw.iter().any(|v| !v.is_finite()) {
+  ------------------
+  115|      1|            return Err("feature_contract".into());
+  116|      8|        }
+  117|      8|        let q = raw[0].clamp(1e-4, 1.0 - 1e-4);
+  118|      8|        let g = &self.geometry;
+  119|      8|        let mut out = vec![1.0, ((q / (1.0 - q)).ln() - g.logit_center) / g.logit_scale];
+  120|     72|        for (j, value) in raw.iter().enumerate() {
+  121|     72|            let lo = g.scaler.minimum[j];
+  122|     72|            let hi = g.scaler.maximum[j];
+  123|     72|            let span = if hi > lo { hi - lo } else { 1.0 };
+  124|     72|            let x = ((value - lo) / span).clamp(0.0, 1.0);
+  125|     72|            let mut b = [0.0; 15];
+  126|  1.08k|            for (i, cell) in b.iter_mut().enumerate() {
+  127|  1.08k|                *cell = f64::from(g.knots[i] <= x && x < g.knots[i + 1]);
+  128|       |            }
+  129|    216|            for degree in 1..=3 {
+  130|  2.80k|                for i in 0..15 - degree {
+  131|  2.80k|                    let left = g.knots[i + degree] - g.knots[i];
+  132|  2.80k|                    let right = g.knots[i + degree + 1] - g.knots[i + 1];
+  133|  2.80k|                    b[i] = if left > 0.0 {
+  134|  2.16k|                        (x - g.knots[i]) / left * b[i]
+  135|       |                    } else {
+  136|    648|                        0.0
+  137|  2.80k|                    } + if right > 0.0 {
+  138|  2.16k|                        (g.knots[i + degree + 1] - x) / right * b[i + 1]
+  139|       |                    } else {
+  140|    648|                        0.0
+  141|       |                    };
+  142|       |                }
+  143|       |            }
+  144|     72|            if x == 1.0 {
+  145|      9|                b[..12].fill(0.0);
+  146|      9|                b[11] = 1.0;
+  147|     63|            }
+  148|     72|            out.extend_from_slice(&b[..12]);
+  149|       |        }
+  150|      8|        Ok(out)
+  151|      9|    }
+  ------------------
+  | _RNvMNtCseWPhmGwgvbB_11carnot_core21numerical_update_8027NtB2_5State6design:
+  |  113|      7|    pub fn design(&self, raw: &[f64]) -> Result<Vec<f64>, String> {
+  |  114|      7|        if raw.len() != 9 || raw.iter().any(|v| !v.is_finite()) {
+  |  115|      1|            return Err("feature_contract".into());
+  |  116|      6|        }
+  |  117|      6|        let q = raw[0].clamp(1e-4, 1.0 - 1e-4);
+  |  118|      6|        let g = &self.geometry;
+  |  119|      6|        let mut out = vec![1.0, ((q / (1.0 - q)).ln() - g.logit_center) / g.logit_scale];
+  |  120|     54|        for (j, value) in raw.iter().enumerate() {
+  |  121|     54|            let lo = g.scaler.minimum[j];
+  |  122|     54|            let hi = g.scaler.maximum[j];
+  |  123|     54|            let span = if hi > lo { hi - lo } else { 1.0 };
+  |  124|     54|            let x = ((value - lo) / span).clamp(0.0, 1.0);
+  |  125|     54|            let mut b = [0.0; 15];
+  |  126|    810|            for (i, cell) in b.iter_mut().enumerate() {
+  |  127|    810|                *cell = f64::from(g.knots[i] <= x && x < g.knots[i + 1]);
+  |  128|       |            }
+  |  129|    162|            for degree in 1..=3 {
+  |  130|  2.10k|                for i in 0..15 - degree {
+  |  131|  2.10k|                    let left = g.knots[i + degree] - g.knots[i];
+  |  132|  2.10k|                    let right = g.knots[i + degree + 1] - g.knots[i + 1];
+  |  133|  2.10k|                    b[i] = if left > 0.0 {
+  |  134|  1.62k|                        (x - g.knots[i]) / left * b[i]
+  |  135|       |                    } else {
+  |  136|    486|                        0.0
+  |  137|  2.10k|                    } + if right > 0.0 {
+  |  138|  1.62k|                        (g.knots[i + degree + 1] - x) / right * b[i + 1]
+  |  139|       |                    } else {
+  |  140|    486|                        0.0
+  |  141|       |                    };
+  |  142|       |                }
+  |  143|       |            }
+  |  144|     54|            if x == 1.0 {
+  |  145|      9|                b[..12].fill(0.0);
+  |  146|      9|                b[11] = 1.0;
+  |  147|     45|            }
+  |  148|     54|            out.extend_from_slice(&b[..12]);
+  |  149|       |        }
+  |  150|      6|        Ok(out)
+  |  151|      7|    }
+  ------------------
+  | _RNvMNtCs6w7qzjj18wm_11carnot_core21numerical_update_8027NtB2_5State6design:
+  |  113|      2|    pub fn design(&self, raw: &[f64]) -> Result<Vec<f64>, String> {
+  |  114|      2|        if raw.len() != 9 || raw.iter().any(|v| !v.is_finite()) {
+  |  115|      0|            return Err("feature_contract".into());
+  |  116|      2|        }
+  |  117|      2|        let q = raw[0].clamp(1e-4, 1.0 - 1e-4);
+  |  118|      2|        let g = &self.geometry;
+  |  119|      2|        let mut out = vec![1.0, ((q / (1.0 - q)).ln() - g.logit_center) / g.logit_scale];
+  |  120|     18|        for (j, value) in raw.iter().enumerate() {
+  |  121|     18|            let lo = g.scaler.minimum[j];
+  |  122|     18|            let hi = g.scaler.maximum[j];
+  |  123|     18|            let span = if hi > lo { hi - lo } else { 1.0 };
+  |  124|     18|            let x = ((value - lo) / span).clamp(0.0, 1.0);
+  |  125|     18|            let mut b = [0.0; 15];
+  |  126|    270|            for (i, cell) in b.iter_mut().enumerate() {
+  |  127|    270|                *cell = f64::from(g.knots[i] <= x && x < g.knots[i + 1]);
+  |  128|       |            }
+  |  129|     54|            for degree in 1..=3 {
+  |  130|    702|                for i in 0..15 - degree {
+  |  131|    702|                    let left = g.knots[i + degree] - g.knots[i];
+  |  132|    702|                    let right = g.knots[i + degree + 1] - g.knots[i + 1];
+  |  133|    702|                    b[i] = if left > 0.0 {
+  |  134|    540|                        (x - g.knots[i]) / left * b[i]
+  |  135|       |                    } else {
+  |  136|    162|                        0.0
+  |  137|    702|                    } + if right > 0.0 {
+  |  138|    540|                        (g.knots[i + degree + 1] - x) / right * b[i + 1]
+  |  139|       |                    } else {
+  |  140|    162|                        0.0
+  |  141|       |                    };
+  |  142|       |                }
+  |  143|       |            }
+  |  144|     18|            if x == 1.0 {
+  |  145|      0|                b[..12].fill(0.0);
+  |  146|      0|                b[11] = 1.0;
+  |  147|     18|            }
+  |  148|     18|            out.extend_from_slice(&b[..12]);
+  |  149|       |        }
+  |  150|      2|        Ok(out)
+  |  151|      2|    }
+  ------------------
+  152|       |
+  153|      5|    pub fn probability(&self, x: &[f64]) -> f64 {
+  154|      5|        let z = self.calibration[0]
+  155|      5|            + self.calibration[1]
+  156|      5|                * x.iter()
+  157|      5|                    .zip(&self.parameters)
+  158|    550|                    .map(|(x, p)| x * p * self.decay_scale)
+  ------------------
+  | _RNCNvMNtCseWPhmGwgvbB_11carnot_core21numerical_update_8027NtB4_5State11probability0B6_:
+  |  158|    330|                    .map(|(x, p)| x * p * self.decay_scale)
+  ------------------
+  | _RNCNvMNtCs6w7qzjj18wm_11carnot_core21numerical_update_8027NtB4_5State11probability0B6_:
+  |  158|    220|                    .map(|(x, p)| x * p * self.decay_scale)
+  ------------------
+  159|      5|                    .sum::<f64>();
+  160|      5|        if z >= 0.0 {
+  161|      3|            1.0 / (1.0 + (-z).exp())
+  162|       |        } else {
+  163|      2|            let v = z.exp();
+  164|      2|            v / (1.0 + v)
+  165|       |        }
+  166|      5|    }
+  ------------------
+  | _RNvMNtCseWPhmGwgvbB_11carnot_core21numerical_update_8027NtB2_5State11probability:
+  |  153|      3|    pub fn probability(&self, x: &[f64]) -> f64 {
+  |  154|      3|        let z = self.calibration[0]
+  |  155|      3|            + self.calibration[1]
+  |  156|      3|                * x.iter()
+  |  157|      3|                    .zip(&self.parameters)
+  |  158|      3|                    .map(|(x, p)| x * p * self.decay_scale)
+  |  159|      3|                    .sum::<f64>();
+  |  160|      3|        if z >= 0.0 {
+  |  161|      1|            1.0 / (1.0 + (-z).exp())
+  |  162|       |        } else {
+  |  163|      2|            let v = z.exp();
+  |  164|      2|            v / (1.0 + v)
+  |  165|       |        }
+  |  166|      3|    }
+  ------------------
+  | _RNvMNtCs6w7qzjj18wm_11carnot_core21numerical_update_8027NtB2_5State11probability:
+  |  153|      2|    pub fn probability(&self, x: &[f64]) -> f64 {
+  |  154|      2|        let z = self.calibration[0]
+  |  155|      2|            + self.calibration[1]
+  |  156|      2|                * x.iter()
+  |  157|      2|                    .zip(&self.parameters)
+  |  158|      2|                    .map(|(x, p)| x * p * self.decay_scale)
+  |  159|      2|                    .sum::<f64>();
+  |  160|      2|        if z >= 0.0 {
+  |  161|      2|            1.0 / (1.0 + (-z).exp())
+  |  162|       |        } else {
+  |  163|      0|            let v = z.exp();
+  |  164|      0|            v / (1.0 + v)
+  |  165|       |        }
+  |  166|      2|    }
+  ------------------
+  167|       |
+  168|       |    /// One scalar decay covers every coefficient; data writes stay local.
+  169|      3|    pub fn step(&mut self, x: &[f64], y: u8, p: f64) {
+  170|      3|        let scale = self.decay_scale * (1.0 - 2.0 * 0.001 * 0.01);
+  171|    330|        for (value, coefficient) in x.iter().zip(&mut self.parameters) {
+  172|    330|            if *value != 0.0 {
+  173|     38|                *coefficient -= 0.01 * (p - f64::from(y)) * self.calibration[1] * value / scale;
+  174|    292|            }
+  175|       |        }
+  176|      3|        self.decay_scale = scale;
+  177|      3|    }
+  ------------------
+  | _RNvMNtCseWPhmGwgvbB_11carnot_core21numerical_update_8027NtB2_5State4step:
+  |  169|      1|    pub fn step(&mut self, x: &[f64], y: u8, p: f64) {
+  |  170|      1|        let scale = self.decay_scale * (1.0 - 2.0 * 0.001 * 0.01);
+  |  171|    110|        for (value, coefficient) in x.iter().zip(&mut self.parameters) {
+  |  172|    110|            if *value != 0.0 {
+  |  173|      1|                *coefficient -= 0.01 * (p - f64::from(y)) * self.calibration[1] * value / scale;
+  |  174|    109|            }
+  |  175|       |        }
+  |  176|      1|        self.decay_scale = scale;
+  |  177|      1|    }
+  ------------------
+  | _RNvMNtCs6w7qzjj18wm_11carnot_core21numerical_update_8027NtB2_5State4step:
+  |  169|      2|    pub fn step(&mut self, x: &[f64], y: u8, p: f64) {
+  |  170|      2|        let scale = self.decay_scale * (1.0 - 2.0 * 0.001 * 0.01);
+  |  171|    220|        for (value, coefficient) in x.iter().zip(&mut self.parameters) {
+  |  172|    220|            if *value != 0.0 {
+  |  173|     37|                *coefficient -= 0.01 * (p - f64::from(y)) * self.calibration[1] * value / scale;
+  |  174|    183|            }
+  |  175|       |        }
+  |  176|      2|        self.decay_scale = scale;
+  |  177|      2|    }
+  ------------------
+  178|       |
+  179|       |    #[cfg(test)]
+  180|      3|    fn fixture() -> Self {
+  181|      3|        Self {
+  182|      3|            arm: "conditioned_energy".into(),
+  183|      3|            parameters: vec![0.01; 110],
+  184|      3|            decay_scale: 1.0,
+  185|      3|            calibration: [0.2, 1.3],
+  186|      3|            geometry: Geometry {
+  187|      3|                scaler: Scaler {
+  188|      3|                    minimum: vec![0.0; 9],
+  189|      3|                    maximum: vec![1.0; 9],
+  190|      3|                },
+  191|      3|                logit_center: 0.0,
+  192|      3|                logit_scale: 1.0,
+  193|      3|                knots: knots(),
+  194|      3|            },
+  195|      3|        }
+  196|      3|    }
+  197|       |}
+  198|       |
+  199|      6|fn knots() -> Vec<f64> {
+  200|      6|    let mut k = vec![0.0; 4];
+  201|     48|    k.extend((1..9).map(|i| f64::from(i) / 9.0));
+  ------------------
+  | _RNCNvNtCseWPhmGwgvbB_11carnot_core21numerical_update_80275knots0B5_:
+  |  201|     32|    k.extend((1..9).map(|i| f64::from(i) / 9.0));
+  ------------------
+  | _RNCNvNtCs6w7qzjj18wm_11carnot_core21numerical_update_80275knots0B5_:
+  |  201|     16|    k.extend((1..9).map(|i| f64::from(i) / 9.0));
+  ------------------
+  202|      6|    k.extend([1.0; 4]);
+  203|      6|    k
+  204|      6|}
+  ------------------
+  | _RNvNtCseWPhmGwgvbB_11carnot_core21numerical_update_80275knots:
+  |  199|      4|fn knots() -> Vec<f64> {
+  |  200|      4|    let mut k = vec![0.0; 4];
+  |  201|      4|    k.extend((1..9).map(|i| f64::from(i) / 9.0));
+  |  202|      4|    k.extend([1.0; 4]);
+  |  203|      4|    k
+  |  204|      4|}
+  ------------------
+  | _RNvNtCs6w7qzjj18wm_11carnot_core21numerical_update_80275knots:
+  |  199|      2|fn knots() -> Vec<f64> {
+  |  200|      2|    let mut k = vec![0.0; 4];
+  |  201|      2|    k.extend((1..9).map(|i| f64::from(i) / 9.0));
+  |  202|      2|    k.extend([1.0; 4]);
+  |  203|      2|    k
+  |  204|      2|}
+  ------------------
+
