@@ -19349,3 +19349,7 @@ code |
 | 2026-10-02 19:08 UTC | Bind thirteen tasks to the complete V696 design | OK | 90 passed, 1 warning in 81.28s (0:01:21) |
 | 2026-10-02 19:45 UTC | Seal evaluation access and independent learning me | OK | 110 passed, 1 warning in 31.53s |
 | 2026-10-02 20:20 UTC | Test cache and execution-shape causes of duplicate | OK | 92 passed, 1 warning in 24.07s |
+| 2026-10-02 20:23 UTC | Capture fit and tune likelihoods through qualified | GATE_BLOCK | gate-unsat(final): 2 of 6 gate(s) failed; first failure: exp8033-scoring-isolation.scoring_isolation_ready_score (actual=0 == expected=1) |
+| 2026-10-02 20:25 UTC | Train small source energy heads with matched infor | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8034-fit-likelihood-capture, exp8034-fit-likelihood-capture, exp8034-fit-likelihood-capture) |
+| 2026-10-02 20:25 UTC | Capture reserved development likelihoods before ev | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8035-source-energy-training, exp8035-source-energy-training, exp8035-source-energy-training) |
+| 2026-10-02 20:25 UTC | Test source information and energy decisions again | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8035-source-energy-training, exp8035-source-energy-training, exp8035-source-energy-training, exp8036-evaluation-likelihood-capture, exp8036-evaluation-likelihood-capture, exp8036-evaluation-likelihood-capture) |
