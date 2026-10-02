@@ -21232,3 +21232,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-10-01: Learn sparse energy updates from randomized delayed feedback (⚠️ Research Finding) — honest_verdict=complete_null_selective_feedback_learning; results/experiment_7998_v693_selective_feedback_learning.json
 - 2026-10-01: Independently audit later benefit retention and recovery (⚠️ Research Finding) — honest_verdict=complete_null_learning_causal_audit; results/experiment_7999_v693_learning_causal_audit.json
 - 2026-10-02: Test delayed confidence using the state that issued each prediction (⚠️ Research Finding) — honest_verdict=complete_null_delayed_confidence; results/experiment_8000_v693_delayed_confidence.json
+- 2026-10-02: Qualify supervisor evidence before generalization refinement (⚠️ Research Finding) — honest_verdict=complete_null_no_new_outcomes; results/experiment_8001_v693_arc_supervisor_qualification.json
