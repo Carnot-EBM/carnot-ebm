@@ -1,0 +1,180 @@
+{
+  "budgets": {
+    "retention_unopened": 64,
+    "stream_slots": 256
+  },
+  "code": [
+    {
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8021_v695_typed_decision_test.py",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8021_v695_typed_decision_test/custody/5334442119d17a64749ae750eaab2f40d9c4289f05d8020cdf00532559ebf42c.py",
+      "sha256": "sha256:5334442119d17a64749ae750eaab2f40d9c4289f05d8020cdf00532559ebf42c"
+    },
+    {
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8021_v695_typed_decision_test.py",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8021_v695_typed_decision_test/custody/9c4cc2fd8da962b6ac94ad11fc38754284268600144a2dfe639eaac11d150787.py",
+      "sha256": "sha256:9c4cc2fd8da962b6ac94ad11fc38754284268600144a2dfe639eaac11d150787"
+    },
+    {
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_typed_decision_8021.py",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8021_v695_typed_decision_test/custody/3a68931632cdba9cb6a0252f27c926d573bda074cfeb757824c23e0864769e17.py",
+      "sha256": "sha256:3a68931632cdba9cb6a0252f27c926d573bda074cfeb757824c23e0864769e17"
+    },
+    {
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8020_v695_qualified_energy_fit.py",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8021_v695_typed_decision_test/custody/ceec4b67eb2df64fe705a83840202672cdb4972a400b5fba4e09bbcdf5809c9c.py",
+      "sha256": "sha256:ceec4b67eb2df64fe705a83840202672cdb4972a400b5fba4e09bbcdf5809c9c"
+    },
+    {
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8019_v695_eligible_targets.py",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8021_v695_typed_decision_test/custody/ec021e26cfc3891722c9f28019d0bc7024df9fa8d0d716da8c876b02a4db9b56.py",
+      "sha256": "sha256:ec021e26cfc3891722c9f28019d0bc7024df9fa8d0d716da8c876b02a4db9b56"
+    }
+  ],
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "run",
+        "--data-file=/tmp/carnot-8021-ai1qpo12/.coverage",
+        "--rcfile=/tmp/carnot-8021-ai1qpo12/coverage.ini",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-8021-ai1qpo12/pytest",
+        "tests/python/test_typed_decision_8021.py",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_response_targets_7955.py",
+        "tests/python/test_source_boundary_7852.py",
+        "tests/python/test_experiment_7942_v689_sentence_labels.py",
+        "-q"
+      ],
+      "name": "unit_consumers_e2e015_019",
+      "scope": "owned",
+      "timeout_s": 300
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--data-file=/tmp/carnot-8021-ai1qpo12/.coverage",
+        "/tmp/carnot-8021-ai1qpo12"
+      ],
+      "name": "coverage_combine",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/carnot-8021-ai1qpo12/.coverage",
+        "--fail-under=100",
+        "--show-missing"
+      ],
+      "name": "coverage_report",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "json",
+        "--data-file=/tmp/carnot-8021-ai1qpo12/.coverage",
+        "-o",
+        "/tmp/carnot-8021-ai1qpo12/coverage.json"
+      ],
+      "name": "coverage_json",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_8021_v695_typed_decision_test.py",
+        "scripts/experiments/experiment_8021_v695_typed_decision_test.py",
+        "tests/python/test_typed_decision_8021.py"
+      ],
+      "name": "ruff_check",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_8021_v695_typed_decision_test.py",
+        "scripts/experiments/experiment_8021_v695_typed_decision_test.py",
+        "tests/python/test_typed_decision_8021.py"
+      ],
+      "name": "ruff_format",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "--follow-imports=silent",
+        "python/carnot/experiment_8021_v695_typed_decision_test.py",
+        "scripts/experiments/experiment_8021_v695_typed_decision_test.py"
+      ],
+      "name": "strict_mypy",
+      "scope": "owned",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_typed_decision_8021.py"
+      ],
+      "name": "spec_coverage",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q"
+      ],
+      "name": "repository_health",
+      "scope": "repository_health",
+      "timeout_s": 180
+    }
+  ],
+  "exposure": "historically exposed development",
+  "methods": {
+    "alpha": 0.05,
+    "comparator": "minimum tune cost; fixed lexical tie order; no sigmoid identity",
+    "costs": {
+      "correct": 0,
+      "escalate": 0.5,
+      "supported_reject": 1,
+      "unsupported_accept": 5
+    },
+    "draws": 10000,
+    "hypotheses": [
+      "static_policy",
+      "source_intervention",
+      "online_update"
+    ],
+    "maximum_brier_degradation": 0.005,
+    "minimum_gain": 0.02,
+    "minimum_groups": 192,
+    "minimum_headroom_errors": 4,
+    "per_class": 20,
+    "primary": "conditioned_energy/posthoc",
+    "primary_seed": 17,
+    "seed": 69521
+  },
+  "roles": "tune selects; stream evaluates; retention sealed"
+}

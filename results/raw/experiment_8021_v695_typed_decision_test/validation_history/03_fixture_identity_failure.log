@@ -1,0 +1,44 @@
+...........F                                                             [100%]
+=================================== FAILURES ===================================
+_______________________ test_terminal_and_unsafe_readers _______________________
+
+tmp_path = PosixPath('/tmp/8021-coverage-f7g87hf3/pytest/test_terminal_and_unsafe_reade0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fc5a23dc4d0>
+
+    def test_terminal_and_unsafe_readers(tmp_path, monkeypatch):
+        """REQ-REPORT-8021: candidate readers and final identity fail closed."""
+        out = tmp_path / (e.NAME + ".json")
+        monkeypatch.setattr(e, "run_commands", lambda *a, **k: [dict(passed=True)])
+        atomic_json(out, {})
+        assert e.terminal(out)["passed"]
+        rows, targets = fixture(False)
+        src = tmp_path / "fixture.json"
+        atomic_json(src, dict(predictions=rows, targets=targets, comparator="linear/posthoc"))
+>       assert e.main(["--fixture-input", str(src), "--output", str(out), "--validation-worker"]) == 0
+E       AssertionError: assert 1 == 0
+E        +  where 1 = <function main at 0x7fc5a2578a40>(['--fixture-input', '/tmp/8021-coverage-f7g87hf3/pytest/test_terminal_and_unsafe_reade0/fixture.json', '--output', '/t...-f7g87hf3/pytest/test_terminal_and_unsafe_reade0/experiment_8021_v695_typed_decision_test.json', '--validation-worker'])
+E        +    where <function main at 0x7fc5a2578a40> = e.main
+
+tests/python/test_typed_decision_8021.py:341: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8021] phase=terminal_subprocesses_before elapsed_s=16.393 completed=0 pending=3
+[exp8021] phase=terminal_subprocesses_after elapsed_s=16.393 completed=3 pending=0
+[exp8021] phase=begin_no_model_load_no_generation elapsed_s=16.443 completed=0 pending=0
+[exp8021] phase=methods_roles_budgets_commands_frozen elapsed_s=16.445 completed=0 pending=0
+[exp8021] phase=bootstrap_before elapsed_s=16.560 completed=0 pending=10000
+[exp8021] phase=bootstrap_draws elapsed_s=16.565 completed=1000 pending=9000
+[exp8021] phase=bootstrap_draws elapsed_s=16.571 completed=2000 pending=8000
+[exp8021] phase=bootstrap_draws elapsed_s=16.576 completed=3000 pending=7000
+[exp8021] phase=bootstrap_draws elapsed_s=16.581 completed=4000 pending=6000
+[exp8021] phase=bootstrap_draws elapsed_s=16.586 completed=5000 pending=5000
+[exp8021] phase=bootstrap_draws elapsed_s=16.591 completed=6000 pending=4000
+[exp8021] phase=bootstrap_draws elapsed_s=16.596 completed=7000 pending=3000
+[exp8021] phase=bootstrap_draws elapsed_s=16.601 completed=8000 pending=2000
+[exp8021] phase=bootstrap_draws elapsed_s=16.606 completed=9000 pending=1000
+[exp8021] phase=bootstrap_draws elapsed_s=16.611 completed=10000 pending=0
+[exp8021] phase=measurement_complete elapsed_s=16.617 completed=768 pending=9
+[exp8021] phase=publication_before elapsed_s=16.618 completed=0 pending=0
+[exp8021] failed=conflicting_identity
+=========================== short test summary info ============================
+FAILED tests/python/test_typed_decision_8021.py::test_terminal_and_unsafe_readers
+1 failed, 11 passed in 19.55s

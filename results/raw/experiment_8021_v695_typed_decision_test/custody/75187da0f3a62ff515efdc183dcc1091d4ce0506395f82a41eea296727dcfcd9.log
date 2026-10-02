@@ -1,0 +1,18 @@
+
+==================================== ERRORS ====================================
+__________ ERROR collecting tests/python/test_typed_decision_8021.py ___________
+ImportError while importing test module '/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_typed_decision_8021.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/python/test_typed_decision_8021.py:11: in <module>
+    from carnot import experiment_8021_v695_typed_decision_test as e
+E   ImportError: cannot import name 'experiment_8021_v695_typed_decision_test' from 'carnot' (/home/ianblenke/github.com/ianblenke/carnot/python/carnot/__init__.py)
+------------------------------- Captured stderr --------------------------------
+An NVIDIA GPU may be present on this machine, but a CUDA-enabled jaxlib is not installed. Falling back to cpu.
+=========================== short test summary info ============================
+ERROR tests/python/test_typed_decision_8021.py
+!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+1 error in 1.03s

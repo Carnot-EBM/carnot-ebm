@@ -87091,6 +87091,48 @@ A qualified empty audit may be ready but establishes no scientific benefit.
 An unchanged qualified null is retired as new evidence under retire_if_same_verdict.
 The conductor owns ops and traceability reconciliation.
 
+### REQ-REPORT-8021: Independently reduce frozen typed decision policies
+
+Exp8021 SHALL evaluate all 256 original stream slots from Exp8020 sealed
+probabilities and Exp8019 eligibility receipts. Verify source schema orientation
+(one means unsupported), original IDs, exclusion masks and head byte hashes
+before opening stream labels. Retention labels SHALL stay unopened. Historical
+exposure SHALL remain explicit; timestamps SHALL NOT imply unseen data.
+Use minimum expected cost (unsupported accept=5, supported reject=1,
+escalate=0.5, correct=0), with escalation winning ties. Unknown labels SHALL
+remain unscored. Retain every arm, seed and base/posthoc condition with costs,
+Brier, log loss, false accepts, accepted risk, coverage and action changes.
+Select the strongest nonidentity comparator on tune cost only, before stream
+access. Primary policy is conditioned_energy seed 17 posthoc. Inferential
+support requires 192 source groups and 20 per class. Benefit requires four
+headroom-bearing baseline errors, changed actions, cost gain at least 0.02,
+adjusted interval excluding zero, Brier degradation at most 0.005 and no extra
+false accepts. Use 10000 paired source-group bootstrap draws and Holm across
+static, source intervention and online policy hypotheses; unmeasured hypotheses
+reserve p=1. Readiness can equal one for a valid null; generalized benefit is zero.
+
+### SCENARIO-REPORT-8021-REDUCTION
+
+Traced tests SHALL cover cost orientation, escalation ties, unknown targets,
+group eligibility, duplicate seeds, known-headroom and zero-headroom fixtures,
+tune-only selection, tampered prediction seals and independent row reduction.
+Private direct CLI success, blocked, invalid date and cold replay SHALL run.
+Freeze commands and methods before labels, retain real log hashes and failures,
+run scoped consumers, E2E-015/019, Ruff, strict mypy and spec checks, and require
+100 percent new statement coverage including direct CLI branches. Keep mutable
+test and coverage scratch outside results with the artifact guard enabled.
+One bounded full-suite health diagnostic SHALL preserve failures separately.
+Cold-reduce durable rows in a fresh process, run exact candidate adversarial and
+strict row readers, publish with the existing helper and recheck final bytes.
+All referenced checkpoints SHALL remain under durable raw. Missing prerequisites
+SHALL produce terminal blocked artifacts. The conductor owns ops reconciliation.
+
+Exp8021 uses `python/carnot/experiment_8021_v695_typed_decision_test.py`, its thin
+script-path CLI and traced `tests/python/test_typed_decision_8021.py` fixtures.
+Stream evaluation retains all 256 slots and all frozen seeds and conditions.
+The primary comparison uses a tune-selected linear policy; source intervention
+and online policy hypotheses retain their reserved multiplicity slots.
+
 ### REQ-REPORT-8020: Fit qualified heads before sealed calibration
 
 Exp8020 SHALL gate on Exp8019 fit_targets_ready_score and
