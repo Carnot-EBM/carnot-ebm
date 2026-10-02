@@ -90245,3 +90245,52 @@ terminal validation. Missing external prerequisites are terminal blocked; a
 fully measured numerical failure is terminal null. Readiness is zero for blocked
 or disqualified evidence. Ops/status/traceability reconciliation is conductor-
 owned for this invocation. Production inference defaults remain fixed.
+# Exp8038 V696 windowed online learning — 2026-10-02
+
+## REQ-REPORT-8038: equal-budget causal replay
+
+Bind the qualified historical head, public stream and frozen learning methods
+from Exp8032. Check terminal byte provenance before measurement. Imported
+development data gives no current pretrained model calls or deployment benefit.
+Freeze code, identity, methods, numerical gates and budgets before measurement.
+Preserve historical failures and exposure. External contract failures are
+terminal blocked with the exact failed operand; missing fields are not zeros.
+
+Process the original 256 slots once for every arm and seed 101 through 120.
+Seed 101 is the example trajectory. Commit each issued prediction synchronously
+before releasing feedback at origin slot plus 20. Each complete block of 16
+eligible releases offers four gradients, with a maximum of 64. Recent64 draws
+uniformly without replacement from the last 64 eligible releases. Cumulative
+draws from all eligible releases. Hashed source identity orders sampling ties.
+Newest16 reproduces the prior uniform block selector. Frozen-no-write is an
+unmatched control. Repeated IDs across blocks are allowed and counted.
+All adaptive arms share labels, starting state, calibrated gradient, step size,
+ridge, geometry and update opportunities. Unknown targets do not compress slots.
+Future losses and retention labels cannot select feedback. Do not flush tail labels.
+
+## SCENARIO-REPORT-8038-CAUSAL
+
+Private tests mutate future labels and compare every prediction and checkpoint
+through their release slot. Check equal actual gradient counts, prior newest16
+selection, sparse/dense error at most 1e-10, frozen identity, artificial positive
+action changes and exactly-once SQLite replay. Retain issued losses, buffer ages,
+active spline indices, state hashes and commit IDs. Checkpoint every block.
+Bound numerical work to 900 seconds. Measure CPU update time, bytes and active
+knot operations separately from synchronous transaction costs. A 100x arithmetic
+scenario supplies prospective Amdahl analysis only. Tier 1/2 uses CPU and RAM;
+Rust/SIMD and FPGA paths remain prospective.
+
+## SCENARIO-REPORT-8038-PUBLICATION
+
+Seal trajectories and final checkpoints before the independent retention task
+can read them. Cold-reduce durable rows in a fresh process. Run the real private
+CLI and consumer tests, Ruff, strict mypy and scoped spec coverage. Require 100
+percent statement coverage for all added modules and real CLI branches. Record
+argv, exit status, durations and durable log hashes. Run one bounded full Python
+health diagnostic; preserve unrelated failures separately from owned checks.
+Run adversarial verification and strict row consistency on candidate and final
+bytes. Publish with the existing primary helper and retain terminal validation.
+Readiness is integer one only for valid trajectories and all owned checks,
+independent of benefit. Generalized benefit remains zero. Keep production
+defaults fixed and make no external publication. The conductor owns ops and
+traceability reconciliation for this task.

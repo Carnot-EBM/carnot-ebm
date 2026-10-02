@@ -1,0 +1,47 @@
+{
+  "primary_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8022_v695_likelihood_protocol.json",
+  "primary_sha256": "sha256:9040abff584083f8fcc97aaf21700ca6832ae8db48257aa84310700b352bc417",
+  "report": {
+    "passed": true,
+    "receipts": [
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8022_v695_likelihood_protocol/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "scripts/adversarial_verify.py",
+          "--json",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8022_v695_likelihood_protocol/terminal_candidate.json"
+        ],
+        "duration_s": 4.723342754994519,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8022_v695_likelihood_protocol/terminal_logs/00_adversarial.log",
+        "log_sha256": "sha256:37fc1de78dfd7ea1eb9a8080dd3c9862f63d52c84dce5cd8315c35d5c7964d05",
+        "name": "adversarial",
+        "output_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8022_v695_likelihood_protocol/terminal_candidate.json\",\n      \"loaded\": true,\n      \"exp_id\": 8022,\n      \"title\": \"\",\n      \"honest_verdict\": \"complete_null_likelihood_protocol\",\n      \"flag_count\": 0,\n      \"max_severity\": -1,\n      \"flags\": [],\n      \"gate_version\": \"197e0a5eacacb09ce6607ae8bdfd507498082857f0d02ec2003a62c251b69a24\"\n    }\n  ],\n  \"flagged_count\": 0\n}\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8022_v695_likelihood_protocol/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "scripts/verdict_row_consistency_lint.py",
+          "--strict",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8022_v695_likelihood_protocol/terminal_candidate.json"
+        ],
+        "duration_s": 0.11297320097219199,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8022_v695_likelihood_protocol/terminal_logs/01_strict_rows.log",
+        "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+        "name": "strict_rows",
+        "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      }
+    ]
+  }
+}

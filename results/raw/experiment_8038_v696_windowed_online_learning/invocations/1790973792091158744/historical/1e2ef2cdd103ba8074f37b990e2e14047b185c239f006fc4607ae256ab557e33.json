@@ -1,0 +1,64 @@
+{
+  "primary_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8019_v695_eligible_targets.json",
+  "primary_sha256": "sha256:310fbb2c5d0b254ceb2e00cd742c1d83c856ff4082075b7cd61e592c940ea518",
+  "report": {
+    "passed": true,
+    "receipts": [
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8019_v695_eligible_targets.py --cold-replay /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8019_v695_eligible_targets/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8019_v695_eligible_targets.py",
+          "--cold-replay",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8019_v695_eligible_targets/terminal_candidate.json"
+        ],
+        "duration_s": 1.4376940990332514,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8019_v695_eligible_targets/terminal_logs/310fbb2c5d0b254ceb2e00cd742c1d83c856ff4082075b7cd61e592c940ea518/00_cold_reduction.log",
+        "log_sha256": "sha256:53a00e81895a0d9d5ff13412969c90d89f4bdc6b1b0f8f4d5b403bad35c05702",
+        "name": "cold_reduction",
+        "output_tail": "[exp8019] phase=begin_no_model_load_generation_or_training elapsed_s=0.000 completed=0 pending=0\n[exp8019] phase=mask_frozen_fit elapsed_s=0.165 completed=256 pending=448\n[exp8019] phase=mask_frozen_tune elapsed_s=0.169 completed=320 pending=384\n[exp8019] phase=mask_frozen_calibration elapsed_s=0.173 completed=384 pending=320\n[exp8019] phase=mask_frozen_stream elapsed_s=0.189 completed=640 pending=64\n[exp8019] phase=mask_frozen_retention elapsed_s=0.192 completed=704 pending=0\n[exp8019] phase=cold_replay_passed elapsed_s=0.205 completed=0 pending=0\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8019_v695_eligible_targets/terminal_candidate.json --json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "scripts/adversarial_verify.py",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8019_v695_eligible_targets/terminal_candidate.json",
+          "--json"
+        ],
+        "duration_s": 0.9246567570371553,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8019_v695_eligible_targets/terminal_logs/310fbb2c5d0b254ceb2e00cd742c1d83c856ff4082075b7cd61e592c940ea518/01_adversarial.log",
+        "log_sha256": "sha256:6a16af30fb779c57ea1727faf12de332cc6b0106d2066b91c65f7e965cc4759a",
+        "name": "adversarial",
+        "output_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8019_v695_eligible_targets/terminal_candidate.json\",\n      \"loaded\": true,\n      \"exp_id\": 8019,\n      \"title\": \"\",\n      \"honest_verdict\": \"complete_null_eligible_targets\",\n      \"flag_count\": 0,\n      \"max_severity\": -1,\n      \"flags\": [],\n      \"gate_version\": \"197e0a5eacacb09ce6607ae8bdfd507498082857f0d02ec2003a62c251b69a24\"\n    }\n  ],\n  \"flagged_count\": 0\n}\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8019_v695_eligible_targets/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "scripts/verdict_row_consistency_lint.py",
+          "--strict",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8019_v695_eligible_targets/terminal_candidate.json"
+        ],
+        "duration_s": 0.06767270900309086,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8019_v695_eligible_targets/terminal_logs/310fbb2c5d0b254ceb2e00cd742c1d83c856ff4082075b7cd61e592c940ea518/02_strict_rows.log",
+        "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+        "name": "strict_rows",
+        "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      }
+    ]
+  }
+}
