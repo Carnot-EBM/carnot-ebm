@@ -49462,3 +49462,82 @@ limitations and retirement conflicts.
 
 All five pages were accessible on October 2. No external result becomes a local
 measurement, and this targeted check is not a complete citation census.
+
+## 2026-10-02 — V695 planning scan: source sensitivity must predict correctness
+
+This scan precedes the V695 experiment design. V694 measured source sensitivity,
+but its human-label decision and learning branches did not qualify. The next
+question is whether a source intervention supplies information about correctness.
+The following are research leads, not local performance claims.
+
+### Methods to test or retain
+
+- [GASP, July 5, 2026](https://arxiv.org/abs/2607.04223),
+  [v1 method and experiments](https://arxiv.org/html/2607.04223v1), holds an
+  answer fixed and measures likelihood changes under context removal. It reports
+  transfer to TofuEval but failure on short-answer RAGBench. This motivates a
+  bounded teacher-forced likelihood comparison with human source-faithfulness
+  labels, complete contexts, exact-duplicate controls and an unperturbed
+  likelihood baseline. A restricted removal protocol is an adaptation, not a
+  full reproduction. It does not revive the retired generated-text candidate
+  reranker: the new information is the intervention on the supplied source.
+- [Evidence Integration in Large Language Models, September 3, 2026](https://arxiv.org/abs/2609.04290)
+  reports that evidence acceptance and verbal verification can diverge. Source
+  sensitivity alone therefore cannot establish correctness. Compare per-source
+  human-label loss, harmful accepts and calibrated actions; do not use the
+  model's agreement as its own target.
+- [Catastrophic Forgetting in KANs, November 2025 / AAAI 2026](https://arxiv.org/abs/2511.12828),
+  [analysis](https://arxiv.org/html/2511.12828v1), connects forgetting to overlap
+  in activation support. Record overlap and later retention loss during sparse
+  updates. This is a diagnostic addition to the existing learner, not another
+  unqualified architecture or importance-anchor sweep.
+- [ADOWIP, June 23, 2026](https://arxiv.org/abs/2606.25068) remains relevant to
+  released-label update scheduling. Resolve the calibration eligibility defect
+  before its existing equal-budget comparison. Its time-series results provide
+  no guarantee for binary decisions.
+- [OpenHalDet, June 5, 2026](https://arxiv.org/abs/2606.06959) standardizes
+  detector access and evaluation. Retain its separation of output-only,
+  probability and internal-signal access when matching comparator information.
+  Its release is a future data/tool lead; this scan does not establish a new
+  independently annotated local corpus.
+
+### Coverage of the requested research topics
+
+| Topic | Primary source checked | Consequence |
+|---|---|---|
+| EBM reasoning | [EBT, 2025](https://arxiv.org/abs/2507.02092); [ARM–EBM, 2025, revised 2026](https://arxiv.org/abs/2512.15605) | Keep the equivalent sigmoid control. Energy normalization is not a truth certificate. |
+| Neural constraint satisfaction | [NSVIF, January 2026](https://arxiv.org/abs/2601.17789) | Logical solving still depends on correct semantic extraction. |
+| Ising in ML | [Scaling Up Thermodynamic AI Models, 2026](https://arxiv.org/abs/2607.00170) | Preserve sampler compatibility as a future path; classifier results do not establish reasoning transfer. |
+| Hallucination detection | GASP, Evidence Integration and OpenHalDet above | Test source-dependent signals against independent labels and equal-information controls. |
+| KAN and continuous learning | KAN forgetting and ADOWIP above | Measure sparse update effects, retention and causal feedback order. |
+| Constrained generation | [DCCD v2, June 27, 2026](https://arxiv.org/abs/2603.03305) | Syntax validity and semantic accuracy differ. Defer another draft-decoding sweep after the local null. |
+| Hardware sampling | [FPGA–ASIC co-design v2, September 4, 2026](https://arxiv.org/abs/2602.15985) | Include orchestration and memory traffic in end-to-end cost. Its analog-chip results are not KV260 measurements. |
+
+### Secondary-source coverage and access limits
+
+- **OpenReview:** searched ICLR, ICML and NeurIPS. The EBT forum encountered
+  browser verification; its indexed [ICLR paper](https://openreview.net/pdf?id=ZBj3Qp1bYg)
+  and [Energy Matching, NeurIPS 2025](https://openreview.net/pdf/62ec030c254ffe361caf735408232b71dcc9075f.pdf)
+  provide primary publication leads. No additional verified ICML method was
+  established. Energy Matching is a generative scalar-potential method, not an
+  off-the-shelf factual verifier.
+- **Semantic Scholar:** attempted citation endpoints for both `ARXIV:2507.02092`
+  and `ARXIV:2512.15605`; both returned browser-tool internal errors. Citation
+  discovery remains incomplete. No citing-paper census or novelty claim follows.
+- **Hugging Face:** checked the verification feed and followed the
+  [GASP paper page](https://huggingface.co/papers/2607.04223) and
+  [OpenHalDet page](https://huggingface.co/papers/2606.06959) to primary arXiv
+  sources. Feed summaries are discovery aids, not independent evidence.
+- **GitHub:** weekly [Python](https://github.com/trending/python?since=weekly)
+  and [Rust](https://github.com/trending/rust?since=weekly) snapshots were cached
+  two weeks earlier. No current EBM/constraint/KAN trend ranking was established.
+- **Extropic:** checked the [writing index](https://extropic.ai/writing) and
+  [Z1T](https://extropic.ai/writing/z1t). Hybrid probabilistic/digital compute
+  informs workload placement. Vendor projections do not establish local TSU
+  access, sampling quality or service speed.
+- **Logical Intelligence:** checked [Kona](https://logicalintelligence.com/kona).
+  The product description supplies architectural context, but no reproducible
+  local training recipe or new Carnot-compatible implementation was established.
+
+The hardware wishlist still supports CPU small-head training and the local CUDA
+RTX 3090 pair for the mandated Qwen GGUF. No acquisition is justified by this scan.

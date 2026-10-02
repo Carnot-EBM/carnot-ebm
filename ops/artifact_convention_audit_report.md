@@ -9,34 +9,32 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 1 |
-| CANNOT_DETERMINE | 7 |
+| CHECKABLE | 5 |
+| CANNOT_DETERMINE | 3 |
 
-## experiment_7997_v693_typed_development_decisions.json
-
-**CANNOT_DETERMINE**
-
-reviewer call failed
-
-## experiment_7998_v693_selective_feedback_learning.json
+## experiment_8008_v694_conditioned_energy_fit.json
 
 **CANNOT_DETERMINE**
 
 reviewer call failed
 
-## experiment_7999_v693_learning_causal_audit.json
+## experiment_8009_development_decisions.json
 
-**CANNOT_DETERMINE**
+**CHECKABLE**
 
-reviewer call failed
+## VERDICT
+CHECKABLE
 
-## experiment_8000_v693_delayed_confidence.json
+## WHAT THE CLAIM IS
+The task was blocked at conductor pre-gate because upstream experiment 8008 failed required gate checks (`conditioned_fit_ready_score` was 0 vs expected 1, and `verdict_class` was 'blocked').
 
-**CANNOT_DETERMINE**
+## WHAT IS MISSING
+nothing
 
-reviewer call failed
+## THE CHECK A READER CANNOT DO
+none
 
-## experiment_8001_v693_arc_supervisor_qualification.json
+## experiment_8010_v694_source_intervention_protocol.json
 
 **CHECKABLE**
 
@@ -52,19 +50,61 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_8002_v693_service_cost.json
+## experiment_8011_v694_qwen_source_sensitivity.json
 
 **CANNOT_DETERMINE**
 
 reviewer call failed
 
-## experiment_8003_v693_hardware_sparse_boundary.json
+## experiment_8012_budgeted_online_updates.json
 
-**CANNOT_DETERMINE**
+**CHECKABLE**
 
-reviewer call failed
+## VERDICT
+CHECKABLE
 
-## experiment_8004_v693_capstone.json
+## WHAT THE CLAIM IS
+no claim
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_8014_v694_arc_supervisor_delta.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+no claim
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_8016_v694_hardware_update_boundary.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The run is blocked with no qualified update trajectory or device benefit due to failed upstream gating prerequisites.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_8017_v694_capstone.json
 
 **CANNOT_DETERMINE**
 
