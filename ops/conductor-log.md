@@ -19340,3 +19340,4 @@ code |
 | 2026-10-02 13:16 UTC | Test source-removal information against human-labe | GATE_BLOCK | gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp8023-likelihood-calibration.likelihood_calibration_ready_score (actual=0 == expected=1) |
 | 2026-10-02 13:53 UTC | Test equal-budget continuous learning on qualified | OK | 93 passed, 1 warning in 20.50s |
 | 2026-10-02 14:23 UTC | Independently reconstruct learning benefit retenti | OK | 99 passed, 1 warning in 36.72s |
+| 2026-10-02 15:50 UTC | Measure loaded native update parity and complete t | OK | 92 passed, 1 warning in 10.70s |
