@@ -19337,3 +19337,4 @@ code |
 | 2026-10-02 12:36 UTC | Qualify fixed-answer Qwen scoring and source-remov | OK | cache hit: 93 passed, 1 warning in 22.51s |
 | 2026-10-02 13:14 UTC | Capture source-conditioned likelihoods and freeze  | OK | 126 passed, 1 warning in 14.69s |
 | 2026-10-02 13:16 UTC | Conductor re-exec: fresh committed source | OK | 13dc269eb2f0 -> 4c629e8aee19; argv preserved |
+| 2026-10-02 13:16 UTC | Test source-removal information against human-labe | GATE_BLOCK | gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp8023-likelihood-calibration.likelihood_calibration_ready_score (actual=0 == expected=1) |
