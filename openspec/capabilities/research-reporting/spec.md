@@ -90524,3 +90524,66 @@ SHALL remain separate from owned readiness. Cold-reduce durable rows/checkpoints
 in a fresh process. Validate candidate and published bytes through the existing
 adversarial verifier, strict row lint and primary publication helper. Preserve
 real argv, exit codes, hashes and flushed progress. No model or device calls.
+
+## REQ-REPORT-8043: Independently reduce the V696 capstone
+
+Bind exactly thirteen ordered tasks, Exp8031 through Exp8043, including complete
+prompts and failure records, to Exp8031's immutable invocation authorities.
+Count this capstone once after owned validation. Missing planned outputs remain
+missing. Actual conductor skip receipts explain absence without supplying data.
+Freeze methods, identity, budgets, code and numerical rules before reduction.
+Preserve old authority failures and original unqualified measurements.
+
+### SCENARIO-REPORT-8043-CUSTODY
+
+Tests SHALL precede code. Exercise missing, changed and valid authority,
+terminal primary bindings, stale code/configuration hashes and absent fields.
+Keep private test and child scratch outside results with artifact guards enabled.
+Freeze durable input records below results/raw/experiment_8043_v696_capstone/.
+Cold replay SHALL reopen primitive records and checkpoints in a fresh process.
+
+### SCENARIO-REPORT-8043-SCIENCE
+
+Reconstruct H1/H2 only from authenticated token features, frozen heads and
+complete evaluator targets. Absence SHALL produce no estimate and p=1.
+Reconstruct H3 with the shipped independent event and checkpoint equations.
+Compare every probability, action, coefficient, support and cost with producers.
+Use 10000 paired source-group or moving-block draws, margins .01/.02/.02,
+and one-sided Holm .05. Failed qualification or safety gates give family p=1.
+Carry retention and noninferiority gates. Intervals describe one finite exposed
+trajectory. Seeds do not add independent environments. Generalized benefit is0.
+
+### SCENARIO-REPORT-8043-DECISIONS
+
+Decide useful source verification FR-06/12, retained causal learning FR-11,
+and reproducible deployment FR-05/08/09/10 and NFR-01 separately.
+ARC empty-delta and board custody remain continuity. Compute historical G1-G4
+and paper_ready independently of science_ready. Authenticate prior verdicts.
+Compare failed operands and substantive mechanisms as well as verdict strings.
+Unchanged failed reruns require scoped retirement and a changed prerequisite.
+A changed mechanism's valid null does not retire every future learning method.
+
+### SCENARIO-REPORT-8043-TERMINAL
+
+External prerequisites yield terminal blocked. Only unfinished owned work is
+partial. Reader correctness may set capstone_execution_ready_score=1 despite
+blocked science. Cover 100% of added statements including actual CLI routes.
+Run traced tests, consumer checks, private E2E-018, Ruff, strict mypy, spec checks,
+and one bounded full Python-suite diagnostic. Preserve unrelated health failures.
+Record argv, process exits and durable log hashes. Check exact candidate and
+published bytes with cold replay, adversarial verification and strict row lint.
+Publish through the existing primary helper. Write v696-outcomes.md. Keep all
+production defaults fixed. Ops/status/changelog/traceability reconciliation is
+conductor-owned for this invocation, per the final user instruction.
+
+REQ-REPORT-8043 implementation: `python/carnot/reporting/v696_capstone.py`,
+`v696_capstone_reduction.py` and the thin Exp8043 CLI bind frozen authority,
+actual primary/skip/absent dispositions, separate independent learning equations,
+raw transaction/fallback reductions, margin/Holm gates and final byte consumers.
+Traced tests in `test_experiment_8043_v696_capstone.py` cover15 owned cases and
+328/328 added statements, including CLI exits and private terminal publication.
+Scoped Ruff, strict mypy and spec tracing pass. The terminal run freezes its
+E2E-018/consumer checks and one bounded repository-health diagnostic separately.
+`docs/research-notes/v696-outcomes.md` records the measured boundaries and next
+changed prerequisites. External science remains terminal blocked; a qualified
+reader can have execution score1. Production defaults remain fixed.
