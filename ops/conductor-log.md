@@ -19309,3 +19309,4 @@ code |
 | 2026-10-02 00:12 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_count_effective_selection_games age-week 1: OPEN 7 days: |
 | 2026-10-02 00:34 UTC | Test delayed confidence using the state that issue | OK | 91 passed, 1 warning in 23.06s |
 | 2026-10-02 00:58 UTC | Qualify supervisor evidence before generalization  | OK | 105 passed, 1 warning in 8.17s |
+| 2026-10-02 01:50 UTC | Measure complete service cost and sparse durable u | OK | 94 passed, 1 warning in 43.80s |
