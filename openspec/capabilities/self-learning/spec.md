@@ -29990,3 +29990,10 @@ circular positive control is mandatory; absent selectable natural headroom makes
 the natural null inconclusive.
 
 Implementation: `python/carnot/verify/learning_causal_audit_7999.py` computes source-averaged contrasts and sealed retention checks. `tests/python/test_learning_causal_audit_7999.py` exercises support, controls and coefficient reconstruction.
+# REQ-SELF-8003: Sparse portability is not accelerator execution
+
+The fitted 109-parameter sparse head and its lazy global L2 decay SHALL be
+declared separately from pretrained models. Exp8003 invokes zero pretrained
+loads or generations. CPU numerical compatibility cannot establish FPGA, NPU,
+TSU or larger-FPGA operation. Extropic and spline papers are external designs.
+Integration waits for useful workload and authenticated compatible kernel evidence.

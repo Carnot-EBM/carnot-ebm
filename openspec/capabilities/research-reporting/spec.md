@@ -89085,3 +89085,30 @@ measures immutable source-bound requests. `python/carnot/experiment_8002_v693_se
 and its matching script publish checked bytes. `service_validation_8002.py`
 freezes actual private commands. The two matching test files assert branch
 independence, sparse writes, drift, private CLI routes and readiness failures.
+# REQ-REPORT-8003: Sparse hardware boundary with independent board custody
+
+Exp8003 SHALL use milestone 2026.10.693 and execution date 20261002. Authenticate
+immutable Exp7977 board receipts and preserve Exp7990 failed operands. Historical
+producer code SHALL resolve through sealed snapshots or hash-matched Git objects,
+never today's mutable code. Emit KV260 quadratic Ising k_max<=5 with SSH custody,
+PolarFire Linux CPU dispatch, and GateMate's physical/JTAG 0xffffffff blocker.
+Optional Exp8002 service qualification SHALL NOT determine board custody readiness.
+Missing service leaves estimates null. Missing required board or sparse evidence
+is terminal blocked; failed owned checks disqualify with hardware readiness zero.
+
+### SCENARIO-REPORT-8003-CUSTODY
+
+Private missing-service and stale-service controls SHALL retain board custody.
+Missing board receipts SHALL retain each failed path/hash/field/operator operand.
+Preserve original producer dates and failed historical checks. No board probe,
+flash, credential action, purchase or integration is authorized by this audit.
+
+### SCENARIO-REPORT-8003-VALIDATION
+
+Freeze configuration and validation commands before numerical work. Require
+nonempty 100% changed-statement coverage with real private CLI success, blocked
+and cold replay. Run affected consumers, E2E-015/019, scoped Ruff, strict mypy,
+explicit-path spec checks and one full Python suite health receipt. Historical
+health failures remain diagnostics. Check final candidate bytes with unchanged
+adversarial and strict row validators and both conductor readers before publishing.
+Reconciliation of status/changelog/traceability is assigned to the conductor.

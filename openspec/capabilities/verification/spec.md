@@ -47858,3 +47858,26 @@ Implementation for REQ-VERIFY-8002: cold replay in `service_cost_8002.py`
 reconstructs deterministic work and validates paired rows before reduction.
 `tests/python/test_service_cost_8002.py` asserts producer, commit, row, timing,
 source-join and frozen-code rejection paths.
+# REQ-VERIFY-8003: CPU fixed-point sparse head and update
+
+For qualified Exp7996 seed 17, emulate signed 16- and 24-bit arithmetic with
+12 fractional bits, saturation and round-to-nearest ties-to-even. Freeze cubic
+basis and logit lookup grids using fit geometry before accessing tune data.
+Use at most 128 distinct fit/tune source groups plus explicit knot/saturation
+fixtures. Save float64 and fixed probabilities, gradients, one-step coefficients,
+typed actions, touches and saturation counts for every unit and format.
+
+### SCENARIO-VERIFY-8003-BOUNDARY
+
+Probability error SHALL be <=0.01, typed-action agreement SHALL be >=0.99 outside
+a 0.01 margin around thresholds 0.05 and 0.75, and unexpected saturation SHALL
+be zero. Report near-threshold units separately. A failed format is a valid null
+with diagnostics. This qualifies CPU emulation only. Known board kernels do not
+implement arbitrary spline updates. Service bounds include host readout, transfer
+assumptions and persistence; unknown service yields null bounds.
+
+### SCENARIO-VERIFY-8003-REPLAY
+
+Cold replay SHALL reconstruct deterministic primitive numerical rows and gates,
+reject altered receipts, readiness, coefficients and bounds, and verify sealed
+current validation logs. Fixtures remain circular controls, never hardware results.
