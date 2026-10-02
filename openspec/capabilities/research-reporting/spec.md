@@ -89659,6 +89659,63 @@ of live planning. The reproduced Exp8017 retry defect used mutable command and
 primitive checkpoint names. The reader now retains content-addressed copies;
 original test assertions and historical primary bytes remain unchanged.
 An absent live V695 design stays terminal blocked and readiness zero.
+
+### REQ-REPORT-8022: Qualify fixed-answer Qwen likelihood without generation
+
+Exp8022 SHALL use only cached_current_model's unsloth/Qwen3.8-27B-GGUF.
+Freeze methods and public inputs before scoring or label access. Reuse source
+custody, GPU leases, bounded command supervision and primary publication.
+Record exact GGUF hash, revision, embedded tokenizer, native API and CUDA memory.
+Load/preflight SHALL finish within 600 seconds. Each scoring child has 120 seconds.
+Every child SHALL emit flushed progress and real 60-second heartbeats.
+Eight scoring passes maximum SHALL use two private fixed-answer fixtures.
+Use eval only. Never call generate or completion, including max_tokens=0.
+Unavailable logits SHALL fail once with no proxy scores or generated tokens.
+Readiness requires actual scoring, a two-second work floor and all owned checks.
+
+### SCENARIO-REPORT-8022-TOKENS
+
+Check conditional logits at token position minus one, BOS, embedded chat template
+and the exact answer boundary. Reject boundary retokenization and nonfinite logits.
+Normalize the complete vocabulary using float64 logsumexp. Retain target scores,
+normalization receipts and byte offsets, never full logits. Compare independent
+tiny logits arithmetic. Duplicate means SHALL agree within 1e-6.
+
+### SCENARIO-REPORT-8022-PANEL
+
+Use original fit/tune shards and original development stream. Select the first
+64/32/96 eligible normalized source groups in each original order. Sources SHALL
+be disjoint. Eligibility depends only on complete context, 6000 prompt tokens and
+1..384 full answer tokens. Exclude overlong answers without clipping. Never use
+labels or model errors for selection. Keep historical development exposure.
+Freeze full, exact duplicate, no-source and one-chunk-removal views. Split with
+the embedded tokenizer into at most 256-token chunks. Remove highest lexical
+word overlap with fixed answer, breaking ties by lowest index. Preserve question
+and answer bytes. Record masks, exclusions, source hashes and all intended slots.
+This restricted GASP adaptation supplies no intervention truth labels.
+
+Exp8022 invocation counters SHALL separate generation operations from model
+loads. Zero generation SHALL never assert that no model loaded. Preserve the
+original flat runtime counters under durable raw/. A reporting-only correction
+SHALL reuse byte-bound scoring evidence when scoring code and inputs agree.
+Retain rejected candidates and prior health logs. Rerun affected owned checks
+and terminal readers. Never add more scoring passes to repair report metadata.
+
+### SCENARIO-REPORT-8022-SEAL
+
+Freeze mean response-token NLL, no-source minus full, removal minus full and
+three hypotheses before scoring: paired no-source increase, paired removal
+increase and downstream independent-label benefit over unperturbed NLL.
+Current work qualifies the scorer; it does not test the scientific hypotheses.
+Document short-answer transfer failure, evidence-integration caveat and no new
+corpus. No calibrated energy-fit task is a prerequisite. Missing external inputs
+are terminal blocked. Fixtures remain circular controls with zero learning credit.
+Require traced tests, 100 percent new statement coverage including direct CLI,
+consumer checks, Ruff, strict mypy, spec coverage, E2E-015 and E2E-016 cold replay.
+Preserve one bounded full-suite health diagnostic separately, including failures.
+Cold-reduce durable rows and checkpoints in a fresh process. Check exact bytes
+with unchanged adversarial and strict row readers, publish through the existing
+helper and check published bytes. The conductor owns ops and BMAD reconciliation.
 ### REQ-REPORT-8019: Seal source roles separately from target eligibility
 
 Exp8019 SHALL bind the Exp8008 custody snapshot and preserve all 704 original

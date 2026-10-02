@@ -19333,3 +19333,4 @@ code |
 | 2026-10-02 11:05 UTC | Freeze complete-label eligibility before fitting o | OK | 111 passed, 1 warning in 31.08s |
 | 2026-10-02 11:31 UTC | Fit calibrated source energies on the sealed eligi | OK | 86 passed, 1 warning in 24.30s |
 | 2026-10-02 11:59 UTC | Measure calibrated decisions with complete predict | OK | 93 passed, 1 warning in 20.73s |
+| 2026-10-02 12:30 UTC | Qualify fixed-answer Qwen scoring and source-remov | FAIL | Codex CLI error: ormalization failures cannot earn readiness.""" + origina |

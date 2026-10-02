@@ -1,0 +1,27 @@
+{
+  "reports": [
+    {
+      "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8022_v695_likelihood_protocol/terminal_candidate.json",
+      "loaded": true,
+      "exp_id": 8022,
+      "title": "",
+      "honest_verdict": "complete_null_likelihood_protocol",
+      "flag_count": 2,
+      "max_severity": 2,
+      "flags": [
+        {
+          "kind": "INFERENCE_PROVENANCE_CONTRADICTION",
+          "severity": "critical",
+          "detail": "Current-task inference provenance is contradictory: live_claim_with_no_invocation_evidence; substrate='live_llm_inference', live_evidence_count=2, negative_evidence_count=2. The duration check fails closed until the invocation scope agrees."
+        },
+        {
+          "kind": "SUBSTRATE_CLASS_MISMATCH",
+          "severity": "critical",
+          "detail": "inference_substrate_class=model_load_no_generation claims a model ran, but typed invocation evidence says it did not (['generation_calls_attempted', 'generation_calls_completed']). Contradictory."
+        }
+      ],
+      "gate_version": "197e0a5eacacb09ce6607ae8bdfd507498082857f0d02ec2003a62c251b69a24"
+    }
+  ],
+  "flagged_count": 1
+}

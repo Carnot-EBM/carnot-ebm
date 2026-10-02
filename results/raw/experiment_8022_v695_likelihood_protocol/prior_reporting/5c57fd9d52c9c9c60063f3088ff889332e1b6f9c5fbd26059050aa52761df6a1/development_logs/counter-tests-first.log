@@ -1,0 +1,80 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+______________ test_main_owned_checks_child_and_terminal_failures ______________
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261002T122806-1318515-407f9716/test_main_owned_checks_child_a0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f2621866750>
+
+    def test_main_owned_checks_child_and_terminal_failures(tmp_path, monkeypatch):
+        """SCENARIO-REPORT-8022-SEAL: real orchestration branches retain failures."""
+        frozen = s.freeze_panel(public(), Tokens(), dict(fit=1, tune=1, evaluation=1))
+        result = dict(
+            panel=frozen,
+            qualification=dict(passed=True, forward_pass_counts=8, rows=[], scored_tokens=8),
+            duration_s=3,
+            model_invocation_counts=dict(
+                e.ZERO_INVOCATION_COUNTS, model_loads_attempted=1, model_loads_completed=1
+            ),
+        )
+        monkeypatch.setattr(
+            e, "authenticate", lambda root: dict(checks=[], references=[], public=public())
+        )
+        monkeypatch.setattr(
+            e, "commands", lambda scratch: [e.CommandSpec("private_owned", ("private",), "owned", 1)]
+        )
+        monkeypatch.setattr(e, "terminal", lambda path: dict(passed=True))
+        monkeypatch.setattr(e, "reader_receipt", lambda *args, **kwargs: dict(passed=True))
+        mode = "normal"
+    
+        def run(root, specs, **kwargs):
+            if specs[0].name == "teacher_forced_preflight":
+                target = Path(specs[0].argv[-1])
+                if mode != "missing_capture":
+                    atomic_json(target, result)
+                return [
+                    dict(
+                        passed=mode != "missing_capture",
+                        scope="runtime",
+                        exit_code=int(mode == "missing_capture"),
+                        log_path=str(tmp_path / "log"),
+                        log_sha256="private",
+                    )
+                ]
+            if specs[0].name == "private_owned":
+                config = Path(kwargs["extra_env"]["CARNOT_8022_COVERAGE_CONFIG"])
+                atomic_json(
+                    config.parent / "coverage.json",
+                    dict(totals=dict(num_statements=1, covered_lines=1, percent_covered=100)),
+                )
+            return [dict(passed=mode != "cold_error", scope=specs[0].scope, exit_code=0)]
+    
+        monkeypatch.setattr(e, "run_commands", run)
+        for mode in ["normal", "missing_capture", "cold_error", "reader_error"]:
+            monkeypatch.setattr(
+                e, "reader_receipt", lambda *args, **kwargs: dict(passed=mode != "reader_error")
+            )
+            output = tmp_path / mode / "results" / (e.NAME + ".json")
+            code = e.main(["--output", str(output)])
+            assert code == (1 if mode in {"cold_error", "reader_error"} else 0)
+            if output.exists():
+                value = json.loads(output.read_text())
+                assert value["coverage_statement_counts"]["percent_covered"] == 100
+                if mode=="normal":
+                    from scripts.adversarial_verify import _classify_current_task_inference_claim
+>                   assert value["model_invocation_counts"]["generation"]["attempted"]==0
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E                   KeyError: 'generation'
+
+tests/python/test_likelihood_protocol_8022.py:385: KeyError
+----------------------------- Captured stdout call -----------------------------
+[exp8022] phase=panel_admission elapsed_s=0.000 completed=1 pending=2
+[exp8022] phase=panel_admission elapsed_s=0.000 completed=2 pending=1
+[exp8022] phase=panel_admission elapsed_s=0.000 completed=3 pending=0
+[exp8022] phase=start elapsed_s=0.000 completed=0 pending=0
+[exp8022] phase=before_runtime_subprocess elapsed_s=0.001 completed=0 pending=8
+[exp8022] phase=after_runtime_before_owned_checks elapsed_s=0.002 completed=0 pending=0
+[exp8022] phase=before_cold_reduction elapsed_s=0.003 completed=0 pending=0
+[exp8022] phase=complete elapsed_s=0.005 completed=0 pending=0
+=========================== short test summary info ============================
+FAILED tests/python/test_likelihood_protocol_8022.py::test_main_owned_checks_child_and_terminal_failures
+1 failed in 1.76s
