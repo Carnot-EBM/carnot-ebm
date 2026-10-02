@@ -21293,3 +21293,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-10-02: Bind thirteen tasks to the complete V696 design (⚠️ Research Finding) — honest_verdict=complete_circular_positive_contract_methods; results/experiment_8031_v696_contract_methods.json
 - 2026-10-02: Seal evaluation access and independent learning methods before labels (⚠️ Research Finding) — honest_verdict=complete_disqualified_sealed_methods; results/experiment_8032_v696_sealed_methods.json
 - 2026-10-02: Test cache and execution-shape causes of duplicate likelihood drift (⚠️ Research Finding) — honest_verdict=complete_disqualified_scoring_isolation; results/experiment_8033_v696_scoring_isolation.json
+- 2026-10-02: Learn from bounded recent feedback under equal update budgets (⚠️ Research Finding) — honest_verdict=complete_disqualified_windowed_checks; results/experiment_8038_v696_windowed_online_learning.json
