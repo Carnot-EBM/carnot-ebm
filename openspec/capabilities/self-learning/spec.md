@@ -30010,3 +30010,38 @@ fallible source-support labels SHALL remain separate from independent natural
 evidence. Development observations and administrative repair cannot close
 hidden-game or out-of-distribution deployment gaps. Report explicit next
 actions and reopening conditions, with generalized learning benefit fixed zero.
+
+# REQ-SELF-8025: Causal equal-budget persistent sparse learning
+
+Exp8025 SHALL start every arm from Exp8020's calibrated conditioned-energy head,
+seed 17. Freeze costs (unsupported accept 5, supported reject 1, escalation 0.5),
+learning rate 0.01, L2 0.001, and calibration before stream access. Exp8019 stream
+support gates admission; Exp8021 benefit does not. Use 256 original slots and
+20 algorithm seeds (101 through 120), which do not increase independent n.
+Compare frozen no-write, uniform, issued decision-loss priority, issued Brier-loss
+priority, and periodic selection. Each adaptive arm selects four distinct IDs
+from each complete nonoverlapping block of 16 eligible releases, capped at 64.
+Periodic selection uses positions 0,4,8,12. Priority ties use seeded stable hashes.
+Issue and commit state hashes before releasing origin slot +20. Unknowns consume
+slots and receive no negative imputation. Do not flush the last 20 labels.
+Use exactly-once feedback IDs and content-addressed durable head checkpoints.
+Measure hot arithmetic CPU nanoseconds separately from durable transaction wall
+nanoseconds and serialized bytes. Record spline support overlap with past inputs.
+Evaluate only issued later decisions on released targets, never training loss.
+Retention labels remain unopened. Complete valid null trajectories earn readiness
+one after owned checks; parameter changes alone give no decision benefit.
+
+## SCENARIO-SELF-8025: Delayed release, reload and controls
+
+Future-target mutation SHALL leave earlier predictions and states unchanged.
+Unknown targets SHALL preserve slots and equal budgets. Reload SHALL recover
+identical durable rows; duplicate feedback SHALL fail. Sparse updates SHALL
+match dense calibrated BCE descent with lazy global L2 decay. Cold CLI reduction
+SHALL reject modified rows, checkpoints and summaries. Missing head or failed
+support SHALL be terminal blocked. Apply E2E-007 learning guard principles to
+this CPU learner without activating production SMGI or certifying retention.
+
+Implementation: `python/carnot/verify/causal_online_8025.py` uses calibrated sparse
+writes and a synchronous SQLite issue/release/update ledger. Traced tests in
+`tests/python/test_causal_online_8025.py` cover delayed release, unknown slots,
+exact budgets, dense equivalence, causal mutation, checkpoints and CLI reload.

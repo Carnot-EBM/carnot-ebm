@@ -1,0 +1,44 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_8025_v695_causal_online_updates.py",
+        "python/carnot/verify/causal_online_8025.py",
+        "scripts/experiments/experiment_8025_v695_causal_online_updates.py",
+        "tests/python/test_causal_online_8025.py"
+      ],
+      "name": "all_owned_ruff",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_8025_v695_causal_online_updates.py",
+        "python/carnot/verify/causal_online_8025.py",
+        "scripts/experiments/experiment_8025_v695_causal_online_updates.py",
+        "tests/python/test_causal_online_8025.py"
+      ],
+      "name": "all_owned_format",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "--follow-imports=silent",
+        "python/carnot/experiment_8025_v695_causal_online_updates.py",
+        "python/carnot/verify/causal_online_8025.py",
+        "scripts/experiments/experiment_8025_v695_causal_online_updates.py"
+      ],
+      "name": "all_owned_strict_mypy",
+      "scope": "owned",
+      "timeout_s": 120
+    }
+  ]
+}

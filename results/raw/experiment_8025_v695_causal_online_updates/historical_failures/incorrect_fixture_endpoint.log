@@ -1,0 +1,92 @@
+..........F.                                                             [100%]
+=================================== FAILURES ===================================
+_________________ test_terminal_update_missing_and_checkpoint __________________
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261002T133403-1349140-589bc063/test_terminal_update_missing_a0')
+
+    def test_terminal_update_missing_and_checkpoint(tmp_path):
+        """SCENARIO-SELF-8025: a missing final update or wrong checkpoint invalidates budgets."""
+        raw = tmp_path / "missing"
+        m.measure(fixture(40), raw)
+        db = sqlite3.connect(raw / "ledger.sqlite")
+        seq = db.execute("SELECT max(seq) FROM events WHERE kind='update'").fetchone()[0]
+        with db:
+            db.execute("DELETE FROM events WHERE seq=?", (seq,))
+        db.close()
+        with pytest.raises(ValueError, match="unequal_budget"):
+>           m.reduce(raw)
+
+tests/python/test_causal_online_8025.py:274: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+raw = PosixPath('/tmp/pytest-carnot-ianblenke/20261002T133403-1349140-589bc063/test_terminal_update_missing_a0/missing')
+
+    def reduce(raw: Path) -> Json:
+        """Rebuild metrics from SQLite and verify equations using durable checkpoints.
+    
+        Reloading public inputs cannot open a label. Only the recorded due feedback
+        rows supply outcomes, including exclusions and terminal censoring.
+        """
+        data = json.loads((raw / "inputs.json").read_text())
+        db = sqlite3.connect(f"file:{raw / 'ledger.sqlite'}?mode=ro", uri=True)
+        events = [
+            (kind, json.loads(payload))
+            for kind, payload in db.execute("SELECT kind,payload FROM events ORDER BY seq")
+        ]
+        db.close()
+        issued = [r for k, r in events if k == "issue"]
+        releases = [r for k, r in events if k == "release"]
+        updates = [r for k, r in events if k == "update"]
+        timings = [r for k, r in events if k == "timing"]
+        heads: Json = {}
+        seen: Json = {}
+        eligible_by_arm: Json = {}
+        for kind, r in events:
+            identity = f"{r['arm']}/{r['seed']}"
+            if kind == "issue":
+                head = json.loads(checked(r["checkpoint"]).read_text())
+                expected_head = heads.setdefault(identity, copy.deepcopy(data["head"]))
+                row = data["sources"][r["slot"]]
+                p = probability(head, design(head, row)) if row["public_eligible"] else None
+                if (
+                    head != expected_head
+                    or canonical_hash(head) != r["head_hash"]
+                    or p != r["probability"]
+                    or action(p) != r["action"]
+                ):
+>                   raise ValueError("issued_state_drift")
+E                   ValueError: issued_state_drift
+
+python/carnot/verify/causal_online_8025.py:345: ValueError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261002T133403-1349140-589bc063/test_terminal_update_missing_a0')
+
+    def test_terminal_update_missing_and_checkpoint(tmp_path):
+        """SCENARIO-SELF-8025: a missing final update or wrong checkpoint invalidates budgets."""
+        raw = tmp_path / "missing"
+        m.measure(fixture(40), raw)
+        db = sqlite3.connect(raw / "ledger.sqlite")
+        seq = db.execute("SELECT max(seq) FROM events WHERE kind='update'").fetchone()[0]
+        with db:
+            db.execute("DELETE FROM events WHERE seq=?", (seq,))
+        db.close()
+>       with pytest.raises(ValueError, match="unequal_budget"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'unequal_budget'
+E         Actual message: 'issued_state_drift'
+
+tests/python/test_causal_online_8025.py:273: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8025] phase=benchmark_before elapsed_s=20.838 completed=0 pending=200
+[exp8025] phase=stream_frozen_no_write_seed_101 elapsed_s=20.841 completed=40 pending=160
+[exp8025] phase=stream_uniform_seed_101 elapsed_s=20.850 completed=80 pending=120
+[exp8025] phase=stream_decision_loss_seed_101 elapsed_s=20.859 completed=120 pending=80
+[exp8025] phase=stream_brier_loss_seed_101 elapsed_s=20.869 completed=160 pending=40
+[exp8025] phase=stream_periodic_seed_101 elapsed_s=20.877 completed=200 pending=0
+[exp8025] phase=benchmark_after elapsed_s=20.877 completed=200 pending=0
+=========================== short test summary info ============================
+FAILED tests/python/test_causal_online_8025.py::test_terminal_update_missing_and_checkpoint
+1 failed, 11 passed in 24.42s

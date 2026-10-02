@@ -89807,3 +89807,33 @@ A reporting or CPU-fitting correction SHALL archive previous reporting bytes,
 reuse unchanged score-producing code and frozen inputs, rerun affected CPU work
 and owned checks, and retain the single original repository-health diagnostic.
 It SHALL never add teacher-forced passes to repair numerical qualification.
+
+# REQ-REPORT-8025: Durable causal online update evidence
+
+Exp8025 SHALL publish a terminal artifact for 256 original stream slots and five
+arms at 20 schedule seeds. Seeds do not enlarge independent source counts.
+Freeze methods, exclusions, budgets, costs and acceptance before measurement.
+Retain issued probabilities/actions, released labels, chosen IDs, coefficients,
+gradient norms, active bases, transitions, overlap, update CPU time, transaction
+latency and bytes. All checkpoints SHALL remain under task-owned durable raw/.
+Calibrated-head or stream-support failures SHALL record exact gate operands and
+terminal blocked readiness zero. Valid complete scientific nulls earn readiness
+one after scoped unit/consumer, CLI, Ruff, strict mypy, spec and 100 percent new
+statement coverage checks. Keep one bounded repository-health diagnostic
+separate and preserve failures. Cold-reduce raw SQLite rows and checkpoints in a
+fresh process. Run existing adversarial and strict row readers on exact candidate
+bytes, publish with primary_publication, then recheck the published result.
+No pretrained models run. Generator weights stay fixed; retention stays sealed.
+Generalized learning benefit stays zero for exposed development replay.
+The conductor owns ops/status/changelog and BMAD reconciliation.
+
+## SCENARIO-REPORT-8025: Terminal custody and direct CLI validation
+
+Missing prerequisites produce terminal blocked output. Private artificial
+fixtures, unknown-target trajectories and reload tests exercise the direct CLI.
+Changed durable rows or checkpoints fail cold replay. Readiness requires all
+owned checks; imported historical model calls do not become current calls.
+
+Implementation: `python/carnot/experiment_8025_v695_causal_online_updates.py`
+freezes input roles, retains raw evidence, runs owned checks and publishes through
+existing validators and readers. The thin script runs the same entry point.

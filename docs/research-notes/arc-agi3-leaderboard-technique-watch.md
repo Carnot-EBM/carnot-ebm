@@ -420,3 +420,13 @@ New Milestone #2 releases provide concrete techniques from the previously leadin
 
 For these three published inference paths, I found no game-source reading or per-game hardcoding.
 
+## 2026-10-02 13:37 UTC -- NEW
+
+- **New top-five entrant, October 2:** **Arnav Singh (`arnavsingh123097`) is #5 at 32.99**, displacing Rogers Johnson. I found no attributable public ARC solution; **exploit/general-purpose classification remains unknown**. [Live leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard)
+
+- **Cihan Atak, current #7 — newly discovered expert pruning:** His older public notebook loads **Qwen3.8-Flash-Next-NVFP4-REAP-k448** through vLLM 0.30.0. REAP removes **64 of 512 routed experts per layer**, selected using routing-weighted activation saliency from **16.49M agent-trace tokens**. The model card reports a **7.9-GiB checkpoint reduction**; retained weights remain unchanged. The speculative MTP module retains 512 experts, requiring a separate runtime override. **Classification: (b), general-purpose model compression; no game-source reading or per-game solution branches found in the visible competition path.** This notebook is **not verified as his current scoring submission**. [Versioned notebook](https://www.kaggle.com/code/cihanatak/arc3-b32-reap-v030-kv14-c12-ctx48-r1?scriptVersionId=353864256), [pruning details](https://huggingface.co/lee-chang-93/Qwen3.8-Flash-Next-NVFP4-REAP-k448)  
+  **POSSIBLE CARNOT LEVER:** Benchmark expert pruning of the local MoE generator to free GPU memory for longer context or additional candidates.
+
+- **Cihan Atak — newly discovered animation presentation:** The same notebook automatically supplies a **chronological image contact sheet**, bounded to eight panels including the final board. Subsampling preserves original frame labels; stale sheets are stripped from outgoing requests while stored history remains intact. **Classification: (b), general-purpose processing of observed frames.** Current-score linkage remains unproven. [Implementation](https://www.kaggle.com/code/cihanatak/arc3-b32-reap-v030-kv14-c12-ctx48-r1?scriptVersionId=353864256)  
+  **POSSIBLE CARNOT LEVER:** Test bounded chronological sheets when transition verification fails, supplying temporal evidence without accumulating image-heavy prompt history.
+
