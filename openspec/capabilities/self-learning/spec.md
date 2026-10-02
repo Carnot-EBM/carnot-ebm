@@ -29997,3 +29997,16 @@ declared separately from pretrained models. Exp8003 invokes zero pretrained
 loads or generations. CPU numerical compatibility cannot establish FPGA, NPU,
 TSU or larger-FPGA operation. Extropic and spline papers are external designs.
 Integration waits for useful workload and authenticated compatible kernel evidence.
+# REQ-SELF-8004: Separate finite replay from durable deployment learning
+
+Implementation: `python/carnot/reporting/v693_capstone_reduction.py` checks
+source means, delayed gradient equations, retention, confidence and service.
+The capstone records three open gaps and explicit evidence to reopen them.
+
+The V693 capstone SHALL independently aggregate issued probabilities and action
+costs by source before comparing update arms. Retention is evaluation only.
+Causal receipts SHALL show feedback release before use. Protocol controls and
+fallible source-support labels SHALL remain separate from independent natural
+evidence. Development observations and administrative repair cannot close
+hidden-game or out-of-distribution deployment gaps. Report explicit next
+actions and reopening conditions, with generalized learning benefit fixed zero.

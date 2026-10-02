@@ -89112,3 +89112,38 @@ explicit-path spec checks and one full Python suite health receipt. Historical
 health failures remain diagnostics. Check final candidate bytes with unchanged
 adversarial and strict row validators and both conductor readers before publishing.
 Reconciliation of status/changelog/traceability is assigned to the conductor.
+# REQ-REPORT-8004: Independent V693 terminal capstone
+
+Implementation: `python/carnot/reporting/v693_capstone.py` and its separate
+primitive reducer. `scripts/experiments/experiment_8004_v693_capstone.py`
+publishes the primary. Requirement-linked private tests freeze terminal routes.
+
+Exp8004 SHALL freeze the thirteen ordered V693 tasks before reducing evidence.
+It SHALL use the parameterized authority reader, exact declared primaries,
+producer dates, byte-bound terminal sidecars and exact conductor skip paths.
+It SHALL preserve V692 owned failures and all task prior_failures comparisons.
+Only exact repeated terminal verdicts with retire_if_same_verdict=true retire
+the narrow failed scope. Reopening requires changed evidence for that scope.
+
+The capstone SHALL reconstruct source-averaged costs, causal update contrasts,
+retention, confidence diagnostics and full-service spans from primitive rows.
+It SHALL not import producer acceptance functions. Disqualified, blocked,
+flagged and circular producers remain diagnostic evidence only. Qualified nulls
+remain visible. Source-disjoint development is not deployment generalization.
+The three PRD gaps remain separate from historical publication G1–G4.
+generalized_learning_benefit_score SHALL remain zero. Missing prerequisites
+produce complete_blocked, owned failures complete_disqualified, and valid
+underpowered evidence complete_null. The thirteenth row records the validated
+capstone without hashing its own final bytes. No pretrained call is permitted.
+
+### SCENARIO-REPORT-8004-REDUCTION
+
+Repeated seeds SHALL not multiply sources. Unknown labels stay unscored.
+Primitive cost, probability, causal ordering and service-span drift SHALL fail.
+Private controls SHALL show both useful changes and a no-headroom case.
+
+### SCENARIO-REPORT-8004-CUSTODY
+
+A missing declared producer SHALL remain missing even if an unrelated artifact
+shares its number. Missing fields SHALL be contract errors, never zero values.
+Cold replay SHALL reconstruct immutable inputs and reject edited aggregates.

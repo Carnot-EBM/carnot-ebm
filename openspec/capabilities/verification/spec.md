@@ -47881,3 +47881,27 @@ assumptions and persistence; unknown service yields null bounds.
 Cold replay SHALL reconstruct deterministic primitive numerical rows and gates,
 reject altered receipts, readiness, coefficients and bounds, and verify sealed
 current validation logs. Fixtures remain circular controls, never hardware results.
+# REQ-VERIFY-8004: Checked private publication and complete new statements
+
+Implementation: `python/carnot/reporting/v693_capstone_validation.py` freezes
+the command manifest and binds terminal receipts to exact prospective bytes.
+`tests/python/test_experiment_8004_v693_capstone.py` covers the owned routes.
+
+Freeze actual commands and code identities before V693 measurements. Keep the
+artifact guard enabled. Use private scratch outside the checkout. Test real CLI
+success, blocked, cold replay, malformed input, expected-negative replay and
+publication rejection before executing current work. Require nonempty 100%
+statement coverage on added files, affected consumers, private E2E-018,
+scoped Ruff check/format, strict mypy and explicit-path spec coverage.
+Run the full Python suite once; retain unrelated failures as diagnostics.
+Do not weaken an owned check. Emit flushed progress and supervise children
+with elapsed-time messages at most sixty seconds apart.
+
+### SCENARIO-VERIFY-8004-TERMINAL
+
+Check actual prospective final bytes with adversarial verification, strict row
+lint, both primary readers and independent cold replay before publication.
+Bind receipts to the published hash in a nested sidecar. Publication rejection
+SHALL leave the old primary intact. Owned failure zeroes readiness; blocked
+work stays zero even when its owned checks pass. Ops and traceability updates
+are reserved for the conductor reconciler by the task's final instruction.
