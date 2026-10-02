@@ -1,0 +1,170 @@
+[exp8014] phase=start completed_units=0 elapsed_s=0
+[exp7949] phase=exp8014_authenticate completed_units=0 elapsed_s=0.000
+[exp7949] phase=exp8014_scope_frozen completed_units=134 elapsed_s=0.484
+[exp7949] phase=exp8014_science_terminal completed_units=0 elapsed_s=0.488
+[exp7303-validation] before_subprocess e2e_017 elapsed_s=0.000 unit=1/1
+[exp7303-validation:e2e_017] ......                                                                   [100%]
+[exp7303-validation:e2e_017] 6 passed in 2.63s
+[exp7303-validation] after_subprocess e2e_017 elapsed_s=4.954 exit=0 unit=1/1
+[exp7303-validation] before_subprocess affected_pytest elapsed_s=0.000 unit=1/1
+[exp7303-validation:affected_pytest] ........................................................................ [ 56%]
+[exp7303-validation:affected_pytest] ........................................................                 [100%]
+[exp7303-validation:affected_pytest] 128 passed in 9.34s
+[exp7303-validation] after_subprocess affected_pytest elapsed_s=11.698 exit=0 unit=1/1
+[exp7303-validation] before_subprocess unit_coverage elapsed_s=0.000 unit=1/1
+[exp7303-validation:unit_coverage] ......                                                                   [100%]
+[exp7303-validation:unit_coverage] 6 passed in 2.58s
+[exp7303-validation] after_subprocess unit_coverage elapsed_s=6.404 exit=0 unit=1/1
+[exp7303-validation] before_subprocess cli_success elapsed_s=0.000 unit=1/1
+[exp7303-validation:cli_success] [exp8014] phase=start completed_units=0 elapsed_s=0
+[exp7303-validation:cli_success] [exp7949] phase=scan completed_units=1 elapsed_s=0.000
+[exp7303-validation:cli_success] {"honest_verdict": "complete_circular_positive_private_reducer"}
+[exp7303-validation] after_subprocess cli_success elapsed_s=0.893 exit=0 unit=1/1
+[exp7303-validation] before_subprocess cli_negative elapsed_s=0.000 unit=1/1
+[exp7303-validation:cli_negative] [exp8014] phase=start completed_units=0 elapsed_s=0
+[exp7303-validation:cli_negative] {"cold_replay_errors": ["identity_filter_count"]}
+[exp7303-validation] after_subprocess cli_negative elapsed_s=0.917 exit=1 unit=1/1
+[exp7303-validation] before_subprocess cli_blocked elapsed_s=0.000 unit=1/1
+[exp7303-validation:cli_blocked] [exp8014] phase=start completed_units=0 elapsed_s=0
+[exp7303-validation:cli_blocked] [exp7949] phase=scan completed_units=1 elapsed_s=0.000
+[exp7303-validation:cli_blocked] {"honest_verdict": "complete_blocked_private_input"}
+[exp7303-validation] after_subprocess cli_blocked elapsed_s=1.042 exit=1 unit=1/1
+[exp7303-validation] before_subprocess cli_replay elapsed_s=0.000 unit=1/1
+[exp7303-validation:cli_replay] [exp8014] phase=start completed_units=0 elapsed_s=0
+[exp7303-validation:cli_replay] {"cold_replay_errors": []}
+[exp7303-validation] after_subprocess cli_replay elapsed_s=1.027 exit=0 unit=1/1
+[exp7303-validation] before_subprocess cli_terminal elapsed_s=0.000 unit=1/1
+[exp7303-validation:cli_terminal] [exp8014] phase=start completed_units=0 elapsed_s=0
+[exp7303-validation:cli_terminal] {"cold_replay_errors": []}
+[exp7303-validation] after_subprocess cli_terminal elapsed_s=0.958 exit=0 unit=1/1
+[exp7303-validation] before_subprocess cli_arguments elapsed_s=0.000 unit=1/1
+[exp7303-validation:cli_arguments] [exp8014] phase=start completed_units=0 elapsed_s=0
+[exp7303-validation:cli_arguments] usage: experiment_8014_v694_arc_supervisor_delta.py [-h] [--date {20261002}]
+[exp7303-validation:cli_arguments]                                                     [--reduce-ledger REDUCE_LEDGER]
+[exp7303-validation:cli_arguments]                                                     [--producer PRODUCER]
+[exp7303-validation:cli_arguments]                                                     [--cold-replay COLD_REPLAY]
+[exp7303-validation:cli_arguments]                                                     [--terminal-recheck TERMINAL_RECHECK]
+[exp7303-validation:cli_arguments]                                                     [--output OUTPUT]
+[exp7303-validation:cli_arguments] experiment_8014_v694_arc_supervisor_delta.py: error: --reduce-ledger requires --producer and --output
+[exp7303-validation] after_subprocess cli_arguments elapsed_s=0.903 exit=2 unit=1/1
+[exp7303-validation] before_subprocess coverage_combine elapsed_s=0.000 unit=1/1
+[exp7303-validation:coverage_combine] Combined 4 files, skipped 3
+[exp7303-validation] after_subprocess coverage_combine elapsed_s=0.075 exit=0 unit=1/1
+[exp7303-validation] before_subprocess coverage_report elapsed_s=0.000 unit=1/1
+[exp7303-validation:coverage_report] Name                                                               Stmts   Miss  Cover   Missing
+[exp7303-validation:coverage_report] ------------------------------------------------------------------------------------------------
+[exp7303-validation:coverage_report] scripts/experiments/experiment_8014_v694_arc_supervisor_delta.py      60      0   100%
+[exp7303-validation:coverage_report] ------------------------------------------------------------------------------------------------
+[exp7303-validation:coverage_report] TOTAL                                                                 60      0   100%
+[exp7303-validation] after_subprocess coverage_report elapsed_s=0.051 exit=0 unit=1/1
+[exp7303-validation] before_subprocess coverage_json elapsed_s=0.000 unit=1/1
+[exp7303-validation:coverage_json] Wrote JSON report to /tmp/carnot-exp8014-ktzpat46/coverage.json
+[exp7303-validation] after_subprocess coverage_json elapsed_s=0.054 exit=0 unit=1/1
+[exp7303-validation] before_subprocess ruff_check elapsed_s=0.000 unit=1/1
+[exp7303-validation:ruff_check] All checks passed!
+[exp7303-validation] after_subprocess ruff_check elapsed_s=0.010 exit=0 unit=1/1
+[exp7303-validation] before_subprocess ruff_format elapsed_s=0.000 unit=1/1
+[exp7303-validation:ruff_format] 2 files already formatted
+[exp7303-validation] after_subprocess ruff_format elapsed_s=0.011 exit=0 unit=1/1
+[exp7303-validation] before_subprocess mypy elapsed_s=0.000 unit=1/1
+[exp7303-validation:mypy] pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.inference.*', 'carnot.models.*', 'carnot.pipeline.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.pipeline.verify_repair', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.*', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl', 'carnot.verify.*']
+[exp7303-validation:mypy] Success: no issues found in 1 source file
+[exp7303-validation] after_subprocess mypy elapsed_s=0.068 exit=0 unit=1/1
+[exp7303-validation] before_subprocess spec_coverage elapsed_s=0.000 unit=1/1
+[exp7303-validation:spec_coverage] OK: All tests reference specification requirements.
+[exp7303-validation] after_subprocess spec_coverage elapsed_s=0.032 exit=0 unit=1/1
+[exp7303-validation] before_subprocess full_python_suite elapsed_s=0.000 unit=1/1
+[exp7303-validation:full_python_suite] ============================= test session starts ==============================
+[exp7303-validation:full_python_suite] platform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0
+[exp7303-validation:full_python_suite] rootdir: /home/ianblenke/github.com/ianblenke/carnot
+[exp7303-validation:full_python_suite] configfile: pyproject.toml
+[exp7303-validation:full_python_suite] plugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2
+[exp7303-validation:full_python_suite] created: 4/4 workers
+[exp7303-validation] subprocess_outstanding full_python_suite elapsed_s=30.001
+[exp7303-validation] subprocess_outstanding full_python_suite elapsed_s=60.001
+[exp7303-validation:full_python_suite] 4 workers [74633 items]
+[exp7303-validation:full_python_suite] 
+[exp7303-validation:full_python_suite] ........................................................................ [  0%]
+[exp7303-validation:full_python_suite] ........................................................................ [  0%]
+[exp7303-validation:full_python_suite] ........................................................................ [  0%]
+[exp7303-validation:full_python_suite] ........................................................................ [  0%]
+[exp7303-validation:full_python_suite] ........................................................................ [  0%]
+[exp7303-validation:full_python_suite] ........................................................................ [  0%]
+[exp7303-validation:full_python_suite] ........................................................................ [  0%]
+[exp7303-validation:full_python_suite] ................F..................................................F.... [  0%]
+[exp7303-validation:full_python_suite] ........................................................................ [  0%]
+[exp7303-validation:full_python_suite] ........................................................................ [  0%]
+[exp7303-validation:full_python_suite] ........................................................................ [  1%]
+[exp7303-validation:full_python_suite] ........................................................................ [  1%]
+[exp7303-validation:full_python_suite] ...F.........................................................F.F........ [  1%]
+[exp7303-validation:full_python_suite] ........................................................................ [  1%]
+[exp7303-validation:full_python_suite] ........................................................................ [  1%]
+[exp7303-validation:full_python_suite] F....................................................................... [  1%]
+[exp7303-validation:full_python_suite] Fssssss........s..........................................FFFF.FFF...... [  1%]
+[exp7303-validation:full_python_suite] ........................................................................ [  1%]
+[exp7303-validation:full_python_suite] ........................................................................ [  1%]
+[exp7303-validation:full_python_suite] ........ssssssssssssssss................................................ [  1%]
+[exp7303-validation] subprocess_outstanding full_python_suite elapsed_s=90.001
+[exp7303-validation:full_python_suite] ................F.....................................................F. [  2%]
+[exp7303-validation:full_python_suite] ........................................................................ [  2%]
+[exp7303-validation:full_python_suite] ........................................................................ [  2%]
+[exp7303-validation:full_python_suite] ..................................................F..................... [  2%]
+[exp7303-validation:full_python_suite] ........................................................................ [  2%]
+[exp7303-validation:full_python_suite] ........................................................................ [  2%]
+[exp7303-validation:full_python_suite] ............................F........................................... [  2%]
+[exp7303-validation:full_python_suite] ...................F.................................................... [  2%]
+[exp7303-validation:full_python_suite] ......................FF................................................ [  2%]
+[exp7303-validation:full_python_suite] ........................................................................ [  2%]
+[exp7303-validation:full_python_suite] ........................................................................ [  2%]
+[exp7303-validation:full_python_suite] ........................................................................ [  3%]
+[exp7303-validation:full_python_suite] ........................................................................ [  3%]
+[exp7303-validation] subprocess_outstanding full_python_suite elapsed_s=120.001
+[exp7303-validation:full_python_suite] ............................................................/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:353: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.
+[exp7303-validation:full_python_suite] Plugin: 140296683649168, Hook: pytest_sessionfinish
+[exp7303-validation:full_python_suite] OSError: cannot send (already closed?)
+[exp7303-validation:full_python_suite] For more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning
+[exp7303-validation:full_python_suite]   config.hook.pytest_sessionfinish(
+[exp7303-validation:full_python_suite] /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:353: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.
+[exp7303-validation:full_python_suite] Plugin: 140189522185008, Hook: pytest_sessionfinish
+[exp7303-validation:full_python_suite] OSError: cannot send (already closed?)
+[exp7303-validation:full_python_suite] For more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning
+[exp7303-validation:full_python_suite]   config.hook.pytest_sessionfinish(
+[exp7303-validation:full_python_suite] /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:353: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.
+[exp7303-validation:full_python_suite] Plugin: 140148582323920, Hook: pytest_sessionfinish
+[exp7303-validation:full_python_suite] OSError: cannot send (already closed?)
+[exp7303-validation:full_python_suite] For more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning
+[exp7303-validation:full_python_suite]   config.hook.pytest_sessionfinish(
+[exp7303-validation:full_python_suite] /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:353: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.
+[exp7303-validation:full_python_suite] Plugin: 140433423097520, Hook: pytest_sessionfinish
+[exp7303-validation:full_python_suite] OSError: cannot send (already closed?)
+[exp7303-validation:full_python_suite] For more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning
+[exp7303-validation:full_python_suite]   config.hook.pytest_sessionfinish(
+[exp7303-validation] after_subprocess full_python_suite elapsed_s=143.740 exit=-15 unit=1/1
+[exp7303-validation] before_subprocess terminal_adversarial elapsed_s=0.000 unit=1/1
+[exp7303-validation:terminal_adversarial] {
+[exp7303-validation:terminal_adversarial]   "reports": [
+[exp7303-validation:terminal_adversarial]     {
+[exp7303-validation:terminal_adversarial]       "artifact": "/tmp/carnot-exp8014-ktzpat46/terminal-candidate.json",
+[exp7303-validation:terminal_adversarial]       "loaded": true,
+[exp7303-validation:terminal_adversarial]       "exp_id": 8014,
+[exp7303-validation:terminal_adversarial]       "title": "New live ARC supervisor outcome inventory",
+[exp7303-validation:terminal_adversarial]       "honest_verdict": "complete_null_no_new_outcomes",
+[exp7303-validation:terminal_adversarial]       "flag_count": 0,
+[exp7303-validation:terminal_adversarial]       "max_severity": -1,
+[exp7303-validation:terminal_adversarial]       "flags": [],
+[exp7303-validation:terminal_adversarial]       "gate_version": "197e0a5eacacb09ce6607ae8bdfd507498082857f0d02ec2003a62c251b69a24"
+[exp7303-validation:terminal_adversarial]     }
+[exp7303-validation:terminal_adversarial]   ],
+[exp7303-validation:terminal_adversarial]   "flagged_count": 0
+[exp7303-validation:terminal_adversarial] }
+[exp7303-validation] after_subprocess terminal_adversarial elapsed_s=0.613 exit=0 unit=1/1
+[exp7303-validation] before_subprocess terminal_rows elapsed_s=0.000 unit=1/1
+[exp7303-validation:terminal_rows] 
+[exp7303-validation:terminal_rows] verdict-row-consistency: checked 0, skipped 1 (no per-unit rows), unreadable 0.
+[exp7303-validation:terminal_rows]   NOTE: most artifacts carry no per-unit row container, so their headline claims are not falsifiable from the artifact alone. That is a reporting-shape gap in those experiments, not a clean bill of health from this tool.
+[exp7303-validation] after_subprocess terminal_rows elapsed_s=0.030 exit=0 unit=1/1
+[exp7303-validation] before_subprocess cold_primary_replay elapsed_s=0.000 unit=1/1
+[exp7303-validation:cold_primary_replay] [exp8014] phase=start completed_units=0 elapsed_s=0
+[exp7303-validation:cold_primary_replay] {"cold_replay_errors": []}
+[exp7303-validation] after_subprocess cold_primary_replay elapsed_s=0.478 exit=0 unit=1/1
+[exp7949] phase=exp8014_published completed_units=0 elapsed_s=174.474

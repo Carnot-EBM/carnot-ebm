@@ -89405,3 +89405,37 @@ covers paired sample floors, duplicate controls, nonstarts, owned load outcomes,
 private CLI publication, frozen requests, runtime file hashes, claim gates,
 validation failures and cold replay. The live run persists evidence below
 `results/raw/experiment_8011_v694_qwen_source_sensitivity/`.
+## REQ-REPORT-8014: Read only the qualified supervisor frontier delta
+
+Exp8014 SHALL use milestone 2026.10.694 and run date 20261002. Authenticate
+Exp8001 primary and inventory bytes, readiness, identity and outcome hashes.
+Reuse the qualified wrapper/frame reader and its content frontier. Freeze
+existing curated arms, source hashes, a 120-second scan cap and acceptance gates
+before reading outcomes. No model, game, adapter, game source or offline search
+is part of this invocation. Registry levels and referenced live receipts SHALL
+be checked before any solve statement. Claim zero new solves.
+
+### SCENARIO-REPORT-8014-DELTA
+
+Unchanged source bytes and previously seen outcomes SHALL add no observations.
+An empty authenticated delta SHALL terminate complete_null_no_new_outcomes.
+Keep chronology-unknown rows separate. Retain original per-game/arm firings,
+help, level-up resolution, action distances and receipt-level stagnations.
+Only eight authenticated firings across three games justify recommending a
+future controlled test over existing arms. Never change priorities automatically.
+Any observed method gap SHALL name the runtime selection and application seams.
+New arms and leaderboard submissions remain operator work.
+
+### SCENARIO-REPORT-8014-SEAL
+
+Add only a thin script-path entry point using existing implementation helpers.
+Traced tests SHALL cover all added statements and real private CLI branches.
+Run scoped consumers, E2E-017, Exp8001 empty-ledger/replay tests, Ruff, strict
+mypy and explicit-path spec checks. Preserve one bounded full-suite health
+diagnostic separately. Freeze actual argv, exits and durable log hashes.
+Cold-reduce in a fresh process and validate exact candidate bytes with the
+adversarial and strict row readers. Publish through the existing primary helper
+and recheck final bytes. Raw evidence and checkpoints SHALL use durable paths.
+Protocol controls remain circular and supply no natural observations. Readiness
+one requires valid measurement and owned checks, not scientific benefit.
+The conductor owns ops/status, ops/changelog and BMAD reconciliation.
