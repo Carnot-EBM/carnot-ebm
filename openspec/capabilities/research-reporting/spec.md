@@ -91164,3 +91164,47 @@ global pass when it fails. Cold replay, adversarial verification and strict row
 consistency precede atomic primary publication after normal child exit. Failed
 required checks disqualify readiness. The conductor owns ops and traceability
 reconciliation for this task.
+
+## REQ-REPORT-8063: Audit historical admission opportunities without tuning
+
+Authenticate Exp8051, Exp8052 and sealed Exp8058 primary bytes, terminal
+validators, candidate states, released guards and checkpoints. Reconstruct each
+historical candidate and alpha using only its released labels. Seal alternatives
+before an isolated evaluator opens later and retention targets. Count useful
+pools once per seed and proposal opportunity. Preserve guard expansions separately
+from gradient opportunities and common candidate audits from closed-loop effects.
+This diagnosis shall not change Exp8064 methods, thresholds or attempt schedule.
+
+### SCENARIO-REPORT-8063-POOLS
+
+A pool with many empirically useful candidates and one useful adoption has zero
+misses. An all-rejected useful pool has one miss. Empty useful-pool denominators
+remain null. Report accepted harmful candidates, weak candidates, guard reuse and
+unsupported generalization separately. All alternatives share the original
+Exp8052 later mask restricted to slots after their commitment, plus its retention
+identities. Empirical usefulness requires cost gain at least .02, no added later
+false accepts against incumbent or initial, nonincreasing incumbent Brier, and
+retention Brier/cost drift at most .01/.02 against initial. This diagnostic
+contract is not the V698 H3 scientific acceptance rule.
+
+### SCENARIO-REPORT-8063-BOUNDS
+
+Calculate paired Clopper-Pearson disagreement intervals and bounded-loss
+Hoeffding feasibility with actual source counts. Record alpha spending, attempt
+indices, candidate multiplicity and source overlap. Zero disagreements do not
+produce a zero-width interval. Twelve-row future blocks can fail even optimistic
+nonzero-margin feasibility. Exposed dependent sources and repeated seeds supply
+no iid certificate or new independent environments. Generalized benefit is zero.
+
+### SCENARIO-REPORT-8063-TERMINAL
+
+Write failing tests first. Freeze required validation argv before measurement.
+Run focused and consumer tests, scoped Ruff, strict mypy, scoped spec coverage,
+100 percent added statement coverage and E2E-015/016 private cold replay. Exercise
+real outside-checkout success, blocked and mutation CLI routes. Preserve the
+historical bounded full-suite failure as separate repository health. Cold replay
+primitive reductions in a new process, then use adversarial verification and
+strict row consistency before primary publication after normal child exit.
+Missing external operands are terminal blocked. Failed owned checks disqualify
+readiness. Readiness qualifies diagnostic completeness, independent of a positive
+scientific result. The conductor owns ops and traceability reconciliation.
