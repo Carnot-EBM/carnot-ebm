@@ -91546,3 +91546,54 @@ checks disqualify readiness; unchanged external failures are blocked. Record
 measured load/view/cleanup cost and conservative192-group planning bounds.
 Generalized learning benefit and generated tokens SHALL remain zero. The
 conductor owns ops/status/changelog/traceability reconciliation for this task.
+
+## REQ-REPORT-8072: Seal independent V699 methods before outcomes
+
+Exp8072 SHALL authenticate Exp8058 primary, terminal sidecar, original public role
+manifests, eligibility metadata and qualified historical head. Preserve fit64,
+tune32, evaluation96, stream256 and retention64. Unknown targets remain excluded.
+Source identities, complete response bytes, exposure and release delay20 remain fixed.
+Methods readiness SHALL describe protocol validity independently for source,
+learning and service. No current evaluator labels, model loads or benefit claims
+are permitted. Preserve earlier primary bytes and terminal evidence.
+
+### SCENARIO-REPORT-8072-METHODS
+
+Freeze the original nine inputs, fit-only conditioned additive spline basis,
+three named interactions, identical four-fold ridge search and exact logistic
+control. Freeze costs5/1/.5/0, accept below.1, reject above.5 and escalation ties.
+Freeze H1/H2 support, margin.02, source bootstrap10000, original-slot moving
+blocks32 with16/64 sensitivity and Holm.05 over exactly these two hypotheses.
+Freeze prediction seals before labels and deterministic public-feature permutation.
+
+### SCENARIO-REPORT-8072-LEARNING
+
+Use the historical head independently from source fitting. Freeze hash-mod4 roles,
+slots64/128/192, four gradients, step.01, ridge.001, newest32 released update rows,
+minimum16 with2/class, fresh next12 one-use admission labels and matched clocks.
+Freeze frozen/unconditional/ray_fresh/projected_fresh, the feedback half-space
+equation, newest64 constraint memory, box w0±.5, sample8, unit relaxation,
+256 corrections, complete residual1e-8 and feasible incumbent or w0 fallback.
+
+### SCENARIO-REPORT-8072-SERVICE
+
+Freeze cold/warm/all_miss separately from changed_10pct/eviction/restart. Each
+partition retains three original observed condition/class pairs, four arms,
+five warmups, thirty paired randomized repetitions,1260 rows and budget1800s.
+Estimate time from authenticated Exp8066 primitive timing rows. Missing timing
+cells remain unknown. Overruns SHALL NOT shrink the frozen matrix.
+
+### SCENARIO-REPORT-8072-TERMINAL
+
+Write requirement-linked tests before implementation. Freeze validation commands
+before sealing, use private test directories, run E2E-015/016 and real CLI success,
+blocked, mutation and cold replay outside the checkout. Require100% new statement
+coverage, Ruff, strict mypy, scoped spec coverage, independent reductions,
+adversarial verification and strict verdict-row lint. Failed owned checks zero
+all readiness and disqualify; missing external inputs block the affected branch.
+Global repository failures remain separate diagnostics. Publish only checked bytes
+through primary_publication; terminal sidecars bind exact primary hash and path.
+
+Implementation: `python/carnot/experiment_8072_v699_sealed_methods.py` and its thin
+`scripts/experiments/experiment_8072_v699_sealed_methods.py` CLI.
+Tests: `tests/python/test_sealed_methods_8072.py`.

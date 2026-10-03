@@ -6378,3 +6378,18 @@ escalate. The registered outcomes are Brier and decision loss. Keep source and
 block bootstrap uncertainty and Holm correction. Neither a responsive fixture
 nor an intercept change establishes natural stream benefit. Retired importance
 anchoring, foundation-model fitting and energy-as-generator claims remain closed.
+
+## Exp8072 V699 methods ingestion — 2026-10-03
+
+Status: ingested into the sealed methods protocol. Primary checks and method
+boundaries are in `results/raw/experiment_8072_v699_sealed_methods/literature_access.json`.
+T-SKM-Net (2512.10461v1) supplies sampled half-space correction as a design idea.
+One-projection optimization (2609.34099v1) motivates separate projection costs.
+Admission auditing (2609.10873v1) motivates candidate commitment and fresh evidence.
+KAN forgetting (2511.12828v1) motivates independent retention tests.
+GASP (2607.04223v1) motivates fixed-answer source dependence diagnostics.
+ARM-EBM (2512.15605v4) motivates the exact equivalent logistic control.
+The full T-SKM-Net text and the other five primary abstracts were rechecked.
+Formal guarantees, generator tuning and new full likelihood capture remain deferred.
+No guarantee transfers to Carnot. The historically exposed cohorts cannot establish
+unseen-data verification or general lifelong improvement.
