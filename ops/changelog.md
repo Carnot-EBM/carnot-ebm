@@ -21323,3 +21323,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
   comparison. Preserve independent ARC and hardware obligations.
 - Add planned specification/traceability entries without marking research as
   implemented. Leave the active roadmap and conductor source unchanged.
+- 2026-10-03: Qualify fixture consumers and bind the complete V698 contract (⚠️ Research Finding) — honest_verdict=complete_fixture_consumer_contract; results/experiment_8057_v698_fixture_consumer_contract.json
