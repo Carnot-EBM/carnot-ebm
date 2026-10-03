@@ -1,0 +1,121 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.7452855249866843,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:ccfbda93c89915013ba8b9b63e0a2daf83c3d2b0cf91212fc9387aa986523174",
+  "input_tokens": 1214,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1214,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1237
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:e67808323930ed5d95a705f53d55f28aa3b8022f83e1c1f4f5595f30a4675bf6",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885913,
+    "id": "chatcmpl-fvDrJ8oAiIxF94xQvqYZcQ6VEYDnwANI",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 539.929,
+      "predicted_n": 23,
+      "predicted_per_second": 42.59819346617797,
+      "predicted_per_token_ms": 23.475173913043477,
+      "prompt_ms": 1063.839,
+      "prompt_n": 1136,
+      "prompt_per_second": 1067.8307525856826,
+      "prompt_per_token_ms": 0.9364779929577465
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1214,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1237
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Nairobi, Kenya (CNN)Kenyan Deputy President William Ruto on Saturday gave the United Nations' refugee agency three months to relocate refugees from the Dadaab camp -- the world's largest -- to Somalia, or \\\"we shall relocate them ourselves.\\\" \\\"The way America changed after 9/11 is the way Kenya will change after Garissa,\\\" Ruto said in Nyeri, according to a statement from his office. Al-Shabaab gunmen stormed Garissa University College in eastern Kenya this month, killing 147 people. Kenya's government says that attack was masterminded by senior Al-Shabaab leader Mohamed Mohamud, whose \\\"extensive terrorist network within Kenya\\\" extends into the sprawling Dadaab complex, according to a Kenyan government document given to CNN. Students wake to Islamist militants' terror. Ruto, who is the second highest-ranking person in Kenya's government behind President Uhuru Kenyatta, said his government has had discussions with United Nations officials about what to do with the camp. On Saturday, a U.N. High Commissioner for Refugees officer said the agency had not received any formal request from Kenya's government about moving Dadaab. The U.N. refugee agency manages the Dadaab complex, having set up the first camps there in late 1991 amid Somalia's civil war. The agency and the governments of both Kenya and Somalia agreed in 2013 on a process for the repatriation of Somali refugees. But that was supposed to be mutually agreed-upon and voluntary, in accordance with the refugees' \\\"freely expressed wish and their relevant knowledge of the conditions\\\" where they'd end up, according to the pact. None of those things, it seems, applies now to the move pushed by Ruto on Saturday. It's not clear where he expects the refugees to go, other than somewhere into Somalia and out of Kenya. Any mass move would be a monumental task, disrupting the already difficult lives of more than 600,000 Somalis who call the camp their home. Simply meeting basic needs is a challenge in the vast complex, which has seen devastating droughts, contagious diseases and other travails that have tested its residents and those trying to help. Still, as tough as conditions there are, they are seen as a better alternative to life back in Somalia, where Al-Shabaab is based and has carried out violent attacks for years. Yet the Islamist extremist group hasn't confined its terror to its homeland, as illustrated by the Garissa attack and the 2013 siege of Nairobi's upscale Westgate Mall, which ended with at least 67 dead. The Dadaab complex came under government scrutiny after the Westgate Mall attack, too. But just a few weeks later, CNN's Nima Elbagir managed to go from Somalia to the Dadaab refugee camp undetected by taking one of the panya, or \\\"rat routes,\\\" just like many others have done, Al-Shabaab sympathizers among them. Such illicit travel along porous borders as well as police officers' willful ignorance of migrants' fake IDs, as acknowledged by then-Interior Minister Ole Lemku, illustrates Kenya's challenge in keeping out threats from Somalia. That's why, in addition to moving the Dadaab camp, Kenya is building of a 435-mile (700-kilometer) wall covering most of the Somali border from Mandera to Kiunga -- a wall that Ruto says has begun to prevent Al-Shabaab elements from getting into Kenya. The deputy president also vowed that any businesses collaborating with the militant group will be shut down. These measures are in addition to Kenyan airstrikes on Al-Shabaab camps in Somalia in the days after the Garissa massacre. \\\"We must secure this country at whatever cost, even if we lose business with Somalia,\\\" Ruto said Saturday. \\\"No politics, no games, no half-measures should apply, as the death of the 147 students must touch all Kenyans.\\\" CNN's Lillian Leposo reported from Nairobi, and CNN's Greg Botelho reported and wrote this story from Atlanta.\\n\", \"original_answer\": \"Kenyan Deputy President William Ruto has given the United Nations' refugee agency three months to relocate refugees from the Dadaab camp, which is the world's largest, to Somalia. The Kenyan government believes that the recent attack on Garissa University College in Kenya, which resulted in the deaths of 147 people, was masterminded by senior Al-Shabaab leader Mohamed Mohamud, whose \\\"extensive terrorist network within Kenya\\\" extends into the Dadaab complex. The Kenyan Government is seeking to prevent any further attacks in Kenya by Al-Shabaab, and is currently building a 435-mile wall along most of the Somali border to prevent the militant group from entering Kenya.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "calibration",
+  "source_cluster_id": "f14704c5ed934aec048db25be89f348a2e05157ca97627ad30cfdd67c56a305a",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+  ]
+}

@@ -1,0 +1,103 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.4598875839728862,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:c708e62134ff5044403552f7194694481ccd38b2cda6da60837017799fcb6bf7",
+  "input_tokens": 908,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 908,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 929
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:7f3fec5bcaa4d61fd4ec047cf0ec4d1147fa8f925fea4f8803dcca171ae57dd0",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885948,
+    "id": "chatcmpl-L5XKaz5UuioKGMhZ60GsEfpsCs7jO30y",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 490.812,
+      "predicted_n": 21,
+      "predicted_per_second": 42.78623994523362,
+      "predicted_per_token_ms": 23.372,
+      "prompt_ms": 849.235,
+      "prompt_n": 830,
+      "prompt_per_second": 977.3502034183706,
+      "prompt_per_token_ms": 1.0231746987951806
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 908,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 929
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"3755 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":null},\\\"business_stars\\\":2.5,\\\"categories\\\":\\\"Nightlife, Bars, Restaurants, Sports Bars, American (Traditional)\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":null,\\\"name\\\":\\\"Downtown Brewing Co\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2010-02-24 19:09:14\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"This business is CLOSED.\\\\n\\\\nThis may be attributed to the area being slated for development, but few locals are lamenting the loss, particularly in regards to the food.\\\\n\\\\nFor your referencing pleasure:\\\\nhttp://www.edhat.com/site/tidbit.cfm?nid=27413\\\"},{\\\"review_date\\\":\\\"2009-11-27 17:06:42\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"Looking for good micro beer in Santa Barbara is tough and the options limited but Downtown Brewing Co delivers a nice pint. That's if you can flag down one of the many, busy, unhappy waitresses that run around like chickens with their heads cut off in front of a packed crowd on Sundays. That said, the food is good, not great, but I do enjoy the Turkey Guadalajara sandwich. \\\\nWith DirectTV Sunday Ticket, DBC offers many TVs at the bar, on the patio and in the lounges that fill up quick so get there early to find a seat and a parking spot in their very small lot. The scene is young but I've only been there to watch a game at lunch and not seen who shows up for dinner. It won't be me but I'll be back for an IPA and some football.\\\"},{\\\"review_date\\\":\\\"2009-09-28 04:09:44\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"the good: fun atmosphere to watch sports, decent beer and pretty tasty pizza.\\\\n\\\\nthe bad: their 'brunch' menu for sunday football (10 bucks for crappy eggs), the occasional rude waitress (she yelled at the entire bar area to 'CHILL OUT') and understaffing which eventually leads to pretty slow service.  \\\\n\\\\nit's not bad to grab a beer on occasion here, but not my favorite place to go out in santa barbara.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Downtown Brewing Co, located at 3755 State St, Santa Barbara, CA, is known for its nightlife, bars, and American traditional restaurant. It is also categorized as a sports bar, offering outdoor seating and takeout services. The business is well-suited for groups but does not offer Wi-Fi or specific information regarding its ambiance or music. There is no parking garage, street parking, or valet service, but a small lot is available. According to customer reviews, the business has closed down. Prior to its closure, customers mentioned a fun atmosphere for watching sports, decent beer, and tasty pizza. However, some found the service slow and the waitresses occasionally rude. Additionally, the brunch menu for Sunday football was criticized, but the Turkey Guadalajara sandwich received positive reviews. Despite its 2.5-star rating, some customers still enjoyed visiting for a game at lunch and a pint of micro beer.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "f9346224d1647a714aa86dda24aee369c4824ab7fe7d97f4cdcf4f27b9e908c2",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ]
+}

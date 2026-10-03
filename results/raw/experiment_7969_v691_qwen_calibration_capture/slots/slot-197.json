@@ -1,0 +1,99 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.4257088379818015,
+  "exclusion_reason": null,
+  "family_id": "sha256:74f08b32ad96d994cb18c6f1698abb68ac025241ab4a06e21407e33deabcb4c9",
+  "input_tokens": 834,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 834,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 858
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:8d51fec2a9d7019550c35fab17830e87a14f69a8c5cde808775a07d2b348461e",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832743,
+    "id": "chatcmpl-wmWJttQTcEDuSTi6IQV2yXLkOkSQsVyi",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.843,
+      "predicted_n": 24,
+      "predicted_per_second": 42.41459203347925,
+      "predicted_per_token_ms": 23.576791666666665,
+      "prompt_ms": 728.733,
+      "prompt_n": 756,
+      "prompt_per_second": 1037.416996348457,
+      "prompt_per_token_ms": 0.9639325396825396
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 834,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 858
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"1002 Casitas Pass Rd\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Restaurants, Donuts, Food, Coffee & Tea\\\",\\\"city\\\":\\\"Carpinteria\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"5:0-20:0\\\",\\\"Monday\\\":\\\"5:0-20:0\\\",\\\"Saturday\\\":\\\"5:0-20:0\\\",\\\"Sunday\\\":\\\"5:0-20:0\\\",\\\"Thursday\\\":\\\"5:0-20:0\\\",\\\"Tuesday\\\":\\\"5:0-20:0\\\",\\\"Wednesday\\\":\\\"5:0-20:0\\\"},\\\"name\\\":\\\"Tyler's Donuts\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-10-27 03:09:32\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Bad very bad servise the old lady to rude I left without  my  daily  coffe I gues she was in a bad mood shouldn't be workin there never came back\\\"},{\\\"review_date\\\":\\\"2021-09-29 16:18:30\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Wonderful experience with fresh, tasty doughnuts. What more could you ask for? My dad got these for us the morning after my sister's wedding and they were a yummy treat and great price. They are located in a very convenient location as well. Thank you!\\\"},{\\\"review_date\\\":\\\"2021-08-03 02:00:46\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I loved this shop when I'd lived Ventura. It's been 2 years since visiting but not having the option to return to my favorite restaurants has made me miss this wonderful little donut haven. The food is delicious & the employees are the salt of the earth. I'm really looking forward to coming back in a month.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Sure! Here's an objective overview of Tyler's Donuts based on the provided structured data:\\n\\nTyler's Donuts is a popular donut shop located in Carpinteria, CA. The business offers a variety of donuts, coffee, and other baked goods, and is open seven days a week from 5am to 8pm. According to their Yelp reviews, the shop receives mixed reviews, with some customers praising the quality of their donuts and others expressing disappointment with the service. Some reviewers have noted that the staff can be rude and unfriendly, while others have reported long wait times and inconsistent availability of certain menu items. Despite these issues, many reviewers have praised the taste and freshness of the donuts, and some have described the shop as a \\\"wonderful little donut haven\\\" with \\\"delicious\\\" food and \\\"nice\\\" employees. Overall, Tyler's Donuts appears to be a local favorite with a loyal customer base, but may require improvement in terms of customer service and consistency.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:5a0786427b9fa054eda8825748ef6c5a2947a8c3085913309c0ad8f82b4297c1",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ]
+}

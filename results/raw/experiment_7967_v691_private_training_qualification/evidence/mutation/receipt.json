@@ -1,0 +1,117 @@
+{
+  "coverage_report_path": "/tmp/carnot7967-private-e5x2razw/mutation/coverage.json",
+  "deleted_test": "test_real_exception_routes",
+  "missing_cli_lines": [
+    51,
+    52,
+    53
+  ],
+  "mutated_test_path": "/tmp/carnot7967-private-e5x2razw/mutation/test_deleted_exception.py",
+  "passed": true,
+  "receipts": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -m coverage run --parallel-mode --data-file=/tmp/carnot7967-private-e5x2razw/mutation/.coverage '--include=*/python/carnot/verify/training_coverage_7954.py,*/scripts/experiments/experiment_7954_v690_training_coverage.py,*/python/carnot/verify/energy_fit_7943.py,*/python/carnot/verify/energy_fit_7943_validation.py,*/scripts/experiments/experiment_7943_v689_energy_fit.py' -m pytest -n 0 -o addopts= --no-cov -q /tmp/carnot7967-private-e5x2razw/mutation/test_deleted_exception.py -k main_dispatch --basetemp=/tmp/carnot7967-private-e5x2razw/mutation/unit",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "run",
+        "--parallel-mode",
+        "--data-file=/tmp/carnot7967-private-e5x2razw/mutation/.coverage",
+        "--include=*/python/carnot/verify/training_coverage_7954.py,*/scripts/experiments/experiment_7954_v690_training_coverage.py,*/python/carnot/verify/energy_fit_7943.py,*/python/carnot/verify/energy_fit_7943_validation.py,*/scripts/experiments/experiment_7943_v689_energy_fit.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "/tmp/carnot7967-private-e5x2razw/mutation/test_deleted_exception.py",
+        "-k",
+        "main_dispatch",
+        "--basetemp=/tmp/carnot7967-private-e5x2razw/mutation/unit"
+      ],
+      "duration_s": 3.1965813799761236,
+      "exit_code": 0,
+      "log_path": "/tmp/carnot7967-private-e5x2razw/mutation/logs/00_deleted_exception_test.log",
+      "log_sha256": "sha256:67f4b4fadf2e68d3bf90bb6cbe8cc36e8659ae3cbfde61afa95e839dfaf79bf4",
+      "name": "deleted_exception_test",
+      "output_tail": ".                                                                        [100%]\n1 passed, 13 deselected in 1.99s\n",
+      "passed": true,
+      "scope": "control",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -m coverage run --parallel-mode --data-file=/tmp/carnot7967-private-e5x2razw/mutation/.coverage '--include=*/python/carnot/verify/training_coverage_7954.py,*/scripts/experiments/experiment_7954_v690_training_coverage.py,*/python/carnot/verify/energy_fit_7943.py,*/python/carnot/verify/energy_fit_7943_validation.py,*/scripts/experiments/experiment_7943_v689_energy_fit.py' scripts/experiments/experiment_7943_v689_energy_fit.py --date 20260930 --cold-replay /tmp/carnot7967-private-e5x2razw/routes/success/experiment_7943_fixture.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "run",
+        "--parallel-mode",
+        "--data-file=/tmp/carnot7967-private-e5x2razw/mutation/.coverage",
+        "--include=*/python/carnot/verify/training_coverage_7954.py,*/scripts/experiments/experiment_7954_v690_training_coverage.py,*/python/carnot/verify/energy_fit_7943.py,*/python/carnot/verify/energy_fit_7943_validation.py,*/scripts/experiments/experiment_7943_v689_energy_fit.py",
+        "scripts/experiments/experiment_7943_v689_energy_fit.py",
+        "--date",
+        "20260930",
+        "--cold-replay",
+        "/tmp/carnot7967-private-e5x2razw/routes/success/experiment_7943_fixture.json"
+      ],
+      "duration_s": 3.321254593960475,
+      "exit_code": 0,
+      "log_path": "/tmp/carnot7967-private-e5x2razw/mutation/logs/01_mutation_cold_replay.log",
+      "log_sha256": "sha256:2e6d7939062d521e8b5ff02e9fc50ead6f11adf107b2c4cf8529d4eb1b39703a",
+      "name": "mutation_cold_replay",
+      "output_tail": "[exp7943] phase=start event=flushed completed=0 elapsed_s=0.000\n[exp7943] phase=cold_replay_passed event=fixture completed=3 elapsed_s=0.936\n[exp7943] phase=replay event=passed completed=3 elapsed_s=0.936\n",
+      "passed": true,
+      "scope": "control",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -m coverage combine --append --keep --data-file=/tmp/carnot7967-private-e5x2razw/mutation/.coverage /tmp/carnot7967-private-e5x2razw/mutation",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "combine",
+        "--append",
+        "--keep",
+        "--data-file=/tmp/carnot7967-private-e5x2razw/mutation/.coverage",
+        "/tmp/carnot7967-private-e5x2razw/mutation"
+      ],
+      "duration_s": 0.05490741494577378,
+      "exit_code": 0,
+      "log_path": "/tmp/carnot7967-private-e5x2razw/mutation/logs/02_mutation_combine.log",
+      "log_sha256": "sha256:c39da6aa013e7c752dd73a1410ffae0f0ac73e969f916261e4aaf96b839e5ee0",
+      "name": "mutation_combine",
+      "output_tail": "Combined 2 files\n",
+      "passed": true,
+      "scope": "control",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -m coverage json --data-file=/tmp/carnot7967-private-e5x2razw/mutation/.coverage '--include=*/python/carnot/verify/training_coverage_7954.py,*/scripts/experiments/experiment_7954_v690_training_coverage.py,*/python/carnot/verify/energy_fit_7943.py,*/python/carnot/verify/energy_fit_7943_validation.py,*/scripts/experiments/experiment_7943_v689_energy_fit.py' --fail-under=100 -o /tmp/carnot7967-private-e5x2razw/mutation/coverage.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "json",
+        "--data-file=/tmp/carnot7967-private-e5x2razw/mutation/.coverage",
+        "--include=*/python/carnot/verify/training_coverage_7954.py,*/scripts/experiments/experiment_7954_v690_training_coverage.py,*/python/carnot/verify/energy_fit_7943.py,*/python/carnot/verify/energy_fit_7943_validation.py,*/scripts/experiments/experiment_7943_v689_energy_fit.py",
+        "--fail-under=100",
+        "-o",
+        "/tmp/carnot7967-private-e5x2razw/mutation/coverage.json"
+      ],
+      "duration_s": 0.09624305000761524,
+      "exit_code": 2,
+      "log_path": "/tmp/carnot7967-private-e5x2razw/mutation/logs/03_mutation_report.log",
+      "log_sha256": "sha256:aedd915dc07149af7845ecf7dc373df2828a30fce005931a5e2a9ee36ab67396",
+      "name": "mutation_report",
+      "output_tail": "Combined 2 files\nWrote JSON report to /tmp/carnot7967-private-e5x2razw/mutation/coverage.json\nCoverage failure: total of 99 is less than fail-under=100\n",
+      "passed": false,
+      "scope": "control",
+      "timed_out": false
+    }
+  ]
+}

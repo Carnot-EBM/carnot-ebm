@@ -1,0 +1,104 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.1908657729509287,
+  "exclusion_reason": null,
+  "family_id": "sha256:385dfe942264128717b257d4007e89886d78baf9dde256afa22aea7d83e9c57c",
+  "input_tokens": 591,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 591,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 614
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:1b81f8f51e1e20bcb693b252a7e9488a3d84b99b62bddd08ac48ff380b0e2ca9",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832522,
+    "id": "chatcmpl-uzFAyfLnyUJQIuDznmMR3vBxkQBRbsFN",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 535.635,
+      "predicted_n": 23,
+      "predicted_per_second": 42.9396884072176,
+      "predicted_per_token_ms": 23.288478260869564,
+      "prompt_ms": 526.476,
+      "prompt_n": 513,
+      "prompt_per_second": 974.4033916075946,
+      "prompt_per_token_ms": 1.026269005847953
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 591,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 614
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Typical signs of strep throat infection are: 1  Fever. 2  Swollen, tender lymph nodes on the sides of the neck (cervical lymphadenopathy). 3  White patches seen on the tonsils and throat (tonsillar exudates).\\\\n\\\\npassage 2:Some people experience mild symptoms like a sore throat, whereas other people have more severe symptoms including fever and difficulty swallowing. Common symptoms of strep throat include: 1  sudden fever. 2  sore throat (red throat with white patches). 3  headache. 4  chills. 5  loss of appetite. 6  swollen lymph nodes in the neck.\\\\n\\\\npassage 3:Common symptoms of strep throat in children and adults include: 1  Severe and sudden sore throat without coughing, sneezing, or other cold symptoms. 2  Pain or difficulty with swallowing. 3  Fever over 101\u00b0F (38.3\u00b0C) . 4  Lower fevers may point to a viral infection and not strep. 5  Swollen lymph nodes in the neck.\\\\n\\\\n\\\",\\\"question\\\":\\\"what's the symptoms of strep throat\\\"}\", \"original_answer\": \"Based on the given passages, the symptoms of strep throat include:\\n\\n* Fever\\n* Swollen, tender lymph nodes on the sides of the neck (cervical lymphadenopathy)\\n* White patches seen on the tonsils and throat (tonsillar exudates)\\n* Sore throat (red throat with white patches)\\n* Headache\\n* Chills\\n* Loss of appetite\\n* Difficulty swallowing\\n* Pain or difficulty with swallowing\\n* Fever over 101\u00b0F (38.3\u00b0C)\\n* Swollen lymph nodes in the neck.\\n\\nIt's worth noting that some people may experience mild symptoms, while others may have more severe symptoms. Additionally, lower fevers may indicate a viral infection rather than strep throat.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:10a90305abf73c3cc1ed7292ce7f453c426599a24239dbcf7d0c6d9db27cea67",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ]
+}

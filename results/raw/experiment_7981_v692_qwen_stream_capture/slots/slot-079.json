@@ -1,0 +1,104 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.3480785639840178,
+  "exclusion_reason": null,
+  "family_id": "sha256:9797a073e2c27b425f927586694779fcda687c750671c0f18f0c0496ca7cca00",
+  "input_tokens": 844,
+  "invocation_finished_at": "2026-10-01T11:43:01.239394+00:00",
+  "invocation_started_at": "2026-10-01T11:42:59.891314+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 844,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 865
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:5f8672b229e4fe5396f89aebf076c1f3588093c8d27be378a85b29e854af4ee1",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790854981,
+    "id": "chatcmpl-bAeMCweVDKFIbgmJkKv3Q2DYGkn8dmTr",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 490.043,
+      "predicted_n": 21,
+      "predicted_per_second": 42.853382254210345,
+      "predicted_per_token_ms": 23.33538095238095,
+      "prompt_ms": 725.377,
+      "prompt_n": 766,
+      "prompt_per_second": 1056.002602784483,
+      "prompt_per_token_ms": 0.946967362924282
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 844,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 865
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"5049 6th St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":null},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Bars, Pubs, Breweries, Nightlife, Food\\\",\\\"city\\\":\\\"Carpinteria\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"12:0-22:0\\\",\\\"Monday\\\":\\\"12:0-21:0\\\",\\\"Saturday\\\":\\\"11:0-22:0\\\",\\\"Sunday\\\":\\\"11:0-21:0\\\",\\\"Thursday\\\":\\\"12:0-21:0\\\",\\\"Tuesday\\\":\\\"12:0-21:0\\\",\\\"Wednesday\\\":\\\"12:0-21:0\\\"},\\\"name\\\":\\\"Island Brewing Company\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-16 20:51:36\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Came with a big group of friends and had an absolute blast. The staff is extremely welcoming and friendly! They helped us celebrate our friends birthday in style! Just absolutely wonderful service! Would highly recommend stopping in for a beer or two!\\\"},{\\\"review_date\\\":\\\"2021-12-17 02:46:28\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Beautiful views, great beer, and family friendly. Highly recommend the Honey Avocado Ale. Its light and refreshing to drink. Also Pet friendly, I have brought my dogs and at one time my cat (PS cat thinks he is a dog... so no one panic).\\\"},{\\\"review_date\\\":\\\"2021-11-21 03:11:32\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Your typical brewery vibe and to make it better, 100% dog friendly! Decent beers and one seltzer choice for the non-beer fans. Don't get confused by the entrance...it is along the train tracks down an alley walkway, so just walk on down!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Island Brewing Company is a popular local brewery and restaurant located in Carpinteria, California. With a rating of 4.5 stars, it offers a cozy atmosphere and excellent service. Customers have praised the friendly and welcoming staff, who go above and beyond to make visitors feel at home. The brewery also boasts beautiful views and a pet-friendly environment, making it a great spot for families and furry friends alike. While the selection of beers is not extensive, customers have enjoyed the Honey Avocado Ale, which is light and refreshing. Additionally, the brewery is easily accessible and dog-friendly, with ample parking available. Overall, Island Brewing Company is a must-visit destination for those looking for a relaxed, enjoyable experience with good company and great beverages.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "calibration_replay",
+  "source_cluster_id": "sha256:2d420f4c7bbb1f798836d3aa9eaed058737b06e877a5da9fa2e64fe2e4310918",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ]
+}

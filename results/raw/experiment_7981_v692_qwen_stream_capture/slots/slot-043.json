@@ -1,0 +1,114 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.368219237017911,
+  "exclusion_reason": null,
+  "family_id": "sha256:74ffbed63a42d3c3be25da404bc3ea36166270351d86ad3e75b98a1eb8c9f7a7",
+  "input_tokens": 817,
+  "invocation_finished_at": "2026-10-01T11:42:09.553672+00:00",
+  "invocation_started_at": "2026-10-01T11:42:08.185453+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 817,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 840
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:3617bdb61bee6c71a26f38222e0dc8a506a7de944ddc92223117e9ef49f47416",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790854929,
+    "id": "chatcmpl-ef93v9u2LEDepbdqVvT4sPaQ9pGe0j4w",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 535.189,
+      "predicted_n": 23,
+      "predicted_per_second": 42.97547221635722,
+      "predicted_per_token_ms": 23.269086956521736,
+      "prompt_ms": 696.839,
+      "prompt_n": 739,
+      "prompt_per_second": 1060.5032152333608,
+      "prompt_per_token_ms": 0.9429485791610285
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 817,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 840
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"A grand jury in Dallas County, Texas, has decided not to indict two officers in the fatal shooting of Jason Harrison, a schizophrenic man whose mother had called police for help getting him to the hospital. \\\"This particular case was reported out as a 'no bill,' from the grand jury,\\\" said Cristal Retana, a spokeswoman for the Dallas County District Attorney's Office. The grand jury's decision not to indict means Officers John Rogers and Andrew Hutchins won't face criminal prosecution in the case. But the officers are still facing a wrongful death lawsuit from Harrison's family. The incident occurred in June, and Harrison's family filed a lawsuit in November. The release of video from one of the officer's body cameras put the shooting back in the headlines last month. In it, Harrison's mother answers the door for police and nonchalantly walks outside. \\\"Oh, he's just off the chain,\\\" she says. \\\"You can hear him, talking about chopping up people.\\\" It was a fairly routine occurrence for her to call the police for assistance with her son. An officer asks who she's talking about, and she replies, \\\"My son, bipolar, schizo,\\\" as Jason Harrison appears in the doorway behind her. He is twiddling a screwdriver between his fingers. One of the two officers called to the scene tells Harrison to drop the tool, a command the officers repeat at least four times as Harrison's mom screams, \\\"Jay! Jay! Jay!\\\" Within five seconds of that first command, the 39-year-old schizophrenic man is shot five times -- including twice in the back as he crashes headlong into the home's garage door, just a few feet from his mother. Video from one officer's body camera fades to black as Harrison's mother wails, \\\"Oh, they killed my son! Oh, they killed my son!\\\" The officers continue to tell Harrison to drop the weapon. The Harrison family's lawsuit against Rogers and Hutchins says they should have used nonlethal means of defusing the situation instead of choosing to engage \\\"in unlawful vicious attacks\\\" when they and the department were aware of Harrison's condition. The suit also claims the officers violated Harrison's civil rights. The officers, however, said in affidavits that they were forced to shoot an armed man who they deemed dangerous after he failed to comply with repeated orders to drop a screwdriver. CNN's Matthew Stucker and Catherine E. Shoichet contributed to this report.\\n\", \"original_answer\": \"A grand jury in Dallas, Texas, has declined to indict two police officers involved in the fatal shooting of Jason Harrison, a schizophrenic man. The officers, John Rogers and Andrew Hutchins, will not face criminal charges despite a wrongful death lawsuit filed by Harrison's family. Body camera footage showed Harrison's mother answering the door for police before being shot five times, including twice in the back, as he approached the officers. The family's lawsuit alleges the officers should have used nonlethal means to defuse the situation, given their knowledge of Harrison's condition.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_admission",
+  "source_cluster_id": "sha256:74930b008ba446a76f1964f4145ebc5c6253d746bd59436dd8a5df598ac5ace4",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20
+  ]
+}

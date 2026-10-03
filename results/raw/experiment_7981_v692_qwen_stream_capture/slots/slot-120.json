@@ -1,0 +1,125 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.6407407040242106,
+  "exclusion_reason": null,
+  "family_id": "sha256:175cfdfcafd1cfd50a11811b69c792b2709ddad6da47a9247a7723e9d07e3355",
+  "input_tokens": 1164,
+  "invocation_finished_at": "2026-10-01T11:44:00.709507+00:00",
+  "invocation_started_at": "2026-10-01T11:43:59.068766+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 1164,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1185
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:94062312cb85ddf4f283a38666f6a63fc1c20e330d3b689a09400ebc38df45f5",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855040,
+    "id": "chatcmpl-WEtE3H5pVvdGsbeJBZsfsgWLlcCBKzWi",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 492.55,
+      "predicted_n": 21,
+      "predicted_per_second": 42.63526545528373,
+      "predicted_per_token_ms": 23.454761904761906,
+      "prompt_ms": 1034.894,
+      "prompt_n": 1086,
+      "prompt_per_second": 1049.382835343523,
+      "prompt_per_token_ms": 0.9529410681399632
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 1164,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1185
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"721 Linden Ave\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":3.0,\\\"categories\\\":\\\"Restaurants, Mexican\\\",\\\"city\\\":\\\"Carpinteria\\\",\\\"hours\\\":null,\\\"name\\\":\\\"Oaxaca Fresh\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-10-02 02:37:42\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"I consider myself a patient person but this place made me lose my mind. Not to mention the food was a total disappointment. Ants on the wall, rude waiter, and dirty to go boxes. OH! And I wasn't served my complimentary chips. I ordered a bean and cheese (wet burrito) and it was served warm borderline cold. The beans and enchilada sauce were probably canned... at least that's what it tasted like. The tortilla was chewy (and not in a good way) . If you're not from carp and want Mexican food I suggest walk past this place.\\\"},{\\\"review_date\\\":\\\"2021-09-14 04:41:08\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"The wife and I have frequented this restaurant a few times before, so we're familiar with the food, or so we thought. We ate at this restaurant on Friday, September 10th. \\\\n\\\\nMy wife will only eat chicken breast. Boneless and skinless. She doesn't eat thighs, drumsticks,  or wings. Nope. Ain't happening. \\\\n\\\\nShe ordered the hard shell tacos with chicken breast. I  ordered the mole negro, one of my favorite dishes. It was a dish my mom used to make for me.\\\\n\\\\nAs we started to eat I could see my wife's face. She didn't seem to be enjoying her meal.  I asked her what was wrong. The tacos were made with thigh meat. Ruined her meal, which ended up being rice & beans, chips and salsa.\\\\n\\\\nAs I  continued to eat my mole I noticed that the chicken didn't taste right. Mole has a strong flavor but I noticed that the chicken squares tasted a little \\\\\\\"tangy\\\\\\\". \\\\n\\\\nI ate about half of it but ended doing the same as the wife and only ate the rice and beans with chips and salsa. \\\\n\\\\nWe walked to the restaurant and not even halfway to our place my body started to let me know it wasn't happy. I ended up being sick until this afternoon  (buuuuurrrpp!!). Excuse me. *cue sour, gross aftertaste*\\\\n\\\\nThanks for ruining my vacation.\\\"},{\\\"review_date\\\":\\\"2021-08-29 20:50:43\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"Very slow service and lots of mistakes. Not much organization. They bring out the wrong food, two waiters keep asking us for drinks or for our order not knowing them at the other person just did. The food is so-so also.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Oaxaca Fresh is a restaurant located in Carpinteria, California. The business offers Mexican cuisine and is categorized as both a restaurant and a Mexican establishment. The restaurant does not offer reservations, but it does provide outdoor seating. Wi-Fi is not available, and takeout and group dining are both options. The restaurant has a rating of 3.0 stars on Google. The reviews provided indicate that the service at the restaurant is slow and there are often mistakes. Additionally, the food quality is not consistently high, with some customers citing issues with the taste, temperature, and presentation of their meals. Overall, while the restaurant may have some redeeming qualities, the negative reviews suggest that it may not be the best choice for diners looking for a satisfying Mexican meal.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_admission",
+  "source_cluster_id": "sha256:5a7492c0665b84989528fa1bcd945c5bab008971c7134f05ecdf3235aa9b2a10",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31
+  ]
+}

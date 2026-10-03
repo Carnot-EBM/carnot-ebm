@@ -1,0 +1,108 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.341334533994086,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:a2282887fd8e7276d45c617c46c258a7582d26d2bf184d7336d055bed315b2fa",
+  "input_tokens": 838,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 838,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 859
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:4369f3368049c57821b48872b2e1cc14e4ce25eedebc8173f1b144f694a4b89f",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886113,
+    "id": "chatcmpl-Eavw34O4Il9AxK0oNSIc1doicM7J4Quq",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 493.144,
+      "predicted_n": 21,
+      "predicted_per_second": 42.583910581899,
+      "predicted_per_token_ms": 23.483047619047618,
+      "prompt_ms": 732.164,
+      "prompt_n": 760,
+      "prompt_per_second": 1038.0188045301327,
+      "prompt_per_token_ms": 0.9633736842105263
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 838,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 859
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"1187 Coast Village Rd, Ste 7\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Food, French, Cafes, Desserts, Bakeries, Restaurants, Breakfast & Brunch\\\",\\\"city\\\":\\\"Montecito\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"7:0-16:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"7:0-16:0\\\",\\\"Sunday\\\":\\\"7:0-15:0\\\",\\\"Thursday\\\":\\\"7:0-16:0\\\",\\\"Tuesday\\\":\\\"7:0-16:0\\\",\\\"Wednesday\\\":\\\"7:0-16:0\\\"},\\\"name\\\":\\\"Renaud's Pattiserie\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-11 00:11:31\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"Do not arrive at what they say is closing time. I was rejected for service as I entered the building one minute before the posted closing time. Customer service is not what it used to be. So. If the say they close at 4PM they really mean 3:50. Food is however good.\\\"},{\\\"review_date\\\":\\\"2021-12-30 23:08:45\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"Very small portion sizes. Grilled cheese was bland and mostly just tasted like bread. I could have made a better grilled cheese with my eyes closed.\\\"},{\\\"review_date\\\":\\\"2021-12-29 22:19:17\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Excellent customer service. Open French style food. Not enough for vegan but great coffee. \\\\nGiven the weather, they allowed me to use the access card for the special.   Five stars for the team here and being dialed up to the present moment and situation.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Renaud's Patisserie is a French bakery and restaurant located at 1187 Coast Village Rd, Ste 7 in Montecito, CA. They offer a range of food items such as desserts and breakfast & brunch in a classy ambiance. The business operates from 7 am to 4 pm on weekdays and Saturdays, and closes an hour earlier on Sundays. They offer free WiFi and outdoor seating, with street and lot parking available. Despite a business rating of 3.5 stars, customer reviews are mixed. Some customers praise the food and coffee, commending the excellent customer service. However, others have noted issues with the customer service, particularly close to closing times, and some have criticized the portion sizes and taste of certain dishes.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "a3f69ae7eca47ef6f223dd826119b232dafa59c31cf1f2dc99d88366cad12222",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]
+}

@@ -1,0 +1,113 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.6567931769532152,
+  "exclusion_reason": null,
+  "family_id": "sha256:f79600a6de7391447e3dcae223272f5d72e27897459797190f9d4eb8649b8468",
+  "input_tokens": 1075,
+  "invocation_finished_at": "2026-10-01T11:42:58.316053+00:00",
+  "invocation_started_at": "2026-10-01T11:42:56.659259+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1075,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1099
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:5bfc31b5af7b480f6971330715acb855ed63916100e0b77dd1de4d13dffc4c18",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790854978,
+    "id": "chatcmpl-ZruAOkbXwNIUmhzylcsWreijkPRR5yv6",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 562.473,
+      "predicted_n": 24,
+      "predicted_per_second": 42.66871476497539,
+      "predicted_per_token_ms": 23.436374999999998,
+      "prompt_ms": 956.41,
+      "prompt_n": 997,
+      "prompt_per_second": 1042.439957758702,
+      "prompt_per_token_ms": 0.9592878635907723
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1075,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1099
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"107 Harbor Way\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":null,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":null,\\\"lot\\\":null,\\\"street\\\":null,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Restaurants, American (Traditional), Seafood, Breakfast & Brunch\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"8:0-14:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"8:0-19:0\\\",\\\"Sunday\\\":\\\"8:0-19:0\\\",\\\"Thursday\\\":\\\"8:0-14:0\\\",\\\"Tuesday\\\":\\\"8:0-16:45\\\",\\\"Wednesday\\\":\\\"8:0-19:0\\\"},\\\"name\\\":\\\"Breakwater Restaurant\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-12 17:43:24\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"This place was so great, we went two days in a row.  \\\\n\\\\nMy friend and I walked by after getting off the Tiny Tut water taxi from the Pier.  We had a mimosa and looked out at the great view.  We saw some wonderful-looking breakfast items being delivered around us (we had already eaten). My dad (89 years old) living in Northern California called while we were there and he remembers from 40+ years ago that they had great ice cream. He was right: we had the coffee one. Terrific!\\\\n\\\\nWe came back the next morning for breakfast and enjoyed a whole bottle of champagne (the cheapest way to do it).  Our food was excellent and huge servings.  The staff and manager are very friendly and very welcoming.\\\"},{\\\"review_date\\\":\\\"2021-12-23 17:02:22\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Hey Guys sometimes our best Experiences are Right under our Nose  The Breakwater Restaurant an Iconic Santa Barbara Eatery. My dear Friends Ed and Tanya Bailey Love the place, so when it was suggested I was Excited and that Excitement kept Building. Breakfast served until 3pm,Oh My!\\\\nBasted Eggs  can be a challenge for some Restaurants but not the Breakwater! Basted Eggs  and Chicken Fried  Steak prepared to Perfection. Ed and Tanya both Enjoyed their Food as Well. \\\\nAs we Celebrate the Christmas  Holiday season and Break Bread  with Family and Friends the Breakwater is a Great option or just about Anytime. Thanks To the Breakwater staff for the Great service and Oh Yes an Old Fashioned Ice Cream cone for dessert  \\\\nMerry Christmas    and Happy New Year to my Yelp Family  in  2022\\\"},{\\\"review_date\\\":\\\"2021-12-05 20:41:47\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"I was excited to take my dad for lunch on the harbor. The line wasn't  long, and we got a table in about 5min. The staff was friendly. The menu  is very outdated. A little pricey (paying for the view?). And the food  was just OK.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Breakwater Restaurant is located in Santa Barbara, CA and offers a variety of cuisines including American (traditional), seafood, and breakfast & brunch. The restaurant has outdoor seating and allows for takeout. It also accepts reservations and has a parking lot. Customers have praised the restaurant's great view, delicious food, and friendly staff. Some have also mentioned the restaurant's large portions and affordable prices. However, others have criticized the outdated menu and high prices. Overall, Breakwater Restaurant seems like a popular and enjoyable spot for locals and tourists alike.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_admission",
+  "source_cluster_id": "sha256:29042c877c89f15dedd1735dfcbcaf0d4129a87e091aaa749b958059049ae804",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ]
+}

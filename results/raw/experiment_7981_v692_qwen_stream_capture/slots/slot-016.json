@@ -1,0 +1,102 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.3786708940169774,
+  "exclusion_reason": null,
+  "family_id": "sha256:b5ef0843d9f860e7b8529a03b3b605dd86fb044aa1593e72ea3f47cef5c36b20",
+  "input_tokens": 792,
+  "invocation_finished_at": "2026-10-01T11:41:39.454659+00:00",
+  "invocation_started_at": "2026-10-01T11:41:38.075989+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 792,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 816
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:16ae54d7ec9d3b59d54ac5eabc981c9b1fef4e6d04bf776915d764b69210637b",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790854899,
+    "id": "chatcmpl-1kL6crDzLGgYnLtzNPI4PmOnkhDrhtR3",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 557.26,
+      "predicted_n": 24,
+      "predicted_per_second": 43.06786778164591,
+      "predicted_per_token_ms": 23.219166666666666,
+      "prompt_ms": 686.605,
+      "prompt_n": 714,
+      "prompt_per_second": 1039.8992142498234,
+      "prompt_per_token_ms": 0.9616316526610644
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 792,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 816
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"102 S Fairview Ave\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":null,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Restaurants, Mexican\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"8:0-20:30\\\",\\\"Monday\\\":\\\"8:0-20:30\\\",\\\"Saturday\\\":\\\"8:0-20:30\\\",\\\"Sunday\\\":\\\"8:0-15:30\\\",\\\"Thursday\\\":\\\"8:0-20:30\\\",\\\"Tuesday\\\":\\\"8:0-20:30\\\",\\\"Wednesday\\\":\\\"8:0-20:30\\\"},\\\"name\\\":\\\"El Sitio\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-10-24 21:46:12\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Bomb and cheap. El Sitio over Super Cucas over Freebirds. Quesaritto is so good and their green salsa is prime. El Sitio supremacy.\\\"},{\\\"review_date\\\":\\\"2021-07-30 23:15:46\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Better off going to Taco Bell. $15 for a quesadilla with no cheese, soggy tortilla and stale chips. Daylight robbery\\\"},{\\\"review_date\\\":\\\"2021-05-05 03:42:42\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"This is possibly the best value in the entire area for your Mexican food dollar. We love the #1, #12...and usually get rajas tacos to spread them around! Tonight we went with the shrimp- Brocheta y Quesadilla de Cameron and were blown away. VIVA EL SITIO!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"El Sitio is a local Mexican restaurant located in Goleta, California. With a rating of 3.5 stars, it offers reasonable prices and excellent quality. According to customer reviews, the restaurant provides delicious food, including the popular Quesarrito, which is highly recommended. However, some patrons have complained about the high cost of certain dishes, such as a $15 quesadilla with no cheese. Despite this, many customers appreciate the value offered by El Sitio, especially when compared to other nearby establishments. The atmosphere is casual, and there are mixed opinions regarding its ambiance, ranging from \\\"hipster\\\" to \\\"trendy.\\\" Overall, El Sitio seems to provide consistent quality at a fair price, making it a popular choice among locals and visitors alike.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_admission",
+  "source_cluster_id": "sha256:da1101b188a9223405170891d0a7338e74d6c917b1e13cc388e74b56f9da1952",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ]
+}

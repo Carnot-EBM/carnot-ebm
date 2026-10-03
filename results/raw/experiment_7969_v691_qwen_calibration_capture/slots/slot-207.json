@@ -1,0 +1,105 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.305515680985991,
+  "exclusion_reason": null,
+  "family_id": "sha256:ba27f69c9630237f8ccb1412a6101ee8cfdb32d58ba89b8b149288b965bf39a7",
+  "input_tokens": 682,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 682,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 705
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:91de688dd394384452eb9f9c6cb3259b381b12ef9d08e0e19f0aed456c41b92c",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832758,
+    "id": "chatcmpl-gEO7xOgNQkvdHFK1eL6jH4TzKqNE2Ogp",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.411,
+      "predicted_n": 23,
+      "predicted_per_second": 42.5601995518226,
+      "predicted_per_token_ms": 23.496130434782607,
+      "prompt_ms": 621.413,
+      "prompt_n": 604,
+      "prompt_per_second": 971.9783783087898,
+      "prompt_per_token_ms": 1.0288294701986755
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 682,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 705
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"The bored teenager who gunned down a college baseball player in Oklahoma simply because he and his two friends \\\"had nothing to do,\\\" is now a convicted murderer. Chancey Allen Luna was found guilty of first-degree murder Friday for his role in the August 2013 drive-by shooting of Christopher Lane, a 23-year-old college student in Duncan, about 80 miles south of Oklahoma City. Luna was 16 at the time of the shooting. Lane, an Australian attending East Central University, was jogging when he was shot in the back by a gun fired by Luna. A jury recommended Friday that Luna spend life in prison without the possibility of parole, according to court records. Because he was under 18 when the crime was committed, he is not eligible for the death penalty. He'll be formally sentenced in June. The vehicle's driver, Michael Jones, pleaded guilty in March to second-degree murder and was sentenced to life in prison. Jones, who was 17 at the time of the murder, will be eligible for parole starting in 2051, according to the Oklahoma Department of Corrections. Prosecutors dropped first-degree murder charges filed against the third suspect, then only 15, after he agreed to testify against Luna and Jones, according to CNN affiliate KSWO. He will now be tried as a juvenile with accessory to murder after the fact. Duncan police Chief Danny Ford told Australian radio station 3AW that when police arrested the teens, Jones offered a motive that made clear that Lane, a baseball player on scholarship, was chosen at random. \\\"We were bored and didn't have anything to do, so we decided to kill somebody.\\\" After the verdict, Luna appeared to be crying as deputies led him out of the courtroom in handcuffs, whimpering  \\\"I'm sorry\\\"  to a reporter. CNN's Greg Botelho contributed to this report.\\n\", \"original_answer\": \"Chancey Allen Luna, a teenager from Oklahoma, has been found guilty of first-degree murder for the drive-by shooting of college baseball player Christopher Lane in August 2013. Luna, who was 16 at the time of the shooting, shot Lane while he was jogging because he and his friends \\\"had nothing to do.\\\" Luna has been sentenced to life in prison without parole. The driver of the vehicle, Michael Jones, pleaded guilty to second-degree murder and will be eligible for parole in 2051. The third suspect will be tried as a juvenile for accessory to murder.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "tune",
+  "source_cluster_id": "sha256:b37eb98b666d260789015c947e51fa75c3919245511ccd1ba4baf7eae1686fcb",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ]
+}

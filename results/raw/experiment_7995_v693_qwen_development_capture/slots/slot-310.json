@@ -1,0 +1,114 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.611184264998883,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:6cb91f0e6d959c9aaa9b206072202369720716022339acc41c2fd8e991c95557",
+  "input_tokens": 1108,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 1108,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1129
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:a72c8edb244c6cc8349739d381c118a4936857e5858e9017486fd3a3d841fdb4",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886285,
+    "id": "chatcmpl-Halptwa0VrmL2FURWH59PKbmjWIjz7Zz",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 493.657,
+      "predicted_n": 21,
+      "predicted_per_second": 42.53965810269074,
+      "predicted_per_token_ms": 23.50747619047619,
+      "prompt_ms": 1001.722,
+      "prompt_n": 1030,
+      "prompt_per_second": 1028.2293889921555,
+      "prompt_per_token_ms": 0.9725456310679611
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 1108,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1129
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"666 Linden Ave\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Italian, Restaurants\\\",\\\"city\\\":\\\"Carpinteria\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"17:0-20:30\\\",\\\"Monday\\\":\\\"17:0-20:30\\\",\\\"Saturday\\\":\\\"17:0-20:30\\\",\\\"Sunday\\\":\\\"17:0-20:30\\\",\\\"Thursday\\\":\\\"17:0-20:30\\\",\\\"Wednesday\\\":\\\"17:0-20:30\\\"},\\\"name\\\":\\\"Giannfranco's Trattoria\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-12-28 02:54:58\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Great family owned business. Delicious food and service. Quant outdoor patio. \\\\nHighly recommend.\\\"},{\\\"review_date\\\":\\\"2021-10-15 04:26:57\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"Part of me feels bad writing this, because COVID has clearly been hard on them and I want them to succeed as a family restaurant in Carp. But, hopefully this inspires them to improve.\\\\n\\\\nThe food was excellent, but the service was strange. Our server started out sweet but soon became patronizing and made us uncomfortable. For example, we were told we can't have Parmesan cheese for the table because \\\\\\\"the cheese is from Italy\\\\\\\" (okay, what does that have to do with anything?). Then when she did stand over our plates spooning (not grating) the cheese into our dishes, she scolded us for wanting too much. Even if she was joking, we all felt weird. Also, when we made our reservation, THEY asked us if there was any special occasion. I said \\\\\\\"yes, actually, a 10 year anniversary\\\\\\\" - they even said happy anniversary to us when we arrived. But then...nothing happened. Which, whatever, but why do you ask if there is a special occasion if you're not going to do anything?? There were a few other weird things but not worth going into.\\\\n\\\\nThe server was the part owner, and maybe she was just out of her element and filling in for servers. But her table-side manner could be better. \\\\n\\\\nOn a positive note, the food was excellent and the other staff members were very friendly.\\\"},{\\\"review_date\\\":\\\"2021-10-10 03:56:05\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Back again....flavor was great and the owner told us on way in \\\\\\\"hey, kitchen is already backed up tonight so service will be slow, if you're looking to get in and out unfortunately try another night.\\\\\\\" Thank you for telling me! That set clear expectations and I wasn't anxious or annoyed waiting. \\\\n\\\\nFood was great and I love the atmosphere.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Giannfranco's Trattoria is a family-owned Italian restaurant located at 666 Linden Ave in Carpinteria, CA. Open from 5pm-8.30pm every day except Tuesday, the restaurant offers both takeout and dine-in options, and is suitable for group outings. The restaurant does not provide Wi-Fi and parking is mainly available on the street. Despite not having a trendy or casual atmosphere, the restaurant maintains a classy ambience. Customer reviews indicate a 4-star rating overall, with many praising the excellent cuisine. Some customers have highlighted the restaurant's outdoor seating as a positive aspect. However, there have been mixed reviews about the service, with some customers appreciating the honesty about potential delays, while others have found the service uncomfortable and strange. Despite these criticisms, many customers highly recommend Giannfranco's Trattoria.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "510ffa1197811c5423d62c2e1a12f7116c2a18c8fcf1648ca69254019c716b8b",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17
+  ]
+}

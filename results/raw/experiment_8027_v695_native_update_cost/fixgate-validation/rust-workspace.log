@@ -1,0 +1,513 @@
+   Compiling carnot-core v0.1.0 (/home/ianblenke/github.com/ianblenke/carnot/crates/carnot-core)
+   Compiling carnot-samplers v0.1.0 (/home/ianblenke/github.com/ianblenke/carnot/crates/carnot-samplers)
+   Compiling carnot-ising v0.1.0 (/home/ianblenke/github.com/ianblenke/carnot/crates/carnot-ising)
+   Compiling carnot-gpu v0.1.0 (/home/ianblenke/github.com/ianblenke/carnot/crates/carnot-gpu)
+   Compiling carnot-webgpu-gateway v0.1.0 (/home/ianblenke/github.com/ianblenke/carnot/crates/carnot-webgpu-gateway)
+   Compiling carnot-boltzmann v0.1.0 (/home/ianblenke/github.com/ianblenke/carnot/crates/carnot-boltzmann)
+   Compiling carnot-gibbs v0.1.0 (/home/ianblenke/github.com/ianblenke/carnot/crates/carnot-gibbs)
+   Compiling carnot-kan v0.1.0 (/home/ianblenke/github.com/ianblenke/carnot/crates/carnot-kan)
+warning: unused variable: `repaired`
+   --> crates/carnot-core/src/verify/sudoku.rs:305:14
+    |
+305 |         let (repaired, history) = repair(&energy_fn, &x, 0.01, 500);
+    |              ^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_repaired`
+    |
+    = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused variable: `grad_all`
+   --> crates/carnot-core/src/verify/mod.rs:859:13
+    |
+859 |         let grad_all = composed.grad_energy(&x.view());
+    |             ^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_grad_all`
+
+   Compiling carnot-constraints v0.1.0 (/home/ianblenke/github.com/ianblenke/carnot/crates/carnot-constraints)
+   Compiling carnot-training v0.1.0 (/home/ianblenke/github.com/ianblenke/carnot/crates/carnot-training)
+warning: unused variable: `norm`
+   --> crates/carnot-training/src/optimizer.rs:150:13
+    |
+150 |         let norm = opt
+    |             ^^^^ help: if this is intentional, prefix it with an underscore: `_norm`
+    |
+    = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: `carnot-training` (lib test) generated 1 warning (run `cargo fix --lib -p carnot-training --tests` to apply 1 suggestion)
+warning: `carnot-core` (lib test) generated 2 warnings (run `cargo fix --lib -p carnot-core --tests` to apply 2 suggestions)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.05s
+     Running unittests src/lib.rs (target/debug/deps/carnot_boltzmann-a4702b76c6a22072)
+
+running 7 tests
+test tests::test_boltzmann_default_config ... ok
+test tests::test_boltzmann_config_validation ... ok
+test tests::test_boltzmann_interface_conformance ... ok
+test tests::test_boltzmann_energy_finite ... ok
+test tests::test_boltzmann_creation ... ok
+test tests::test_boltzmann_gradient_no_residual ... ok
+test tests::test_boltzmann_analytical_gradient_vs_finite_difference ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/soft_bellman.rs (target/debug/deps/soft_bellman-87d4044322e28c93)
+
+running 9 tests
+test soft_bellman_empty_sequence_has_zero_energy ... ok
+test soft_bellman_exhaustive_sequence_energies_normalize ... ok
+test soft_bellman_path_extracts_chosen_logprobs_from_rows ... ok
+test soft_bellman_path_rejects_bad_shapes_and_token_ids ... ok
+test soft_bellman_path_rejects_nonfinite_and_positive_row_values ... ok
+test soft_bellman_path_rejects_unnormalized_logprob_rows ... ok
+test soft_bellman_probability_gauge_maps_logprobs_to_energy ... ok
+test soft_bellman_rejects_nonfinite_logprobs ... ok
+test soft_bellman_rejects_positive_logprobs ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/carnot_constraints-7afa8eebbcb092c4)
+
+running 57 tests
+test constraint::tests::test_bound_gradient_above ... ok
+test constraint::tests::test_bound_gradient_below ... ok
+test constraint::tests::test_bound_gradient_finite_difference ... ok
+test constraint::tests::test_bound_gradient_inside ... ok
+test constraint::tests::test_bound_satisfied_at_boundary ... ok
+test constraint::tests::test_bound_violated_above ... ok
+test constraint::tests::test_bound_satisfied_inside ... ok
+test constraint::tests::test_bound_invalid_range - should panic ... ok
+test constraint::tests::test_bound_violated_below ... ok
+test constraint::tests::test_equality_gradient ... ok
+test constraint::tests::test_equality_gradient_finite_difference ... ok
+test constraint::tests::test_equality_satisfied ... ok
+test constraint::tests::test_equality_satisfied_within_tolerance ... ok
+test constraint::tests::test_equality_violated ... ok
+test constraint::tests::test_ising_constraint_satisfied ... ok
+test constraint::tests::test_ising_constraint_gradient_when_violated ... ok
+test constraint::tests::test_ising_constraint_violated ... ok
+test constraint::tests::test_ising_constraint_zero_grad_when_satisfied ... ok
+test extract::tests::test_empty_text ... ok
+test extract::tests::test_multiple_claims ... ok
+test extract::tests::test_subtraction ... ok
+test extract::tests::test_no_arithmetic ... ok
+test extract::tests::test_domain_filter_match ... ok
+test extract::tests::test_negative_operand ... ok
+test extract::tests::test_correct_addition ... ok
+test extract::tests::test_domain_filter_skip ... ok
+test extract::tests::test_wrong_addition ... ok
+test pipeline::tests::test_epoch_days_to_ymd ... ok
+test extract::tests::test_wrong_subtraction ... ok
+test extract::tests::test_logic_empty_text ... ok
+test verify::tests::test_certificate_from_result ... ok
+test verify::tests::test_certificate_json_roundtrip ... ok
+test verify::tests::test_certificate_verified ... ok
+test verify::tests::test_certificate_violated ... ok
+test extract::tests::test_logic_domain_filter ... ok
+test extract::tests::test_multiple_implications ... ok
+test extract::tests::test_if_comma ... ok
+test extract::tests::test_auto_supported_domains ... ok
+test extract::tests::test_auto_domain_filter ... ok
+test extract::tests::test_if_then ... ok
+test extract::tests::test_auto_empty_text ... ok
+test pipeline::tests::test_verify_domain_filter ... ok
+test extract::tests::test_exclusion ... ok
+test extract::tests::test_negation ... ok
+test extract::tests::test_no_logic ... ok
+test extract::tests::test_disjunction ... ok
+test pipeline::tests::test_certificate_json_roundtrip ... ok
+test extract::tests::test_universal ... ok
+test extract::tests::test_auto_deduplication ... ok
+test pipeline::tests::test_verify_correct_arithmetic ... ok
+test extract::tests::test_auto_combines_arithmetic_and_logic ... ok
+test pipeline::tests::test_verify_with_logic ... ok
+test pipeline::tests::test_verify_no_constraints ... ok
+test pipeline::tests::test_extract_constraints_convenience ... ok
+test pipeline::tests::test_verify_wrong_arithmetic ... ok
+test pipeline::tests::test_verify_multiple_constraints ... ok
+test pipeline::tests::test_certificate_fields ... ok
+
+test result: ok. 57 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests/experiment_7326_constraint_kernel.rs (target/debug/deps/experiment_7326_constraint_kernel-d0f7d9c26f6dbba4)
+
+running 3 tests
+test zero_acquired_energy_never_claims_complete_oracle_authority ... ok
+test boundary_equality_and_overlapping_windows_have_exact_energy ... ok
+test empty_invalid_slot_version_and_overflow_fail_closed ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/integration.rs (target/debug/deps/integration-f9f79d673ff287e3)
+
+running 8 tests
+test test_composed_all_satisfied ... ok
+test test_composed_with_violations ... ok
+test test_deterministic_results ... ok
+test test_decomposition_consistency ... ok
+test test_certificate_full_workflow ... ok
+test test_ising_in_composed_energy ... ok
+test test_repair_with_equality_constraints ... ok
+test test_repair_with_bound_constraints ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/test_pipeline.rs (target/debug/deps/test_pipeline-476c92439a1bf4e5)
+
+running 27 tests
+test cross_lang_06_multiple_arithmetic ... ok
+test cross_lang_03_subtraction ... ok
+test cross_lang_02_wrong_addition ... ok
+test cross_lang_07_no_arithmetic ... ok
+test cross_lang_09_domain_filter_skip ... ok
+test cross_lang_05_negative_operand ... ok
+test cross_lang_01_correct_addition ... ok
+test cross_lang_10_domain_filter_match ... ok
+test cross_lang_04_wrong_subtraction ... ok
+test cross_lang_08_empty_text_arithmetic ... ok
+test cross_lang_20_logic_domain_filter ... ok
+test pipeline_custom_extractor ... ok
+test pipeline_auto_extractor_union ... ok
+test cross_lang_13_exclusion ... ok
+test cross_lang_12_if_comma ... ok
+test cross_lang_18_empty_text_logic ... ok
+test cross_lang_11_if_then ... ok
+test cross_lang_19_multiple_implications ... ok
+test cross_lang_15_negation ... ok
+test cross_lang_14_disjunction ... ok
+test cross_lang_17_no_logic ... ok
+test cross_lang_16_universal ... ok
+test pipeline_correct_arithmetic_verified ... ok
+test pipeline_certificate_json_roundtrip ... ok
+test pipeline_no_constraints_vacuous ... ok
+test pipeline_wrong_arithmetic_violated ... ok
+test pipeline_mixed_constraints ... ok
+
+test result: ok. 27 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running unittests src/lib.rs (target/debug/deps/carnot_core-368554c26bc81ab2)
+
+running 58 tests
+test adaptive_state::adaptive_state_tests::certified_strategy_schema_record_is_fixed_width_and_deterministic ... ok
+test benchmarks::tests::test_ackley_away_from_min ... ok
+test benchmarks::tests::test_ackley_at_minimum ... ok
+test benchmarks::tests::test_double_well_at_minimum ... ok
+test benchmarks::tests::test_all_benchmarks_implement_energy_function ... ok
+test benchmarks::tests::test_double_well_gradient ... ok
+test benchmarks::tests::test_double_well_away_from_min ... ok
+test benchmarks::tests::test_double_well_symmetry ... ok
+test benchmarks::tests::test_rastrigin_at_minimum ... ok
+test benchmarks::tests::test_gaussian_mixture_two_modes ... ok
+test benchmarks::tests::test_rastrigin_gradient_at_minimum ... ok
+test benchmarks::tests::test_rastrigin_local_minima ... ok
+test benchmarks::tests::test_rosenbrock_at_minimum ... ok
+test benchmarks::tests::test_rosenbrock_away_from_min ... ok
+test benchmarks::tests::test_rosenbrock_gradient_at_minimum ... ok
+test init::tests::test_he_normal_shape ... ok
+test init::tests::test_zeros ... ok
+test init::tests::test_xavier_uniform_shape ... ok
+test math::gec::tests::test_gec_projection_conflict_epsilon ... ok
+test math::gec::tests::test_gec_projection_conflict_strict ... ok
+test adaptive_state::adaptive_state_tests::adaptive_state_invalid_inputs_fail_closed ... ok
+test math::gec::tests::test_gec_projection_no_conflict ... ok
+test portable_recalibration::tests::identity_prediction_preserves_typed_decision ... ok
+test numerical_update_8027::tests::test_valid_state_and_negative_probability ... ok
+test portable_recalibration::tests::jsonl_invalid_input_has_no_acknowledgment ... ok
+test numerical_update_8027::tests::test_basis_boundaries_and_nonfinite ... ok
+test tests::test_precision_default ... ok
+test tests::test_quadratic_energy_single ... ok
+test tests::test_quadratic_energy_batch ... ok
+test tests::test_quadratic_gradient ... ok
+test numerical_update_8027::tests::test_lazy_update_restart ... ok
+test serialize::tests::test_save_load_metadata_roundtrip ... ok
+test verify::tests::test_composed_as_energy_function ... ok
+test serialize::tests::test_save_load_parameters_roundtrip ... ok
+test verify::tests::test_composed_energy_sum ... ok
+test verify::tests::test_constraint_term_violated ... ok
+test verify::tests::test_composition_add_constraints ... ok
+test verify::tests::test_constraint_term_satisfied ... ok
+test verify::tests::test_decomposition_sums_to_total ... ok
+test verify::sudoku::tests::test_clue_constraints_high_weight ... ok
+test verify::tests::test_deterministic_reproducibility ... ok
+test init::tests::test_xavier_uniform_bounds ... ok
+test verify::sudoku::tests::test_invalid_solution_has_violations ... ok
+test verify::sudoku::tests::test_per_constraint_decomposition ... ok
+test verify::tests::test_grad_violated_only ... ok
+test record_decision::tests::scenario_report_7710_restart_and_version ... ok
+test verify::tests::test_verification_all_satisfied ... ok
+test verify::tests::test_verification_with_violations ... ok
+test verify::sudoku::tests::test_valid_solution_energy_zero ... ok
+test verify::tests::test_repair_preserves_satisfied ... ok
+test verify::tests::test_repair_fixes_violations ... ok
+test adaptive_state::adaptive_state_tests::adaptive_state_abi_v2_ordering_recovery_and_lifetime_are_bounded ... ok
+test adaptive_state::adaptive_state_tests::adaptive_state_trace_round_trips_and_evicts_deterministically ... ok
+test record_decision::tests::scenario_report_7710_parity_128_cases_and_errors ... ok
+test benchmarks::runner::tests::test_run_benchmark_converges ... ok
+test verify::sudoku::tests::test_repair_improves_invalid_solution ... ok
+test benchmarks::runner::tests::test_run_standard_benchmarks ... ok
+test benchmarks::runner::tests::test_baseline_save_load_roundtrip ... ok
+
+test result: ok. 58 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.18s
+
+     Running unittests src/bin/portable-recalibration-service.rs (target/debug/deps/portable_recalibration_service-2bcf34c70cd013ba)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/carnot_gibbs-f13b841bf4c83849)
+
+running 7 tests
+test tests::test_gibbs_config_validation ... ok
+test tests::test_gibbs_default_config ... ok
+test tests::test_gibbs_creation ... ok
+test tests::test_gibbs_interface_conformance ... ok
+test tests::test_gibbs_energy_finite ... ok
+test tests::test_gibbs_energy_batch ... ok
+test tests::test_gibbs_analytical_gradient_vs_finite_difference ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/carnot_gpu-0abb3072bc1dc38d)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/test_ising_gpu.rs (target/debug/deps/test_ising_gpu-7d0573e1db5a243f)
+
+running 3 tests
+test test_gpu_context_creation ... ok
+test test_ising_gpu_matches_cpu ... ok
+test test_ising_energy_batch ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.32s
+
+     Running tests/test_kv260_ebrm.rs (target/debug/deps/test_kv260_ebrm-4396dfad58a61808)
+
+running 7 tests
+test test_req_verify_1657_invalid_inputs_fail_closed_before_execution ... ok
+test test_req_verify_1657_ordering_and_executor_error_paths ... ok
+test test_scenario_verify_1657_executor_trait_receives_encoded_problem ... ok
+test test_req_verify_1657_scores_preserve_ebrm_components ... ok
+test test_req_verify_1657_artifact_validation_catches_schema_drift ... ok
+test test_scenario_verify_1657_artifact_schema_and_writer ... ok
+test test_scenario_verify_1657_artifact_edge_paths_and_hardware_status ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/carnot_ising-21c6eee44deba3ac)
+
+running 10 tests
+test tests::test_ising_config_validation_zero_dim ... ok
+test tests::test_ising_config_validation_zero_hidden ... ok
+test tests::test_ising_default_config ... ok
+test tests::test_ising_coupling_symmetric ... ok
+test tests::test_ising_energy_batch ... ok
+test tests::test_ising_creation ... ok
+test tests::test_ising_energy_finite ... ok
+test tests::test_ising_gradient_finite_difference ... ok
+test tests::test_ising_interface_conformance ... ok
+test tests::test_ising_memory_footprint ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+     Running unittests src/lib.rs (target/debug/deps/carnot_kan-1d58b6736331fdf9)
+
+running 8 tests
+test tests::test_bspline_creation ... ok
+test tests::test_kan_config_validation ... ok
+test tests::test_bspline_evaluate ... ok
+test tests::test_kan_config_default ... ok
+test tests::test_kan_n_params ... ok
+test tests::test_kan_gradient_shape ... ok
+test tests::test_kan_energy_finite ... ok
+test tests::test_kan_energy_function_creation ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/carnot_samplers-e63a8e3bb220a4b6)
+
+running 9 tests
+test ebft::tests::test_ebft_loss_contrastive ... ok
+test ebft::tests::test_ebft_loss_features ... ok
+test tests::test_sampler_interface_genericity ... ok
+test tests::test_langevin_chain_length ... ok
+test tests::test_hmc_produces_samples ... ok
+test tests::test_langevin_produces_samples ... ok
+test casal::tests::test_casal_sample ... ok
+test tests::test_hmc_acceptance_rate ... ok
+test tests::test_langevin_statistics ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.43s
+
+     Running unittests src/bin/fixed-cardinality-bridge.rs (target/debug/deps/fixed_cardinality_bridge-7a6fda67ebbf9c4f)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/e2e_benchmarks.rs (target/debug/deps/e2e_benchmarks-0bed2d854ec31a97)
+
+running 5 tests
+test test_benchmark_gradient_descent_convergence ... ok
+test test_langevin_on_rosenbrock ... ok
+test test_hmc_on_double_well ... ok
+test test_langevin_on_gaussian_mixture ... ok
+test test_langevin_on_double_well ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.13s
+
+     Running tests/fixed_cardinality.rs (target/debug/deps/fixed_cardinality-c9bce60aba32d714)
+
+running 5 tests
+test replay_uses_caller_tape_and_preserves_cardinality ... ok
+test malformed_models_states_and_draws_fail_closed ... ok
+test energy_budget_charges_each_full_energy_call ... ok
+test singleton_slices_are_identity_kernels ... ok
+test seeded_stream_is_reproducible_and_keeps_the_slice ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/mode_jump.rs (target/debug/deps/mode_jump-feec4fb84d1af8f5)
+
+running 8 tests
+test req_sample_6194_replays_exact_exp6166_short_chain ... ok
+test req_sample_6194_uses_exact_mh_acceptance_equation ... ok
+test req_sample_6208_runtime_adapter_uses_fixed_kernel_contract ... ok
+test scenario_sample_6194_serialization_and_errors_fail_closed ... ok
+test req_sampler_6280_metadata_controls_fail_closed ... ok
+test req_sampler_6280_variable_cardinality_metadata_roundtrips_and_runs ... ok
+test req_sample_6208_runtime_controls_reject_malformed_fixed_config ... ok
+test scenario_sample_6194_distribution_quality_matches_frozen_target ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests/one_axis_tempering.rs (target/debug/deps/one_axis_tempering-ac12b02fa7a4c3a6)
+
+running 4 tests
+test req_sample_5714_malformed_inputs_fail_closed ... ok
+test req_sample_5714_energy_proposal_and_swap_are_deterministic ... ok
+test scenario_sample_5714_checkpoint_restart_reproduces_schedule ... ok
+test req_sample_5764_compact_sweeps_reuse_buffers_and_match_step_replay ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/spectral_k_block.rs (target/debug/deps/spectral_k_block-36e0a2044e1e0909)
+
+running 4 tests
+test req_rustpy_6612_malformed_inputs_fail_closed ... ok
+test req_sampler_6612_validation_and_counter_guards_are_covered ... ok
+test req_sampler_6612_exact_block_transition_replays_seed ... ok
+test scenario_rustpy_6612_single_spin_and_block_kernels_preserve_contract ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/carnot_training-a2d0fb46ec4485e6)
+
+running 17 tests
+test nce::tests::test_nce_config_default ... ok
+test nce::tests::test_nce_loss_is_finite ... ok
+test nce::tests::test_nce_loss_non_negative ... ok
+test cd::tests::test_cd_loss_computes ... ok
+test nce::tests::test_nce_softplus_stability ... ok
+test nce::tests::test_nce_good_model_lower_loss_than_bad ... ok
+test nce::tests::test_nce_perfect_separation_low_loss ... ok
+test nce::tests::test_nce_noise_gets_high_energy ... ok
+test score_matching::tests::test_dsm_default_config ... ok
+test optimizer::tests::test_adam_gradient_clipping ... ok
+test score_matching::tests::test_dsm_loss_better_model_has_lower_loss ... ok
+test optimizer::tests::test_adam_optimizer_step ... ok
+test score_matching::tests::test_dsm_loss_with_noise_deterministic ... ok
+test score_matching::tests::test_dsm_loss_perfect_score_quadratic ... ok
+test score_matching::tests::test_dsm_loss_finite ... ok
+test cd::tests::test_cd_negative_samples_differ ... ok
+test optimizer::tests::test_adam_multiple_steps ... ok
+
+test result: ok. 17 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/carnot_webgpu_gateway-00471e0739f831d9)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/bin/gateway.rs (target/debug/deps/gateway-181527f53b0a4833)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/test_kv260_bindings.rs (target/debug/deps/test_kv260_bindings-0ca7e08f4f27d130)
+
+running 3 tests
+test test_kv260_binding_rejects_invalid_problem_shapes ... ok
+test test_kv260_binding_uploads_axi_register_sequence ... ok
+test test_exp1704_artifact_schema_fields_validate ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests carnot_boltzmann
+
+running 1 test
+test crates/carnot-boltzmann/src/lib.rs - BoltzmannConfig (line 326) ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.09s
+
+   Doc-tests carnot_constraints
+
+running 1 test
+test crates/carnot-constraints/src/pipeline.rs - pipeline (line 21) ... ignored
+
+test result: ok. 0 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests carnot_core
+
+running 2 tests
+test crates/carnot-core/src/benchmarks/runner.rs - benchmarks::runner::run_benchmark (line 187) ... ignored
+test crates/carnot-core/src/lib.rs - EnergyFunction (line 124) ... ignored
+
+test result: ok. 0 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests carnot_gibbs
+
+running 1 test
+test crates/carnot-gibbs/src/lib.rs - GibbsConfig (line 115) ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.09s
+
+   Doc-tests carnot_gpu
+
+running 1 test
+test crates/carnot-gpu/src/lib.rs - (line 13) - compile ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+   Doc-tests carnot_ising
+
+running 2 tests
+test crates/carnot-ising/src/lib.rs - IsingConfig (line 91) ... ok
+test crates/carnot-ising/src/lib.rs - IsingModel::new (line 242) ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.09s
+
+   Doc-tests carnot_kan
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests carnot_samplers
+
+running 1 test
+test crates/carnot-samplers/src/lib.rs - Sampler (line 74) ... ignored
+
+test result: ok. 0 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests carnot_training
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests carnot_webgpu_gateway
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

@@ -1,0 +1,103 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.6235690980101936,
+  "exclusion_reason": null,
+  "family_id": "sha256:675e6f07aa6592fc613d9634d25b3cb0fe2e3318c63d128305dfd4c765f108a8",
+  "input_tokens": 1022,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1022,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1046
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:b50c4136edcdd27bf274fc107f93dac51b655f1d636ed1a18d84e476e73b6596",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832853,
+    "id": "chatcmpl-JjOGi5IeU5yELdqFAzs72tgAqMISMoGz",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 572.698,
+      "predicted_n": 24,
+      "predicted_per_second": 41.90690381317903,
+      "predicted_per_token_ms": 23.862416666666665,
+      "prompt_ms": 932.847,
+      "prompt_n": 944,
+      "prompt_per_second": 1011.9558727208214,
+      "prompt_per_token_ms": 0.9881853813559321
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1022,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1046
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"494 Ucen Rd\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":null},\\\"business_stars\\\":3.0,\\\"categories\\\":\\\"American (New), Mexican, Restaurants\\\",\\\"city\\\":\\\"Isla Vista\\\",\\\"hours\\\":null,\\\"name\\\":\\\"Wahoo's Fish Tacos\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2019-07-24 21:04:52\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Overpriced slop, tiny portions of reheated oil saturated scraps, cheap cuts of meat with limp cabbage. Worst food I've ever had on campus and that's saying something .....\\\"},{\\\"review_date\\\":\\\"2019-05-19 18:53:23\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Wahoo's is a vibe. The food is bomb and it is a pretty chill spot to hang at. The service here is great! The only downside is typically the busyness of the establishment. Definitely worth eating here.\\\"},{\\\"review_date\\\":\\\"2019-03-08 23:23:59\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Bottom Line: Against all odds, an on-campus Wahoos is pretty good\\\\n\\\\nAny time you go to get food on a campus, in an airport or a place like Fresno you dont quite know what you're getting.  You're trapped - they've got you by the tender bits.  You just have to ante up and hope for the best.... and often times the best is crap (figurative crap, not actual crap).\\\\n\\\\nDon't ask me about the time I ordered a $16 Ceaser salad in the O'Hare airport....I will go on and on for hours about how crap it was, and then you'll leave and I will be here just talking to myself.\\\\n\\\\n\\\\nAnyways, when I was living in Los Angeles, every Wednesday my corworkers and I religiously went to the Wahoo's on Wilshire.  This carried on for years and we liked it (most of the time).\\\\nThat location did suffer from being inconsistent but ultimately we liked the spot.\\\\n\\\\nThe other day, their Banzai burrito popped into my head and I had to have one.  Now living back in Santa Barbara, I enlisted a friend of mine who is UCSB alum to help me navigate the incredible bureaucracy that is even finding a place to park and paying for it, then walking the four miles to the Wahoo's location.\\\\n\\\\nI of course had the glorious banzai burrito: the asada was tender, the green sauce was green....it was nicely hot inside and out and delicious.  I believe that they do use microwaves which isnt ideal but this burrito was as good as I remember any of them being for the many years that I got them in LA!\\\\n\\\\nMy buddy had the chicken sandwich and he really like it as well.\\\\n\\\\nI will be back!!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Wahoo's Fish Tacos is a restaurant located in Isla Vista, California. They offer American, Mexican, and seafood cuisine. Customers can enjoy outdoor seating and takeout options. The restaurant does not offer parking services or Wi-Fi. According to reviews, the restaurant has a mix of positive and negative feedback. While some customers praise the quality of the food and the atmosphere, others criticize the price and portion sizes. Overall, the restaurant appears to be a casual dining option with a focus on seafood dishes.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:d99f9b7ee56c9e1c9b20abade4eedb8b0383ab743f57e4ac3a2ddc2b9bb058f1",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]
+}

@@ -1,0 +1,115 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.316953030996956,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:282e564c142ba85e1f581ef5ea367354c57ed7bd0b02fa208f0c93bca299a970",
+  "input_tokens": 640,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 16,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 640,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 665
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:b030151ffea6c50b3d4f4f66382dc71177174a65aaddc5c27696ff7ca8fde732",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 16\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885838,
+    "id": "chatcmpl-A9tVerUUvre1FCECs8Cm9if25cR5k1CX",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 581.154,
+      "predicted_n": 25,
+      "predicted_per_second": 43.01785757303572,
+      "predicted_per_token_ms": 23.24616,
+      "prompt_ms": 574.414,
+      "prompt_n": 562,
+      "prompt_per_second": 978.3884097532441,
+      "prompt_per_token_ms": 1.0220889679715301
+    },
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 640,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 665
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Call it a little piece of heaven for a family torn apart by tragedy. Back in July, Sierra Sharry and Lane Smith were just about to become parents.  Sharry was eight months pregnant. But then Smith fell and hit his head.  He was taken to the OU Medical Center in Oklahoma City.  Smith never recovered. \\\"July 13th 2014 was the absolute worst day of my life,\\\" Sharry posted on Facebook.  \\\"I lost my best friend. The father of my unborn child.\\\" Their son Taos arrived a few weeks later. When it was time for his 6-month pictures, Sharry had a special request. Maybe the photographer could make their family complete, just for one picture. \\\"They asked me if I would be willing to 'play around' with capturing their first family photo by editing Taos' daddy in one of their pictures,\\\" Kayli Rene' Photography posted on Facebook. \\\"I just got to thinking, we don't have a picture with Lane in it,\\\" the new mom told CNN affilaite KOCO. The photographer wasn't sure it would work, but they found just the right picture of Smith -- one that has him looking over his family's shoulder. \\\"Lane's not physically here with us, of course, but that picture represents to us that he is always watching over us and he will always be there for us no matter what,\\\" Sharry said. The family photo has become a social media sensation after appearing on the photographer's Facebook page this week. It has some 193,000 likes and more than 24,000 shares. \\\"I can't believe she actually did this,\\\" Sharry said.  \\\"It's like amazing and apparently everyone else thinks it is too.\\\"\\n\", \"original_answer\": \"After Sierra Sharry's partner, Lane Smith, died in an accident just before the birth of their son, the grieving mother asked a photographer to photoshop an image of Smith into their first family portrait. The photograph, which represents Smith watching over the family, has become a social media sensation with over 193,000 likes and 24,000 shares.&nbsp;\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "calibration",
+  "source_cluster_id": "59d74513d8dd4e6cf60e3770d57d3d93f96953bd39e18ac563857e34105f4a0f",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18
+  ]
+}

@@ -1,0 +1,117 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.7850645169964992,
+  "exclusion_reason": null,
+  "family_id": "sha256:b18527fc6f776dd1fef992188c1d621ccd4b894bd06901d2f064ef596ea9802b",
+  "input_tokens": 1255,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1255,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1278
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:b13c632a2053c89637d96415b6b6ac0bb3b46fddcf454547720d094a2c9e2c1c",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832838,
+    "id": "chatcmpl-wl4GnGF1r7V3KptviR6ZkWZ6Pi7N2vv0",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.975,
+      "predicted_n": 23,
+      "predicted_per_second": 42.437381798053416,
+      "predicted_per_token_ms": 23.56413043478261,
+      "prompt_ms": 1109.374,
+      "prompt_n": 1177,
+      "prompt_per_second": 1060.9587028360138,
+      "prompt_per_token_ms": 0.9425437553101105
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1255,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1278
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"1919 Cliff Dr\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":null},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Event Planning & Services, Party & Event Planning, Restaurants, Caterers, American (Traditional), Mexican\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-22:0\\\",\\\"Monday\\\":\\\"11:0-21:30\\\",\\\"Saturday\\\":\\\"11:0-22:0\\\",\\\"Sunday\\\":\\\"11:0-21:30\\\",\\\"Thursday\\\":\\\"11:0-21:30\\\",\\\"Tuesday\\\":\\\"11:0-21:30\\\",\\\"Wednesday\\\":\\\"11:0-21:30\\\"},\\\"name\\\":\\\"Cliff's & Co Restaurant\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2012-06-12 18:32:01\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"is this place really closed? I feel like I was there within the last year or so... well when it was opened, it was an awesome place to order food from. Why you may ask? Location and hours and variety were very important to me and this venue had it all. I could go to the beach with friends, we get hungry and order a delivery. Throw on some beer to our order and bam, lunch and beer would be delivered to us at the beach in no time. Great staff, and they had such a wide variety of food, ranging from sandwiches and pasta, to soup, salad and burritos. Their tri-tip was unbelievable.\\\"},{\\\"review_date\\\":\\\"2011-01-19 06:05:59\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"We saw it on the way back from picking up our daughter from college.  We were really hungry so we stopped here.  It was a very nice restaurant they have inside.  The place was classy, a live pianist playing while we sipped our wine, and enjoyed our delicious meal.  You can't beat the view of the ocean either.  Beautiful.\\\"},{\\\"review_date\\\":\\\"2010-09-11 21:49:41\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"Wanting to give Cliff & Co another try to wow me. I would settle for decent BBQ and service. \\\\n\\\\nSaturday afternoon and we're the only patrons in this shack. Having the Tri-tip last visit, and not  being impressed, I wanted to move on. The Two Meat Platter ($13.95) with chicken and beef ribs which includes two side. I chose the jalapeno, pinto beans and a salad. It's a whole lot of food. Across form me, the Tri-tip sandwich was met with less than excitement. \\\\n\\\\nOnly 10 minutes to receive our food and it was piping hot. The ribs were good, pretty darn good, but drenched in BBQ sauce. Once I scraped off about 2/3 cup, I could taste the meet. The chicken was very good too.\\\\n\\\\nThe food was better and so was the service but it's hard to judge when we were the only two people partaking. For that, I'll up my 1 star to 2.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Cliff's & Co Restaurant is a local business located at 1919 Cliff Dr in Santa Barbara, CA. It offers a variety of services including event planning, party planning, catering, and a restaurant. The restaurant serves American (Traditional) and Mexican cuisine and is open from 11:00 AM to 9:30 PM on weekdays and until 10:00 PM on weekends. The business has a rating of 3.5 stars.\\n\\nCustomers have mentioned positive aspects of the restaurant in their reviews. One customer praised the location and hours of operation, mentioning that they could order food for delivery while enjoying the beach. They also appreciated the wide variety of food options available, ranging from sandwiches and pasta to soup, salad, and burritos. The tri-tip dish was particularly impressive.\\n\\nAnother customer described the restaurant as classy, with a live pianist providing entertainment. They enjoyed their meal and highlighted the beautiful view of the ocean.\\n\\nHowever, there was also a negative review where a customer expressed disappointment in their previous visit. They found the BBQ and service to be underwhelming, but noted that the food and service had improved since their last visit.\\n\\nOverall, Cliff's & Co Restaurant offers a diverse menu and has received positive feedback for its location, variety of food options, and improved service.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "tune",
+  "source_cluster_id": "sha256:14d869dd7a8c8f1350bce77a21d4d9c6d2ded7b0945370ba519415b4802fb756",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25
+  ]
+}

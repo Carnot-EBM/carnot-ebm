@@ -1,0 +1,40 @@
+[exp8027] phase=build_before elapsed_s=0.000 completed=0 pending=0
+[phase 3 before] interpreter-bound carnot-python subprocess
+   Compiling carnot-core v0.1.0 (/home/ianblenke/github.com/ianblenke/carnot/crates/carnot-core)
+   Compiling carnot-ising v0.1.0 (/home/ianblenke/github.com/ianblenke/carnot/crates/carnot-ising)
+   Compiling carnot-gibbs v0.1.0 (/home/ianblenke/github.com/ianblenke/carnot/crates/carnot-gibbs)
+   Compiling carnot-kan v0.1.0 (/home/ianblenke/github.com/ianblenke/carnot/crates/carnot-kan)
+   Compiling carnot-samplers v0.1.0 (/home/ianblenke/github.com/ianblenke/carnot/crates/carnot-samplers)
+   Compiling carnot-webgpu-gateway v0.1.0 (/home/ianblenke/github.com/ianblenke/carnot/crates/carnot-webgpu-gateway)
+   Compiling carnot-boltzmann v0.1.0 (/home/ianblenke/github.com/ianblenke/carnot/crates/carnot-boltzmann)
+   Compiling carnot-constraints v0.1.0 (/home/ianblenke/github.com/ianblenke/carnot/crates/carnot-constraints)
+   Compiling carnot-python v0.1.0 (/home/ianblenke/github.com/ianblenke/carnot/crates/carnot-python)
+warning: unused import: `ndarray::Array2`
+ --> crates/carnot-python/src/s2kan.rs:3:5
+  |
+3 | use ndarray::Array2;
+  |     ^^^^^^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused import: `std::sync::Arc`
+ --> crates/carnot-python/src/s2kan.rs:6:5
+  |
+6 | use std::sync::Arc;
+  |     ^^^^^^^^^^^^^^
+
+warning: use of deprecated method `numpy::IntoPyArray::into_pyarray_bound`: renamed to `IntoPyArray::into_pyarray`
+  --> crates/carnot-python/src/s2kan.rs:40:16
+   |
+40 |         result.into_pyarray_bound(py)
+   |                ^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(deprecated)]` on by default
+
+warning: `carnot-python` (lib) generated 3 warnings (run `cargo fix --lib -p carnot-python` to apply 2 suggestions)
+    Finished `release` profile [optimized] target(s) in 9.73s
+[phase 3 after] native build selected=/home/ianblenke/github.com/ianblenke/carnot/target/experiment-7230-load/_rust.cpython-312-x86_64-linux-gnu.so
+[exp8027] phase=build_after elapsed_s=9.754 completed=0 pending=0
+[exp8027] phase=extension_load_before elapsed_s=9.754 completed=0 pending=0
+[exp8027] phase=extension_load_after elapsed_s=9.758 completed=0 pending=0
+{"command": ["cargo", "build", "--release", "-p", "carnot-python"], "exit_code": 0, "duration_s": 9.748625961015932, "output": "   Compiling carnot-core v0.1.0 (/home/ianblenke/github.com/ianblenke/carnot/crates/carnot-core)\n   Compiling carnot-ising v0.1.0 (/home/ianblenke/github.com/ianblenke/carnot/crates/carnot-ising)\n   Compiling carnot-gibbs v0.1.0 (/home/ianblenke/github.com/ianblenke/carnot/crates/carnot-gibbs)\n   Compiling carnot-kan v0.1.0 (/home/ianblenke/github.com/ianblenke/carnot/crates/carnot-kan)\n   Compiling carnot-samplers v0.1.0 (/home/ianblenke/github.com/ianblenke/carnot/crates/carnot-samplers)\n   Compiling carnot-webgpu-gateway v0.1.0 (/home/ianblenke/github.com/ianblenke/carnot/crates/carnot-webgpu-gateway)\n   Compiling carnot-boltzmann v0.1.0 (/home/ianblenke/github.com/ianblenke/carnot/crates/carnot-boltzmann)\n   Compiling carnot-constraints v0.1.0 (/home/ianblenke/github.com/ianblenke/carnot/crates/carnot-constraints)\n   Compiling carnot-python v0.1.0 (/home/ianblenke/github.com/ianblenke/carnot/crates/carnot-python)\nwarning: unused import: `ndarray::Array2`\n --> crates/carnot-python/src/s2kan.rs:3:5\n  |\n3 | use ndarray::Array2;\n  |     ^^^^^^^^^^^^^^^\n  |\n  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default\n\nwarning: unused import: `std::sync::Arc`\n --> crates/carnot-python/src/s2kan.rs:6:5\n  |\n6 | use std::sync::Arc;\n  |     ^^^^^^^^^^^^^^\n\nwarning: use of deprecated method `numpy::IntoPyArray::into_pyarray_bound`: renamed to `IntoPyArray::into_pyarray`\n  --> crates/carnot-python/src/s2kan.rs:40:16\n   |\n40 |         result.into_pyarray_bound(py)\n   |                ^^^^^^^^^^^^^^^^^^\n   |\n   = note: `#[warn(deprecated)]` on by default\n\nwarning: `carnot-python` (lib) generated 3 warnings (run `cargo fix --lib -p carnot-python` to apply 2 suggestions)\n    Finished `release` profile [optimized] target(s) in 9.73s\n", "PYO3_PYTHON": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python", "CARGO_TARGET_DIR": "/home/ianblenke/github.com/ianblenke/carnot/target/experiment-7230-interpreter-bound", "PYO3_USE_ABI3_FORWARD_COMPATIBILITY": null, "built_library": "/home/ianblenke/github.com/ianblenke/carnot/target/experiment-7230-interpreter-bound/release/libcarnot_python.so", "loaded_copy": "/home/ianblenke/github.com/ianblenke/carnot/target/experiment-7230-load/_rust.cpython-312-x86_64-linux-gnu.so", "binary_sha256": "sha256:e8b1751e1afdeacfafa670826ed61c4f5d846b149d4266f1979bb5d6a9c15ec3", "path": "/home/ianblenke/github.com/ianblenke/carnot/target/experiment-8027-load/_rust.cpython-312-x86_64-linux-gnu.so", "sha256": "sha256:e8b1751e1afdeacfafa670826ed61c4f5d846b149d4266f1979bb5d6a9c15ec3", "actual_loaded": true, "build_helper": "Exp7230 interpreter-bound build; task-owned copied binary"}

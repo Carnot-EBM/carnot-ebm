@@ -1,0 +1,118 @@
+.........F..F                                                            [100%]
+=================================== FAILURES ===================================
+______________________ test_budget_and_unknown_positions _______________________
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261002T141006-1358316-4d4bd761/test_budget_and_unknown_positi0')
+
+    def test_budget_and_unknown_positions(tmp_path):
+        """REQ-REPORT-8026: dropped terminal writes and shifted unknowns fail."""
+        data = bundle(tmp_path)
+        db = sqlite3.connect(Path(data["trajectory"]) / "ledger.sqlite")
+        with db:
+            db.execute("delete from events where seq=(select max(seq) from events where kind='update')")
+        db.close()
+        with pytest.raises(a.AuditFailure, match="updates"):
+>           a.reduce(data)
+
+tests/python/test_learning_retention_audit_8026.py:136: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/verify/learning_retention_audit_8026.py:189: in reduce
+    equal(prefix + "/checkpoint_state", state, checkpoint_cache[digest])
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+field = 'issue/periodic/101/54/checkpoint_state'
+expected = {'arm': 'conditioned_energy', 'calibration': [0.0, 1.0], 'decay_scale': 0.9998600083997198, 'geometry': {'logit_center... 1.0, 'scaler': {'maximum': [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, ...], 'minimum': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, ...]}}, ...}
+observed = {'arm': 'conditioned_energy', 'calibration': [0.0, 1.0], 'decay_scale': 0.9998400111995518, 'geometry': {'logit_center... 1.0, 'scaler': {'maximum': [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, ...], 'minimum': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, ...]}}, ...}
+
+    def equal(field: str, expected: Any, observed: Any) -> None:
+        """Fail at the original field instead of hiding errors in a combined gate."""
+        if expected != observed:
+>           raise AuditFailure(field, expected, observed)
+E           carnot.verify.learning_retention_audit_8026.AuditFailure: {"artifact_field": "issue/periodic/101/54/checkpoint_state", "expected": {"arm": "conditioned_energy", "calibration": [0.0, 1.0], "decay_scale": 0.9998600083997198, "geometry": {"logit_center": 0.0, "logit_scale": 1.0, "scaler": {"maximum": [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0], "minimum": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}}, "parameters": [-0.034348118794165716, 0.0, 0.0, 0.0, 0.0, 0.0, -0.000715585808211786, -0.016458473588871064, -0.016458473588871068, -0.0007155858082117862, 0.0, 0.0, 0.0, 0.0, -0.005019103172048379, -0.002145207348873885, -0.00610730298876486, -0.008689966925573596, -0.008234903306196953, -0.003923454046978241, -0.00022818100572979296, 0.0, 0.0, 0.0, 0.0, 0.0, -0.005019103172048379, -0.002145207348873885, -0.00610730298876486, -0.008689966925573596, -0.008234903306196953, -0.003923454046978241, -0.00022818100572979296, 0.0, 0.0, 0.0, 0.0, 0.0, -0.005019103172048379, -0.002145207348873885, -0.00610730298876486, -0.008689966925573596, -0.008234903306196953, -0.003923454046978241, -0.00022818100572979296, 0.0, 0.0, 0.0, 0.0, 0.0, -0.005019103172048379, -0.002145207348873885, -0.00610730298876486, -0.008689966925573596, -0.008234903306196953, -0.003923454046978241, -0.00022818100572979296, 0.0, 0.0, 0.0, 0.0, 0.0, -0.005019103172048379, -0.002145207348873885, -0.00610730298876486, -0.008689966925573596, -0.008234903306196953, -0.003923454046978241, -0.00022818100572979296, 0.0, 0.0, 0.0, 0.0, 0.0, -0.005019103172048379, -0.002145207348873885, -0.00610730298876486, -0.008689966925573596, -0.008234903306196953, -0.003923454046978241, -0.00022818100572979296, 0.0, 0.0, 0.0, 0.0, 0.0, -0.005019103172048379, -0.002145207348873885, -0.00610730298876486, -0.008689966925573596, -0.008234903306196953, -0.003923454046978241, -0.00022818100572979296, 0.0, 0.0, 0.0, 0.0, 0.0, -0.005019103172048379, -0.002145207348873885, -0.00610730298876486, -0.008689966925573596, -0.008234903306196953, -0.003923454046978241, -0.00022818100572979296, 0.0, 0.0, 0.0, 0.0, 0.0]}, "observed": {"arm": "conditioned_energy", "calibration": [0.0, 1.0], "decay_scale": 0.9998400111995518, "geometry": {"logit_center": 0.0, "logit_scale": 1.0, "scaler": {"maximum": [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0], "minimum": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}}, "parameters": [-0.03916022550104608, 0.0, 0.0, 0.0, 0.0, 0.0, -0.0008158380312717937, -0.018764274719251236, -0.018764274719251243, -0.0008158380312717938, 0.0, 0.0, 0.0, 0.0, -0.005019103172048379, -0.002145207348873885, -0.00610730298876486, -0.008689966925573596, -0.008617335187376791, -0.006926443794024507, -0.0016464709397283914, -8.395144655659835e-06, 0.0, 0.0, 0.0, 0.0, -0.005019103172048379, -0.002145207348873885, -0.00610730298876486, -0.008689966925573596, -0.008617335187376791, -0.006926443794024507, -0.0016464709397283914, -8.395144655659835e-06, 0.0, 0.0, 0.0, 0.0, -0.005019103172048379, -0.002145207348873885, -0.00610730298876486, -0.008689966925573596, -0.008617335187376791, -0.006926443794024507, -0.0016464709397283914, -8.395144655659835e-06, 0.0, 0.0, 0.0, 0.0, -0.005019103172048379, -0.002145207348873885, -0.00610730298876486, -0.008689966925573596, -0.008617335187376791, -0.006926443794024507, -0.0016464709397283914, -8.395144655659835e-06, 0.0, 0.0, 0.0, 0.0, -0.005019103172048379, -0.002145207348873885, -0.00610730298876486, -0.008689966925573596, -0.008617335187376791, -0.006926443794024507, -0.0016464709397283914, -8.395144655659835e-06, 0.0, 0.0, 0.0, 0.0, -0.005019103172048379, -0.002145207348873885, -0.00610730298876486, -0.008689966925573596, -0.008617335187376791, -0.006926443794024507, -0.0016464709397283914, -8.395144655659835e-06, 0.0, 0.0, 0.0, 0.0, -0.005019103172048379, -0.002145207348873885, -0.00610730298876486, -0.008689966925573596, -0.008617335187376791, -0.006926443794024507, -0.0016464709397283914, -8.395144655659835e-06, 0.0, 0.0, 0.0, 0.0, -0.005019103172048379, -0.002145207348873885, -0.00610730298876486, -0.008689966925573596, -0.008617335187376791, -0.006926443794024507, -0.0016464709397283914, -8.395144655659835e-06, 0.0, 0.0, 0.0, 0.0]}, "passed": false}
+
+python/carnot/verify/learning_retention_audit_8026.py:56: AuditFailure
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261002T141006-1358316-4d4bd761/test_budget_and_unknown_positi0')
+
+    def test_budget_and_unknown_positions(tmp_path):
+        """REQ-REPORT-8026: dropped terminal writes and shifted unknowns fail."""
+        data = bundle(tmp_path)
+        db = sqlite3.connect(Path(data["trajectory"]) / "ledger.sqlite")
+        with db:
+            db.execute("delete from events where seq=(select max(seq) from events where kind='update')")
+        db.close()
+>       with pytest.raises(a.AuditFailure, match="updates"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'updates'
+E         Actual message: '{"artifact_field": "issue/periodic/101/54/checkpoint_state", "expected": {"arm": "conditioned_energy", "calibration": [0.0, 1.0], "decay_scale": 0.9998600083997198, "geometry": {"logit_center": 0.0, "logit_scale": 1.0, "scaler": {"maximum": [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0], "minimum": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}}, "parameters": [-0.034348118794165716, 0.0, 0.0, 0.0, 0.0, 0.0, -0.000715585808211786, -0.016458473588871064, -0.016458473588871068, -0.0007155858082117862, 0.0, 0.0, 0.0, 0.0, -0.005019103172048379, -0.002145207348873885, -0.00610730298876486, -0.008689966925573596, -0.008234903306196953, -0.003923454046978241, -0.00022818100572979296, 0.0, 0.0, 0.0, 0.0, 0.0, -0.005019103172048379, -0.002145207348873885, -0.00610730298876486, -0.008689966925573596, -0.008234903306196953, -0.003923454046978241, -0.00022818100572979296, 0.0, 0.0, 0.0, 0.0, 0.0, -0.005019103172048379, -0.002145207348873885, -0.00610730298876486, -0.008689966925573596, -0.008234903306196953, -0.003923454046978241, -0.00022818100572979296, 0.0, 0.0, 0.0, 0.0, 0.0, -0.005019103172048379, -0.002145207348873885, -0.00610730298876486, -0.008689966925573596, -0.008234903306196953, -0.003923454046978241, -0.00022818100572979296, 0.0, 0.0, 0.0, 0.0, 0.0, -0.005019103172048379, -0.002145207348873885, -0.00610730298876486, -0.008689966925573596, -0.008234903306196953, -0.003923454046978241, -0.00022818100572979296, 0.0, 0.0, 0.0, 0.0, 0.0, -0.005019103172048379, -0.002145207348873885, -0.00610730298876486, -0.008689966925573596, -0.008234903306196953, -0.003923454046978241, -0.00022818100572979296, 0.0, 0.0, 0.0, 0.0, 0.0, -0.005019103172048379, -0.002145207348873885, -0.00610730298876486, -0.008689966925573596, -0.008234903306196953, -0.003923454046978241, -0.00022818100572979296, 0.0, 0.0, 0.0, 0.0, 0.0, -0.005019103172048379, -0.002145207348873885, -0.00610730298876486, -0.008689966925573596, -0.008234903306196953, -0.003923454046978241, -0.00022818100572979296, 0.0, 0.0, 0.0, 0.0, 0.0]}, "observed": {"arm": "conditioned_energy", "calibration": [0.0, 1.0], "decay_scale": 0.9998400111995518, "geometry": {"logit_center": 0.0, "logit_scale": 1.0, "scaler": {"maximum": [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0], "minimum": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]}}, "parameters": [-0.03916022550104608, 0.0, 0.0, 0.0, 0.0, 0.0, -0.0008158380312717937, -0.018764274719251236, -0.018764274719251243, -0.0008158380312717938, 0.0, 0.0, 0.0, 0.0, -0.005019103172048379, -0.002145207348873885, -0.00610730298876486, -0.008689966925573596, -0.008617335187376791, -0.006926443794024507, -0.0016464709397283914, -8.395144655659835e-06, 0.0, 0.0, 0.0, 0.0, -0.005019103172048379, -0.002145207348873885, -0.00610730298876486, -0.008689966925573596, -0.008617335187376791, -0.006926443794024507, -0.0016464709397283914, -8.395144655659835e-06, 0.0, 0.0, 0.0, 0.0, -0.005019103172048379, -0.002145207348873885, -0.00610730298876486, -0.008689966925573596, -0.008617335187376791, -0.006926443794024507, -0.0016464709397283914, -8.395144655659835e-06, 0.0, 0.0, 0.0, 0.0, -0.005019103172048379, -0.002145207348873885, -0.00610730298876486, -0.008689966925573596, -0.008617335187376791, -0.006926443794024507, -0.0016464709397283914, -8.395144655659835e-06, 0.0, 0.0, 0.0, 0.0, -0.005019103172048379, -0.002145207348873885, -0.00610730298876486, -0.008689966925573596, -0.008617335187376791, -0.006926443794024507, -0.0016464709397283914, -8.395144655659835e-06, 0.0, 0.0, 0.0, 0.0, -0.005019103172048379, -0.002145207348873885, -0.00610730298876486, -0.008689966925573596, -0.008617335187376791, -0.006926443794024507, -0.0016464709397283914, -8.395144655659835e-06, 0.0, 0.0, 0.0, 0.0, -0.005019103172048379, -0.002145207348873885, -0.00610730298876486, -0.008689966925573596, -0.008617335187376791, -0.006926443794024507, -0.0016464709397283914, -8.395144655659835e-06, 0.0, 0.0, 0.0, 0.0, -0.005019103172048379, -0.002145207348873885, -0.00610730298876486, -0.008689966925573596, -0.008617335187376791, -0.006926443794024507, -0.0016464709397283914, -8.395144655659835e-06, 0.0, 0.0, 0.0, 0.0]}, "passed": false}'
+
+tests/python/test_learning_retention_audit_8026.py:135: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8025] phase=benchmark_before elapsed_s=1.796 completed=0 pending=320
+[exp8025] phase=stream_frozen_no_write_seed_101 elapsed_s=1.801 completed=64 pending=256
+[exp8025] phase=stream_uniform_seed_101 elapsed_s=1.812 completed=128 pending=192
+[exp8025] phase=stream_decision_loss_seed_101 elapsed_s=1.824 completed=192 pending=128
+[exp8025] phase=stream_brier_loss_seed_101 elapsed_s=1.835 completed=256 pending=64
+[exp8025] phase=stream_periodic_seed_101 elapsed_s=1.846 completed=320 pending=0
+[exp8025] phase=benchmark_after elapsed_s=1.846 completed=320 pending=0
+[exp8025] phase=independent_benchmark_before elapsed_s=1.961 completed=0 pending=320
+[exp8025] phase=independent_issues elapsed_s=1.971 completed=256 pending=64
+________________________ test_validation_and_cli_paths _________________________
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261002T141006-1358316-4d4bd761/test_validation_and_cli_paths0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f56ec0945c0>
+
+    def test_validation_and_cli_paths(tmp_path, monkeypatch):
+        """SCENARIO-REPORT-8026-PUBLISH: publish terminal bytes and cold read them."""
+        import runpy
+        import sys
+    
+        data = bundle(tmp_path)
+        src = tmp_path / "fixture.json"
+        atomic_json(src, data)
+        counts = {p: dict(num_statements=1, missing_lines=0) for p in e.OWNED}
+        receipts = [dict(scope="owned", passed=True), dict(scope="repository_health", passed=False)]
+    
+        def checks(scratch):
+            commands = e.validation_plan(scratch)
+            atomic_json(
+                scratch / "coverage.json", dict(files={p: dict(summary=s) for p, s in counts.items()})
+            )
+            return commands
+    
+        monkeypatch.setattr(e, "validation_plan", checks)
+        monkeypatch.setattr(e, "run_commands", lambda *args, **kw: receipts)
+        monkeypatch.setattr(e, "terminal", lambda p: dict(passed=True))
+        monkeypatch.setattr(e, "recover", lambda *args: [dict(passed=True)])
+        output = tmp_path / "out" / (e.NAME + ".json")
+>       assert e.main(["--fixture-input", str(src), "--output", str(output)]) == 0
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_learning_retention_audit_8026.py:183: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/experiment_8026_v695_learning_retention_audit.py:344: in main
+    commands = validation_plan(scratch) if not args.validation_worker else []
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+tests/python/test_learning_retention_audit_8026.py:172: in checks
+    commands = e.validation_plan(scratch)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/python/test_learning_retention_audit_8026.py:172: in checks
+    commands = e.validation_plan(scratch)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   RecursionError: maximum recursion depth exceeded
+!!! Recursion detected (same locals & position)
+----------------------------- Captured stdout call -----------------------------
+[exp8025] phase=benchmark_before elapsed_s=19.380 completed=0 pending=320
+[exp8025] phase=stream_frozen_no_write_seed_101 elapsed_s=19.385 completed=64 pending=256
+[exp8025] phase=stream_uniform_seed_101 elapsed_s=19.397 completed=128 pending=192
+[exp8025] phase=stream_decision_loss_seed_101 elapsed_s=19.409 completed=192 pending=128
+[exp8025] phase=stream_brier_loss_seed_101 elapsed_s=19.421 completed=256 pending=64
+[exp8025] phase=stream_periodic_seed_101 elapsed_s=19.432 completed=320 pending=0
+[exp8025] phase=benchmark_after elapsed_s=19.432 completed=320 pending=0
+=========================== short test summary info ============================
+FAILED tests/python/test_learning_retention_audit_8026.py::test_budget_and_unknown_positions
+FAILED tests/python/test_learning_retention_audit_8026.py::test_validation_and_cli_paths
+2 failed, 11 passed in 21.15s

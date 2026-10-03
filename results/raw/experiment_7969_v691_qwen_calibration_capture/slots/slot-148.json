@@ -1,0 +1,109 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.6306790499947965,
+  "exclusion_reason": null,
+  "family_id": "sha256:b635706ab10f35394f28c7f727a3b4720db8b921c19d0e99a20f601639d6d0c4",
+  "input_tokens": 974,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": 13,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 26,
+      "prompt_tokens": 974,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1000
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:6f4504b0538f7111be2d982aa910cb7d8dd747ef2a1eb0b4d20a40a9d4513b8a",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": 13\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832676,
+    "id": "chatcmpl-ieoG7MSt3w64VibQUMF4luHZMlYK9oyS",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 614.053,
+      "predicted_n": 26,
+      "predicted_per_second": 42.34162197725604,
+      "predicted_per_token_ms": 23.617423076923078,
+      "prompt_ms": 883.603,
+      "prompt_n": 896,
+      "prompt_per_second": 1014.0300564846431,
+      "prompt_per_token_ms": 0.9861640625
+    },
+    "usage": {
+      "completion_tokens": 26,
+      "prompt_tokens": 974,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1000
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Joy-Anna Duggar jumps on new income stream\\nJoy-Anna Duggar is nothing if not determined.\\nShe is one of the Duggar children who has been working hard on social media and using it to her advantage.\\nThere is a weekly vlog update on YouTube, she often shares photos and other promotional things on her Instagram page, and now, she has joined LTK, a shop where creators link all of their favorite productions and earn a commission from what they sell.\\nFollowers often ask the former Counting On star where she\u2019s purchased certain items, which is the perfect way to organize everything while securing another income stream for her.\\nJoy-Anna\u2019s husband, Austin Forsyth, is one of the husbands who isn\u2019t living off her father, Jim Bob Duggar. Most of her brothers work for her father, which ensures his control over their finances.\\nFollowing the cancelation of Counting On three years ago, the stars of the show had to find other ways to make money. TLC would no longer support the family in any future show, so they had to figure things out independently.\\nJoy-Anna Duggar shares announcement\\nOn her Instagram page, Joy-Anna Duggar revealed she would have her own place to link all her favorite things.\\nShe wrote, \u201ccozy & casual is my go to \ud83c\udf41\\nFor those wondering where my looks are from, you can now find links to them all in one place on @shop.ltk.\\nFollow my shop (JoyForsyth) on @shop.ltk\\nYou can find the direct link to my page on my bio\\n#LTK#LTKFashion#ltkhome#ltkfamily#ltkwomensfashion\u201d\\nInterestingly, Joy-Anna wore pants for her announcement, calling her outfit \u201ccozy & casual.\u201d\\nJoy-Anna Duggar\u2019s loyalties lie with Jim Bob Duggar\\nAfter Jill Duggar\u2019s bombshell memoir release, it was interesting to see where the siblings fell with her.\\nIt was clear ahead of time that Jedidiah Duggar and Katelyn Nakatsu weren\u2019t happy about the book, but there was some hope that Joy-Anna Duggar may have been supportive.\\nHowever, she only acknowledged that she and Austin Forsyth planned to read the book, but that was it. Since the release, she has been happy to share the moments she is spending with her family, likely something pleasing to Jim Bob Duggar.\\nAfter all, he threatened to disinherit any children who spoke out about him or Michelle. None of the siblings, except Jinger Duggar and her husband, Jeremy Vuolo, voluntarily spoke out about the book without being asked.\\nJoy-Anna seems content to be in her dad\u2019s good graces.\\nShiny Happy People: Duggar Family Secrets is currently streaming on Prime Video.\", \"original_answer\": \"Joy-Anna Duggar has announced that she will have her own store on LTK, a platform where creators link their favorite products and earn commissions. She shared the news on her Instagram page, writing that followers could now find links to her favorite items in one place. Joy-Anna wore pants in the announcement, sparking some controversy among her conservative followers. The Duggar family has been finding alternative ways to make money since the cancellation of Counting On, and Joy-Anna's store is just one example. Interestingly, Joy-Anna's loyalties lie with her father, Jim Bob Duggar, despite her sister Jill Duggar releasing a bombshell memoir. The book has caused tension within the family, with some siblings speaking out against their patriarch, while others have remained silent. Joy-Anna appears content to remain in her father's good graces, despite the ongoing controversies surrounding the family.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "tune",
+  "source_cluster_id": "sha256:e6192564125241655ecb0e9970fc7efdf2e2c416c52129547c5ea72dbb901cef",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17
+  ]
+}

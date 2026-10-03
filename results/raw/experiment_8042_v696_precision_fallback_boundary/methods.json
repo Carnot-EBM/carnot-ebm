@@ -1,0 +1,286 @@
+{
+  "acceptance": "all readouts contained; zero final disagreements/unhandled overflow; exact restart",
+  "artifact_guard_enabled": true,
+  "code": [
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8042_v696_precision_fallback_boundary.py",
+      "sha256": "sha256:2d154ad965d54c92b38d7407eff9a274215dddb2b6bab351a6cd42c40b18ddc5"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/precision_fallback_8042.py",
+      "sha256": "sha256:7eb52b4437ad7f8933584431c1bc8284908eb88dd54531064d90f2a19074c893"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8042_v696_precision_fallback_boundary.py",
+      "sha256": "sha256:68048e453de640fbe9295e0e746dc36deb1269f04f5e252120bf3e9b4f5765eb"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_precision_fallback_8042.py",
+      "sha256": "sha256:41525ae7257caad98927e4e9c37e041b34c2d8626aeeb3f6ebbdb7b30b1e17ba"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_precision_fallback_8042_counts.py",
+      "sha256": "sha256:47184218f2f6118ae29e2da2ae5a3bf7383426c0b917621534fe65b38eadecfb"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+      "sha256": "sha256:218e82cb31df2bb9e93df4f165387018842773843759b888d7d92d56e516bd2e"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/causal_online_8025.py",
+      "sha256": "sha256:2215d92594949a59249008f2e0fb0fbda047a31eea04267a79e69ba0f11bc608"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/windowed_online_8038.py",
+      "sha256": "sha256:33bea7d324e7d73e86abae1b2158698fb9d655c745db179e3f764ac8bab53c1b"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/hardware_workload_8029.py",
+      "sha256": "sha256:9f2c80edb24cf18030d11d6e4b85d2b15e59e8db5cb7f14cc81bda7493d53bf0"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/fixedpoint_sparse_8003.py",
+      "sha256": "sha256:692039c3744767c727e562d8b3bd81dcc6d945c7ca09dfc144dd4fb98e1bdbef"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/hardware_update_8016.py",
+      "sha256": "sha256:73361f639441898beeccf8dcf5f412c0665cbfce3b2b3dafc8d45a66b6b8a2e6"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/current_work_receipt.py",
+      "sha256": "sha256:428d1696eef0820ce9df519532743aeccb8ec1156eb8c1b52fa0c8f72bf16a10"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/primary_publication.py",
+      "sha256": "sha256:7fe8c6caa2725d68eeae612d2f4a17146b08afc29ff5a8003a4f1ad5f21d1310"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_template.py",
+      "sha256": "sha256:9396db4d8604620a2dc0f26b7b797099e5215d2f1d681cd01a7d1ed7c423c184"
+    }
+  ],
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "carnot.experiment_8042_v696_precision_fallback_boundary",
+        "carnot.reporting.precision_fallback_8042"
+      ],
+      "name": "worktree_imports",
+      "scope": "owned",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-8042-oogr5895/.coverage",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8042_v696_precision_fallback_boundary.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/precision_fallback_8042.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8042_v696_precision_fallback_boundary.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-8042-oogr5895/pytest/coverage",
+        "tests/python/test_precision_fallback_8042.py",
+        "tests/python/test_precision_fallback_8042_counts.py",
+        "-q"
+      ],
+      "name": "changed_module_coverage",
+      "scope": "owned",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/carnot-8042-oogr5895/.coverage",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8042_v696_precision_fallback_boundary.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/precision_fallback_8042.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8042_v696_precision_fallback_boundary.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "name": "changed_module_coverage_report",
+      "scope": "owned",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_8042_v696_precision_fallback_boundary.py",
+        "python/carnot/reporting/precision_fallback_8042.py",
+        "scripts/experiments/experiment_8042_v696_precision_fallback_boundary.py",
+        "scripts/adversarial_verify.py",
+        "tests/python/test_precision_fallback_8042.py",
+        "tests/python/test_precision_fallback_8042_counts.py"
+      ],
+      "name": "ruff_check",
+      "scope": "owned",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_8042_v696_precision_fallback_boundary.py",
+        "python/carnot/reporting/precision_fallback_8042.py",
+        "scripts/experiments/experiment_8042_v696_precision_fallback_boundary.py",
+        "scripts/adversarial_verify.py",
+        "tests/python/test_precision_fallback_8042.py",
+        "tests/python/test_precision_fallback_8042_counts.py"
+      ],
+      "name": "ruff_format",
+      "scope": "owned",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_precision_fallback_8042.py",
+        "tests/python/test_precision_fallback_8042_counts.py"
+      ],
+      "name": "scoped_spec_coverage",
+      "scope": "owned",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "--follow-imports=silent",
+        "python/carnot/experiment_8042_v696_precision_fallback_boundary.py",
+        "python/carnot/reporting/precision_fallback_8042.py",
+        "scripts/experiments/experiment_8042_v696_precision_fallback_boundary.py",
+        "scripts/adversarial_verify.py"
+      ],
+      "name": "strict_mypy",
+      "scope": "owned",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "json",
+        "--data-file=/tmp/carnot-8042-oogr5895/.coverage",
+        "-o",
+        "/tmp/carnot-8042-oogr5895/coverage.json"
+      ],
+      "name": "coverage_json",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "run",
+        "--rcfile=/dev/null",
+        "--data-file=/tmp/carnot-8042-oogr5895/.coverage-guard",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "tests/python/test_precision_fallback_8042_counts.py",
+        "-q"
+      ],
+      "name": "changed_guard_statement_tests",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "json",
+        "--rcfile=/dev/null",
+        "--data-file=/tmp/carnot-8042-oogr5895/.coverage-guard",
+        "-o",
+        "/tmp/carnot-8042-oogr5895/guard-coverage.json"
+      ],
+      "name": "guard_coverage_json",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-8042-oogr5895/consumers",
+        "tests/python/test_hardware_update_8016.py",
+        "tests/python/test_hardware_sparse_8003.py",
+        "tests/python/test_primary_publication_7928.py",
+        "-q"
+      ],
+      "name": "consumer_board_mutations",
+      "scope": "owned",
+      "timeout_s": 120
+    }
+  ],
+  "config": {
+    "acceptance": "all readouts contained; zero final disagreements/unhandled overflow; exact restart",
+    "accumulator_bits": 32,
+    "action_disagreements_max": 0,
+    "bound_method": "outward interval recurrence; Q12 rounding cells; actual fixed center loss",
+    "device_execution_budget": 0,
+    "drift_max": 0.001,
+    "fallback": "threshold overlap or saturation; existing float64 CPU shadow",
+    "float_roundoff_allowance": 9.094947017729282e-13,
+    "fractional_bits": 12,
+    "geometry_venue": "CPU float64 frozen fitted geometry",
+    "model_load_budget": 0,
+    "numerical_budget_s": 600,
+    "overflow": "saturate",
+    "overflow_max": 0,
+    "retention_labels_opened": false,
+    "rounding": "nearest_ties_to_even",
+    "rounding_cell_radius": 0.0001220703125,
+    "scale": 4096,
+    "seed": 8042,
+    "sigmoid_bounded_logit": 32,
+    "sigmoid_venue": "CPU float64 readout of fixed accumulator",
+    "storage_bits": 24,
+    "thresholds": [
+      0.1,
+      0.5
+    ],
+    "trajectory_scope": "all original exposed-development arms and seeds",
+    "update_budget": 8192,
+    "width_tuning": false
+  },
+  "exclusions": "missing, blocked or disqualified current sources; unmatched operations",
+  "roles": "authenticated history; exposed-development update replay; independent current costs",
+  "source_hashes": {
+    "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8038_v696_windowed_online_learning.json": "sha256:c58e4f19c9d88567e4553556f0c47ad64c36748eb264c02d69573b8e8658df23",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8040_v696_native_transaction_cost.json": "sha256:3356ffec64239cba129ba833ef04e08f53458a95dfe8badb90d37a1583485d21"
+  },
+  "sources": {
+    "8038": [
+      "experiment_8038_v696_windowed_online_learning",
+      "learning_trajectory_ready_score"
+    ],
+    "8040": [
+      "experiment_8040_v696_native_transaction_cost",
+      "native_transaction_ready_score"
+    ]
+  }
+}

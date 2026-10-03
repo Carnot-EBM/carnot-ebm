@@ -1,0 +1,111 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.6491718210745603,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:05f1fe14e22537fa408e52865f4830e55c31c650cda7441829d0409f17a0c370",
+  "input_tokens": 1075,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1075,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1098
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:c3c646cccc5aac6e4914c36492d62d3edde354275ae3fc79179f8d46a42c8ffe",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886197,
+    "id": "chatcmpl-bTeRKFoc8VgLEi9SgfaQIizeXLnjRLif",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.806,
+      "predicted_n": 23,
+      "predicted_per_second": 42.45061885619576,
+      "predicted_per_token_ms": 23.556782608695652,
+      "prompt_ms": 969.319,
+      "prompt_n": 997,
+      "prompt_per_second": 1028.5571622964164,
+      "prompt_per_token_ms": 0.9722357071213641
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1075,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1098
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"7060 Hollister Ave, Ste 106\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":null,\\\"classy\\\":false,\\\"divey\\\":null,\\\"hipster\\\":false,\\\"intimate\\\":null,\\\"romantic\\\":null,\\\"touristy\\\":null,\\\"trendy\\\":null,\\\"upscale\\\":null},\\\"BusinessParking\\\":null,\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":null},\\\"business_stars\\\":3.0,\\\"categories\\\":\\\"Thai, Restaurants\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"17:0-21:30\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"17:0-21:30\\\",\\\"Sunday\\\":\\\"17:0-21:0\\\",\\\"Thursday\\\":\\\"17:0-21:0\\\",\\\"Tuesday\\\":\\\"17:0-21:0\\\",\\\"Wednesday\\\":\\\"17:0-21:0\\\"},\\\"name\\\":\\\"TAP Thai Cuisine\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-05 03:07:45\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"We LOVE the original TAP so we were excited to have one in Goleta. However, the quality is unfortunately not the same. Our online order was ready late even though the restaurant wasn't busy. Our go-to crispy tofu was mushy. We had to cook it for an additional 10 minutes in the air fryer at home and still was dripping with oil and doughy coating. The pad tai and curry were fine. The steamed veggies at the state location are a favorite with the mushrooms - Goleta location uses different veggies. The staff was very young and probably new here and probably doing their best. However, we will take the extra time to use the State location in the future.\\\"},{\\\"review_date\\\":\\\"2022-01-04 03:55:04\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"This is one of my go to favorite Thai restaurants in SB at the moment. The only items I have ordered are the eggplant salad and the drunken noodles, both amazing! \\\\n\\\\nThe eggplant salad is very large and a meal on its own, with eggplant, crispy fried onions, fresh tomato slices, cilantro and a hint of spiciness and lots of lemon. I usually order this with fried tofu which is placed on top of the colorful  salad and holds its crispiness as you eat your salad.\\\\n\\\\nI have ordered with a side of sticky rice in the past, but the sticky rice gets hard right away if you don't eat it so I pass on the sticky rice now.\\\\n\\\\nThe drunken noodles are full of flavor, and one of my favorite dishes to order if I come with someone that is very hungry and I can share my meal with.\\\\n\\\\nI ordered a Thai iced tea today and it was delicious! And the size was super large, unlike the other Thai restaurants in town. \\\\n\\\\nWill definitely continue to come here and enjoy other menu items!\\\"},{\\\"review_date\\\":\\\"2021-12-30 23:51:11\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Amazing great food and service will be back soon. Vegie Brown fried rice, chicken penang, drunken noodles\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"TAP Thai Cuisine, located at 7060 Hollister Ave, Ste 106 in Goleta, California, is a local restaurant that serves Thai meals. The restaurant is open from 5 PM to 9 PM (or 9:30 PM on Fridays and Saturdays). The restaurant offers outdoor seating and takeout services. However, there's no information on business parking, WiFi, and if the restaurant is good for groups. Some customers have praised the food and service, highlighting dishes like the eggplant salad, drunken noodles, and chicken penang as particularly enjoyable. There are, however, mixed reviews on the quality of dishes compared to other branches, with some customers suggesting inconsistency in the quality and preparation of the food. The restaurant has a 3-star business rating.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "71232b93fb39e3f66987c646d535a6018a6572b07dd89ea16645981baad8e63d",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ]
+}

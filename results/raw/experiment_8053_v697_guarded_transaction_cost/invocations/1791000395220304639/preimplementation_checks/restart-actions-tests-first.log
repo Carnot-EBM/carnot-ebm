@@ -1,0 +1,57 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_________________________ test_guard_and_transactions __________________________
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261003T040055-1712301-5bb087a7/test_guard_and_transactions0')
+data = {'cases': [{'arm': 'unconstrained', 'before': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, ...], 'class': 'accepted', 'delta': [0.0,...on-312-x86_64-linux-gnu.so', 'sha256': 'sha256:ee1e82d2891e735fa7824228a3e98f474ca43cf5cc114b89c3c6e4d460e89170'}, ...}
+native = <module 'carnot._rust' from '/tmp/pytest-carnot-ianblenke/20261003T040055-1712301-5bb087a7/test_guard_and_transactions0/extension/_rust.cpython-312-x86_64-linux-gnu.so'>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fd30f8a78f0>
+
+    def test_guard_and_transactions(tmp_path, data, native, monkeypatch):
+        """SCENARIO-REPORT-8053-PARITY/COST: all alphas, storage and restarts agree."""
+        controls = m.parity(data, native, tmp_path)
+        assert controls["parity_passed"]
+        assert {"accepted", "rejected", "reset"} <= {w["class"] for w in data["cases"]}
+        monkeypatch.setitem(m.CONFIG, "warmups", 1)
+        monkeypatch.setitem(m.CONFIG, "repetitions", 2)
+        result = m.measure(data, native, tmp_path)
+        assert result["complete_numerical_transaction_speedup"]
+        assert result["total_useful_decisions_per_second"] == []
+        assert all(r["transaction_ns"] >= sum(r["components"].values()) for r in result["rows"])
+        assert all(r["restart_equal"] for r in result["rows"])
+>       assert all(r["restart_decisions_equal"] for r in result["rows"])
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_guarded_transaction_8053.py:44: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+.0 = <list_iterator object at 0x7fd30f5ea0e0>
+
+>   assert all(r["restart_decisions_equal"] for r in result["rows"])
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'restart_decisions_equal'
+
+tests/python/test_guarded_transaction_8053.py:44: KeyError
+---------------------------- Captured stdout setup -----------------------------
+[exp8040] phase=native_library_load_before elapsed_s=0.131 completed=0 pending=0
+[exp8040] phase=native_library_load_after elapsed_s=0.134 completed=0 pending=0
+----------------------------- Captured stdout call -----------------------------
+[exp8053] phase=parity_before elapsed_s=0.055 completed=0 pending=4
+[exp8053] phase=parity_after elapsed_s=0.059 completed=4 pending=0
+[exp8053] phase=benchmark_before elapsed_s=0.059 completed=0 pending=24
+[exp8053] phase=benchmark_pair_after elapsed_s=0.063 completed=2 pending=22
+[exp8053] phase=benchmark_pair_after elapsed_s=0.067 completed=4 pending=20
+[exp8053] phase=benchmark_pair_after elapsed_s=0.071 completed=6 pending=18
+[exp8053] phase=benchmark_pair_after elapsed_s=0.075 completed=8 pending=16
+[exp8053] phase=benchmark_pair_after elapsed_s=0.079 completed=10 pending=14
+[exp8053] phase=benchmark_pair_after elapsed_s=0.083 completed=12 pending=12
+[exp8053] phase=benchmark_pair_after elapsed_s=0.087 completed=14 pending=10
+[exp8053] phase=benchmark_pair_after elapsed_s=0.091 completed=16 pending=8
+[exp8053] phase=benchmark_pair_after elapsed_s=0.095 completed=18 pending=6
+[exp8053] phase=benchmark_pair_after elapsed_s=0.099 completed=20 pending=4
+[exp8053] phase=benchmark_pair_after elapsed_s=0.103 completed=22 pending=2
+[exp8053] phase=benchmark_pair_after elapsed_s=0.107 completed=24 pending=0
+[exp8053] phase=benchmark_after elapsed_s=0.113 completed=24 pending=0
+=========================== short test summary info ============================
+FAILED tests/python/test_guarded_transaction_8053.py::test_guard_and_transactions
+1 failed in 1.96s

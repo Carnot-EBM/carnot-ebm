@@ -1,0 +1,97 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.1412958820001222,
+  "exclusion_reason": null,
+  "family_id": "sha256:1eb0cb2607a3c95fc8cf5b6ca36f8109f2c9f396156b1b78418c7fb6a00901d6",
+  "input_tokens": 434,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 434,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 458
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:9cae331701fc4e04058658c3b84d25cef9e142288771b819854c9ed70058eb3e",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832786,
+    "id": "chatcmpl-AMZQS7lwvHsvT7hiFa8OPrM6WzPe0FWY",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.34,
+      "predicted_n": 24,
+      "predicted_per_second": 42.527554311230816,
+      "predicted_per_token_ms": 23.514166666666668,
+      "prompt_ms": 442.226,
+      "prompt_n": 356,
+      "prompt_per_second": 805.0182485878262,
+      "prompt_per_token_ms": 1.2422078651685393
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 434,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 458
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:The differences between an ATV and a UTV become clear with a simple glance at the rider positions: an ATV rider will straddle the vehicle on a saddle, while UTV riders can sit on side by side on bench seats or bucket seats. The steering differs between the two as well.\\\\n\\\\npassage 2:What Is the Difference between an ATV and a UTV? ATVs are off-road, single-rider vehicles used as recreational vehicles, racers, or transport over rough terrain. Also known as side-by-sides, UTVs are used on rough terrains, but two people can sit beside each other, and UTVs can haul items.\\\\n\\\\npassage 3:ATV vs UTV: Pros and Cons. If you\u2019re in the market for a new machine you\u2019re probably wondering which is better, an ATV or a UTV? Today we\u2019re helping you make a little pros and cons list for each one so you\u2019ll have a better idea which machine is right for you.\\\\n\\\\n\\\",\\\"question\\\":\\\"difference between atv & utv\\\"}\", \"original_answer\": \"Based on the given passages, an ATV (All-Terrain Vehicle) has one seat and the rider sits on a saddle, while a UTV (Utility Terrain Vehicle) has multiple seats and the riders can sit beside each other. Additionally, UTVs are capable of hauling items.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "calibration_replay",
+  "source_cluster_id": "sha256:eed46ea20a15258c204cab3a86261b6b679a5da7f0a1cdbb4e73ad78c8c2050c",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ]
+}

@@ -1,0 +1,110 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.5959422959713265,
+  "exclusion_reason": null,
+  "family_id": "sha256:e33ce2489ce7822bca4d870f938aa547631e54f405342132175c6065733c5a04",
+  "input_tokens": 987,
+  "invocation_finished_at": "2026-10-01T11:44:42.721420+00:00",
+  "invocation_started_at": "2026-10-01T11:44:41.125477+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 987,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1011
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:ad915605d4f3db8746b3c555363dbbf49ad420d43f86cf83056f382368eb0972",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855082,
+    "id": "chatcmpl-8p07NkLNWDfGBQpkMRddYiiWKPcjCcu0",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.543,
+      "predicted_n": 24,
+      "predicted_per_second": 42.5122621306083,
+      "predicted_per_token_ms": 23.522625,
+      "prompt_ms": 919.771,
+      "prompt_n": 909,
+      "prompt_per_second": 988.2894764022783,
+      "prompt_per_token_ms": 1.0118492849284928
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 987,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1011
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"6546 Pardall Rd\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":null},\\\"business_stars\\\":3.0,\\\"categories\\\":\\\"Restaurants, Italian\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":null,\\\"name\\\":\\\"Pasta House\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2012-05-14 10:40:03\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"Got the calzone, it was decent. Took forevs. I recommend the sausage and pepperoni if you like calzones, otherwise the pepperoni jalapeno calzone was average and nothing special. \\\\n\\\\nSeating was awkward, but nice that it was outdoors.\\\"},{\\\"review_date\\\":\\\"2012-03-28 00:16:21\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Pasta house is the lowest of the low. First of all, pasta is one of the cheapest foods for a restaurant to prepare fresh. But at Pasta House, everything is frozen. Can't tell you how many times I've taken home a baked ziti that was rock hard and cold in the middle. And because it isn't fresh, the pasta doesn't really seem to hold up as leftovers in the fridge, usually getting soggy and inedible. \\\\n\\\\nBut wait, there's more! The pricing is just unacceptable, $8-$10 (or more) for one medium-sized serving of pasta which is never a notch above barely mediocre. You are seriously better off buying the ingredients and making it yourself  - it'll cost roughly the same and it'll be fresh, and the cashier won't shamelessly hit on you in an attempt to haggle for tips.\\\\n\\\\nAlso, did I mention that they take forever? That's because they put their frozen iced pasta blocks in the oven to give the impression that it's being cooked fresh. Pasta House, you ain't foolin' nobody. Put it in the damn microwave and save us the dramatics. Or better yet, just make it fresh.\\\"},{\\\"review_date\\\":\\\"2011-11-15 17:37:42\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Pasta House disappointed--long wait 20-30 minutes & very sub par food--very spicy marinara, & bland veggies. A decent portion for the price, but i'd rather get a small amount of good than a large amount of mediocre bordering on bad..let's just say I could have done better myself. But I did like the garlic bread.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Pasta House is an Italian restaurant located in Goleta, CA. According to customer reviews, the restaurant offers decent portions of pasta dishes, but the quality of the food is questionable. Some customers have reported that the pasta is frozen and not fresh, and the pricing is considered unreasonable for the quality served. Customers have also complained about the long wait times for their food, with some reporting a wait of 20-30 minutes. On the positive side, the garlic bread is said to be good. The restaurant has outdoor seating, takes reservations, and offers take-out options. However, based on customer feedback, the overall experience at Pasta House is mediocre at best, with some reviewers expressing dissatisfaction with the food and service.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_update",
+  "source_cluster_id": "sha256:999af9fdf07fd7bd3e8ada5960214b7a10c439fdb8b59a1dbd4a1632e27d5672",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+  ]
+}

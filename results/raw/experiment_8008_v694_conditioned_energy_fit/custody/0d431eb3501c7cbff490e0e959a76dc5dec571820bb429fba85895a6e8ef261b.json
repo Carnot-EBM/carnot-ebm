@@ -1,0 +1,111 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.20318509102799,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:e9e218abe5ce8087a19ee1dacc41388e0738408dd0271aa5166327408405571f",
+  "input_tokens": 527,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 1,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 527,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 551
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:5cb8d23da65b278e38bf2ffd3eb383ba5ef4fc6dd150878c4341bf299099fff8",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 1\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886205,
+    "id": "chatcmpl-VwyaogFioot9Xq0L0L3T82KcDrnVXMVu",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.437,
+      "predicted_n": 24,
+      "predicted_per_second": 42.445046928305004,
+      "predicted_per_token_ms": 23.559875,
+      "prompt_ms": 501.923,
+      "prompt_n": 449,
+      "prompt_per_second": 894.5595240704251,
+      "prompt_per_token_ms": 1.11786859688196
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 527,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 551
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Breach of Contract when no money has exchanged hands, no work has been performed, and no start or end date for the work? Had an asphalt paver give written estimate for paving my driveway. Signed it. But some of the details of the quantity of material looked suspect.\\\\n\\\\npassage 2:The acceptance of a verbal contract occurs when the person to whom the contract is offered voluntarily indicates agreement to its terms and conditions. Consideration: In addition to an offer and acceptance, verbal contracts must contain consideration. This means that each side must give the other something of value for the agreement to be binding. In most verbal contracts, this is an exchange of money, such as a down payment. However, in some cases, it is not money but a promise that is exchanged.\\\\n\\\\npassage 3:RECOGNIZING WHAT CONSTITUTES A CONTRACT is the key to understanding many legal. questions. Very often a dispute centers not on whether someone has violated a contract, but whether. there was a contract in the first place. Other disputes center on whether a change in circumstances. has made the contract unenforceable. This chapter contains five sections. The first section, A.\\\\n\\\\n\\\",\\\"question\\\":\\\"when money changes hands constitutes contract\\\"}\", \"original_answer\": \"Money changing hands can constitute a contract if it is part of an agreement where both sides give something of value, as described in passage 2. This is often seen in verbal contracts, where an exchange of money, such as a down payment, is seen as acceptance of the contract's terms and conditions. However, recognizing what constitutes a contract can often be a point of dispute, as mentioned in passage 3.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "ca19f39fb33be9db51cd5497ce6c2122b39e5fd97d7b61624a67ac26184902fb",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ]
+}

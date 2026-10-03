@@ -1,0 +1,123 @@
+{
+  "arm": "swap",
+  "capture_identity": "sha256:c690c1f517fbce73c5da6a2d1e99e3819c3de93e1045fe76d1c8215b54691541",
+  "censor_status": false,
+  "denominator": 1,
+  "donor_group_id": "sha256:8a2356c726ba4a4cbcc131179731a1da8e9be383d6783480705941188494264b",
+  "duration_s": 1.3744613010203466,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:1e5d3e5d327aa79fb6ce771bbf622201b5aebb41cc48183de3114e7a2976d32d:swap",
+  "group_id": "sha256:1e5d3e5d327aa79fb6ce771bbf622201b5aebb41cc48183de3114e7a2976d32d",
+  "input_byte_upper_bound": 3743,
+  "input_tokens": 963,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 1.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 963,
+      "prompt_tokens_details": {
+        "cached_tokens": 342
+      },
+      "total_tokens": 986
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:51d677fe4a1503683625e8577ff940432d27fc3aeb51185684f7f361b9b28649",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 1.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790925791,
+    "id": "chatcmpl-EahahzmlU3RanyHI04gToZgSTh6vDOiL",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 342,
+      "predicted_ms": 537.782,
+      "predicted_n": 23,
+      "predicted_per_second": 42.768259257468635,
+      "predicted_per_token_ms": 23.381826086956522,
+      "prompt_ms": 632.612,
+      "prompt_n": 621,
+      "prompt_per_second": 981.6443570466574,
+      "prompt_per_token_ms": 1.0186988727858293
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 963,
+      "prompt_tokens_details": {
+        "cached_tokens": 342
+      },
+      "total_tokens": 986
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 32,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:1 Preheat grill to medium (or bake in oven at 375\u00b0). 2  Place one chicken breast on 10x10 piece of heavy aluminum foil. 3  Brush each breast with olive oil, season with salt and pepper. 4  Heat 1 tablespoon olive oil in skillet. 5  Saute shallot and garlic until just tender, 2-3 minutes. Taste to check seasoning. 2  Divide sauce, spooning over each chicken breast on foil. 3  Fold foil over, or bring up sides and crimp edges tightly to seal. 4  Place on grill and cook until chicken is cooked through, about 15-20 minutes or place in oven and bake about 20 minutes. 5  Serve hot. 6  Great with hot cooked brown rice.\\\\n\\\\npassage 2:Fold the sides of the foil together over the chicken breast, crimping the edges together to create a tight seal. Crimp both ends together, as well. Place the foil packet on a baking sheet and place in the oven.Bake for 20 to 30 minutes, depending on the size of the chicken breast.Remove baking sheet from oven. Allow the chicken to rest for five minutes before opening the packet.Transfer chicken and vegetables to a plate and serve immediately.old the sides of the foil together over the chicken breast, crimping the edges together to create a tight seal. Crimp both ends together, as well. Place the foil packet on a baking sheet and place in the oven.\\\\n\\\\npassage 3:1 Preheat oven to 375\u00b0F. 2  Place 1 chicken breast in center of each sheet of foil; arrange carrots, zucchini, peas and bell pepper around chicken. 3  Combine 1/2 cup chicken broth and flour in small saucepan; stir in garlic, thyme, salt, nutmeg and black pepper.REPARATION: 1  Preheat oven to 375\u00b0F. 2  Place 1 chicken breast in center of each sheet of foil; arrange carrots, zucchini, peas and bell pepper around chicken. 3  Combine 1/2 cup chicken broth and flour in small saucepan; stir in garlic, thyme, salt, nutmeg and black pepper. 4  Heat to a boil, stirring constantly, until thickened.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to cook chicken breast in the oven with foil\\\"}\", \"original_answer\": \"Based on the passages, to cook sinigang na baboy, start by boiling sampalok in water until the shell shows cracks. After it cools, peel off the shells and strain the sampalok with water into a bowl. Massage the sampalok meat off the seeds and strain again. In a pot, saut\u00e9 garlic and onion then add tomatoes and let it simmer for 5 minutes. Add pork and fish sauce then add the rice wash. Bring to a boil then simmer for 15 minutes then add the gabi. Continue to simmer until the pork is tender. Add the horse radish and simmer for 10 minutes then add the string beans, kangkong, and sili (optional). Let boil for 2 minutes. Remove scum from the broth then add onions, tomatoes, siling mahaba, msg, and sinigang mix and let cook for 10 minutes. Add eggplant and cook it for an additional 10 minutes. Wait five minutes then add the string beans. Finally add the water spinach (Kangkong) and add salt if needed. Let it cook for three more minutes. Serve with rice.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69410,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "seed": 69410,
+  "source_cluster_id": "24913e98c933fd708cec97501c28ebfb641c3f51852ffaf3290e3b8c51bd2f59",
+  "source_hash": "sha256:a9f6edcc62c20084f83e7f516fdd989386b7c467e4baed0941668e9aa0e9d615",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20
+  ]
+}

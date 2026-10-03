@@ -1,0 +1,115 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.5214499180437997,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:5e802398e934d62e0a2f103eba6c284e3a72e2f3c21844ec487de8d383919fb5",
+  "input_tokens": 978,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 978,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1001
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:b384c65c9a19a11fc5057b24abdb1aa357fa2c087885797fe74c39a4c46dec9a",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885867,
+    "id": "chatcmpl-p7LbxqcBckIEAWbMgq3DE9axEfqqtcnZ",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 536.227,
+      "predicted_n": 23,
+      "predicted_per_second": 42.89228255943845,
+      "predicted_per_token_ms": 23.314217391304346,
+      "prompt_ms": 865.185,
+      "prompt_n": 900,
+      "prompt_per_second": 1040.2399486814961,
+      "prompt_per_token_ms": 0.9613166666666666
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 978,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1001
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"827 E Montecito St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":true},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Mexican, Restaurants, Breakfast & Brunch, Seafood\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"9:0-20:30\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"9:0-20:30\\\",\\\"Sunday\\\":\\\"9:0-20:30\\\",\\\"Thursday\\\":\\\"9:0-20:30\\\",\\\"Tuesday\\\":\\\"9:0-20:30\\\",\\\"Wednesday\\\":\\\"9:0-20:30\\\"},\\\"name\\\":\\\"Rosales Mexican Restaurant\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-05 18:31:23\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Amazing service and amazing authentic Mexican food! A must try you won't be disappointed.\\\"},{\\\"review_date\\\":\\\"2021-12-07 18:53:33\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"I came here for dinner with some friends. I have been to wanting to try this restaurant because I have heard good things about their food. I got two carnitas tacos, red steak enchiladas and a Michelada to go. Everything was tasty and flavorful! The steak enchiladas was wet with the red sauce and came with rice and beans. I don't usually eat beans, but their beans had a good taste and wasn't dry at all. The only reason why I didn't give them 5 stars is because they could have put more meat on the tacos and inside the enchiladas. Other than that everything was great and the michelada was definitely refreshing!\\\"},{\\\"review_date\\\":\\\"2021-11-21 01:01:38\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Most delicious bbq chicken in town... under radar spot for locals. On Saturdays only they grill some delicious marinated chicken. Order a half plate comes with hand made tortillas and chow down. Just melts in mouth so tasty, flavorful and fluffy. Their tacos are also really tasty during the week. Very nice staff, a real locals joint no tourists here. Maybe one of very best Mexican spots around Milpas which is saying a lot. Forget chicken ranch too much sodium aka heart attack 101. This is healthy and extremely tasty. Seasoning perfection.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Rosales Mexican Restaurant is a popular eatery in Santa Barbara, CA, located at 827 E Montecito St. The restaurant is known for its authentic Mexican cuisine, including breakfast, brunch, and seafood dishes, and is open from 9:00 am to 8:30 pm from Tuesday to Sunday. It boasts a 4.5-star rating, with customers praising the excellent service, delicious food, and refreshing beverages. Favorites include the carnitas tacos, red steak enchiladas, and BBQ chicken. The restaurant provides a casual ambiance and is good for groups. Despite not offering Wi-Fi or outdoor seating, customers can avail themselves of validated parking and take-out services. However, the restaurant does not take reservations.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "calibration",
+  "source_cluster_id": "35d2f2c868195f040d15e15aceb5319d7c67535c5e9bbee980343aaf72a28613",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18
+  ]
+}

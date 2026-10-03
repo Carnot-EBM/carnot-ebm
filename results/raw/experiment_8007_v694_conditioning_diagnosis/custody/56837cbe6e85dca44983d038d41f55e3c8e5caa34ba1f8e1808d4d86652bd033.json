@@ -1,0 +1,110 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.2089521660236642,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:8f0eda2e41852e575f302976b9913acdf9c30796b582ee6d82872227a702ad5a",
+  "input_tokens": 584,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 584,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 607
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:f68a0463fab23f5df30b6bbd6d4d1bf59fb4b7a57e47a00096fa32bfcbf09f33",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886276,
+    "id": "chatcmpl-8TRcqWWH5VW77ZbG8h1Di0znpTeqO26d",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.08,
+      "predicted_n": 23,
+      "predicted_per_second": 42.50757743771716,
+      "predicted_per_token_ms": 23.52521739130435,
+      "prompt_ms": 535.771,
+      "prompt_n": 506,
+      "prompt_per_second": 944.4333493227518,
+      "prompt_per_token_ms": 1.0588359683794466
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 584,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 607
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:See the current Clayton, ID weather and a 5 day forecast. Also view: monthly average temperatures, precipitation, snow depth, wind speed, air quality and pollution. Find Homes Mortgages Best Places 2017 Top 10 Cities Blog\\\\n\\\\npassage 2:Hourly Forecast Detailed. 1  0am:The Clayton, ID forecast for Aug 14 is 68 degrees and Partly cloudy. There is 78 percentage chance of rain and 1 mph winds from the East-Northeast. 2  3am:The Clayton, ID forecast for Aug 14 is 62 degrees and Fog. There is 89 percentage chance of rain and 1 mph winds from the Southeast.\\\\n\\\\npassage 3:3pm: The Clayton, ID forecast for Jan 06 is 5 degrees and Cloudy. There is 44 percentage chance of rain and 17 mph winds from the Northwest. 6pm: The Clayton, ID forecast for Jan 06 is 2 degrees and Cloudy. There is 50 percentage chance of rain and 12 mph winds from the Northwest. 9pm: The Clayton, ID forecast for Jan 06 is -1 degrees and Cloudy. There is 62 percentage chance of rain and 8 mph winds from the Northwest. Clayton 7 Day Weather. Saturday: The Clayton forecast for Jan 06 is 3 degrees and Light\\\\n\\\\n\\\",\\\"question\\\":\\\"weather in clayton,id\\\"}\", \"original_answer\": \"The weather in Clayton, ID varies throughout the year. For instance, the forecast for Aug 14 shows temperatures ranging from 62 to 68 degrees with chances of rain and wind speeds up to 1 mph. However, in January, the temperature can drop as low as -1 degrees with higher wind speeds and a higher chance of rain. It's also possible to experience conditions like fog and cloudiness.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "764a35829340ac6d069e923fe80e65c80a64d355375ac1bcf055596816d73170",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ]
+}

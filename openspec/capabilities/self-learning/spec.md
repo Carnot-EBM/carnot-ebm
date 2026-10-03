@@ -29902,3 +29902,146 @@ principle for every required field. `verdict_class` SHALL be one of
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-SELF-7142 and SCENARIO-SELF-7142-* | Implemented by `python/carnot/experiment_7142_v627_flowbalance_memory_csl.py` and `scripts/experiments/experiment_7142_v627_flowbalance_memory_csl.py`; publishes `results/experiment_7142_v627_flowbalance_memory_csl.json` plus transactional checkpoints | Focused RED-to-green tests in `tests/python/test_experiment_7142_v627_flowbalance_memory_csl.py`; scoped 100 percent coverage, cold artifact validation, adversarial verification, row-consistency replay, spec coverage, and root-clutter gates |
+
+## REQ-SELF-7994: Freeze delayed development feedback before learning
+
+V693 prepares a once-through development stream; it does not train a head or
+claim learning benefit. Calibration uses only 64 calibration groups. The 256
+stream slots retain a fixed 20-slot label delay, including unavailable and
+end-censored events. Retention labels remain evaluator-only until an independent
+learning audit seal. Public source disjointness is bounded to recorded evidence;
+unknown historical access and public pretraining exposure remain unknown.
+
+## REQ-SELF-7996: Runnable adaptation precedes benefit claims
+
+Freeze a historical-fit spline checkpoint and predict/update interface before
+any new-cohort target access. Demonstrate CPU update locality and numerical
+parity. Readiness is a mechanism result; natural stream improvement and retention
+remain unmeasured. Sigmoid equivalence is an identity control and cannot count as
+an energy-method win.
+
+## REQ-SELF-7997: Static evaluation does not gate adaptation
+
+Frozen development decisions do not gate the online learner. Calibration
+selects temperatures only. No coefficients change and no retention targets
+are opened. This evaluation does not claim globally fresh observations.
+
+Implementation: `scripts/experiments/experiment_7997_v693_typed_development_decisions.py`
+uses a label-free predictor and separate reporting evaluator.
+`tests/python/test_typed_development_7997.py` and
+`tests/python/test_experiment_7997_v693_typed_development_decisions.py`
+verify the frozen decision and custody requirements.
+
+## REQ-SELF-7998: Randomized delayed sparse adaptation
+
+Exp7998 starts from Exp7996 spline seed 17 and calibrates only temperature by
+calibration Brier with tie order 1, .5, 2. Freeze rate .01, L2 .001, typed costs,
+coefficients and acquisition before stream-label access. Only 256 stream slots
+may train; retention targets stay sealed. Targeted acquisition has pi=.5 inside
+[.05,.75], .125 outside and zero for ineligible public observations. Uniform pi
+is sum(targeted pi)/eligible count. Seeds 101 through 120 share one deterministic
+source/seed draw across arms. Report expected and realized budgets separately.
+
+Compare targeted IPW, targeted unweighted, uniform IPW, full feedback and frozen
+no-write. IPW weights are exactly 1/pi, at most 8, without clipping; L2 decay is
+unweighted. Full feedback is a descriptive upper-budget reference. Issue and
+persist prediction/action at t before releasing selected origin t-20. Never
+compress slots or flush terminal pending labels. Update once per due receipt.
+Atomic state stores coefficients, pending due times, RNG identity, seen IDs and
+checksum. Report physical coefficient touches and durable bytes.
+
+### SCENARIO-SELF-7998-CAUSAL
+
+Future and never-selected label mutation leave earlier predictions unchanged.
+Duplicate receipts do not update twice. Restart at slot 128 equals uninterrupted
+execution. Sparse updates match independent dense gradients on identical labels.
+A circular known-benefit fixture changes future predictions; a no-headroom
+fixture asserts no benefit. Save past-label shuffle separately. Twenty schedules
+are not twenty independent datasets. Exp7999 alone decides natural benefit.
+
+Implementation: `python/carnot/verify/selective_feedback_7998.py` stores issued
+and committed slot receipts. `tests/python/test_selective_feedback_7998.py`
+checks delayed custody, mutation invariance, interrupted issuance at slot 128,
+idempotence, sparse/dense parity, controls and corrupt checkpoint rejection.
+The separate shuffle diagnostic samples only selected labels whose origin is no
+later than the currently due receipt. It records the sampled origin explicitly;
+reversing a complete stream is forbidden because that exposes future labels.
+
+## REQ-SELF-7999: Independent finite replay learning audit
+
+Independently reconstruct Exp7998 acquisition, delayed feedback, sparse data
+gradients and unweighted L2 decay without importing its acceptance or benefit
+functions. Compare targeted IPW with frozen, uniform IPW and targeted unweighted
+on one-based slots 41–256. Average acquisition seeds within each source first.
+Require 160 eligible groups, 20 per class and eight complete disjoint 20-slot
+blocks. Use 10000 paired moving-block draws of length 20, Holm correction of
+three cost tests, cost gain >=.02, positive lower bounds, adjusted p<.05,
+no extra false accepts and Brier degradation upper bound <=.01. Lengths 10 and
+40 are diagnostics. Adaptive development intervals have no population coverage
+guarantee. Generalized benefit remains zero.
+
+### SCENARIO-SELF-7999-RETENTION
+
+Freeze final heads and retention predictions before opening reserved targets.
+Retention never trains or tunes. Require 48 eligible sources and eight per class,
+and cost degradation upper bound <=.01 against the initial head. Report Brier,
+false accepts and durable updates that change later natural predictions. A working
+circular positive control is mandatory; absent selectable natural headroom makes
+the natural null inconclusive.
+
+Implementation: `python/carnot/verify/learning_causal_audit_7999.py` computes source-averaged contrasts and sealed retention checks. `tests/python/test_learning_causal_audit_7999.py` exercises support, controls and coefficient reconstruction.
+# REQ-SELF-8003: Sparse portability is not accelerator execution
+
+The fitted 109-parameter sparse head and its lazy global L2 decay SHALL be
+declared separately from pretrained models. Exp8003 invokes zero pretrained
+loads or generations. CPU numerical compatibility cannot establish FPGA, NPU,
+TSU or larger-FPGA operation. Extropic and spline papers are external designs.
+Integration waits for useful workload and authenticated compatible kernel evidence.
+# REQ-SELF-8004: Separate finite replay from durable deployment learning
+
+Implementation: `python/carnot/reporting/v693_capstone_reduction.py` checks
+source means, delayed gradient equations, retention, confidence and service.
+The capstone records three open gaps and explicit evidence to reopen them.
+
+The V693 capstone SHALL independently aggregate issued probabilities and action
+costs by source before comparing update arms. Retention is evaluation only.
+Causal receipts SHALL show feedback release before use. Protocol controls and
+fallible source-support labels SHALL remain separate from independent natural
+evidence. Development observations and administrative repair cannot close
+hidden-game or out-of-distribution deployment gaps. Report explicit next
+actions and reopening conditions, with generalized learning benefit fixed zero.
+
+# REQ-SELF-8025: Causal equal-budget persistent sparse learning
+
+Exp8025 SHALL start every arm from Exp8020's calibrated conditioned-energy head,
+seed 17. Freeze costs (unsupported accept 5, supported reject 1, escalation 0.5),
+learning rate 0.01, L2 0.001, and calibration before stream access. Exp8019 stream
+support gates admission; Exp8021 benefit does not. Use 256 original slots and
+20 algorithm seeds (101 through 120), which do not increase independent n.
+Compare frozen no-write, uniform, issued decision-loss priority, issued Brier-loss
+priority, and periodic selection. Each adaptive arm selects four distinct IDs
+from each complete nonoverlapping block of 16 eligible releases, capped at 64.
+Periodic selection uses positions 0,4,8,12. Priority ties use seeded stable hashes.
+Issue and commit state hashes before releasing origin slot +20. Unknowns consume
+slots and receive no negative imputation. Do not flush the last 20 labels.
+Use exactly-once feedback IDs and content-addressed durable head checkpoints.
+Measure hot arithmetic CPU nanoseconds separately from durable transaction wall
+nanoseconds and serialized bytes. Record spline support overlap with past inputs.
+Evaluate only issued later decisions on released targets, never training loss.
+Retention labels remain unopened. Complete valid null trajectories earn readiness
+one after owned checks; parameter changes alone give no decision benefit.
+
+## SCENARIO-SELF-8025: Delayed release, reload and controls
+
+Future-target mutation SHALL leave earlier predictions and states unchanged.
+Unknown targets SHALL preserve slots and equal budgets. Reload SHALL recover
+identical durable rows; duplicate feedback SHALL fail. Sparse updates SHALL
+match dense calibrated BCE descent with lazy global L2 decay. Cold CLI reduction
+SHALL reject modified rows, checkpoints and summaries. Missing head or failed
+support SHALL be terminal blocked. Apply E2E-007 learning guard principles to
+this CPU learner without activating production SMGI or certifying retention.
+
+Implementation: `python/carnot/verify/causal_online_8025.py` uses calibrated sparse
+writes and a synchronous SQLite issue/release/update ledger. Traced tests in
+`tests/python/test_causal_online_8025.py` cover delayed release, unknown slots,
+exact budgets, dense equivalence, causal mutation, checkpoints and CLI reload.

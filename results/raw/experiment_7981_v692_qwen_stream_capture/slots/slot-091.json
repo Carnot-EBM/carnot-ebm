@@ -1,0 +1,132 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.9094867029925808,
+  "exclusion_reason": null,
+  "family_id": "sha256:db8f240b4e9da4a995c95cf68a7ac2b57ac323f1c1da1feb95c766e22fb1c352",
+  "input_tokens": 1448,
+  "invocation_finished_at": "2026-10-01T11:43:20.023751+00:00",
+  "invocation_started_at": "2026-10-01T11:43:18.114264+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1448,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1471
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:6c2edb7dbba03a0abab031f80b8961ebc576e3639d4b21df96f78d4b66f6fdf7",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855000,
+    "id": "chatcmpl-8YJPQyOUYYflX1xu0Tj0b3y1pJPe7JGg",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.057,
+      "predicted_n": 23,
+      "predicted_per_second": 42.58809718233446,
+      "predicted_per_token_ms": 23.480739130434785,
+      "prompt_ms": 1244.746,
+      "prompt_n": 1370,
+      "prompt_per_second": 1100.6261518414199,
+      "prompt_per_token_ms": 0.9085737226277373
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1448,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1471
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Hong Kong (CNN)When she was growing up, Mui Thomas, wanted to be a fashion model -- not an unusual aspiration for a young girl. But Mui suffers from a rare genetic condition that leaves the skin on her face and body red raw and open to infection. \\\"I really don't think I knew that I didn't look like everybody else,\\\" she says. She was born with Harlequin ichthyosis, which means her skin is extremely thick, dry and flaky -- resembling fish scales. She can't sweat but she can shed tears. On the day we speak, her appearance raises few eyebrows at her local Starbucks in Sai Kung -- she's a familiar and well-known presence in the waterfront Hong Kong town where she grew up. Mui's struggle to come to terms with her condition and other people's reactions to it has, at times, left her on the brink of suicide. But, now 22, she refuses to let it get in the way of her life -- she has a full-time job, plays sport and is embarking on a career as public speaker -- educating and inspiring others about the challenges of looking \\\"visibly different.\\\" After she was abandoned at birth, long-time Hong Kong expats Tina and Rog Thomas began fostering Mui, when she was just one and a half years old. They were told she didn't have long to live. \\\"We wanted to give her a family life in the time she had,\\\" says Tina. However, Mui began to thrive in a loving family environment and Tina and Rog formally adopted Mui when she was three years old. Together they gradually learned how to manage her skin condition. Each day she bathes twice, ideally for two hours each time, and everywhere she goes she carries a backpack with three or four tubs of cream that she must apply throughout the day to stop her skin from drying out. She's thought to be the fourth oldest person alive with harlequin ichthyosis. The oldest is 31. But while Mui's unusual appearance made little difference during her early years, that changed when she started secondary school. The school she attended required that she be accompanied by a educational assistant, which put up a barrier between her and the other children and made it difficult for her to make friends. Things got worse when she became a victim of cyberbullying. She began to deny her appearance, stopped bathing, taking her medication and applying the cream. At times, she considered jumping from the balcony of her home. \\\"They'd say things like 'You shouldn't have been born' -- and very personal things that only people who knew me would know,\\\" she says. \\\"It made me very wary of everybody. Even when people tried to be nice, I didn't repay it. I didn't trust them.\\\" The worst episode lasted for 10 months and only stopped after police became involved and found the bully -- someone whom Mui thought was her friend. Mui left school with no qualifications. She says the school didn't push her to study and made too many allowances for her skin disorder. \\\"I still wish I had got a very hard kick up the backside from the teachers when I wasn't doing work,\\\" says Mui. Since leaving school, Mui has found a full-time job working with people with special needs and at weekends can be found running around a rugby pitch with a whistle -- she's a referee for kids' matches. Along with her parents, she's also begun speaking about her experiences of living with a \\\"visible difference\\\" and cyberbullying at schools around Hong Kong. Her father has also written a family memoir called \\\"The Girl Behind the Face.\\\" Many have found her story inspirational -- a real life version of the young adult novel \\\"Wonder\\\" by R.J. Palacio about a young boy with a deformed face who enters middle school. On Saturday, she will graduate from school assemblies and speak in front of a paying audience at a TEDx talk in the city. Her father is both protective and proud. He thinks public speaking will help Mui come to terms with her condition but he's also wary that she could be portrayed as a \\\"modern freak show.\\\" \\\"It's difficult for her because she spent so long denying it. The more she confronts it, the more she is aware of it -- it will build confidence,\\\" he says. There's even talk she might take part in a fashion show for people with visible difference, realizing a childhood dream. In person, Mui comes across as articulate, poised and confident -- something her mom says comes out of spending so much time with adults while growing up -- and it's easy to see how she could command an audience of hundreds. But after two hours of chatting in a coffee shop, she's a little bored and keen to get back to her job. She flings her backpack over her shoulder and dashes off into Hong Kong's crowded streets.\\n\", \"original_answer\": \"Mui Thomas, a 22 year old Hong Kong woman who suffers from the rare genetic condition, Harlequin ichthyosis, is embarking on a career as a public speaker to educate and inspire others about the challenges of looking \\\"visibly different\\\". Thomas is thought to be the fourth oldest person alive with the condition that leaves her skin extremely thick, dry and flaky, resembling fish scales. After being abandoned at birth, she was adopted by Tina and Rog Thomas at the age of three. Thomas' life has been a struggle to come to terms with her condition and other people's reactions to it. She left school with no qualifications and fell victim to cyber bullying, something she also intends to address in her talks. Thomas now has a full-time job working with people with special needs and plans to take part in a fashion show for people with visible differences.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_admission",
+  "source_cluster_id": "sha256:d8a6748c04089f82af8202f32bc148d991c6c997fefceb5b71491fc9e24d88ca",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38
+  ]
+}

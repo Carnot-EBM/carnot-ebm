@@ -1,0 +1,107 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.407619029050693,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:8c11af78ee5d637c83ff639a5acf9048b817469f46f825fdf89486d8e929c95e",
+  "input_tokens": 828,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 828,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 851
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:7a8ddce79782f63a54383599bc645a8199822632053c6b7578cb810fb5e6297c",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886342,
+    "id": "chatcmpl-GPhwP3WMBJYpqtvrSBOZuzCspdRQjNNu",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.741,
+      "predicted_n": 23,
+      "predicted_per_second": 42.45571223149069,
+      "predicted_per_token_ms": 23.55395652173913,
+      "prompt_ms": 731.402,
+      "prompt_n": 750,
+      "prompt_per_second": 1025.4278768720894,
+      "prompt_per_token_ms": 0.9752026666666668
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 828,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 851
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"944 Linden Ave\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Sandwiches, Specialty Food, Food, Health Markets, Juice Bars & Smoothies, Restaurants\\\",\\\"city\\\":\\\"Carpinteria\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"9:0-18:30\\\",\\\"Monday\\\":\\\"9:0-18:30\\\",\\\"Saturday\\\":\\\"9:0-18:30\\\",\\\"Thursday\\\":\\\"9:0-18:30\\\",\\\"Tuesday\\\":\\\"9:0-18:30\\\",\\\"Wednesday\\\":\\\"9:0-18:30\\\"},\\\"name\\\":\\\"Pacific Health Foods\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-12-30 02:35:12\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"Not nice at the end of the day and after repeating a few times , one sandwich for my child was still missing. Check well on your food and what they charge you.\\\"},{\\\"review_date\\\":\\\"2021-11-27 03:22:40\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Came in for a\u00e7a\u00ed bowls and was not disappointed! We ordered a Blue Bowl, Green Bowl, and a Coconut Bowl.  All came with blueberries, bananas, strawberries, and gluten free granola on top. Coconut and honey are optional, and you can add other stuff for extra cost (e.g. nut butter, bee pollen, etc.).  The bowls are quite large and were delicious. Would definitely stop in again for more!\\\"},{\\\"review_date\\\":\\\"2021-11-03 15:48:55\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"This is a wine-lovers secret garden! Fantastic selection of local and European wines - pairs well with the fresh bread, too! We LOVE being part of the wine club and getting the lowdown from Amy each month. A great local market - from deli, to staff, to goods - love PHF.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Pacific Health Foods is a highly-rated local business located at 944 Linden Ave in Carpinteria, California. This establishment is known for its diverse offerings which include sandwiches, specialty foods, health markets, juice bars and smoothies, and restaurant services. It operates six days a week from 9:00 am to 6:30 pm. Pacific Health Foods offers free Wi-Fi and takeout options, with parking available both on the street and in a lot. Customer reviews highlight the large, delicious a\u00e7a\u00ed bowls with a variety of toppings as well as a fantastic selection of local and European wines. However, one review noted an issue with a missing sandwich from their order. Overall, customers enjoy the fresh food, quality goods, and the wine club offered by Pacific Health Foods.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "9c6aa7fad76e232d2640fcba3f4c9cf77b88b0ca73b87ca21949d76c0c9643f2",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ]
+}

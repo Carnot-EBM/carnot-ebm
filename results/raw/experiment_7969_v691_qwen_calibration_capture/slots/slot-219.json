@@ -1,0 +1,114 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.7818870189948939,
+  "exclusion_reason": null,
+  "family_id": "sha256:3c20ce3518c8d544f42ff58963d3c02e45e23f99b96e8d0d7a5ed1706d6bb768",
+  "input_tokens": 1248,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1248,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1271
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:96ebd144ed15a60b08f67607b3a9060c5ad4c52cc3ebc7b8e07d700e507881ec",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832777,
+    "id": "chatcmpl-AOyXAxBNlb2F5wSrrn7MA7ouGqBFBnP8",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 542.041,
+      "predicted_n": 23,
+      "predicted_per_second": 42.43221453727669,
+      "predicted_per_token_ms": 23.567000000000004,
+      "prompt_ms": 1108.669,
+      "prompt_n": 1170,
+      "prompt_per_second": 1055.3194866998174,
+      "prompt_per_token_ms": 0.947580341880342
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1248,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1271
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"1915 De La Vina St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":null,\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":false,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Restaurants, Barbeque, Food, Caterers, Event Planning & Services\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Monday\\\":\\\"9:0-17:0\\\"},\\\"name\\\":\\\"Feast and Fest Catering\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2019-05-19 00:34:13\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"My wife and I hired Feast & Fest to cater our wedding in May 2019 and we could not have been happier with our experience. First of all, and most importantly, their food is amazing! We chose cedar plank salmon and roast chicken as our main dinner entrees, along with a variety of sides and appetizers -- every dish was both delicious and beautifully presented. Secondly, Jessica and her team were wonderful. They were friendly and helpful throughout the process of building our menu, and the cooks and servers who came in for the day of the wedding were also stellar -- professional, courteous, accommodating, and attentive. We could not have asked for more. If you are looking for great, farm-to-table style catering for a wedding or other event, we highly recommend Feast & Fest.\\\"},{\\\"review_date\\\":\\\"2018-11-11 19:36:49\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Fantastic! First rate! My daughter's wedding reception was catered by Feast & Fest. Food is perfect, service excellent, timely, easy to work with. Would totally do business with Jessica and team. So great!\\\"},{\\\"review_date\\\":\\\"2018-10-18 19:21:38\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"If you are searching for a caterer in Santa Barbara - search no further! Feast and Fest catered our wedding for 220 people and they did a stunning job on every level. Attending were seasoned restaurant people - veterans of some of the top restaurants in the country along with award winning Portland restaurateurs. There was absolute consensus that F&F delivered impeccably on all levels - food - preparation, creativity, execution and presentation - service - gracious, attentive, responsive and on point. \\\\nBeyond this, owner Jessica Miller's dedication to client service on all fronts: from planning, organizing, connecting with vendors, providing anything and everything needed - reflected the passion and dedication she brings to her work. This commitment is translated to her staff which did an exceedingly amazing job!! Jessica also had a keen eye for value and quality and made certain that our choices were always aligned with budget while not sacrificing aesthetics.\\\\nThere are no words to thank Jessica and her crew for their hard work. It is inspiring to see people truly dedicated to their craft and passionate about the service they are providing. The accolades poured in over the weekend! Everyone was blown away!! Thank you Feat and Fest! If you want the best in Santa Barbara book them!!!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Feast and Fest Catering is a local business located at 1915 De La Vina St in Santa Barbara, CA. They offer catering services for events, specializing in farm-to-table style cuisine. The business has received positive reviews from customers, with an average rating of 4.5 stars.\\n\\nCustomers have praised the food provided by Feast and Fest, describing it as amazing, delicious, and beautifully presented. The menu offers a variety of options, including cedar plank salmon and roast chicken as main entrees, along with a selection of sides and appetizers. The business is known for its attention to detail in preparing and presenting their dishes.\\n\\nIn addition to the quality of their food, customers have also highlighted the excellent service provided by Feast and Fest. The staff, including the cooks and servers, have been described as professional, courteous, accommodating, and attentive. Customers have appreciated the friendly and helpful approach of the team, particularly when it comes to building the menu for their events.\\n\\nFeast and Fest has catered for various types of events, including weddings with large guest lists of up to 220 people. Customers have been impressed with the level of execution and presentation provided by the business, with specific mention of their creativity and attention to detail.\\n\\nOverall, Feast and Fest Catering is highly recommended for those looking for a caterer in Santa Barbara. The business offers top-quality food, excellent service, and a dedicated team led by owner Jessica Miller.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:eedf9f7906565a8ce39465973cc3ab7502623dcae086350d569ff46a1740413b",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22
+  ]
+}

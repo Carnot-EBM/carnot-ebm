@@ -1,0 +1,109 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.5611829580157064,
+  "exclusion_reason": null,
+  "family_id": "sha256:db806c3b4782ba1f3eb7daf21075da2883f8db157d45be969694426537bdcee2",
+  "input_tokens": 1068,
+  "invocation_finished_at": "2026-10-01T11:42:37.054808+00:00",
+  "invocation_started_at": "2026-10-01T11:42:35.493623+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 1068,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1089
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:48c3e501f4a7c518ade08acdbd25bdfa7e3a4fcb6750e3fd345496527c9f2681",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790854957,
+    "id": "chatcmpl-y0LhRI4vbx8rsAYeYJ9widw3nTSqkEfE",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 489.269,
+      "predicted_n": 21,
+      "predicted_per_second": 42.92117424157263,
+      "predicted_per_token_ms": 23.29852380952381,
+      "prompt_ms": 951.037,
+      "prompt_n": 990,
+      "prompt_per_second": 1040.968963352635,
+      "prompt_per_token_ms": 0.9606434343434344
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 1068,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1089
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"129 E Anapamu St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":true,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Gastropubs, French, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-22:0\\\",\\\"Monday\\\":\\\"11:0-22:0\\\",\\\"Saturday\\\":\\\"8:0-22:0\\\",\\\"Sunday\\\":\\\"8:0-22:0\\\",\\\"Thursday\\\":\\\"11:0-22:0\\\",\\\"Tuesday\\\":\\\"11:0-22:0\\\",\\\"Wednesday\\\":\\\"11:0-22:0\\\"},\\\"name\\\":\\\"The French Table\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2014-05-12 15:42:30\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"THE FRENCH TABLE is no longer in business but there is a new restaurant in it's place called PIANO GASTROLOUNGE.  Great food, great service and the same incredible view.  If you were a fan of The French Table than you should definately come by and try this new menu.  The brunch was very good,  I had a simple soprano omelete which turned out to be not so simple.  It was delicious.  I think it was the carmelized onions that did the trick and made it so unique.  Sit ouside if you can, it is so quiet, beautiful and relaxing.\\\"},{\\\"review_date\\\":\\\"2014-03-18 00:09:27\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"This place totally came out of nowhere and it is adorable! \\\\n\\\\nMy server named Dustin was incredibly attentive and kind. \\\\n\\\\nPlus this world needs more creperies, and The French Table excels in that arena.\\\"},{\\\"review_date\\\":\\\"2014-02-21 04:47:01\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"It's sad to saw but the food was really good but the service was horrid. Working in the food industry I was shocked. My friend and I were ignored by the first waiter who was flirting with a group of girls so we went to the bar. The bartender was busy talking with off the clock staff drinking for free. We were basically ignored. She also made up an excuse not to use our living social deal. Won't be going back. Staff was a joke.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"The French Table, located at 129 E Anapamu St in Santa Barbara, CA, is a gastropub and French restaurant. It offers a variety of food options and is known for its great service and incredible view. The business has a rating of 3.5 stars. \\n\\nThe restaurant is open from 11:00 am to 10:00 pm from Monday to Friday, and from 8:00 am to 10:00 pm on weekends. It offers outdoor seating and accepts reservations. The atmosphere is described as romantic and casual. \\n\\nCustomers have praised the food at The French Table, with one reviewer mentioning the deliciousness of the soprano omelette, which had a unique twist with caramelized onions. Another reviewer appreciated the attentive and kind service from a server named Dustin. \\n\\nHowever, there is also a negative review stating that the service was poor, with staff members ignoring customers and making excuses to not honor a deal. \\n\\nOverall, The French Table offers a pleasant dining experience with great food and a beautiful view. It is recommended to make a reservation and try their outdoor seating for a quiet and relaxing meal.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_update",
+  "source_cluster_id": "sha256:0eecc53436277aa6658661bd95ad9497c5e6a0936056d74dd1bb67a7f25345f8",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ]
+}

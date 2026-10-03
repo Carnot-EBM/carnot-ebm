@@ -1,0 +1,83 @@
+{
+  "arm": "swap",
+  "capture_identity": "sha256:c690c1f517fbce73c5da6a2d1e99e3819c3de93e1045fe76d1c8215b54691541",
+  "censor_status": false,
+  "denominator": 1,
+  "donor_group_id": "sha256:aac628b5d94a3088f5f6d88b6a19e83cb81f652995f2af8a2a86b8625739b1b3",
+  "duration_s": 0.0022551269503310323,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:5982816b5e4a6617aba5f99c460cd38b14d9e9418dfb6dd0ed7b0e259c7abd8c:swap",
+  "group_id": "sha256:5982816b5e4a6617aba5f99c460cd38b14d9e9418dfb6dd0ed7b0e259c7abd8c",
+  "input_byte_upper_bound": 2478,
+  "input_tokens": 30,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.25,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 18,
+      "prompt_tokens": 30
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:4deef479d1713db29c0debe9062be1cbe1ab88688cadb8af03c5e6e57dec6abb",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "message": {
+          "content": "{\"unsupported_probability\": 0.25, \"source_sentence_id\": null}"
+        }
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "usage": {
+      "completion_tokens": 18,
+      "prompt_tokens": 30
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 32,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Macropus antilopinus is the exception among wallaroos. It is, essentially, the far-northern equivalent of the eastern and western grey kangaroos. Like them, it is a creature of the grassy plains and woodlands, and gregarious, where the other wallaroos are solitary.\\\\n\\\\npassage 2:Kangaroos are usually larger than wallabies, which tend to be small (around 60 cm or 2 ft). Though their sizes vary hugely, the largest wallabies measure up to 180 cm (6 ft) from tail to head and weigh up to 20 kg (44 lbs).\\\\n\\\\npassage 3:Kangaroos and wallabies are very similar marsupials that belong to the same family (Macropodidae) and genus (Macropus). (The above image is a wallaby.) Their native territories often overlap, but wallabies are generally much, much smaller than kangaroos with a color pattern that is much more varied. The lifespan of a kangaroo is much longer, and these larger animals take longer to grow, and become more independent than their relatives.\\\\n\\\\n\\\",\\\"question\\\":\\\"difference between kangaroo and wallaby\\\"}\", \"original_answer\": \"At least 147 people have been killed, and many more injured, in a terrorist attack on Garissa University College, in Kenya. The attack was carried out by members of Al-Shabaab, an Islamist extremist group. The attackers targeted a Christian prayer service, before moving through the campus, killing non-Muslims and taking hostages. Witnesses have described the attackers forcing students to lie down before shooting them in the head. Some students were beheaded. The attackers then killed the remaining hostages. One student, Hellen Titus, survived by smearing herself in the blood of another victim to make it look as though she was dead. The bodies of the attackers were found still clutching their weapons.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69410,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "seed": 69410,
+  "source_cluster_id": "12ebfe81dd8cbde138d41f25285e0004c0e769e41e20c4dea73a071b9aa5a0bd",
+  "source_hash": "sha256:690ca56b7f1801afc387b585905b96da5493ea8cdea6d8cd350a65f78ef039fb",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ]
+}

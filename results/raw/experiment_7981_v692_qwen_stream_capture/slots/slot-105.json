@@ -1,0 +1,101 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.198647934012115,
+  "exclusion_reason": null,
+  "family_id": "sha256:99f1e4466c76d6e94b9299f63bb37f87f68cc56d27a46fb0f937fb3205b2e867",
+  "input_tokens": 491,
+  "invocation_finished_at": "2026-10-01T11:43:40.484021+00:00",
+  "invocation_started_at": "2026-10-01T11:43:39.285370+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 491,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 516
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:8011d94b80421de5895d086754c2670739758ae273ab3d4ec7f343dd6f110b05",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855020,
+    "id": "chatcmpl-4Wy68vmhdI1bUVltdPSiNnQrp6vo8ZPW",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 593.401,
+      "predicted_n": 25,
+      "predicted_per_second": 42.13002674414098,
+      "predicted_per_token_ms": 23.73604,
+      "prompt_ms": 490.558,
+      "prompt_n": 413,
+      "prompt_per_second": 841.8984095662491,
+      "prompt_per_token_ms": 1.1877917675544793
+    },
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 491,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 516
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:You'll notice when painting with acrylic paint that they dry to a flat finish. But mediums abound that can be added to the paints to increase luminosity or to get a matte or semi-matte finish. Acrylic pigments can also be diluted with water or a medium to create watercolor-like transparent washes.\\\\n\\\\npassage 2:http://www.facebook.com/allisonpriorart Learn how to draw a lighthouse and paint it, I forgot to zoom in but I hope this helped, if you need any help contact allisonprior@yahoo.com. Category. License.\\\\n\\\\npassage 3:Rating is available when the video has been rented. This feature is not available right now. Please try again later. http://www.facebook.com/allisonpriorart Learn how to draw a lighthouse and paint it, I forgot to zoom in but I hope this helped, if you need any help contact allisonprior@yahoo.com.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to paint a lighthouse with acrylics\\\"}\", \"original_answer\": \"To paint a lighthouse with acrylics, one can use different techniques such as adding mediums to achieve different finishes like luminosity or matte/semi-matte. Acrylic pigments can also be diluted with water or a medium to create transparent washes for a watercolor-like effect. The specific steps to paint a lighthouse may vary depending on the artist's preferred method, but generally, one can start by drawing the structure and blocking out colors before adding details and textures. For more guidance, the artist can refer to online resources or tutorials on how to draw and paint lighthouses using various materials and techniques.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_admission",
+  "source_cluster_id": "sha256:720d9db22fce88b2fd0891ea63389ab0abe6667d25ad512a7387c78c091cf536",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ]
+}

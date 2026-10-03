@@ -1,0 +1,104 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.1608161170152016,
+  "exclusion_reason": null,
+  "family_id": "sha256:5b2fd0bd2697020360bc99cda511e501a4abdd9cfc4fab39860bc3484ed9f267",
+  "input_tokens": 489,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 489,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 512
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:33aad20806d86521f5257371525a403e6889d39deb882cc983de14b13f01cd43",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832578,
+    "id": "chatcmpl-bBGr3221pnLOUU5BUuR1A8YCmlAejg9W",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 538.304,
+      "predicted_n": 23,
+      "predicted_per_second": 42.726786351206755,
+      "predicted_per_token_ms": 23.404521739130434,
+      "prompt_ms": 489.442,
+      "prompt_n": 411,
+      "prompt_per_second": 839.7317761859423,
+      "prompt_per_token_ms": 1.1908564476885646
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 489,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 512
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:1. Do squats. There are tons of different squat exercises you can do, but the basic idea is this: With your legs shoulder-width apart, lower your bum down to the ground until your thighs are parallel with the ground. Balance here for at least three seconds before pushing up. 1  Try doing squats with an exercise ball.\\\\n\\\\npassage 2:Calories. The main goal in any weight-loss regimen is to use more calories than you consume. This will create a calorie deficit and cause your body to burn fat to make up for the lacking calories. To burn 1 lb. of fat, you need to burn 3,500 more calories than you consume. If you are consuming as many calories as you are burning, you can drop 500 calories a day from your diet and lose 1 lb. in a week. The rest of the calories can be burned through exercise.\\\\n\\\\npassage 3:The best exercises to burn fat are cardiovascular exercises. Running, jogging and biking work the heart and lungs and tone the legs, thighs and buttocks in addition to burning hundreds of calories per hour.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to lose leg fat\\\"}\", \"original_answer\": \"To lose leg fat, you can try doing squats (passage 1). Additionally, creating a calorie deficit by consuming fewer calories than you burn (passage 2) and engaging in cardiovascular exercises like running, jogging, and biking (passage 3) can help burn fat in the legs.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:c94b614152e23fe813c6dab8a260ed05b6790bfdc72a6d565a235fc8a0e712e3",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ]
+}

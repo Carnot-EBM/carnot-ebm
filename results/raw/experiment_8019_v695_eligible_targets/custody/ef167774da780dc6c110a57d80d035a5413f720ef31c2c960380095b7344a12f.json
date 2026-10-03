@@ -1,0 +1,112 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.2198070829035714,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:a08cc714172a50f8f973af142b088d6b8aee791625a0ff2981b58c3dee16fdb3",
+  "input_tokens": 638,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 3,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 638,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 660
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:07c770ea36d5112360da2f6e486f487ab3e75fa5bb1587f4215e3aa4022db34d",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"unsupported_probability\": 0.0,\n\"source_sentence_id\": 3\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886131,
+    "id": "chatcmpl-EoxpeE7G42vR84TSpBUNhmBYc5vLyFPd",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 516.408,
+      "predicted_n": 22,
+      "predicted_per_second": 42.60197363325123,
+      "predicted_per_token_ms": 23.47309090909091,
+      "prompt_ms": 589.512,
+      "prompt_n": 560,
+      "prompt_per_second": 949.9382540134893,
+      "prompt_per_token_ms": 1.0527
+    },
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 638,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 660
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Yes, really. This rice cooker-sized appliance fries and roasts using hot air (from 80 to 200 deg C), which circulates around the food. No oil is needed for most foods, such as chicken wings and frozen French fries, while less oily ingredients like fish fillets or home-made fries need just a brush of oil. The Philips Air Fryer.\\\\n\\\\npassage 2:French fries being a staple in the American diet, the air fryer does a wonderful job frying French fries. A single layer of Frozen fries take about 12 minutes only to get that crispy outside and moist inside texture. Get ready for dinner with air fried fish and chips in just 15 minutes.\\\\n\\\\npassage 3:Directions. 1  For fish, preheat the Airfryer at 200 degree C for 5 minutes. Meanwhile, mix bread crumbs, salt, pepper, parsley and olive oil in a bowl. 2  Cut the fish into 8 long pieces. Crack the egg in a shallow bowl and use a fork to lightly whisk. 3  Dip 1 piece of fish in the flour. Shake off any excess.  Place the fish in air fryer. Repeat with all the remaining fish pieces and put in air fryer and cook for about 15 minutes or until golden. For chips, cut the potatoes in wedges shape with skin on. Soak them in a bowl with mild salted water for 20 minutes.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to make breaded fish in an air fryer\\\"}\", \"original_answer\": \"To make breaded fish in an air fryer, preheat the Airfryer at 200 degree C for 5 minutes. In the meantime, mix bread crumbs, salt, pepper, parsley, and olive oil in a bowl. Then, cut the fish into 8 long pieces. Take one piece of fish and dip it in the flour, shaking off any excess. Place this piece of fish in the air fryer. Repeat with all the remaining fish pieces. Cook the fish in the air fryer for about 15 minutes or until it turns golden.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "659924e504f404faa3e06b80767cbe90af49896715e2df726572eb194ec8e4b7",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ]
+}

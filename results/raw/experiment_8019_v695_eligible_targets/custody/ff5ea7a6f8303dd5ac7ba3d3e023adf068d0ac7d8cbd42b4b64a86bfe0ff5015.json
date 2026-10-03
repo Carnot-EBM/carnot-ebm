@@ -1,0 +1,97 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.1754183750017546,
+  "exclusion_reason": null,
+  "family_id": "sha256:aa7d303f4907906724390d59b2acb4a6f9d51bf540c7b3bc1cd7bbfc26c754ac",
+  "input_tokens": 507,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 507,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 530
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:b84d558584434a703d96a4051cfee7f830e30606179ab17e75219f88e088170e",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832861,
+    "id": "chatcmpl-KfhPhi4SQrZ9feYQafTJnRej7aBVRi7o",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 547.133,
+      "predicted_n": 23,
+      "predicted_per_second": 42.03731085494751,
+      "predicted_per_token_ms": 23.78839130434783,
+      "prompt_ms": 497.412,
+      "prompt_n": 429,
+      "prompt_per_second": 862.464114255386,
+      "prompt_per_token_ms": 1.1594685314685313
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 507,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 530
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:To add a data label to a single data point in a data series, click the data series that contains the data point that you want to label, and then click the data point again. This displays the Chart Tools, adding the Design, Layout, and Format tabs.\\\\n\\\\npassage 2:Select the chart you want to add the data labels to by clicking it. The chart will be surrounded by a light blur border indicating it is selected. Choose the Layout tab at the top of the Excel 2007 screen to display the options in the Layout ribbon. Locate the Labels group in the Layout ribbon.\\\\n\\\\npassage 3:When you \u201cadd data labels\u201d to a chart series, excel can show either \u201ccategory\u201d , \u201cseries\u201d or \u201cdata point values\u201d as data labels. But what if you want to have a data label that is altogether different, like this: You can change data labels and point them to different cells using this little trick.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to add data labels to a chart in excel\\\"}\", \"original_answer\": \"To add data labels to a chart in Excel, first click on the chart you want to add data labels to. This will make the Chart Tools appear, adding the Design, Layout, and Format tabs. Choose the Layout tab at the top of the screen to display the options in the Layout ribbon. Find the Labels group in the Layout ribbon. Click the data series that contains the data point that you want to label, and then click the data point again. When you add data labels, Excel can display either category, series, or data point values as data labels. If you want to change data labels and point them to different cells, you can use a trick.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:cbf89623112a3e4a9e1c621d7c943191122b290a0aeea7559f514387241c6c42",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ]
+}

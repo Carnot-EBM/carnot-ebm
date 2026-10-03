@@ -1,0 +1,104 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.3263052600086667,
+  "exclusion_reason": null,
+  "family_id": "sha256:c79fe1a8b2e988c7b269d6bd8133f68741dca275fea7c6fedb41ade08c88ecb2",
+  "input_tokens": 735,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 735,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 758
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:4ceba7d59e93e3496a33eaea11bbcc960311efa3aac11556ec96a33a08d9b257",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832628,
+    "id": "chatcmpl-L8AtNAVULVaNcpwbaMOJz6Zl1K00sAK4",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 539.647,
+      "predicted_n": 23,
+      "predicted_per_second": 42.62045374105665,
+      "predicted_per_token_ms": 23.462913043478263,
+      "prompt_ms": 667.798,
+      "prompt_n": 657,
+      "prompt_per_second": 983.8304397437549,
+      "prompt_per_token_ms": 1.0164353120243532
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 735,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 758
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:It is permissible to name the child on the first day or on the seventh. It was reported that Anas ibn Maalik said: the Messenger of Allaah (peace and blessings of Allaah be upon him) said: \u201cA boy was born to me this night and I have named him with the name of my father Ibraaheem.\u201d (Narrated by Muslim, 3126).econdly: There is no action prescribed in sharee\u2019ah for preparing to welcome a new baby a day or two before he is born, as far as we know. But one can recite general du\u2019aa\u2019s, such as praying for the newborn to be safe and sound, to be guided, and so on.\\\\n\\\\npassage 2:It is the infant s vested right to be honored with a beautiful name. When choosing a Muslim baby name for the child, it should be done with the intention that the baby will be blessed with the barakah of that name. According to a Hadith a child must be named promptly on birth.You will be called by your name on the day of judgment' this is another reason why it is important to chose a baby name with good meaning. The prophet (pbuh) was very particular about it. The Prophet has suggested names of the Prophets or Abdullah and Abdur Rahman.\\\\n\\\\npassage 3:Muslim birth rites. Muslims have some very simple rites for welcoming a child. The Muslim call to prayer or adhaan (God is great, there is no God but Allah. Muhammad is the messenger of Allah. Come to prayer.) are the first words a newborn Muslim baby should hear.They are whispered into the right ear of the child by his or her father.The baby's first taste should be something sweet, so parents may chew a piece of date and rub the juice along the baby's gums.ome to prayer.) are the first words a newborn Muslim baby should hear. They are whispered into the right ear of the child by his or her father. The baby's first taste should be something sweet, so parents may chew a piece of date and rub the juice along the baby's gums.\\\\n\\\\n\\\",\\\"question\\\":\\\"HOW to react when a musllim baby is born\\\"}\", \"original_answer\": \"Based on the given passages, it is permissible to name a Muslim baby on the first day or on the seventh day after birth. Additionally, one can recite general du'aa's, such as praying for the newborn to be safe and sound, to be guided, and so on. Muslims also have simple birth rites, which include whispering the Muslim call to prayer (adhan) into the baby's right ear and giving them a sweet first taste, such as date juice.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:68005f68693185acd0634559d6099b4d46412cbf711f260bb322db21f4050495",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ]
+}

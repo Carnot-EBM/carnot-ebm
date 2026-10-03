@@ -1,0 +1,99 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.0476262680022046,
+  "exclusion_reason": null,
+  "family_id": "sha256:6c1c9e2b847f30d6b38f6721edecb09986990eb9d514b4975e33f469cc1807cd",
+  "input_tokens": 417,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 417,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 439
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:01a4cb833c1cc3167476d790e0db8702ceab20581ba2723f1aae9beb431152fb",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"unsupported_probability\": 0.0,\n\"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832476,
+    "id": "chatcmpl-1Ic4WIMm7iE7PGKG2zOHEBeGw88YAqbI",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 508.254,
+      "predicted_n": 22,
+      "predicted_per_second": 43.285443892227114,
+      "predicted_per_token_ms": 23.102454545454545,
+      "prompt_ms": 410.471,
+      "prompt_n": 339,
+      "prompt_per_second": 825.8805128742347,
+      "prompt_per_token_ms": 1.2108289085545723
+    },
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 417,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 439
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Guide. A Lyme disease test detects antibodies to the Lyme disease bacteria Borrelia burgdorferi in the blood. Lyme disease bacteria are spread by certain kinds of ticks. Lyme disease can be hard to diagnose because its symptoms are similar to those of many other illnesses.\\\\n\\\\npassage 2:Lyme Disease Causes, Symptoms, and Tests. The cause of Lyme disease is the bacteria Borrelia burgdorferi sensu lato, with B. burgdorferi sensu stricto responsible for infections in North America. The infection is transmitted by tick bite with some dogs developing the Lyme disease rash, although not all do.\\\\n\\\\npassage 3:A blood test for antibodies to the bacteria is the preferred test for the diagnosis of Lyme disease. However, if a person has central nervous system symptoms, such as meningitis, then IgM, IgG, and western blot testing may sometimes be performed on cerebrospinal fluid (CSF) .\\\\n\\\\n\\\",\\\"question\\\":\\\"is dog lymes blood test accurate\\\"}\", \"original_answer\": \"The passages suggest that a blood test for Lyme disease in dogs detects antibodies to the bacteria Borrelia burgdorferi, which causes the disease. However, the passages do not provide specific information on the accuracy of this test.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "tune",
+  "source_cluster_id": "sha256:11e5890f7d8fac436bef3aa7ac03154b91b6a5b93d5d13e7a8c9c27609517691",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ]
+}

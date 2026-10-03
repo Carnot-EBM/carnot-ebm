@@ -1,0 +1,105 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.6090178150334395,
+  "exclusion_reason": null,
+  "family_id": "sha256:63f3814c560ee469517576a2d4e3284acaddf3361c046afd0114045286085f78",
+  "input_tokens": 1032,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1032,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1055
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:26cc52bc3273461498a5b866f59cc88acb6581ab26d543dd5dfb3f9a839441d8",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832544,
+    "id": "chatcmpl-Tq4Nj0m66fsdcuFz33XqJLIRd8TCXOBC",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 538.162,
+      "predicted_n": 23,
+      "predicted_per_second": 42.73806028667947,
+      "predicted_per_token_ms": 23.398347826086958,
+      "prompt_ms": 921.546,
+      "prompt_n": 954,
+      "prompt_per_second": 1035.2169072406587,
+      "prompt_per_token_ms": 0.9659811320754718
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1032,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1055
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":null,\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":5.0,\\\"categories\\\":\\\"Party Equipment Rentals, DJs, Caterers, Bartenders, Audio/Visual Equipment Rental, Event Planning & Services, Party & Event Planning, Wedding Planning, Cocktail Bars, Nightlife, Venues & Event Spaces, Photo Booth Rentals, Bars\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"0:0-0:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"0:0-0:0\\\",\\\"Sunday\\\":\\\"0:0-0:0\\\",\\\"Thursday\\\":\\\"0:0-0:0\\\",\\\"Tuesday\\\":\\\"0:0-0:0\\\",\\\"Wednesday\\\":\\\"0:0-0:0\\\"},\\\"name\\\":\\\"Top Shelf Event Services\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-07-05 20:10:02\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Jude and his team did an amazing job! Very well organized and took a lot of stress/organization away from myself and my bride. I would highly recommend the Top Shelf Team!\\\"},{\\\"review_date\\\":\\\"2021-06-27 19:15:02\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I am a wedding planner in Santa Barbara and have worked with Top Shelf before and been pleased and impressed. But with the long break in our work due to Covid, I got a great refresher in just how awesome they are yesterday. I can't say enough about how amazing the bartenders and staffers that worked my Carpinteria event were! Incredibly hard workers, flexible, pleasant, going out of their way, you name it, they did it. Thanks to Jude who runs the show for tying it all together.\\\\n\\\\nBest- Toby the SB Wedding Coordinator\\\"},{\\\"review_date\\\":\\\"2020-08-14 13:29:16\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Jude is so knowledgeable in his industry! He knows all the other vendors in Santa Barbara area, he knows all the venues, and he gives great advice! I highly recommend choosing him in general, but especially if you are having a Santa Barbara wedding because it is ideal to hire a wedding planner who is familiar with your venue. He will know how much space there is for things and he will be realistic with you about what will/will not work. Although he is technically a partial service wedding planner, he will do some full-service things for you because he goes above-and-beyond to make sure his brides are happy. He even fought for a refund for us from a vendor that we ended up needing a refund from. It was great that he had a lot of \\\\\\\"pull\\\\\\\" with that vendor when they were trying to be difficult. I highly recommend hiring Jude as your wedding planner!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Based on the provided structured data, here is an objective overview of Top Shelf Event Services:\\n\\nTop Shelf Event Services is a reputable and highly-rated event planning and services company based in Goleta, CA. With a 5-star rating and numerous positive reviews, the business offers a wide range of services including party equipment rentals, DJs, caterers, bartenders, audio/visual equipment rental, event planning & services, and more. Their team, led by Jude, is known for being well-organized, flexible, and hardworking, making them a go-to choice for weddings and other events in the Santa Barbara area. Reviewers praise their professionalism, attention to detail, and ability to handle any challenges that may arise during an event. One reviewer notes that Jude has a wealth of knowledge about the local area and its various vendors, which can be particularly useful for couples planning a Santa Barbara wedding. Overall, Top Shelf Event Services is a trustworthy and dependable choice for anyone seeking top-notch event planning and services in the region.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:c7e91078b5b2d0eb82009e0ce93eb2af5854ce1f11bb350cc07bc699a004bdfd",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ]
+}

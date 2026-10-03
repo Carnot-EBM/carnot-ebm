@@ -1,0 +1,119 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.6735311680240557,
+  "exclusion_reason": null,
+  "family_id": "sha256:65953707faaa59f9a66bb393c0ab178eb8cfbed87b4e6a305ed87718a0e0a8d8",
+  "input_tokens": 1138,
+  "invocation_finished_at": "2026-10-01T11:45:02.605085+00:00",
+  "invocation_started_at": "2026-10-01T11:45:00.931552+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1138,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1161
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:b76b83d3baa6a759488c0ff6bafa87fd82c0f6785c646ca173b174e28a79c15b",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855102,
+    "id": "chatcmpl-HxQCv6LwygZoihp2b4qBpZ5IcCCVCeLU",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.777,
+      "predicted_n": 23,
+      "predicted_per_second": 42.53139464141411,
+      "predicted_per_token_ms": 23.51204347826087,
+      "prompt_ms": 1017.293,
+      "prompt_n": 1060,
+      "prompt_per_second": 1041.9810221833827,
+      "prompt_per_token_ms": 0.9597103773584905
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1138,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1161
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Washington (CNN)Israeli Prime Minister Benjamin Netanyahu criticized the deal six world powers struck to thwart Iran's nuclear ambitions, saying he sees better options than \\\"this bad deal or war.\\\" \\\"I think there's a third alternative, and that is standing firm, ratcheting up the pressure until you get a better deal,\\\" Netanyahu told CNN's Jim Acosta Sunday on \\\"State of the Union.\\\" His comments come as Democrats and Republicans spar over the framework announced last week to lift Western sanctions on Iran in exchange for the country dropping from 19,000 to 5,060 active centrifuges, limiting its highly enriched uranium, and increasing inspections. President Barack Obama endorsed the deal, saying it was better than the alternatives. But GOP contenders for the party's 2016 presidential nomination lambasted it, saying it gave Iran too much flexibility. On Sunday, the sparring continued. One Senate Democrat said Netanyahu needs to \\\"contain himself.\\\" And a top Republican said almost any of Obama's successors as president \\\"could do better.\\\" Netanyahu's most recent argument against the Iran nuclear deal was similar to the one he'd made in a March trip to Washington, when he addressed a joint session of Congress -- fueling a Republican push to have the deal sent to Congress before it's implemented. \\\"It does not roll back Iran's nuclear program. It keeps a vast nuclear infrastructure in place. Not a single centrifuge is destroyed. Not a single nuclear facility is shut down, including the underground facilities that they built illicitly. Thousands of centrifuges will keep spinning, enriching uranium,\\\" Netanyahu said Sunday. \\\"That's a very bad deal. \\\" Netanyahu said Iran is a country of \\\"congenital cheating\\\" and that it can't be trusted to abide by the terms of the deal, which lasts 10 years with some provisions extending well beyond that. He said his opposition has little to do with his frosty relationship with Obama. \\\"I think that we can have a legitimate difference of opinion on this, because I think Iran has shown to be completely distrustful,\\\" Netanyahu said. Democratic Sen. Dianne Feinstein of California, meanwhile, said she wishes Netanyahu \\\"would contain himself.\\\" The top-ranking Democrat on the Senate Intelligence Committee said negotiators working on the deal -- from Iran and the United States, as well as Russia, China, Britain, France and Germany -- are \\\"on the cusp of something that can be workable.\\\" \\\"It's a framework. It has to be wrapped into a final agreement. There still can be some changes,\\\" Feinstein said. \\\"But I don't think it's helpful for Israel to come out and oppose this one opportunity to change a major dynamic -- which is downhill, a downhill dynamic in this part of the world.\\\" Energy Secretary Ernest Moniz defended the deal in an appearance on CBS' \\\"Face the Nation\\\" on Sunday, saying it would extend from two months to one year the \\\"breakout\\\" time period -- the length of time it would take Iran to build a nuclear bomb. He said it also allows for the \\\"almost instantaneous recognition of any attempt to evade the deal.\\\" \\\"We have blocked all of these pathways to a bomb,\\\" he said. Sen. Lindsey Graham, R-South Carolina, said on \\\"Face the Nation\\\" that the best option for the United States is to keep current sanctions in place for two more years and then have a \\\"new crack at it with a new president that doesn't have the baggage of Obama.\\\" And he said the alternatives to Obama on both sides -- with the exception of Sen. Rand Paul of Kentucky, who's called for a less active U.S. role overseas -- would likely strike a better deal. \\\"Hillary Clinton would do better. I think everybody on our side, except, maybe, Rand Paul, could do better,\\\" Graham said.\\n\", \"original_answer\": \"Here is a summary of the article in 155 words:\\n\\nIsraeli Prime Minister Benjamin Netanyahu criticized the recently announced deal between world powers and Iran, stating that it does not effectively address Iran's nuclear ambitions. Netanyahu argues that the deal leaves in place a vast Iranian nuclear infrastructure and does not adequately address Iran's history of cheating on international agreements. He advocates for increased pressure on Iran rather than accepting the current deal. Some Democrats, such as Senator Dianne Feinstein, disagree with Netanyahu's assessment and believe that the deal has the potential to be workable. Republicans, including Senator Lindsey Graham, remain opposed to the deal and suggest that a better agreement could be reached with a future president.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_update",
+  "source_cluster_id": "sha256:a51b42e1e64a88b537007e7f962ce85129dcf456adf3f2731db284a647eeada1",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25
+  ]
+}

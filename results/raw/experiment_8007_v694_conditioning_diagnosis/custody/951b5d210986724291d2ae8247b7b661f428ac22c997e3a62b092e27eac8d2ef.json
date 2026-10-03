@@ -1,0 +1,108 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.2586146510438994,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:e7b0768edb61389e1a2887b40b8e5d2ad20d43c59d29315819395c657df46654",
+  "input_tokens": 703,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 703,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 724
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:d542064477ae7644969991b0abe1742f5dbde07edc9940aadb96bfbdd3083afd",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886047,
+    "id": "chatcmpl-6XouAVl9N2tQIqpBHNkzuyTcuJjdauRk",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 492.549,
+      "predicted_n": 21,
+      "predicted_per_second": 42.63535201573853,
+      "predicted_per_token_ms": 23.454714285714285,
+      "prompt_ms": 634.219,
+      "prompt_n": 625,
+      "prompt_per_second": 985.4640116426659,
+      "prompt_per_token_ms": 1.0147504
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 703,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 724
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Bronchioles and alveoli. Smoking causes the majority of lung cancers \u2014 both in smokers and in people exposed to secondhand smoke. But lung cancer also occurs in people who never smoked and in those who never had prolonged exposure to secondhand smoke.In these cases, there may be no clear cause of lung cancer.he two general types of lung cancer include: 1  Small cell lung cancer. 2  Small cell lung cancer occurs almost exclusively in heavy smokers and is less common than non-small cell lung cancer. 3  Non-small cell lung cancer.\\\\n\\\\npassage 2:There are all types of smokers. Some smokers are casual smokers, who only smoke ... SMOKING: THE NUMBER ONE CAUSE OF LUNG CANCER. Lung cancer is a disease in which a primary cancer (the original site where the cancer occurred) develops in the tissue of the lungs.Lung cancer was first described by doctors in the mid 1800's.MOKING: THE NUMBER ONE CAUSE OF LUNG CANCER. Lung cancer is a disease in which a primary cancer (the original site where the cancer occurred) develops in the tissue of the lungs.\\\\n\\\\npassage 3:Lung Cancer Causes and Effects. How common lung cancer is Lung cancer is the second most common cancer in the United Kingdom (excluding non melanoma skin cancer).Around 41,400 people are diagnosed in the UK each year.Smoking and lung cancer In most people, lung cancer is related to cigarette smoking.oes Smoking Cause Lung Cancer. die from lung cancer and other smoking related diseases than they die from aids, drug abuse, car accidents and homicide, combined. Cigarette smoking is a danger to our life and health.\\\\n\\\\n\\\",\\\"question\\\":\\\"cause and effect essay on smoking causes lung cancer\\\"}\", \"original_answer\": \"Smoking is the leading cause of lung cancer, as mentioned in passages 1, 2, and 3. The majority of lung cancer cases are found in smokers and those exposed to secondhand smoke. Two types of lung cancer are small cell lung cancer, which almost exclusively occurs in heavy smokers, and non-small cell lung cancer. Lung cancer is the second most common cancer in the United Kingdom, with around 41,400 people diagnosed each year. More people die from lung cancer and other smoking-related diseases than from aids, drug abuse, car accidents, and homicide combined. However, it is noteworthy that lung cancer can also occur in people who have never smoked or had prolonged exposure to secondhand smoke, in which case the cause may not be clear.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "862a1c0ccf50481ce7284360ee313f008375900c7c5fc50c17fbb116e43a6065",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]
+}

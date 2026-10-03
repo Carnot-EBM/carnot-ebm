@@ -1,0 +1,139 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 2.3580440200166777,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:21e87cbea335c117e351fe8b8c9e3baf9b6fb21963387fcd1d44609f9e9b8598",
+  "input_tokens": 2078,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 2078,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 2101
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:5c8ba9c35c8dc6443e3d9d46230c6d3f176a29a38ca5260769f8be3a83c135b9",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885863,
+    "id": "chatcmpl-jy7sexry676QCOfmtVNMIFo7oqzIKxbj",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 537.78,
+      "predicted_n": 23,
+      "predicted_per_second": 42.768418312321025,
+      "predicted_per_token_ms": 23.38173913043478,
+      "prompt_ms": 1683.042,
+      "prompt_n": 2000,
+      "prompt_per_second": 1188.324474374377,
+      "prompt_per_token_ms": 0.841521
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 2078,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 2101
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"138 E Canon Perdido St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":true,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":false,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":false,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Restaurants, American (New), Seafood, French\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"17:0-22:0\\\",\\\"Saturday\\\":\\\"17:0-22:0\\\",\\\"Thursday\\\":\\\"17:0-21:30\\\",\\\"Tuesday\\\":\\\"17:0-21:30\\\",\\\"Wednesday\\\":\\\"17:0-21:30\\\"},\\\"name\\\":\\\"Julienne\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2018-05-10 00:52:41\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"** Very long overdue review **\\\\n\\\\nOne of the saddest closings of a Santa Barbara restaurant throughout my culinary journey was Julienne. With the classiest establishment representing the combination of sophisticated French dishes with a twist of old school Americano. \\\\n\\\\nLate Owner/chef Justin West created an amazing menu, although I felt as if it didn't really have a distinct identity to it, it had a lot of fan favorites with a heavy focus on meat.\\\\n\\\\nMy boyfriend pointed me to this establishment when I first came to Santa Barbara saying it's very \\\\\\\"date-worthy\\\\\\\", \\\\\\\"boundary-pushing haute cuisine\\\\\\\", and also was one of his favorite restaurants for fine dining. I wanted to see if all the hype surrounding this place was worth it. I'm pleased to say Julienne had the BEST wine pairings with their prix fixe menu.\\\\n\\\\nTHE STAFF- \\\\n\\\\nTo my surprise, Chef Justin was in the restaurant working the kitchen; not sure if he was expediting or what, but he came to our table after our meal and showed his gratitude for us coming in that night. It truly made that our stay feel special.\\\\n\\\\nTHE FOOD-\\\\n\\\\nMy boyfriend and I both ordered their five course tasting with wine pairing ($210 for both).\\\\n\\\\nFor starters we received a delicious Wild baby Arugula salad ($12) that was tousled in stone fruit with toasted oats, house ricotta, and onions with lemon oil. I was most impressed with how the lemon oil added a tart flavor to the stone fruit. \\\\n\\\\nAfter the starters, we received a delicious duck dish ($25 on menu) that had boneless confit, lentil risotto, bok choy, and plum sauce that was drizzled on the side. Although duck is definitely an acquired taste to most, the duck that we received was glistening and perfectly cooked, I'm sure anyone new to duck would fall in love!\\\\n\\\\nWe had the Roasted Ocean Trout ($26 on menu) which consisted mostly of lentils, artichoke, garlic, and dashi broth. The dashi broth and artichoke gave a very rich and aromatic flavor that was very palatable to my tastes.\\\\n\\\\nWe received the Fettuccine ($24 on menu), which consisted of tomatoes, fresh pork sausage, basil and Parmesan cheese. It must have been in season for the tomatoes because they were juicy and delicious. I was extremely impressed with the refined flavor of the dish which was very savory and didn't come out too heavy as one would normally expect from the typical fine dining French restaurant.\\\\n\\\\nThe Bone Marrow (not on menu) was my boyfriend's favorite part of the meal. I'm not even a huge fan of Bone Marrow, but the one I had at Julienne just had immaculate texture that gave me joy in every bite, it was absolutely phenomenal.\\\\n\\\\nTo finish off our meal, my boyfriend and I chose separate dishes. I had the Foie Gras & Donuts ($18 on menu) which had Torchon of foie, sourdough donuts, and strawberry balsamic preserves. My boyfriend had their sherbet I believe, and I know he liked it.\\\\n\\\\n--------------------------------------------------------------\\\\n\\\\nI haven't the clue to how much time and energy chef Justin put into his restaurant, but I wish the magic that I experienced at Julienne comes back to Santa Barbara soon!\\\"},{\\\"review_date\\\":\\\"2016-11-27 14:13:54\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"One of the last dinners at Julienne as they are closing shortly! Excellent personal service. It was a fixed menu with four courses. The chick pea chorizo soup had an outstanding flavor, as did the broth with the main course, grilled snapper with local black mussels. Somewhat curiously, the menu concluded with a salad (European style) though we added a desert. Many people will be sad to see Julienne close and I'm glad I had one last chance to dine there. I would have loved to have the chance to hear the feed back on the establishment from my sophisticated yelp friend George!\\\"},{\\\"review_date\\\":\\\"2016-10-24 21:30:41\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"My husband chose this for our one dinner out in Santa Barbara and we were really looking forward to it. The menu looking really great so we splurged and chose the tasting menu -- something we rarely do but it was a special evening out. The hostess was super friendly and got us a table by the window.  Waiter was very friendly and opened our wine and put it in a decanter.  When he explained the tasting menu he said one of the three courses has to be a salad or appetizer, which some of the reviews seem to say otherwise but that's fine. We each chose an appetizer and two entrees.Took about 20 minutes for our appetizers to arrive. The mussels were excellent and the foie gras with strawberry jam was nice but not a stand out.  As these were light dishes, we were looking forward to our next course.  We continued to look forward for a very very long time. It was about 50 minutes until our next course came. Three other tables were served that ordered after us and our waiter never stopped by to comment or check in with us. We were hungry, impatient, and really considering whether we should stay and continue waiting. Once our entrees arrived, our waiter didn't check on us but did check on the table next to us -- two feet away!  The rockfish was lovely but the ramen noodles with pork was very average.  Finally the waiter comes by to ask how it was and my husband mentions that it took a very very long time to come out and the kitchen must be very slow tonight.  The waiter makes no comment at all and walks off.  No comment, no apology, and now he's avoiding our table.  Didn't see him again until time to ask about dessert.  Our third course was duck breast and beef cheeks.  Both were nicely prepared. The waiter should have let us know the food was going to be really delayed and apologized or at least waived our corkage fee. By the end of the evening we didn't feel our special evening out was that special. Somehow we splurged on the tasting menu and ended up with inferior service.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Julienne is a highly-rated local business located at 138 E Canon Perdido St, Santa Barbara, CA. The restaurant is known for its blend of new American, seafood, and French cuisines. They accept reservations and offer free WiFi, but do not accommodate outdoor seating, takeout orders, or groups. Street parking is available. Julienne is open from Tuesday to Saturday with varying hours. Customers' reviews highlight the fine dining experience, with a heavy focus on meat dishes. The menu is described as sophisticated and boundary-pushing, with high praise for the wine pairings. The customer service is generally commended, although there have been instances of slow service. The establishment had a particularly intimate ambience but has since closed.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "calibration",
+  "source_cluster_id": "a626cbc38d1aa2a2b8bd23c1d2c1820fe034e5f51dda542b9da17755a25b6e92",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42
+  ]
+}

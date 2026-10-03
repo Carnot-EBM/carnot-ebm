@@ -1,0 +1,112 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.3013235399848782,
+  "exclusion_reason": null,
+  "family_id": "sha256:cf9c3e20db79ff3c2e4152e589344a9d5e3c356b6dafb9331f3ea37707ddcd87",
+  "input_tokens": 608,
+  "invocation_finished_at": "2026-10-01T11:45:34.282839+00:00",
+  "invocation_started_at": "2026-10-01T11:45:32.981513+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 16,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 608,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 633
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:d17f962d00d2045ee67f4fe8e7543e108a43ebb5f4a17908353d7e62bb39d60b",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 16\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855134,
+    "id": "chatcmpl-ZCFF83kD9rqdd4fPLez0riBXrJH5m1wu",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 588.489,
+      "predicted_n": 25,
+      "predicted_per_second": 42.48167765242851,
+      "predicted_per_token_ms": 23.53956,
+      "prompt_ms": 574.588,
+      "prompt_n": 530,
+      "prompt_per_second": 922.4000501228707,
+      "prompt_per_token_ms": 1.0841283018867924
+    },
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 608,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 633
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:If you want to know your baby\u2019s eyes color check the picture below. It explains pretty well what are the odds of you baby being with different kind of color based on the parents eye colors. For example: 1. If both parents are with brown eyes there is a 75% chance for the kid to be brows-eyed. 2. If one of the parents has green eyes and the other one has brown eyes there is a 50% chance for the kid to be brown-eyed. 3. If one of the parents has blue and the other one has brown eyes there is a 50% chance for the kid to be brown-eyed. 4. If both parents are with green eyes there is a 75% chance for the kid to be green-eyed. 5. If one of the parents has green eyes and the other one has blue eyes there is a 50% chance for the kid to be blue-eyed. 6. If both parents are with blue eyes there is a 99% chance for the kid to be blue-eyed.\\\\n\\\\npassage 2:For example, we now know it's possible for two blue-eyed parents to have a child with brown eyes  something the old model of eye color inheritance would have deemed impossible. More Info. 1  Find out about the hidden eye health dangers of UV. 2  TheraTears has patented nutrients that match your natural tears.\\\\n\\\\npassage 3:Although not common, two blue-eyed parents can produce children with brown eyes, says Richard A. Sturm, a Principal Research Fellow at the Institute for Molecular Bioscience at the University of Queensland in Brisbane, Australia. Eye color is a complex trait that depends on the state of several interacting genes.\\\\n\\\\n\\\",\\\"question\\\":\\\"what eyes do you have if your parents have\\\"}\", \"original_answer\": \"Based on the information provided in passage 3, it is possible for two blue-eyed parents to have a child with brown eyes.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "sha256:7d9c0455f7c436a132def87318731bdebd39af062d83d54ba8a35794963cb018",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18
+  ]
+}

@@ -1,0 +1,113 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.641125594964251,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:58cadc11d55151edf64d4ec011f3eb20802027feb0c1d6ab7db4665912fddea7",
+  "input_tokens": 1102,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1102,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1125
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:f81e2486441b106cc7f467509d6262dab5df7263aade9190426778468e531961",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886188,
+    "id": "chatcmpl-Ec8dPbYauQh4sxgQ2MyYJZsETHGbezAH",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 542.424,
+      "predicted_n": 23,
+      "predicted_per_second": 42.402253587599375,
+      "predicted_per_token_ms": 23.58365217391304,
+      "prompt_ms": 975.118,
+      "prompt_n": 1024,
+      "prompt_per_second": 1050.129317682578,
+      "prompt_per_token_ms": 0.952263671875
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1102,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1125
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"1759 S Jameson Ln\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":false,\\\"valet\\\":true,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":false,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Restaurants, Tapas/Small Plates, Bars, Cocktail Bars, American (New), Italian, Vegetarian, Nightlife\\\",\\\"city\\\":\\\"Montecito\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"17:0-21:30\\\",\\\"Monday\\\":\\\"17:0-21:0\\\",\\\"Saturday\\\":\\\"17:0-21:30\\\",\\\"Sunday\\\":\\\"17:0-21:0\\\",\\\"Thursday\\\":\\\"17:0-21:0\\\",\\\"Tuesday\\\":\\\"17:0-21:0\\\",\\\"Wednesday\\\":\\\"17:0-21:0\\\"},\\\"name\\\":\\\"The Revere Room\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-17 17:53:08\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Visited the Revere Room for brunch (yesterday, so a Sunday) and had no issue getting a 10am reservation for 2.  The entire hotel/resort is beautiful, so give yourself time to walk around and see everything. \\\\n\\\\nMichela, took care of my friend and me for brunch, and she was great.  Super attentive but not invasive, really friendly and nice, I'd honestly ask for her again because she was so great. My friend enjoyed the fancy avocado toast with mole on it with 2 perfectly poached eggs, and I had the eggs Benedict with the house smoked salmon sooooo good. The benedict was exactly the right amount of food, well dressed, and a great way to start the day.  We also took advantage of the $35 bottomless mimosas (for up to two hours). We made it worth it.\\\\n\\\\nWe booked a Lyft in advance to get to and from brunch so we could both be foolish. I highly recommend doing the same and scheduling in advance to ensure you can get a ride in a timely manner.\\\\n\\\\nThe place was definitely pricey, but everything was so good and it felt decadent and fun.\\\"},{\\\"review_date\\\":\\\"2022-01-09 01:41:09\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"This restaurant is great.  The food is excellent.  The quinoa bowl was fantastic. Great quality. The staff is great, especially Michael the bartender.  Everyone is professional. The room itself is very elegant. Thank you for the wonderful experience!\\\"},{\\\"review_date\\\":\\\"2021-12-25 23:23:16\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"5 start service and delicious food. We had the Christmas brunch buffet today and it was absolutely delicious and a lovely experience.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"The Revere Room is a restaurant located at 1759 S Jameson Ln in Montecito, CA. It operates from 5 pm to 9 pm from Monday to Thursday, and until 9:30 pm on Friday and Saturday. The restaurant offers a variety of cuisines including Tapas/Small Plates, American (New), Italian, and Vegetarian. It also has a bar and cocktail bar, making it a popular nightlife spot. The business offers amenities such as outdoor seating, free WiFi, and valet parking. However, it does not offer take-out services. The ambiance is noted as classy, but not casual, trendy, or upscale. Customers have given The Revere Room a 4-star rating, complimenting the excellent food, professional staff, and elegant room. Particular praise was given for their brunch service, with customers enjoying dishes such as avocado toast with mole and eggs Benedict with house smoked salmon. The restaurant is also noted as being pricey but worth it for the quality and experience.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "dc15788b16fa42b93ef39be5919ee95bf2d374888dfba67f42e8703fbe1d5b98",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+  ]
+}

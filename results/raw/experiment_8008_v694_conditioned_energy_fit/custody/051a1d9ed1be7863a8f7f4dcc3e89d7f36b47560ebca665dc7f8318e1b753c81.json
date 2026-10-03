@@ -1,0 +1,118 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.6673590380232781,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:bc178b3a20fb36c9601b98eb7b7da34467621dbc79e74e750c7dc27a84a5a67f",
+  "input_tokens": 1065,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1065,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1089
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:6587b9b05e6c68b94f623935139001fc2a36b6acf2fce61ff516b08e420c8fcd",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885865,
+    "id": "chatcmpl-97HB6O3Iw1xdxyjUkLtZQ8MYc4ueA1bz",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 560.474,
+      "predicted_n": 24,
+      "predicted_per_second": 42.82089802559975,
+      "predicted_per_token_ms": 23.353083333333334,
+      "prompt_ms": 944.376,
+      "prompt_n": 987,
+      "prompt_per_second": 1045.1345650461255,
+      "prompt_per_token_ms": 0.9568145896656535
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1065,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1089
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"The Palestinian Authority officially became the 123rd member of the International Criminal Court on Wednesday, a step that gives the court jurisdiction over alleged crimes in Palestinian territories. The formal accession was marked with a ceremony at The Hague, in the Netherlands, where the court is based. The Palestinians signed the ICC's founding Rome Statute in January, when they also accepted its jurisdiction over alleged crimes committed \\\"in the occupied Palestinian territory, including East Jerusalem, since June 13, 2014.\\\" Later that month, the ICC opened a preliminary examination into the situation in Palestinian territories, paving the way for possible war crimes investigations against Israelis. As members of the court, Palestinians may be subject to counter-charges as well. Israel and the United States, neither of which is an ICC member, opposed the Palestinians' efforts to join the body. But Palestinian Foreign Minister Riad al-Malki, speaking at Wednesday's ceremony, said it was a move toward greater justice. \\\"As Palestine formally becomes a State Party to the Rome Statute today, the world is also a step closer to ending a long era of impunity and injustice,\\\" he said, according to an ICC news release. \\\"Indeed, today brings us closer to our shared goals of justice and peace.\\\" Judge Kuniko Ozaki, a vice president of the ICC, said acceding to the treaty was just the first step for the Palestinians. \\\"As the Rome Statute today enters into force for the State of Palestine, Palestine acquires all the rights as well as responsibilities that come with being a State Party to the Statute. These are substantive commitments, which cannot be taken lightly,\\\" she said. Rights group Human Rights Watch welcomed the development. \\\"Governments seeking to penalize Palestine for joining the ICC should immediately end their pressure, and countries that support universal acceptance of the court's treaty should speak out to welcome its membership,\\\" said Balkees Jarrah, international justice counsel for the group. \\\"What's objectionable is the attempts to undermine international justice, not Palestine's decision to join a treaty to which over 100 countries around the world are members.\\\" In January, when the preliminary ICC examination was opened, Israeli Prime Minister Benjamin Netanyahu described it as an outrage, saying the court was overstepping its boundaries. The United States also said it \\\"strongly\\\" disagreed with the court's decision. \\\"As we have said repeatedly, we do not believe that Palestine is a state and therefore we do not believe that it is eligible to join the ICC,\\\" the State Department said in a statement. It urged the warring sides to resolve their differences through direct negotiations. \\\"We will continue to oppose actions against Israel at the ICC as counterproductive to the cause of peace,\\\" it said. But the ICC begs to differ with the definition of a state for its purposes and refers to the territories as \\\"Palestine.\\\" While a preliminary examination is not a formal investigation, it allows the court to review evidence and determine whether to investigate suspects on both sides. Prosecutor Fatou Bensouda said her office would \\\"conduct its analysis in full independence and impartiality.\\\" The war between Israel and Hamas militants in Gaza last summer left more than 2,000 people dead. The inquiry will include alleged war crimes committed since June. The International Criminal Court was set up in 2002 to prosecute genocide, crimes against humanity and war crimes. CNN's Vasco Cotovio, Kareem Khadder and Faith Karimi contributed to this report.\\n\", \"original_answer\": \"The Palestinian Authority became the 123rd member of the International Criminal Court (ICC) yesterday, marking a step towards giving the international body jurisdiction over alleged crimes in Palestinian territories. The Palestinians signed the ICC's founding Rome Statute in January, which also saw the court open a preliminary examination into the situation in Palestinian territories; this move paved the way for potential war crime investigations against Israelis. However, Palestinians may also be subject to counter-charges. Israel and the US, neither of which are ICC members, opposed the Palestinians' efforts to join the body. The ICC's recognition of Palestine as a state is at odds with the US's stance; the State Department does not believe that Palestine is a state and therefore, ineligible to join the ICC.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "calibration",
+  "source_cluster_id": "7788a2f3f60060ea49f7e781198660e2a945eebc78a2e6859c30938ab30b66d2",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21
+  ]
+}

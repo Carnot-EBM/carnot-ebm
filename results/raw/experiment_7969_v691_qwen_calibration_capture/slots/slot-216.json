@@ -1,0 +1,104 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.577702668029815,
+  "exclusion_reason": null,
+  "family_id": "sha256:cf24fd57f8b110565804865c0c88a3bf58b202aff566f0028160c1fac6857bab",
+  "input_tokens": 934,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 934,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 958
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:9542e9131d9101364aa0ec8fd47c1a5dd93fa6d9b994e3836cd4c2ca5171a98d",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832773,
+    "id": "chatcmpl-X066IpeJ4bqvavjEDaOzu0r9zNf9Fezr",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.595,
+      "predicted_n": 24,
+      "predicted_per_second": 42.43318982664274,
+      "predicted_per_token_ms": 23.566458333333333,
+      "prompt_ms": 875.61,
+      "prompt_n": 856,
+      "prompt_per_second": 977.6041845113693,
+      "prompt_per_token_ms": 1.022908878504673
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 934,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 958
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"14 W Calle Laureles\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":null,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Restaurants, Pizza, Italian\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"16:30-20:0\\\",\\\"Monday\\\":\\\"16:30-20:0\\\",\\\"Saturday\\\":\\\"16:30-20:0\\\",\\\"Sunday\\\":\\\"16:30-20:0\\\",\\\"Thursday\\\":\\\"16:30-20:0\\\",\\\"Tuesday\\\":\\\"16:30-20:0\\\",\\\"Wednesday\\\":\\\"16:30-20:0\\\"},\\\"name\\\":\\\"Petrini's Italian Restaurant - Santa Barbara\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-12-10 04:43:45\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Had lunch there today, and although the food is usually good, today was disappointing. My wife had the Salmon and vegetables for 18.95 and the Salmon was over cooked and burnt. I argued with her to send it back , but it was close to their lunch closing time, so she resisted and suffered with it. My chicken Parm sandwich was overly cooked and dry. For a 40.00 lunch it was awful. We will not return.\\\"},{\\\"review_date\\\":\\\"2021-10-17 03:07:13\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"My boyfriend and I happened to stumble upon this place last minute for a dinner date. The service was absolutely amazing, the lady helping us was extremely kind. The food was delicious as well. We were very pleased with our visit and will definitely be back soon.\\\"},{\\\"review_date\\\":\\\"2021-10-11 00:49:05\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Yum! My friend's husband picked up to go for my friend's birthday and it was so good! The meat lasagna was my favorite. I haven't been here for years, but this may prompt another visit in the near future! Everything was cooked perfectly.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Based on the provided structured data, here is an objective overview of Petrini's Italian Restaurant - Santa Barbara:\\n\\nPetrini's Italian Restaurant is located in Santa Barbara, California and offers a variety of Italian dishes including pizza, pasta, and more. The restaurant has a rating of 4.0 stars and is open from 4pm-8pm from Monday to Saturday and closed on Sundays. The restaurant offers outdoor seating and WiFi, but does not have valet parking or a music venue. Reviews of the restaurant are mixed, with some customers praising the quality of the food and service, while others have had disappointing experiences with overcooked or burnt food. One customer even mentioned that they will not return due to the poor quality of their meal. However, other customers have given the restaurant high ratings for its excellent service and delicious food. Overall, Petrini's Italian Restaurant appears to have a good reputation, but inconsistent quality in its food and service.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "policy_design",
+  "source_cluster_id": "sha256:d72d4c44a34c4b6daaff2c5d0c4a73e49e7c337889d2dc464c7847dff5b612c5",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ]
+}

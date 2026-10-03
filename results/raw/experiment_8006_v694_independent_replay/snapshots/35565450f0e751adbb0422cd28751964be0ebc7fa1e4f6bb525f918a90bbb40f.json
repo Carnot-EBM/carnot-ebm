@@ -1,0 +1,46 @@
+{
+  "actor": "agent_diagnostic_subprocess",
+  "calibration_target_counts": {
+    "0": 50,
+    "1": 11,
+    "unknown": 3
+  },
+  "command_exit_code": 0,
+  "consequence": "Owned stream target custody failure. Disqualified, readiness zero, no static method conclusion; retention targets never opened.",
+  "diagnostic_purpose": "Find calibration_support adapter failure; mistakenly included stream label counts",
+  "execution_date": "20261001",
+  "first_cli_attempt": {
+    "command": "PYTHONUNBUFFERED=1 JAX_PLATFORMS=cpu OPENBLAS_NUM_THREADS=1 .venv/bin/python -u scripts/experiments/experiment_7997_v693_typed_development_decisions.py --date 20261001",
+    "exit_code": 1,
+    "log_path": "/tmp/carnot-7997-run.log",
+    "log_sha256": "sha256:4aa65c0a3ddd24a9274c4f442c45927782983da66edc1c241d0bf7f3fb05c1e9"
+  },
+  "missing_original_stream_predictions": "/tmp/carnot-7997-qeqci7zs/evidence/stream_predictions.json",
+  "original_calibration_predictions": {
+    "path": "/tmp/carnot-7997-qeqci7zs/evidence/calibration_predictions.json",
+    "sha256": "sha256:17b0d7b24e988744737734338095a0a4cccd04dc8678f030b557cc96e1d6a9ec"
+  },
+  "original_task_configuration": {
+    "path": "/tmp/carnot-7997-qeqci7zs/evidence/task_configuration.json",
+    "sha256": "sha256:eae4f4b0bc47bed428052ba33f0269d70031c9b071ab7ccc3abbcb98e6299b53"
+  },
+  "predictions_sealed_before_stream_label_access": false,
+  "schema": "carnot.prior_label_exposure.v1",
+  "stream_target_counts": {
+    "0": 219,
+    "1": 35,
+    "unknown": 2
+  },
+  "target_references": {
+    "calibration": {
+      "count": 64,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7994_v693_development_cohort/evaluator/calibration.json",
+      "sha256": "sha256:35bba530fb36ba99f085ba98f3934276fdb9abc60fbdc322db962b5dd8647058"
+    },
+    "stream": {
+      "count": 256,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7994_v693_development_cohort/evaluator/stream.json",
+      "sha256": "sha256:4e87b155403eb5b17635650d295be850a8cd59bc8058ea1457d3cf7cbfb1d521"
+    }
+  }
+}

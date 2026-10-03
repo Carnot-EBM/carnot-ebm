@@ -1,0 +1,77 @@
+{
+  "arm": "duplicate",
+  "capture_identity": "sha256:c690c1f517fbce73c5da6a2d1e99e3819c3de93e1045fe76d1c8215b54691541",
+  "censor_status": false,
+  "denominator": 1,
+  "donor_group_id": "sha256:d3e64eb749669d380630138ef8b1e79be44bbc9c06324e44b337361fbfa48858",
+  "duration_s": 0.0,
+  "eligibility": false,
+  "exclusion_reason": "paired_context_upper_bound_overrun",
+  "failure_status": false,
+  "family_id": "sha256:d3e64eb749669d380630138ef8b1e79be44bbc9c06324e44b337361fbfa48858:duplicate",
+  "group_id": "sha256:d3e64eb749669d380630138ef8b1e79be44bbc9c06324e44b337361fbfa48858",
+  "input_byte_upper_bound": 4693,
+  "input_tokens": null,
+  "numerator": 0,
+  "parsed": {
+    "citation_valid": false,
+    "completed": false,
+    "finish_reason": null,
+    "probability": null,
+    "schema_valid": false,
+    "source_sentence_id": null,
+    "status": "invalid_envelope",
+    "syntax_valid": false,
+    "usage": {}
+  },
+  "public_eligible": false,
+  "public_hash": "sha256:20be38d6dcffba80b7c10ab2bf1d7de10cb7b6fa831eb3a82cf307d6a7f71f7d",
+  "raw_response": {},
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 32,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"36 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":true,\\\"touristy\\\":true,\\\"trendy\\\":true,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":true,\\\"lot\\\":false,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Bakeries, Sandwiches, Food, Restaurants, American (Traditional)\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"7:0-20:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"7:0-20:0\\\",\\\"Sunday\\\":\\\"7:0-20:0\\\",\\\"Thursday\\\":\\\"7:0-20:0\\\",\\\"Tuesday\\\":\\\"7:0-20:0\\\",\\\"Wednesday\\\":\\\"7:0-20:0\\\"},\\\"name\\\":\\\"Goat Tree\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-13 03:07:11\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"We stopped into this lovely bistro for some snacks along our exploration of Santa Barbara. They have lovely patio out front the main eat in Santa Barbara, so it makes for great people watching. We offer a bottle of rose, light starters, and enjoyed the moment until the next stop. If you are in Santa Barbara it's worth stopping in as you make your way through town either walking or on a bike ride. We preferred the later.\\\"},{\\\"review_date\\\":\\\"2022-01-11 02:45:18\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Ordered for delivery. I got the shrimp Louie salad, the fruit Parfait and the turkey club with fries. The fries arrived very soggy but everything else was great.\\\"},{\\\"review_date\\\":\\\"2022-01-04 01:14:33\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"The food here is amazing! We passed it while visiting during dinner and it was packed so we figured it must be good. We decided to stop for brunch while it was pouring rain. There was a wait but luckily they took my number and texted me when it was ready, so I could wander around other shops and stuff and didn't have to wait out in the rain. The hostess was really nice as was our waitress, I totally forgot her name! The only complaint is that she brought our check before we were done; I really hate the feeling of being rushed out and we had to add a couple things after the bill came. She was super nice about it and brought us the drinks we ordered right away.\\\\nLike I said, the food was absolutely amazing. It doesn't sound filling from the descriptions but it totally is and it is so so good. The \\\\\\\"side\\\\\\\" of fries portion was huge. It is definitely a splurge for brunch as the food is kind of fancy and the presentation is also really impressive. We only ate here for brunch but I would assume their dinner is just as great.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Goat Tree is a local business located at 36 State St, Santa Barbara, CA. The establishment fits into categories such as Bakeries, Sandwiches, Food, Restaurants, and American (Traditional). It operates from Tuesday to Sunday between 7:00 and 20:00. The business offers various amenities like free WiFi, outdoor seating, and accepts restaurant reservations. It also provides takeout and is suitable for groups. Despite the lack of a music setting, the ambience is touristy, romantic, trendy, classy, and casual. However, the parking is restricted to a garage only. \\n\\nCustomers commend Goat Tree for its lovely patio, making it an excellent spot for people-watching. The food, especially the brunch menu, is highly praised for its taste and presentation. The shrimp Louie salad and fruit Parfait are also recommended. However, some customers have noted that the fries can arrive soggy when ordered for delivery. The restaurant has an overall rating of 3.5 stars.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69410,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 0,
+  "role": "stream",
+  "seed": 69410,
+  "source_cluster_id": "1b05ebb66820f278e87837c7d1192e20b8c97e384a1542d79bca832d5161013f",
+  "source_hash": "sha256:33afdb6e7af28a5adcf0fd9d94d0360577b065de943bcde3513e8aa8a8daba3f",
+  "started": false,
+  "status": "excluded",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+  ]
+}

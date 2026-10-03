@@ -1,0 +1,103 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.3618615369778126,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:1061f8ca7d46d739f297aa2b42caf07d6a746d03c24ffd9b74caa887ef455ea4",
+  "input_tokens": 829,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 829,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 850
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:01365c8208aae7ab14a5464d6a90ce322f0b386b9d93a4c70fc77c10c2f596d3",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886238,
+    "id": "chatcmpl-ZVl8ncODBl5h6oPczZNEPLVYIszqK2Ys",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 493.113,
+      "predicted_n": 21,
+      "predicted_per_second": 42.5865876584069,
+      "predicted_per_token_ms": 23.481571428571428,
+      "prompt_ms": 729.523,
+      "prompt_n": 751,
+      "prompt_per_second": 1029.439784626393,
+      "prompt_per_token_ms": 0.9714021304926764
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 829,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 850
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"701 Chapala St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":null,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Food, Restaurants, Mexican\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"9:0-3:0\\\",\\\"Monday\\\":\\\"9:0-20:0\\\",\\\"Saturday\\\":\\\"9:0-3:0\\\",\\\"Sunday\\\":\\\"9:0-21:0\\\",\\\"Thursday\\\":\\\"9:0-3:0\\\",\\\"Tuesday\\\":\\\"9:0-20:0\\\",\\\"Wednesday\\\":\\\"9:0-20:0\\\"},\\\"name\\\":\\\"Romanti-Ezer\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2020-12-12 20:37:00\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"A good taco on the go. Pretty average but reliable for late night food run. Also good (when Covid is done) after a movie and shopping bc it's nearby :) it's has decent prices and the employees work quickly.\\\"},{\\\"review_date\\\":\\\"2020-08-30 19:07:02\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"From LA and I've had a lot of Mexican food, this place is better than most I've been to\\\"},{\\\"review_date\\\":\\\"2020-06-26 21:45:39\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"Had the pastor burrito. The burrito came out less than 90 seconds after ordering which led me to believe I ate a $9 pre made burrito which was heated on the griddle to order. Not great quality, taste not the best, but I've had a couple worse in my day. Icing on the cake was I got very ill after eating this. Maybe don't get the pastor ?\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Romanti-Ezer is a Mexican restaurant located at 701 Chapala St, Santa Barbara, CA. With a 3.5-star rating, it is known for its casual ambience and is popular among groups. It offers outdoor seating and takeout but does not provide Wi-Fi or reservations. Parking is available on the street and in a lot, but there is no garage or valet service. The restaurant operates from 9 am to 8 pm Monday to Wednesday, 9 am to 3 pm from Thursday to Saturday, and 9 am to 9 pm on Sundays. Based on customer reviews, the restaurant is seen as average but reliable for late-night food runs. Its proximity to shopping centers and movie theaters is appreciated. However, some customers have expressed concerns about the quality and taste of the food, suggesting it may be pre-prepared rather than freshly made.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "b325f1705a1db44959e619c4cac9627a46140948165e046c6762994895c5d408",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ]
+}

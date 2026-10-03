@@ -1,0 +1,125 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.833530478994362,
+  "exclusion_reason": null,
+  "family_id": "sha256:5f2d7f2d9de45b54d086262f3dbe5c10eb9740048eed0f0dbb595ec27cabb9c1",
+  "input_tokens": 1361,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1361,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1384
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:ea021e1208486400c57bb375f1b80cf764187071e2dc503cd6f70fe1b202fcd9",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832960,
+    "id": "chatcmpl-x5fPF9mkuKLvgJSKItCjXGz8NPzhmGIC",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 542.307,
+      "predicted_n": 23,
+      "predicted_per_second": 42.41140165994538,
+      "predicted_per_token_ms": 23.578565217391304,
+      "prompt_ms": 1172.317,
+      "prompt_n": 1283,
+      "prompt_per_second": 1094.413882934394,
+      "prompt_per_token_ms": 0.9137310989867498
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1361,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1384
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Atlanta (CNN)Federal marshals have arrested Scott Kelley, a fugitive accused of kidnapping who was featured on CNN's \\\"The Hunt.\\\" Kelley, 50, was taken into custody at the Atlanta airport Wednesday after arriving on a flight from Costa Rica, Deputy U.S. Marshal Jamie Berry said. \\\"It was time to come home,\\\" Kelley told People magazine about his decision to return to the United States. Kelley has been wanted since 2004, accused of noncustodial kidnapping and unlawful flight to avoid prosecution. His wife, Genevieve Kelley, who's charged with the same crimes, turned herself in to authorities last year, just a few months after the case was featured on CNN's \\\"The Hunt.\\\" Her trial is scheduled to start next month. The couple is accused of leaving New Hampshire, kidnapping Genevieve Kelley's daughter, Mary Nunes, and beginning a life on the lam when she was 8 years old. At the time, the child's father, Mark Nunes, had full custody rights. The search for the three spanned the United States, Canada and Central and South America. It ended on Monday, when Scott Kelley and Mary Nunes entered the U.S. Consulate in Costa Rica and requested passports so they could return to the United States. The consulate notified U.S. Marshals, Berry said, and when Kelley and Nunes flew to Atlanta on Wednesday investigators were waiting for them. Mary Nunes, now 19, was interviewed by investigators at the Atlanta airport to ensure her health and safety and then allowed to continue to her final destination, Berry said. Previously, authorities had said her whereabouts were unknown. CNN New Hampshire affiliate WMUR reported that the daughter plans to testify at her mother's trial. In a statement released through a private investigator he's hired in the case, her father said that he was thrilled to learn Mary is safe. \\\"We love Mary and are overjoyed that she is alive and back in the US. Our hearts and home are open to her, and we will do everything we can to insure she remains safe and healthy,\\\" Mark Nunes said in a statement. \\\"We remain concerned about her emotional and physical well-being. We look forward to the day our family is finally reunited.\\\" Kelley's attorney did not immediately respond to a request for comment. Before allegedly fleeing the country, Genevieve Kelley had accused her ex-husband of abusing their child. Investigators found no basis for the accusations and no charges were filed. On a Facebook page defending her, supporters of the mother say she did what any parent would do under the same circumstances. Photos on the page show her standing with friends holding signs that say, \\\"Justice for Gen! Children need protection.\\\" Wayne Rioux, who was then the police chief of Whitefield, New Hampshire, told \\\"The Hunt\\\" that a video Genevieve and Scott Kelley made, intended to prove their abuse allegations, aroused his suspicions. Rioux watched the tape for \\\"any evidence of wrongdoing by Mark Nunes.\\\" \\\"But throughout the tape all I saw was this bizarre, strange conduct by the mother,\\\" Rioux said, \\\"who was absolutely brainwashing the daughter and trying to get the daughter to say things against her daddy.\\\" Attorney Alan Rosenfeld has argued that Genevieve Kelley had no other option than running away with her daughter, after a court-appointed guardian and social service agencies had said they didn't believe the abuse allegations. \\\"Simply put, there was no lawful alternative to provide safety for this child,\\\" he said earlier this year, according to WMUR. Earlier this year, Brazilian police tracked down Victor Arden Barnard, another fugitive who'd been featured on \\\"The Hunt.\\\" The 53-year-old American pastor is accused of dozens of sexual assaults in Minnesota. Last year, the same day Genevieve Kelley was arrested, authorities in Texas announced that in an unrelated case, remains found were confirmed to be those of another fugitive featured on the program, Kevin Patrick Stoeser. Stoeser, a U.S. soldier who was dishonorably discharged, pleaded guilty in 2003 to child sexual assault and child pornography charges and was sentenced to 13 years behind bars. Remains of Shane Miller, another suspect featured on the \\\"The Hunt,\\\" were found last year. And Charles Mozdir, another suspect who was profiled on the show, was killed in a gunbattle with authorities. CNN's Tricia Escobedo and Slma Shelbayah contributed to this report.\\n\", \"original_answer\": \"Scott Kelley, 50, a fugitive accused of kidnapping that was featured on CNN's \\\"The Hunt\\\" has been arrested by Federal marshals. He was taken into custody at the Atlanta airport after arriving on a flight from Costa Rica. Kelley had been wanted since 2004, for noncustodial kidnapping and unlawful flight to avoid prosecution. His wife, Genevieve Kelley, who is charged with the same crimes, turned herself in to authorities last year, a few months after the case was featured on CNN's \\\"The Hunt.\\\" The couple is accused of kidnapping Genevieve Kelley's daughter, Mary Nunes, when she was 8 years old and her father had full custody rights. They then began a life on the run. The search for the three spanned the United States, Canada and Central and South America. It ended when Scott Kelley and Mary Nunes entered the US Consulate in Costa Rica and requested passports to return to the United States.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:67690aa5002efc879e35cf044b29738bd50b97d77451ba212f69661f31fa674b",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33
+  ]
+}

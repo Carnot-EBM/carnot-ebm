@@ -1,0 +1,107 @@
+{
+  "arm": "swap",
+  "capture_identity": "sha256:c690c1f517fbce73c5da6a2d1e99e3819c3de93e1045fe76d1c8215b54691541",
+  "censor_status": false,
+  "denominator": 1,
+  "donor_group_id": "sha256:f1e8d3440505bf13b1e0c9ed63cf1994b1428b001c6e299458f63b9e621e747d",
+  "duration_s": 1.199916735989973,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:71ecefce7eba695d846aead9eeec7a2a4ba4073f978f2e8547e7fcdef2f3ed6a:swap",
+  "group_id": "sha256:71ecefce7eba695d846aead9eeec7a2a4ba4073f978f2e8547e7fcdef2f3ed6a",
+  "input_byte_upper_bound": 2290,
+  "input_tokens": 521,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 1.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 521,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 544
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:e577829d4539a2e0c4ea37dd3d0d543c00a8a51194affa8f41a67c432872714c",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 1.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790925725,
+    "id": "chatcmpl-i891V6UVcIdtIscTAUiUzGbh2wDK7QEh",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 533.083,
+      "predicted_n": 23,
+      "predicted_per_second": 43.14525130233004,
+      "predicted_per_token_ms": 23.177521739130434,
+      "prompt_ms": 487.706,
+      "prompt_n": 443,
+      "prompt_per_second": 908.3341193259874,
+      "prompt_per_token_ms": 1.1009164785553047
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 521,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 544
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 32,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:3pm: The Morro Bay, CA forecast for Feb 14 is 64 degrees and Partly cloudy. There is 42 percentage chance of rain and 8 mph winds from the West-Northwest. 6pm: The Morro Bay, CA forecast for Feb 14 is 55 degrees and Partly cloudy. There is 58 percentage chance of rain and 7 mph winds from the Northwest. 9pm: The Morro Bay, CA forecast for Feb 14 is 52 degrees and Partly cloudy.\\\\n\\\\npassage 2:Excessive Rainfall and Winter Weather Forecasts; River Flooding ; Latest Warnings; Thunderstorm/Tornado Outlook ; Hurricanes ; Fire Weather Outlooks ; UV Alerts ; Drought ; Space Weather ; NOAA Weather Radio ; NWS CAP Feeds\\\\n\\\\npassage 3:Home \u00bb Local \u00bb Weather Report Morro Bay, California Weather Report \u00b7 Interactive Map \u00b7 Extended Forecast \u00b7 Hourly Forecast \u00b7 Past Observations \u00b7 Historic Averages\\\\n\\\\n\\\",\\\"question\\\":\\\"weather in morro bay ca\\\"}\", \"original_answer\": \"Hana Kitchen is a restaurant located at 503 State St, Santa Barbara, CA, specializing in a fusion of Asian and Vegan cuisines, offering a range of food items including Bubble Tea and Acai Bowls. The establishment is open seven days a week, with extended hours on Fridays and Saturdays. They provide free WiFi, outdoor seating, and takeout options, but do not accommodate reservations or large groups. The ambience of the restaurant is casual and they offer both street and lot parking. However, customer reviews suggest a less-than-satisfactory experience, with complaints about promotional code issues, food quality, and customer service. The business has an overall rating of 3 out of 5 stars.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69410,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "seed": 69410,
+  "source_cluster_id": "0d92e1fd0abe65074dc7c56ad7989c70ae43ece4bcfb6ca00b926781ac9b8f65",
+  "source_hash": "sha256:20259714a2e1d14d633440af9f22ab4c3b6443c60208abb1b9b48dc4f364a4b6",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ]
+}

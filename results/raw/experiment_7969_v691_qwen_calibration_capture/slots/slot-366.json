@@ -1,0 +1,118 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.9085406489903107,
+  "exclusion_reason": null,
+  "family_id": "sha256:0ab5613c564081e1ef2aefacc13c978042f67fd0e7706a372368e80c7339ceae",
+  "input_tokens": 1496,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 1496,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1517
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:f73618169b4587ea7565d805afbc954a048d572fa52311aa9883f83398a9839b",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832985,
+    "id": "chatcmpl-lTQtrDz55lDEzBhwDHp4KM1YLLaXBkkw",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 493.371,
+      "predicted_n": 21,
+      "predicted_per_second": 42.56431772438996,
+      "predicted_per_token_ms": 23.49385714285714,
+      "prompt_ms": 1303.014,
+      "prompt_n": 1418,
+      "prompt_per_second": 1088.2461738707336,
+      "prompt_per_token_ms": 0.9189097320169252
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 1496,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1517
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"3888 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":null,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":null,\\\"romantic\\\":null,\\\"touristy\\\":null,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Salad, Steakhouses, Restaurants, Nightlife, Seafood\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"17:0-21:0\\\",\\\"Monday\\\":\\\"17:0-21:0\\\",\\\"Saturday\\\":\\\"17:0-21:0\\\",\\\"Sunday\\\":\\\"17:0-21:0\\\",\\\"Thursday\\\":\\\"17:0-21:0\\\",\\\"Tuesday\\\":\\\"17:0-21:0\\\",\\\"Wednesday\\\":\\\"17:0-21:0\\\"},\\\"name\\\":\\\"Chuck's of Hawaii\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-12-28 17:39:12\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"We love this place for many reasons.  Great staff, salad bar, full bar, cozy atmosphere.  And, we will come back.\\\\n\\\\nWe have been sampling lobster around town.  To date, the Tee-Off has the best in this area, though I have yet to try it at Reunion (the new East Beach grill).  Every restaurant has its charms and distractions. \\\\n\\\\nI knew I was taking a chance with Chuck's char broiled lobster, but at $48 I figured they would be careful.  It did not come out well (dry & blackened around edges...overcooked it seemed) , but the waitress, whom was very nice, disappeared after serving it.  I kept trying to get her attention but she was gone.  She did not even stop to chat when dropping off the check.  I honestly felt she knew there were questions about the lobster that she was not interested in entertaining...visually it was overcooked...did she even look at it?  We did not want to return the lobster--paid in full and left a 12% cash tip, normally we are 25% at this place.   \\\\n\\\\nAs foodies, we wanted to learn more.  Food is one of our great interests, and even a bad meal can turn into something special if you learn something new.  I really wanted to ask \\\\\\\"Was this a good example of the best lobster you can get with char broil?\\\\\\\"  Regardless of the answer (yes or no), I would have learned something interesting.  In my case, I learnt nothing, except to avoid that waitress.\\\"},{\\\"review_date\\\":\\\"2021-12-15 01:38:11\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"It's a decent restaurant but not worth their prices at all. I've been here about 4 or 5 times not by choice, and every time I am even more disappointed. All of the fish tastes pretty much the same and I was greatly disappointed with the salmon. Don't spend too much time deciding what steak you want either because it doesn't matter. They pretty much don't season any of their food Inspite of the slightest bit of salt that they put on. The side is always undercooked hard rice with a lemon slice. The salad bar is very good but that's about all they have going for them. Spend your money elsewhere and get better food.\\\"},{\\\"review_date\\\":\\\"2021-11-11 07:20:25\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"We had reservations for 7:15 and the restaurant was full of people! This was my third time at Chuck's and it did not disappoint. I ordered the halibut ($38) and it was amazing. It comes with teriyaki rice and the salad bar. The wait staff was wonderful. Thank you!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Sure, here's an objective overview of Chuck's of Hawaii based on the provided structured data in JSON format:\\n\\nChuck's of Hawaii is a local business in Santa Barbara, California that offers Salad, Steakhouses, Restaurants, Nightlife, and Seafood. According to their Yelp reviews, the business has a rating of 3.5 out of 5 stars based on 3 customer reviews.\\n\\nThe first review, posted on December 28, 2021, praises the restaurant's staff, salad bar, full bar, cozy atmosphere, and the fact that they will come back. However, the reviewer notes that the lobster they ordered was dry and overcooked, and the waitress did not seem interested in addressing their concerns. Despite this, the reviewer still left a 12% cash tip and paid in full.\\n\\nThe second review, posted on December 15, 2021, states that the restaurant is not worth the prices, and the fish and salmon were disappointing. The reviewer also found the side dishes to be undercooked and lacking in seasoning. However, they did note that the salad bar was good.\\n\\nThe third review, posted on November 11, 2021, gave the restaurant a perfect 5-star review, stating that the halibut was amazing and the wait staff was wonderful.\\n\\nBased on these reviews, it seems that Chuck's of Hawaii is a mixed bag. Some customers have enjoyed their meals and the ambiance, while others have been disappointed with the quality of the food and service. It appears that the restaurant has some strengths, such as its salad bar and cozy atmosphere, but also some areas for improvement, such as the quality of its seafood and seasoning.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:27e60705f55d917add5e2dde2185b142c33bf6a370eda7814dcc5f16227438d3",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26
+  ]
+}

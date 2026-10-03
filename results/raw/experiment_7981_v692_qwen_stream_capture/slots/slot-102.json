@@ -1,0 +1,116 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 2.024593251000624,
+  "exclusion_reason": null,
+  "family_id": "sha256:a56aa2ce7c28036c4aa2057b2d673dd11881f751236ecb786f9be02820e581e6",
+  "input_tokens": 1614,
+  "invocation_finished_at": "2026-10-01T11:43:36.570935+00:00",
+  "invocation_started_at": "2026-10-01T11:43:34.546341+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1614,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1638
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:7b6f8dbb888d84663e98e1e46d175726c7f4007f01f350db4f33136840ac45a5",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855016,
+    "id": "chatcmpl-KWmFyvht8R61FDtcKg2MME8jjUEuqfy7",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.53,
+      "predicted_n": 24,
+      "predicted_per_second": 42.43806694605061,
+      "predicted_per_token_ms": 23.56375,
+      "prompt_ms": 1345.892,
+      "prompt_n": 1536,
+      "prompt_per_second": 1141.2505609662587,
+      "prompt_per_token_ms": 0.8762317708333334
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1614,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1638
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"314 E Haley St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Delis, Food, Restaurants, Bakeries\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"6:0-21:0\\\",\\\"Monday\\\":\\\"6:0-21:0\\\",\\\"Saturday\\\":\\\"6:0-20:0\\\",\\\"Thursday\\\":\\\"6:0-21:0\\\",\\\"Tuesday\\\":\\\"6:0-21:0\\\",\\\"Wednesday\\\":\\\"6:0-21:0\\\"},\\\"name\\\":\\\"Los Tarascos Bakery and Deli\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-12-19 18:42:07\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"I had a bad experience here. I ordered the Chicken Mole Platillo for $15.75 and The Combo #1 (regular torta and a small smoothie) for $14.50 for myself and my friend. During the order I asked if it was OK to use the buy one get one free deal from the Axxess card and they said yes.\\\\n\\\\nSo we wait, and when they ring me up the total is over $22. I was confused and asked about the total. This is the point at which he informed me that I have to pay for the smoothie separately ($4.75) as the buy 1 get 1 will only apply to the food.\\\\n\\\\nI was pretty shocked that he waited until the last moment to charge me like this. He clearly wrote just two items on the order, the plate and the combo, it is clearly labeled as a combo item, but he looked at me and said \\\\\\\"well, what do you want to do now?\\\\\\\".\\\\n\\\\nI said I didn't want to pay extra since I told him I was using the buy one get one deal, he wrote down two items, and said nothing about this until now. He said \\\\\\\"It's still a good deal\\\\\\\" but I was so annoyed I explained why I was frustrated. He took the smoothie and put it under the counter and rang me up for $15.75.\\\\n\\\\nI am so surprised that a $4.75 smoothie that almost certainly was going to be thrown away was more important to them than a happy customer who was just trying to use the promotion that they were running. As I left I asked one more time \\\\\\\"Are you really sure I can't just have the smoothie?\\\\\\\" He said no, I can't have it and I walked out feeling pretty stressed about the whole thing.\\\\n\\\\nI could have ordered two tortas or two mole's that cost the same if I knew they were going to do this. I am just so surprised by the greed. I totally understand if he told me this when I was ordering and made it clear I was using the buy one get one deal. No complaints. But to wait until the end, try to get an extra $4.75, then take the smoothie and act like I am being the jerk just blows me away.\\\\n\\\\nI won't ever go back and I'll tell this story every time this place comes up in conversation in town. I hope it was worth the $4.75.\\\\n\\\\nI have since found out that the person who rang me up and made all these choices was in fact the owner. So surprising that him keeping a small smoothie from me and my friend was more important than making me want to come back and say good things about the place.\\\"},{\\\"review_date\\\":\\\"2021-11-05 00:07:10\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Where to begin.... I called after 9am needing a large flan for that evening for a celebration of life. They let me know it'd be cutting it close to have it ready by the time I needed it but they were willing to do it for me. I'm so appreciative of them going above and beyond to make it happen for me. And on top of that, it was one of the most delicious flans we've ever had, and the family I bought it for are all from Mexico. Thank you so much! Will be back!\\\"},{\\\"review_date\\\":\\\"2021-05-24 04:34:38\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"What really won me over has been my encounters with the wonderful, friendly staff. \\\\nTo be honest I've never cared for cheesecake until I had a slice from Los Tarascos. Make a point to stop by for breakfast, lunch, and delicious pastries !\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Based on the provided structured data, here is an objective overview of Los Tarascos Bakery and Deli:\\n\\nLocated in Santa Barbara, California, Los Tarascos Bakery and Deli is a popular destination for delicious Mexican cuisine and baked goods. With categories including Delis, Food, Restaurants, and Bakeries, this local business offers a wide range of options for breakfast, lunch, and dinner.\\n\\nThe business has a rating of 4.5 stars, indicating generally positive reviews from customers. One reviewer had a negative experience with poor service and unexpected additional charges, while another reviewer had a positive experience with excellent service and high-quality food.\\n\\nThe business hours are as follows: Monday to Friday from 6 AM to 21 PM, Saturday from 6 AM to 20 PM, and closed on Sundays. Parking options nearby include street parking and a garage, but validation is not available. Wifi is not available at the location.\\n\\nLos Tarascos Bakery and Deli offers takeout and is good for groups, but does not accept reservations. The ambiance is described as casual and touristy, with no mention of upscale or classy atmosphere.\\n\\nIn summary, Los Tarascos Bakery and Deli is a well-rated local business with a variety of options for Mexican cuisine and baked goods. While some reviews mention poor service and unexpected charges, overall the business seems to have a loyal customer base and a welcoming atmosphere.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "sha256:3079868c1c18ad245c61473416cf1cf3bbd4854f75b70b98ac87431f80b99153",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22
+  ]
+}

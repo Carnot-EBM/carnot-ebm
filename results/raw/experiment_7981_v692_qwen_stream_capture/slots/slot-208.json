@@ -1,0 +1,116 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.5007562119862996,
+  "exclusion_reason": null,
+  "family_id": "sha256:df23e671dc2dce91aa95d1c9d2aec1a6e070c578ebacce616f09af653b96d1fb",
+  "input_tokens": 865,
+  "invocation_finished_at": "2026-10-01T11:46:07.412188+00:00",
+  "invocation_started_at": "2026-10-01T11:46:05.911431+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.05,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 865,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 889
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:e9c090a2c71514ede80afa66fec763d6d4945ceb8491876f206061dd9111a475",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.05,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855167,
+    "id": "chatcmpl-lqCMr6gRJmFfXVEuESecHpWPHjvB2rld",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.374,
+      "predicted_n": 24,
+      "predicted_per_second": 42.524992292345146,
+      "predicted_per_token_ms": 23.515583333333336,
+      "prompt_ms": 818.14,
+      "prompt_n": 787,
+      "prompt_per_second": 961.9380546116802,
+      "prompt_per_token_ms": 1.0395679796696315
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 865,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 889
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"The killing of an employee at Wayne Community College in Goldsboro, North Carolina, may have been a hate crime, authorities said Tuesday. Investigators are looking into the possibility, said Goldsboro police Sgt. Jeremy Sutton. He did not explain what may have made it a hate crime. The victim -- Ron Lane, whom officials said was a longtime employee and the school's print shop operator -- was white, as is the suspect. Lane's relatives said he was gay, CNN affiliate WNCN reported. The suspect, Kenneth Morgan Stancil III, worked with Lane as part of a work-study program, but was let go from the program in early March due to poor attendance, college President Kay Albertson said Tuesday. On Monday, Stancil walked into the print shop on the third floor of a campus building, aimed a pistol-grip shotgun and fired once, killing Lane, according to Sutton. Stancil has tattoos on his face. Sutton said investigators are looking into whether he is part of a white supremacist gang. He has no previous criminal record, authorities said. Sutton said Stancil fled on a motorcycle after the shooting and ultimately abandoned it in a highway median. Then, Stancil continued on to Daytona, Florida, but authorities don't know how he traveled, Sutton said. He was arrested just after 1 a.m. Tuesday, after he was found sleeping on a beach, about 550 miles (885 kilometers) from Goldsboro. Volusia County Beach Patrol had approached him for violating the city's ordinance against sleeping on the beach. He had a knife, police said. He was taken into custody without incident. Authorities in North Carolina expect to bring him back to face charges. Wayne Community College, a two-year school, has a student population of 3,837, according 2013 figures from the National Center for Education Statistics. Slightly more than half the students are part-time. Crime statistics from the center's website show no killings, assaults, robberies or motor vehicle thefts between 2011 and 2013. There were three arrests for illegal weapons possession in 2012 and three in 2013.\\n\", \"original_answer\": \"A 64-year-old employee was killed in what authorities are investigating as a possible hate crime at Wayne Community College in Goldsboro, North Carolina. The victim, Ron Lane, was white and gay, while the suspect, Kenneth Morgan Stancil III, is also white and has tattoos on his face. Stancil was let go from a work-study program at the college due to poor attendance and walked into the print shop on the third floor of a campus building and shot Lane once, killing him. Stancil then fled on a motorcycle before being arrested in Daytona, Florida. Authorities expect to bring him back to North Carolina to face charges. The college has a student population of around 3,837 and no recorded killings, assaults, robberies, or motor vehicle thefts between 2011 and 2013. However, there were three arrests for illegal weapons possession in 2012 and three in 2013.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "sha256:43c42e178794c34bd9cd6e600b42eb01a72df4b978e3585e36e23f5851c4a0d4",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22
+  ]
+}

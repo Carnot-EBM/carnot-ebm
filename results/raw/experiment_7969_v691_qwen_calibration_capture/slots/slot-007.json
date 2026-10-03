@@ -1,0 +1,116 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.7686831770115532,
+  "exclusion_reason": null,
+  "family_id": "sha256:67b16a0044cbbc1747f7d658af1209c3c7ec0f0c1fe0d0cc7892ffcf2be617d8",
+  "input_tokens": 1274,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1274,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1298
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:032e7a1bc6b6e65afffe9937ed7a205eca9c9e0c243e0c5208b5f4133f7d0c52",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832479,
+    "id": "chatcmpl-f2qzL8YxEwdYYzcUAU4uW4iDKALbF88j",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 563.911,
+      "predicted_n": 24,
+      "predicted_per_second": 42.55990750313436,
+      "predicted_per_token_ms": 23.496291666666664,
+      "prompt_ms": 1088.329,
+      "prompt_n": 1196,
+      "prompt_per_second": 1098.9324000371212,
+      "prompt_per_token_ms": 0.9099740802675584
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1274,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1298
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"202 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":true,\\\"touristy\\\":false,\\\"trendy\\\":true,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":true,\\\"validated\\\":false},\\\"Music\\\":false,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Event Planning & Services, Nightlife, Tapas Bars, Spanish, Modern European, Bars, Cocktail Bars, Seafood, Venues & Event Spaces, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"17:0-22:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"17:0-22:0\\\",\\\"Sunday\\\":\\\"17:0-21:0\\\",\\\"Thursday\\\":\\\"17:0-21:0\\\",\\\"Tuesday\\\":\\\"17:0-21:0\\\",\\\"Wednesday\\\":\\\"17:0-21:0\\\"},\\\"name\\\":\\\"Loquita\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-17 17:20:15\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Came to loquita for the first time in SB. It's a very nice Spanish tapas restaurant with and outdoor patio and lots of fireplaces and heaters to keep guests warm at night. We ordered the el bulli, baya de oro and datil as small bites to start off the night. My favorite was the datil and the el bulli was an interesting citrus caviar but I didn't think it was mind blowing. Don't skip out on the Jamon tasting and manchego! The jamon tasting is perfect for 2 people and comes with plenty of meat (iberico, Serrano, and chorizo and pan con tomate). The manchego tasting plate was amazing and came with the best accompaniments! The almonds were out of this world and was cooked with a lavender type glaze on them which paired well with the cheese. Also, try the pulpo and churros to round off your meal. The pulpo was super tender and crisp and the churros were plenty to share. I even got to take the leftovers home for snacking later. Don't get the patatas bravas! I thought it was going to be more like a hash brown from previous photos but we got more smashed potatoes covered in like a hot mayo sauce! Definitely could have skipped on that one. Overall, it's a great dinner spot and was enjoyable on a Sunday night out.\\\"},{\\\"review_date\\\":\\\"2022-01-16 06:02:30\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"Was a nice atmosphere. Appreciated the outdoor dining and they are very thoughtful about having ample heaters to make sure diners are warm. \\\\n\\\\nStaff was nice. \\\\n\\\\nFood was slightly disappointing:\\\\n\\\\nEl bulli: felt like simple tangerine pulp with a micro basil leaf\\\\nCrudo: seafood is my jam and brininess is delish but the fish in this Crudo tasted fishy and felt like a coarse hunk of fish that wasn't cured at all in acid\\\\nPollo paella: wasn't bad but wasn't something to write home about\\\\nChurros: batter seemed very good but was burned with burnt flavor\\\\nBasque cheesecake: delicious! Light and not too sweet\\\"},{\\\"review_date\\\":\\\"2022-01-13 03:51:35\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"This place has the best food! I thought I knew a good paella until I came here. A bit on the pricey side but well worth it. We shared it with some sangria. The sangria was perfect, but too sweet or too tart. The service was quick and simple. We'd definitely come back here the next time we're in the area.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Loquita is a Spanish tapas restaurant located in Santa Barbara, California. The restaurant offers a variety of event planning and services, nightlife, tapas bars, and cocktail bars. They also serve modern European cuisine and seafood. The restaurant has an outdoor seating area with fireplaces and heaters to provide warmth to guests during cold nights. Wi-Fi is available, but reservations can be made through their website or by phone. The restaurant is open six days a week and closes early on Sundays. Customers have praised the restaurant's ambiance, which is described as romantic and upscale. They have also commented on the quality of the food, particularly the jamon and manchego tastings and the pulpo dish. However, some customers have expressed disappointment with the taste of certain dishes such as the el bulli and the crudo.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:16cdb44be8b4d81ffb134a04f2b6fffc8333c3cac6ae6a4978a3d20d527541ee",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+  ]
+}

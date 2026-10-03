@@ -1,0 +1,135 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.98380664200522,
+  "exclusion_reason": null,
+  "family_id": "sha256:8ad17aa5f5002a348ffbc6fa44e71422ccdee2ab41f72beee995660a7e148c09",
+  "input_tokens": 1439,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": 12,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 26,
+      "prompt_tokens": 1439,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1465
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:916883c9494264217303f379ed1b89a486ba84c7b4360ec50905cc49a3ef1aa0",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": 12\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832755,
+    "id": "chatcmpl-EKFpPuIZg3nxxaadgcW4cILWOKDUupDN",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 617.501,
+      "predicted_n": 26,
+      "predicted_per_second": 42.105194971344176,
+      "predicted_per_token_ms": 23.75003846153846,
+      "prompt_ms": 1237.012,
+      "prompt_n": 1361,
+      "prompt_per_second": 1100.2318490038901,
+      "prompt_per_token_ms": 0.9088993387215283
+    },
+    "usage": {
+      "completion_tokens": 26,
+      "prompt_tokens": 1439,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1465
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"(Billboard)From Channing Tatum twerking for Jennifer Lopez to host Amy Schumer's archery fail, there were plenty of highlights and misfires from the 2015 MTV Movie Awards. 2015 MTV Movie Awards: See the full winners list. Here are the jokes, performances and moments that hit the target and the ones and missed it. Best Moments. Amy Schumer's opener: From a \\\"Boyhood\\\"/HPV joke to nearly flashing J.K. Simmons to her run-in with a cancer support group, Schumer's opening video segment was as reliably hilarious and inventive as her Comedy Central show (which can't come back on TV soon enough). Plus, her monologue killed: \\\"Half of you know who I am, half of you think I'm Meghan Trainor.\\\" Channing Tatum doing his thing: When the cast of \\\"Magic Mike XXL\\\" presented J.Lo with the Scared As Shit Performance award, she asked them exactly what we were all thinking: \\\"Why aren't you dancing?\\\" Channing Tatum obliged, popping a twerk (in a suit) onstage in front of Lopez. \\\"Your turn,\\\" he told her. Sadly, she did not oblige. Amy Schumer takes on Hillary Clinton, Zayn Malik and more in monologue. Rebel Wilson's censored moment: Introducing an exclusive clip from \\\"Pitch Perfect 2\\\" as an \\\"exclusive clit\\\" was easily the funniest non-Schumer joke of the entire night. Even her castmates seemed shocked when she slipped it in. Fall Out Boy meets Fetty Wap: \\\"Centuries\\\" didn't need a rap breakdown, nor did \\\"Trap Queen\\\" need a punk-rock edge. But did it sound killer on both counts? Hell yeah. Fetty with an electric guitar is something that needs to happen again. Charli XCX, Ty Dolla $ign & Tinashe: There's a reason Charli gets invited to every MTV awards show: She attacks a pop song with the abandon of a rock 'n' roll tidal wave. \\\"Drop That Kitty\\\" was Tinashe's time to shine, though. It's only a shame she got about 30 seconds to command the stage. Kiss Cam: Amy Schumer sensuously kissing Amber Rose just before a commercial break? Well played, Amy. Kevin Hart's Comedic Genius Award: While Kimmel's intro jokes were a little one-note (we get it, Kevin is short), it was pretty adorable that Hart brought his kids onstage to accept his Golden Popcorn. As his son held it, you realized the award was bigger than the kid's head. MTV Movie Awards: See all the photos. Robert Downey Jr. accepting Generation Award: His speech was fine (kudos for the \\\"keep your nose clean\\\" quip), but his Avengers castmates taking a knee while he accepted his award was just perfect. Misfires. Archery fail: Schumer's bow-and-arrow misfire was a literal misfire. It wasn't a big deal, but the fact that it ruined an entire gag (with Jimmy Kimmel pretending to get shot in the chest) was naturally awkward. Of course, Schumer poked fun at herself almost immediately. \\\"Gone Girl\\\" joke: \\\"How good was Gone Girl? It's the story of what one crazed white woman -- or every Latina -- does when a man cheats on them,\\\" Schumer joked. It wasn't awful, just kinda off. MTV immediately cut to J.Lo laughing like \\\"ummm, OK\\\" -- which is an accurate response. Vin Diesel sings 'Furious 7' Paul Walker tribute song at MTV Movie Awards. Shailene Woodley speech: Woodley definitely marches to the beat of her own drum, which is part of her appeal. But halfway through her Trailblazer award acceptance speech, the neo-hippie charm wore off, leaving most people wondering what she was trying to say. One of those wondering where she was going was Woodley herself, who wrapped up her speech by admitting it had totally gotten away from her. Zac Efron and Dave Franco: Was the punchline for their whole shtick really just Efron grabbing Franco's balls? Yes. Apparently, a man touching another man's junk is still comedy gold in 2015. Dwayne Johnson: The Rock shouting into the camera about 2014's movie highlights was totally unnecessary. At this point, MTV has to realize we've heard jokes about \\\"American Sniper\\\", \\\"Gone Girl\\\", \\\"Boyhood\\\" and \\\"Whiplash\\\" for almost a year now, and we're all ready to move on. But God Bless The Rock for giving it his all.\\n\", \"original_answer\": \"The 2015 MTV Movie Awards were filled with memorable moments and funny jokes. Highlights included Amy Schumer's hilarious opener, which featured a \\\"Boyhood\\\"/HPV joke and nearly flashing J.K. Simmons. Channing Tatum also impressed with his twerk performance, and Rebel Wilson's censored moment during her introduction of an exclusive clip from \\\"Pitch Perfect 2\\\" was a fan favorite. Other standout performances included Charli XCX's electrifying rendition of \\\"Drop That Kitty\\\" and Fetty Wap's powerful version of \\\"Trap Queen.\\\" However, some misses included Amy Schumer's attempt to impersonate Gone Girl, Vin Diesel's tribute song to Paul Walker, and Shailene Woodley's confusing Trailblazer acceptance speech. Overall, the 2015 MTV Movie Awards were a mix of hits and misses, with many memorable moments and laughs to be had.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:bb55736e21b4edba30ba83c75d204f0be10f83d45a362d9e86db5a1b6a1a0c1e",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43
+  ]
+}

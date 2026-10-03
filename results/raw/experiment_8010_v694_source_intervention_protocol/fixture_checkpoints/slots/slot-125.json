@@ -1,0 +1,90 @@
+{
+  "arm": "original",
+  "capture_identity": "sha256:c690c1f517fbce73c5da6a2d1e99e3819c3de93e1045fe76d1c8215b54691541",
+  "censor_status": false,
+  "denominator": 1,
+  "donor_group_id": "sha256:4a5f7291e72cb9fe6c81db9ee03872bc503a01e852823693eee38832b8d5b1fe",
+  "duration_s": 0.0029332409612834454,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:4a5f7291e72cb9fe6c81db9ee03872bc503a01e852823693eee38832b8d5b1fe:original",
+  "group_id": "sha256:4a5f7291e72cb9fe6c81db9ee03872bc503a01e852823693eee38832b8d5b1fe",
+  "input_byte_upper_bound": 3935,
+  "input_tokens": 30,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.25,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 18,
+      "prompt_tokens": 30
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:8e2d5729d98e84287475d67021cb471eab97f86e3eedb36fa2fc0c49fcced879",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "message": {
+          "content": "{\"unsupported_probability\": 0.25, \"source_sentence_id\": null}"
+        }
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "usage": {
+      "completion_tokens": 18,
+      "prompt_tokens": 30
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 32,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"3765 Santa Claus Ln\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":false,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"American (Traditional), Restaurants, Seafood, Burgers, Tacos, Sandwiches, Mexican, Bars, Food, Beer Bar, Juice Bars & Smoothies, Nightlife\\\",\\\"city\\\":\\\"Carpinteria\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-20:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"11:0-20:0\\\",\\\"Sunday\\\":\\\"11:0-19:30\\\",\\\"Thursday\\\":\\\"11:0-19:30\\\",\\\"Tuesday\\\":\\\"11:0-19:30\\\",\\\"Wednesday\\\":\\\"11:0-19:30\\\"},\\\"name\\\":\\\"Padaro Beach Grill\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-18 03:32:06\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"I give the food here 5/5 very delicious I've had their burgers and sandwiches. Their sweet potato fries are really good. In my opinion the food is pricey but if your hungry and don't mind spending a bit more by all means yes. But well their service there is sometimes great sometime not so great just depends who takes your order. But the food and view are great.\\\"},{\\\"review_date\\\":\\\"2021-12-08 05:09:40\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"What's a surprising treat. We were road-tripping and wanted to grab some fresh affordable fish and ended up at Padrino's. Their fresh fish was perfectly matched by the ambiance as you could sit outside close to the ocean. Casual, good quality, and beautiful! Highly recommend!\\\"},{\\\"review_date\\\":\\\"2021-11-29 17:17:46\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"What an adorable place!!! Loved the Ambience, the beautiful outside seating, the cozy and warm fire pits and the delicious food! I got the Turkey burger with caramelized onions and avocados, OMG!! My taste buds were bursting with joy!! Love it and can't wait to go back on a warmer day!!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Padaro Beach Grill is a highly-rated restaurant in Carpinteria, California, offering a wide range of cuisines including traditional American, seafood, burgers, tacos, sandwiches, Mexican, and more. Open from Tuesday to Sunday, the restaurant is appreciated for its delicious food, especially the burgers, sandwiches, and sweet potato fries. Despite being perceived as slightly pricey, customers still recommend the restaurant for its great food and views. The restaurant offers outdoor seating, free Wi-Fi, and is good for group dining. The service, however, is reported to be inconsistent. The restaurant does not offer parking in a garage or lot but has street parking available. It is described as casual yet classy, with a beautiful ambiance, particularly noted for its outdoor seating near the ocean and warm fire pits.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69410,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "seed": 69410,
+  "source_cluster_id": "2976a5849a3f5d733a7297eca7af3b2683e66a8451c5a23f5660c1302da66662",
+  "source_hash": "sha256:f4c146031e119bdaaf29aa2e56457647215a8cfb5145acb2dabc38dd96463e2a",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ]
+}

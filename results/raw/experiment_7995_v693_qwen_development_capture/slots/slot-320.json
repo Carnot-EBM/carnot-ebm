@@ -1,0 +1,107 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.130251388065517,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:f5387bca84622fcb932b4878338a6097ab327a9715e3d5710f1ce7f10c81c6c1",
+  "input_tokens": 438,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 4,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 438,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 462
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:875425b1f2c5c75b22da1efbefe65a234c478d25b34d1874e9e52e98435b93c9",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 4\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886299,
+    "id": "chatcmpl-IkgW4lE0gS0MviYuvisu99pljkekYrMB",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.822,
+      "predicted_n": 24,
+      "predicted_per_second": 42.4912627341003,
+      "predicted_per_token_ms": 23.53425,
+      "prompt_ms": 443.51,
+      "prompt_n": 360,
+      "prompt_per_second": 811.7066131541566,
+      "prompt_per_token_ms": 1.2319722222222222
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 438,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 462
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:When the programs and features window opens select the program your want to uninstall from the list and click on the Uninstall button. 5. Confirm that you want to uninstall a program by clicking on the Yes button.\\\\n\\\\npassage 2:In the list of programs, click Windows XP, and then click Change/Remove. 3. Click Uninstall Windows XP, and then click Continue. 4. If any programs have been modified since the upgrade to Windows XP, you will receive a warning message.\\\\n\\\\npassage 3:When the Start Menu opens select Control Panel. 3. Depending on your view options either click on uninstall a program or program and features. 4. When the programs and features window opens select the program your want to uninstall from the list and click on the Uninstall button.\\\\n\\\\n\\\",\\\"question\\\":\\\"how do you remove programs and processes from windows xp\\\"}\", \"original_answer\": \"To remove programs and processes from Windows XP, first open the Start Menu and select Control Panel. Depending on your view options, click on either 'uninstall a program' or 'program and features'. When the programs and features window opens, select the program you want to uninstall from the list and click on the Uninstall button. Confirm that you want to uninstall a program by clicking on the Yes button.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "0ed0f0ea382f9007f3c88b4e12488c82d66b4d47b04f57ee97e8bbc2991e6763",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ]
+}

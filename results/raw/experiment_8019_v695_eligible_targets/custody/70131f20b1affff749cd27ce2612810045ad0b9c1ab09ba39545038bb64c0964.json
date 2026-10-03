@@ -1,0 +1,101 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.5087968619773164,
+  "exclusion_reason": null,
+  "family_id": "sha256:a2244ffa68e87d445576afec66ef21ec21a32e72be0117ba692147ef87bc87ee",
+  "input_tokens": 873,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 873,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 897
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:45085c0988029ffe52e48302965209895cae78bcac8a90bdf576340f93e39d6b",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832617,
+    "id": "chatcmpl-Z63MT0SFfhtkGfozHU9G3JHQzwkvQGCC",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.062,
+      "predicted_n": 24,
+      "predicted_per_second": 42.47321532858341,
+      "predicted_per_token_ms": 23.54425,
+      "prompt_ms": 824.813,
+      "prompt_n": 795,
+      "prompt_per_second": 963.8548373995075,
+      "prompt_per_token_ms": 1.0375006289308175
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 873,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 897
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"7060 Hollister Ave, Ste 106\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":null,\\\"street\\\":null,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Mexican, Restaurants, Food, Organic Stores, Caterers, Event Planning & Services, Vegan\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-20:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"11:0-20:0\\\",\\\"Sunday\\\":\\\"11:0-20:0\\\",\\\"Thursday\\\":\\\"11:0-20:0\\\",\\\"Tuesday\\\":\\\"11:0-20:0\\\",\\\"Wednesday\\\":\\\"11:0-20:0\\\"},\\\"name\\\":\\\"Sharky's Woodfired Mexican Grill\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2020-06-14 23:24:38\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"This place is so good. The happy hour menu is honestly a great bang for your buck. I got so much food (and really good) with only $5. Ive gotten the nachos and the tacos and all were really great. The tofu burrito and tacos are also so good. Friendly staff as well.\\\"},{\\\"review_date\\\":\\\"2020-01-30 04:33:51\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Such great service! We ordered off of grub hub and it was never picked up / delivered so we had to go pick up our meal. The ladies ensured that our meal would still be hot after the 40 delay and offered us free cookies and drinks to make up for what was not their mistake. Thanks homies! We really appreciate it and will be in in-person next time\\\"},{\\\"review_date\\\":\\\"2019-11-09 19:50:16\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"The best fish tacos in Goleta.\\\\nTons of options for vegetarians, pescatarians and vegans.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Based on the provided structured data, here is an objective overview of Sharky's Woodfired Mexican Grill:\\n\\nSharky's Woodfired Mexican Grill is a popular restaurant located in Goleta, California, offering a variety of Mexican dishes, including vegetarian, pescatarian, and vegan options. The business has a rating of 4.0 stars and receives positive reviews from customers. According to one review, the happy hour menu offers great value, with customers receiving a lot of food for their money. Another reviewer praises the friendly and accommodating staff, who went above and beyond to ensure their meal was hot after a delayed delivery. Customers can enjoy outdoor seating and WiFi at the restaurant, although parking may be limited. Overall, Sharky's is a great choice for those looking for delicious Mexican cuisine in a casual setting.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "tune",
+  "source_cluster_id": "sha256:f41bef0dc198fbd9e1983acd42b0e3cb8c8948de945ec6567acf00b6f130e3b5",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ]
+}

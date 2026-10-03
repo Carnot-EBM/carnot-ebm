@@ -1,0 +1,112 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.1472831360297278,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:65f06c6aa37479f1f8cc4f6324da7cca8cdac6cccededc168da00da900fb011c",
+  "input_tokens": 584,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 584,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 605
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:0fbc2d1e735dc4b82838c857b3c947ec29617fbc6918bb43520328d4312f9315",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"unsupported_probability\": 0.0,\n\"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886171,
+    "id": "chatcmpl-9pnErIcvJiIxFbxLE2LWDPCxtlMnzNa3",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 492.609,
+      "predicted_n": 21,
+      "predicted_per_second": 42.63015901049311,
+      "predicted_per_token_ms": 23.457571428571427,
+      "prompt_ms": 536.852,
+      "prompt_n": 506,
+      "prompt_per_second": 942.5316474559097,
+      "prompt_per_token_ms": 1.0609723320158102
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 584,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 605
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:To avoid choking, make sure anything you give your baby is soft, easy to swallow, and cut into small pieces. Some examples include: 1  Small pieces of banana. 2  Wafer-type cookies or crackers. 3  Scrambled eggs. 4  Well-cooked pasta. 5  Well-cooked chicken finely chopped. 6  Well-cooked and cut up yellow squash, peas, and potatoes.\\\\n\\\\npassage 2:Within a few months of starting solid foods, your baby\u2019s daily diet should include a variety of foods each day that may include the following: 1  Breast milk and/or formula. 2  Meats. 3  Cereal. 4  Vegetables. 5  Fruits. 6  Eggs. 7  Fish.\\\\n\\\\npassage 3:Breastmilk or formula will still be your baby\u2019s main source of nutrition. Starting solids is a time of introducing new flavors and textures to your baby, a time of exploration. Helpful tips on introducing cereals: 1  Start with infant rice or oatmeal cereal.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to start feeding. baby solids\\\"}\", \"original_answer\": \"Before starting to feed a baby solids, ensure that the food is soft, easy to swallow and cut into small pieces to avoid choking. Some examples of suitable foods include small pieces of banana, wafer-type cookies or crackers, scrambled eggs, well-cooked pasta, well-cooked and finely chopped chicken, and well-cooked and cut up yellow squash, peas, and potatoes. Over the next few months, start to include a variety of foods in your baby's daily diet such as meats, cereal, vegetables, fruits, eggs, and fish. Remember that breastmilk or formula will still be your baby\u2019s main source of nutrition at this point. A good first solid food to introduce could be infant rice or oatmeal cereal.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "5c3b56e6891c25e667172924ffa761f764f34fa97124339ab3cdc0e3f6b2ec24",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ]
+}

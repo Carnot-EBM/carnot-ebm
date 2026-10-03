@@ -1,0 +1,104 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.2858865950256586,
+  "exclusion_reason": null,
+  "family_id": "sha256:4ab919433a831cc5e97b1f280e94bc48602541290a7846bf00e11a10993722f3",
+  "input_tokens": 665,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 665,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 688
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:ab9a4af699550ab95ddba0b73ab64b601cc68d4fc52603d95db7c03fdfa4d003",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832830,
+    "id": "chatcmpl-MOQi4CaeQoECYnDJpzhn51oVzd7H1FXI",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.553,
+      "predicted_n": 23,
+      "predicted_per_second": 42.5490192451064,
+      "predicted_per_token_ms": 23.502304347826087,
+      "prompt_ms": 612.251,
+      "prompt_n": 587,
+      "prompt_per_second": 958.7571110541265,
+      "prompt_per_token_ms": 1.0430170357751278
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 665,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 688
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:This is the first hive after we installed the bees. The emptied nuc box on the ground still had a few bees in it that eventually flew back into the hive. The upside-down Mason jar is full of a honey-sugar mixture. (Nov. 15/10 update: Don\u2019t use honey unless it\u2019s from your own bees.\\\\n\\\\npassage 2:If the NUC is packed with bees, add a second box on top of the nest box, preferably with some drawn comb frames. Add the inner cover (or Vivaldi cover) and sugar syrup. Add the hive top and reduce the hive entrance to 1 inch. You can increase to no more than 3 inches in a few weeks.\\\\n\\\\npassage 3:Step By Step: 1  As soon as you get the NUC to your apiary, place in its permanent location with the entrance at the same place as the entrance to the hive will be. 2  Remove the block to the NUC entrance and wait at least 24 hours. The bees will orient to the new location. Move the NUC to the side of the hive location and replace it with the empty nest box. Gently smoke the entrance to the NUC. Remove the top of the nuc and spritz the bees with a light sugar syrup.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to install a nuc of bees\\\"}\", \"original_answer\": \"To install a NUC of bees, follow these steps:\\n\\n1. Place the NUC in its permanent location with the entrance at the same place as the entrance to the hive will be.\\n2. Wait for at least 24 hours for the bees to orient to the new location.\\n3. Once the bees have oriented, move the NUC to the side of the hive location and replace it with an empty nest box.\\n4. Gently smoke the entrance to the NUC.\\n5. Remove the top of the NUC and spritz the bees with a light sugar syrup.\\n6. If the NUC is packed with bees, add a second box on top of the nest box, preferably with some drawn comb frames. Add the inner cover (or Vivaldi cover) and sugar syrup. Add the hive top and reduce the hive entrance to 1 inch. You can increase to no more than 3 inches in a few weeks.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:8dde7104c15ac46ab8c6e17f92886462ac920070245634e20338869ec51f748a",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ]
+}

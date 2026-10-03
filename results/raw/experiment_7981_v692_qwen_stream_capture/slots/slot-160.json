@@ -1,0 +1,113 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.4280176379834302,
+  "exclusion_reason": null,
+  "family_id": "sha256:ffcb0ddb3b7617ff8bfd6fb42d5c3f24b48c1c78bdd9250fc26e124a62f3af2d",
+  "input_tokens": 838,
+  "invocation_finished_at": "2026-10-01T11:44:58.174912+00:00",
+  "invocation_started_at": "2026-10-01T11:44:56.746894+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": 6,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 838,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 863
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:b572753be1d5ef1d5151e4a3245298b445cd8f738c7fcc5745aafbfe36b948dd",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": 6\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855098,
+    "id": "chatcmpl-hqmL5FuUYpRFnFv9SDJfZEpHsQnN9IjD",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 588.776,
+      "predicted_n": 25,
+      "predicted_per_second": 42.460969876489536,
+      "predicted_per_token_ms": 23.551039999999997,
+      "prompt_ms": 727.093,
+      "prompt_n": 760,
+      "prompt_per_second": 1045.2583094597253,
+      "prompt_per_token_ms": 0.9567013157894736
+    },
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 838,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 863
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"A freshly fallen tree in the roadway was Jason Warnock's first clue. Warnock was driving through a canyon in Lewiston, Idaho, on Wednesday when he saw the tree, then looked up to see an SUV dangling over the edge of a cliff. The only thing holding the GMC Yukon and its terrified driver from a 30-foot drop was a crumpled chain-link fence, still clinging to the earth above Bryden Canyon Road. \\\"I seen that guy hanging there and he was trying to beat the window out or the door open and I was like 'Oh man,' 'cause only like five links were hanging there,\\\" Warnock told KXLY, a CNN affiliate. \\\"I was like, I gotta do something and no one was doing anything.\\\" What Warnock did next, captured in a dramatic photo by Lewiston Tribune photographer Barry Kough, made headlines around the world. Warnock dashed from his car and scrambled up a hill to the Yukon and its driver, 23-year-old Matthew Sitko, who appeared to be in shock. \\\"I got up there and I was like, 'Are you alright man?' He shook his head, yeah. I grabbed my Snap-on multi-tool and it had jagged edges on each end. I hit the window three times and it didn't break. Every time I hit it, the thing rocked like it was going to fall off,\\\" Warnock told KXLY. Sitko was finally able to get the passenger-side window down. Warnock then reached in and pulled Sitko out to safety -- a moment recorded by Kough's camera. Then Warnock disappeared. \\\"I left and got out of there before anyone knew who I was,\\\" he said. He remained an unknown good Samaritan, his identity a mystery, until Kough's picture of the daring rescue appeared in the Lewiston paper and spread across the Internet. \\\"I don't feel like I deserve any credit or anything,\\\" Warnock said. \\\"I just did what anyone would do, went right back to work.\\\" Thanks to Warnock, Sitko went to the hospital with just minor injuries. \\\"The Lewiston Police Department would like to thank Jason Warnock for his quick and decisive actions in helping Mr. Sitko and preventing the situation from worsening,\\\" said Roger Lanier, the interim police chief. Warnock told KXLY he didn't want or expect all the attention and would rather be fishing in the mountains than reading about himself.\\n\", \"original_answer\": \"A man named Jason Warnock noticed a fallen tree on a road in Lewiston, Idaho while driving. As he looked up, he saw an SUV hanging off a cliff with only a chain-link fence holding it up. He quickly parked his car and climbed up the hill to the SUV. With a Snap-on multi-tool, he struck the passenger-side window three times until it shattered. He then reached inside and pulled the driver out to safety. The driver, Matthew Sitko, was taken to the hospital with minor injuries. The Lewiston Police Department thanked Warnock for his quick actions. Warnock said he doesn't want any attention and would rather be fishing than reading about himself.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_admission",
+  "source_cluster_id": "sha256:f4be491d3b39c6f8243c965a2256e74ab5a4dba931a0b30ab8d008260dbd2a47",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ]
+}

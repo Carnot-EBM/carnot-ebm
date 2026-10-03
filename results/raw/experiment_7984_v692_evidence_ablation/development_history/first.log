@@ -1,0 +1,300 @@
+.....FF..                                                                [100%]
+=================================== FAILURES ===================================
+________________ test_external_missing_and_validation_failures _________________
+
+tmp_path = PosixPath('/tmp/carnot-7984-first/test_external_missing_and_vali0')
+
+    def test_external_missing_and_validation_failures(tmp_path):
+        output = tmp_path / "blocked" / (e.NAME + ".json")
+        assert (
+            e.main(
+                ["--root", str(tmp_path / "missing"), "--validation-worker", "--output", str(output)]
+            )
+            == 0
+        )
+        value = json.loads(output.read_text())
+        assert value["verdict_class"] == "blocked" and value["ablation_ready_score"] == 0
+        assert any(r["observed"] is None for r in value["gate_check_summary"])
+        assert e.replay(value)["blocked"]
+        e.apply_validation(value, [dict(name="required", required=True, passed=False, exit_code=1)])
+        assert value["verdict_class"] == "disqualified"
+        e.apply_validation(value, [dict(name="health", required=False, passed=False, exit_code=1)])
+        assert len(value["validation_receipts"]) == 2
+        with patch.object(
+            e,
+            "terminal_check",
+            side_effect=[dict(passed=False, flagged_adversarial=False), dict(passed=True)],
+        ):
+            e.publish(tmp_path / "corrected" / (e.NAME + ".json"), value)
+        with patch.object(e, "reader_receipt", return_value=dict(passed=False)):
+            with pytest.raises(ValueError, match="primary_resolution"):
+>               e.publish(tmp_path / "resolver" / (e.NAME + ".json"), e.base([]))
+
+tests/python/test_experiment_7984_v692_evidence_ablation.py:89: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/experiment_7984_v692_evidence_ablation.py:522: in publish
+    receipt = publish_primary(output, value, terminal_check)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+output = PosixPath('/tmp/carnot-7984-first/test_external_missing_and_vali0/resolver/experiment_7984_v692_evidence_ablation.json')
+value = {'MODEL_SPECS': [], 'ablation_ready_score': 0, 'acceptance_gate_results': {'added_information': False, 'readiness': False, 'validity': False}, 'added_information_score': 0, ...}
+validator = <function terminal_check at 0x7f71219f5120>
+
+    def publish_primary(
+        output: Path, value: Mapping[str, Any], validator: Callable[[Path], dict[str, Any]]
+    ) -> dict[str, Any]:
+        """Validate a locked candidate and replace only its checked bytes atomically.
+    
+        Validator reports use hash-specific paths so an older reader can detect a
+        replaced primary. Historical siblings cause rejection and remain untouched.
+        """
+        output = output.absolute()
+        validate_primary(value, output)
+        raw = output.parent / "raw" / output.stem
+        raw.mkdir(parents=True, exist_ok=True)
+        with (raw / "publication.lock").open("a") as lock:
+            fcntl.flock(lock, fcntl.LOCK_EX)
+            siblings = list(output.parent.glob(f"experiment_{value['experiment_id']}_*.json"))
+            if any(path != output for path in siblings):
+                raise ValueError("conflicting_primary")
+            if output.exists():
+                old = json.loads(output.read_text())
+                if (old.get("experiment_id"), old.get("task_id")) != (
+                    value["experiment_id"],
+                    value["task_id"],
+                ):
+                    raise ValueError("conflicting_identity")
+            candidate = raw / "terminal_candidate.json"
+            atomic_json(candidate, value)
+            digest = sha256_file(candidate)
+            report = validator(candidate)
+            if report.get("passed") is not True:
+>               raise ValueError("candidate_rejected")
+E               ValueError: candidate_rejected
+
+python/carnot/reporting/primary_publication.py:73: ValueError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = PosixPath('/tmp/carnot-7984-first/test_external_missing_and_vali0')
+
+    def test_external_missing_and_validation_failures(tmp_path):
+        output = tmp_path / "blocked" / (e.NAME + ".json")
+        assert (
+            e.main(
+                ["--root", str(tmp_path / "missing"), "--validation-worker", "--output", str(output)]
+            )
+            == 0
+        )
+        value = json.loads(output.read_text())
+        assert value["verdict_class"] == "blocked" and value["ablation_ready_score"] == 0
+        assert any(r["observed"] is None for r in value["gate_check_summary"])
+        assert e.replay(value)["blocked"]
+        e.apply_validation(value, [dict(name="required", required=True, passed=False, exit_code=1)])
+        assert value["verdict_class"] == "disqualified"
+        e.apply_validation(value, [dict(name="health", required=False, passed=False, exit_code=1)])
+        assert len(value["validation_receipts"]) == 2
+        with patch.object(
+            e,
+            "terminal_check",
+            side_effect=[dict(passed=False, flagged_adversarial=False), dict(passed=True)],
+        ):
+            e.publish(tmp_path / "corrected" / (e.NAME + ".json"), value)
+        with patch.object(e, "reader_receipt", return_value=dict(passed=False)):
+>           with pytest.raises(ValueError, match="primary_resolution"):
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AssertionError: Regex pattern did not match.
+E             Expected regex: 'primary_resolution'
+E             Actual message: 'candidate_rejected'
+
+tests/python/test_experiment_7984_v692_evidence_ablation.py:88: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp7984] phase=begin
+[exp7984] phase=authenticate_inputs
+[exp7984] phase=publish
+[exp7303-validation] before_subprocess adversarial elapsed_s=0.000 unit=1/2
+[exp7303-validation:adversarial] {
+[exp7303-validation:adversarial]   "reports": [
+[exp7303-validation:adversarial]     {
+[exp7303-validation:adversarial]       "artifact": "/tmp/carnot-7984-first/test_external_missing_and_vali0/blocked/raw/experiment_7984_v692_evidence_ablation/terminal_candidate.json",
+[exp7303-validation:adversarial]       "loaded": true,
+[exp7303-validation:adversarial]       "exp_id": 7984,
+[exp7303-validation:adversarial]       "title": "",
+[exp7303-validation:adversarial]       "honest_verdict": "complete_blocked_evidence_ablation_inputs",
+[exp7303-validation:adversarial]       "flag_count": 0,
+[exp7303-validation:adversarial]       "max_severity": -1,
+[exp7303-validation:adversarial]       "flags": [],
+[exp7303-validation:adversarial]       "gate_version": "197e0a5eacacb09ce6607ae8bdfd507498082857f0d02ec2003a62c251b69a24"
+[exp7303-validation:adversarial]     }
+[exp7303-validation:adversarial]   ],
+[exp7303-validation:adversarial]   "flagged_count": 0
+[exp7303-validation:adversarial] }
+[exp7303-validation] after_subprocess adversarial elapsed_s=0.518 exit=0 unit=1/2
+[exp7303-validation] before_subprocess strict_rows elapsed_s=0.000 unit=2/2
+[exp7303-validation:strict_rows] 
+[exp7303-validation:strict_rows] verdict-row-consistency: checked 0, skipped 1 (no per-unit rows), unreadable 0.
+[exp7303-validation:strict_rows]   NOTE: most artifacts carry no per-unit row container, so their headline claims are not falsifiable from the artifact alone. That is a reporting-shape gap in those experiments, not a clean bill of health from this tool.
+[exp7303-validation] after_subprocess strict_rows elapsed_s=0.023 exit=0 unit=2/2
+[exp7303-validation] before_subprocess primary_cold_replay elapsed_s=0.000 unit=1/1
+[exp7303-validation:primary_cold_replay] [exp7984] phase=begin
+[exp7303-validation:primary_cold_replay] [exp7984] phase=replay_passed
+[exp7303-validation] after_subprocess primary_cold_replay elapsed_s=1.185 exit=0 unit=1/1
+[exp7303-validation] before_subprocess adversarial elapsed_s=0.000 unit=1/2
+[exp7303-validation:adversarial] {
+[exp7303-validation:adversarial]   "reports": [
+[exp7303-validation:adversarial]     {
+[exp7303-validation:adversarial]       "artifact": "/tmp/carnot-7984-first/test_external_missing_and_vali0/blocked/raw/experiment_7984_v692_evidence_ablation/terminal_candidate.json",
+[exp7303-validation:adversarial]       "loaded": true,
+[exp7303-validation:adversarial]       "exp_id": 7984,
+[exp7303-validation:adversarial]       "title": "",
+[exp7303-validation:adversarial]       "honest_verdict": "complete_blocked_evidence_ablation_inputs",
+[exp7303-validation:adversarial]       "flag_count": 0,
+[exp7303-validation:adversarial]       "max_severity": -1,
+[exp7303-validation:adversarial]       "flags": [],
+[exp7303-validation:adversarial]       "gate_version": "197e0a5eacacb09ce6607ae8bdfd507498082857f0d02ec2003a62c251b69a24"
+[exp7303-validation:adversarial]     }
+[exp7303-validation:adversarial]   ],
+[exp7303-validation:adversarial]   "flagged_count": 0
+[exp7303-validation:adversarial] }
+[exp7303-validation] after_subprocess adversarial elapsed_s=0.531 exit=0 unit=1/2
+[exp7303-validation] before_subprocess strict_rows elapsed_s=0.000 unit=2/2
+[exp7303-validation:strict_rows] 
+[exp7303-validation:strict_rows] verdict-row-consistency: checked 0, skipped 1 (no per-unit rows), unreadable 0.
+[exp7303-validation:strict_rows]   NOTE: most artifacts carry no per-unit row container, so their headline claims are not falsifiable from the artifact alone. That is a reporting-shape gap in those experiments, not a clean bill of health from this tool.
+[exp7303-validation] after_subprocess strict_rows elapsed_s=0.037 exit=0 unit=2/2
+[exp7303-validation] before_subprocess primary_cold_replay elapsed_s=0.000 unit=1/1
+[exp7303-validation:primary_cold_replay] [exp7984] phase=begin
+[exp7303-validation:primary_cold_replay] [exp7984] phase=replay_passed
+[exp7303-validation] after_subprocess primary_cold_replay elapsed_s=1.217 exit=0 unit=1/1
+[exp7984] phase=complete
+[exp7303-validation] before_subprocess adversarial elapsed_s=0.000 unit=1/2
+[exp7303-validation:adversarial] {
+[exp7303-validation:adversarial]   "reports": [
+[exp7303-validation:adversarial]     {
+[exp7303-validation:adversarial]       "artifact": "/tmp/carnot-7984-first/test_external_missing_and_vali0/resolver/raw/experiment_7984_v692_evidence_ablation/terminal_candidate.json",
+[exp7303-validation:adversarial]       "loaded": true,
+[exp7303-validation:adversarial]       "exp_id": 7984,
+[exp7303-validation:adversarial]       "title": "",
+[exp7303-validation:adversarial]       "honest_verdict": "complete_null_evidence_ablation",
+[exp7303-validation:adversarial]       "flag_count": 1,
+[exp7303-validation:adversarial]       "max_severity": 2,
+[exp7303-validation:adversarial]       "flags": [
+[exp7303-validation:adversarial]         {
+[exp7303-validation:adversarial]           "kind": "SUBSTRATE_CLASS_MISMATCH",
+[exp7303-validation:adversarial]           "severity": "critical",
+[exp7303-validation:adversarial]           "detail": "duration_s=0.0 is below the 0.0001s floor of the declared inference_substrate_class=no_model_load. Either the class is wrong or the duration was not measured."
+[exp7303-validation:adversarial]         }
+[exp7303-validation:adversarial]       ],
+[exp7303-validation:adversarial]       "gate_version": "197e0a5eacacb09ce6607ae8bdfd507498082857f0d02ec2003a62c251b69a24"
+[exp7303-validation:adversarial]     }
+[exp7303-validation:adversarial]   ],
+[exp7303-validation:adversarial]   "flagged_count": 1
+[exp7303-validation:adversarial] }
+[exp7303-validation] after_subprocess adversarial elapsed_s=0.523 exit=1 unit=1/2
+[exp7303-validation] before_subprocess strict_rows elapsed_s=0.000 unit=2/2
+[exp7303-validation:strict_rows] 
+[exp7303-validation:strict_rows] verdict-row-consistency: checked 0, skipped 1 (no per-unit rows), unreadable 0.
+[exp7303-validation:strict_rows]   NOTE: most artifacts carry no per-unit row container, so their headline claims are not falsifiable from the artifact alone. That is a reporting-shape gap in those experiments, not a clean bill of health from this tool.
+[exp7303-validation] after_subprocess strict_rows elapsed_s=0.025 exit=0 unit=2/2
+[exp7303-validation] before_subprocess primary_cold_replay elapsed_s=0.000 unit=1/1
+[exp7303-validation:primary_cold_replay] [exp7984] phase=begin
+[exp7303-validation:primary_cold_replay] [exp7984] phase=replay_passed
+[exp7303-validation] after_subprocess primary_cold_replay elapsed_s=1.302 exit=0 unit=1/1
+[exp7303-validation] before_subprocess adversarial elapsed_s=0.000 unit=1/2
+[exp7303-validation:adversarial] {
+[exp7303-validation:adversarial]   "reports": [
+[exp7303-validation:adversarial]     {
+[exp7303-validation:adversarial]       "artifact": "/tmp/carnot-7984-first/test_external_missing_and_vali0/resolver/raw/experiment_7984_v692_evidence_ablation/terminal_candidate.json",
+[exp7303-validation:adversarial]       "loaded": true,
+[exp7303-validation:adversarial]       "exp_id": 7984,
+[exp7303-validation:adversarial]       "title": "",
+[exp7303-validation:adversarial]       "honest_verdict": "complete_disqualified_owned_validation",
+[exp7303-validation:adversarial]       "flag_count": 1,
+[exp7303-validation:adversarial]       "max_severity": 2,
+[exp7303-validation:adversarial]       "flags": [
+[exp7303-validation:adversarial]         {
+[exp7303-validation:adversarial]           "kind": "SUBSTRATE_CLASS_MISMATCH",
+[exp7303-validation:adversarial]           "severity": "critical",
+[exp7303-validation:adversarial]           "detail": "duration_s=0.0 is below the 0.0001s floor of the declared inference_substrate_class=no_model_load. Either the class is wrong or the duration was not measured."
+[exp7303-validation:adversarial]         }
+[exp7303-validation:adversarial]       ],
+[exp7303-validation:adversarial]       "gate_version": "197e0a5eacacb09ce6607ae8bdfd507498082857f0d02ec2003a62c251b69a24"
+[exp7303-validation:adversarial]     }
+[exp7303-validation:adversarial]   ],
+[exp7303-validation:adversarial]   "flagged_count": 1
+[exp7303-validation:adversarial] }
+[exp7303-validation] after_subprocess adversarial elapsed_s=0.542 exit=1 unit=1/2
+[exp7303-validation] before_subprocess strict_rows elapsed_s=0.000 unit=2/2
+[exp7303-validation:strict_rows] 
+[exp7303-validation:strict_rows] verdict-row-consistency: checked 0, skipped 1 (no per-unit rows), unreadable 0.
+[exp7303-validation:strict_rows]   NOTE: most artifacts carry no per-unit row container, so their headline claims are not falsifiable from the artifact alone. That is a reporting-shape gap in those experiments, not a clean bill of health from this tool.
+[exp7303-validation] after_subprocess strict_rows elapsed_s=0.028 exit=0 unit=2/2
+[exp7303-validation] before_subprocess primary_cold_replay elapsed_s=0.000 unit=1/1
+[exp7303-validation:primary_cold_replay] [exp7984] phase=begin
+[exp7303-validation:primary_cold_replay] [exp7984] phase=replay_passed
+[exp7303-validation] after_subprocess primary_cold_replay elapsed_s=1.228 exit=0 unit=1/1
+____________________ test_authenticated_live_original_roles ____________________
+
+tmp_path = PosixPath('/tmp/carnot-7984-first/test_authenticated_live_origin0')
+
+    def test_authenticated_live_original_roles(tmp_path):
+        failures, plan = e.authenticate(e.ROOT)
+        assert not failures
+        public = e.load_public(plan)
+        assert set(public) == {"fit", "tune", "policy_design", "evaluation"}
+        assert len(public["evaluation"]) == 64
+>       value = e.measure(public, plan, tmp_path, fixture_data=None)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_experiment_7984_v692_evidence_ablation.py:98: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+public = {'evaluation': [{'answer_bytes': '43726f636f64696c652052657374617572616e74202620426172206973206c6f63617465642061742032...6c617374204175677573742e204d6179626520746f6461792c20697420776f756c64206272696e67206f75742074686520626573742e0a'}, ...]}
+plan = {'checks': [{'expected': 'sha256:dc06fadccb5a0bfce0b545256a9e8133e61f002df642b2d71d829753322438ed', 'field': 'sha256',...on/primitives.json', 'sha256': 'sha256:829664d39162e68ab2d744b8ae9c3315b465b1b23b010b185e5ff57fdd06ceb2'}}, ...}, ...}}
+raw = PosixPath('/tmp/carnot-7984-first/test_authenticated_live_origin0')
+
+    def measure(public: Json, plan: Json, raw: Path, *, fixture_data: Json | None) -> Json:
+        """Seal public interventions before labels, heads before policy, and policy before truth."""
+        value, events = base([]), []
+        progress("freeze_interventions")
+        views = a.interventions(public)
+        atomic_json(raw / "public.json", public)
+        atomic_json(raw / "interventions.json", views)
+        value["intervention_manifest"] = dict(
+            reference(raw / "interventions.json"),
+            frozen_before_labels=True,
+            seed=69284,
+            length_bins=a.CONFIG["length_bins"],
+            same_source_excluded=True,
+        )
+        qrows = {r["family_id"]: r for r in plan.get("upstream", {}).get(7969, {}).get("rows", [])}
+        data = {}
+        for role in ROLES:
+            targets = (
+                labels(plan, role, events, False)
+                if fixture_data is None and role in ("fit", "tune")
+                else {}
+            )
+            data[role] = []
+            for row in public[role]:
+                fid = row["family_id"]
+                if fixture_data is not None:
+                    r = next(r for r in fixture_data[role] if r["family_id"] == fid)
+                    q, y, status = r["q"], r["y"] if role in ("fit", "tune") else None, r["status"]
+                else:
+>                   r = qrows[fid]
+                        ^^^^^^^^^^
+E                   KeyError: 'sha256:11d5953abbf9eaa5f94e82465e56fccfb8a66f2c0a42cbb6069017333710482e'
+
+python/carnot/experiment_7984_v692_evidence_ablation.py:272: KeyError
+----------------------------- Captured stdout call -----------------------------
+[exp7984] phase=freeze_interventions
+[exp7984] public_mapping role=fit rows=256
+[exp7984] public_mapping role=tune rows=64
+[exp7984] public_mapping role=policy_design rows=32
+[exp7984] public_mapping role=evaluation rows=64
+=========================== short test summary info ============================
+FAILED tests/python/test_experiment_7984_v692_evidence_ablation.py::test_external_missing_and_validation_failures
+FAILED tests/python/test_experiment_7984_v692_evidence_ablation.py::test_authenticated_live_original_roles
+2 failed, 7 passed in 62.49s (0:01:02)

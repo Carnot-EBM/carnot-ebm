@@ -1,0 +1,132 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 2.0131431400077417,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:3bb5726c8a448f303c71b242d71565747f5b1483325b327e154cc9108d1322f1",
+  "input_tokens": 1588,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1588,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1611
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:045359d15efb6356be0b1ff1feed44e26636ff13a2edc4cb15f1ad3b22430add",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886272,
+    "id": "chatcmpl-AwarXQ0Jck5DPtDVv7AATDnIS6QW1TLs",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 542.73,
+      "predicted_n": 23,
+      "predicted_per_second": 42.378346507471484,
+      "predicted_per_token_ms": 23.59695652173913,
+      "prompt_ms": 1349.321,
+      "prompt_n": 1510,
+      "prompt_per_second": 1119.0813750026866,
+      "prompt_per_token_ms": 0.8935900662251655
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1588,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1611
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"A sweat-smothered man in a wide-brimmed hat, knee-high leather boots and a khaki uniform machetes his way through lush jungle foliage. As thick tangles of vine fall beneath his blade, he pushes into a clearing, then suddenly staggers back. The fanged mouth of a primordial stone beast gapes toward him. Before him rise the crumbled ruins of an enormous portal of rock, black with age but with a colossal grandeur not yet lost -- a fine example of what archaeologists call a \\\"zoomorphic portal\\\" or, more popularly, a \\\"monster mouth gate.\\\" What was once the gateway to an ancient Mayan city, built circa 700 AD and mysteriously abandoned four centuries later, stands before him. He has found the lost city of Lagunita. Now that the planet has been mapped, circumnavigated, measured and tagged in every way imaginable, the age of explorers discovering new worlds seems a quaint memory. But there are still adventurers exploring forgotten corners of the globe, and some find astonishing things. One such explorer, part Indiana Jones, part Magellan, is Slovenian archaeologist Ivan \u0160prajc. The sprightly \u0160prajc wears the weathered face of a man who has spent much of his 60 years beneath a hot sun at excavations, or hacking his way through dense jungle. He has been the first to see ancient pyramids, 30 meters high, that he spotted in aerial photographs from his office among the Baroque Mitteleuropean cobbled streets of Ljubljana, Slovenia, some 10,000 kilometers away. But in terms of the thrill of discovery, it doesn't get any better than his encounter with Lagunita's monster portal. What does it feel like to find a lost city?  \\\"It's a victory,\\\" says \u0160prajc, \\\"especially when the efforts are long. On several occasions we've had two, three weeks of just cutting through the bush to get to some location, without knowing what we would find. When we get to the site it feels like a big victory, like we've done it. If it had been easy, then other people would have done it already.\\\" Since 1996, he and his team have discovered more than 80 ancient Mayan cities in the jungles of Mexico, few of which the modern world had known before. But how can an entire city, which once may have been home to tens of thousands, simply vanish? \u0160prajc explains that the region in which he has found such riches had gone unexplored because it's so inaccessible: \\\"It's so hard to get there. It's a biosphere, a protected natural area that has never been densely populated since the collapse of the Classical Mayans, for the past thousand years or so.\\\" When a primal jungle is allowed to grow rampant for centuries, it can indeed swallow entire cities. But just why so many settlements were simply abandoned, long before the arrival of the Spanish conquistadors, remains a mystery to which these long lost sites may provide an answer. \\\"Ninety-nine percent of settlements in the central and southern lowlands of the Yucatan peninsula were abandoned in a matter of 200 years. By 1000 AD, practically everything was abandoned. That was the situation when the Spaniards came. But not so in the northern section of the peninsula and the Guatemala highlands, where there was no rupture until the arrival of the Spaniards.\\\" So what happened in that enormous area that led to this mass evacuation? \\\"Nobody knows the exact sequence of events, but it was definitely a combination of droughts, climate change, (and) overpopulation, but other things must have come as consequences: devastating raids and wars among the Mayan states, which resembled the constantly battling ancient Greek city-states. \\\"In this Late Classical period, wars intensified with devastating consequences, for if one city-state was destroyed or overcome, it had a ripple effect on trade networks. It was a sort of globalized Mayan world.\\\" To learn more would require extensive, time-consuming surveys of each site, which is a different sort of fieldwork than \u0160prajc likes to practice. His team will map what appears to be the core of a settlement, but there simply isn't time or manpower to map it all, so hundreds of structures are left for others to survey and excavate. The adrenaline of the treasure hunt is what drives \u0160prajc, the \\\"Eureka\\\" moment when he finds the buried treasure. He is not in the least proprietary about what he discovers, preferring to let other research teams dive in to the sites he has found to slowly excavate, catalogue and analyze what he finds. \\\"[This extensive mapping] is not our job.  We are taking the first step into an unknown area.\\\" \u0160prajc is a throwback to the great 19th century explorers -- a dying breed as the world becomes smaller and science bleaches out its mysteries. But in the heat of the jungle, science can only get you so far.  Intrepid spirit, calloused palms, sweat, blood and patience are more important than gadgetry. As \u0160prajc likes to say, \\\"We can survive without computers, but not without machetes.\\\" Noah Charney is a professor of art history and best-selling author. He teaches a Guardian Masterclass called \\\"How to write about art.\\\"\\n\", \"original_answer\": \"Slovenian archaeologist Ivan \u0160prajc has discovered more than 80 ancient Mayan cities in the jungles of Mexico since 1996, most of which were previously unknown to the modern world. These cities, which once may have housed tens of thousands of people, have seemingly vanished. \u0160prajc explains that the region in which he has found these ancient sites had gone unexplored because it is so inaccessible: \\\"It's a biosphere, a protected natural area that has never been densely populated since the collapse of the Classical Mayans, for the past thousand years or so.\\\" When a jungle is allowed to grow freely for centuries, it can indeed swallow entire cities. But why so many settlements were abandoned long before the arrival of the Spanish conquistadors remains a mystery. \u0160prajc believes a combination of droughts, climate change, overpopulation and devastating raids and wars among the Mayan states led to the mass evacuation. However, the exact sequence of events is still unknown.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "9634cbe24bc05343051b2637013e56770c1404717cdc95837d53c628c12d2976",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35
+  ]
+}

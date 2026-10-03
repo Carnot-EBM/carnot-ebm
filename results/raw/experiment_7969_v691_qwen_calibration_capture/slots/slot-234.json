@@ -1,0 +1,108 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.3930762910167687,
+  "exclusion_reason": null,
+  "family_id": "sha256:bb3a02cf780f696cc02bb6a943dcfa66bb425aabc2e5a7eab18b627eb655ba22",
+  "input_tokens": 850,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 850,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 873
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:a288c98f5379aa36638d126628d01936efdd4329071c432c070fe99419c94ad7",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832799,
+    "id": "chatcmpl-BBRmAWCsqDXSPxTQk9BEeId3ndikMEa3",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.581,
+      "predicted_n": 23,
+      "predicted_per_second": 42.4682549794029,
+      "predicted_per_token_ms": 23.547,
+      "prompt_ms": 733.75,
+      "prompt_n": 772,
+      "prompt_per_second": 1052.129471890971,
+      "prompt_per_token_ms": 0.9504533678756477
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 850,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 873
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Reassess your diet plan. As you diet and lose weight, your body gets used to your new habits and needs fewer calories with each pound you lose. You'll notice that that 1700-calorie diet you're on just isn't giving you the results you once had.unning 3 miles (4.8 km) a day to stay in shape and lose weight is a great idea. It will be effective and get the job done. Until you get bored out of your mind and stop. Do yourself a favor and switch up your routine. Your mind and your body is getting bored stiff.\\\\n\\\\npassage 2:As you know, motivation is the key to my program, and it's crucial to any successful weight-loss effort. When one teammate was feeling down about feeling motivated, another member was there to rev her up. Here's her advice on how to stay motivated: Life does happen.Have a heart to heart with yourself.he online Community Groups are the heart and soul of JillianMichaels.com. Ours is a fun, vibrant, and welcoming community, where we tell it like it is and share the ups and downs of losing weight and keeping fit.\\\\n\\\\npassage 3:Write down your diet and workout goals to come face to face with the hard work you've put forth. It'll feel really, really satisfying. 1  Your daily weight can fluctuate due to water retention. 2  Instead of basing your progress on daily weigh-ins, pick a set day and time each week to log your weight.unning 3 miles (4.8 km) a day to stay in shape and lose weight is a great idea. It will be effective and get the job done. Until you get bored out of your mind and stop. Do yourself a favor and switch up your routine. Your mind and your body is getting bored stiff.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to lose weight and stay motivated\\\"}\", \"original_answer\": \"Based on the provided passages, here are some tips for losing weight and staying motivated:\\n\\n1. Reassess your diet plan: As you lose weight, your body may need fewer calories, so it's important to adjust your diet plan accordingly. (Passage 1)\\n2. Stay consistent with exercise: Running 3 miles a day can be an effective way to lose weight and stay in shape, but it's important to mix up your routine to avoid boredom. (Passage 2 & Passage 3)\\n3. Set realistic goals: Write down your diet and workout goals to track your progress and stay motivated. (Passage 3)\\n4. Use the online community: Join an online community of people who are also working towards their weight loss goals to stay motivated and accountable. (Passage 2)\\n5. Be kind to yourself: Remember that life happens and it's okay to have off days. Don't be too hard on yourself if you miss a workout or don't meet your goals every day. (Passage 2)\\n\\nUnable to answer based on given passages. The passages do not provide specific information on how to stay motivated, other than to suggest finding a supportive community and setting realistic goals.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "calibration_replay",
+  "source_cluster_id": "sha256:c4683ca6bd8c7f3a232897bddeb7dd4ed8f0a4e37c020246ac18b7a40c9c61c7",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+  ]
+}

@@ -1,0 +1,124 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.6438113689655438,
+  "exclusion_reason": null,
+  "family_id": "sha256:5c7df68d0f02243de664333492057756184d35cc86ca265a76f43706b9d4f6cc",
+  "input_tokens": 1007,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1007,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1031
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:c2e4a3bdfb5e4d55a16cbb942562bb06c586ee01a51fd7aade440a0f6a9228c6",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832882,
+    "id": "chatcmpl-62sVoJVkDOARwV1QKBowYd4ocmWjj2Jl",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 572.696,
+      "predicted_n": 24,
+      "predicted_per_second": 41.90705016273904,
+      "predicted_per_token_ms": 23.862333333333336,
+      "prompt_ms": 928.995,
+      "prompt_n": 929,
+      "prompt_per_second": 1000.0053821602916,
+      "prompt_per_token_ms": 0.999994617868676
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1007,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1031
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Zingbot Day arrives for Big Brother 25 cast\\nThe Big Brother 25 cast finally gets to meet Zingbot.\\nThe comedian robot will arrive at the house to make jokes about the players.\\nHost Julie Chen Moonves announced that it would go down in Week 10.\\nAnd that means the BB25 cast will come across Zingbot on Saturday (October 7).\\nReaching this point of the season is a milestone for the players.\\nIt also comes shortly after Julie revealed that everyone left has made it to at least the BB25 jury.\\nZingbot will arrive for the Veto Competition\\nThe producers roll out Zingbot to help with a competition in the house.\\nThis time, he will be linked to the Week 10 Veto Competition.\\nZingbot will burst into the house or be announced in the backyard (much like Josh Duhamel for his Buddy Games challenge).\\nThe robot will joke about each houseguest and film a segment for the Tuesday night episode (October 10).\\nAfter that, six houseguests will take part in a Veto Competition.\\nBelow is a video from when Zingbot met the Big Brother 22 cast.\\nSpoilers from Week 10 of Big Brother 25\\nBowie Jane is the Week 10 Head of Household.\\nFelicia Cannon and Bowie Jane finished in a tie during the latest HOH Competition.\\nIt led to a tie-breaker question where Bowie Jane became the new HOH.\\nBowie Jane nominated Felicia and Cirie Fields for eviction. She has some resentment for how The Professors\u2019 alliance broke down.\\nThree more houseguests join the ladies to play in Saturday\u2019s Veto Competition.\\nThis is the first time during the BB25 season that Cirie has played for the Power of Veto.\\nSeveral houseguests have presented Bowie Jane with the idea of backdooring Cameron Hardin or Cory Wurtenberger. Because of that, the POV winner will have some pressure this week.\\nThe Veto Meeting will happen on Monday (October 9), where the final nominees will be set for the week.\\nSomeone will soon become the first BB25 jury member.\\nWant more from Zingbot? Below is a video from when the Big Brother 18 cast met the joking robot.\\nMore from Big Brother\\nA Big Brother 25 reunion took place this week.\\nJared Fields and Izzy Gleicher reunited in the real world. The duo appears on good terms following their time in the Big Brother house.\\nJared\u2019s exit also caused a shift in the voting for the most liked and disliked members of the BB25 cast.\\nProducers are reportedly working on an all-winners season of Big Brother. It could air on CBS this winter.\\nHere is the updated schedule for BB25 episodes in October.\\nBig Brother 25 airs on CBS.\", \"original_answer\": \"Sure! Here's the summary within 111 words:\\n\\nZingbot arrived in the Big Brother 25 house to roast the cast during the Week 10 Veto Competition. Host Julie Chen Moonves announced the robot's arrival, and it will be linked to the Veto Competition. Zingbot will make jokes about each houseguest before the competition, and the winner will be crowned on Monday's episode. The current Head of Household, Bowie Jane, nominated Felicia Cannon and Cirie Fields for eviction. Some houseguests have suggested backdooring Cameron Hardin or Cory Wurtenberger, adding pressure to the Veto competition. The first BB25 jury member will be revealed soon.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:77f89ccb7bda14e8d1d232e439bdad4d93fec56cade33468924c69097c59ec45",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32
+  ]
+}

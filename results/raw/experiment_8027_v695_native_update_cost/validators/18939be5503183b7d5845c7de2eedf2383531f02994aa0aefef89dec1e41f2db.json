@@ -1,0 +1,64 @@
+{
+  "primary_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8027_v695_native_update_cost.json",
+  "primary_sha256": "sha256:18939be5503183b7d5845c7de2eedf2383531f02994aa0aefef89dec1e41f2db",
+  "report": {
+    "passed": true,
+    "receipts": [
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8027_v695_native_update_cost.py --cold-replay /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8027_v695_native_update_cost/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8027_v695_native_update_cost.py",
+          "--cold-replay",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8027_v695_native_update_cost/terminal_candidate.json"
+        ],
+        "duration_s": 3.252321589970961,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8027_v695_native_update_cost/terminal_logs/18939be5503183b7d5845c7de2eedf2383531f02994aa0aefef89dec1e41f2db/00_cold_reduction.log",
+        "log_sha256": "sha256:ecb1564eafd105fe41d533290b8f4b86ec670e34bdeeb0ae0fed49d3d507974b",
+        "name": "cold_reduction",
+        "output_tail": "[exp8027] phase=extension_load_before elapsed_s=0.500 completed=0 pending=0\n[exp8027] phase=extension_load_after elapsed_s=0.504 completed=0 pending=0\n[exp8027] phase=parity_before elapsed_s=1.000 completed=0 pending=4736\n[exp8027] phase=parity_natural elapsed_s=1.024 completed=1 pending=4479\n[exp8027] phase=parity_natural elapsed_s=1.128 completed=513 pending=3967\n[exp8027] phase=parity_natural elapsed_s=1.233 completed=1025 pending=3455\n[exp8027] phase=parity_natural elapsed_s=1.338 completed=1537 pending=2943\n[exp8027] phase=parity_natural elapsed_s=1.443 completed=2049 pending=2431\n[exp8027] phase=parity_natural elapsed_s=1.575 completed=2561 pending=1919\n[exp8027] phase=parity_natural elapsed_s=1.680 completed=3073 pending=1407\n[exp8027] phase=parity_natural elapsed_s=1.785 completed=3585 pending=895\n[exp8027] phase=parity_natural elapsed_s=1.890 completed=4097 pending=383\n[exp8027] phase=parity_after elapsed_s=2.013 completed=4736 pending=0\n{\"passed\": true}\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8027_v695_native_update_cost/terminal_candidate.json --json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "scripts/adversarial_verify.py",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8027_v695_native_update_cost/terminal_candidate.json",
+          "--json"
+        ],
+        "duration_s": 1.373839139007032,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8027_v695_native_update_cost/terminal_logs/18939be5503183b7d5845c7de2eedf2383531f02994aa0aefef89dec1e41f2db/01_adversarial.log",
+        "log_sha256": "sha256:a81002e5e6e413d145c464b8a8a660ab0582ba3795322998477950cc74c23b7c",
+        "name": "adversarial",
+        "output_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8027_v695_native_update_cost/terminal_candidate.json\",\n      \"loaded\": true,\n      \"exp_id\": 8027,\n      \"title\": \"\",\n      \"honest_verdict\": \"complete_disqualified_native_update_cost\",\n      \"flag_count\": 0,\n      \"max_severity\": -1,\n      \"flags\": [],\n      \"gate_version\": \"197e0a5eacacb09ce6607ae8bdfd507498082857f0d02ec2003a62c251b69a24\"\n    }\n  ],\n  \"flagged_count\": 0\n}\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8027_v695_native_update_cost/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "scripts/verdict_row_consistency_lint.py",
+          "--strict",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8027_v695_native_update_cost/terminal_candidate.json"
+        ],
+        "duration_s": 0.05120013409759849,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8027_v695_native_update_cost/terminal_logs/18939be5503183b7d5845c7de2eedf2383531f02994aa0aefef89dec1e41f2db/02_strict_rows.log",
+        "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+        "name": "strict_rows",
+        "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      }
+    ]
+  }
+}

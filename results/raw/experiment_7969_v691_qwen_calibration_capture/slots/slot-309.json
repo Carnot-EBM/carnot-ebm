@@ -1,0 +1,96 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.1324853849946521,
+  "exclusion_reason": null,
+  "family_id": "sha256:2b56b661be1e421250f3870b8ffc9af1630a60e2eaab0f1c13bcbd3d3e83efeb",
+  "input_tokens": 458,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 458,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 482
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:d05355f8d73f56006fb7d16ef05ecfc69be11df8cee62f5330a6a1e0fa6860be",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832904,
+    "id": "chatcmpl-M3T0EI5FWfeLrR4JqgJE99uLCrVXKCek",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.581,
+      "predicted_n": 24,
+      "predicted_per_second": 42.509400776859295,
+      "predicted_per_token_ms": 23.524208333333334,
+      "prompt_ms": 447.342,
+      "prompt_n": 380,
+      "prompt_per_second": 849.4619329282741,
+      "prompt_per_token_ms": 1.177215789473684
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 458,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 482
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:This can result in some fuel being pumped through the engine and into the hot muffler, causing that fuel to ignite. Gasoline that contains alcohol has a tendency to ignite easier, plus cause the engine to run slightly hotter.\\\\n\\\\npassage 2:This can result in some fuel being pumped through the engine and into the hot muffler, causing that fuel to ignite. Gasoline that contains alcohol has a tendency to ignite easier, plus cause the engine to run slightly hotter. This, combined with a hot muffler, can cause afterfire.\\\\n\\\\npassage 3:This backfire occurs when fuel ignites outside the engine, usually in the muffler. The backfire won't hurt your engine, but it's often a symptom of a mechanical problem.\\\\n\\\\n\\\",\\\"question\\\":\\\"i cleaned my carburetor on my riding mower why does it backfire at start up\\\"}\", \"original_answer\": \"Based on the provided passages, it is possible that the backfire at start-up is caused by fuel igniting outside the engine, specifically in the muffler. Passage 1 and 2 explain that fuel pumped through the engine and into the hot muffler can ignite, leading to an afterfire or backfire. Passage 3 confirms that this type of backfire typically occurs when fuel ignites outside the engine, such as in the muffler. Therefore, it is likely that the cleaning of the carburetor may have dislodged fuel residue that entered the muffler, causing it to ignite during startup.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:a93c91d786829bb1e31904950d13736bdfa95c12bc3d2effbb20989a6087a4ab",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ]
+}

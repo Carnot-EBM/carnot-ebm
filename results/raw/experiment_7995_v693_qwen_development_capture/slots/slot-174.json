@@ -1,0 +1,112 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.5624624990159646,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:aee068539c8f9c198b72cf7cc78127c6667dfd90e64bd0035b8cfcc00aac7b79",
+  "input_tokens": 947,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 947,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 970
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:373b8644cb8d05d8b7aa24ace9bd66a81c70562fcc9487970f157e993de2d5f5",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886085,
+    "id": "chatcmpl-JzAAkGXLnGIgk3QozuTkZnS8GG6OKu3a",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.959,
+      "predicted_n": 23,
+      "predicted_per_second": 42.43863465686519,
+      "predicted_per_token_ms": 23.56343478260869,
+      "prompt_ms": 878.477,
+      "prompt_n": 869,
+      "prompt_per_second": 989.212011242184,
+      "prompt_per_token_ms": 1.0109056386651323
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 947,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 970
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"7127 Hollister Ave, Ste 25\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Food, Vietnamese, Restaurants, Bubble Tea\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"10:0-20:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"10:0-20:0\\\",\\\"Sunday\\\":\\\"10:0-20:0\\\",\\\"Thursday\\\":\\\"10:0-20:0\\\",\\\"Wednesday\\\":\\\"10:0-20:0\\\"},\\\"name\\\":\\\"Phamous Cafe\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-08 02:58:22\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Wanted Pho, read the reviews and decided to try it.  It was good and hit the spot.  Gentleman working was very nice.  Food cam out quickly.  Had the P3 Pho Tai, Chin and A1 Goi Cuon Tom Thit Heo.  Both good and flavorful.   Pho was hot temperature.  Took it to go.  Total with tax and tip about $24.  I would recommend\\\"},{\\\"review_date\\\":\\\"2022-01-06 20:13:04\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"The best pho, bun, and banh mi you can get in SB! Delicious pho broth (all of the varieties are good from the classic beef pho to chicken to veggie) and great service.\\\"},{\\\"review_date\\\":\\\"2021-12-08 02:50:21\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Winter time is perfect to have a warm and comforting bowl of pho! My favorite meat combination is simply fatty brisket, tendon, and tripe, which provides rich flavors and a great contrast in textures. Crunchy bean sprout, some chili, and a squeeze of lime bring out the flavorful bone broth too! And if you're running hot, cool down with a classic thai tea! Their thai tea was on the bland side, I think due to too much milk compared to the actual tea. Definitely the pho place to go in town.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Phamous Cafe, located at 7127 Hollister Ave, Ste 25 in Goleta, CA, is a popular Vietnamese restaurant known for its Bubble Tea, Pho, and other delightful dishes. The cafe operates from 10:00 AM to 8:00 PM from Wednesday through Sunday, offering free Wi-Fi and is suitable for groups. While the restaurant does not offer a reservation service, it does provide a takeout option. The ambiance is casual, and there's ample parking space in the lot. Coming to the food, customers have praised the Pho, referring to it as flavorful, warm, and comforting. The service is described as quick and the staff as friendly. The cafe also offers a variety of meats and a classic Thai tea. The overall business rating stands at 4.0 stars.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "c028a9175d8e6810c583468bb9a426d083b299acb9d53261b733cf21938f0478",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ]
+}

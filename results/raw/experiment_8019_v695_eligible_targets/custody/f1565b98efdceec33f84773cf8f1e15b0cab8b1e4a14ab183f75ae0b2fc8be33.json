@@ -1,0 +1,118 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 2.0078098570229486,
+  "exclusion_reason": null,
+  "family_id": "sha256:4d16532a6d34f9e7a84283a70d7c1a8b3ab00d1702ff704f5b8bf197a8316bcd",
+  "input_tokens": 1467,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": 12,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 26,
+      "prompt_tokens": 1467,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1493
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:feaf25c4f392ebaf52b05992a9ff8f0ba0b95e1c4b8977ef88205ce1d3797fb5",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": 12\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790833004,
+    "id": "chatcmpl-ymIshQq3owDx8HjWlacGI8eHZNHwhGHU",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 615.113,
+      "predicted_n": 26,
+      "predicted_per_second": 42.26865632818685,
+      "predicted_per_token_ms": 23.65819230769231,
+      "prompt_ms": 1260.586,
+      "prompt_n": 1389,
+      "prompt_per_second": 1101.8684960803944,
+      "prompt_per_token_ms": 0.9075493160547157
+    },
+    "usage": {
+      "completion_tokens": 26,
+      "prompt_tokens": 1467,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1493
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"137 Anacapa St, Ste C\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Wine Bars, Wine Tasting Room, Wineries, Beer, Wine & Spirits, Arts & Entertainment, Nightlife, Bars, Food\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"12:0-17:0\\\",\\\"Monday\\\":\\\"12:0-17:0\\\",\\\"Saturday\\\":\\\"12:0-17:0\\\",\\\"Sunday\\\":\\\"12:0-17:0\\\",\\\"Thursday\\\":\\\"12:0-17:0\\\",\\\"Tuesday\\\":\\\"12:0-17:0\\\",\\\"Wednesday\\\":\\\"12:0-17:0\\\"},\\\"name\\\":\\\"Riverbench Santa Barbara Tasting Room\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-11-03 00:37:12\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Girl friends and I made an unplanned stop at Riverbench and were blown away by the amazing time we had during our tasting, especially their sparkling brut ros\u00e9, I had to write a review for our pourer Jordie, who took very good care of us and was extremely passionate and knowledgeable about their products. She took the time to explain in detail each wine we chose for our flights. We also had 3 small dogs with us and she came out with dog treats to make sure they weren't forgotten. Also, the chocolate truffles were to die for. Needless to say we had an amazing time and left with a couple bottles of their fantastic wines and sparkling ros\u00e9. Definitely coming back the next time we're in Santa Barbara!\\\"},{\\\"review_date\\\":\\\"2021-10-21 14:06:06\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Fantastic wine tasting experience with great patio vibes!! We came here before our dinner over at The Lark and had a wonderful time tasting some exceptional wine. We were helped by Jordy (sp?) who provided us with an exceptional wine tasting experience and was super nice and fun to talk to. We posted up on their patio and first tasted a few of their bubbles. We both LOVE champagne/sparkling and since we each got our own tasting we got to try a good variety...our favorite was probably the 2017 Blanc de Blancs! We then moved on to try their Pinot Noirs and seriously every one we tried was phenomenal!! I went with the 2018 Estate, 2017 One Palm, and 2017 Pommard. On their menu it was explained the tasting notes go from a little lighter down to something a little more darker/bold in flavor so it was really fun to see and taste the difference as we worked our way down the list. We already had their wine club form filled out by the time we tried our first Pinot!! Everything we tasted up to that point was phenomenal and then you through in the excellent experience Jordy provided us and it was a no-brainer this was a winery we wanted to be part of and enjoy for years to come! This was also a special experience for us as we recently got engaged so being we visited one of the only places in Santa Barbara Wine Country to taste a bubble flight made our celebration even more perfect!! And speaking of celebrations, they also sell their sparkling wine in these glittered out sparkling bottles which would be a perfect gift for someone or something fun for the holidays. They have bottles already glittered-out in certain colors or if you request a color and give them a little less time, they can customize the glitter color for you. Such a cool add-on to offer!! Overall this was one of our favorite wine tasting experiences and we cannot wait to come back!!\\\"},{\\\"review_date\\\":\\\"2021-09-19 17:59:00\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"Five stars for the wine! their Pinot noir's are spectacular. I just didn't love this place. Small tables with uncomfortable stools. Only two options for food are a cracker/salami/nut box or chocolate truffles.  I'm thinking the wine pores are 1.5 ounces and you get five of them for $25. Just doesn't seem like a great value in comparison to other places with a better atmosphere and food choices. Server was very knowledgeable about the wine and the wines themselves were amazing.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Located in the heart of Santa Barbara, Riverbench Santa Barbara Tasting Room offers a unique and exceptional wine tasting experience. With a rating of 4.0 stars and rave reviews, this establishment is a must-visit for any wine enthusiast. The tasting room boasts a cozy and intimate atmosphere, with small tables and comfortable seating, creating an ideal setting for a relaxed tasting experience. The knowledgeable staff, led by Jordie, provides exceptional service and takes the time to explain the nuances of each wine, making sure guests have a deep understanding of the products. The wine selection is impressive, with a focus on Pinot Noirs and sparkling wines that are sure to impress even the most discerning palates. To complement the exceptional wine, Riverbench offers a limited food menu, including a cheese and charcuterie board and chocolate truffles. While some may find the price point of the tasting flight to be a bit steep, the quality of the wine and the overall experience make it well worth the investment. Whether you're a seasoned oenophile or a newcomer to the world of wine, Riverbench Santa Barbara Tasting Room is an excellent choice for a memorable afternoon of wine tasting in Santa Barbara.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:dca1ae12a97c72743e794ca6f12a6393448ccfc4f6f21623e72cc4369721b9fd",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26
+  ]
+}

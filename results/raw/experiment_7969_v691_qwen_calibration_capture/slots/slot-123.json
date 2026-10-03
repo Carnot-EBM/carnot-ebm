@@ -1,0 +1,101 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.3054977789870463,
+  "exclusion_reason": null,
+  "family_id": "sha256:d1f1d74a0b9ff77da16ef2f0e4c506a888d93cc1cc4b9256e2e09373a8ec2c30",
+  "input_tokens": 691,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 691,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 715
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:568fa3c71cbb3d5dd0659f673d5eb53f6de7ddeac28a8939727d11604c0480b6",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832642,
+    "id": "chatcmpl-XldEUFYLII8bV0Dh3Bzp1g7JnVpii1eO",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.214,
+      "predicted_n": 24,
+      "predicted_per_second": 42.5370515442722,
+      "predicted_per_token_ms": 23.508916666666668,
+      "prompt_ms": 627.653,
+      "prompt_n": 613,
+      "prompt_per_second": 976.6542978365434,
+      "prompt_per_token_ms": 1.0239037520391518
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 691,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 715
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Best Answer: It takes a chicken about 24-26 hours to form a complete egg. Some birds may take a bit longer. Layer-type chickens (leghorns) lay more eggs than brown-egg layers or other breeds because their clutch length is longer and/or their days between clutches is shorter.Chickens lay in clutches which means they lay around 5-12 eggs in a row (about every day) and then take a day or two off.ome birds may take a bit longer. Layer-type chickens (leghorns) lay more eggs than brown-egg layers or other breeds because their clutch length is longer and/or their days between clutches is shorter.\\\\n\\\\npassage 2:Chickens now lay eggs and have a 1 in 8 to spawn a chick and a 1 in 254 chance an egg will hatch 4 chickens. 0.8.0. Chickens follow the player if the player holds pumpkin seeds, melon seeds, beetroot seeds, or wheat seeds.Thrown eggs can now spawn baby chickens.hickens now lay eggs and have a 1 in 8 to spawn a chick and a 1 in 254 chance an egg will hatch 4 chickens. 0.8.0. Chickens follow the player if the player holds pumpkin seeds, melon seeds, beetroot seeds, or wheat seeds.\\\\n\\\\npassage 3:A: That depends on three main factors: 1  The breed of chicken. 2  Some chickens are bred for meat production and lay few eggs; some are bred for egg production and can lay as often as once a day; some are bred as dual purpose andare good for both egg-laying and meat, although not optimal for either.3  The hen's age. Some chickens are bred for meat production and lay few eggs; some are bred for egg production and can lay as often as once a day; some are bred as dual purpose andare good for both egg-laying and meat, although not optimal for either.\\\\n\\\\n\\\",\\\"question\\\":\\\"how often can chickens lay eggs\\\"}\", \"original_answer\": \"Based on the given passages, it is possible for chickens to lay eggs daily, but this depends on several factors such as the breed of chicken and its age. Some chickens are bred specifically for egg production and can lay as often as once a day, while others may take longer or lay fewer eggs. Additionally, chickens follow certain patterns in laying eggs, such as forming clutches of 5-12 eggs before taking a break.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:31918686397259aa03261981238cd0ade8b9da2d9898bf448c71d8f016d39b50",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ]
+}

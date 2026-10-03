@@ -1,0 +1,114 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.4393585099605843,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:b1e1b614b37f67cc82cb0b1b3de034f8eea8757fc4431555c7d3cf4cc1a277a5",
+  "input_tokens": 829,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 15,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 829,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 854
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:01770cec1d486736bdf0ab91346d5c58861ccb4b807f8e42526a6674c71d0b73",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 15\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886365,
+    "id": "chatcmpl-9BjdgPOkrYmY2VQkf8HeMzY6cZCxCBHT",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 590.43,
+      "predicted_n": 25,
+      "predicted_per_second": 42.34202191623055,
+      "predicted_per_token_ms": 23.617199999999997,
+      "prompt_ms": 729.488,
+      "prompt_n": 751,
+      "prompt_per_second": 1029.4891759699954,
+      "prompt_per_token_ms": 0.9713555259653796
+    },
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 829,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 854
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Prince William and Princess Kate have a new \\\"Secret Weapon,\\\" and it's effective\\nEarlier this month, Prince George and his father, Prince William, went out together in France to support Wales during the Rugby World Cup.\\nFans were thrilled to see the young prince, even though the team's outcome wasn't all that good. Many even noted how much he resembled his father.\\nA recent YouGov poll reveals a tiny fall in support for the monarchy, with just 5% of respondents, despite an overall constant vote in favor of it.\\nWhile the Prince and Princess of Wales seem to be two of the most well-liked royals, 10-year-old Prince George could do a little to improve both their stature and public perception of the monarchy as a whole.\\nThe general people will probably be quite interested in the younger royals, especially William and Kate's three kids.\\nAt the moment, Lambrook School is home to George, Princess Charlotte, who is eight, and Prince Louis, who is five.\\nAlthough Kate and William have stated that they want their kids to enjoy as regular a childhood as possible, George has a history of being more outspoken at royal events, sometimes going alone with William.\\nGeorge, looking happy to be in the crowd and supporting Wales in France, even down to their identical red ties and navy suit coats, looked just like his father.\\nWith both of them destined to lead the monarchy in the future, William seems to be mentoring his oldest son.\\nSince the Prince of Wales has been in George's position and is, in some respects, still in it, he is without a doubt the finest mentor for George.\\nIn addition to supporting his father, George's presence suggests that he is a potential covert asset used to boost the ratings in anticipation of his father's eventual reign.\\nSince the Prince and Princess of Wales and their offspring are sometimes referred to as the \\\"future of the monarchy,\\\" enlisting the help of their eldest son seems like a tactful but wise decision.\\nThe young three undoubtedly attracts a younger audience, but George is the most suitable to team up with his parents because he is the oldest.\\n'Surprise' appearances by the younger royals are another idea that attracts large crowds; William and Kate are masters at pulling this off.\\nUnexpected appearances, such as George making his French debut, will undoubtedly increase ratings and provide fans a preview of what's to come.\\nWhether that is for George's future reign, or William's reign with his son at his side.\\nSource: express.co.uk\", \"original_answer\": \"Prince George is being seen as a \\\"secret weapon\\\" to boost the popularity of the monarchy, amid a slight dip in public support. The 10-year-old prince, who is often seen accompanying his father, Prince William, at royal events, is believed to attract a younger audience and improve the public perception of the monarchy. This strategy includes \\\"surprise\\\" appearances by the young prince, such as his recent outing in France to support Wales during the Rugby World Cup. The move is seen as a tactful decision to prepare the public for Prince George's future role as a monarch.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "19c15a55f20859162193f2d08b928ce0cda6e2904e4b00ee4e08e7024d49d7ae",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17
+  ]
+}

@@ -1,0 +1,123 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.6308262489037588,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:1d862a3dfa5a6373153f33662014d53b314950add25d1b55d143a29f90303765",
+  "input_tokens": 1082,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1082,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1105
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:78b3973d566793fdeced2360cce27cd3eacda797d5e2ab142b26e4a310f79453",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886351,
+    "id": "chatcmpl-fdG3N6UEElfrt9yQmBXuxN5b4o8CGbyd",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 542.146,
+      "predicted_n": 23,
+      "predicted_per_second": 42.4239964880309,
+      "predicted_per_token_ms": 23.571565217391303,
+      "prompt_ms": 969.79,
+      "prompt_n": 1004,
+      "prompt_per_second": 1035.275678239619,
+      "prompt_per_token_ms": 0.9659262948207171
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1082,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1105
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"The lawyer for a Baltimore community activist whose arrest was broadcast live on CNN said Thursday morning that his client had been released from jail. As viewers watched, Joseph Kent held his hands up and walked in front of a phalanx of police Tuesday night after a citywide curfew had started. Seconds later, several officers in riot gear rushed out of their line and arrested him, just as a Humvee passed between the camera and the police, making social media churn with questions about what happened to Kent. Attorney Stephen Patrick Beatty confirmed he is representing Kent. He was still trying to get in touch with his client after Kent was released. \\\"He wanted me to tell people most that he doesn't want violence in his name,\\\" Beatty told CNN's Don Lemon on Wednesday night. The incident unfolded live on CNN about 40 minutes after the 10 p.m. curfew went into effect and as authorities tried to prevent the kind of rioting -- part of protests over the death of Freddie Gray -- that plagued the city Monday. Kent was being held on a charge of curfew violation, according to the Maryland Department of Public Safety and Correctional Services. People on Twitter continued to circulate the name of Kent, a young activist, making #JosephKent and #WhereIsJosephKent hot topics. Investigators made 10 arrests in Baltimore on Tuesday night, city Police Commissioner Anthony Batts said. Seven were for curfew violations, he said. Beatty said he met with Kent on Wednesday afternoon. \\\"He said he's physically OK, not injured. He's safe in there,\\\" Beatty said. But even though more than 100 people who had been held at the city's booking center were released earlier in the day, Kent was not one of them. Beatty initially checked on Kent's status, despite not officially representing him. He said Kent was just trying to help with getting people to go home when he was arrested. \\\"He went out there to try to settle things down because he had seen what happened in this city previously,\\\" Beatty said. \\\"And the last thing he wanted was any more violence, and he was trying to stop it.\\\" Kent once was employed as an intern, through an outside company, at Morgan State University's Entrepreneurial Development and Assistance Center, the school said Wednesday. But Kent is not a student there and, as far as the school can tell, never has been, MSU spokesman Clint Coleman said. A woman who answered the phone at the EDAC said that no one there was available to talk about Kent and that she'd have no further comment. In November, the Baltimore City Paper ran a story about Kent, then 21, and his participation in Baltimore protests over a grand jury's decision not to indict a police officer in the August shooting of teenager Michael Brown in Ferguson, Missouri. He helped lead protesters who walked through Morgan State's campus and eventually to City Hall on November 25, the newspaper reported. \\\"Everyone knows me at Morgan already, organizing and making sure everything (is) running the correct way and peaceful and everything like that,\\\" he said, according to the City Paper's article. \\\"So, everybody already knows I'm going to do things the right way, so when everybody else and community people and civilians and people who joined and saw that the Morgan students were looking up to it, before you knew it, the whole city was on my back and I was just carrying the whole city.\\\" Complete coverage on the Baltimore protests. CNN's Justin Lear, Evan Perez, Elan Bird and AnneClaire Stapleton contributed to this report.\\n\", \"original_answer\": \"The young community activist whose arrest was broadcast live on CNN has been released from jail in Baltimore. Joseph Kent was arrested by several officers in riot gear, shortly after a citywide curfew went into effect, a move which led to a social media storm, questioning what had happened to him. The lawyer acting for Kent, Stephen Patrick Beatty, said his client had been trying to get people to go home when he was arrested. Beatty said Kent had been trying to stop any further violence. Kent was being held on a charge of curfew violation, according to the Maryland Department of Public Safety and Correctional Services.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "3ccbc1f8ef9707ef6f8693bf82c246fecfc2b0d82357dfacd1d7cc10c44431fb",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26
+  ]
+}

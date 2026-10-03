@@ -1,0 +1,110 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.5887363200308755,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:6b9de455fffde285c983306a9f1aee4dfb6be0fd22159277bb9fe9d463d9bd36",
+  "input_tokens": 1002,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1002,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1025
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:c790a715db20a8599459198bb7200023fe0aa0692d58ca529180c8aec9e65bce",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886266,
+    "id": "chatcmpl-9Qr7InfDgDP2RJxgBDETo2MljrldX0z4",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.859,
+      "predicted_n": 23,
+      "predicted_per_second": 42.44646670074687,
+      "predicted_per_token_ms": 23.559086956521742,
+      "prompt_ms": 928.108,
+      "prompt_n": 924,
+      "prompt_per_second": 995.573790981222,
+      "prompt_per_token_ms": 1.0044458874458875
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1002,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1025
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"26 E Ortega St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":true,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":true,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":\\\"{dj: None, live: False, jkebox: None, video: False, backgrond_msic: False, karaoke: None, no_msic: False}\\\",\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"American (New), Beer, Wine & Spirits, Food, Japanese, Bars, Asian Fusion, Ramen, Restaurants, Cocktail Bars, Nightlife\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"17:0-22:30\\\",\\\"Saturday\\\":\\\"17:0-22:0\\\",\\\"Sunday\\\":\\\"17:0-21:0\\\",\\\"Thursday\\\":\\\"17:0-21:0\\\",\\\"Wednesday\\\":\\\"17:0-21:0\\\"},\\\"name\\\":\\\"The Black Sheep\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-17 19:56:51\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"I was eventually visiting Santa Barbara after almost 4 years since I moved. The black sheep is the first (and sadly last) place I revisited in town, because I got food poisoned. Me and my boyfriend shared the risotto at night. Then I started vomiting at 3 am. It was really scary. My boyfriend didn't feel the nausea by then so I thought it might be Covid or anything else. But then he started feeling sick too and eventually vomited in the afternoon. We didn't had anything in between. Excuse my words, but it's clearly the not digested risotto..\\\\nReally hope I could enjoy the lovely side of the town next time.\\\"},{\\\"review_date\\\":\\\"2022-01-17 17:32:43\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"Service was substandard.\\\\nFood was over salted...really over salted. \\\\nThere was plenty of tables available but we were seated in a crowded section of the patio very close (like a guy behind me would tilt his head back and hit my head).\\\"},{\\\"review_date\\\":\\\"2022-01-15 06:44:32\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"My favorite restaurant in the world. Incredible food and managed with class and care. Genuine people doing great work. I've been maybe half a dozen times as I don't live in the area, but I would ride 70 miles on a unicycle to have cold 3 day old leftovers from this place. The place feels like home, with better food.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"The Black Sheep is a trendy and classy restaurant located at 26 E Ortega St, Santa Barbara, CA. It offers a range of cuisines including American (New), Asian Fusion, Japanese, and Ramen alongside a wide selection of beers, wines, spirits, and cocktails. The restaurant is open from Wednesday to Sunday with varying hours. It provides free WiFi, outdoor seating, and has provisions for both garage and street parking. The establishment also accommodates group dining and takeout orders. Despite having an impressive overall rating of 4.5 stars, customer reviews are mixed. One patron praised The Black Sheep as their favorite restaurant globally, lauding its incredible food and management. However, some customers have had less favorable experiences, citing substandard service, oversalted food, and a recent incident of food poisoning from the risotto.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "b83a1621b5091c8fa7f45708b15fc72e7442534f933c9898bd49b239ea98e55e",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ]
+}

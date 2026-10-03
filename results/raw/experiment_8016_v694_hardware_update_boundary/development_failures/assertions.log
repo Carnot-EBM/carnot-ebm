@@ -1,0 +1,137 @@
+.......F...                                                              [100%]
+=================================== FAILURES ===================================
+____________________ test_qualified_contract_and_zero_gate _____________________
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261002T080127-1220758-415035f2/test_qualified_contract_and_ze0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f9790f7fd70>
+
+    def test_qualified_contract_and_zero_gate(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+        """REQ-REPORT-8016: missing fields differ from failed zero gates."""
+        authority(tmp_path, monkeypatch)
+        path = tmp_path / "results" / h.UPSTREAM[8012]
+        atomic_json(path, dict(experiment_id=8012, learning_measurement_ready_score=0))
+>       plan = h.authenticate(tmp_path, tmp_path / "sealed")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_hardware_update_8016.py:109: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+root = PosixPath('/tmp/pytest-carnot-ianblenke/20261002T080127-1220758-415035f2/test_qualified_contract_and_ze0')
+raw = PosixPath('/tmp/pytest-carnot-ianblenke/20261002T080127-1220758-415035f2/test_qualified_contract_and_ze0/sealed')
+
+    def authenticate(root: Path, raw: Path) -> Json:
+        """Each board owns its bytes; optional trajectory absence cannot erase it."""
+        checks: list[Json] = []
+        refs: list[Json] = []
+        path = old.seal(
+            root,
+            dict(path=str(root / "results" / UPSTREAM[8003]), sha256=PRIOR_HASH),
+            raw,
+            8003,
+            checks,
+            refs,
+        )
+        prior = json.loads(path.read_bytes()) if path else {}
+        boards = deepcopy(prior.get("board_rows", old.fixture()["boards"]))
+        for board in boards:
+            before = len(checks)
+            source = (
+                old.seal(
+                    root,
+                    dict(path=board["source_path"], sha256=board["source_hash"]),
+                    raw,
+                    8003,
+                    checks,
+                    refs,
+                )
+                if path
+                else None
+            )
+            receipt = json.loads(source.read_bytes()) if source else {}
+            for label, digest in (
+                (
+                    receipt.get("kv260_terminal_transcript_path"),
+                    receipt.get("kv260_terminal_transcript_sha256"),
+                ),
+                (
+                    receipt.get("raw_dispatch_transcript_path"),
+                    next(
+                        (
+                            r.get("latest_receipt_hash")
+                            for r in receipt.get("board_rows", [])
+                            if r.get("board") == "PolarFire"
+                        ),
+                        None,
+                    ),
+                ),
+            ):
+                if label and digest:
+                    old.seal(
+                        root,
+                        dict(
+                            path=label,
+                            sha256=digest if digest.startswith("sha256:") else "sha256:" + digest,
+                        ),
+                        raw,
+                        8003,
+                        checks,
+                        refs,
+                    )
+            board.update(
+                custody_valid=bool(source) and all(r["passed"] for r in checks[before:]),
+                current_hardware_execution=False,
+                compatible_update_kernel=False,
+                last_actual_execution_date=receipt.get("run_date")
+                if receipt.get("hardware_operations_issued")
+                else None,
+                last_actual_execution_hash=sha256_file(source)
+                if source and receipt.get("hardware_operations_issued")
+                else None,
+                execution_date_absence_reason="Original execution timestamp absent or this receipt is read-only history",
+                terminal_criterion=board.get(
+                    "terminal_criterion",
+                    "Authenticated compatible workload and complete service timing",
+                ),
+                next_missing_prerequisite=board.get(
+                    "next_missing_prerequisite",
+                    board.get("blocker") or "Measured compatible update kernel",
+                ),
+            )
+        producers = {}
+        for eid, field in ((8012, "learning_measurement_ready_score"), (8015, "parity_ready_score")):
+            source = root / "results" / UPSTREAM[eid]
+            exists = source.is_file()
+            checks.append(
+                old.operand(
+                    eid,
+                    source,
+                    "artifact.exists",
+                    True,
+                    exists,
+                    sha256_file(source) if exists else None,
+                )
+            )
+            if exists:
+                sealed = old.seal(
+                    root, dict(path=str(source), sha256=sha256_file(source)), raw, eid, checks, refs
+                )
+                value = json.loads(sealed.read_bytes())  # type: ignore[union-attr]
+                for key, expected in (
+                    ("experiment_id", eid),
+                    (field, 1),
+                    ("flagged_adversarial", False),
+                ):
+                    if key not in value:
+>                       raise ValueError("upstream_contract:" + key)
+E                       ValueError: upstream_contract:flagged_adversarial
+
+python/carnot/reporting/hardware_update_8016.py:175: ValueError
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_hardware_update_8016.py::test_qualified_contract_and_zero_gate
+1 failed, 10 passed, 1 warning in 19.12s

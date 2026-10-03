@@ -1,0 +1,105 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.2908372089732438,
+  "exclusion_reason": null,
+  "family_id": "sha256:2bf759c3698f211e8273d24f6b670a9b84dd83a143586a03015d33896b4bc099",
+  "input_tokens": 673,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 5,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 673,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 697
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:72f8d0881363f2a94b17cc2db96a61117fa03f3bed045f6f2e3771d8de4066e6",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 5\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832685,
+    "id": "chatcmpl-Qbm8yxVPO0b81TEri4auzry8382fLi7c",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.644,
+      "predicted_n": 24,
+      "predicted_per_second": 42.50465780208415,
+      "predicted_per_token_ms": 23.526833333333332,
+      "prompt_ms": 611.333,
+      "prompt_n": 595,
+      "prompt_per_second": 973.2829734367358,
+      "prompt_per_token_ms": 1.0274504201680672
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 673,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 697
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Care. 1  Remember to add a thin layer of compost, followed by a 2\u2013inch layer of mulch around your plants each spring. 2  If you receive less than 1 inch of rain a week in the summer, remember to water your plants regularly. 3  Divide yarrow plants every 3 to 5 years.\\\\n\\\\npassage 2:Planting. 1  Use a garden fork or tiller to loosen the soil in your garden to about 12 to 15 inches deep, then mix in a 2\u2013 to 4\u2013inch layer of compost. 2  Plant in the spring in well-drained, average to poor soil. 3  Yarrows thrive in hot, dry conditions; they will not tolerate wet soil.\\\\n\\\\npassage 3:The Blanket Flower, Gaillardia grandiflora is a perennial member of the sunflower family. The bright, daisy like flower heads of the Gaillardia may reach up to 4 inches across. Blanket Flowers may be single or double flowered, depending on the variety. These perennials generally grow from two to three feet tall, but there are also many new hybrid strains which include dwarf varieties like Gaillardia grandiflora 'Goblin' that only attain a height of a foot. Gaillardia flowers may be single or bi-colored and range from yellow to red or orange. Gaillardias are hardy in USDA zones 4-10. Blanket flowers grow best when grown in full sun. Plant them 15-18 inches apart in light, well drained soil.\\\\n\\\\n\\\",\\\"question\\\":\\\"how fast do blanket flower grow\\\"}\", \"original_answer\": \"Based on the given passages, I can answer the question as follows:\\n\\nBlanket flowers (Gaillardia grandiflora) typically grow to be around 2-3 feet tall, according to Passage 3. However, some dwarf varieties like 'Goblin' may only grow to be about a foot tall, as mentioned in Passage 3. The plants prefer full sun and well-drained soil, as stated in Passage 3. Watering is recommended during periods of less than 1 inch of rainfall per week, as mentioned in Passage 1. Compost and mulch can be added to the soil to promote healthy growth, as suggested in Passage 1.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:57953afa037cb059cf5710fd61b05f9050aa4f4934dba4386efd404386f8f90b",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ]
+}

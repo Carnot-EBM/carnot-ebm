@@ -1,0 +1,113 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.3393693060497753,
+  "exclusion_reason": null,
+  "family_id": "sha256:dc26b774d1e0d2f5a4b7765151124c934eb7045a422c3f92a7177963cb4e1f55",
+  "input_tokens": 725,
+  "invocation_finished_at": "2026-10-01T11:41:30.838727+00:00",
+  "invocation_started_at": "2026-10-01T11:41:29.499357+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 12,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 725,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 750
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:1059b60b2e08b5354f7bcc594ad5eaf613773c66a10382192b640d1462fee2f8",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 12\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790854890,
+    "id": "chatcmpl-ejep0QsykOHyFmWF3NQndn3NNyuMVLVo",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 580.391,
+      "predicted_n": 25,
+      "predicted_per_second": 43.07441018210138,
+      "predicted_per_token_ms": 23.215639999999997,
+      "prompt_ms": 643.032,
+      "prompt_n": 647,
+      "prompt_per_second": 1006.1707659960935,
+      "prompt_per_token_ms": 0.9938670788253479
+    },
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 725,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 750
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:1 Any laptop that is awake should charge a device that's plugged into it. 2  Things can get trickier if the laptop is asleep. 3  If you've plugged a phone into a laptop, be sure to verify that it is actually charging.tory Highlights. 1  Any laptop that is awake should charge a device that's plugged into it. 2  Things can get trickier if the laptop is asleep. 3  If you've plugged a phone into a laptop, be sure to verify that it is actually charging.\\\\n\\\\npassage 2:Report Abuse. Another temp solution is to go to My computer, right click Device Manager, view devices by connections. Find the USB port the phone is connected to, right click the name, select properties, and then select power management.Deselect the first box to prevent the computer from turning off the device.s s \u00b7 8 years ago.Thumbs up. 2.ind the USB port the phone is connected to, right click the name, select properties, and then select power management. Deselect the first box to prevent the computer from turning off the device. s s \u00b7 8 years ago. Thumbs up. 2.\\\\n\\\\npassage 3:Instructions. Purchase a USB cable from your cell phone provider's store or online that is compatible with your phone model. This cord comes standard with some new phones, like PDA devices. Insert the USB cable into your phone and then into the USB slot on your laptop.Plug your laptop into a power outlet using its power charger. Start up the computer and log in (if required). Once the computer is active, it begins to charge your cell phone phone.lug your laptop into a power outlet using its power charger. Start up the computer and log in (if required). Once the computer is active, it begins to charge your cell phone phone.\\\\n\\\\n\\\",\\\"question\\\":\\\"how do i charge my phone from my laptop\\\"}\", \"original_answer\": \"To charge your phone from your laptop, follow these steps:\\n1. Purchase a USB cable that is compatible with your phone model.\\n2. Insert the USB cable into your phone and then into the USB slot on your laptop.\\n3. Plug your laptop into a power outlet using its power charger.\\n4. Start up the computer and log in (if required).\\n5. Once the computer is active, it will begin to charge your phone.\\n\\nNote: If the laptop is asleep, it may not charge the phone. Verify that the phone is actually charging.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_update",
+  "source_cluster_id": "sha256:b746da84d133b08a2190220da4ac88a07852b0665b11904d38832a1b85f616ab",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ]
+}

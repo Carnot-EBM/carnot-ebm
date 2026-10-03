@@ -1,0 +1,123 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.530429107020609,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:30a71378547046edd94b6612eef93a631c8fb3a2d0bcf892ab2c620e2a4d640c",
+  "input_tokens": 946,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 946,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 969
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:a5ef2cdacbec591101e3616caec8485705a1085746f2d80493c758f3283bdd15",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886076,
+    "id": "chatcmpl-5kDhhT1mjLAAJl5iB369D6SMVSShieqb",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.348,
+      "predicted_n": 23,
+      "predicted_per_second": 42.486533616084294,
+      "predicted_per_token_ms": 23.53686956521739,
+      "prompt_ms": 877.658,
+      "prompt_n": 868,
+      "prompt_per_second": 988.9957135923104,
+      "prompt_per_token_ms": 1.0111267281105991
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 946,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 969
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"He's a blue chip college basketball recruit. She's a high school freshman with Down syndrome. At first glance Trey Moses and Ellie Meredith couldn't be more different. But all that changed Thursday when Trey asked Ellie to be his prom date. Trey -- a star on Eastern High School's basketball team in Louisville, Kentucky, who's headed to play college ball next year at Ball State -- was originally going to take his girlfriend to Eastern's prom. So why is he taking Ellie instead? \\\"She's great... she listens and she's easy to talk to\\\" he said. Trey made the prom-posal (yes, that's what they are calling invites to prom these days) in the gym during Ellie's P.E. class. Trina Helson, a teacher at Eastern, alerted the school's newspaper staff to the prom-posal and posted photos of Trey and Ellie on Twitter that have gone viral. She wasn't surpristed by Trey's actions. \\\"That's the kind of person Trey is,\\\" she said. To help make sure she said yes, Trey entered the gym armed with flowers and a poster that read \\\"Let's Party Like it's 1989,\\\" a reference to the latest album by Taylor Swift, Ellie's favorite singer. Trey also got the OK from Ellie's parents the night before via text. They were thrilled. \\\"You just feel numb to those moments raising a special needs child,\\\"  said Darla Meredith, Ellie's mom. \\\"You first feel the need to protect and then to overprotect.\\\" Darla Meredith said Ellie has struggled with friendships since elementary school, but a special program at Eastern called Best Buddies had made things easier for her. She said Best Buddies cultivates friendships between students with and without developmental disabilities and prevents students like Ellie from feeling isolated and left out of social functions. \\\"I guess around middle school is when kids started to care about what others thought,\\\" she said, but \\\"this school, this year has been a relief.\\\" Trey's future coach at Ball State, James Whitford, said he felt great about the prom-posal, noting that Trey, whom he's known for a long time, often works with other kids. Trey's mother, Shelly Moses, was also proud of her son. \\\"It's exciting to bring awareness to a good cause,\\\" she said. \\\"Trey has worked pretty hard, and he's a good son.\\\" Both Trey and Ellie have a lot of planning to do. Trey is looking to take up special education as a college major, in addition to playing basketball in the fall. As for Ellie, she can't stop thinking about prom. \\\"Ellie can't wait to go dress shopping\\\" her mother said. \\\"Because I've only told about a million people!\\\" Ellie interjected.\\n\", \"original_answer\": \"Trey Moses, a star player on Eastern High School's basketball team in Kentucky, asked Ellie Meredith, a high school freshman with Down syndrome, to be his prom date. Trey, who will play college basketball at Ball State next year, was originally going to take his girlfriend to the prom. However, he decided to invite Ellie instead because he said she's easy to talk to. The invitation, which was made in the gym during Ellie's P.E. class, included flowers and a poster that read \\\"Let's Party Like it's 1989,\\\" a reference to the latest album by Taylor Swift, Ellie's favorite singer. The story has gone viral on Twitter and both Trey and Ellie's parents have expressed their excitement and support for the prom proposal.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "463a61a0acd3428a8f661570e51bfd6880553a5eff590d0a6c05060392f2e8f8",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26
+  ]
+}

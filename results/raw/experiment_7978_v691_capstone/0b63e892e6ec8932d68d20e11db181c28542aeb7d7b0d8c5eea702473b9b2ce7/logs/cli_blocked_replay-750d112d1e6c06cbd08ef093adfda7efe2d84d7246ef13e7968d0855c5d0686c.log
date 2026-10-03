@@ -1,0 +1,12 @@
+[exp7978] start current capstone CLI
+Traceback (most recent call last):
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7978_v691_capstone.py", line 56, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7978_v691_capstone.py", line 37, in main
+    errors = cap.cold_replay(json.loads(args.cold_replay.read_bytes()), root, design, active)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v691_capstone.py", line 591, in cold_replay
+    snapshots=Path(value["authority_snapshots"]["active"]["snapshot_path"]).parent,
+                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: 'snapshot_path'

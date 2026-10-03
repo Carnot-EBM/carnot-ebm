@@ -1,0 +1,225 @@
+{
+  "code_config_hashes": [
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8022_v695_likelihood_protocol.py",
+      "sha256": "sha256:0a9298ca1b40787e1416baf78b011e09778d3708bdfc31d31d66a8b63483ac44"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/fixed_answer_likelihood_8022.py",
+      "sha256": "sha256:4902581c5675957c0c251905ff077e38b5dcfc6600c8b505be5cdff64ad12afe"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/likelihood_runtime_8022.py",
+      "sha256": "sha256:fff3f68b06c3ce867007f4e18c1a81142f04f486e4ccd65dff1b5e8ac4942aca"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8022_v695_likelihood_protocol.py",
+      "sha256": "sha256:75e9c1d5ea24809a1ea2be233b77487f57c6de98c17e5ef69314955d4bd4fc56"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_likelihood_protocol_8022.py",
+      "sha256": "sha256:cd17bdc9d3a45217b9ab01953541665d25d0bf1bba71e289b0215ab6fa2a6ed5"
+    }
+  ],
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "run",
+        "--rcfile=/tmp/carnot-8022-y1ez97ld/coverage.ini",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_likelihood_protocol_8022.py"
+      ],
+      "name": "focused",
+      "scope": "owned",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "combine",
+        "--rcfile=/tmp/carnot-8022-y1ez97ld/coverage.ini",
+        "/tmp/carnot-8022-y1ez97ld"
+      ],
+      "name": "combine",
+      "scope": "owned",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "json",
+        "--rcfile=/tmp/carnot-8022-y1ez97ld/coverage.ini",
+        "--fail-under=100",
+        "-o",
+        "/tmp/carnot-8022-y1ez97ld/coverage.json"
+      ],
+      "name": "coverage",
+      "scope": "owned",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_source_boundary_7852.py",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_current_work_receipt.py",
+        "tests/python/test_qwen_development_capture_7995.py",
+        "tests/python/test_experiment_7995_v693_qwen_development_capture.py",
+        "tests/python/test_llama_cpp_process.py"
+      ],
+      "name": "consumers_E2E015_7995",
+      "scope": "owned",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_7868_v683_intervention_protocol.py",
+        "--date",
+        "20260929",
+        "--fixture-e2e",
+        "/tmp/carnot-8022-y1ez97ld/e2e016.json"
+      ],
+      "name": "E2E016_fixture",
+      "scope": "owned",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_7868_v683_intervention_protocol.py",
+        "--date",
+        "20260929",
+        "--cold-replay",
+        "/tmp/carnot-8022-y1ez97ld/e2e016.json"
+      ],
+      "name": "E2E016_replay",
+      "scope": "owned",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "ruff",
+        "check",
+        "python/carnot/experiment_8022_v695_likelihood_protocol.py",
+        "python/carnot/inference/fixed_answer_likelihood_8022.py",
+        "python/carnot/inference/likelihood_runtime_8022.py",
+        "scripts/experiments/experiment_8022_v695_likelihood_protocol.py",
+        "tests/python/test_likelihood_protocol_8022.py"
+      ],
+      "name": "ruff",
+      "scope": "owned",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_8022_v695_likelihood_protocol.py",
+        "python/carnot/inference/fixed_answer_likelihood_8022.py",
+        "python/carnot/inference/likelihood_runtime_8022.py",
+        "scripts/experiments/experiment_8022_v695_likelihood_protocol.py",
+        "tests/python/test_likelihood_protocol_8022.py"
+      ],
+      "name": "format",
+      "scope": "owned",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "mypy",
+        "--strict",
+        "python/carnot/experiment_8022_v695_likelihood_protocol.py",
+        "python/carnot/inference/fixed_answer_likelihood_8022.py",
+        "python/carnot/inference/likelihood_runtime_8022.py",
+        "scripts/experiments/experiment_8022_v695_likelihood_protocol.py"
+      ],
+      "name": "mypy",
+      "scope": "owned",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "python/carnot/experiment_8022_v695_likelihood_protocol.py",
+        "python/carnot/inference/fixed_answer_likelihood_8022.py",
+        "python/carnot/inference/likelihood_runtime_8022.py",
+        "scripts/experiments/experiment_8022_v695_likelihood_protocol.py",
+        "tests/python/test_likelihood_protocol_8022.py"
+      ],
+      "name": "spec",
+      "scope": "owned",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q"
+      ],
+      "name": "repository_health",
+      "scope": "repository_health",
+      "timeout_s": 120
+    }
+  ],
+  "methods": {
+    "answer_tokens": 384,
+    "chunk_tokens": 256,
+    "duplicate_tolerance": 1e-06,
+    "duration_floor_s": 2,
+    "exposure": "all roles retain historical development exposure",
+    "features": [
+      "full_mean_nll",
+      "no_source_minus_full",
+      "removal_minus_full"
+    ],
+    "heartbeat_s": 60,
+    "hypotheses": [
+      "H1: paired no-source minus full mean NLL > 0",
+      "H2: paired removal minus full mean NLL > 0",
+      "H3: independent-label loss improves over full NLL alone"
+    ],
+    "input_tokens": 6000,
+    "labels_available": false,
+    "load_preflight_timeout_s": 600,
+    "question_scope": "fixed neutral instruction; original generation prompts unavailable",
+    "removal": "unique_casefold_word_intersection_count_then_lowest_chunk_index",
+    "scoring_child_timeout_s": 120,
+    "scoring_pass_budget": 8,
+    "seed": 69522,
+    "selection": "original_role_order_first_admitted_normalized_source_groups",
+    "statistical_plan": "future source-paired 10000 bootstrap draws; one-sided Holm alpha .05; no hypothesis tested here"
+  }
+}

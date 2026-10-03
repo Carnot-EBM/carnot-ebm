@@ -1,0 +1,101 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.1701127960113809,
+  "exclusion_reason": null,
+  "family_id": "sha256:dcb6c8707f1d957e931577fa3e125b14ce14b30b1a73b77847f5ec0a97adf813",
+  "input_tokens": 489,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 489,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 512
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:9d3d19e5eb74b634d12a48a0d4b5efa9315e01929afbb8ddeffad0404205cc05",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832789,
+    "id": "chatcmpl-FAjF9gDzilGDRYmQrQIoOY6YkuP2cC15",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.254,
+      "predicted_n": 23,
+      "predicted_per_second": 42.57256771814739,
+      "predicted_per_token_ms": 23.48930434782609,
+      "prompt_ms": 492.509,
+      "prompt_n": 411,
+      "prompt_per_second": 834.5025167052784,
+      "prompt_per_token_ms": 1.1983187347931874
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 489,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 512
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:You can start lavender from hardwood or softwood cuttings. Softwood cuttings are taken from the soft, pliable tips of new growth. Hardwood is thicker than softwood and resists bending. It may snap if you force it to bend. The best type of cutting to use depends on the type of lavender and the time of year.\\\\n\\\\npassage 2:Once you find the perfect branch, cut it from the plant at the base of the stem. Taking cuttings for lavender propagation. Take cuttings that are several inches long. You want the cuttings to have 3-5 leaf nodes on the stems that you can remove, but still have several inches of growth at the top.\\\\n\\\\npassage 3:After the cuttings from your lavender plant, remove the bottom 3-5 sets of leaves from the stem of the cutting. You can pinch them off with your fingernail, or clip them off with a sharp pair of clippers. You want to leave small wounds on the stems, that\u2019s where the roots will grow out of.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to lavender cuttings\\\"}\", \"original_answer\": \"To lavender cuttings, follow these steps:\\n\\n1. Choose softwood or hardwood cuttings depending on the type of lavender and time of year.\\n2. Cut the branch from the plant at the base of the stem, taking care to have 3-5 leaf nodes on the stem.\\n3. Remove the bottom 3-5 sets of leaves from the stem, leaving small wounds on the stem for root growth.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:0379e5289b7449f726beae666c439e1282bf043399134ffb707ae5df628a220e",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ]
+}

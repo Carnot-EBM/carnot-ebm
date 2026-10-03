@@ -1,0 +1,24 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_________________________ test_frozen_mypy_invocation __________________________
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261003T010300-1641160-cb50688b/test_frozen_mypy_invocation0')
+
+    def test_frozen_mypy_invocation(tmp_path):
+        """SCENARIO-REPORT-8044-TERMINAL: the frozen strict command must parse and exit normally."""
+        spec = next(
+            s for s in methods.manifest(ROOT, tmp_path)["commands"] if s["name"] == "mypy_strict"
+        )
+        run = subprocess.run(spec["argv"], cwd=ROOT, capture_output=True, text=True, timeout=60)
+>       assert run.returncode == 0, run.stdout + run.stderr
+E       AssertionError: usage: mypy [-h] [-v] [-V] [more options; see below]
+E                     [-m MODULE] [-p PACKAGE] [-c PROGRAM_TEXT] [files ...]
+E         mypy: error: unrecognized arguments: python/carnot/reporting/v697_evidence.py
+E         
+E       assert 2 == 0
+E        +  where 2 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy', '--strict', 'python/carnot/report...CKAGE] [-c PROGRAM_TEXT] [files ...]\nmypy: error: unrecognized arguments: python/carnot/reporting/v697_evidence.py\n').returncode
+
+tests/python/test_experiment_8044_v697_contract_methods.py:350: AssertionError
+=========================== short test summary info ============================
+FAILED tests/python/test_experiment_8044_v697_contract_methods.py::test_frozen_mypy_invocation
+1 failed in 2.63s

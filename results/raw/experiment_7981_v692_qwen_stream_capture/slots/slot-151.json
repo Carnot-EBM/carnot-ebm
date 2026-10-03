@@ -1,0 +1,105 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.545307321997825,
+  "exclusion_reason": null,
+  "family_id": "sha256:91e6ea61146fa21c81497d6619f04ca517f15a4a7768dd1956c79b17595deebc",
+  "input_tokens": 934,
+  "invocation_finished_at": "2026-10-01T11:44:44.281526+00:00",
+  "invocation_started_at": "2026-10-01T11:44:42.736217+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 934,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 957
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:adc0e174056847c05eaac278fd4c082673867cc234b641f7b6a641dbd6d7c1d6",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855084,
+    "id": "chatcmpl-lPFB5kre2kH71fZ7gFRxwQkG9ftSSC3b",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.201,
+      "predicted_n": 23,
+      "predicted_per_second": 42.57674458210925,
+      "predicted_per_token_ms": 23.487000000000002,
+      "prompt_ms": 872.234,
+      "prompt_n": 856,
+      "prompt_per_second": 981.3880220216136,
+      "prompt_per_token_ms": 1.018964953271028
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 934,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 957
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"5725 Hollister Ave\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":null,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Restaurants, Burgers, American (Traditional), Breakfast & Brunch, Diners\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"6:0-14:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"6:0-14:0\\\",\\\"Sunday\\\":\\\"6:0-14:0\\\",\\\"Thursday\\\":\\\"6:0-14:0\\\",\\\"Tuesday\\\":\\\"6:0-14:0\\\",\\\"Wednesday\\\":\\\"6:0-14:0\\\"},\\\"name\\\":\\\"Alphie's Restaurant\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2020-03-21 20:01:31\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Ordered breakfast takeout today for 6 family members.  Everyone was very happy and enjoyed the food.  Thank you for the experience...looking forward to trying lunch items too!\\\"},{\\\"review_date\\\":\\\"2020-02-08 19:14:08\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"If you want a hardy breakfast at a good price, then this is it! \\\\n\\\\nI'd go back for the food as it was very good!\\\\n\\\\nService...not so much.\\\"},{\\\"review_date\\\":\\\"2019-11-18 10:50:57\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I'm glad we found this hole-in-the-wall! My friends and I were visiting UCSB from out of town for the weekend and we were looking for a breakfast place before the long trip back home. This place has a cozy atmosphere and I was surprised that there was a live band playing. I ordered the crab omelette and my sister ordered the Loco Moco that they had as one of the day's specials. Both dishes were tasty and hearty, plus reasonably priced. I love how filled the omelette was and how the cheese from inside the omelette would stretch from every forkful! Even the food that my friends ordered looked delicious. The service was also pretty good. Definitely would come again when we come back to visit UCSB.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Alphie's Restaurant is a traditional American diner located at 5725 Hollister Ave, Goleta, CA. The eatery offers a variety of food categories, including Burgers, Breakfast & Brunch, and Diners. The restaurant is open from 6:00 am to 2:00 pm from Tuesday to Sunday. Street and lot parking is available, there is free Wi-Fi, and the restaurant is suitable for groups. However, Alphie's does not offer outdoor seating or accept reservations. The overall ambiance of the restaurant is casual. Based on customer reviews, Alphie's provides hearty breakfasts at good prices and a cozy atmosphere. The service is noted as satisfactory and the restaurant has an overall 3.5-star rating. Customers particularly appreciated the breakfast take-out option, and the generous, tasty portions.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_update",
+  "source_cluster_id": "sha256:707d7c6e679a49c87c0e826fc311da8c2a1cf775d552cbe283b56a80f69f3eed",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]
+}

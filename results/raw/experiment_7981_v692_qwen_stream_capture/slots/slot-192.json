@@ -1,0 +1,108 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.23955462500453,
+  "exclusion_reason": null,
+  "family_id": "sha256:54b047022caba06681dceb8eeaf142e38250c02fec5dc79f139ea9d611d53302",
+  "input_tokens": 595,
+  "invocation_finished_at": "2026-10-01T11:45:45.006228+00:00",
+  "invocation_started_at": "2026-10-01T11:45:43.766672+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 595,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 619
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:da926647080af91a84de6990bb0dc8e60213ba95c256c427e33983a5d345bd5f",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855145,
+    "id": "chatcmpl-X0DkdFw8JS9ke60O8OTGZyW4kpOUlqYs",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 563.773,
+      "predicted_n": 24,
+      "predicted_per_second": 42.570325290498126,
+      "predicted_per_token_ms": 23.49054166666667,
+      "prompt_ms": 558.205,
+      "prompt_n": 517,
+      "prompt_per_second": 926.1830331150741,
+      "prompt_per_token_ms": 1.0797001934235977
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 595,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 619
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Ready In. 25 m. Heat peanut oil in a large skillet over medium heat, and cook and stir the bacon bits and garlic until fragrant, about 1 minute. Stir in 2 or 3 handfuls of mustard greens, allow the greens to wilt, and stir in remaining greens; sprinkle with onion powder. Continue to cook and stir until the greens are bright green, wilted, and starting to become tender, 2 to 3 more minutes. Drizzle greens with fish sauce, stir to combine, and serve.\\\\n\\\\npassage 2:{{model.addEditText}} Print. 1  Prep. 2  Cook. 3  Ready In.  Combine onions, ham hocks, and garlic in a stockpot; add chicken 1  broth. Stir collard greens, vinegar, sugar, salt, and pepper into the broth mixture; cook until greens have reached desired tenderness, about 2 more hours.\\\\n\\\\npassage 3:Add the ham hock, smashed garlic, chicken stock and water and bring to a simmer. Cover and cook for 1 hour. 2 Add the collard greens to the pot and cook until tender, another 45 minutes to an hour. 3 To serve, fish out the ham hock, pull the meat off the bones and chop. Mix the meat back with the greens and serve with vinegar and hot sauce at the table.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to make mustard greens\\\"}\", \"original_answer\": \"To make mustard greens, heat peanut oil in a large skillet over medium heat. Cook and stir bacon bits and garlic for about 1 minute. Add 2 or 3 handfuls of mustard greens and allow them to wilt. Stir in the remaining greens and sprinkle with onion powder. Cook and stir until the greens are bright green, wilted, and starting to become tender, which should take about 2 to 3 more minutes. Drizzle the greens with fish sauce, stir to combine, and serve.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "sha256:50317479010bafbef073c8de3d65b0ac1e1ed6d80fe500d4f2b5ccf7dd5fefad",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ]
+}

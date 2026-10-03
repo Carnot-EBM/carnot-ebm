@@ -1,0 +1,97 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.1941907239961438,
+  "exclusion_reason": null,
+  "family_id": "sha256:60d1879fb6eca35ab46ed029e76dc5c34b44909ac4e6f8c88d04713cae25e254",
+  "input_tokens": 567,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 567,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 590
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:276113b3729025b7d3cdf29dfa30981504e9078a5e1e3798dffc6383705888cd",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832545,
+    "id": "chatcmpl-XWEi7qzRcw9sKVKlRNgTc1korUG7fAqG",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 537.234,
+      "predicted_n": 23,
+      "predicted_per_second": 42.81188457915917,
+      "predicted_per_token_ms": 23.358,
+      "prompt_ms": 524.213,
+      "prompt_n": 489,
+      "prompt_per_second": 932.8269234070884,
+      "prompt_per_token_ms": 1.0720102249488752
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 567,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 590
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Foods that create a lot of gas in the gut during digestion should also be avoided by people with colitis. Many of these foods are also high in fiber. Gas-causing foods to avoid include broccoli, cauliflower, cabbage, raw fruits, raw fruit juices, popcorn, dried fruits, legumes, foods made with sorbitol and oat bran.\\\\n\\\\npassage 2:Some people with colitis may have difficulty digesting foods with lactose, according to the Mayo Clinic. Lactose is a sugar found in dairy foods. To limit colitis symptoms, like diarrhea, people with colitis should avoid foods containing lactose, or use an enzyme to help digest the lactose called called lactase. Dairy foods with lactose include milk, some cheeses, ice cream, half and half, yogurt, condensed milk, nonfat dried milk powder and cream cheese.\\\\n\\\\npassage 3:High fiber foods that people with colitis may need to avoid include apples, bananas, blueberries, figs, grapefruits, pears, raspberries, avocados, carrots, kale, popcorn, potatoes with the skin, bran, oats, brown rice, whole wheat breads, legumes, peas and nuts.\\\\n\\\\n\\\",\\\"question\\\":\\\"what foods to avoid with ulcerative colitis\\\"}\", \"original_answer\": \"To avoid worsening symptoms of ulcerative colitis, individuals should avoid foods that create gas in the gut such as broccoli, cauliflower, cabbage, raw fruits, raw fruit juices, popcorn, dried fruits, legumes, foods made with sorbitol, and oat bran. They should also limit or avoid foods with lactose, including milk, certain cheeses, ice cream, yogurt, and cream cheese. Additionally, high fiber foods like apples, bananas, blueberries, figs, grapefruits, pears, raspberries, avocados, carrots, kale, popcorn, potatoes with the skin, bran, oats, brown rice, whole wheat breads, legumes, peas, and nuts should be avoided.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:087a15bef62b5e0c075bb05660e941298eb3b36d0c77e568b1d37c2df81f0ba6",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ]
+}

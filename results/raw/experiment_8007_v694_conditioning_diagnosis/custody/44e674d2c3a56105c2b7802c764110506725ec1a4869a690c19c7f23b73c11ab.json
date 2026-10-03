@@ -1,0 +1,116 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.694781951024197,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:e5574c9181be89a647826fdf4ebc0ca46ccacc86b82bbf818b472cade713e45d",
+  "input_tokens": 1160,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1160,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1183
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:5918607dab808fdf3a120829f1ea3273b3e50adcd6a73b0a9369086bccf92f56",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886370,
+    "id": "chatcmpl-ezTGO00Q4PuEZnIqiuG3t57XhpbseuqV",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 542.566,
+      "predicted_n": 23,
+      "predicted_per_second": 42.391156098981504,
+      "predicted_per_token_ms": 23.589826086956524,
+      "prompt_ms": 1039.503,
+      "prompt_n": 1082,
+      "prompt_per_second": 1040.8820368964784,
+      "prompt_per_token_ms": 0.9607236598890943
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1160,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1183
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"4610 Carpinteria Ave\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":2.5,\\\"categories\\\":\\\"Burgers, Restaurants, Fast Food\\\",\\\"city\\\":\\\"Carpinteria\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"7:0-22:0\\\",\\\"Monday\\\":\\\"7:0-22:0\\\",\\\"Saturday\\\":\\\"7:0-22:0\\\",\\\"Sunday\\\":\\\"7:0-22:0\\\",\\\"Thursday\\\":\\\"7:0-22:0\\\",\\\"Tuesday\\\":\\\"7:0-22:0\\\",\\\"Wednesday\\\":\\\"7:0-22:0\\\"},\\\"name\\\":\\\"Carl's Jr\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-08 22:26:29\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I don't write many reviews on here, less so for a fast food restaurant but man oh man did this place impress me. Right when I walked in Ruben greeted me like we were old friends and was a beacon of service from the moment I stepped through the doors. I tried the hot honey chicken sandwich, it came out within 3 minutes and was delicious. Bacon was crispy, the chicken perfectly cooked, and the bun was not soggy at all. I had a great quick meal and was so impressed by Ruben that I had to come on here to give a review. Thank you so much for being so kind and helpful. If you're on a road trip and Ruben is working you'll be in for a delightful pit stop.\\\"},{\\\"review_date\\\":\\\"2021-11-28 18:43:37\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"We had to exit to this city cause traffic was so bad omw home from Solvang.  People in Carpinteria are either super kind or they're flippant and don't like visitors  in their town. \\\\nRUBEN was so kind and welcoming this morning as I entered to get a veggie breakfast burrito to soak in the 90 glasses of red wine. He has fabulous energy and took pride in his work and love for this city. I love people like him cause positive energy is contagious and started off my day beautifully! \\\\nCarl's Jr is so lucky to have him on board. \\\\n\\\\nNo drive through fyi.\\\"},{\\\"review_date\\\":\\\"2021-10-08 01:22:50\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"I used to eat breakfast there almost every day but in the last 2 weeks that I ate there I got really sick twice!! I believe it was the sausage because it was like black and dried out! Sausage should be brown not black! So I stopped eating there. I'll get a burger from time to time but usually only with coupons. The workers are very friendly and helpful, it's just the food that lacks. It's pretty expensive for burgers but even when they give you specials by the time you buy the fries and the soda you end up spending even more than a combo. I guess every place is expensive now though.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Carl's Jr is a fast-food restaurant located at 4610 Carpinteria Ave, Carpinteria, CA. They specialize in burgers and are open every day of the week from 7:00 to 22:00. The restaurant offers amenities such as outdoor seating and take-out options, and is also suitable for groups. However, they do not provide Wi-Fi or music. Parking is available in the lot but not on the street, with no valet or validated parking. The overall rating for this business is 2.5 stars. One customer praised the fast service and the delicious hot honey chicken sandwich, commending an employee named Ruben for his exceptional customer service. Another customer also complimented Ruben's positive energy and the taste of their veggie breakfast burrito. However, there was a complaint about the food quality, specifically the breakfast sausage, and the perceived high cost of the meals.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "68e66851a436cdfcf2dd0e28a351c918394905103de5e91c8706a83752891175",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ]
+}

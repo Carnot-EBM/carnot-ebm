@@ -1,0 +1,95 @@
+{
+  "cold": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/experiments/experiment_8033_v696_scoring_isolation.py --cold-replay /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8033_v696_scoring_isolation/candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_8033_v696_scoring_isolation.py",
+        "--cold-replay",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8033_v696_scoring_isolation/candidate.json"
+      ],
+      "duration_s": 1.8056543871061876,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_8033_v696_scoring_isolation/cold_logs/00_cold_reduction.log",
+      "log_sha256": "sha256:51b838ba426d4037d4373c8bc746d738382cd51f71dc2aefe066f811c565ba2b",
+      "name": "cold_reduction",
+      "output_tail": "[exp8022] phase=8033_start elapsed_s=0.000 completed=0 pending=0\n",
+      "passed": true,
+      "scope": "terminal",
+      "timed_out": false
+    }
+  ],
+  "publication": {
+    "primary_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8033_v696_scoring_isolation.json",
+    "primary_sha256": "sha256:9d69dc54de5de2a2ada4b96aa3872fb140425f1ae3884ef9d29338a5f162b420",
+    "sidecar_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8033_v696_scoring_isolation/validators/9d69dc54de5de2a2ada4b96aa3872fb140425f1ae3884ef9d29338a5f162b420.json"
+  },
+  "published": {
+    "passed": true,
+    "receipts": [
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/experiment_8033_v696_scoring_isolation.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "scripts/adversarial_verify.py",
+          "--json",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8033_v696_scoring_isolation.json"
+        ],
+        "duration_s": 4.755976659944281,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8033_v696_scoring_isolation/terminal_logs/experiment_8033_v696_scoring_isolation.json/00_adversarial.log",
+        "log_sha256": "sha256:85649b41f315505871196916df5469f2a8728e2206bcb5452a33f1131622b2e8",
+        "name": "adversarial",
+        "output_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8033_v696_scoring_isolation.json\",\n      \"loaded\": true,\n      \"exp_id\": 8033,\n      \"title\": \"\",\n      \"honest_verdict\": \"complete_disqualified_scoring_isolation\",\n      \"flag_count\": 0,\n      \"max_severity\": -1,\n      \"flags\": [],\n      \"gate_version\": \"197e0a5eacacb09ce6607ae8bdfd507498082857f0d02ec2003a62c251b69a24\"\n    }\n  ],\n  \"flagged_count\": 0\n}\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/experiment_8033_v696_scoring_isolation.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "scripts/verdict_row_consistency_lint.py",
+          "--strict",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8033_v696_scoring_isolation.json"
+        ],
+        "duration_s": 0.07293323497287929,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8033_v696_scoring_isolation/terminal_logs/experiment_8033_v696_scoring_isolation.json/01_strict_rows.log",
+        "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+        "name": "strict_rows",
+        "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      }
+    ]
+  },
+  "readers": {
+    "document_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8033_v696_scoring_isolation.json",
+    "document_sha256": "sha256:9d69dc54de5de2a2ada4b96aa3872fb140425f1ae3884ef9d29338a5f162b420",
+    "document_status": "\u26a0\ufe0f Research Finding",
+    "gate_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8033_v696_scoring_isolation.json",
+    "gate_sha256": "sha256:9d69dc54de5de2a2ada4b96aa3872fb140425f1ae3884ef9d29338a5f162b420",
+    "gates": [
+      {
+        "actual": 0,
+        "artifact_field": "scoring_isolation_ready_score",
+        "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8033_v696_scoring_isolation.json",
+        "artifact_sha256": "sha256:9d69dc54de5de2a2ada4b96aa3872fb140425f1ae3884ef9d29338a5f162b420",
+        "expected": 0,
+        "op": "==",
+        "passed": true,
+        "reason": "actual=0 == expected=0",
+        "upstream": "exp8033-scoring-isolation",
+        "upstream_final": true
+      }
+    ],
+    "passed": true,
+    "summary": "1 gate(s) satisfied",
+    "task_id": "exp8033-scoring-isolation"
+  }
+}

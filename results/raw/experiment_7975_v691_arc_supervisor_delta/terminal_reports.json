@@ -1,0 +1,69 @@
+{
+  "primary_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7975_v691_arc_supervisor_delta.json",
+  "primary_sha256": "sha256:a28af99cf2de2a4ba93348d7c2fb3ce18879a46a468fb02961f407180fc48a4f",
+  "report": {
+    "passed": true,
+    "replay_errors": [],
+    "reports": [
+      {
+        "actual_exit": 0,
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "scripts/adversarial_verify.py",
+          "--json",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7975_v691_arc_supervisor_delta/terminal_candidate.json"
+        ],
+        "classification": "required",
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7975_v691_arc_supervisor_delta/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "scripts/adversarial_verify.py",
+          "--json",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7975_v691_arc_supervisor_delta/terminal_candidate.json"
+        ],
+        "deadline_s": 60,
+        "duration_s": 0.6014382159919478,
+        "exit_code": 0,
+        "expected_exit": 0,
+        "expected_text": null,
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7975_v691_arc_supervisor_delta/logs/terminal_adversarial-62692390964927fdcce9ab0e4aff708d19187876c557b0a91e9f1c5cc1171a3b.log",
+        "log_sha256": "sha256:62692390964927fdcce9ab0e4aff708d19187876c557b0a91e9f1c5cc1171a3b",
+        "name": "terminal_adversarial",
+        "output_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7975_v691_arc_supervisor_delta/terminal_candidate.json\",\n      \"loaded\": true,\n      \"exp_id\": 7975,\n      \"title\": \"New live ARC supervisor outcome inventory\",\n      \"honest_verdict\": \"complete_disqualified_supervisor_delta_prerequisites\",\n      \"flag_count\": 0,\n      \"max_severity\": -1,\n      \"flags\": [],\n      \"gate_version\": \"197e0a5eacacb09ce6607ae8bdfd507498082857f0d02ec2003a62c251b69a24\"\n    }\n  ],\n  \"flagged_count\": 0\n}\n",
+        "passed": true,
+        "scope": "required",
+        "timed_out": false
+      },
+      {
+        "actual_exit": 0,
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "scripts/verdict_row_consistency_lint.py",
+          "--strict",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7975_v691_arc_supervisor_delta/terminal_candidate.json"
+        ],
+        "classification": "required",
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7975_v691_arc_supervisor_delta/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "scripts/verdict_row_consistency_lint.py",
+          "--strict",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7975_v691_arc_supervisor_delta/terminal_candidate.json"
+        ],
+        "deadline_s": 60,
+        "duration_s": 0.0273073420394212,
+        "exit_code": 0,
+        "expected_exit": 0,
+        "expected_text": null,
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7975_v691_arc_supervisor_delta/logs/terminal_rows-2a5acc7f6565e1cba7cebf220383f1fb8b6afbbc1ef9c87af7959b982029deda.log",
+        "log_sha256": "sha256:2a5acc7f6565e1cba7cebf220383f1fb8b6afbbc1ef9c87af7959b982029deda",
+        "name": "terminal_rows",
+        "output_tail": "\nverdict-row-consistency: checked 0, skipped 1 (no per-unit rows), unreadable 0.\n  NOTE: most artifacts carry no per-unit row container, so their headline claims are not falsifiable from the artifact alone. That is a reporting-shape gap in those experiments, not a clean bill of health from this tool.\n",
+        "passed": true,
+        "scope": "required",
+        "timed_out": false
+      }
+    ]
+  },
+  "sidecar_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7975_v691_arc_supervisor_delta/validators/a28af99cf2de2a4ba93348d7c2fb3ce18879a46a468fb02961f407180fc48a4f.json"
+}

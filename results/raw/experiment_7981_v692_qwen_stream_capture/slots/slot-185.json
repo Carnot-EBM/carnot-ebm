@@ -1,0 +1,115 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.472340519016143,
+  "exclusion_reason": null,
+  "family_id": "sha256:6d3d02fd40cf282a75fb9a5103784e233e28cd7db444803934e7107e11750913",
+  "input_tokens": 851,
+  "invocation_finished_at": "2026-10-01T11:45:35.769913+00:00",
+  "invocation_started_at": "2026-10-01T11:45:34.297570+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 851,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 874
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:d29d916501381fdfbd7985f4b8c13c883a6651cca2bdde3b61b6513515d9486c",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855135,
+    "id": "chatcmpl-YTFLrAIgh94pzwgRkMoppD3yrn8GOYQS",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.303,
+      "predicted_n": 23,
+      "predicted_per_second": 42.56870681821126,
+      "predicted_per_token_ms": 23.491434782608696,
+      "prompt_ms": 817.816,
+      "prompt_n": 773,
+      "prompt_per_second": 945.2003873731989,
+      "prompt_per_token_ms": 1.0579767141009055
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 851,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 874
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Flu Vaccines Actually Work, Just Not in the Way You'd Expect\\nAs autumn leaves begin to fall, the familiar call to arm ourselves against the flu with a vaccine resounds. This year, the U.S. Centers for Disease Control and Prevention (CDC) is taking a fresh approach with their \\\"Wild to Mild\\\" campaign. Using animals as metaphors, the campaign highlights the vaccine's ability to weaken the flu's ferocity, transforming it from a roaring lion to a gentle kitten:\\nWhile many have been conditioned to think of vaccines in binary terms\u2014either they prevent illness or they don't\u2014the reality is more intricate.\\nDr. Sarah Bauerle Bass, a health communication expert at Temple University, points out that while some vaccines, like those for measles and polio, offer near-complete protection, the flu vaccine operates differently. This is primarily because the flu virus is a master of disguise, constantly evolving and presenting new challenges for our immune defenses.\\nUnlike the static nature of measles or polio, the flu is a dynamic adversary. It's a collection of viruses, and the vaccine typically targets only a select few strains. These strains are chosen based on predictions from the Southern Hemisphere's flu activity, a method that, while scientifically grounded, isn't foolproof.\\nTo the casual observer, the flu vaccine might seem less effective, with protection rates hovering between 40-60% during well-matched seasons. This has led to a pervasive myth that the vaccine is subpar. However, this perspective misses the broader picture as the vaccine's primary goal isn't just to prevent infection but to mitigate the severe consequences of the flu.\\nSo, while the vaccine might not always prevent a runny nose, it's adept at shielding vital organs from the virus, reducing hospitalizations and saving lives. The \\\"Wild to Mild\\\" initiative aims to recalibrate public understanding, emphasizing the vaccine's role in transforming a potentially lethal illness into a more manageable one.\\nHowever, the public's relationship with vaccines has evolved over the decades. Dr. Howard Markel, a medical historian, notes that while vaccines were once celebrated as miraculous gifts, modern perceptions are more varied and, at times, skeptical. This skepticism has extended to the COVID vaccine, which, like the flu vaccine, has faced misconceptions about its efficacy.\\nDespite these challenges, the CDC remains optimistic. While not everyone will choose to get vaccinated, the goal is to reach the undecided majority with compelling messaging. The \\\"Wild to Mild\\\" campaign encapsulates the essence of the flu vaccine: it might not be perfect, but it's a powerful tool we have right now.\", \"original_answer\": \"Here is a summary of the article in 104 words:\\n\\nThe flu vaccine does not work like other vaccines, such as measles and polio, in that it does not provide complete protection against the flu. Instead, it reduces the severity of the illness, shields vital organs, and saves lives. The CDC's \\\"Wild to Mild\\\" campaign aims to educate the public about the vaccine's effectiveness and encourage those who are undecided to get vaccinated. Despite misconceptions and skepticism, the CDC remains optimistic about the vaccine's ability to protect against the flu.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_update",
+  "source_cluster_id": "sha256:1a36906a287d304917a660cdc6dd6e23f830fe9aaf0a6d1da7377bb0819cc176",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21
+  ]
+}

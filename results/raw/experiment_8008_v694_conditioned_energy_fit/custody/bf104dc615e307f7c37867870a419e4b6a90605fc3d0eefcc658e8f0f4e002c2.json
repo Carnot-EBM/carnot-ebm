@@ -1,0 +1,104 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.395246775005944,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:93e7b3a4b2cca2b3ebbdf8e1528dc13b215b4e110fbd6b781dd89435398dc34d",
+  "input_tokens": 829,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 829,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 852
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:a9731206fdc6825e6bf2626833c776c7fe83508b1c964fe90746fba24a3c0876",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886367,
+    "id": "chatcmpl-DtWSWHGtPXun20cwtbg6PmBidytNOYsH",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 542.229,
+      "predicted_n": 23,
+      "predicted_per_second": 42.41750256810314,
+      "predicted_per_token_ms": 23.57517391304348,
+      "prompt_ms": 730.011,
+      "prompt_n": 751,
+      "prompt_per_second": 1028.7516215509083,
+      "prompt_per_token_ms": 0.972051930758988
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 829,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 852
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"532 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":null,\\\"Music\\\":true,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Burgers, Restaurants, Tapas Bars, Belgian, Bars, Food, Beer, Wine & Spirits, Nightlife\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"16:30-1:30\\\",\\\"Saturday\\\":\\\"16:30-1:30\\\"},\\\"name\\\":\\\"Apero\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2014-10-06 20:30:54\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"My food was cold, and the server was too busy flirting with her bartender boyfriend to bother coming to my table. They did remake the food for me, but being a former server, I can tell when food has been sitting on the line. Dissappointed\\\"},{\\\"review_date\\\":\\\"2014-08-10 21:03:51\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"Not sure how this place has received such great reviews, we ate here last night and the food was average at best, and that's being generous. \\\\n\\\\nWe had kale salads with bruschetta and both were really bland and boring. The kale was really, really tough, to the point where it wasn't worth finishing. \\\\n\\\\nThe service was okay, but the employee cocktail hour happening behind us while we were the only ones there eating was annoying.\\\"},{\\\"review_date\\\":\\\"2014-07-08 03:52:31\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Apero has one of the best cocktails lists around in downtown SB and the bartenders are incredibly friendly! The bar itself isn't too big but it makes a cozy spot to interact with strangers and to make new friends. \\\\n\\\\nI recommend the cantaloupe cocktail - they make it with their housemade cantaloupe puree and it's freaking amazing.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Apero is a local business situated at 532 State St, Santa Barbara, CA. It operates on Fridays and Saturdays from 16:30 to 1:30. The restaurant has a diverse range of categories such as Burgers, Tapas Bars, Belgian, Bars, Food, Beer, Wine & Spirits, and Nightlife. Some of the attributes of the restaurant include free WiFi, a facility for restaurant reservations, take-out, and it is suitable for groups. However, it does not offer outdoor seating and its ambiance does not cater to any specific taste. Apero has a 4.5-star business rating. However, customer reviews are mixed, with a few expressing dissatisfaction with the food and service, while others praise the cocktail list and friendly bartenders.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "cd855e61abbe4c3b07bbac19f2932cc2dd1ce8808587ca44b989ca49f69faf79",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ]
+}

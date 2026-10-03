@@ -1,0 +1,103 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.499373305006884,
+  "exclusion_reason": null,
+  "family_id": "sha256:9ff441a23fc85b8c97d8f5739819766640cef006e969e4c39a865d45ab597c09",
+  "input_tokens": 962,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 962,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 983
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:b25eaefbca8700ce1085bae6ea0d69f4f0f91b099c4f239bf7f6fc1ba94a40f5",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832841,
+    "id": "chatcmpl-1kxgdGUq792yBQZz1szJVjKCCdvnB0mf",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 492.709,
+      "predicted_n": 21,
+      "predicted_per_second": 42.62150681233751,
+      "predicted_per_token_ms": 23.462333333333333,
+      "prompt_ms": 881.118,
+      "prompt_n": 884,
+      "prompt_per_second": 1003.2708445406859,
+      "prompt_per_token_ms": 0.9967398190045249
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 962,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 983
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"30 E Victoria St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":null,\\\"classy\\\":null,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":null,\\\"romantic\\\":null,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":null,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Italian, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"17:0-22:0\\\",\\\"Saturday\\\":\\\"17:0-22:0\\\",\\\"Sunday\\\":\\\"17:0-21:0\\\",\\\"Thursday\\\":\\\"17:0-21:0\\\",\\\"Tuesday\\\":\\\"17:0-21:0\\\",\\\"Wednesday\\\":\\\"17:0-21:0\\\"},\\\"name\\\":\\\"Trattoria Vittoria\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-09 04:55:39\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Great italian food. came here on a whim and thorough enjoyed it. will return next time i'm visiting santa barbara.\\\"},{\\\"review_date\\\":\\\"2021-12-11 08:50:25\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Their homemade pasta dishes, lasagna, tortellini and ravioli with a heavenly tomato sauce was definitely one of the most delicious dishes I've tried (and then I've been to Italy). The servers where so funny and genuine, too. We'll be back in SB when we get the chance!\\\"},{\\\"review_date\\\":\\\"2021-12-08 17:23:35\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"We had an early dinner here. It filled up fast so if you can make reservations you should. \\\\n\\\\nWe had an awesome dinner. Atmosphere was perfect.  Wine was delicious and the service was great. \\\\n\\\\nNext time I will come early and have a drink at the bar. Looked like a fun crowd. Enjoy!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Trattoria Vittoria is an Italian restaurant located at 30 E Victoria St in Santa Barbara, CA. The restaurant offers a variety of Italian dishes and is known for its great food. Customers have praised the homemade pasta dishes, including lasagna, tortellini, and ravioli, which are served with a heavenly tomato sauce. The servers at Trattoria Vittoria are described as funny and genuine, providing excellent service.\\n\\nThe restaurant is open from 5:00 PM to 9:00 PM on Tuesdays, Wednesdays, and Thursdays, and from 5:00 PM to 10:00 PM on Fridays and Saturdays. On Sundays, it is open from 5:00 PM to 9:00 PM. Trattoria Vittoria accepts reservations and is good for groups. Takeout is also available for those who prefer to enjoy their meals at home.\\n\\nIn terms of amenities, the restaurant does not offer valet parking or a garage, but street parking is available. The atmosphere is described as perfect and the wine selection is delicious. The restaurant does not offer WiFi, but customers have mentioned that the ambiance is enjoyable.\\n\\nOverall, Trattoria Vittoria has received positive reviews from customers, with an average rating of 4.0 stars. Visitors have praised the quality of the food, service, and atmosphere. It is a recommended spot for Italian cuisine in Santa Barbara.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:92adbb0f5243fb4ce7c31ad3203a4ec7e6a0f808c5c21b2c176451f26f2e9bd8",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]
+}

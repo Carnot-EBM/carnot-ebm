@@ -1,0 +1,110 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.259761358029209,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:1d5b29b237726bf03af902510f7630afcf6a1473dfd6c083576d067876d8e632",
+  "input_tokens": 595,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 4,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 595,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 619
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:138f31171cf27953002536c0ad67698a1401bcae9d9b22b41bd9fd63fb30ed93",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 4\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886086,
+    "id": "chatcmpl-GkZM2HaT4I8NuODT8chHzXx7J1IymMHB",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.368,
+      "predicted_n": 24,
+      "predicted_per_second": 42.450227108715026,
+      "predicted_per_token_ms": 23.557000000000002,
+      "prompt_ms": 560.499,
+      "prompt_n": 517,
+      "prompt_per_second": 922.3923682290244,
+      "prompt_per_token_ms": 1.084137330754352
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 595,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 619
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Imprisoned soldier Chelsea Manning can now communicate with the world  -- in 140 characters or less. Manning, who is serving a 35-year prison sentence for leaking thousands of classified documents, appears to have joined Twitter this week. In a series of tweets, the prisoner formerly known as Bradley Manning said she will be using a voice phone to dictate her tweets to  communications firm Fitzgibbon Media, which will post them on her behalf. She is not allowed Internet access in prison, according to The Guardian. \\\"It will be hard, but I don't want this Twitter feed to be a one-way street/conversation,\\\" Manning posted to her nearly 26,000-plus followers. Manning was sentenced in 2013, and in August of that year, she said she wanted to transition to a female. The Fort Leavenworth Disciplinary Barracks in Kansas, where she is serving her sentence, has authorized hormone therapy for her treatment. Manning said she suffers from gender dysphoria. Her  lawyers describe it as \\\"the medical diagnosis given to individuals whose gender identity -- their innate sense of being male or female -- differs from the sex they were assigned at birth, causing clinically significant distress.\\\" Last year, a Kansas judge granted her request to be formally known as Chelsea Elizabeth Manning. The former Army intelligence analyst was convicted of stealing and disseminating 750,000 pages of documents and videos to WikiLeaks in what has been described as the largest leak of classified material in U.S. history. She was found guilty of 20 of the 22 charges, including violations of the U.S. Espionage Act. Manning has written opinion pieces for The New York Times and The Guardian from prison.\\n\", \"original_answer\": \"Chelsea Manning, the soldier imprisoned for 35 years for leaking thousands of classified documents, has joined Twitter. She will dictate her tweets to communications firm Fitzgibbon Media to upload on her behalf, as she is not allowed internet access in prison. Manning has stated she wants her Twitter feed to be a two way conversation.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "f4b611e060cea97a2386d2729a003261436388dee7aae4577386fa24e21e35ce",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ]
+}

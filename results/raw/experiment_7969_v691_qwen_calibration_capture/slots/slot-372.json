@@ -1,0 +1,103 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.5584827269776724,
+  "exclusion_reason": null,
+  "family_id": "sha256:e77892fd7650131b141e616de2f6b9891bb2f3f7bd52c358b7a8edffaa3edc96",
+  "input_tokens": 931,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 931,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 955
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:fb438ceaa1dfa88a2c3e01a654bff0e34fca44775d029f14beeb68ebf8f3670b",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832994,
+    "id": "chatcmpl-9Yx8lOzTeHWjwGkO2Lm0X1dMA1JH3DJn",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.605,
+      "predicted_n": 24,
+      "predicted_per_second": 42.43243960007426,
+      "predicted_per_token_ms": 23.566875,
+      "prompt_ms": 874.664,
+      "prompt_n": 853,
+      "prompt_per_second": 975.2316318037555,
+      "prompt_per_token_ms": 1.0253974208675263
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 931,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 955
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"3967 State St Space 4, Space 4\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Sandwiches, Breakfast & Brunch, Restaurants, Fast Food\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"8:0-22:0\\\",\\\"Monday\\\":\\\"8:0-22:0\\\",\\\"Saturday\\\":\\\"8:0-22:0\\\",\\\"Sunday\\\":\\\"9:0-21:0\\\",\\\"Thursday\\\":\\\"8:0-22:0\\\",\\\"Tuesday\\\":\\\"8:0-22:0\\\",\\\"Wednesday\\\":\\\"8:0-22:0\\\"},\\\"name\\\":\\\"Subway\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2020-11-02 05:34:38\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"My kid loves Subway. I appreciate their wide selection, their consistency, and their price point, which is dirt cheap for SB. Chances are you like it too, or it wouldn't be the largest fast-food franchise in the country by number of stores. I wish there were 3.5 stars, because that seems more fair. \\\\n\\\\nThis shop is tiny and tucked away in the 5 points center. They have a few tables out front, but it's not a great place to eat unless you're really hungry. They are generally very friendly, although one time I forgot to ask for my free cookie up front and they refused to give it to me. Their cookies aren't any good anyways so they can keep it, but it seemed like a silly decision. Maybe I'll get my kid to TP the place when she's a teenager. \\\\n\\\\nAnyway, Valentinos, South Coast, Sam's, Plaza Deli, and Fresco all have better sandwiches but not as cheap and maybe your kids love Subway too. Certainly a reasonable option.\\\"},{\\\"review_date\\\":\\\"2020-04-21 23:17:40\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Sandwiches were really good wasn't expecting much but honestly as blown away keep up the good work\\\"},{\\\"review_date\\\":\\\"2016-03-31 19:45:20\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"The employees didn't seem to care, they also didn't cut the bread correctly and the sandwich was falling apart. Make the trip to another subway, it'll be worth it.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Subway is a fast food chain located in Santa Barbara, California. It offers a variety of sandwiches, breakfast and brunch items, and other restaurant options. The store is open from 8 am to 10 pm Monday through Sunday. It has outdoor seating and a validated parking lot, but does not offer reservations. The store has a rating of 3.5 out of 5 stars based on customer reviews. One customer praised the sandwiches and the low prices, while another criticized the store for poor service and poorly cut bread. Overall, Subway appears to be a casual and affordable option for sandwiches and other fast food items in Santa Barbara.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:4e71462fc9403d67056024e8abdd525bc59ff31b27029c29069f68a93d1995aa",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]
+}

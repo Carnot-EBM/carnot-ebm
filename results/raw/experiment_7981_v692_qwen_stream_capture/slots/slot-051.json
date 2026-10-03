@@ -1,0 +1,103 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.445572605007328,
+  "exclusion_reason": null,
+  "family_id": "sha256:e6deb210234cb7cd7198a7e867e8b6d6840f71cf311bd9213e70195d5586ba89",
+  "input_tokens": 859,
+  "invocation_finished_at": "2026-10-01T11:42:21.869288+00:00",
+  "invocation_started_at": "2026-10-01T11:42:20.423713+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.05,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 859,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 881
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:4169f92c6f272f7481f0b613f5996b9f947efd06f25b89f0b4e15b279e6a0436",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.05,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790854941,
+    "id": "chatcmpl-ThHi2qIDt2BiI8dJJMBbhoDNFCgT3qOL",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 511.756,
+      "predicted_n": 22,
+      "predicted_per_second": 42.98923705828559,
+      "predicted_per_token_ms": 23.261636363636363,
+      "prompt_ms": 803.233,
+      "prompt_n": 781,
+      "prompt_per_second": 972.320609337515,
+      "prompt_per_token_ms": 1.0284673495518566
+    },
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 859,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 881
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"315 Meigs Rd, Ste K\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Pizza, Restaurants, Italian, Vegan, Gluten-Free, Sandwiches\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-21:0\\\",\\\"Monday\\\":\\\"11:0-21:0\\\",\\\"Saturday\\\":\\\"11:0-19:30\\\",\\\"Sunday\\\":\\\"11:0-21:0\\\",\\\"Thursday\\\":\\\"11:0-21:0\\\",\\\"Tuesday\\\":\\\"16:0-21:0\\\",\\\"Wednesday\\\":\\\"16:0-21:0\\\"},\\\"name\\\":\\\"Mesa Pizza\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-12-09 17:33:39\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Looking for some good pizza in Santa Barbara this place is it. It's crunchy crust was so good. Very tasty I wish I could try them all.\\\"},{\\\"review_date\\\":\\\"2021-11-09 01:21:35\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"most respectful customer service i have ever had at a restaurant.  extremely delicious pizza and not too expensive.  my new main pizza place for sure\\\"},{\\\"review_date\\\":\\\"2021-10-27 02:02:31\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Pros: fresh ingredients great crust.\\\\nCons: Some ingredients like the sausage was well done which indicated pre cooked. The onions were chunky and not cooked, green peppers were chunky and not cooked.\\\\nSuggestions: slice the onions and green peppers thin and saute the onions and peppers so they are cooked. The flavor of an Italian pizza comes from all vegetables / cheeses and sauce being caramelized together during the cooking process so the flavors are married into a delicious array of pristine flavors that dance together. There is nothing worse than a good crust good sauce and undercooked green peppers and onions, those two ingredients are not garnishes. Sorry for being picky but  I'm an Italian from the East Coast and I'm also a professional chef. I know you can do better.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Mesa Pizza is a popular restaurant located in Santa Barbara, California, serving a variety of delicious pizzas, sandwiches, and Italian dishes. According to their Google reviews, customers praise the crispy crust and high-quality ingredients used in their pizzas. They also mention excellent customer service and reasonable prices. Some customers have suggested improving the cooking time for certain toppings, such as green peppers and onions, to achieve a more authentic Italian taste. Despite this, Mesa Pizza has received an overall rating of 4.0 stars and is a recommended spot for both casual dining and special occasions.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "sha256:eb3d58c11181c19d698ff3942022516c378a6f59aec3e4f33752dd867eb70fb5",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ]
+}

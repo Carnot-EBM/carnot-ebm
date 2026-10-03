@@ -1,0 +1,96 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.2132809950271621,
+  "exclusion_reason": null,
+  "family_id": "sha256:5928d4ca7f324b33ef87237c37f58d1fa1bd4fd5842bc71269547c38bf912322",
+  "input_tokens": 554,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 554,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 578
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:f68891551735b9af800f6918b7a364415e37150307f4779d35080684cc36ee6c",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832982,
+    "id": "chatcmpl-YsGjua0OFOdoOSLKk6rqV7CFaAXe36cN",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.046,
+      "predicted_n": 24,
+      "predicted_per_second": 42.47441801198486,
+      "predicted_per_token_ms": 23.543583333333334,
+      "prompt_ms": 529.771,
+      "prompt_n": 476,
+      "prompt_per_second": 898.5014279754838,
+      "prompt_per_token_ms": 1.1129642857142856
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 554,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 578
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Like other transition metals gold's valence electrons, or the electrons it uses to combine with other elements, are present in more than one shell. Unusually for a metal, gold can also form compounds (aurides) in which its oxidation number is negative (-1).\\\\n\\\\npassage 2:Gold is a heavy metal (density 19.3 g cm -3) and one gram of gold can be hammered out into a thin sheet of gold a metre in area, and just 230 atoms or so thick. Gold leaf is translucent and the transmitted light is greenish blue (gold metal reflects yellow and red, leaving the greenish blue colour.\\\\n\\\\npassage 3:Gold is metallic, with a yellow colour when in a mass, but when finely divided it may be black, ruby, or purple. It is the most malleable and ductile metal; 1 ounce (28 g) of gold can be beaten out to 300 square feet. It is a soft metal and is usually alloyed to give it more strength.\\\\n\\\\n\\\",\\\"question\\\":\\\"what are properties of gold\\\"}\", \"original_answer\": \"Based on the given passages, here are some properties of gold:\\n\\n1. Gold has multiple valence electrons, which allows it to form compounds with an oxidation number of -1.\\n2. Gold is a heavy metal with a density of 19.3 g/cm3.\\n3. Gold is highly malleable and ductile, meaning it can be beaten out to a large surface area (up to 300 square feet with 1 ounce of gold).\\n4. Gold is soft and often alloyed to increase its strength.\\n5. Gold has a yellow color when in a mass, but it can appear black, ruby, or purple when finely divided.\\n\\nI hope this helps! Let me know if you have any further questions or if there's anything else I can help with.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:a53d590391af8379d1f3541f77c648db0f6f93b5a54b3b735c669eb08bfdb5f0",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ]
+}

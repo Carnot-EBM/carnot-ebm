@@ -1,0 +1,106 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.3525102719431743,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:e72621bae830274fc55f0c3c079bff9daa6509ad1e755a680a6a69e831a6816f",
+  "input_tokens": 827,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 827,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 848
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:6cf7d22ce4813751d604c31eb18ffe85ae220c8a5cd1c7470a57cf3608d4f789",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885915,
+    "id": "chatcmpl-gpGRURcJ7xFTbKLFfxPEHqm1ItkXTvqV",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 491.328,
+      "predicted_n": 21,
+      "predicted_per_second": 42.74130519734272,
+      "predicted_per_token_ms": 23.396571428571427,
+      "prompt_ms": 722.719,
+      "prompt_n": 749,
+      "prompt_per_second": 1036.3640640414876,
+      "prompt_per_token_ms": 0.9649118825100135
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 827,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 848
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"8301 Hollister Ave\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":null,\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":false,\\\"WiFi\\\":null},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Cafes, Restaurants\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"7:0-13:0\\\",\\\"Monday\\\":\\\"7:0-13:0\\\",\\\"Saturday\\\":\\\"7:0-13:0\\\",\\\"Sunday\\\":\\\"7:0-13:0\\\",\\\"Thursday\\\":\\\"7:0-13:0\\\",\\\"Tuesday\\\":\\\"7:0-13:0\\\",\\\"Wednesday\\\":\\\"7:0-13:0\\\"},\\\"name\\\":\\\"Spa Caf\u00e9\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2016-11-09 06:53:52\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Pretty good for breakfast. Their hours, however, I didn't really understand (we were there on Monday at 10:15 am and it was closed!) and their service was a bit lacking. Good food otherwise\\\"},{\\\"review_date\\\":\\\"2016-05-29 17:25:21\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"I will give this a 3 star, one for the food , 2 for the chill, relaxed vibe , and 3 for the convenience of been able to work out and walk 1 minute to this place. \\\\n\\\\nThe employees have a lack of communication. Like, I had to place the same order with 3 different waitress , like really ? Plus I order the turmeric shoot and after 15 min waiting the waitress came back k to our table to tell us that they were out of it !\\\"},{\\\"review_date\\\":\\\"2015-09-14 05:52:48\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"Lovely setting. Order the buckwheat waffle, which consisted of two little waffles. They were very good but portion size petite. Hubby got the mushroom spinach omelette which was tasty. Due to the small portion sizes of entrees  we ordered a side of chicken sausage which was delicious and needed.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Spa Caf\u00e9, located at 8301 Hollister Ave, Goleta, CA, is a local business categorized under Cafes and Restaurants. It operates every day of the week from 7:00 am to 1:00 pm. The caf\u00e9 offers amenities such as outdoor seating and accepts restaurant reservations. It is also suitable for group dining. However, it does not provide take-out services or Wi-Fi. The business has an average rating of 3.5 stars. Reviewers have praised the caf\u00e9 for its good food, relaxed vibe, and convenience. Some customers highlight the breakfast menu, including items like the buckwheat waffle and mushroom spinach omelette. However, there have been some criticisms about the service, especially in terms of communication between staff and customers, and the caf\u00e9's operating hours.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "calibration",
+  "source_cluster_id": "70800c6d997e3e80640759ceb115dcc0eef3c4a549d78b5b1473bc926668a98e",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ]
+}

@@ -1,0 +1,112 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.3598815849982202,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:75866ae3e3304cfde0ae4b819860398043422b9784468924d07f68304f81f1d4",
+  "input_tokens": 764,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 764,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 787
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:9c76950b462a93c0140ea299683dba6ae7807785151fda6c876eafce55c55e11",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886054,
+    "id": "chatcmpl-QeCNltHIIwNr0I1Imyapow8Ps0VdB840",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 548.128,
+      "predicted_n": 23,
+      "predicted_per_second": 41.961001809796244,
+      "predicted_per_token_ms": 23.831652173913046,
+      "prompt_ms": 689.844,
+      "prompt_n": 686,
+      "prompt_per_second": 994.4277256887063,
+      "prompt_per_token_ms": 1.0056034985422742
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 764,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 787
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Annette Bening Praises Parents Of Trans Kids, Gender-Affirming Procedures 'Saves Lives'\\nHollywood actress Annette Bening is speaking out in favor of gender-affirming procedures for minors. She praises the parents of transgender children for \\\"doing what's best for their children and saving their lives.\\\" Breitbart News reports that Bening, who has a transgender child, spoke at a Los Angeles fundraiser for The Gay, Lesbian, Straight Educational Network in support of minors obtaining transgender medical care.\\nBening told a story about a friend with a transgender child who moved to California from Texas so her child could get gender-affirming procedures. According to The Hollywood Reporter, the actor slammed the reality of parents being criminally charged or being reported to child protective services for doing what is \\\"best for their child\\\" by receiving transgender care for their minor children.\\nAnnette said that her friend worried about child protection services taking her child from her after receiving transgender care, that she bought a burner phone and gave her child instructions to follow in case they visited or she faced legal charges.\\nThe actor was referring to a Texas law that bans puberty blockers, hormone therapy, and gender-affirming surgery for minors. Texas Governor Greg Abbott believes it is \\\"dangerous and risky\\\" to give hormone therapy to minor children.\\n\\\"The government should not be getting in between parents and children when it comes to private matters like this,\u201d Bening said in her speech, according to The Hollywood Reporter.\\nBening concluded her speech by saying that for most of her life, she's been a private person who rarely spoke out about LGBTQ issues. But in recent years, she has grown frustrated with the public's transphobia. The actor feels it is her responsibility to speak out and use her fame as a platform to help educate the public about the issues transgender minors face.\\nAnnette said that she couldn't imagine facing legal charges or risking custody of her trans son, Stephen Ira, just because she wanted to do what was best for her kid.\\nWhat do you think about Annette Bening's comments about transgender children and gender-affirming procedures? Do you think minors should be allowed to take hormone therapy or puberty blockers? Please share your thoughts with me in the comments section below. Remember to follow me to read more of my content.\", \"original_answer\": \"Hollywood actress Annette Bening has publicly supported gender-affirming procedures for minors and praised parents of transgender children for potentially saving their lives. Bening, who has a transgender child, shared these views at a fundraiser for The Gay, Lesbian, Straight Educational Network. She spoke about the challenges faced by parents seeking transgender care for their children, including the fear of criminal charges or child protective services intervention. Bening criticised the government for interfering in these private matters and expressed her commitment to using her fame to educate the public about issues faced by transgender minors.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "dc73d07e9010e9f23fec3988aa4f836508e150ee89c05d3e2656b91cb3af55d2",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ]
+}

@@ -1,0 +1,111 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.49131951702293,
+  "exclusion_reason": null,
+  "family_id": "sha256:969e2613e403c9994c501b3b65f9f3641105b5c2ba29f04c6b914f8c2322903b",
+  "input_tokens": 908,
+  "invocation_finished_at": "2026-10-01T11:42:20.407924+00:00",
+  "invocation_started_at": "2026-10-01T11:42:18.916603+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 908,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 930
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:4127414788130a8d0f203c407e7e6892d755b8ba9c78c7e5bd72d02c25bbf881",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.95,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790854940,
+    "id": "chatcmpl-rPLa91OPwMob0yCZklsEyq142YZit6kO",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 511.941,
+      "predicted_n": 22,
+      "predicted_per_second": 42.973702047696904,
+      "predicted_per_token_ms": 23.270045454545453,
+      "prompt_ms": 832.283,
+      "prompt_n": 830,
+      "prompt_per_second": 997.2569426505167,
+      "prompt_per_token_ms": 1.0027506024096386
+    },
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 908,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 930
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"2010 Cliff Dr\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":null,\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":false,\\\"WiFi\\\":null},\\\"business_stars\\\":1.5,\\\"categories\\\":\\\"Beer, Wine & Spirits, Grocery, Bakeries, Delis, Food, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":null,\\\"name\\\":\\\"Haggen Food & Pharmacy\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2015-10-19 19:38:34\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Well, that was quick.  They came in, they go out.  And non too soon.  What a crock with their prices.  \\\\nI went to the 5Points going out of business sale....states 10-to-30% off.  I only saw one section with 30% off---the vitamins.  Everything else was 10 to 20% off and hardly a bargain.  I could get items at Vons or Albertsons with coupons for much less.  Why don't they just mark items down 50-70% off and get the heck out of dodge, er, Santa Barbara and go back where they came from.  Jerks.\\\"},{\\\"review_date\\\":\\\"2015-09-28 23:21:28\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Closing the door shelves are bare minimum. Went to get a few things and that's what they have a few items. The employee's were great just very uncertain about the future and who the next owners were going to be. To have a company come take over change everything and then up and leave is unsettling to say the least.\\\"},{\\\"review_date\\\":\\\"2015-09-03 02:34:23\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Face it, Ralphs downtown has its drawbacks. So, I thought I'd give this place a try despite the fierce Santa Barbara backlash.\\\\n\\\\nI was glad that I did. Plenty of parking, nice, clean store. If you buy right there are some decent bargains here. It's a different store, you have to shop differently too.\\\\n\\\\nCalifornia avos for a buck, good prices on the meat, got some marrow bones for the dogs for two bucks too!\\\\n\\\\nThe place and the employees deserve a break. Give them a chance.\\\\n\\\\nand no, I'm not a union rep or an employee.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Haggen Food & Pharmacy is a grocery store located in Santa Barbara, CA, offering a variety of products including beer, wine, spirits, baked goods, and deli items. The store has a clean and well-stocked environment with ample parking. Some customers have expressed frustration with the store's pricing, finding it to be higher than other local grocery stores. However, others have reported finding decent bargains and appreciating the store's unique selection. The staff has been described as friendly and helpful. The store's future is uncertain due to a planned takeover by a new owner, which has caused concern among employees and customers alike. Despite this, Haggen Food & Pharmacy remains a convenient option for grocery shopping in the area.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_admission",
+  "source_cluster_id": "sha256:9ecef384dc2c27112c0b403afaae680a61fd4eefad2baa6f3edb3bf4fe072e6e",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17
+  ]
+}

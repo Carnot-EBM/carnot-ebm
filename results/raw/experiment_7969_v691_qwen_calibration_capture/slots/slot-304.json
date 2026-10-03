@@ -1,0 +1,108 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.6615298980032094,
+  "exclusion_reason": null,
+  "family_id": "sha256:1f8b35f4d2aec7f0a38ac76cb339281103f5a2d862913088e792133ddffe6744",
+  "input_tokens": 1052,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1052,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1076
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:cec4a0537daa03ad9faa649300c09f9a43c662d856912fad2864548145b21294",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832896,
+    "id": "chatcmpl-mn6LqNs2k334oApC08murdSkLiVcdAh4",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 566.243,
+      "predicted_n": 24,
+      "predicted_per_second": 42.384629920369875,
+      "predicted_per_token_ms": 23.593458333333334,
+      "prompt_ms": 962.652,
+      "prompt_n": 974,
+      "prompt_per_second": 1011.788268242314,
+      "prompt_per_token_ms": 0.9883490759753594
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1052,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1076
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"1218 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":true,\\\"lot\\\":false,\\\"street\\\":false,\\\"valet\\\":true,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Italian, Pizza, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"17:30-22:0\\\",\\\"Monday\\\":\\\"17:30-21:30\\\",\\\"Saturday\\\":\\\"17:30-22:0\\\",\\\"Sunday\\\":\\\"17:30-21:30\\\",\\\"Thursday\\\":\\\"17:30-21:30\\\",\\\"Tuesday\\\":\\\"17:30-21:30\\\",\\\"Wednesday\\\":\\\"17:30-21:30\\\"},\\\"name\\\":\\\"Mollie's\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-10-10 00:44:19\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"I want to like this place. The flavor of the Bolognese is delicious. But I ordered the lasagna version this time and it was so smothered with sauce on a tiny little piece of lasagna I didn't know if the lasagna was really in the plate. This is also the second time I've gotten sick from eating the Bolognese. I had Bolognese not even two weeks ago at another restaurant in Montecito with no issues whatsoever so I'm not sure what they're putting in theirs at Mollies . The wait staff is very friendly but very slow. We wait too long to order we wait too long for the food we wait too long for the check. For the price it's just not a very desirable experience. I generally get places at least three tries before I make a decision but this time I think I'm done.\\\"},{\\\"review_date\\\":\\\"2021-09-17 02:51:16\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"The food is decent.  There's a live band next door so we enjoyed the out door dining.  The servers were friendly. It did take a long time for our main entre to come out but we didn't mind since the live band was so good. The lady owner was quite friendly so I'm not sure what the guys are complaining about.\\\"},{\\\"review_date\\\":\\\"2021-09-17 02:00:34\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Worst service ever. The food actually looked really good but the owner was so rude. As we sat down she actually told us \\\\\\\"you guys need to order already because we're busy\\\\\\\" we had been sitting there for no more than 5 min to look at the menu. We decided to walk out and as we walked out she said \\\\\\\"I'm glad you're leaving. Don't come back again\\\\\\\" trust me we won't !\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Mollie's is an Italian restaurant located in Santa Barbara, CA, offering a variety of dishes including pizza and pasta. The restaurant has a cozy atmosphere and provides outdoor seating. The staff is friendly, but service can be slow, and the restaurant does not offer Wi-Fi. The menu offers a range of options, but some dishes may be heavy on sauce, and some customers have reported getting sick after eating the Bolognese. Prices are moderate, but some customers feel that the quality of food and service does not justify the cost. Some customers have had negative experiences with the owner, who has been reported to be rude, while others have enjoyed the live band and friendly service. Overall, Mollie's receives a rating of 3.5 stars out of 5.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:e6b9dfd4382ec3c811523caf6f96be792d1dc942297ef596790f29fc7dc34add",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+  ]
+}

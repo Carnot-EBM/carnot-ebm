@@ -1,0 +1,113 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.3637992549920455,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:59766b676609285348dfb022f3985f84f634347fb8e5a1c3c4f3ab7ec818a3bd",
+  "input_tokens": 837,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 1,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 837,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 859
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:0cf4128f4505d2975d00d0bc2b2ef93e9369bc90098a116e165512b84c7e4a38",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": 1\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886078,
+    "id": "chatcmpl-C5nOMh3Vh5MPcIyK9rii82Q1MSi2z0HA",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 516.965,
+      "predicted_n": 22,
+      "predicted_per_second": 42.5560724613852,
+      "predicted_per_token_ms": 23.498409090909092,
+      "prompt_ms": 729.33,
+      "prompt_n": 759,
+      "prompt_per_second": 1040.6811731315042,
+      "prompt_per_token_ms": 0.9609090909090909
+    },
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 837,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 859
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:There are three different Redwoods trees (true species)-. Coast Redwood, Giant Sequoia. Dawn Redwood. The Coast Redwood is found mostly along the California coast and a few along the southern Oregon coast. These giant Coast Redwoods can reach over 300 feet tall and over 20 feet across, and be over 4,000 years old.he growth rates will vary, but the Coastal and Dawn Redwoods can grow fairly fast, so a good-sized tree is possible in just a few years. The Giant Sequoia is fairly slow growing, but still can become a reasonable size with not too long a wait. The Sequoia is also a popular bonsai tree.\\\\n\\\\npassage 2:The giant sequoia is the fastest growing conifer on earth given the right conditions. We expect 4 feet of upward growth in the third year for trees in large pots and one-inch plus growth rings. They have the potential to grow faster every year.Giant sequoias grow rapidly tall and less dense when the rising and setting sun is blocked.ailure to keep the soil moist results in a dead tree. Sequoias require moist, rich, balanced ph, and well-drained soil. Permanently swampy or muddy soil will not work. Our website gallery at http://www.giant-sequoia.com/gallery/ shows giant sequoias growing in many different places around the US and the world.\\\\n\\\\npassage 3:Answers. Best Answer: Growth of seedlings is very fast, with young trees known to reach 65 feet tall in 20 years. Growing to heights of 120 feet or more at maturity, most sequoia trees will grow at a rate of 3 to 5 feet per year.Seed production begins at 10\u201315 years of age. Source(s): http://www.ehow.com/how_6207859_care-pot...rowing to heights of 120 feet or more at maturity, most sequoia trees will grow at a rate of 3 to 5 feet per year. Seed production begins at 10\u201315 years of age. Source(s): http://www.ehow.com/how_6207859_care-pot...\\\\n\\\\n\\\",\\\"question\\\":\\\"how fast do giant sequoias grow\\\"}\", \"original_answer\": \"Giant sequoias are considered the fastest growing conifers on earth given the right conditions. They are capable of growing 4 feet upwards in the third year for trees in large pots, with one-inch plus growth rings. They have the potential to grow faster every year. Seedlings grow very fast, with young trees known to reach 65 feet tall in 20 years. Most sequoia trees will grow at a rate of 3 to 5 feet per year, reaching heights of 120 feet or more at maturity. Seed production begins at 10\u201315 years of age. However, it's also noted that the Giant Sequoia is fairly slow growing in comparison to the Coastal and Dawn Redwoods.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "c1bc499d1afb6650df2f343e74c3c6ac2382147696cb3ea20704efc50fb68cf5",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+  ]
+}

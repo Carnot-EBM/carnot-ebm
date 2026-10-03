@@ -1,0 +1,110 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.2450167500064708,
+  "exclusion_reason": null,
+  "family_id": "sha256:753b946191e63794891e9737676af2249b344859b3a7f11cc12ecc36c4fbde92",
+  "input_tokens": 616,
+  "invocation_finished_at": "2026-10-01T11:44:47.053941+00:00",
+  "invocation_started_at": "2026-10-01T11:44:45.808922+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 616,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 639
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:b0c0e531ef6cad9d9d5e2d68218170927a45960517150a7ae07286f32df06b75",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855087,
+    "id": "chatcmpl-JAFO7KXD6NkmYOrPjQz0Pzq8GYehbSki",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 539.8,
+      "predicted_n": 23,
+      "predicted_per_second": 42.60837347165617,
+      "predicted_per_token_ms": 23.469565217391303,
+      "prompt_ms": 574.641,
+      "prompt_n": 538,
+      "prompt_per_second": 936.2367112684268,
+      "prompt_per_token_ms": 1.0681059479553903
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 616,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 639
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"A measles outbreak that affected more than 130 Californians since December is over, the California Department of Public Health declared Friday. It has been 42 days since the last known case of B3 strain of measles, the equivalent of two successive incubation periods, said Dr. Karen Smith, director of the health department. The department said in its latest update that 131 people came down with the B3 strain, and five who had a different genotype than the outbreak strain. Of the 131 cases, the state was able to obtain the vaccination status for 81 patients. Of the 81, 70% were unvaccinated. \\\"Prompt investigation of cases, interviewing hundreds of contacts of infected people, vaccinating hundreds of at risk people, and increasing awareness among health care providers about measles, helped to control this outbreak,\\\" Smith said. The outbreak began with dozens of visitors to two Disney theme parks in the state. The health department said 42 of the cases occurred from December 17-20. Two patients with rashes have been identified in April, but they have a different measles genotype. The Centers for Disease Control and Prevention said on its website that 19 different strains have been discovered since 1990. Measles is a highly contagious respiratory disease. It causes fever, red and sore eyes, runny nose, cough and a rash. It can cause deadly health complications, including pneumonia and encephalitis. It  is spread by contact with an infected person through coughing or sneezing. It can remain in the air and on surfaces for up to two hours. CNN's Debra Goldschmidt contributed to this report.\\n\", \"original_answer\": \"A measles outbreak in California that affected over 130 people since December has ended, according to the California Department of Public Health. The outbreak was caused by the B3 strain of measles and mostly affected unvaccinated individuals. Prompt investigation and vaccination efforts helped control the outbreak, which began with visitors to Disney theme parks. Measles is highly contagious and can cause serious health complications.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_update",
+  "source_cluster_id": "sha256:5a3b218f6e86886f77d02fd003c5be5243423b26d6b208fb072a983b1d72dc42",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+  ]
+}

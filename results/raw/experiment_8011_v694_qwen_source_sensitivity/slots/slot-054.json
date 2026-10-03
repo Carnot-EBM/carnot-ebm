@@ -1,0 +1,118 @@
+{
+  "arm": "duplicate",
+  "capture_identity": "sha256:c690c1f517fbce73c5da6a2d1e99e3819c3de93e1045fe76d1c8215b54691541",
+  "censor_status": false,
+  "denominator": 1,
+  "donor_group_id": "sha256:e239cb5f4ad379eac0dc58fbbcc427f7db410d30f3bf5430836852ea12fa5d19",
+  "duration_s": 1.1916789119131863,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:e239cb5f4ad379eac0dc58fbbcc427f7db410d30f3bf5430836852ea12fa5d19:duplicate",
+  "group_id": "sha256:e239cb5f4ad379eac0dc58fbbcc427f7db410d30f3bf5430836852ea12fa5d19",
+  "input_byte_upper_bound": 2756,
+  "input_tokens": 644,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 644,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 665
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:ab7540c046b8cdba3fe1d1fd98d0e84d45a33099ede84694481b9649d6b2d33a",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"unsupported_probability\": 0.0,\n\"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790925750,
+    "id": "chatcmpl-lBaopgT5XcY65ZocGy6yNX9ItBxBunOJ",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 486.875,
+      "predicted_n": 21,
+      "predicted_per_second": 43.13222079589217,
+      "predicted_per_token_ms": 23.18452380952381,
+      "prompt_ms": 582.857,
+      "prompt_n": 566,
+      "prompt_per_second": 971.0786693820269,
+      "prompt_per_token_ms": 1.0297826855123675
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 644,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 665
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 32,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:How about a simple list of 10 foods to eat for healthy eyes? Whole Grains. Whole Grains are good for your eyes, because they have a low glycemic index as opposed to other common types of carbs (white rice, pasta, processed bread). Eat foods like quinoa, brown rice and whole wheat and oats to protect your eyes. Whole grains also contain Vitamin E, Zinc and Niacin. Fish. Fish are one of the best foods for eye health, because they are rich in omega-3 fatty acids. These acids help protect against dry eyes, cataracts, AMD and more. They are also lower in fat than most other meat, which is always a dieting plus!\\\\n\\\\npassage 2:The Nutrition Source on Twitter. 1  RT @HarvardChanSPH: Most products in the popular Box Tops school-based marketing program don't meet federal school nutrition standards ht\u2026. 2  RT @HarvardChanSPH: This week we're sharing recipes for quick, tasty, and nutritious meals. First up: Our take on Caesar salad.\\\\n\\\\npassage 3:Eggs are rich in the proteins that are essential for eye health and basic functions. They contain lutein and Vitamin A, protect against dry eye syndrome, and can even improve your night vision. The only thing to beware of is the fat contained in eating too many yolks. Nuts. Almost all kinds of nuts are good for eye health.\\\\n\\\\n\\\",\\\"question\\\":\\\"what foods should i eat for eye health\\\"}\", \"original_answer\": \"Based on the passages provided, foods that are good for eye health include whole grains such as quinoa, brown rice, whole wheat and oats. These foods are good for your eyes because they have a low glycemic index and contain Vitamin E, Zinc and Niacin. Fish is also beneficial for eye health as it is rich in omega-3 fatty acids which help protect against dry eyes, cataracts, and AMD. Eggs are another food that promotes eye health due to their rich protein content and the presence of lutein and Vitamin A, which protect against dry eye syndrome and can improve night vision. Lastly, almost all kinds of nuts are good for eye health.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69410,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "seed": 69410,
+  "source_cluster_id": "17ff8b455f26cfe20215dab3e8b47c5b687bc7e4ba2c60a4ee6ae06c08f58dac",
+  "source_hash": "sha256:6291f477c192e5c083cebef7ec75485d2b8f30c37b5f2178f1a6303909c6aecb",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ]
+}

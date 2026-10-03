@@ -1,0 +1,114 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.5820375210023485,
+  "exclusion_reason": null,
+  "family_id": "sha256:45d412dd29886523ee4db6899367c76d377b3228d180d2c359457bb4af8fbcd9",
+  "input_tokens": 943,
+  "invocation_finished_at": "2026-10-01T11:43:15.496393+00:00",
+  "invocation_started_at": "2026-10-01T11:43:13.914354+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 943,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 967
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:672a04438b747db10a1ee87e7d6c4d89b0dc0b9c9f807958f27db9ec9328163f",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790854995,
+    "id": "chatcmpl-lSw6ZDQBVaoWgr2KbpAcPlh7JdZdfTlV",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 563.106,
+      "predicted_n": 24,
+      "predicted_per_second": 42.62074991209471,
+      "predicted_per_token_ms": 23.46275,
+      "prompt_ms": 871.588,
+      "prompt_n": 865,
+      "prompt_per_second": 992.4413828552023,
+      "prompt_per_token_ms": 1.0076161849710983
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 943,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 967
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"8301 Hollister Ave\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":null,\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":false,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":3.0,\\\"categories\\\":\\\"Cafes, Restaurants, Bakeries, Coffee & Tea, Juice Bars & Smoothies, Food\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"6:0-15:0\\\",\\\"Monday\\\":\\\"6:0-15:0\\\",\\\"Saturday\\\":\\\"6:0-15:0\\\",\\\"Sunday\\\":\\\"6:0-15:0\\\",\\\"Thursday\\\":\\\"6:0-15:0\\\",\\\"Tuesday\\\":\\\"6:0-15:0\\\",\\\"Wednesday\\\":\\\"6:0-15:0\\\"},\\\"name\\\":\\\"Caff\u00e8\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-12-29 16:43:38\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"It's the cafe run by the Ritz, of course everything is twice the price it should be. It is however quick and convenient. The espresso is good and the breakfast pastries are as well. Don't go in expecting it to be the best cafe you've been to since Milan or for it to be cheap and you won't be disappointed.\\\"},{\\\"review_date\\\":\\\"2020-12-28 17:01:57\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"This is the coffee shop near the entrance to the resort. The inside looks warm and inviting, like a higher end Starbucks. There is very little seating Inside of you wanted to sip your tea in the shop. \\\\n\\\\nBe warned. It is pricey.  $6.50 for a large plain coffee or iced tea. It is not special coffee or tea either. It is not some fancy brewed with fancy bean coffee. It is just regular pump thermos style coffee you get when you have a meeting. The cups aren't unique, the beverages themselves are mediocre at best. You are just trapped and they know it.  Convenient if you are staying there and want to grab a coffee for the road, but you are better off stopping at Starbucks or another local  on the way.\\\"},{\\\"review_date\\\":\\\"2020-07-30 14:59:57\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Expensive and bitter coffee. For $7, I was expecting a pour over. It was not a pour over. In fact, it was barely drinkable. I drank about 10% of it. I was in Solvang later in the morning and went to Good Seed Coffee to get my morning coffee fix. Delicious coffee there.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Caff\u00e8 is a caf\u00e9 located within the Ritz-Carlton resort in Santa Barbara, CA. It offers a variety of coffee and tea drinks, as well as pastries and other light bites. The caf\u00e9 has a cozy and inviting atmosphere, with both indoor and outdoor seating available. While the prices may be a bit steep, guests can expect a convenient and quick coffee stop, perfect for grabbing a drink on the go. Some reviewers have noted that the coffee is good, but not exceptional, and that the prices are high compared to other local options. However, others have appreciated the convenience and ambiance of the caf\u00e9. Free Wi-Fi is available, and the caf\u00e9 does not take reservations.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "sha256:beb36cdb0c85cbad1a2ccbaf6e3d231e5e82a5213e2f13fd114f1b44dd61d9e3",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20
+  ]
+}

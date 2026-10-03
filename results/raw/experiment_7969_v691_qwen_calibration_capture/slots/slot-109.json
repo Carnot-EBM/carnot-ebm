@@ -1,0 +1,120 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.7727050870307721,
+  "exclusion_reason": null,
+  "family_id": "sha256:73e7dcc9bf3ccc9cfc222bcd5182b464100db20615d71ebd4da8382253b37079",
+  "input_tokens": 1305,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 1305,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1326
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:49907ff6da4b748f171ac3a96b10bbaee8a6e3f008ffc1f83d833af54e36bb56",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832623,
+    "id": "chatcmpl-MsQlJeWjE34PxfzVgqmdbGJNG7Whlefq",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 492.898,
+      "predicted_n": 21,
+      "predicted_per_second": 42.60516374584599,
+      "predicted_per_token_ms": 23.471333333333334,
+      "prompt_ms": 1147.122,
+      "prompt_n": 1227,
+      "prompt_per_second": 1069.633395576059,
+      "prompt_per_token_ms": 0.9348997555012225
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 1305,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1326
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"1260 Channel Dr\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":null,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":null,\\\"romantic\\\":null,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":true},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":true,\\\"validated\\\":true},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":false,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Seafood, American (New), Salad, Restaurants, Sandwiches\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"17:0-21:0\\\",\\\"Monday\\\":\\\"16:30-21:0\\\",\\\"Saturday\\\":\\\"17:0-21:0\\\",\\\"Sunday\\\":\\\"17:0-21:0\\\",\\\"Thursday\\\":\\\"11:30-15:0\\\"},\\\"name\\\":\\\"Tydes Restaurant\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2020-01-24 04:16:56\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"It's worth it to eat on their patio on the second floor.  I got the avo toast with shrimp and it was pretty good.  We wanted to eat here again the next day, but didn't realize they close at 3pm and open back up for dinner service.  Ugh.  So sad.  Need to eat here for dinner.  We got to come in because we stayed at the Four Seasons across the street.\\\"},{\\\"review_date\\\":\\\"2019-07-29 02:06:18\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I would rate this restaurant a solid 4.5 stars. My first experience i think happened to be an off night which can happen at any restaurant, but recently had a chance to dine here again and was impressed with the food and service. Obviously the setting is the biggest draw of the venue. It is situated perched above the beach with immaculate views of water, sand and cliffs. U can choose to sit outdoors or indoors, which also has views due to windows all around. There are space heaters outside so u can continue to enjoy if it gets chilly in the afternoon/evening. Regarding food, they have a nice mix of lighter and heavier options. We had a crab salad entree which was filled heavily with crab and really nicely seasoned, not heavy and full of filler like a lot of places. Our favorite dish was the short rib salad that had a korean style short rib next to a salad of baby romaine type lettuces and avocado. The short rib was perfectly seasoned and grilled, very impressive for a non-korean restaurant to be able to make it so tender and tasty. I was impressed with a mocktail i ordered that tasted just like a cocktail but without the alcohol. Usually mocktails are boring and uninventive but this was super tasty and thoughtful. Our server and wait staff were very helpful in food and drink recommendations and attentive throughout the meal. They surprised me with a ridiculously good piece of cake since we were celebrating a special occasion, which i thought was an extremely thoughtful gesture. The only reason id give 4.5 instead of 5 stars is the steep price, but given food quality and setting (really one of a kind in the world) u get what u pay for. Not a cheap quick meal but more of a special occassion location that u will truly enjoy ambiance, food and service.\\\"},{\\\"review_date\\\":\\\"2019-06-26 18:21:34\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"I think u have to be fully confused to call the food here anything but really bad. The steak quality is similar to low end grocery store. My caesar salad was cheap grocery store romaine and wilted. The fries werent even good! Just so sad all around. Small portion, high prices. Giving two stars bc view and setting is amazing. I will never go back for the food!!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Tydes Restaurant, located at 1260 Channel Drive in Santa Barbara, CA, serves up a variety of food including seafood, American dishes, salads, and sandwiches. The restaurant is open most days of the week, offering dinner service every day, and lunch service on Thursdays. It offers a range of amenities such as outdoor seating, free WiFi, valet parking, and restaurant reservations. The restaurant has an upscale ambiance and is well-suited for group gatherings. The restaurant has received a general rating of 4.0 stars. Customers praised the restaurant's patio dining, food quality, and service. The favorite dishes include an avocado toast with shrimp and a short rib salad. However, some customers have complained about the quality of certain dishes like steak and Caesar salad, and the high prices. Despite this, the breathtaking beach views and setting were universally appreciated. The restaurant doesn't offer take-out service.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:02dfb0b82a664bd8c53082a42926fe4c55f567016b90708b281943479525e173",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28
+  ]
+}

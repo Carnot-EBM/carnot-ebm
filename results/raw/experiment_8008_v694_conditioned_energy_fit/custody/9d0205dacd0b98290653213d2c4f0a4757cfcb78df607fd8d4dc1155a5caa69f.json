@@ -1,0 +1,104 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.2711359270615503,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:d6f36042520c2de42cf48fd6dbb4f936de58d19657222625396ba6c85bf1487e",
+  "input_tokens": 666,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 666,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 689
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:15898cce7fc210b510568739e990ce041f2ab619af81c2b4a6c11dccb4c7b519",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886349,
+    "id": "chatcmpl-v8veD33hvd09NOmr8K4FFiEWKQQPRCjo",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.185,
+      "predicted_n": 23,
+      "predicted_per_second": 42.49933017360053,
+      "predicted_per_token_ms": 23.52978260869565,
+      "prompt_ms": 611.189,
+      "prompt_n": 588,
+      "prompt_per_second": 962.059199363863,
+      "prompt_per_token_ms": 1.039437074829932
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 666,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 689
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Let Thrifty help your travel plans go smoothly with an airport car rental deal at one of our 120 in-terminal locations.Not only will you get great airport car rental rates, you can make the airport car rental process even smoother, faster and more rewarding when you sign up for our Blue Chip Express Rental Program.hat way, we\u2019ll know what kind of airport car rental you prefer, which options you normally want, which credit card to use, and more. Once you receive your Blue Chip number, you can use it whenever you-or your travel agent-place a reservation.\\\\n\\\\npassage 2:Tip. 1  If you are picking up your rental car at an airport, a way to select a car company is to see what is available near your arrival terminal. 2  Most airport websites list rental agencies that operate from that airport. 3  If you do not wish to rent a car over the Internet, you also rent one over the phone.ow to Rent a Rental Car. Log on to a rental car website. Step 2. Enter the necessary information in the data fields, such as pick-up city or location, date range and time frame.\\\\n\\\\npassage 3:ON-TERMINAL \u2013 The rental car counter that is on airport property with transportation to the rental vehicles provided by shuttle service and the elapsed time to the rental office will not exceed 30 minutes from the time the traveler requested pick-up service.FF-TERMINAL \u2013 The rental car counter and vehicles that are not physically located on the airport property and the elapsed time to the rental office will not exceed 30 minutes from the time the traveler requested pick-up service.\\\\n\\\\n\\\",\\\"question\\\":\\\"how do you purchase a rental car at airport\\\"}\", \"original_answer\": \"To purchase a rental car at an airport, you can choose a rental company that operates from the airport you're arriving at; most airport websites list these agencies. You can rent a car over the internet or the phone. You'll need to enter the necessary information such as pick-up location, date and time range. You can also sign up for rental programs like Thrifty's Blue Chip Express Rental Program to streamline the process. With this program, the company will know your preferences, credit card information, and more. You will receive a Blue Chip number that you can use whenever you or your travel agent place a reservation. The rental car counters are located on the airport property with transportation to the rental vehicles provided by shuttle service.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "dcc56e9d9e8665ec6e900fcb1cabc91ae9ad0977e7c7fceed3e597d4ee6badfa",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ]
+}

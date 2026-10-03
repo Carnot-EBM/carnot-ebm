@@ -1,5 +1,65 @@
 # Carnot — Session Metrics
 
+## Session: 2026-10-02 Milestone 2026.10.696 Operational Retrospective
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-10-02T23:32:32Z | 2026-10-02T23:34:49Z | Wrote operational retro for milestone 2026.10.696; adversarial reviewer verified clean | ~25k |
+
+---
+
+## Session: 2026-10-02 Milestone 2026.10.695 Operational Retrospective
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-10-02T17:23:31Z | 2026-10-02T17:27:02Z | Wrote operational retro for milestone 2026.10.695; adversarial reviewer verified clean | ~25k |
+
+---
+
+## Session: 2026-10-02 Milestone 2026.10.694 Operational Retrospective
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-10-02T09:05:37Z | 2026-10-02T09:08:00Z | Wrote operational retro for milestone 2026.10.694; adversarial reviewer verified clean | ~25k |
+
+---
+
+## Session: 2026-10-02 Milestone 2026.10.693 Operational Retrospective
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-10-02T03:33:46Z | 2026-10-02T03:37:12Z | Wrote operational retro for milestone 2026.10.693; adversarial reviewer verified clean | ~25k |
+
+---
+
+## Session: 2026-10-01 Milestone 2026.10.692 Operational Retrospective
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-10-01T16:26:23Z | 2026-10-01T16:30:02Z | Wrote operational retro for milestone 2026.10.692; adversarial reviewer verified clean | ~25k |
+
+---
+
+## Session: 2026-10-01 Milestone 2026.10.691 Operational Retrospective
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-10-01T08:41:27Z | 2026-10-01T08:47:46Z | Wrote operational retro for milestone 2026.10.691; adversarial reviewer verified clean | ~25k |
+
+---
+
 ## Session: 2026-10-01 Milestone 2026.09.690 Operational Retrospective
 
 ### Turn Log

@@ -1,0 +1,20 @@
+.....F....                                                               [100%]
+=================================== FAILURES ===================================
+___________________________ test_threshold_controls ____________________________
+
+    def test_threshold_controls() -> None:
+        """SCENARIO-REPORT-8029-NUMERIC: synthetic thresholds cannot earn natural credit."""
+>       controls = h.controls()
+                   ^^^^^^^^^^
+E       AttributeError: module 'carnot.reporting.hardware_workload_8029' has no attribute 'controls'
+
+tests/python/test_hardware_workload_8029.py:170: AttributeError
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_hardware_workload_8029.py::test_threshold_controls
+1 failed, 9 passed, 1 warning in 17.85s

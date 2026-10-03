@@ -1,0 +1,111 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.3041881180251949,
+  "exclusion_reason": null,
+  "family_id": "sha256:1f51df741f04d2d3f84824cb31e26f3f0f996ff991f6101f85a3fcfddfb7b725",
+  "input_tokens": 692,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 692,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 715
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:bb6666c53f4996f5f196cdd55f2c4e941c580f956ec44e068dfbe43edaffb9fc",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832867,
+    "id": "chatcmpl-IfBzhgz0p7JEULZNi1Bt1VYVruWn7dMq",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.047,
+      "predicted_n": 23,
+      "predicted_per_second": 42.510170096128434,
+      "predicted_per_token_ms": 23.523782608695655,
+      "prompt_ms": 629.466,
+      "prompt_n": 614,
+      "prompt_per_second": 975.4299676233506,
+      "prompt_per_token_ms": 1.0251889250814332
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 692,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 715
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Windermere man convicted for his role in Jan. 6 Capitol breach\\nThis article may contain AI-assisted content.\\nWashington, D.C. - John Edward Crowley, a 52-year-old from Windermere, Florida, faced trial before U.S. District Court Judge Trevor N. McFadden and was found guilty of one felony and three misdemeanors related to his involvement in the Jan. 6, 2021, breach of the U.S. Capitol.\\nKey Points\\nCharges against Crowley include civil disorder (a felony), and misdemeanors such as entering a restricted building or grounds, disorderly conduct therein, and hindering movement through the Capitol building or grounds.\\nTrial evidence pointed out that Crowley traveled to Washington, D.C., from Florida for the \u201cStop the Steal\u201d rally held by the former president. He was in company with the Guardians of Freedom, some of whom support the Three Percenters' ideology.\\nAfter the rally, Crowley, equipped with a tactical vest and belt, joined other rioters at the Capitol. The group reached the Lower West Terrace Tunnel around 3:30 p.m., where violent confrontations with law enforcement ensued.\\nAt around 3:56 p.m., Crowley was seen actively confronting police officers, even allowing a fellow rioter to use him as a step to kick at the officers.\\nDespite being sprayed with a chemical irritant multiple times, Crowley continued his aggressive behavior, urging fellow rioters to join him in the onslaught against the police.\\nIn a telling series of text exchanges later that day, Crowley confirmed his presence at the scene and boasted about being pepper-sprayed three times. He expressed his resentment against what he termed a \\\"fraudulent election.\\\"\\nCrowley's arrest took place on Aug. 24, 2022, in his hometown of Windermere. Sentencing is scheduled for Jan. 19, 2024.\", \"original_answer\": \"John Edward Crowley, 52, was found guilty of a felony and three misdemeanors for his role in the January 6, 2021, US Capitol breach. He traveled from Florida to DC for the \\\"Stop the Steal\\\" rally and joined rioters at the Capitol, actively confronting police officers and continuing to fight despite being pepper-sprayed. His sentencing is set for January 19, 2024.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:4470819be4292b23ddc87ec862d224167da2a3d0bacbedf0add65c158a8b30d9",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ]
+}

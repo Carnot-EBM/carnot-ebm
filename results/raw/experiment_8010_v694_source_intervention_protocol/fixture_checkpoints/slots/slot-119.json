@@ -1,0 +1,89 @@
+{
+  "arm": "original",
+  "capture_identity": "sha256:c690c1f517fbce73c5da6a2d1e99e3819c3de93e1045fe76d1c8215b54691541",
+  "censor_status": false,
+  "denominator": 1,
+  "donor_group_id": "sha256:2d1f2c813d9ed8c36f779b7f839a0315b45d63474fc4c0a45499721c892d29a7",
+  "duration_s": 0.00318600598257035,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:2d1f2c813d9ed8c36f779b7f839a0315b45d63474fc4c0a45499721c892d29a7:original",
+  "group_id": "sha256:2d1f2c813d9ed8c36f779b7f839a0315b45d63474fc4c0a45499721c892d29a7",
+  "input_byte_upper_bound": 3225,
+  "input_tokens": 30,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.25,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 18,
+      "prompt_tokens": 30
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:933f84a594bf7b27d9e1bc564c03b3516f88a6bde0909542f6322fa9cfc7e980",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "message": {
+          "content": "{\"unsupported_probability\": 0.25, \"source_sentence_id\": null}"
+        }
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "usage": {
+      "completion_tokens": 18,
+      "prompt_tokens": 30
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 32,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:This instructable will walk you through how to cream butter and sugar together by hand, as well as by mixer. Steps for using a mixer are in bold. 1. Place the butter out on the counter for at least an hour, or until it becomes room temperature.reaming simply means mixing your butter and sugar(s) together until well blended, leaving you with a fluffy light yellow mix. Just do not over mix! Butter and sugars are over-mixed when the butter begins to separate.\\\\n\\\\npassage 2:Many recipes for baked goods instruct to \u201ccream\u201d the butter. This helps incorporate air into the batter, giving a light and tender texture. 1  Measure the amount of butter you need and soften it just enough that your finger easily leaves an impression in the butter when you press it.any recipes for baked goods instruct to \u201ccream\u201d the butter. This helps incorporate air into the batter, giving a light and tender texture. 1  Measure the amount of butter you need and soften it just enough that your finger easily leaves an impression in the butter when you press it.\\\\n\\\\npassage 3:1 Place the butter in a large bowl and use a wooden spoon or an electric mixer to stir or beat the butter until it is smooth, creamy and a uniform texture.2  Add the sugar or other ingredients called for in the recipe to further cream them together.any recipes for baked goods instruct to \u201ccream\u201d the butter. This helps incorporate air into the batter, giving a light and tender texture. 1  Measure the amount of butter you need and soften it just enough that your finger easily leaves an impression in the butter when you press it.\\\\n\\\\n\\\",\\\"question\\\":\\\"how do you cream butter\\\"}\", \"original_answer\": \"To cream butter, first place the butter out on the counter for at least an hour, or until it becomes room temperature. Then, measure the amount of butter you need and soften it just enough that your finger easily leaves an impression in the butter when you press it. Place the softened butter in a large bowl and use a wooden spoon or an electric mixer to stir or beat the butter until it is smooth, creamy and a uniform texture. Add the sugar or other ingredients called for in the recipe to further cream them together. The goal is to mix your butter and sugar together until well blended, which will result in a fluffy light yellow mix. Be careful not to over mix, as this occurs when the butter begins to separate. This process helps to incorporate air into the batter, giving a light and tender texture.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69410,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "seed": 69410,
+  "source_cluster_id": "280468cdceca5b53b18e85e467114737fb4b988700376b2594ad56fb421d999e",
+  "source_hash": "sha256:55ac087be1fd9c7c6bb7a8f8fd7f137f07a6081a8a7679640033b0d2682e1b3a",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]
+}

@@ -1,0 +1,91 @@
+{
+  "arm": "duplicate",
+  "capture_identity": "sha256:c690c1f517fbce73c5da6a2d1e99e3819c3de93e1045fe76d1c8215b54691541",
+  "censor_status": false,
+  "denominator": 1,
+  "donor_group_id": "sha256:3c31b99d1e59b77fbc8b11da07ccf33ad26e09ebb3f0941f0bb8abc60f761548",
+  "duration_s": 0.00203252793289721,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:3c31b99d1e59b77fbc8b11da07ccf33ad26e09ebb3f0941f0bb8abc60f761548:duplicate",
+  "group_id": "sha256:3c31b99d1e59b77fbc8b11da07ccf33ad26e09ebb3f0941f0bb8abc60f761548",
+  "input_byte_upper_bound": 3258,
+  "input_tokens": 30,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.25,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 18,
+      "prompt_tokens": 30
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:2177980b0d4ee0211e665695bac94fff9fb51125f1a5844ae84083bad60a94ff",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "message": {
+          "content": "{\"unsupported_probability\": 0.25, \"source_sentence_id\": null}"
+        }
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "usage": {
+      "completion_tokens": 18,
+      "prompt_tokens": 30
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 32,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"420 S Fairview Ave\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":null},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Cajun/Creole, Restaurants\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":null,\\\"name\\\":\\\"Cajun Kitchen\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2016-02-26 01:16:25\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Cool retro ode diner! Love when I go to a restaurant and it's functional. I had he jambalaya. Very tasty although the shrimp was farmed not fresh but really good base. My friend had eggs over easy. Friendly efficient service. Corn bread was also good.\\\"},{\\\"review_date\\\":\\\"2015-10-15 16:47:44\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Great diner style restaurant. The jambalaya was great. They had soju too! Which was a pleasant surprise! Service was very prompt and pleasant.\\\"},{\\\"review_date\\\":\\\"2015-06-14 03:50:01\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"So yummy! I'm a UCSB alumni and try to visit this place each time I find myself in Santa Barbara. We stopped in for brunch during our last visit and it was still delicious! I love this place!!!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Cajun Kitchen, located at 420 S Fairview Ave in Goleta, CA, is a Cajun/Creole restaurant that does not offer reservations but does provide outdoor seating and takeout service. The establishment is also suitable for groups. The restaurant, however, does not provide WiFi, music, or any kind of parking, including street, garage, valet, or validated parking. The ambiance is not classified as romantic, intimate, classy, hipster, divey, touristy, trendy, upscale, or casual. The business has an average star rating of 3.5. Customers have praised the tasty jambalaya, with one noting the shrimp was farmed, not fresh, but the base was really good. Another customer mentioned the prompt and pleasant service. A UCSB alumni stated that they try to visit the place each time they're in Santa Barbara, praising its consistency in delivering delicious meals.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69410,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "seed": 69410,
+  "source_cluster_id": "0a462e3886e46991f61795de0dda697589d8d5fea0b64256a613d9aa15b4b83b",
+  "source_hash": "sha256:49bd290b58b0fcf5de43996d4817ab9fac0983d846bb4cfb97d5d3977446ba88",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ]
+}

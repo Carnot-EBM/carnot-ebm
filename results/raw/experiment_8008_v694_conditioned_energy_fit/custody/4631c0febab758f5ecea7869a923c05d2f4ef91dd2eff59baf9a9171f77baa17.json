@@ -1,0 +1,110 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.6225508929928765,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:bdc8410ee152581da4ef7895b0450c27bb8a5780e7603d174d2ed0e11bb01773",
+  "input_tokens": 1050,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1050,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1073
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:34f00639d784b84f335162b920ac75e3f6dc491ff5629bff121f63dca9dc25ca",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886209,
+    "id": "chatcmpl-Fj6AffkspAZFCRZ1DWbYHsntsEnehdGx",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 542.414,
+      "predicted_n": 23,
+      "predicted_per_second": 42.403035319884815,
+      "predicted_per_token_ms": 23.58321739130435,
+      "prompt_ms": 962.123,
+      "prompt_n": 972,
+      "prompt_per_second": 1010.265839191039,
+      "prompt_per_token_ms": 0.9898384773662552
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1050,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1073
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"1009 Casitas Pass Rd\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":2.0,\\\"categories\\\":\\\"Restaurants, Fast Food, Sandwiches, Breakfast & Brunch\\\",\\\"city\\\":\\\"Carpinteria\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"5:30-21:0\\\",\\\"Monday\\\":\\\"5:30-21:0\\\",\\\"Saturday\\\":\\\"9:0-21:0\\\",\\\"Sunday\\\":\\\"9:0-20:0\\\",\\\"Thursday\\\":\\\"5:30-21:0\\\",\\\"Tuesday\\\":\\\"5:30-21:0\\\",\\\"Wednesday\\\":\\\"5:30-21:0\\\"},\\\"name\\\":\\\"Subway\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-12-07 20:36:38\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"I come to this Subway often so this is not a one time occurrence. The customer service is worst than a McDonald's. They are rude, they take their time making sandwiches. The simplest order they mess up. I've dealt with everyone that works at this location and I have never had a good experience. So disappointed\\\"},{\\\"review_date\\\":\\\"2021-04-07 20:16:32\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"This is by far the worst subway I have ever been to, and unfortunately it has to be the only one in my town. I just spent a bunch of time ordering on the app and placing the order, only to be told that I could not pick up my sandwiches. I had proof of payment, a receipt that matched the store, along with exact descriptions of my items. Rather than working with me and offering to make the sandwiches, I was told to call 1-800 subway, to voice a complaint, which is not even a real phone number. I was then told to call the phone number on the door, which is just a phone number for the actual store that I was already standing in. Once there was no one else in the store, Only then did Irene offered to call the owner of this franchise, I waited for 15 minutes while she was on the phone with the owner looking at an iPad at which point I decided to leave with no food, having paid the restaurant for literally nothing. Now I get to go battle with subway corporate, who doesn't even have a non-automated phone system anymore.\\\"},{\\\"review_date\\\":\\\"2020-05-25 21:30:37\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Terrible online and pickup service. 30 min after receiving order confirmation they haven't even started yet. Subway said they have not received any online order.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Subway, located at 1009 Casitas Pass Rd in Carpinteria, CA, is a fast-food restaurant offering sandwiches, breakfast, and brunch. The business is open seven days a week, with varied opening hours. Parking is available on the street and in a lot, but not in a garage or with valet service. The restaurant does not accept reservations but offers outdoor seating and is suitable for groups. No Wi-Fi is provided and the ambiance is neither romantic, intimate, trendy, nor upscale. Subway's overall rating is 2 stars. The reviews highlight several issues with the restaurant, particularly poor customer service and problems with online and app-based orders. Customers have reported rude staff, slow service, and frequent mistakes with orders. Additionally, there have been complaints about inability to pick up orders placed through the app, even after payment confirmation, as well as issues with the online ordering system.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "982e5d529ca4da5efbc729c270c5e1214007275489fa1ef3282d84ca8359b13b",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ]
+}

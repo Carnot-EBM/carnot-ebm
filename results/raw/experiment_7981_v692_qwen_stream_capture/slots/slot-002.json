@@ -1,0 +1,112 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.3345239250338636,
+  "exclusion_reason": null,
+  "family_id": "sha256:55b2b0d64467168c1f3eac5fe326a5c157fa1ff13b95a75b7d9dc642e42f0592",
+  "input_tokens": 733,
+  "invocation_finished_at": "2026-10-01T11:41:21.685324+00:00",
+  "invocation_started_at": "2026-10-01T11:41:20.350801+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 733,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 757
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:017e4e671c074f7ef1ed6a2fc08fd475e12c0af034551704f562494d5365a559",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790854881,
+    "id": "chatcmpl-cIQ1MGLvTFJZFGYIhuvU4P8633L6nMxu",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 555.501,
+      "predicted_n": 24,
+      "predicted_per_second": 43.20424265662888,
+      "predicted_per_token_ms": 23.145875,
+      "prompt_ms": 643.847,
+      "prompt_n": 655,
+      "prompt_per_second": 1017.3224384053975,
+      "prompt_per_token_ms": 0.9829725190839694
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 733,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 757
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"A naturalized U.S. citizen pleaded not guilty in Ohio Friday to federal charges of providing material support to terrorists and lying to the FBI. Abdirahman Sheik Mohamud, 23, of Columbus, allegedly traveled to Syria for training and wanted to return home to kill Americans -- particularly U.S. soldiers, execution style, the U.S. Department of Justice said Thursday. Mohamud was remanded into custody on Friday. \\\"I am confident in the system working fairly and (in) our client getting a vigorous and aggressive defense,\\\" said his lawyer, Sam Shamansky. Mohamud told someone that he wanted to target U.S. armed forces, police officers or other people in uniform, the indictment alleges, adding that \\\"Mohamud's plan was to attack a military facility, and his backup plan was to attack a prison.\\\" \\\"Mohamud talked about doing something big in the United States. He wanted to go to a military base in Texas and kill three or four American soldiers execution style,\\\" it says. Mohamud allegedly said he was happy that his brother, Aden, died fighting for al-Nusra Front, al Qaeda's largest affiliate in Syria. Mohamud told someone he planned to join Aden in death soon, the indictment says. He became a U.S. citizen in February 2014 and submitted a U.S. passport application days later, according to the indictment. Mohamud traveled to Syria in April 2014 \\\"for the purpose of training and fighting with terrorists,\\\" prosecutors said in a news release. To get there, Mohamud bought a one-way ticket to Greece with a layover in Istanbul, Turkey, the Department of Justice said. He skipped the connecting flight \\\"and instead completed pre-arranged plans to travel to Syria.\\\" Once there, he trained in shooting weapons, breaking into homes, using explosives and hand-to-hand combat, prosecutors said. Mohamud \\\"also stated that, after completing this training, he was instructed by a cleric in the organization to return to the United States and commit an act of terrorism.\\\" CNN's John Newsome contributed to this story.\\n\", \"original_answer\": \"Abdirahman Sheik Mohamud, a naturalized US citizen, has been charged with providing material support to terrorists and lying to the FBI. He allegedly traveled to Syria for training and planned to return to the US to kill Americans, including soldiers and law enforcement officers. Mohamud also allegedly expressed happiness at his brother's death while fighting for al-Nusra Front and said he planned to join him in death soon. He faces up to 20 years in prison if convicted.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_update",
+  "source_cluster_id": "sha256:5b849be94e5a9af270c520c924cffb3026365eae622a95994109925d75f1f21c",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18
+  ]
+}

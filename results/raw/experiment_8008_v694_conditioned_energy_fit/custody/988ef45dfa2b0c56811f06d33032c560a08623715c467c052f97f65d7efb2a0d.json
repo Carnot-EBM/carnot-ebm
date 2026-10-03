@@ -1,0 +1,110 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.378659671987407,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:394d1f24fce0ea03477fc559969233fb3a719f935e26fe0107d9e9efeba968f7",
+  "input_tokens": 731,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 12,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 731,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 756
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:09e03dbadc683dafdea8b02cc6eecec635dbdcf7df4f4266c03a838c0564b48c",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 12\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886132,
+    "id": "chatcmpl-QqNvuxXuViw2FTJ2qdFLKZm2NldYLG9T",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 589.483,
+      "predicted_n": 25,
+      "predicted_per_second": 42.41004405555377,
+      "predicted_per_token_ms": 23.57932,
+      "prompt_ms": 670.299,
+      "prompt_n": 653,
+      "prompt_per_second": 974.192114265425,
+      "prompt_per_token_ms": 1.026491577335375
+    },
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 731,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 756
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Just kill it already. That was the sentiment of many \\\"Vampire Diaries\\\" fans on Tuesday after star Nina Dobrev announced she will be leaving the CW show at the end of this season. \\\"I always knew I wanted Elena's story to be a six season adventure, and within those six years I got the journey of a lifetime,\\\" she posted on her social media accounts after a \\\"goodbye party\\\" at Lake Lanier outside Atlanta, where the show is filmed. \\\"I was a human, a vampire, a doppelganger, a crazy immortal, a doppelganger pretending to be human, a human pretending to be a doppelganger. I got kidnapped, killed, resurrected, tortured, cursed, body-snatched, was dead and undead, and there's still so much more to come before the season finale in May.\\\" And while that may be true, fans were feeling a little jilted. Many chastised the show's producers, some even Dobrev herself, for allowing the show to go on to a seventh season this fall after she departs. Many were upset that Dobrev's departure could sink hopes of seeing a satisfying denouement to the relationship between Dobrev's character, Elena Gilbert, and love interest vampire Damon Salvatore. Fans called the couple \\\"Delena.\\\" \\\"I feel angry, sad, depressed, numb but most of all I feel like part of me died along with Nina leaving TVD. Nothing will be the same again,\\\" Twitter user iDamonAndElena posted. Producer Julie Plec issued a statement supporting Dobrev's decision. \\\"Nina is excited to spread her wings, get some rest, travel the world and also take it by storm, and we support her a thousand-fold,\\\" she said in the statement, according to media accounts. \\\"We will miss Nina and the four hundred characters she played, but we look forward to the insane and exciting challenge of continuing to tell stories of our Salvatore Brothers and our much-loved and gifted ensemble.\\\" No thanks, some fans said. Dobrev seemed to anticipate the pain, urging fans to hold on through the show's finale next month. \\\"If you think you know what's coming, you don't,\\\" she said.\\n\", \"original_answer\": \"\\\"Vampire Diaries\\\" fans expressed disappointment after star Nina Dobrev announced she will be leaving the show at the end of this season. Many fans chastised the show's producers for allowing the show to continue to a seventh season this fall after she departs, fearing her departure could affect the relationship between Dobrev's character, Elena Gilbert, and love interest vampire Damon Salvatore. Producer Julie Plec issued a statement supporting Dobrev's decision, and urged fans to hold on through the show's finale next month.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "9b9763bf17444d029869bcf0edca77a4f3ff82584dd5372eb06eb4690dd5e09a",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ]
+}

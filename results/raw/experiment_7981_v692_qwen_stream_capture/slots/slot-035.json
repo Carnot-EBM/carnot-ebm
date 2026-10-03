@@ -1,0 +1,99 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.254583203990478,
+  "exclusion_reason": null,
+  "family_id": "sha256:b7e814de2d36dee8d0326f0797c53a79198b281c0ef2c254347de3b6029f6104",
+  "input_tokens": 546,
+  "invocation_finished_at": "2026-10-01T11:42:00.219038+00:00",
+  "invocation_started_at": "2026-10-01T11:41:58.964453+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 546,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 571
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:2a86cbd0ca491ed771c4ccc6aff0fdaf46277ac58030f956f326d33680b22a69",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790854920,
+    "id": "chatcmpl-kUHAw5H6vCxSp6D5FyJ9aCgfI1eO7QNO",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 586.134,
+      "predicted_n": 25,
+      "predicted_per_second": 42.65236277028802,
+      "predicted_per_token_ms": 23.44536,
+      "prompt_ms": 516.785,
+      "prompt_n": 468,
+      "prompt_per_second": 905.5990402198206,
+      "prompt_per_token_ms": 1.1042414529914528
+    },
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 546,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 571
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:According to the U.S. Bureau of Labor Statistics, reporting on the usual weekly earnings of wage and salary workers for the second quarter of 2012, the median weekly earnings for men and women were higher in older age groups. Men ages 45 to 54 had median weekly earnings of $1,003; for men 55 to 64, the median weekly earnings were $1,015. For women, the usual weekly earnings were highest for those 55 to 64 at $760. Women ages 35 to 44 had median weekly earnings of $749, while women from 45 to 54 earned a median $733.\\\\n\\\\npassage 2:Personal income is an individual's total earnings from wages, investment interest, and other sources. The US Census Bureau reported a median personal income of $30,240 for all workers over age 15 with income, and a mean personal income of $44,510 based on the Current Population Survey for 2015.\\\\n\\\\npassage 3:Among different demographics (gender, marital status, ethnicity) for those over the age of 18, median personal income ranged from $3,317 for an unemployed, married Asian American female to $55,935 for a full-time, year-round employed Asian American male.\\\\n\\\\n\\\",\\\"question\\\":\\\"age vs income data\\\"}\", \"original_answer\": \"Based on the given passages, it can be concluded that there is a correlation between age and income for both men and women. However, this correlation varies depending on the age group and gender. Generally, older age groups tend to have higher median weekly earnings than younger age groups. Additionally, the median weekly earnings for women are generally lower than those for men, but the gap becomes smaller as age increases.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_update",
+  "source_cluster_id": "sha256:4d7fc182eb409258682c434f56d19b335017a04dbf3d10dc7378aa04bc46008b",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ]
+}

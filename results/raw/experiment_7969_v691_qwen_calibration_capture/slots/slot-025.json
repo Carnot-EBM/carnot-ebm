@@ -1,0 +1,100 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.3452953219530173,
+  "exclusion_reason": null,
+  "family_id": "sha256:4858f8f2ec01584f294dbb0becfe27fb92c8ace98c3ea9703919698cb8f3b4b3",
+  "input_tokens": 775,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 775,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 799
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:10fbb7c795d8a817d459b4c0d9c52e2ea2b2d7bb4abec1ff66b5194abb59ff75",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832504,
+    "id": "chatcmpl-hPeCEF1gcCwttdsfCJ3xEHiOlLBDSZZu",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 559.125,
+      "predicted_n": 24,
+      "predicted_per_second": 42.924211938296445,
+      "predicted_per_token_ms": 23.296875,
+      "prompt_ms": 673.969,
+      "prompt_n": 697,
+      "prompt_per_second": 1034.172194863562,
+      "prompt_per_token_ms": 0.9669569583931135
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 775,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 799
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Step 3. Tie a second piece of string around the bottom of the stem to suspend the sunflower with the head pointing toward the ground. Leave in a cool, dry place until the seeds dry completely and fall into the cheesecloth.\\\\n\\\\npassage 2:Step 4. Spread the seeds out in a single layer across a piece of fine-mesh screen, such as that used in a screen door. Spread the screen on top of a sheet pan, so that air is allowed to pass the seeds on all sides. Set the sheet pan and screen full of sunflower seeds in a cool, dry place, away from any drafts or direct sunlight.\\\\n\\\\npassage 3:Step 1. Wrap a piece of cheesecloth around the head of the sunflower and secure it with string tied around the stem to keep birds away from the seeds as they ripen. Step 2. Cut the stem 12 inches below the cheesecloth-wrapped head to remove the flower after the petals have wilted and half of them have fallen off the flower.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to prepare fresh sunflower seeds for consumption\\\"}\", \"original_answer\": \"Based on the provided passages, here's how you can prepare fresh sunflower seeds for consumption:\\n\\nTo dry the sunflower seeds, follow the steps described in Passage 1:\\n\\n* Step 3: Tie a second piece of string around the bottom of the stem to suspend the sunflower with the head pointing towards the ground.\\n* Leave the sunflower in a cool, dry place until the seeds dry completely and fall into the cheesecloth.\\n\\nAlternatively, you can spread the sunflower seeds out in a single layer across a piece of fine-mesh screen, as described in Passage 2:\\n\\n* Step 4: Spread the seeds out in a single layer across a piece of fine-mesh screen, such as that used in a screen door.\\n* Spread the screen on top of a sheet pan, so that air is allowed to pass the seeds on all sides.\\n* Set the sheet pan and screen full of sunflower seeds in a cool, dry place, away from any drafts or direct sunlight.\\n\\nOnce the seeds are dry, you can remove them from the cheesecloth or screen by cutting the stem 12 inches below the wrapped head, as described in Passage 3:\\n\\n* Step 1: Wrap a piece of cheesecloth around the head of the sunflower and secure it with string tied around the stem to keep birds away from the seeds as they ripen.\\n* Step 2: Cut the stem 12 inches below the cheesecloth-wrapped head to remove the flower after the petals have wilted and half of them have fallen off the flower.\\n\\nAfter removing the seeds from the cheesecloth or screen, you can further clean and prepare them for consumption by rinsing them with water and removing any debris or impurities. Enjoy!\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:b220e59c92f7542c83908d41995db55949cc94a23768125185a65834011b7798",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ]
+}

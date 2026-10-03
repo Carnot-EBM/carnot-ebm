@@ -1,0 +1,127 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.589621301041916,
+  "exclusion_reason": null,
+  "family_id": "sha256:209d813e84f86bf995a08704d1ab523037d4d3be6f28469c0a3cc775c198941b",
+  "input_tokens": 1031,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1031,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1054
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:0d7530421ae622573e1d6d421a8fd1cc1db7fc9b3bdf6e74f953e59690b3bbaf",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832500,
+    "id": "chatcmpl-EqhOdttjMMefKgxcoTjEYsrBXUX3lKz4",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 534.96,
+      "predicted_n": 23,
+      "predicted_per_second": 42.99386870046359,
+      "predicted_per_token_ms": 23.25913043478261,
+      "prompt_ms": 911.876,
+      "prompt_n": 953,
+      "prompt_per_second": 1045.098237041001,
+      "prompt_per_token_ms": 0.9568478488982162
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1031,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1054
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"In 2013, \\\"The Bible\\\" broke ratings records on the History Channel, so of course, a sequel was ordered up -- and this one is on NBC. The new miniseries from Mark Burnett and Roma Downey is one of six shows to watch this week. 1. \\\"A.D. The Bible Continues,\\\" 9 p.m. ET Sunday, NBC. Just in time for Easter, the peacock network debuts the \\\"Bible\\\" sequel, picking up with Jesus' resurrection and following the early days of Christianity. NBC scored on picking up the follow-up to the smash cable hit, starring Juan Pablo Di Pace as Jesus and Greta Scacchi as Mary (replacing Downey in the role). The full miniseries will run for 12 weeks, so consider it a spring revival. 2. \\\"Mad Men,\\\" 9 p.m. Sunday, AMC. We've arrived at the end, \\\"Mad Men\\\" fans. This is the first of the last several episodes, where we'll learn the fate of Don Draper and the cast of characters. Click here for more on \\\"Mad Men.\\\" 3. \\\"American Odyssey,\\\" 10 p.m. Sunday, NBC. Anna Friel (\\\"Pushing Daisies\\\") stars as a special forces translator in Mali who is believed to be dead by those back in the States. On the show, she struggles to get back home, while we discover how she ended up how she did. 4. \\\"Louie,\\\" 10:30 Thursday, FX. Louis C.K.'s critically-acclaimed comedy is back for a fifth season. Will Louie continue to offend people in his life? All signs point to yes. Is Louie still dating his best friend-turned-girlfriend, Pamela? We'll have to tune into find out. 5. \\\"The Comedians,\\\" 10 p.m. Thursday, FX. Billy Crystal returns to television, with co-star Josh Gad, as two people starring in an FX comedy. It's a meta mockumentary about the making of a comedy show. \\\"Seinfeld\\\" and \\\"Curb Your Enthusiasm's\\\" Larry Charles is among the producers. 6. \\\"Marvel's Daredevil,\\\" Friday, Netflix. This ain't Ben Affleck's movie. Now that Marvel has the rights to the \\\"Man Without Fear\\\" back, they've decided to launch several series for Netflix, starting with this dark, gritty drama about blind lawyer Matt Murdock, and his moonlighting as a costumed avenger (no pun intended).\\n\", \"original_answer\": \"Here are the 6 shows to watch this week, in summary:\\n\\n1. \\\"A.D. The Bible Continues\\\" - NBC, Sun., 9pm - Sequel to \\\"The Bible\\\" miniseries, follows Jesus' resurrection and early Christianity.\\n2. \\\"Mad Men\\\" - AMC, Sun., 9pm - Final episodes, focusing on Don Draper and the cast's fates.\\n3. \\\"American Odyssey\\\" - NBC, Sun., 10pm - A special forces translator in Mali struggles to return home after being believed dead.\\n4. \\\"Louie\\\" - FX, Thu., 10:30pm - Critically-acclaimed comedy returns for its 5th season, continuing to follow Louie's offensive antics.\\n5. \\\"The Comedians\\\" - FX, Thu., 10pm - A meta mockumentary about two comedians starring in an FX comedy, produced by Larry Charles.\\n6. \\\"Marvel's Daredevil\\\" - Netflix, Fri. - A dark, gritty drama about blind lawyer Matt Murdock, who moonlights as a costumed avenger.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:928e9856a39144dae61ac0f312448d57bc0c86854d8d66410fe2afa638f9c205",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35
+  ]
+}

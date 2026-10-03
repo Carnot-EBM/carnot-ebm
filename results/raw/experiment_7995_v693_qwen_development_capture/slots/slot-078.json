@@ -1,0 +1,109 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.3434696859912947,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:b167788f50cd6d2c6f2b451217b8c3d89abc44b4f95d4d797ed7b3bd2847189a",
+  "input_tokens": 758,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 758,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 781
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:0e35dc38b38ca750fc33280896900410e5990ed4257221b4133f56a0c32378b1",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885945,
+    "id": "chatcmpl-rBkweNvweqHHTNZr8kNJKvGqIOWRenzQ",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 547.487,
+      "predicted_n": 23,
+      "predicted_per_second": 42.01012992089311,
+      "predicted_per_token_ms": 23.803782608695652,
+      "prompt_ms": 684.657,
+      "prompt_n": 680,
+      "prompt_per_second": 993.1980539160484,
+      "prompt_per_token_ms": 1.0068485294117648
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 758,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 781
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"HS FOOTBALL: Bears outlast Dawgs, 27-20\\nMAHANOY CITY \u2013 Mahanoy Area and Tri-Valley exchanged the lead at least four times before a winner was decided Friday on Homecoming night in Mahanoy City.\\nA 52-yard run by senior running back Colm McGroarty put Mahanoy Area on the board first early in the 1st quarter.\\nThe Bulldogs would answer three seconds into the second quarter via a run by senior fullback Kash Tobin, but a failed point-after would keep Mahanoy in the lead.\\nSenior quarterback Blake Schwartz found Hunter Troutman for a go-ahead touchdown with about two minutes left in the half, followed by a successful two point conversion.\\nA Trey Porter interception for Tri-Valley ended a Mahanoy drive at the very end of the half to give Tri-Valley the 14-7 advantage into the halftime break.\\nMcGroarty would find paydirt again early in the third quarter with a 26-yard run, but a failed point-after kept Tri-Valley ahead 14-13.\\nHe would put Mahanoy ahead a few minutes later with an explosive 61-yard score, and a failed two-point conversion put Mahanoy ahead 19-14.\\nStandout sophomore Cole Gemberling scored on a 9-yard run for Tri-Valley to put the Dawgs back in front, 20-19.\\nWith 7:25 left to play, Mahanoy junior quarterback Levi Terry connected with senior wideout Ethan Manley to retake the lead for good at 27-20.\\nThe Bears held of the Bulldogs for the remainder of the game, including a hail mary attempt with 1.5 seconds left.\\nMahanoy improves to 2-6 with the victory while Tri-Valley falls to 4-4.\\nThe Bears are on the road next Saturday, facing Nativity BVM at Spartan Stadium in Fountain Springs.\\nFull Photo Gallery\\nThe post HS FOOTBALL: Bears outlast Dawgs, 27-20 appeared first on The Shenandoah Sentinel .\", \"original_answer\": \"In a close high school football game, the Bears of Mahanoy Area beat the Dawgs from Tri-Valley, 27-20. The lead changed hands multiple times, with notable plays by both teams, including a 52-yard run by senior running back Colm McGroarty from Mahanoy and a go-ahead touchdown by Tri-Valley's senior quarterback Blake Schwartz. In the end, Mahanoy junior quarterback Levi Terry sealed the game with a touchdown pass to senior Ethan Manley. Mahanoy's record improves to 2-6, while Tri-Valley's record is now 4-4.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "83dc060b56f2f8cc1de43f19dd4f31c9ecfb7a2e2b4f23f1062b6e68456d7fa4",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ]
+}

@@ -1,0 +1,103 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.5051961240242235,
+  "exclusion_reason": null,
+  "family_id": "sha256:a747c091bef7b53a8d95e584c79c8bb69b09bfd0867d0b8177e69adef70c2f43",
+  "input_tokens": 921,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 921,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 943
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:8ea944abf06add18f1b661342bb9139e5b9bbb2ecd3f1460b22297b763dd008b",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.95,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832749,
+    "id": "chatcmpl-CbpCoQmCiI3Z6KebEtIiZMI5wH3CfVQe",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 517.067,
+      "predicted_n": 22,
+      "predicted_per_second": 42.547677573699346,
+      "predicted_per_token_ms": 23.503045454545454,
+      "prompt_ms": 854.741,
+      "prompt_n": 843,
+      "prompt_per_second": 986.2636751951761,
+      "prompt_per_token_ms": 1.0139276393831553
+    },
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 921,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 943
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"1017 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":null,\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Specialty Food, Health Markets, Restaurants, Gluten-Free, Bakeries, Coffee & Tea, Desserts, Breakfast & Brunch, Food\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"8:0-14:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"8:0-14:0\\\",\\\"Sunday\\\":\\\"8:0-14:0\\\",\\\"Thursday\\\":\\\"8:0-14:0\\\",\\\"Tuesday\\\":\\\"8:0-16:0\\\",\\\"Wednesday\\\":\\\"8:0-14:0\\\"},\\\"name\\\":\\\"Lilac P\u00e2tisserie\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-13 21:17:16\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"If you want to find an entirely delicious gluten free restaurant, come to this place! Everything is absolutely delicious, they could add more seasoning to their breakfast potatoes, and avocado to their breakfast sandwiches, not going to lie. They're closed for remodeling, but I can't wait until they open back up!!\\\"},{\\\"review_date\\\":\\\"2021-12-11 18:40:02\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"* Nothing beats a beautiful and decadent warm cup of hot cocoa after a stressful week! I love that this cup is on the less sweet side, which pairs very well with their sweet pastries. Their latte art is beautifully done as well, which makes up for their $5.50 price point.\\\\n\\\\n* The lemon tart was textbook: had a beautiful shortbread crust with a lemon custard topped with a scorched meringue. It was flawless and I don't think I can point out any flaws. \\\\n\\\\n* The cake, however, had way too much cream and chocolate go the rest of the cake ratio which made it unsettling to eat and way too sweet. I think the flavor combination sounded good but unfortunately didn't deliver. \\\\n\\\\nWhat's unique is that I believe all the desserts are gluten free, which is incredible, and inclusive of our gluten free friends.\\\"},{\\\"review_date\\\":\\\"2021-12-08 04:43:21\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Fantastic decadent chocolate cake. Friendly staff. The cake didn't taste gluten free at all. Blueberry lemon tarte was fantastic.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Lilac P\u00e2tisserie is a highly rated local business in Santa Barbara, California, offering a variety of specialty food items, including gluten-free options. Customers have praised the business for its high-quality products and friendly staff. Reviews mention that the gluten-free options are particularly impressive, with one customer stating that everything is \\\"absolutely delicious\\\" and another commenting on the beautiful latte art. While some customers have noted minor issues with the portion size of certain dishes, the overall experience has been consistently positive. The business has a rating of 4.5 stars and is open Monday through Sunday from 8 AM to 14 PM.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:d927d619cfc4270fc843a10d41e6f6596d6364fe796f72c7f819f8fd756ce406",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]
+}

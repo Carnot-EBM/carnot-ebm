@@ -1,0 +1,102 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.2826085099950433,
+  "exclusion_reason": null,
+  "family_id": "sha256:529d2841e0544fe30ee3cf29e546569ffeb7519c9c01f9c04f0359e62cc58f95",
+  "input_tokens": 741,
+  "invocation_finished_at": "2026-10-01T11:41:48.810138+00:00",
+  "invocation_started_at": "2026-10-01T11:41:47.527528+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 741,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 763
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:20e60c8ee8360f5aacbf28562d52870f3321f22a858c437fd2696a4a21cf65ea",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.95,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790854908,
+    "id": "chatcmpl-8trZyVJKmbsc8v8pGPmcGZe66Qii2Efb",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 509.593,
+      "predicted_n": 22,
+      "predicted_per_second": 43.171707617647805,
+      "predicted_per_token_ms": 23.163318181818184,
+      "prompt_ms": 650.828,
+      "prompt_n": 663,
+      "prompt_per_second": 1018.7023299550726,
+      "prompt_per_token_ms": 0.9816410256410256
+    },
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 741,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 763
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"827 E Montecito St\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":null},\\\"business_stars\\\":3.0,\\\"categories\\\":\\\"Italian, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":null,\\\"name\\\":\\\"Presto Pasta\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2012-09-05 00:39:22\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Not the best Italian around but for the value, hard to beat. Get the chicken piccata.\\\"},{\\\"review_date\\\":\\\"2010-09-07 04:56:20\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"A $5 bill gets you a plate of pasta, choice of sauce, and a piece of garlic bread.  Tastes good, feels good on the wallet, and has a pretty good picatta and meat sauce.\\\\n\\\\nWill be back for a quick lunch or pick up some sauce for dinner at home.\\\"},{\\\"review_date\\\":\\\"2010-08-15 19:09:27\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"I started going there in 1992, and am still going. They' re in their 19th year. After a remodle this place feels and looks great. As for the food you can't get a better Italian meal at any price period. Depth of flavor, freshness, portion all solid. \\\\nDon't let the price fool you, way to good of a deal.\\\\n\\\\n19 years in business, i guess it must be pretty good, ya think. I sure do.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Sure! Here is an objective overview of Presto Pasta based on the provided structured data in JSON format:\\n\\nPresto Pasta is an Italian restaurant located in Santa Barbara, California. It has been in business for 19 years and offers a variety of Italian dishes, including pasta, chicken piccata, and meat sauce. The restaurant has both indoor and outdoor seating and offers takeout options. According to customer reviews, Presto Pasta offers good value for its prices and has a cozy atmosphere. The menu includes a variety of options, and the food is described as having depth of flavor, being fresh, and offering generous portions. The restaurant also has validated parking and is open for lunch and dinner. Based on customer reviews, Presto Pasta is a good option for those looking for a casual, affordable Italian meal in Santa Barbara.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "calibration_replay",
+  "source_cluster_id": "sha256:70e75a442b4725689c61c6120c0f6dd7eee92b5b3c5c342b7112c7335504fb84",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ]
+}

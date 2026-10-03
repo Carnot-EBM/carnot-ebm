@@ -1,0 +1,109 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.4543940209550783,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:deda0c421e6b73b15b0e7ae3463ba009a9d3c00003eff90f823437e72aac97f3",
+  "input_tokens": 863,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 863,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 884
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:691bbbd6408c385797847ac6acf5d34e70ece1bd4920a2428606b6362ce2dd7d",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886109,
+    "id": "chatcmpl-ByuRXQPqcVAXq7IhPmAFeVsxhsL9ykfF",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 493.039,
+      "predicted_n": 21,
+      "predicted_per_second": 42.59297946004272,
+      "predicted_per_token_ms": 23.47804761904762,
+      "prompt_ms": 822.701,
+      "prompt_n": 785,
+      "prompt_per_second": 954.1741167204125,
+      "prompt_per_token_ms": 1.0480267515923567
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 863,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 884
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"966 Embarcadero Del Mar, Apt C\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":null,\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":null},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Restaurants, Fast Food, Chinese\\\",\\\"city\\\":\\\"Isla Vista\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-21:0\\\",\\\"Monday\\\":\\\"11:0-21:0\\\",\\\"Saturday\\\":\\\"11:0-21:0\\\",\\\"Sunday\\\":\\\"11:0-21:0\\\",\\\"Thursday\\\":\\\"11:0-21:0\\\",\\\"Tuesday\\\":\\\"11:0-21:0\\\",\\\"Wednesday\\\":\\\"11:0-21:0\\\"},\\\"name\\\":\\\"Red Pepper Chinese Food Express\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-12-09 06:27:06\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Honestly some of the worst food I've ever eaten. I know that sounds like an exaggeration, but it was dry and flavorless (MC), and there were a bunch of bones and non-gelatinzed pieces of fat (SC). One of the few times I've ever had to throw out my dinner instead of just bearing it. I'm not sure what the dishes were called, since there are no name plates, but one looked like mandarin chicken (MC), and the other was referred to as \\\\\\\"spicy\\\\\\\" chicken (SC.\\\\n\\\\nTo whatever credit they may deserve, the chow mein/lo mein (not sure) was actually better than your average fast food counterpart. Take that as you will.\\\"},{\\\"review_date\\\":\\\"2021-12-02 04:34:48\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Best restaurant in IV if ur looking for Chinese Food. Some dishes are on rotation. You know it's authentic when the chef mainly speaks Mandarin! Also budget friendly and super convenient.\\\"},{\\\"review_date\\\":\\\"2021-12-02 04:32:32\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"For what's in IV, 5/5. Fried rice is dank. Chow mein is dank. Portions are dank. Cha siu questionable, everything else is dank. Would revisit every other day if I were not a poor college kid.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Red Pepper Chinese Food Express is a restaurant located at 966 Embarcadero Del Mar, Apt C, Isla Vista, CA. It is categorized under Restaurants, Fast Food, and Chinese. The restaurant operates from 11:00 to 21:00 from Monday to Sunday. While there is no information about services like business parking, reservations, outdoor seating, WiFi, takeaway, and group suitability, it holds an average star rating of 3.5. Some customers have had mixed experiences, with one describing their food as dry and flavorless. However, others praised the authenticity of the food, the rotation of dishes, and the affordability, with special mentions of the chow mein and fried rice. The restaurant is particularly popular among college students.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "7b401a190dd4011f137b219482ef06a7a6f353c00d0a5db76b6f97bec1030a97",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ]
+}

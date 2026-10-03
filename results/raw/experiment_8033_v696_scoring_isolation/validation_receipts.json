@@ -1,0 +1,249 @@
+{
+  "receipts": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n' --exp7303-resolve-imports /home/ianblenke/github.com/ianblenke/carnot carnot.experiment_8033_v696_scoring_isolation carnot.inference.scoring_isolation_8033 carnot.inference.likelihood_isolation_runtime_8033",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "carnot.experiment_8033_v696_scoring_isolation",
+        "carnot.inference.scoring_isolation_8033",
+        "carnot.inference.likelihood_isolation_runtime_8033"
+      ],
+      "duration_s": 1.412532952032052,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_8033_v696_scoring_isolation/validation_logs/00_worktree_imports.log",
+      "log_sha256": "sha256:b3a2d087021d09e86b69a1ed0967ccbddde70bf83389923d2f2d21753e759b3c",
+      "name": "worktree_imports",
+      "output_tail": "{\"resolved_imports\": {\"carnot.experiment_8033_v696_scoring_isolation\": \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8033_v696_scoring_isolation.py\", \"carnot.inference.likelihood_isolation_runtime_8033\": \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/likelihood_isolation_runtime_8033.py\", \"carnot.inference.scoring_isolation_8033\": \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/scoring_isolation_8033.py\"}}\n",
+      "passed": true,
+      "resolved_imports": {
+        "carnot.experiment_8033_v696_scoring_isolation": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8033_v696_scoring_isolation.py",
+        "carnot.inference.likelihood_isolation_runtime_8033": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/likelihood_isolation_runtime_8033.py",
+        "carnot.inference.scoring_isolation_8033": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/scoring_isolation_8033.py"
+      },
+      "scope": "owned",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-8033-ecl4d_8d/pytest/focused tests/python/test_scoring_isolation_8033.py -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-8033-ecl4d_8d/pytest/focused",
+        "tests/python/test_scoring_isolation_8033.py",
+        "-q"
+      ],
+      "duration_s": 5.1417423740495,
+      "exit_code": 1,
+      "log_path": "results/raw/experiment_8033_v696_scoring_isolation/validation_logs/01_focused_pytest.log",
+      "log_sha256": "sha256:59672352dd80def8e63aded416d899e15b2868c662438d34838ff5f75c49dfc0",
+      "name": "focused_pytest",
+      "output_tail": "ROR at setup of test_main_publication_and_replay ______________\n\nself = PosixPath('/tmp/carnot-8033-ecl4d_8d/pytest/focused'), mode = 448\nparents = False, exist_ok = False\n\n    def mkdir(self, mode=0o777, parents=False, exist_ok=False):\n        \"\"\"\n        Create a new directory at this given path.\n        \"\"\"\n        try:\n>           os.mkdir(self, mode)\nE           FileNotFoundError: [Errno 2] No such file or directory: '/tmp/carnot-8033-ecl4d_8d/pytest/focused'\n\n../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1311: FileNotFoundError\n_________ ERROR at setup of test_main_failures_and_validation_manifest _________\n\nself = PosixPath('/tmp/carnot-8033-ecl4d_8d/pytest/focused'), mode = 448\nparents = False, exist_ok = False\n\n    def mkdir(self, mode=0o777, parents=False, exist_ok=False):\n        \"\"\"\n        Create a new directory at this given path.\n        \"\"\"\n        try:\n>           os.mkdir(self, mode)\nE           FileNotFoundError: [Errno 2] No such file or directory: '/tmp/carnot-8033-ecl4d_8d/pytest/focused'\n\n../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1311: FileNotFoundError\n_____________ ERROR at setup of test_private_missing_contract_cli ______________\n\nself = PosixPath('/tmp/carnot-8033-ecl4d_8d/pytest/focused'), mode = 448\nparents = False, exist_ok = False\n\n    def mkdir(self, mode=0o777, parents=False, exist_ok=False):\n        \"\"\"\n        Create a new directory at this given path.\n        \"\"\"\n        try:\n>           os.mkdir(self, mode)\nE           FileNotFoundError: [Errno 2] No such file or directory: '/tmp/carnot-8033-ecl4d_8d/pytest/focused'\n\n../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1311: FileNotFoundError\n________ ERROR at setup of test_native_memory_clear_and_loader_failure _________\n\nself = PosixPath('/tmp/carnot-8033-ecl4d_8d/pytest/focused'), mode = 448\nparents = False, exist_ok = False\n\n    def mkdir(self, mode=0o777, parents=False, exist_ok=False):\n        \"\"\"\n        Create a new directory at this given path.\n        \"\"\"\n        try:\n>           os.mkdir(self, mode)\nE           FileNotFoundError: [Errno 2] No such file or directory: '/tmp/carnot-8033-ecl4d_8d/pytest/focused'\n\n../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1311: FileNotFoundError\n_________ ERROR at setup of test_child_exit_and_retained_failure_slots _________\n\nself = PosixPath('/tmp/carnot-8033-ecl4d_8d/pytest/focused'), mode = 448\nparents = False, exist_ok = False\n\n    def mkdir(self, mode=0o777, parents=False, exist_ok=False):\n        \"\"\"\n        Create a new directory at this given path.\n        \"\"\"\n        try:\n>           os.mkdir(self, mode)\nE           FileNotFoundError: [Errno 2] No such file or directory: '/tmp/carnot-8033-ecl4d_8d/pytest/focused'\n\n../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1311: FileNotFoundError\n=========================== short test summary info ============================\nERROR tests/python/test_scoring_isolation_8033.py::test_schedule_capture_and_reduction\nERROR tests/python/test_scoring_isolation_8033.py::test_failure_nonstarts_and_owned_oracle\nERROR tests/python/test_scoring_isolation_8033.py::test_native_context_shapes_and_stale_buffer\nERROR tests/python/test_scoring_isolation_8033.py::test_runtime_adapter_checks_and_cleanup\nERROR tests/python/test_scoring_isolation_8033.py::test_private_cli_routes - ...\nERROR tests/python/test_scoring_isolation_8033.py::test_main_publication_and_replay\nERROR tests/python/test_scoring_isolation_8033.py::test_main_failures_and_validation_manifest\nERROR tests/python/test_scoring_isolation_8033.py::test_private_missing_contract_cli\nERROR tests/python/test_scoring_isolation_8033.py::test_native_memory_clear_and_loader_failure\nERROR tests/python/test_scoring_isolation_8033.py::test_child_exit_and_retained_failure_slots\n1 passed, 10 errors in 1.90s\n",
+      "passed": false,
+      "scope": "owned",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -m coverage run --rcfile=/tmp/carnot-8033-ecl4d_8d/coverage.ini -m pytest -n 0 -o addopts= --no-cov -q tests/python/test_scoring_isolation_8033.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "run",
+        "--rcfile=/tmp/carnot-8033-ecl4d_8d/coverage.ini",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_scoring_isolation_8033.py"
+      ],
+      "duration_s": 29.83493107499089,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_8033_v696_scoring_isolation/validation_logs/02_changed_code_coverage.log",
+      "log_sha256": "sha256:57f7c303049e796e884b45dbfb43f29cc52e520657cb6eb8edf0409c8b2e063b",
+      "name": "changed_code_coverage",
+      "output_tail": "...........                                                              [100%]\n11 passed in 24.67s\n",
+      "passed": true,
+      "scope": "owned",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -m coverage combine --rcfile=/tmp/carnot-8033-ecl4d_8d/coverage.ini",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "combine",
+        "--rcfile=/tmp/carnot-8033-ecl4d_8d/coverage.ini"
+      ],
+      "duration_s": 0.064909280044958,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_8033_v696_scoring_isolation/validation_logs/03_combine.log",
+      "log_sha256": "sha256:692e83e649223740c6119dc5f19dc6a72d9a8b3c846db4b12839acc92ef7ce1c",
+      "name": "combine",
+      "output_tail": "Combined 5 files\n",
+      "passed": true,
+      "scope": "owned",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -m coverage json --rcfile=/tmp/carnot-8033-ecl4d_8d/coverage.ini -o /tmp/carnot-8033-ecl4d_8d/coverage.json --fail-under=100",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "json",
+        "--rcfile=/tmp/carnot-8033-ecl4d_8d/coverage.ini",
+        "-o",
+        "/tmp/carnot-8033-ecl4d_8d/coverage.json",
+        "--fail-under=100"
+      ],
+      "duration_s": 0.07938121305778623,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_8033_v696_scoring_isolation/validation_logs/04_coverage_json.log",
+      "log_sha256": "sha256:c2cecd2340bb912e6b8bab48efa4f07b52425935a45872c5e489aaf558851175",
+      "name": "coverage_json",
+      "output_tail": "Wrote JSON report to /tmp/carnot-8033-ecl4d_8d/coverage.json\n",
+      "passed": true,
+      "scope": "owned",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff check python/carnot/experiment_8033_v696_scoring_isolation.py python/carnot/inference/scoring_isolation_8033.py python/carnot/inference/likelihood_isolation_runtime_8033.py scripts/experiments/experiment_8033_v696_scoring_isolation.py tests/python/test_scoring_isolation_8033.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_8033_v696_scoring_isolation.py",
+        "python/carnot/inference/scoring_isolation_8033.py",
+        "python/carnot/inference/likelihood_isolation_runtime_8033.py",
+        "scripts/experiments/experiment_8033_v696_scoring_isolation.py",
+        "tests/python/test_scoring_isolation_8033.py"
+      ],
+      "duration_s": 0.013214672915637493,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_8033_v696_scoring_isolation/validation_logs/05_ruff_check.log",
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff_check",
+      "output_tail": "All checks passed!\n",
+      "passed": true,
+      "scope": "owned",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff format --check python/carnot/experiment_8033_v696_scoring_isolation.py python/carnot/inference/scoring_isolation_8033.py python/carnot/inference/likelihood_isolation_runtime_8033.py scripts/experiments/experiment_8033_v696_scoring_isolation.py tests/python/test_scoring_isolation_8033.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_8033_v696_scoring_isolation.py",
+        "python/carnot/inference/scoring_isolation_8033.py",
+        "python/carnot/inference/likelihood_isolation_runtime_8033.py",
+        "scripts/experiments/experiment_8033_v696_scoring_isolation.py",
+        "tests/python/test_scoring_isolation_8033.py"
+      ],
+      "duration_s": 0.01061695592943579,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_8033_v696_scoring_isolation/validation_logs/06_ruff_format.log",
+      "log_sha256": "sha256:f114d83b30c5c657ee43a847a45bafccaea255d82673feb87c26d252c61e29c1",
+      "name": "ruff_format",
+      "output_tail": "5 files already formatted\n",
+      "passed": true,
+      "scope": "owned",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy --strict --follow-imports=skip --ignore-missing-imports python/carnot/experiment_8033_v696_scoring_isolation.py python/carnot/inference/scoring_isolation_8033.py python/carnot/inference/likelihood_isolation_runtime_8033.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "--follow-imports=skip",
+        "--ignore-missing-imports",
+        "python/carnot/experiment_8033_v696_scoring_isolation.py",
+        "python/carnot/inference/scoring_isolation_8033.py",
+        "python/carnot/inference/likelihood_isolation_runtime_8033.py"
+      ],
+      "duration_s": 0.10217824997380376,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_8033_v696_scoring_isolation/validation_logs/07_changed_module_mypy.log",
+      "log_sha256": "sha256:6cba7477ee639aca45091fce0722dd4981774f96da439ea3c604e6f861256cef",
+      "name": "changed_module_mypy",
+      "output_tail": "pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.models.*', 'carnot.pipeline.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.pipeline.verify_repair', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.*', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl', 'carnot.verify.*']\nSuccess: no issues found in 3 source files\n",
+      "passed": true,
+      "scope": "owned",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/check_spec_coverage.py tests/python/test_scoring_isolation_8033.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_scoring_isolation_8033.py"
+      ],
+      "duration_s": 0.020072118961252272,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_8033_v696_scoring_isolation/validation_logs/08_scoped_spec_coverage.log",
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "scoped_spec_coverage",
+      "output_tail": "OK: All tests reference specification requirements.\n",
+      "passed": true,
+      "scope": "owned",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -n 0 -o addopts= --no-cov -q tests/python/test_likelihood_protocol_8022.py tests/python/test_primary_publication_7928.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_likelihood_protocol_8022.py",
+        "tests/python/test_primary_publication_7928.py"
+      ],
+      "duration_s": 21.159847085014917,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_8033_v696_scoring_isolation/validation_logs/09_consumer_contracts.log",
+      "log_sha256": "sha256:9d8f94556fefc51399c3f69d741b4230f40fa26e34e132fcc37ef44ba2508df0",
+      "name": "consumer_contracts",
+      "output_tail": "........................                                                 [100%]\n24 passed in 17.88s\n",
+      "passed": true,
+      "scope": "owned",
+      "timed_out": false
+    },
+    {
+      "command": "timeout --kill-after=5s 60s /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest tests/python -q",
+      "command_argv": [
+        "timeout",
+        "--kill-after=5s",
+        "60s",
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q"
+      ],
+      "duration_s": 60.080338421976194,
+      "exit_code": 124,
+      "log_path": "results/raw/experiment_8033_v696_scoring_isolation/validation_logs/10_repository_health.log",
+      "log_sha256": "sha256:e3aacda51df003a85d2c543044d9c4f14628e4e8f751512fba8ef9ea76daf7f4",
+      "name": "repository_health",
+      "output_tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0\nrootdir: /home/ianblenke/github.com/ianblenke/carnot\nconfigfile: pyproject.toml\nplugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2\ncreated: 4/4 workers\n",
+      "passed": false,
+      "scope": "repository_health",
+      "timed_out": true
+    }
+  ]
+}

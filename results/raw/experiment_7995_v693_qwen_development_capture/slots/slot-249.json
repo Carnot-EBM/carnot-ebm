@@ -1,0 +1,108 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.284927019965835,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:9f89d36fa0ccbfb8e354e2cec961f653c9385314a14d98da66cf446d460456dd",
+  "input_tokens": 697,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 697,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 720
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:647a8dd64a22bfeea55f84cc348c6ce72ad471db31bc31a9debdd0e3f949c489",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886194,
+    "id": "chatcmpl-QnC0KnJ1gG8i9PkB6W4WnCBvdbPT9t6f",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.054,
+      "predicted_n": 23,
+      "predicted_per_second": 42.509620111855746,
+      "predicted_per_token_ms": 23.52408695652174,
+      "prompt_ms": 630.079,
+      "prompt_n": 619,
+      "prompt_per_second": 982.4164906305401,
+      "prompt_per_token_ms": 1.017898222940226
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 697,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 720
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:If your device still won't turn on or start up. Plug in your device and let it charge for up to 1 hour. After a few minutes, you should see the charging screen. If you don't see the charging screen within an hour, or you see the connect to power screen, check your connector, USB cable, and power adapter.lug in your device and let it charge for up to 1 hour. After a few minutes, you should see the charging screen. If you don't see the charging screen within an hour, or you see the connect to power screen, check your connector, USB cable, and power adapter.\\\\n\\\\npassage 2:So, your iPhone could be refusing to turn on because its battery doesn't have enough juice. In that case, plug your iPhone into a wall charger or into your computer (plug it directly into the computer; some USB ports on keyboards don't have enough power to charge iPhones).ormally, you can just sync your iPhone and click the Restore button in iTunes, but if it won't turn on, you need a different technique: 1  Plug the iPhone's USB cable into the dock connector, but not into your computer.\\\\n\\\\npassage 3:1 To reset, press and hold the Sleep/Wake button and the Home button at the same time for at least ten seconds, until either the Apple logo or the battery symbol appears. 2  If the display turns on, go to step 4. 3  If the display remains black, go to next step. 4  Restore the iPhone. Connect the iPhone to the iPhone's USB power adapter and let it charge for at least ten minutes. 2  After at least 15 minutes, if: 3  The home screen appears: The iPhone should be working.\\\\n\\\\n\\\",\\\"question\\\":\\\"iphone wont turn on from charging\\\"}\", \"original_answer\": \"If your iPhone won't turn on when charging, it could be due to its battery not having enough power. You should plug your device into either a wall charger or your computer for up to 1 hour. If you don't see the charging screen within an hour, check your connector, USB cable, and power adapter. If the screen still remains black after these steps, you may need to reset the device by pressing and holding the Sleep/Wake button and the Home button at the same time for at least ten seconds until the Apple logo or battery symbol appears. If this doesn't work, you may need to restore the iPhone after letting it charge for at least ten minutes.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "da85cf4d5600c9fb1d1f1140ba09c7c99281732737381924fb3a5d604ecb99c9",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]
+}

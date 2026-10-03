@@ -1,0 +1,103 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.4511735220439732,
+  "exclusion_reason": null,
+  "family_id": "sha256:cde57004f2f80835278ef03b4a636e04cc4ed7613653647d5e974326248657ab",
+  "input_tokens": 868,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 868,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 890
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:a9ebacb991b96df3d94e3b6d83a5589a022a061171c2f5c100fa9c405eb519d0",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.95,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832819,
+    "id": "chatcmpl-bCzzqM9NI2bEKDnYToA2VbvhwQc9kWzx",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 516.48,
+      "predicted_n": 22,
+      "predicted_per_second": 42.59603469640644,
+      "predicted_per_token_ms": 23.476363636363637,
+      "prompt_ms": 823.645,
+      "prompt_n": 790,
+      "prompt_per_second": 959.1510905790724,
+      "prompt_per_token_ms": 1.0425886075949367
+    },
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 868,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 890
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"5915 Calle Real, Ste A\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":null},\\\"business_stars\\\":2.0,\\\"categories\\\":\\\"Restaurants, Pizza, Chicken Wings, American (New), Italian\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"10:30-0:0\\\",\\\"Monday\\\":\\\"10:30-23:0\\\",\\\"Saturday\\\":\\\"10:30-0:0\\\",\\\"Sunday\\\":\\\"10:30-0:0\\\",\\\"Thursday\\\":\\\"10:30-23:0\\\",\\\"Tuesday\\\":\\\"10:30-1:0\\\",\\\"Wednesday\\\":\\\"10:30-23:0\\\"},\\\"name\\\":\\\"Pizza Hut\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2020-08-22 04:57:48\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"I'm not shocked tbh they were way too over prices compared to all the competition from dominos to rusties to Woodstock's to giovannis to ginos... etc etc just no chance. Only stuffed crust pizza in town though so that's a bummer :/\\\"},{\\\"review_date\\\":\\\"2020-01-16 14:49:22\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Sorry to see that the Calle Real location in Goleta has closed.  I liked this place.  Gods pizza.  Convenient location.  Lots of parking.  Fast service.\\\"},{\\\"review_date\\\":\\\"2019-10-29 02:33:01\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"I don't normally leave reviews, but the service of this place was so terrible that I felt I should take the time to write one. I don't know how many times they messed up my order, and I didn't find out until I got home. This time they left out half the order of my breadsticks, I tried to call, but no answer. Just really frustrated with this store. If you buy anything from here, make sure they didn't mess up the order or leave out a part of your order.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Pizza Hut is a restaurant located at 5915 Calle Real, Ste A in Goleta, California. They offer pizzas, chicken wings, American, and Italian cuisine. Their hours are from 10:30 am to midnight, seven days a week. Based on customer reviews, Pizza Hut has an average rating of 2.0 stars. One customer praised the quality of their pizza and the convenience of their location, while another customer expressed frustration with the poor service they experienced at the restaurant. Another customer also noted the lack of outdoor seating and WiFi available at the restaurant. Despite these issues, Pizza Hut offers takeout options and is good for groups.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:72f1ffcb9394038c8c6b45b987fbf119d3e5f3972e108ce2f7f2e962e1791cf7",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]
+}

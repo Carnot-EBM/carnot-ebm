@@ -1,0 +1,109 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.266183718922548,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:8c5dda5511904cafc915dcd0859c4cff17fa464e5bae5bd9836e887a7a818f88",
+  "input_tokens": 695,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 1,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 695,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 717
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:dc068c9325adc3ced728d72d427be99282bb61d0404d8474be7aadd750f7c1cd",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"unsupported_probability\": 0.0,\n\"source_sentence_id\": 1\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885985,
+    "id": "chatcmpl-AC2HNcgwikkDP9cmCC4ifXHIyveqSWkj",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 516.545,
+      "predicted_n": 22,
+      "predicted_per_second": 42.59067457820713,
+      "predicted_per_token_ms": 23.47931818181818,
+      "prompt_ms": 631.002,
+      "prompt_n": 617,
+      "prompt_per_second": 977.8098960066689,
+      "prompt_per_token_ms": 1.0226936790923824
+    },
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 695,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 717
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:The natural greenhouse effect has been keeping the earth warm for millions of years, allowing life to thrive on this planet. The enhanced or accelerated greenhouse effect, which is what is happening now, is causing global warming and may mean the end of life on earth if we can't slow or stop it.o this  natural greenhouse effect is very useful.    The gases that keep the earth warm are called greenhouse  gases. The most important gas, causing about 75% of the  natural greenhouse effect, is water vapor.\\\\n\\\\npassage 2:The greenhouse effect keeps the earth warm enough for life.  It does this by trapping some of the sun's heat as it radiates back  out from the surface of the earth. This has \u2026 been happening for  millions of years and is completely natural.o this  natural greenhouse effect is very useful.    The gases that keep the earth warm are called greenhouse  gases. The most important gas, causing about 75% of the  natural greenhouse effect, is water vapor.\\\\n\\\\npassage 3:A greenhouse gas (sometimes abbreviated GHG) is a gas in an atmosphere that absorbs and emits radiation within the thermal infrared range. This process is the fundamental cause of the greenhouse effect. The primary greenhouse gases in Earth's atmosphere are water vapor, carbon dioxide, methane, nitrous oxide, and ozone.Without greenhouse gases, the average temperature of Earth's surface would be about 15 \u00b0C (27 \u00b0F) colder than the present average of 14 \u00b0C (57 \u00b0F). greenhouse gas (sometimes abbreviated GHG) is a gas in an atmosphere that absorbs and emits radiation within the thermal infrared range. This process is the fundamental cause of the greenhouse effect. The primary greenhouse gases in Earth's atmosphere are water vapor, carbon dioxide, methane, nitrous oxide, and ozone.\\\\n\\\\n\\\",\\\"question\\\":\\\"why are greenhouse gases important to life on earth\\\"}\", \"original_answer\": \"Greenhouse gases are important to life on Earth because they help maintain the planet's temperature. They do this by trapping some of the sun's heat as it radiates back out from the surface of the Earth, a process commonly known as the greenhouse effect. Without greenhouse gases, the average temperature of Earth's surface would be about 15 \u00b0C colder, making it less hospitable for life as we know it. The most important greenhouse gas is water vapor, which causes about 75% of the natural greenhouse effect. Other significant greenhouse gases include carbon dioxide, methane, nitrous oxide, and ozone.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "723dd004b35d128bbc97df72f75ae95cbedcccaa0e0d4f68c9d3eb410249b2fc",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ]
+}

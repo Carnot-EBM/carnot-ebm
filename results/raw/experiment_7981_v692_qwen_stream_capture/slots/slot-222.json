@@ -1,0 +1,102 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.4468248389894143,
+  "exclusion_reason": null,
+  "family_id": "sha256:9a5a0bd20946a5ee60cda93907a12762648d3a7ef08e74fbf1910ed356e0fe09",
+  "input_tokens": 876,
+  "invocation_finished_at": "2026-10-01T11:46:27.688052+00:00",
+  "invocation_started_at": "2026-10-01T11:46:26.241226+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 876,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 897
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:fcce450c68b08ef4879e261b340bcd0d064bdacec726d55ed137e183d03fd746",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855187,
+    "id": "chatcmpl-1NdIska6jvF5UgZqPkLidqFvwq8AFRYa",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 491.912,
+      "predicted_n": 21,
+      "predicted_per_second": 42.69056253964124,
+      "predicted_per_token_ms": 23.42438095238095,
+      "prompt_ms": 822.305,
+      "prompt_n": 798,
+      "prompt_per_second": 970.4428405518635,
+      "prompt_per_token_ms": 1.0304573934837091
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 876,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 897
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"628 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":null,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":true,\\\"lot\\\":false,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Burgers, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"10:30-21:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"10:30-21:0\\\",\\\"Sunday\\\":\\\"11:0-21:0\\\",\\\"Thursday\\\":\\\"10:30-21:0\\\",\\\"Tuesday\\\":\\\"10:30-21:0\\\",\\\"Wednesday\\\":\\\"10:30-21:0\\\"},\\\"name\\\":\\\"The Habit Burger Grill\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-12-28 00:40:23\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"I did a door dash order for pick up and they didn't have it confirmed. After forty mins of waiting and going up to the restaurant they didn't have anything in their system even though I had proof that I paid and was waiting for them to confirm the order after FORTY MINS!\\\"},{\\\"review_date\\\":\\\"2021-10-30 02:34:45\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"i usually never have \\\\\\\"fast food\\\\\\\" or when i do it will be something more macro and \\\\\\\"health\\\\\\\" oriented. i decided to treat myself with habit's chicken club on sourdough and boy was it good! i got the mayo on the side but the sandwhich was honestly great without it. only thing was the chicken was a little dry but besides that it was awesome!\\\"},{\\\"review_date\\\":\\\"2021-10-15 04:25:47\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"The worse habit in sb lol. I have no idea why but they can't ever get the order right. I door dash a burger and get no cheese??? Maybe some quality check should be implemented. Go to the habit on milpas it's way better\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"The Habit Burger Grill is a local burger restaurant located at 628 State St, Santa Barbara, CA. The restaurant specializes in burgers and is open from 10:30 to 21:00 from Tuesday to Saturday, and from 11:00 to 21:00 on Sunday. The business provides garage parking but does not offer WiFi. The restaurant, which does not require reservations, offers outdoor seating and takeout, and is suitable for groups. The ambience is casual. The business has a 4-star rating. However, customer reviews suggest some issues with their service, including order mix-ups and problems with delivery confirmations. One review praised the chicken club sandwich, though they found the chicken a bit dry. Another review recommended visiting a different branch for a better experience.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_update",
+  "source_cluster_id": "sha256:449fc0d13033c19975bab9b0c46f4c7794e31c74057ef1f362c97f819f5b6aa6",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ]
+}

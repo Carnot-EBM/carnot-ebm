@@ -1,0 +1,112 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.693947818945162,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:525cee93d7331332ec3297bfdd9796466bf3bb322471e9849192c472fb9f7292",
+  "input_tokens": 1209,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1209,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1232
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:29ad8496841ad7a5e315aa0814f87c36fc7541133e65eae7cb8fe25e64322e9d",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885851,
+    "id": "chatcmpl-uyy6ChOrSKuEg5FBQqAh7nrafkpyVN5p",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 534.932,
+      "predicted_n": 23,
+      "predicted_per_second": 42.99611913289914,
+      "predicted_per_token_ms": 23.25791304347826,
+      "prompt_ms": 1041.635,
+      "prompt_n": 1131,
+      "prompt_per_second": 1085.7930081074464,
+      "prompt_per_token_ms": 0.9209858532272325
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1209,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1232
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"10 El Paseo\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Restaurants, Mexican\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"16:0-21:0\\\",\\\"Saturday\\\":\\\"16:0-21:0\\\",\\\"Sunday\\\":\\\"10:30-20:0\\\",\\\"Thursday\\\":\\\"16:0-21:0\\\",\\\"Tuesday\\\":\\\"16:0-21:0\\\",\\\"Wednesday\\\":\\\"16:0-21:0\\\"},\\\"name\\\":\\\"El Paseo Mexican Restaurant\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-18 02:05:40\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"This restaurant was so great, from ambiance to food to staff and cleanliness are all excellent. We had brunch for my sons birthday with few of his friends and I was really impressed. I've been so many Mexican restaurants and this by far the best I always love ambiance and the food was really amazing so many choices on the buffet and all of them we're good. We also love our server Princess she made sure we're all comfortable and having a good time, definitely will come back here when we visit our son and his wife again.\\\"},{\\\"review_date\\\":\\\"2022-01-06 22:57:54\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"The WORST customer service I have ever experienced in my ENTIRE life. I came here two separate occasions, both at 7:50 pm on two separate Tuesday evenings. El Paseo advertises that they are open until 9pm, however BOTH of these times they denied me from their restaurant during their \\\\\\\"open hours\\\\\\\". The first time because they had a \\\\\\\"special event\\\\\\\" going on, which they failed to disclose on their website, and the second time, because they decided to close at 8pm that day, without any notice.\\\\n\\\\nThe most recent time, I took a 45 minute Uber to the restaurant only to be greeted by the rudest hostess I have ever met in my entire life. She told me they decided to close early because they didn't have enough business that particular day, and after telling her I had just spent $70 ubering there and that they still had an hour and 15 minutes until closing, as mentioned on their website, she told me thats \\\\\\\"too bad\\\\\\\" and I should find somewhere else to eat, and then proceeded to slam the door in my face. I will never be returning to this restaurant EVER again, and I highly advise that you take your money and time and spend it at a small local restaurant in Downtown SB, where there is plenty of delicious food and small local businesss that actually WANT, and need, your customer service.\\\"},{\\\"review_date\\\":\\\"2022-01-05 04:25:36\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Terrible customer service. Especially the hostess. They advertise being open until 9, arrived an hour early (with respect of not wanting to stay past closing) and was told we could not be seated. I suggest advertising correct business hours and expecting costumer dissatisfaction when not seated during restaurant hours. In addition when we expressed confusion we were helped by one of the rudest hostesses I have come across (being a hostess myself) . Insanely unprofessional. Will not be returning and suggest to others to not check this place out. A much cheaper and friendlier taco restaurant down the street that actually deserves your business.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"El Paseo Mexican Restaurant, located at 10 El Paseo in Santa Barbara, CA, is a Mexican establishment open from Tuesday to Sunday with varying hours. The restaurant offers free Wi-Fi, reservations, takeout, outdoor seating, and is good for groups. It is described as both casual and classy. However, customers have provided mixed reviews. Some customers praised the restaurant for its excellent food, ambiance, and staff, indicating it as a great place for events such as birthday celebrations. However, other customers have reported negative experiences primarily related to customer service and the restaurant's adherence to its advertised opening hours. Several reviewers reported being denied entry despite arriving during the advertised hours. As a result, the business has an average rating of 3.5 stars.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "calibration",
+  "source_cluster_id": "aaa1f1e9801b62af307cd6cd6adc4664c540f0c6323ffc8b4f7994771331873c",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ]
+}

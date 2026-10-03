@@ -1,0 +1,121 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.3926129719475284,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:6db6eb87e315a7ef95a8632aa95d73e9015652aa56b995d2716a686cc5cd09f5",
+  "input_tokens": 815,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 815,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 838
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:2539293c47626a5fc33c5deb23e1e7b7c7a77a112b80d81d42dfcc1190a4f45a",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886042,
+    "id": "chatcmpl-8IhvYpeYkKPUSV0Qu03GlQIgaJxSIcir",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.788,
+      "predicted_n": 23,
+      "predicted_per_second": 42.452029206996095,
+      "predicted_per_token_ms": 23.556,
+      "prompt_ms": 715.234,
+      "prompt_n": 737,
+      "prompt_per_second": 1030.4319984788194,
+      "prompt_per_token_ms": 0.9704667571234736
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 815,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 838
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"The accidental death of a 2-year-old boy in Milwaukee on Sunday triggered a violent chain of events, eventually claiming the lives of three more people. It all started with a birthday party that little Damani Terry was attending. During the family gathering, he dashed out into the street and was struck and killed by a GMC van, according to Milwaukee police. The distraught driver, Archie Brown Jr., 40, immediately stopped and got out to tend to the boy. But it was too late, police said. Damani was dead. Damani's alarmed family came running, including his older brother, 15-year-old Rasheed Chiles, police said. That was not the end of the situation. Soon, two more people would also die: the driver and the teen were both felled by bullets fired by the same man, police said. That man, identified as Ricky Ricardo Chiles III, was located late Wednesday at a Chicago-area hotel. He committed suicide as authorities closed in with a warrant for his arrest, Milwaukee Police Chief Ed Flynn told reporters. \\\"Chicago police and United States Marshals Service entered the hotel room, whereupon Mr. Chiles took his own life with his firearm,\\\" the police chief said Thursday. An accidental death, a fatal retaliation rips apart two families. Damani's family members had previously identified the shooting suspect as the boys' uncle. \\\"Sunday was the worst day I ever lived in my whole entire life,\\\" Lena Tidwell, told CNN affiliate WISN. \\\"It's a day I wish had never, never came.\\\" Tidwell is the boys' grandmother and the mother of the alleged gunman. She said she was inside eating cake and ice cream at the birthday when her life turned upside down. \\\"I didn't know my grandbaby got hit, and then I heard people just screaming,\\\" she said. \\\"Then I just heard gunshots, and my daughter ran in the house with the baby in her arms.\\\" The family believes the uncle targeted Brown, and Rasheed was struck by an errant bullet. \\\"I heard he was trying to pick his brother up. He was trying to hold him and save him,\\\" a family friend, Stephanie Townsend, told CNN affiliate WITI. Earlier this week, Flynn bemoaned the apparent madness of what happened. \\\"What did we have Sunday?\\\" Flynn asked. \\\"We had some clown take the law into his own hands and murder a guy who was doing what we expect good citizens to do, and oops, accidentally kill somebody else.\\\"\\n\", \"original_answer\": \"A 2-year-old boy's accidental death resulted in an unexpected violent chain of events in Milwaukee, Wisconsin, which took the lives of three more people. The driver of the car which hit the boy was shot dead, as was the boy's older brother. The gunman, the uncle of the two boys, was later found dead in a Chicago hotel room, having committed suicide as the police closed in.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "6d324a90ea11140572bdb443607190dc41266624c80efe2c693a1ad1f6a285d0",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+  ]
+}

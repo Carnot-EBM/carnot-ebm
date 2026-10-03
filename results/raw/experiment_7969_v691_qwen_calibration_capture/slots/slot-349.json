@@ -1,0 +1,102 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.367556688026525,
+  "exclusion_reason": null,
+  "family_id": "sha256:e3a8306adb542b1a0e915b257dbae3a91dde7ac1cc7c8ae2c05af4004dedce62",
+  "input_tokens": 784,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 784,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 807
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:e91c9836cfadb35117dc637e6c9f92eed15fcee03706a81421f3400d7b095ee8",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832958,
+    "id": "chatcmpl-HRLjzP8VS6PociYO01AEaorlncdm6BUf",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.139,
+      "predicted_n": 23,
+      "predicted_per_second": 42.502942866805014,
+      "predicted_per_token_ms": 23.527782608695652,
+      "prompt_ms": 695.91,
+      "prompt_n": 706,
+      "prompt_per_second": 1014.4990013076404,
+      "prompt_per_token_ms": 0.9857082152974503
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 784,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 807
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Freedom of religion is so important, because no matter what one's religion is, all religions have one thing in common: If an individual is forced to follow certain customs and \u2026 beliefs, that person is not whole-heartedly being religious.his  freedom is one of the most basic rights of man.    Answer   People need to be able to worship; or to change religions such as  when they do not feel safe in their religion, or they get  interested in another religion's history so they decide to convert.\\\\n\\\\npassage 2:Freedom of religion is important because people must have the right to believe and trust in their own religion. Answer. Religion without freedom of or from religion is tyranny.This freedom is one of the most basic rights of man. Answer. People need to be able to worship; or to change religions such as when they do not feel safe in their religion, or they get interested in another religion's history so they decide to convert.his freedom is one of the most basic rights of man. Answer. People need to be able to worship; or to change religions such as when they do not feel safe in their religion, or they get interested in another religion's history so they decide to convert.\\\\n\\\\npassage 3:All of this makes me think that religion is important because people could rely on it when they are feeling down, religion can also help turn a person from doing bad into doing something that will benefit him or herself in the future.1  Add new comment. 2  Share.ll of this makes me think that religion is important because people could rely on it when they are feeling down, religion can also help turn a person from doing bad into doing something that will benefit him or herself in the future. 1  Add new comment. 2  Share.\\\\n\\\\n\\\",\\\"question\\\":\\\"why is the right to religion important\\\"}\", \"original_answer\": \"The right to religion is important for several reasons, as highlighted in the given passages:\\n\\n1. Freedom of religion allows individuals to choose and practice their faith without fear of persecution or coercion, which is essential for a person's spiritual and emotional well-being. As stated in passage 1, if an individual is forced to follow certain customs and beliefs against their will, they are not truly religious.\\n2. The ability to change religions or worship freely is crucial for people who may feel unsafe in their current belief system or who wish to explore other religions. Passage 2 emphasizes that without freedom of religion, there is tyranny, which goes against the fundamental human right to religious autonomy.\\n3. Religion can provide solace and hope during difficult times, as discussed in passage 3. By relying on their faith, individuals can find strength and inspiration to overcome challenges. Additionally, religion can influence positive behavioral changes by guiding people towards moral principles and ethical values.\\n\\nIn conclusion, the right to religion is essential for protecting individuals' spiritual, emotional, and moral well-being, as well as their freedom to make choices about their beliefs and practices.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:8570a48d72c1e9c260e135f8232d6a314ec1e5be4d69f91a0abaa9d42ed0a245",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ]
+}

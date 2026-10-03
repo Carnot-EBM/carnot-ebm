@@ -1,0 +1,202 @@
+{
+  "affinity": [
+    0
+  ],
+  "artifact_guard_enabled": true,
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "run",
+        "--data-file=/tmp/carnot-8027-aczeo5cb/.coverage",
+        "--rcfile=/tmp/carnot-8027-aczeo5cb/coverage.ini",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-8027-aczeo5cb/pytest",
+        "tests/python/test_native_update_8027.py",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_response_targets_7955.py",
+        "tests/python/test_source_boundary_7852.py",
+        "tests/python/test_experiment_7942_v689_sentence_labels.py",
+        "-q"
+      ],
+      "name": "unit_consumers_e2e015_019",
+      "scope": "owned",
+      "timeout_s": 300
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--data-file=/tmp/carnot-8027-aczeo5cb/.coverage",
+        "/tmp/carnot-8027-aczeo5cb"
+      ],
+      "name": "coverage_combine",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/carnot-8027-aczeo5cb/.coverage",
+        "--fail-under=100",
+        "--show-missing"
+      ],
+      "name": "coverage_report",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "json",
+        "--data-file=/tmp/carnot-8027-aczeo5cb/.coverage",
+        "-o",
+        "/tmp/carnot-8027-aczeo5cb/coverage.json"
+      ],
+      "name": "coverage_json",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_8027_v695_native_update_cost.py",
+        "scripts/experiments/experiment_8027_v695_native_update_cost.py",
+        "tests/python/test_native_update_8027.py"
+      ],
+      "name": "ruff_check",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_8027_v695_native_update_cost.py",
+        "scripts/experiments/experiment_8027_v695_native_update_cost.py",
+        "tests/python/test_native_update_8027.py"
+      ],
+      "name": "ruff_format",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--config-file=/tmp/carnot-8027-aczeo5cb/mypy.ini",
+        "python/carnot/experiment_8027_v695_native_update_cost.py",
+        "scripts/experiments/experiment_8027_v695_native_update_cost.py"
+      ],
+      "name": "strict_mypy",
+      "scope": "owned",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_native_update_8027.py"
+      ],
+      "name": "spec_coverage",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q"
+      ],
+      "name": "repository_health",
+      "scope": "repository_health",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "env",
+        "PYO3_PYTHON=/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "RUSTFLAGS=-C link-arg=-L/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib -C link-arg=-lpython3.12",
+        "LD_LIBRARY_PATH=/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib",
+        "cargo",
+        "test",
+        "-p",
+        "carnot-core",
+        "-p",
+        "carnot-python",
+        "numerical_update_8027"
+      ],
+      "name": "cargo_test",
+      "scope": "owned",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "cargo",
+        "fmt",
+        "-p",
+        "carnot-core",
+        "-p",
+        "carnot-python",
+        "--",
+        "--check",
+        "--config",
+        "skip_children=true"
+      ],
+      "name": "cargo_fmt",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "cargo",
+        "clippy",
+        "-p",
+        "carnot-core",
+        "-p",
+        "carnot-python",
+        "--no-deps"
+      ],
+      "name": "cargo_clippy",
+      "scope": "owned",
+      "timeout_s": 180
+    }
+  ],
+  "config": {
+    "batches": [
+      1,
+      16,
+      64
+    ],
+    "budget_s": 900,
+    "defaults": false,
+    "eligibility": "exact original public masks and released labels",
+    "l2": 0.001,
+    "learning_rate": 0.01,
+    "nfr01_target": 10,
+    "repetitions": 30,
+    "scope": "cached exposed development; stress has no independent natural credit",
+    "seed": 8027,
+    "stress_inputs": 256,
+    "thread_limit": 1,
+    "tier1_target_ns": 1000,
+    "tolerance": 1e-10
+  },
+  "exclusions": "original public masks; no unknown target imputation; unmatched acquisition excluded",
+  "source_roles": "qualified head and released natural stream updates",
+  "threads": {
+    "MKL_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1"
+  }
+}

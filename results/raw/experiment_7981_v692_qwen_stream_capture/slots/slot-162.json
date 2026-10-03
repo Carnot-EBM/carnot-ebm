@@ -1,0 +1,108 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.3004492460167967,
+  "exclusion_reason": null,
+  "family_id": "sha256:1dbcfcbfb866142a31b1f3a632f662ed0895089544369ef94c96fa51ae6c0340",
+  "input_tokens": 685,
+  "invocation_finished_at": "2026-10-01T11:45:00.915657+00:00",
+  "invocation_started_at": "2026-10-01T11:44:59.615206+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 1,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 685,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 709
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:b69ef42ec16f573e4e851e796f8f4cba10a6df03c48869f237cd4113c7b4e504",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 1\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855100,
+    "id": "chatcmpl-uDjnr5wJWtIrMBYUyDAsiynu5ndpqOKp",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.189,
+      "predicted_n": 24,
+      "predicted_per_second": 42.53893642024215,
+      "predicted_per_token_ms": 23.507875,
+      "prompt_ms": 620.426,
+      "prompt_n": 607,
+      "prompt_per_second": 978.360030043873,
+      "prompt_per_token_ms": 1.0221186161449753
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 685,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 709
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Guaranteed to last the life of your seat. This size is the most typical size found on harley-davidson seats and cycle saddle-bags. Dome Studs Category. Shaped like a dome, these dome studs are one of the most classic \u2013 a design to last the ages.\\\\n\\\\npassage 2:Push the stud's rivets completely through the seat cover until the prongs protrude out from the inside of the seat cover. Bend the prongs toward each other with a pair of needle-nose pliers to secure the stub in place. Push the prongs of the next stud into the seat cover near the previous stud. Remove the stud and cut holes for the prongs. Push the stud into place and bend its prongs in with a pair of needle-nose pliers. Repeat until you have studded to the seat to your liking. Double check the stud prongs on the inside of the seat cover. Make sure that all of the prongs have been bent completely and that the studs are held firmly in place. Lay the seat cover over your motorcycle's seat pan, then flip the entire seat upside down.\\\\n\\\\npassage 3:Flip the seat over. Pry up the staples attaching the seat cover to the seat pan, using a staple remover or a small pry bar. Drill the cover rivets out carefully with an electric drill and a 1/8-inch bit, if your seat cover is attached by rivets. Pull the cover off of the seat pan.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to attach studs to seat\\\"}\", \"original_answer\": \"To attach studs to a seat, you can follow the steps outlined in passage 2. Begin by pushing the stud's rivets completely through the seat cover until the prongs protrude out from the inside of the seat cover. Then, bend the prongs toward each other with a pair of needle-nose pliers to secure the stub in place. Next, push the prongs of the next stud into the seat cover near the previous stud. Remove the stud and cut holes for the prongs. Finally, push the stud into place and bend its prongs in with a pair of needle-nose pliers. Repeat until you have studded to the seat to your liking. It's important to double check the stud prongs on the inside of the seat cover and ensure that all of the prongs have been bent completely and that the studs are held firmly in place.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_update",
+  "source_cluster_id": "sha256:84ec81b7f901573cc0d24ce95ffc8bc8a8368570d7681b83082b4f8abb970259",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ]
+}

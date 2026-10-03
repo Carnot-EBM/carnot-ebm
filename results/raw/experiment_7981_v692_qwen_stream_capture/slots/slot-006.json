@@ -1,0 +1,105 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.332581857976038,
+  "exclusion_reason": null,
+  "family_id": "sha256:fec38688aa7634c01a33d7f89293011ec612a56f44f298951181a09e8da70375",
+  "input_tokens": 825,
+  "invocation_finished_at": "2026-10-01T11:41:25.671131+00:00",
+  "invocation_started_at": "2026-10-01T11:41:24.338550+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.05,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 825,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 847
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:0822e7eae8bab8af1bc2973ee00cb089e7becf8fb7a763e60e9cef565493ff46",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.05,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790854885,
+    "id": "chatcmpl-EL9BHo2i5qWLVeJ69x3Az7mEKDrwa4aZ",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 508.286,
+      "predicted_n": 22,
+      "predicted_per_second": 43.282718784306475,
+      "predicted_per_token_ms": 23.10390909090909,
+      "prompt_ms": 701.46,
+      "prompt_n": 747,
+      "prompt_per_second": 1064.921734667693,
+      "prompt_per_token_ms": 0.9390361445783133
+    },
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 825,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 847
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"5003 Carpinteria Ave\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":null,\\\"classy\\\":false,\\\"divey\\\":null,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":null,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":3.0,\\\"categories\\\":\\\"Pizza, Restaurants\\\",\\\"city\\\":\\\"Carpinteria\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-22:0\\\",\\\"Monday\\\":\\\"11:0-21:0\\\",\\\"Saturday\\\":\\\"11:0-22:0\\\",\\\"Sunday\\\":\\\"12:0-21:0\\\",\\\"Thursday\\\":\\\"11:0-21:0\\\",\\\"Tuesday\\\":\\\"11:0-21:0\\\",\\\"Wednesday\\\":\\\"11:0-21:0\\\"},\\\"name\\\":\\\"Giovanni's Pizza Carpinteria\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-12-07 20:08:39\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Pan pepperoni and sausage pizza was delicious. It was piping hot and spicy just how I like it! Owner Shawn is friendly and low key.\\\"},{\\\"review_date\\\":\\\"2021-11-24 00:44:21\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Wow! This place is amazing!!! The service is amazing.  A true family owned business. Pizza made to perfection. I would definitely recommend. They also sell beer in tap--additional plus!! \\\\n\\\\nMy family has been camping this area for years. This past September we took the train up and finally ate at this pizzeria. Now I can't believe it took us so many years to discover how good this place is.\\\"},{\\\"review_date\\\":\\\"2021-10-29 23:33:28\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Excellent old school feel and real pizza, good location, good concerts, a local hange out.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Giovanni's Pizza Carpinteria is a local restaurant located at 5003 Carpinteria Ave in Carpinteria, California. The restaurant serves pizza and is categorized as a restaurant. Giovanni's Pizza Carpinteria is open from Monday to Sunday, with hours of operation varying slightly each day. The restaurant does not offer reservations and has outdoor seating available. Wi-Fi is not available, but takeout and catering options are available. Customers have praised the quality of the pizza and the friendly owner, Shawn. Some customers have also mentioned that Giovanni's Pizza Carpinteria is a great place for groups and that they sell beer in tap. Overall, Giovanni's Pizza Carpinteria appears to be a popular and well-regarded local restaurant that offers authentic pizza and a casual atmosphere.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_update",
+  "source_cluster_id": "sha256:0275a70c527df037942632ef2e53ad6bb99fe05293a7db36d522c908364c8159",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]
+}

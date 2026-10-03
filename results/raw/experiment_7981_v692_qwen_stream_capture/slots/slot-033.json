@@ -1,0 +1,101 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.1610943209961988,
+  "exclusion_reason": null,
+  "family_id": "sha256:f9364f13a0a37b8474c5f109aa6b8744b14818ce012f8f206876213c86277f7c",
+  "input_tokens": 620,
+  "invocation_finished_at": "2026-10-01T11:41:57.178919+00:00",
+  "invocation_started_at": "2026-10-01T11:41:56.017823+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 620,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 641
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:28bc39fea6c5c2beb839d6bfd05757c165fad58c34662d3d7c7285f670c017d2",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"unsupported_probability\": 0.0,\n\"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790854917,
+    "id": "chatcmpl-oEIF3XSJ2h6qj5Gcvn5xyazPgYoNu1ON",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 485.419,
+      "predicted_n": 21,
+      "predicted_per_second": 43.261594622377785,
+      "predicted_per_token_ms": 23.115190476190474,
+      "prompt_ms": 565.406,
+      "prompt_n": 542,
+      "prompt_per_second": 958.6031984096385,
+      "prompt_per_token_ms": 1.0431845018450183
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 620,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 641
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:When you do so, you'll see that the Trash icon changes to an Eject icon (same symbol that's on an Eject key). By doing that the drive will be dismounted, and its icon will disappear from the desktop; once that's done you can safely unplug it. The reason to use an Eject command or drag it to the Trash is to make sure the drive has been dismounted before disconnecting it.\\\\n\\\\npassage 2:Safely Removing a Flash Drive. When you insert a flash drive into a computer running Windows 7, 8 or 8.1, an icon reading Safely Remove Hardware and Eject Media displays on the system tray. To unplug your flash drive, right-click that icon, and select Eject USB Flash Drive. If it's safe to eject, a notification displays Safe to Remove Hardware. If instead, the utility notifies you that the flash drive is in use, close any files or applications that you are running off the flash drive, and then try again.\\\\n\\\\npassage 3:There is one more type of device you should never eject and that is a device you have booted an OS from. By \u201cnever eject\u201d we mean don\u2019t ever pull the drive out of the system unless the computer is turned off or the entire operating system is loaded into RAM like winPE.\\\\n\\\\n\\\",\\\"question\\\":\\\"how do i eject flash drives\\\"}\", \"original_answer\": \"To eject a flash drive, you can use the Eject command or drag it to the Trash on a Mac. The Trash icon will change to an Eject icon, and once the drive has been dismounted, its icon will disappear from the desktop. After this, you can safely unplug the drive. On a Windows 7, 8 or 8.1 system, an icon reading \\\"Safely Remove Hardware and Eject Media\\\" will display on the system tray when a flash drive is inserted. To eject the drive, right-click that icon and select \\\"Eject USB Flash Drive\\\". A notification will appear when it's safe to remove the drive. If the utility notifies you that the flash drive is in use, close any files or applications that are running off the flash drive, and then try again.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_update",
+  "source_cluster_id": "sha256:7336b1c1019f489cc55316a8036a41e43206ee05b1cd467965526f73aa078ede",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ]
+}

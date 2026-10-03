@@ -1,0 +1,112 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.256057592923753,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:a193cac4bfc8954b8d5f1996284f4982fc2427050842b73fc4993315f38a348b",
+  "input_tokens": 743,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 743,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 764
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:475a53018db8d8904be9f059ee1b34b0739a85da0d9bb454b46366819130e674",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885843,
+    "id": "chatcmpl-Nh7a5Ar407ZehXZA55EGZdM3hkNYQ26w",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 485.228,
+      "predicted_n": 21,
+      "predicted_per_second": 43.278623657332226,
+      "predicted_per_token_ms": 23.10609523809524,
+      "prompt_ms": 651.547,
+      "prompt_n": 665,
+      "prompt_per_second": 1020.6477813572926,
+      "prompt_per_token_ms": 0.9797699248120301
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 743,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 764
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Use the minimum amount of detergent and/or bleach when you are washing clothes or dishes. Use only phosphate free soaps and detergents. 1  Minimize the use of pesticides, herbicides, fertilizers. 2  DO NOT dispose of these chemicals, motor oil, or other automotive fluids into the sanitary sewer or storm sewer systems.O NOT dispose of household chemicals or cleaning agents down the sink or toilet. Simsbury has a Hazardous Waste Collection day usually from 8:00 a.m to 1:00 p.m. at Henry James School. Connecticut Resource Recovery Authority lists all collection dates.\\\\n\\\\npassage 2:Use water wisely. Do not keep the tap running when not in use. Also, you can reduce the amount of water you use in washing and bathing. If we all do this, we can significantly prevent water shortages and reduce the amount of dirty water that needs treatment.Do not throw chemicals, oils, paints and medicines down the sink drain, or the toilet. In many cities, your local environment office can help with the disposal of medicines and chemicals.f we all do this, we can significantly prevent water shortages and reduce the amount of dirty water that needs treatment. Do not throw chemicals, oils, paints and medicines down the sink drain, or the toilet. In many cities, your local environment office can help with the disposal of medicines and chemicals.\\\\n\\\\npassage 3:If you want to help keep our waters clean, there are many things you can do to help. You can prevent water pollution of nearby rivers and lakes as well as groundwater and drinking water by following some simple guidelines in your everyday life. 1  Conserve water by turning off the tap when running water is not necessary.ou can prevent water pollution of nearby rivers and lakes as well as groundwater and drinking water by following some simple guidelines in your everyday life. 1  Conserve water by turning off the tap when running water is not necessary.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to help with water pollution\\\"}\", \"original_answer\": \"To help with water pollution, one should use the minimum amount of detergent, bleach, pesticides, herbicides, and fertilizers, preferably choosing products that are phosphate-free. It is essential not to dispose of chemicals, motor oil, or other automotive fluids into the sewer systems or household cleaning agents down the sink or toilet. Instead, hazardous waste should be disposed of during designated collection times. Using water wisely by not leaving the tap running unnecessarily can also help prevent water shortages and reduce the amount of dirty water requiring treatment. One should not dispose of chemicals, oils, paints, or medicines down the sink drain or toilet; in many cities, the local environment office can assist with their appropriate disposal.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "calibration",
+  "source_cluster_id": "a831fc25bf8abdc6b8e618a217a169efe6f5e9030c51fb2e6b2efc1f14b1ae9a",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ]
+}

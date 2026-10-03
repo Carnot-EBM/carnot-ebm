@@ -1,0 +1,120 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.595113726099953,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:756db6ef148b39ec6b8144b723130bcee51d8b3df20013734a28c4a83e3b40e0",
+  "input_tokens": 1022,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1022,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1045
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:cb7da610253b8efc08a26f4c36b145af14d8823b28a2ddfe91fe8e76cde29f87",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885875,
+    "id": "chatcmpl-zyhWHvHwbEpWWYK8mVlFbYkqaFkWX8uC",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 543.921,
+      "predicted_n": 23,
+      "predicted_per_second": 42.28555249751342,
+      "predicted_per_token_ms": 23.648739130434784,
+      "prompt_ms": 914.319,
+      "prompt_n": 944,
+      "prompt_per_second": 1032.4624119153164,
+      "prompt_per_token_ms": 0.9685582627118644
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1022,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1045
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Beijing (CNN)A day after the Chinese government released five young feminists on bail, their families and supporters expressed mixed emotions on the unexpected development. Wei Tingting, Wang Man, Zheng Churan, Li Tingting and Wu Rongrong were freed from the Haidian Detention Center on the outskirts of Beijing late Monday. The five activists on women's rights -- aged from 25 to 32 -- were picked up by police in three different cities just before March 8, the International Women's Day. They had been planning a campaign against sexual harassment on public transportation. \\\"I'm still speechless and don't know how to react,\\\" tweeted Li's girlfriend Suan Xiaola to the couple's friends upon hearing the news. \\\"No tears, no ecstasy... just wondering what we're going to do next.\\\" \\\"I can't hide my happiness for the women but being released on bail is not the end of their ordeal,\\\" echoed Li's lawyer Yan Xin on Chinese social media. \\\"Without closing their cases, they still can't live without shackles -- we'll have our work cut out for us.\\\" Police had recommended last week that prosecutors press charges of \\\"assembling a crowd to disturb public order,\\\" which carries a maximum penalty of five years in prison. The women are still considered suspects in an ongoing criminal investigation and may face charges in the future, Wu's lawyer Liang Xiaojun told CNN. They will be under surveillance for a year with their movements and activities restricted, and police can summon them for questioning at any time, Liang added. \\\"This shouldn't be a moment of celebration,\\\" he said. \\\"The arbitrary detention and release of these women really shows the backwardness of China's legal system.\\\" Under China's household registration system, only Li is considered a Beijing resident. Police sent the other four back to their hometowns, disrupting their work and lives, according to the women's lawyers. Many have called the five members of Women's Rights Action Group trailblazers. Staging their protests through performance art or flash mobs, they highlighted feminist causes ranging from fighting domestic violence, gender equality at work, to more female public bathrooms -- drawing nationwide attention and even state media praise. Their detention had drawn widespread condemnation, including from the United States. \\\"Each and every one of us has the right to speak out against sexual harassment and the many other injustices that millions of women and girls suffer around the world,\\\" said John Kerry, the U.S. Secretary of State, in a statement Friday. \\\"We strongly support the efforts of these activists to make progress on these challenging issues, and we believe that Chinese authorities should also support them, not silence them.\\\" Kerry's predecessor Hillary Clinton -- a longtime champion of women's rights who just announced her bid for the U.S. presidency -- called the jailing of the feminists \\\"inexcusable\\\" on Twitter, joining the \\\"free the five\\\" hashtag campaign. China had rejected all international criticisms, insisting it's a country ruled by law and that its judicial sovereignty be respected. Supporters of the woman activists, however, sense the chilling effect of their ordeal on China's nascent civil society, as the ruling Communist Party under President Xi Jinping continues to tighten its grip over the country. \\\"Of course people will feel more afraid,\\\" said Wei's lawyer Wang Qiushi. \\\"Women's rights is among the most politically correct issues in China -- now even those who took up that cause ended up in jail.\\\"\\n\", \"original_answer\": \"A day after the Chinese government released five young feminists on bail, their families and supporters expressed mixed emotions. The five activists on women's rights were picked up by police in three different cities just before March 8, the International Women's Day. They had been planning a campaign against sexual harassment on public transportation. They are still considered suspects in an ongoing criminal investigation and may face charges in the future. They will be under surveillance for a year with their movements and activities restricted, and police can summon them for questioning at any time.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "calibration",
+  "source_cluster_id": "bdea371c8051f601c8d783857a349ae66f6b6c07281a4ac342d3ce5dd380443b",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23
+  ]
+}

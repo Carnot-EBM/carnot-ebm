@@ -1,0 +1,105 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.3463350820238702,
+  "exclusion_reason": null,
+  "family_id": "sha256:39e016b2f8ce41e1016751a2034fc5dc76ec5701a4626327c4ae8be26be54726",
+  "input_tokens": 728,
+  "invocation_finished_at": "2026-10-01T11:43:26.356032+00:00",
+  "invocation_started_at": "2026-10-01T11:43:25.009696+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 8,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 728,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 752
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:71a8203f47495fdac881c9298b706ee0f854acc33718d32cc3403327d4330867",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 8\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855006,
+    "id": "chatcmpl-eV5fB7M3HPCWQhAkOAvVDxnUJY3XOyEF",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 562.607,
+      "predicted_n": 24,
+      "predicted_per_second": 42.65855206209663,
+      "predicted_per_token_ms": 23.441958333333332,
+      "prompt_ms": 662.088,
+      "prompt_n": 650,
+      "prompt_per_second": 981.7426082333467,
+      "prompt_per_token_ms": 1.018596923076923
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 728,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 752
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Untreated adult AML. In untreated adult AML, the disease is newly diagnosed. It has not been treated except to relieve signs and symptoms such as fever, bleeding, or pain, and the following are true: 1  The complete blood count is abnormal. 2  At least 20% of the cells in the bone marrow are blasts (leukemia cells).dult acute myeloid leukemia (AML) is a type of cancer in which the bone marrow makes abnormal myeloblasts (a type of white blood cell), red blood cells, or platelets. Adult acute myeloid leukemia (AML) is a cancer of the blood and bone marrow.\\\\n\\\\npassage 2:1 Adult acute lymphoblastic leukemia (ALL) is a type of cancer in which the bone marrow makes too many lymphocytes (a type of white blood cell).2  Leukemia may affect red blood cells, white blood cells, and platelets. 3  Previous chemotherapy and exposure to radiation may increase the risk of developing ALL. Adult acute lymphoblastic leukemia (ALL) is a type of cancer in which the bone marrow makes too many lymphocytes (a type of white blood cell).\\\\n\\\\npassage 3:Symptoms of acute leukemia depend on how much the cancer has grown. They may include: 1  A new lump or swollen gland in your neck, under your arm, or in your groin. 2  Frequent nosebleeds, bleeding from the gums or rectum, more frequent bruising, or very heavy menstrual bleeding.3  Frequent fevers. 4  Night sweats.ymptoms of acute leukemia depend on how much the cancer has grown. They may include: 1  A new lump or swollen gland in your neck, under your arm, or in your groin. 2  Frequent nosebleeds, bleeding from the gums or rectum, more frequent bruising, or very heavy menstrual bleeding.\\\\n\\\\n\\\",\\\"question\\\":\\\"symptoms of leukemia in adult\\\"}\", \"original_answer\": \"Based on the provided passages, here are the symptoms of leukemia in adults:\\n\\nAccording to Passage 3, the symptoms of acute leukemia may include:\\n\\n1. A new lump or swollen gland in the neck, under the arm, or in the groin.\\n2. Frequent nosebleeds, bleeding from the gums or rectum, more frequent bruising, or very heavy menstrual bleeding.\\n3. Frequent fevers.\\n4. Night sweats.\\n\\nHowever, it's important to note that these symptoms can also be caused by other conditions, and only a qualified medical professional can accurately diagnose leukemia based on a comprehensive evaluation.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_update",
+  "source_cluster_id": "sha256:84675fe462a1f40654178dec6274e35a6cc2ee9c5fc85116df9e3ebb9615f9ff",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]
+}

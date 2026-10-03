@@ -1,0 +1,64 @@
+...........................................F............................ [ 30%]
+........................................................................ [ 61%]
+........................................................................ [ 92%]
+.................                                                        [100%]
+=================================== FAILURES ===================================
+_____________________ test_archived_numerical_predictions ______________________
+
+tmp_path = PosixPath('/tmp/carnot7967-private-e5x2razw/attempts/unit/test_archived_numerical_predic0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f664b2da5a0>
+
+    def test_archived_numerical_predictions(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+        """SCENARIO-REPORT-7967-REPLAY: recompute actual small-head predictions from checkpoints."""
+        lib = core.fit.fixture_library()
+        upstream = lib.make_fixture(tmp_path / "input")
+        fitted = lib.fit_score(upstream, tmp_path / "attempt.json", tmp_path / "fit", 7943, "20260930")
+        value = {
+            "scratch_root_receipt": {"path": "/tmp/absent-original", "archive_path": str(tmp_path)},
+            "fixture_checkpoint_manifest": {
+                "path": fitted["checkpoint_manifest_path"],
+                "sha256": fitted["checkpoint_manifest_sha256"],
+            },
+            "fixture_prediction_path": fitted["prediction_rows_path"],
+            "fixture_prediction_sha256": fitted["prediction_rows_sha256"],
+            "fixture_prediction_rows": fitted["fixture_prediction_rows"],
+        }
+        core.replay_fit(value)
+        value["fixture_prediction_rows"] = []
+        with pytest.raises(ValueError, match="fixture primitive drift"):
+            core.replay_fit(value)
+        value["fixture_prediction_rows"] = fitted["fixture_prediction_rows"]
+        original = core.fit.old.natural_training.predict
+    
+        def wrong(*args: object) -> list:
+            predicted = original(*args)
+            predicted[0]["probability"] += 0.01
+            return predicted
+    
+        monkeypatch.setattr(core.fit.old.natural_training, "predict", wrong)
+        with pytest.raises(ValueError, match="cold fixture prediction drift"):
+>           core.replay_fit(value)
+
+tests/python/test_private_training_7967.py:257: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/verify/private_training_7967.py:554: in replay_fit
+    predicted = fit.old.natural_training.predict(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+args = ({'arm': 'energy_local', 'curve': [{'dual': [0.0, 0.0], 'epoch': 1, 'gradient_norm': 2.1985435939314666, 'loss': 1.344...'known': [0], ...}, {'answer': b'Lumen has 17 apples.', 'group': 'evaluation', 'id': 'evaluation', 'known': [0], ...}])
+predicted = [{'action': 'escalate', 'probability_unsupported': 0.590559248075706, 'raw_risk': 0.5228763772594462}, {'action': 'esc...228763772594462}, {'action': 'escalate', 'probability_unsupported': 0.590559248075706, 'raw_risk': 0.5228763772594462}]
+
+    def wrong(*args: object) -> list:
+        predicted = original(*args)
+>       predicted[0]["probability"] += 0.01
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'probability'
+
+tests/python/test_private_training_7967.py:252: KeyError
+----------------------------- Captured stdout call -----------------------------
+[exp7943] phase=resolve_inputs event=fixture completed=0 elapsed_s=36.661
+[exp7943] phase=before_head_fit event=fixture completed=0 elapsed_s=36.665
+[exp7943] phase=after_head_fit event=fixture completed=1 elapsed_s=39.897
+=========================== short test summary info ============================
+FAILED tests/python/test_private_training_7967.py::test_archived_numerical_predictions
+1 failed, 232 passed in 139.62s (0:02:19)

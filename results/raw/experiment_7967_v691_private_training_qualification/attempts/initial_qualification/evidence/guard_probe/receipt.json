@@ -1,0 +1,30 @@
+{
+  "cross_device_fixture_only": true,
+  "guard_enabled": true,
+  "historical_failure_count": 13,
+  "mirror_path": "/tmp/carnot7967-private-e5x2razw/guard_probe/mirror",
+  "passed": true,
+  "private_atomic_same_device": true,
+  "protected_move_errno": 18,
+  "receipts": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -c 'import os,sys,json\nfrom carnot.testing.child_results_guard import _SHIM_SOURCE\nos.environ['\"'\"'CARNOT_CHILD_GUARD_REPO_ROOT'\"'\"']=sys.argv[1]\nos.environ['\"'\"'CARNOT_CHILD_GUARD_REDIRECT_ROOT'\"'\"']=sys.argv[2]\nexec(_SHIM_SOURCE)\ntry: os.rename(sys.argv[1]+'\"'\"'/results/source.tmp'\"'\"',sys.argv[1]+'\"'\"'/results/target.json'\"'\"')\nexcept OSError as exc: print(json.dumps({'\"'\"'errno'\"'\"':exc.errno,'\"'\"'guard_enabled'\"'\"':True}),flush=True)' /tmp/carnot7967-private-e5x2razw/guard_probe/mirror /dev/shm/carnot7967-cross-device-qpk0kom2",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-c",
+        "import os,sys,json\nfrom carnot.testing.child_results_guard import _SHIM_SOURCE\nos.environ['CARNOT_CHILD_GUARD_REPO_ROOT']=sys.argv[1]\nos.environ['CARNOT_CHILD_GUARD_REDIRECT_ROOT']=sys.argv[2]\nexec(_SHIM_SOURCE)\ntry: os.rename(sys.argv[1]+'/results/source.tmp',sys.argv[1]+'/results/target.json')\nexcept OSError as exc: print(json.dumps({'errno':exc.errno,'guard_enabled':True}),flush=True)",
+        "/tmp/carnot7967-private-e5x2razw/guard_probe/mirror",
+        "/dev/shm/carnot7967-cross-device-qpk0kom2"
+      ],
+      "duration_s": 0.4512164370389655,
+      "exit_code": 0,
+      "log_path": "/tmp/carnot7967-private-e5x2razw/guard_probe/logs/00_mirrored_guard_move.log",
+      "log_sha256": "sha256:ab57c64bb186cbd60c9bd7c5fbd429d3379aa9bff5632a024ddcd3e9f3381df5",
+      "name": "mirrored_guard_move",
+      "output_tail": "{\"errno\": 18, \"guard_enabled\": true}\n",
+      "passed": true,
+      "scope": "control",
+      "timed_out": false
+    }
+  ]
+}

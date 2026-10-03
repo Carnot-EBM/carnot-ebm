@@ -1,0 +1,55 @@
+{
+  "correction": "Add wrong-experiment-ID replay test; retain 100 percent coverage assertion.",
+  "files": {
+    "manifest.json": "sha256:d8c74190e580dcc750e56547507b647574273892df69dc279b1f7fdd5bc75e34",
+    "primary.json": "sha256:5e1e1b834759e10ff40d3bd62e7699dd78c95d5f8bee33377d767694411ca546",
+    "rows.json": "sha256:b2dd4e1a209418906d44cde2a33020db9d18297508d411aca0ea3fe80985364b"
+  },
+  "primary_sha256": "sha256:5e1e1b834759e10ff40d3bd62e7699dd78c95d5f8bee33377d767694411ca546",
+  "required_failures": [
+    {
+      "actual_exit": 2,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/exp7979-ecmdttk4/.coverage.combined",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v692_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v692_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7979_v692_contract_methods.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "classification": "required",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage report --data-file=/tmp/exp7979-ecmdttk4/.coverage.combined --include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v692_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v692_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7979_v692_contract_methods.py --show-missing --fail-under=100",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/exp7979-ecmdttk4/.coverage.combined",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v692_contract_methods.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v692_contract_validation.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7979_v692_contract_methods.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "deadline_s": 60,
+      "duration_s": 0.0675008770194836,
+      "exit_code": 2,
+      "expected_exit": 0,
+      "failure_reason": "required_check_failed",
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7979_v692_contract_methods/sealed_logs/coverage_report-49c2eccaf60c03cfdae8c9c74e4f46088a6b02c64c5145c527c8804d8f7721a0.log",
+      "log_sha256": "sha256:49c2eccaf60c03cfdae8c9c74e4f46088a6b02c64c5145c527c8804d8f7721a0",
+      "name": "coverage_report",
+      "output_tail": "Name                                                           Stmts   Miss  Cover   Missing\n--------------------------------------------------------------------------------------------\npython/carnot/reporting/v692_contract_methods.py                  96      1    99%   414\npython/carnot/reporting/v692_contract_validation.py               96      0   100%\nscripts/experiments/experiment_7979_v692_contract_methods.py      45      0   100%\n--------------------------------------------------------------------------------------------\nTOTAL                                                            237      1    99%\nCoverage failure: total of 99 is less than fail-under=100\n",
+      "passed": false,
+      "scope": "required",
+      "timed_out": false
+    },
+    {
+      "actual_exit": 1,
+      "argv": [
+        "coverage_json_reduction",
+        "/tmp/exp7979-ecmdttk4/coverage.json"
+      ],
+      "expected_exit": 0,
+      "name": "per_file_statement_coverage",
+      "passed": false
+    }
+  ],
+  "verdict_class": "disqualified"
+}

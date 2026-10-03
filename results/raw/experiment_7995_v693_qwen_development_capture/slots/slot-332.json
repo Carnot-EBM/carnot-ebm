@@ -1,0 +1,107 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.372036839951761,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:ea8459463d6449b0f7951bef02d55adc3c9872afd5a2baed18dced8bf8c4c8d4",
+  "input_tokens": 815,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 815,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 838
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:de3e22e4326555f7b55d53d37cca0beaa00292db7f8aefc9533194423519d138",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886317,
+    "id": "chatcmpl-xfaQG1NqMPe51U7xyY48d1aQBvqO3c1u",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.383,
+      "predicted_n": 23,
+      "predicted_per_second": 42.483786893936454,
+      "predicted_per_token_ms": 23.53839130434783,
+      "prompt_ms": 716.018,
+      "prompt_n": 737,
+      "prompt_per_second": 1029.3037325877283,
+      "prompt_per_token_ms": 0.9715305291723203
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 815,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 838
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"3400 Calle Real\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Barbeque, Food Trucks, Restaurants, Caterers, Event Planning & Services, Food\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":null,\\\"name\\\":\\\"Georgia's Smokehouse\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2016-08-17 17:08:35\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"These guys make some great sandwiches.\\\\n I had the grilled cheese and it was really delicious it was on sourdough bread has several different cheeses mixed in.  I actually ended up buying two at 5 bucks a piece they were a deal. \\\\nMy friend got a couple of pulled pork sandwiches and they were awesome too. \\\\nThis is a great food truck, nice people and good prices\\\"},{\\\"review_date\\\":\\\"2016-08-04 05:16:51\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Georgia's is the most prolific truck in the SB area and we've eaten there several times. They have a solid line-up, with pulled pork, brisket and chicken. My fav is the grilled cheese with bacon, simple but solid :-) They are also very accommodating  about doing lo-carb dishes. Can't go wrong with Georgia's  :-)\\\"},{\\\"review_date\\\":\\\"2016-04-08 06:31:52\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Shame on you if you like this place. There are other good BBQ catering companies with in range. I bet the new Dickies BBQ will be 100% better than this sh@t. Sorry but this is some nasty food. Don't be fooled you will regret every penny spent, I know I did.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Georgia's Smokehouse is a local business located at 3400 Calle Real in Santa Barbara, CA. They specialize in barbeque and operate as a food truck, restaurant, and catering service. They are also known for their event planning and services. Georgia's Smokehouse does not offer WiFi, reservations, or parking facilities, but they do provide outdoor seating and takeout options, and are well-suited for groups. The ambience of the place is casual. The business has an overall rating of 3.5 stars. Customer reviews highlight their delicious grilled cheese and pulled pork sandwiches, with one reviewer praising their accommodating approach to low-carb dishes. However, one customer raised concerns about the quality of the food.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "710277fecd90ec4f734769efe3a78e592ce0ded1e349f1b4936d487e46fb0194",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ]
+}

@@ -1,0 +1,118 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.7846618999028578,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:12659aa0b858f82575bcba4571b6b55fc9019cd07a4f054c0196d9d795a87d70",
+  "input_tokens": 1273,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1273,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1296
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:22ccabec0214b075e935fd77dbc4ec90a03470db0402287370fc0c2c4d7480cc",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885889,
+    "id": "chatcmpl-x6vemSKWcQLPR9evdZcsvOnpMhIKp14h",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 544.376,
+      "predicted_n": 23,
+      "predicted_per_second": 42.250209414081446,
+      "predicted_per_token_ms": 23.668521739130433,
+      "prompt_ms": 1109.012,
+      "prompt_n": 1195,
+      "prompt_per_second": 1077.5356804074258,
+      "prompt_per_token_ms": 0.9280435146443514
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1273,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1296
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"6 De La Guerra Pl\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":null,\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":null},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Bars, Nightlife\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":null,\\\"name\\\":\\\"Mels Place\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2012-01-15 16:08:07\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Nestled off the main strip known as state street on West Carrillo, not far from the 101 freeway at all, this spot gives you a welcoming... you are at your place, kind of feel. Perhaps you can call it the CHEERS of Santa Barbara. The regular folks that come through will tell you that.\\\\n\\\\nI was introduced to this place last night while checking things out around town. It's very clean, lighting is balanced and the mood is one which simply says \\\\\\\"take a load off your shoulders and have a good time.\\\\\\\" The staff is extremely accommodating. Fran has worked with the establishment for a couple decades now and she's the epitome of the reason why Mel's Place has been around since 1963. \\\\n\\\\nMy small clan shot the breeze with her for a while... we are on a call her by her handle basis now (visit this place and learn what it is for yourself). She filled us in on the history of the joint. She even cracked open the billiard room for us to squeeze in a game.\\\\n\\\\nThe game room features darts, pool among other things like a jukebox you can DJ for a reasonable cost. All in excellent condition.The menu has eats and drinks that are reasonably priced.\\\\n\\\\nI read that this spot is closed and no longer in business. Visit and see for yourself that such is far from the truth. You can check out their website to learn more about it: www.melslounge.com\\\\n\\\\nAfter your visit, I'm sure you'll have some nice things to put up on yelp about them too.\\\"},{\\\"review_date\\\":\\\"2010-12-15 16:29:47\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"It's great that Mel's is back in a new place. But I still miss the dark little bar.\\\"},{\\\"review_date\\\":\\\"2008-07-16 06:14:08\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"Super small local place to stop for a drink or two... or three. ;-)\\\\n\\\\nCost to worth it ratio: 4\\\\n\\\\nHighlight:\\\\n- Dive bar in the middle of the trendy pedestrian mall in downtown Santa Barbara. Liked the juxtaposition of the overall location with nice stores and bars and this actual tiny dive bar hidden in between it all.\\\\n- Local's spot: because it's not like the others, a lot of locals hang here. Nice to get out of the touristy joints.\\\\n- Strong drinks that don't break the bank: you can always count on this from dive bars! The Captain and Cokes we ordered were mostly clear with just a tinge of caramel color. ;-)\\\\n- Mid daytime excitement: you get quite the characters to people watch and interact with--from hard core drinkers to free-loving travelers to a couple dancing happily like nobody's watching to jukebox music. \\\\n\\\\nLowlights (my flip side to highlights):\\\\n- Really hot inside: small place with limited air flow\\\\n- If you're visiting the city probably wouldn't spend tons of time here, as a lot of places have patios, etc to enjoy the perfect Santa Barbara weather\\\\n\\\\nI'd come back for a few drinks for a change of Santa Barbara pace. And my friends who live here like it and I'm usually with them.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Mel's Place, an establishment located at 6 De La Guerra Pl, Santa Barbara, CA, is a local hangout featuring a bar and nightlife. This spot, open for outdoor seating and accommodating groups, has a 3.5-star overall rating. Mel's Place is known for its welcoming atmosphere that evokes a 'home away from home' experience. It has been in business since 1963, providing its patrons with a clean environment, balanced lighting, and friendly staff. There are also amenities like a billiards room, a dart board, a jukebox, and reasonably priced food and drinks. Despite its small size, it is noted for strong drinks and a casual atmosphere, making it a popular spot for locals. However, some customers have expressed that the establishment can get quite hot inside.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "calibration",
+  "source_cluster_id": "f0d50148b2366f58e821b55a1cd7aae084b8dfb615b2f1e4215cea6d0cdd65ce",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21
+  ]
+}

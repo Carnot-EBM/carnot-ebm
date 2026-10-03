@@ -1,0 +1,110 @@
+{
+  "arm": "original",
+  "capture_identity": "sha256:c690c1f517fbce73c5da6a2d1e99e3819c3de93e1045fe76d1c8215b54691541",
+  "censor_status": false,
+  "denominator": 1,
+  "donor_group_id": "sha256:9f357f23e1b94d812fb2c1df704fcf70fe95e317a042d53d1ae1a0d2a7453f0d",
+  "duration_s": 1.1136639070464298,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:9f357f23e1b94d812fb2c1df704fcf70fe95e317a042d53d1ae1a0d2a7453f0d:original",
+  "group_id": "sha256:9f357f23e1b94d812fb2c1df704fcf70fe95e317a042d53d1ae1a0d2a7453f0d",
+  "input_byte_upper_bound": 1931,
+  "input_tokens": 422,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 422,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 446
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:4e0e10c132a0752bca55c28244c9ff9eaf0f3fa3da682048249d3a27741620c1",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790925721,
+    "id": "chatcmpl-0iueOcLqrAPiufkdc2raJ5BqrgRRzWGF",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 555.528,
+      "predicted_n": 24,
+      "predicted_per_second": 43.20214282628419,
+      "predicted_per_token_ms": 23.147000000000002,
+      "prompt_ms": 427.614,
+      "prompt_n": 344,
+      "prompt_per_second": 804.4638388827308,
+      "prompt_per_token_ms": 1.243063953488372
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 422,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 446
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 32,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:The easiest way is to export music to the computer using iTunes. Go to My Music and copy everything to PC. Then use a free app to transfer music to your Android wirelessly. I've used this way to transfer hundreds of songs.\\\\n\\\\npassage 2:Once you have identified your iTunes music that's transferable to your Android phone, just connect the phone to your computer via USB. You'll see a message in the phone's notification area saying that you're connected via USB and it'll ask if you want to mount the storage for use by your computer.\\\\n\\\\npassage 3:Manually selecting songs for transfer to your Android phone. 1  On the doubleTwist window, click Music under Library. 2  Select a song from the list. 3  You can select one song, select multiple songs, or select all songs from a single album.\\\\n\\\\n\\\",\\\"question\\\":\\\"how do i get my music from itunes to my android\\\"}\", \"original_answer\": \"You can get your music from iTunes to your Android by first exporting the music to your computer using iTunes. After doing this, you can either transfer the music to your Android wirelessly using a free app or connect the phone to your computer via USB and manually select songs for transfer to your Android phone.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69410,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "seed": 69410,
+  "source_cluster_id": "0c30e30d36ddd17cf0fb5f766b643af9a107dcd039d278f172eb817680c355f7",
+  "source_hash": "sha256:d8dba8599421216b70cf70efba53355dbdb890276597321f48f7ef4bb1711c58",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ]
+}

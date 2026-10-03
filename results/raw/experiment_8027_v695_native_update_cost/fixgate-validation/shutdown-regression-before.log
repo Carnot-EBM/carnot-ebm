@@ -1,0 +1,79 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+______________ test_req_pybind_8027_repeated_load_exits_normally _______________
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261002T154001-1411082-c6a8dd4a/test_req_pybind_8027_repeated_0')
+native = <module 'carnot._rust' from '/home/ianblenke/github.com/ianblenke/carnot/target/experiment-8027-load/_rust.cpython-312-x86_64-linux-gnu.so'>
+
+    def test_req_pybind_8027_repeated_load_exits_normally(tmp_path, native):
+        """SCENARIO-PYBIND-8027-SHUTDOWN: repeated copies retain valid ELF finalizers."""
+        import os
+        import subprocess
+        import sys
+    
+        code = """
+    import os
+    from pathlib import Path
+    import sys
+    from carnot import experiment_8027_v695_native_update_cost as e
+    
+    source = Path(sys.argv[1])
+    e.ROOT = Path(sys.argv[2])
+    e.build.build_native_extension = lambda root: (source, {})
+    os.environ.pop("CARNOT_8027_EXTENSION", None)
+    first, _ = e.extension()
+    second, _ = e.extension()
+    assert first is second
+    assert second.numerical_echo_8027([[1.0]]) == [[1.0]]
+    print("repeated_load_completed", flush=True)
+    """
+        result = subprocess.run(
+            [sys.executable, "-c", code, native.__file__, str(tmp_path)],
+            env=dict(os.environ, PYTHONPATH=str(e.ROOT / "python")),
+            capture_output=True,
+            text=True,
+            timeout=60,
+        )
+>       assert result.returncode == 0, (result.returncode, result.stdout, result.stderr)
+E       AssertionError: (-11, '[exp8027] phase=build_before elapsed_s=0.000 completed=0 pending=0
+E         [exp8027] phase=build_after elapsed_s=0.001...apsed_s=0.077 completed=0 pending=0
+E         [exp8027] phase=extension_load_after elapsed_s=0.080 completed=0 pending=0
+E         ', '')
+E       assert -11 == 0
+E        +  where -11 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-c', '\nimport os\nfrom pathli...=0.077 completed=0 pending=0\n[exp8027] phase=extension_load_after elapsed_s=0.080 completed=0 pending=0\n', stderr='').returncode
+
+tests/python/test_native_update_8027.py:494: AssertionError
+---------------------------- Captured stdout setup -----------------------------
+[exp8027] phase=build_before elapsed_s=0.002 completed=0 pending=0
+[phase 3 before] interpreter-bound carnot-python subprocess
+warning: unused import: `ndarray::Array2`
+ --> crates/carnot-python/src/s2kan.rs:3:5
+  |
+3 | use ndarray::Array2;
+  |     ^^^^^^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused import: `std::sync::Arc`
+ --> crates/carnot-python/src/s2kan.rs:6:5
+  |
+6 | use std::sync::Arc;
+  |     ^^^^^^^^^^^^^^
+
+warning: use of deprecated method `numpy::IntoPyArray::into_pyarray_bound`: renamed to `IntoPyArray::into_pyarray`
+  --> crates/carnot-python/src/s2kan.rs:40:16
+   |
+40 |         result.into_pyarray_bound(py)
+   |                ^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(deprecated)]` on by default
+
+warning: `carnot-python` (lib) generated 3 warnings (run `cargo fix --lib -p carnot-python` to apply 2 suggestions)
+    Finished `release` profile [optimized] target(s) in 0.05s
+[phase 3 after] native build selected=/home/ianblenke/github.com/ianblenke/carnot/target/experiment-7230-load/_rust.cpython-312-x86_64-linux-gnu.so
+[exp8027] phase=build_after elapsed_s=0.075 completed=0 pending=0
+[exp8027] phase=extension_load_before elapsed_s=0.075 completed=0 pending=0
+[exp8027] phase=extension_load_after elapsed_s=0.078 completed=0 pending=0
+=========================== short test summary info ============================
+FAILED tests/python/test_native_update_8027.py::test_req_pybind_8027_repeated_load_exits_normally
+1 failed, 9 deselected in 3.51s

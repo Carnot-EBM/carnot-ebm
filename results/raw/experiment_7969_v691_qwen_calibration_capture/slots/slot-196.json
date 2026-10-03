@@ -1,0 +1,115 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.576558864035178,
+  "exclusion_reason": null,
+  "family_id": "sha256:560b0035b81d2c0d9baa7fd2220afb5719ed7c7b07bcc1f49df673e2e46a80f1",
+  "input_tokens": 918,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 12,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 918,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 943
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:8ce48e25a2bf859b404e42c186e1cec65770d496cd27764ee824f268c956ba44",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 12\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832742,
+    "id": "chatcmpl-YAJXANXH2M02N6edTa5bwYjMIqRMGIoa",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 590.158,
+      "predicted_n": 25,
+      "predicted_per_second": 42.361537079900636,
+      "predicted_per_token_ms": 23.60632,
+      "prompt_ms": 853.846,
+      "prompt_n": 840,
+      "prompt_per_second": 983.7839610421552,
+      "prompt_per_token_ms": 1.0164833333333334
+    },
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 918,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 943
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"RHOC star Gina Kirschenheiter drags Andy Cohen over shady casita comment\\nThe Real Housewives of Orange County star Gina Kirschenheiter isn\u2019t letting Andy Cohen diminish her accomplishment of being a homeowner.\\nDuring an episode of Watch What Happens Live, Andy brought out the shady whale for guests Heather Dubrow and Jenny McCarthy.\\nOne of the questions for Heather was which one of her Housewives castmates would get the least amount of money if they sold their home. This was crafted because Heather and Terry Dubrow sold their massive over for over $50 million during Season 17 of RHOC.\\nNaturally, Heather wasn\u2019t going to answer because she said she had not been to everyone\u2019s home, but Andy was happy to chime in with Gina\u2019s name because she lives in a casita.\\nNeedless to say, Gina was not impressed with Andy attempting to throw her under the bus.\\nShe responded with an epic clapback and shade for some castmates.\\nGina Kirschenheiter called out Andy Cohen\u2019s \u2018unkind\u2019 remark\\nYou can take the girl out of New York, but you can\u2019t take the New York out of the girl.\\nThe Real Housewives of Orange County star was ready to educate Andy Cohen on the reality of her accomplishments and wasn\u2019t shy about speaking up.\\nGina Kirschenheiter reminded \u201cMr. Cohen\u201d that of the six full-time RHOC Housewives, only four are homeowners. She is one of the four.\\nJennifer Pedranti is not a homeowner; the other one is speculated to be Shannon Beador.\\nOf the four homeowners, Gina is the only one who owns her home without a husband. Everyone else is married.\\nShe also called him out for painting a picture that she is \u201cdragging behind the herd\u201d because she isn\u2019t.\\nThere is also a significant age gap of 10-20 years between Gina and some of her castmates, which is another point she made.\\nHeather Dubrow wasn\u2019t going to throw her friend under the bus\\nSeason 17 of The Real Housewives of Orange County featured plenty of ganging up on Heather Dubrow, and even Gina Kirschenheiter was questioning whether she was even a real friend.\\nHer appearance on Watch What Happens Live should have cleared that up for Gina. After Andy Cohen mentioned Gina\u2019s casita, Heather wanted to know how he knew that, questioning his intentions and shooting down the idea that it was fact and not an opinion.\\nHeather has continuously maintained that she considers Gina a friend, which seems true. It\u2019s unclear whether their resolution at the finale stuck, especially after the reunion.\\nAnd speaking of the reunion, it was pretty convenient that Andy made that comment after the three-part reunion was filmed.\\nThe Real Housewives of Orange County airs Wednesdays at 8/7c on Bravo.\", \"original_answer\": \"Gina Kirschenheiter from The Real Housewives of Orange County called out Andy Cohen for his \\\"unkind\\\" comment about her home, a casita. She pointed out that she is one of the few homeowners among the cast and the only one who owns her home without a husband. Heather Dubrow, a friend of Gina's, also defended her against Andy's comment, questioning his intentions. The exchange happened on Watch What Happens Live, and it's unclear how it will affect their relationships moving forward.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "policy_design",
+  "source_cluster_id": "sha256:d9e03af210a0697022e4366f285e73d1f33d19b65c1b502116be4ecfe3cf38d0",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23
+  ]
+}

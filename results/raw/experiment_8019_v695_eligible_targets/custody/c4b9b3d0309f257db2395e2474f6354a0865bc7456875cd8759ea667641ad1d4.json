@@ -1,0 +1,111 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.32105841091834,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:53e17dc03b979eedc62563aab80d05f1ef4e17d5978bacdcb9c6b3fdb836b922",
+  "input_tokens": 659,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 2,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 659,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 683
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:23f5028650a4553878bf28f362cbc4375afe959e1fd9b6a79521a99d1c93fdb6",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 2\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886065,
+    "id": "chatcmpl-9op4w9U3OYfW2Y0icPL4EQa7lOSqBOCY",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.454,
+      "predicted_n": 24,
+      "predicted_per_second": 42.51896523011619,
+      "predicted_per_token_ms": 23.518916666666666,
+      "prompt_ms": 607.569,
+      "prompt_n": 581,
+      "prompt_per_second": 956.2699874417556,
+      "prompt_per_token_ms": 1.0457297762478486
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 659,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 683
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Use of Passive. Passive voice is used when the focus is on the action. It is not important or not known, however, who or what is performing the action. Example: My bike was stolen. In the example above, the focus is on the fact that my bike was stolen.I do not know, however, who did it.hen rewriting active sentences in passive voice, note the following: 1  the object of the active sentence becomes the subject of the passive sentence. 2  the finite form of the verb is changed (to be + past participle). 3  the subject of the active sentence becomes the object of the passive sentence (or is dropped).\\\\n\\\\npassage 2:In a sentence using passive voice, the subject is acted upon; he or she receives the action expressed by the verb. The agent performing the action may appear in a by the... phrase or may be omitted. Image Caption: The dog is acting upon the sentence subject (the boy), meaning it uses the passive voice.ummary: This handout will explain the difference between active and passive voice in writing. It gives examples of both, and shows how to turn a passive sentence into an active one. Also, it explains how to decide when to choose passive voice instead of active.\\\\n\\\\npassage 3:In traditional grammar, the term passive voice refers to a type of sentence or clause in which the subject receives the action of the verb. For example, A good time was had by all.. Contrast with active voice.The most common form of the passive in English is the short passive or agentless passive: a construction in which the agent (that is, the performer of an action) is not identified.ften the passive voice is formed by using the appropriate form of the verb to be (for example, is) and a past participle (for example, formed). However, passive constructions aren't always made up of be and a past participle.\\\\n\\\\n\\\",\\\"question\\\":\\\"what is passive voice example\\\"}\", \"original_answer\": \"An example of passive voice is \\\"My bike was stolen.\\\" In this sentence, the subject is acted upon by the verb and the performer of the action is not known or important. Another example is \\\"A good time was had by all.\\\" In this case, the subject receives the action of the verb.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "cf487d5a8e4de3dd32dd9e495fa418e17c64513bdf554f9f1cb2232cbbdb6cab",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ]
+}

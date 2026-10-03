@@ -1,0 +1,59 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.10.692",
+  "generated_at": "2026-10-01T16:26:16Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 117.5,
+  "experiments_completed": 9,
+  "compute_bound_experiments_count": 9,
+  "slowest_experiments": [
+    {
+      "experiment": "Join public source features and reserve evaluation sources before label access",
+      "duration_minutes": 22.29,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Test whether source features add signal beyond scalar confidence",
+      "duration_minutes": 21.65,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Fit a small conditional energy using Qwen and source evidence",
+      "duration_minutes": 20.18,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Capture bounded Qwen judgments for delayed feedback and reserved evaluation",
+      "duration_minutes": 15.97,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Freeze thirteen tasks and separate historical authority from new evidence",
+      "duration_minutes": 10.72,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.10.692 completed 9 experiments (all 9 compute-bound) totaling 117.5 wall-time minutes (averaging 13 minutes per experiment) reconstructed from disk modification timestamps. The longest running experiments were 'Join public source features and reserve evaluation sources before label access' at 22.29 minutes, 'Test whether source features add signal beyond scalar confidence' at 21.65 minutes, and 'Fit a small conditional energy using Qwen and source evidence' at 20.18 minutes, followed by 'Capture bounded Qwen judgments for delayed feedback and reserved evaluation' at 15.97 minutes and 'Freeze thirteen tasks and separate historical authority from new evidence' at 10.72 minutes. While static monitor telemetry observed both RTX 3090 GPUs at 0% utilization with 4MB allocated outside active runs, active execution-window hardware traces were not captured, and the locked indicator gpu_idle_on_compute_bound_tasks is false.",
+  "bottlenecks_identified": [
+    "Execution wall time was heavily concentrated in the top compute-bound tasks: 'Join public source features and reserve evaluation sources before label access' (22.29 minutes), 'Test whether source features add signal beyond scalar confidence' (21.65 minutes), and 'Fit a small conditional energy using Qwen and source evidence' (20.18 minutes), which together accounted for 64.12 of 117.5 total wall-time minutes (54.6%), while intra-task phase timings were uninstrumented.",
+    "Milestone timing relied on disk-mtime fallback reconstruction following zero commits on the live git-log path, leaving phase-level stage attribution (setup, data preparation, forward passes, serialization) unmeasured.",
+    "Absence of continuous time-series accelerator telemetry across active execution windows leaves hardware processor-memory interactions, kernel saturation, and concurrency profiling unmeasured during compute-bound runs."
+  ],
+  "improvements_suggested": [
+    "Instrument experiment runners with monotonic sub-phase timers to measure latency across environment setup, data/feature preparation, model loading, compute passes, and artifact validation.",
+    "Deploy continuous, lightweight GPU sampling throughout task execution rather than relying solely on discrete point-in-time monitor checkpoints.",
+    "Profile and optimize the feature join and evidence ablation pipelines ('Join public source features...' and 'Test whether source features add signal...') which accounted for nearly 44 minutes of wall time.",
+    "Restrict DualGPURunner orchestration strictly to parallel executions involving two or more distinct models, avoiding overhead on single-model inference jobs.",
+    "Preserve and maintain failure_ledger pre-launch checks to ensure doomed reruns continue to be blocked in sub-second time without consuming compute budget."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add granular sub-phase execution timing to experiment runners to measure setup, compute, feature joins, and artifact validation overhead.",
+    "Implement active-window GPU utilization and memory timeseries logging to assess hardware efficiency during compute-bound tasks.",
+    "Profile the longest-running feature join (22.29 minutes) and evidence ablation (21.65 minutes) workflows to identify optimization or memoization opportunities."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Milestone 2026.10.692 completed 9 compute-bound experiments totaling 117.5 wall-time minutes, dominated by evidence feature preparation (22.29 minutes), evidence ablation testing (21.65 minutes), and multivariate energy fitting (20.18 minutes). Although static GPU monitoring observed both RTX 3090 GPUs at 0% utilization with 4MB allocated outside execution, the locked field records gpu_idle_on_compute_bound_tasks as false and no continuous in-flight telemetry exists. Estimated time savings remain at 0% pending empirical measurement of intra-task phases and verified accelerator execution traces."
+}

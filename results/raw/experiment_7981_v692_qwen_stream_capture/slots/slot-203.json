@@ -1,0 +1,103 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.202400843030773,
+  "exclusion_reason": null,
+  "family_id": "sha256:068859562c5b50b8faf8c57daf38093d8f6ee4d5967d18ef1575d21456e6865d",
+  "input_tokens": 578,
+  "invocation_finished_at": "2026-10-01T11:45:59.770821+00:00",
+  "invocation_started_at": "2026-10-01T11:45:58.568419+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 578,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 601
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:e73852d900b59f49f862912e0b40bc73f1d1c1e5658530d71bfcbf5b68bd9a58",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855159,
+    "id": "chatcmpl-VNxOtwe1zFicHM0CrOaBLaxIT6PPSr0o",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 539.674,
+      "predicted_n": 23,
+      "predicted_per_second": 42.61832143108618,
+      "predicted_per_token_ms": 23.464086956521736,
+      "prompt_ms": 531.506,
+      "prompt_n": 500,
+      "prompt_per_second": 940.7231527019451,
+      "prompt_per_token_ms": 1.0630119999999998
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 578,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 601
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:But at the end of the day, the best way to train yourself to just know when your body's had enough food is to really pay attention when you're eating. That means no having dinner in front of the latest episode of Scandal\u2014and you definitely shouldn't be munching away in front of your computer screen.\\\\n\\\\npassage 2:Here are some sneaky tips: 1  Buy smaller plates - your mind is conditioned to expect a plate full of food. 2  Go individual - if you fancy crisps, buy an individual bag. 3  Eat slowly - this gives your brain and stomach time to recognise when you are full. Chew each mouthful 20 times. Put your cutlery down while you chew and then pick it up again for the next mouthful. Drink water before meals - 20 minutes or so before you eat, drink a pint glass of water, as cold as possible.\\\\n\\\\npassage 3:Buy smaller plates - your mind is conditioned to expect a plate full of food. So buy smaller plates and fill them with food, and you'll be reducing the calories you eat by 25% or even 50%! Go individual - if you fancy crisps, buy an individual bag. If you want pudding, buy a one-person not a family size.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to train yourself to eat less\\\"}\", \"original_answer\": \"To train yourself to eat less, it's essential to pay close attention when you're eating, avoiding distractions such as television or computer screens. Some practical tips include buying smaller plates, since your mind expects a plate full of food, thus reducing the calories you eat by 25% or even 50%. Also, if you crave snacks, buy individual serving sizes instead of family sizes. Eating slowly and chewing each mouthful around 20 times can help your brain and stomach recognize when you are full. Additionally, drinking a pint glass of cold water 20 minutes before eating may also be beneficial.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "calibration_replay",
+  "source_cluster_id": "sha256:3e21440ab1fb252445023ca94ede31b40d6a91aff279cf21a555de4021752948",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ]
+}

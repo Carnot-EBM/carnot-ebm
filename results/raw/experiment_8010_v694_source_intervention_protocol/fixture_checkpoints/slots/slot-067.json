@@ -1,0 +1,94 @@
+{
+  "arm": "original",
+  "capture_identity": "sha256:c690c1f517fbce73c5da6a2d1e99e3819c3de93e1045fe76d1c8215b54691541",
+  "censor_status": false,
+  "denominator": 1,
+  "donor_group_id": "sha256:06f17a2d74ee080ac3b83718c76856d2a5afa768144b685436784833e8c2e705",
+  "duration_s": 0.0023305279901251197,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:06f17a2d74ee080ac3b83718c76856d2a5afa768144b685436784833e8c2e705:original",
+  "group_id": "sha256:06f17a2d74ee080ac3b83718c76856d2a5afa768144b685436784833e8c2e705",
+  "input_byte_upper_bound": 4020,
+  "input_tokens": 30,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.25,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 18,
+      "prompt_tokens": 30
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:b616f1cbac32a0ea03f2324d4ef98dedbc21a57fb037ccf3fa926dfd286d222b",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "message": {
+          "content": "{\"unsupported_probability\": 0.25, \"source_sentence_id\": null}"
+        }
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "usage": {
+      "completion_tokens": 18,
+      "prompt_tokens": 30
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 32,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"1027 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Pakistani, Restaurants, Indian\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"17:30-21:30\\\",\\\"Monday\\\":\\\"17:30-21:30\\\",\\\"Saturday\\\":\\\"17:0-21:30\\\",\\\"Sunday\\\":\\\"17:0-21:30\\\",\\\"Thursday\\\":\\\"17:30-21:30\\\",\\\"Tuesday\\\":\\\"17:30-21:30\\\",\\\"Wednesday\\\":\\\"17:30-21:30\\\"},\\\"name\\\":\\\"Spice Avenue\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2013-07-08 17:31:09\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Great place and ambiance. The food had a great taste and was different to most Indian restaurants out there.  The only thing I would recommend is to have some kid friendly options.\\\"},{\\\"review_date\\\":\\\"2013-06-10 04:55:48\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"For the price, a definite NO WAY!  Sat on a nice patio and the service was fine considering we were the only people eating there.  Ordered the lamb samosa to start.  It was dry, small, and had no redeeming flavor whatsoever.  The mint sauce was the only thing that made it taste passable.  For entrees we choose to stay safe with chicken tikka masala with rosemary garlic naan to accompany.  I went to use the restroom while we waited for dinner.  In the kitchen I saw an entire plastic trash can filled with empty plastic pouches soiled with sauces and such.  Made me think that nothing is fresh made on site.  Food tasted like mall food-court food, which isn't necessarily bad except we paid more here than we did at Roy for fresh homemade seafood fettuccine.  We will not be back.\\\"},{\\\"review_date\\\":\\\"2013-05-05 00:19:46\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Spice Avenue is a great place to go for lunch. They have a really good lunch buffet special for $12. The naan is delicious and really fresh! The service is also very friendly. Try there Saag Paneer/Tofu with the naan\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Spice Avenue is a restaurant in Santa Barbara, CA located at 1027 State St. It specializes in Pakistani and Indian cuisines. The restaurant operates every day of the week from 17:30 to 21:30 and offers outdoor seating. While it does not provide WiFi, it does offer take-out and is suitable for group dining. Street parking is available, and the ambiance is casual. The restaurant has an average rating of 3.5 stars. One customer praised the unique taste of the food and the ambiance, but suggested the addition of kid-friendly options. Another customer was disappointed with the quality and taste of the food, comparing it to mall food-court food. A third customer recommended the lunch buffet special and praised the fresh naan and friendly service.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69410,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "seed": 69410,
+  "source_cluster_id": "1b2743319ea9bbea6f3790c55b061cfed2b832349ce3583439b7006b478c32bd",
+  "source_hash": "sha256:f5c021c7d35615d97605c552986ad8924a920b93af8c3f8c36c827240c38e7c1",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+  ]
+}

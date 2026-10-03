@@ -1,0 +1,106 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.5100429930025712,
+  "exclusion_reason": null,
+  "family_id": "sha256:ffbbf61a88e4f4300b3058ca645019442bda85737d4fbb5fc0841f384d86c22d",
+  "input_tokens": 958,
+  "invocation_finished_at": "2026-10-01T11:43:49.392509+00:00",
+  "invocation_started_at": "2026-10-01T11:43:47.882464+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.85,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 958,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 980
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:88c6bb05be61f18e5b270e13ec843341bbf4f0c87a9d7959f0681fd9fbf2ebd0",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.85,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855029,
+    "id": "chatcmpl-Pyx8PfHDWKgvlOMt9HjvszQXD6aIvqwS",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 516.207,
+      "predicted_n": 22,
+      "predicted_per_second": 42.618561933487925,
+      "predicted_per_token_ms": 23.463954545454545,
+      "prompt_ms": 874.939,
+      "prompt_n": 880,
+      "prompt_per_second": 1005.7844032555413,
+      "prompt_per_token_ms": 0.9942488636363636
+    },
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 958,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 980
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"718 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":true,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":true,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":true,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":true,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Tacos, Desserts, Nightlife, Bars, Indian, Mexican, Restaurants, Food, Beer Bar, Wine Bars, Fast Food\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:30-23:0\\\",\\\"Monday\\\":\\\"11:30-21:0\\\",\\\"Saturday\\\":\\\"11:30-23:0\\\",\\\"Sunday\\\":\\\"11:30-21:0\\\",\\\"Thursday\\\":\\\"11:30-23:0\\\",\\\"Tuesday\\\":\\\"11:30-22:0\\\",\\\"Wednesday\\\":\\\"11:30-22:0\\\"},\\\"name\\\":\\\"goa taco\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2019-06-19 00:07:36\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Very delicious . Pork belly tacos ! Luckily the new restaurant opening up plans on keeping some of the tacos on the menu supposably\\\"},{\\\"review_date\\\":\\\"2019-05-28 22:38:37\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"SO DISAPPOINTED to drop in this afternoon to fund the door locked and  a sing in the window noticing an application for a new business!  I had been getting lunchtime take out for a couple of months, after dining in many times.  I hope they're looking for a better location in SB, but not optimistic.  Another great restaurant disappears...\\\"},{\\\"review_date\\\":\\\"2019-05-26 06:11:20\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"One of the best Indian Mexican fusions I have had recently. Concept is pretty unique - Use flaky Indian style parathas instead of regular Corn tortillas with some darn good fillings. We tried the Chicken chorizo and Paneer with pesto taco. Delicious fillings but tons of coriander. Well if you are a person who doesn't toile fresh coriander- do mention it while ordering.\\\\nChicken chorizo needs a special mention for its taste and texture. Must try item on their menu.\\\\nGreat drinks. Spicy habanero margaritas pretty good but the non alcoholic Aqua Fresca - Watermelon was out of the world.\\\\nCasual seating. Nothing extraordinary to mention here.\\\\nFast friendly and courteous service\\\\nI would have given 5 stars but I think portion sizes were small compared to the prices.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Goa Taco is a unique fusion restaurant located in Santa Barbara, CA that combines Indian and Mexican cuisine. Their menu features a variety of tacos, desserts, and drinks, including vegetarian and vegan options. The restaurant has a casual atmosphere with outdoor seating and offers fast, friendly, and courteous service. They have a 4-star rating and are known for their delicious and unique flavors, such as their pork belly tacos and chicken chorizo tacos. Some reviewers have noted that the portions are a bit small compared to the prices, but overall, Goa Taco is a popular spot for those looking for a flavorful and fresh twist on traditional tacos.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "calibration_replay",
+  "source_cluster_id": "sha256:3587764d5ef9e75d0c3d4cd182bb59e1aa65a47ba018d86ab7497b5d9b1a26f2",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ]
+}

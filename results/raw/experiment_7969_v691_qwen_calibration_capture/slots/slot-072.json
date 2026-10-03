@@ -1,0 +1,118 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.326280148990918,
+  "exclusion_reason": null,
+  "family_id": "sha256:736d2b788a70722b60914cf21e48c3a03a31fbb7135deb5c29c037b7743ca928",
+  "input_tokens": 698,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 698,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 722
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:30ec27b5056fefe6ef774af12745d0504e506c7545896bc669f19757f3448ee7",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832571,
+    "id": "chatcmpl-p4bj6vNoMmHQnWoBlhCtxUIjNNmGSPzt",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 562.543,
+      "predicted_n": 24,
+      "predicted_per_second": 42.66340528635145,
+      "predicted_per_token_ms": 23.439291666666666,
+      "prompt_ms": 626.015,
+      "prompt_n": 620,
+      "prompt_per_second": 990.3916040350472,
+      "prompt_per_token_ms": 1.0097016129032257
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 698,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 722
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:1. Unscrew and remove the storm window from the outside of the window. 2. Pry off the vinyl siding and J-channel from around the perimeter of the window. 3. Use tin snips to trim off the metal flashing covering the exterior windowsill. 4. Notch the vinyl windowsill with tin snips to fit the existing windowsill. 5. Nail the vinyl windowsill to the old wooden windowsill. 6. Glue a vinyl end cap onto each end of the vinyl windowsill. 7. Set vinyl casing against vertical side of window and scribe bottom end to match angle of sill. 8. Cut bottom end of casing with aviation snips, then install the casing against the window.\\\\n\\\\npassage 2:But you can add just a casual look by adding a new window sill/stool. Or get on your Sunday best and some casing around the rest of the window. Or go for the evening gown look and add a cap and crown. It\u2019s all matter of taste. Once you have decided on your final look here are the steps to transform your windows.\\\\n\\\\npassage 3:The window will be. mounted with the nailing fin/. exterior trim flush against the. applied backing support. This backing support should be a. non water-degradable, thin (max. 1/8 thick) sheet material such. as vinyl sheeting.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to install vinyl exterior window sill\\\"}\", \"original_answer\": \"1. Begin by unscrewing and removing the storm window from the outside of the window. 2. Pry off the vinyl siding and J-channel from around the perimeter of the window. 3. Use tin snips to trim off the metal flashing covering the exterior windowsill. 4. Notch the vinyl windowsill with tin snips to fit the existing windowsill. 5. Nail the vinyl windowsill to the old wooden windowsill. 6. Glue a vinyl end cap onto each end of the vinyl windowsill. 7. Set vinyl casing against the vertical side of the window and scribe the bottom end to match the angle of the sill. 8. Cut the bottom end of the casing with aviation snips, then install the casing against the window.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "tune",
+  "source_cluster_id": "sha256:bfca3f259423e7864910e4b96c1f627345df30a1965ffde9eb3c219baa630aac",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26
+  ]
+}

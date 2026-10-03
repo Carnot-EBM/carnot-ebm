@@ -1,0 +1,115 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.4006908030132763,
+  "exclusion_reason": null,
+  "family_id": "sha256:4d51fc31e376fc3e384c37dc5641d636268960817b6e06ed32f25c4a90b9b9fb",
+  "input_tokens": 805,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 805,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 828
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:f4a09196cf7a1d67218cb10496d3b8f6f9369990b9db96bb30f3e82d50c67a97",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832980,
+    "id": "chatcmpl-ZKctwKp8cTM8yMrPGMQGy1swqw51925q",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.356,
+      "predicted_n": 23,
+      "predicted_per_second": 42.48590576256659,
+      "predicted_per_token_ms": 23.53721739130435,
+      "prompt_ms": 712.254,
+      "prompt_n": 727,
+      "prompt_per_second": 1020.7032884336205,
+      "prompt_per_token_ms": 0.9797166437414031
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 805,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 828
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Once you learn this proven technique for succulent smoked ribs, you\u2019ll be surprised how easy it is to make perfect ribs, every time. 1  1. Skin and rub the ribs. 2  2. Prepping your cooker for smoking. 3  3. Smoking the ribs.  4. Glaze or sauce the 1  ribs. 5. Testing for doneness.  6. Rest and cut.\\\\n\\\\npassage 2:To grill the ribs: 1Heat a gas or charcoal grill to medium (350\u00b0F to 450\u00b0F). 2Remove the ribs from the foil, place them meaty-side up on the grill, and brush them with some of the sauce. Cover the grill and cook for 5 minutes. Flip and brush the ribs and cook another 5 minutes. Continue to cook, flipping and brushing every 5 minutes, until the sauce has thickened and the ribs are heated through and have grill marks, for a total grilling time of 20 minutes.\\\\n\\\\npassage 3:Grill, both sides for approx. 4 minutes per side, to seal. Then decrease temp to medium and grill for until internal temp of 150. Flipping about every 5-6 minutes. Total cooking time 25 minutes for me. Then coat with sauce on both sides and grill until brown. 2-4 more minutes. Let stand for 5 minutes before cutting.\\\\n\\\\n\\\",\\\"question\\\":\\\"how do you make ribs on a grill\\\"}\", \"original_answer\": \"Based on the given passages, here's a brief answer to the question \\\"How do you make ribs on a grill?\\\"\\n\\nTo make ribs on a grill, first heat the grill to medium heat (350\u00b0F to 450\u00b0F). Remove the ribs from the foil and place them meaty-side up on the grill. Brush them with some sauce and cover the grill. Cook for 5 minutes, then flip and brush the ribs and cook for another 5 minutes. Continue to cook, flipping and brushing every 5 minutes, until the sauce has thickened and the ribs are heated through and have grill marks, for a total grilling time of 20 minutes.\\n\\nAlternatively, you can also seal the ribs by grilling them for 4 minutes per side at high heat, then decrease the temperature to medium and continue grilling until the internal temperature reaches 150\u00b0F, flipping every 5-6 minutes. Once the ribs are cooked through, coat them with sauce on both sides and grill until brown, for an additional 2-4 minutes. Let the ribs stand for 5 minutes before cutting and serving.\\n\\nNote that these instructions are based on the provided passages and may not be comprehensive or applicable to all situations.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:a732e40af2c2b39dc2d40b5c85300a08b97c2062615464b3df66d9794e578259",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23
+  ]
+}

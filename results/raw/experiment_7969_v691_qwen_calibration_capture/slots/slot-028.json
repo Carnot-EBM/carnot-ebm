@@ -1,0 +1,106 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.2593258140259422,
+  "exclusion_reason": null,
+  "family_id": "sha256:d172200df4ec83a67eb5118cc513d1f03645d93aa6df3bb45d55e4e9ca911665",
+  "input_tokens": 607,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 607,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 632
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:1415c9784d10b51dc0080ebdfd05b4ea5f24e15c2c1d3e177661f3659f224bf0",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832508,
+    "id": "chatcmpl-MWswJJCNO3a3ySQZKfnk7pmBhclT30Dl",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 582.665,
+      "predicted_n": 25,
+      "predicted_per_second": 42.906301219397086,
+      "predicted_per_token_ms": 23.3066,
+      "prompt_ms": 564.51,
+      "prompt_n": 529,
+      "prompt_per_second": 937.0958884696463,
+      "prompt_per_token_ms": 1.067126654064272
+    },
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 607,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 632
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:4. Check for doneness: Depending on the size of your potatoes, it may take between 30 minutes to 1 hour for them to be done. Check at 30 minutes by squeezing one of the potatoes in a oven mitt protected hand and inserting a sharp knife or fork into the center.\\\\n\\\\npassage 2:1. Preheat oven and wash the sweet potatoes: Preheat oven to 375\u00b0F. Scrub the sweet potatoes well and pat them dry with a dish towel. 2. Oil them up: Prepare squares of aluminum foil for as many sweet potatoes as you are roasting. Place each potato on a foil square and drizzle with a small amount of vegetable oil. Using your hands, rub the oil in a thin, even layer all over the potatoes. 3. Prick with a fork, wrap, and roast: Prick each sweet potato several times with a fork and wrap loosely in the foil. Be sure the foil is well-sealed.\\\\n\\\\npassage 3:Baked Sweet Potato. For a flavorful finish, top baked sweet potatoes with cranberries, toasted walnuts, and a dab of butter. To prepare baked sweet potatoes in your microwave: Prick the potatoes all over with a fork. Microwave on high for 8 to 10 minutes or until tender, turning the potatoes once.\\\\n\\\\n\\\",\\\"question\\\":\\\"how long do you bake sweet potato\\\"}\", \"original_answer\": \"Based on the given passages, it is difficult to determine an exact time for how long to bake sweet potatoes. The passages provide instructions for preparing baked sweet potatoes, but they do not specify how long to bake them for. Passage 1 suggests checking for doneness after 30 minutes, while passage 2 mentions that it may take between 30 minutes to 1 hour for sweet potatoes to be done. Passage 3 mentions microwaving sweet potatoes, which takes around 8 to 10 minutes. Without more specific information about the desired texture or level of doneness, it is impossible to give a definitive answer.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:c0c3218d90965b60cb4bf157b22b0b2be51da87c16aa8bb394fea7d32c110349",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ]
+}

@@ -1,0 +1,124 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.677649029996246,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:f5d4c41e0ad6f99ae7dd18ec8091717b060397f8420eee1a51b17887ae3a482d",
+  "input_tokens": 1111,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1111,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1134
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:8e393def8c6531deeb1c90ad5eafb914d41dea3ba36e4716faa26e579a7b256d",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886309,
+    "id": "chatcmpl-RXz3TRrFvlloKpYpx0qv6PCbQqtJkyKO",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 542.067,
+      "predicted_n": 23,
+      "predicted_per_second": 42.43017929517938,
+      "predicted_per_token_ms": 23.56813043478261,
+      "prompt_ms": 1017.338,
+      "prompt_n": 1033,
+      "prompt_per_second": 1015.3950801012054,
+      "prompt_per_token_ms": 0.984838334946757
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1111,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1134
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"About a dozen Native American actors have walked off the set of an Adam Sandler movie comedy, saying the satirical Western's script is insulting to Native Americans and women, according to a report. The walkout occurred Wednesday on the set of \\\"The Ridiculous Six\\\" near Las Vegas, New Mexico, according to the Indian Country Today Media Network. The script called for native women's names such as \\\"Beaver's Breath\\\" and \\\"No Bra\\\" and an actress portraying an Apache woman to squat and urinate while smoking a peace pipe, ICTMN reported. \\\"When I began doing this film, I had an uneasy feeling inside of me and I felt so conflicted. ... We talked to the producers about our concerns. They just told us, 'If you guys are so sensitive, you should leave,' \\\" said Allison Young, a Navajo and one of the actors who left the set. \\\"Nothing has changed,\\\" she told ICTMN. \\\"We are still just Hollywood Indians.\\\" \\\"They were being disrespectful,\\\" added David Hill, a Choctaw actor. \\\"They were bringing up those same old arguments that Dan Snyder uses in defending the (Washington) Redskins. But let me tell you, our dignity is not for sale.\\\" Produced by Sandler's Happy Madison Productions as part of a four-picture deal with Netflix, \\\"The Ridiculous Six\\\" also stars Will Forte, Taylor Lautner, Steve Buscemi, John Turturro, Nick Nolte, Luke Wilson and Rob Schneider, among others. The ICTMN describes the movie as a Western spoof on \\\"The Magnificent Seven,\\\" the 1960 classic about gunfighters who protect a village from a group of bandits. The movie was co-written by Sandler and is being directed by his frequent collaborator Frank Coraci. Actors playing historical figures include David Spade as General Custer, Blake Shelton as Wyatt Earp and Vanilla Ice as Mark Twain, according to the Internet Movie Database. Sandler had not commented publicly on the walkout as of Friday morning, although people were criticizing him in comments posted on his Facebook page. \\\"Hey Adam, act like an adult for once. Respect others, especially Native Americans,\\\" wrote one commenter. In a statement sent to CNN and other media outlets, Netflix defended the movie as satire:. \\\"The movie has ridiculous in the title for a reason: because it is ridiculous. It is a broad satire of Western movies and the stereotypes they popularized, featuring a diverse cast that is not only part of -- but in on -- the joke.\\\" The Native American actors who spoke to ICTMN weren't laughing, however. One, Loren Anthony, posted a photo to Instagram from the set Monday along with a comment saying, \\\"Having a good time, great cast, great crew and feeling blessed to be here.\\\" But by Wednesday, the Navajo actor had become disillusioned and joined others in walking out. He told ICTMN he felt insulted because costumes he and others wore to portray Apache Indians were not authentic. \\\"We were supposed to be Apache, but it was really stereotypical and we did not look Apache at all. We looked more like Comanche,\\\" he said. According to ICTMN, a Native American adviser hired to help ensure the movie's cultural authenticity also walked off the set in protest. Hill, the Choctaw actor, seemed to hold out hope that differences between the producers and Native American cast members could be resolved. \\\"I hope they will listen to us,\\\" he told ICTMN. \\\"We understand this is a comedy, we understand this is humor, but we won't tolerate disrespect.\\\" In photos: A glimpse of life on the reservation.\\n\", \"original_answer\": \"Approximately a dozen Native American actors have left the set of an Adam Sandler movie comedy, citing the script as being insulting to Native Americans and women. The walkout occurred on the set of \\\"The Ridiculous Six\\\" near Las Vegas, New Mexico, after the script called for offensive native women's names and disrespectful acts. The actors stated their concerns to the producers but were told, \\\"If you guys are so sensitive, you should leave.\\\" The movie is part of a four-picture deal with Netflix and stars various known actors. Netflix defended the movie as satire. A Native American adviser hired to aid the movie's cultural authenticity also left the set in protest.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "76cc623b137d06805c2af77e34bda59b24c3c68a2d78824fead00de5f61be840",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27
+  ]
+}

@@ -1,0 +1,96 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.3075686040101573,
+  "exclusion_reason": null,
+  "family_id": "sha256:3ccfc22c88e0551ffa73f455212deec55eccd2e6d2212e5fb6b759c608c697a1",
+  "input_tokens": 752,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 752,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 774
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:36f77957187759404fc4d1e034ad0cd49f7df8dca90d303d6b3fe66ee626919e",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.95,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832585,
+    "id": "chatcmpl-fZMRHdfjwcQluJGCtcicFN6wxvZBOdZI",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 522.033,
+      "predicted_n": 22,
+      "predicted_per_second": 42.1429296615348,
+      "predicted_per_token_ms": 23.728772727272727,
+      "prompt_ms": 666.307,
+      "prompt_n": 674,
+      "prompt_per_second": 1011.5457289207527,
+      "prompt_per_token_ms": 0.988586053412463
+    },
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 752,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 774
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"724 E Haley St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":null,\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":null},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Restaurants, Peruvian, Pop-Up Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Sunday\\\":\\\"11:30-16:0\\\"},\\\"name\\\":\\\"Challwa\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2019-11-05 03:00:40\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I love ceviche, have sampled it many places in Santa Barbara but none as fresh and inventive as the choices at Challwa. I came to know this pop up after trying the equally delicious empanadas at Buena Onda (at the same location during the week). The Ahi ceviche and the mixed ceviche with shrimp, fish, octopus was delicious. I can see me coming back weekly!\\\"},{\\\"review_date\\\":\\\"2019-11-03 22:15:30\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Ceviche Nikkei is absolutely amazing. I would highly recommend this considering the quality of ceviche at most places in Santa Barbara.\\\"},{\\\"review_date\\\":\\\"2019-11-03 20:50:18\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I'm Peruvian and 100% approved this restaurant.\\\\nThe leche de tigre and ceviches are amazing\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Sure! Here's an objective overview of Challwa based on the provided structured data:\\n\\nChallwa is a Peruvian pop-up restaurant located in Santa Barbara, California. It has a rating of 4.5 stars and is open Sunday from 11:30am to 4pm. The restaurant offers ceviche, empanadas, and other Peruvian dishes. According to customer reviews, the ceviche is fresh and inventive, with one reviewer stating that they have tried ceviche at many places in Santa Barbara but none compare to Challwa. Another reviewer praised the leche de tigre and ceviches, stating that they are \\\"amazing\\\" and \\\"100% approved\\\" by a Peruvian customer. The restaurant does not offer reservations, outdoor seating, or wifi, but takeout is available. The ambiance is casual and intimate, with no trendy or upscale atmosphere. Overall, Challwa is a great option for those looking for authentic and delicious Peruvian cuisine in Santa Barbara.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:64e5fc860cd2a9438513bd9e1bd508ab548cb5b8ae1f630b6cb72d24e14bf61d",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ]
+}

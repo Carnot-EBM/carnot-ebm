@@ -1,0 +1,95 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.3035885710269213,
+  "exclusion_reason": null,
+  "family_id": "sha256:f71e9060474b5b0fcf0e48232ef080dfedc9c9cc73f0ef8c674bd9a4ec69ac31",
+  "input_tokens": 761,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 761,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 782
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:ff4973d2a38c1ad74b72629ce3f3f5b2b233334ca91191b8cd351346fa10b19d",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790833009,
+    "id": "chatcmpl-CL9RptqF7K2k8EDDtIOy7DTzijq8r9Az",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 499.003,
+      "predicted_n": 21,
+      "predicted_per_second": 42.083915327162366,
+      "predicted_per_token_ms": 23.762047619047618,
+      "prompt_ms": 690.246,
+      "prompt_n": 683,
+      "prompt_per_second": 989.502293385257,
+      "prompt_per_token_ms": 1.0106090775988286
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 761,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 782
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"1936 State St, Ste B\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":null},\\\"business_stars\\\":3.0,\\\"categories\\\":\\\"Restaurants, Delis, Sandwiches, Fast Food\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"8:0-22:0\\\",\\\"Monday\\\":\\\"8:0-22:0\\\",\\\"Saturday\\\":\\\"10:0-22:0\\\",\\\"Sunday\\\":\\\"10:0-22:0\\\",\\\"Thursday\\\":\\\"8:0-22:0\\\",\\\"Tuesday\\\":\\\"8:0-22:0\\\",\\\"Wednesday\\\":\\\"8:0-22:0\\\"},\\\"name\\\":\\\"Subway\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2018-06-24 13:46:20\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"I have to assume that the \\\\\\\"Sandwich Artist\\\\\\\" who made my meal had to be none other than Hannah H\u00f6ch, because this was clearly a dadaesque attack on the logic of how to make a meatball sub!\\\"},{\\\"review_date\\\":\\\"2017-06-15 20:12:30\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Standard subway experience except they did not take our gift card/voucher with a bar code and the amount on it. The cashier did not put any effort and we ended up paying using credit card. Whole wheat bread was a little dry but nothing much to complain about.\\\"},{\\\"review_date\\\":\\\"2017-06-11 21:25:19\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"Good  chicken breast sandwich and courteous help but only one employee and I waited 25 min to order.  Probably not going back to this location.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Subway, located at 1936 State St, Ste B in Santa Barbara, CA, is a fast food restaurant specializing in sandwiches and delis. The restaurant operates from 8:00 to 22:00 from Monday to Friday and 10:00 to 22:00 on weekends. Parking is available on the street and in a lot, but there's no valet service or garage parking. The establishment does not accept reservations but offers outdoor seating and is suitable for groups. Take-out service is also available. Subway has a 3-star average rating. One customer complained about the poor assembly of their meatball sub while another mentioned a refusal to accept a gift card and slightly dry whole wheat bread. A third reviewer praised the chicken breast sandwich but was unhappy with the long wait due to understaffing.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:1224865dbf03be6f301e376642e8c60f64406e918fb38bdb5d54e906b2a5d7e8",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3
+  ]
+}

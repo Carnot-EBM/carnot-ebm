@@ -1,0 +1,111 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.4691055599832907,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:b7f6860ee9b0a7eece969894060a57d060d4b73802596aef3e36bc5e5dedc138",
+  "input_tokens": 927,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 927,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 948
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:2e913d6fab47465a60f7c1d383263365f493bb6f1dab3964639cba181c56e4e7",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885887,
+    "id": "chatcmpl-0QGieWL6ykybISAPmqUfB3kHM81uWeJy",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 488.944,
+      "predicted_n": 21,
+      "predicted_per_second": 42.94970385156582,
+      "predicted_per_token_ms": 23.28304761904762,
+      "prompt_ms": 847.138,
+      "prompt_n": 849,
+      "prompt_per_second": 1002.1979889935288,
+      "prompt_per_token_ms": 0.9978068315665489
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 927,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 948
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"1045 Casitas Pass Road\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":null,\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":2.5,\\\"categories\\\":\\\"Restaurants, Tex-Mex, Fast Food, Mexican, Tacos\\\",\\\"city\\\":\\\"Carpinteria\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"9:30-23:0\\\",\\\"Monday\\\":\\\"9:30-22:0\\\",\\\"Saturday\\\":\\\"9:30-23:0\\\",\\\"Sunday\\\":\\\"9:30-22:0\\\",\\\"Thursday\\\":\\\"9:30-22:0\\\",\\\"Tuesday\\\":\\\"9:30-22:0\\\",\\\"Wednesday\\\":\\\"9:30-22:0\\\"},\\\"name\\\":\\\"Taco Bell\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-12-16 20:08:59\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Vegetarians beware. I showed them a literal photo from their website of the black bean Crunchwrap to make double sure they understood which one. And they gave me a ground beef one. Luckily I noticed after 2 bites but very disappointing. I haven't eaten meat in 8 years. THANKS TACO BELL!\\\"},{\\\"review_date\\\":\\\"2021-10-08 01:16:08\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"I went in and they made the wrong thing twice !! I went all the way home and had to come back and they made the exact wrong thing again. I asked for a refund and the cashier was wrong about price and said SO !! WHO HIRES THESE MORONS ? Rudest food service worker I've EVER encountered. He kept saying give me the receipt after HE threw it away the first time they screwed up. Contacted management and they didn't even respond ! Place was also very dirty. My advice is DON'T GO TO THIS GARBAGE TACO HELL\\\"},{\\\"review_date\\\":\\\"2021-09-25 03:45:40\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Would give more stars if customers service wasn't trash. Dudes has his phone behind the register playing a video with his AirPods in & shakes his head at me when I asked to add rice to my burrito.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Taco Bell is a fast-food restaurant located at 1045 Casitas Pass Road, Carpinteria, CA. It specializes in Tex-Mex cuisine, offering a variety of tacos and other Mexican dishes. The restaurant operates from 9:30 AM to 10 PM from Monday to Thursday, and until 11 PM on Fridays and Saturdays. Key features include free WiFi, takeout services, and suitability for group dining. However, the restaurant does not offer outdoor seating or reservations. Taco Bell has an overall rating of 2.5 stars. Recent reviews highlight issues with order accuracy and customer service, with customers reporting incorrect orders and unresponsive staff. Some customers have also criticized the cleanliness of the establishment. The restaurant does not seem to be vegetarian-friendly, as evidenced by complaints about meat being included in orders that were supposed to be vegetarian.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "calibration",
+  "source_cluster_id": "6e58ea7490e2f8e05a817c6d7c15fcc08c3031dd06a912bded8b390d79f2b808",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ]
+}

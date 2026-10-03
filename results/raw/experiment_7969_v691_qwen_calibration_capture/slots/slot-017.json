@@ -1,0 +1,131 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.722350403026212,
+  "exclusion_reason": null,
+  "family_id": "sha256:ef5d290af3938b408937a514508ba086afba3c10f4cbb96b81867cd4ba08f1d5",
+  "input_tokens": 1229,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1229,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1252
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:0ae73facdabaa1692b4fd46e0b33e09190d81ae21976b28455822cbb1244eae7",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832494,
+    "id": "chatcmpl-KuPnqDWedZ6736pyWX98xXpKGw4wcJa3",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 534.277,
+      "predicted_n": 23,
+      "predicted_per_second": 43.04883047557727,
+      "predicted_per_token_ms": 23.2294347826087,
+      "prompt_ms": 1051.374,
+      "prompt_n": 1151,
+      "prompt_per_second": 1094.7579072718177,
+      "prompt_per_token_ms": 0.9134439617723719
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1229,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1252
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Let's start with a pop quiz (space junkies can skip this test). True or False, Mercury is:. 1) The planet closest to the sun in our solar system. 2) So hot that water couldn't possibly exist there. 3) Something used in old-style glass thermometers. 4) A planet you don't think about very often. Answers: True, False, True (but not what we're talking about in this story) and I'm guessing No. 4 is true too. If you flunked the test, it might be because Mercury (the planet) suffers from bad (or very little) press. Or, maybe it's just bad lighting. Mercury orbits about 35,983,125 miles from the sun. Compare that to Earth -- we're about 93 million miles from the sun. Mercury's closeness to the sun makes it hard to see except at dawn and twilight. This may be one reason we don't think about it much. Venus, on the other hand, the planet between Earth and Mercury, appears to be the brightest planet in the sky. It's so bright it's been mistaken for an airplane. Pilot sends plane into dive after mistaking Venus for oncoming plane. But back to Mercury. It's getting some attention from the media now because it's about to get a visitor. The NASA spacecraft MESSENGER (an acronym for MErcury Surface, Space ENvironment, GEochemistry, and Ranging) is about to crash onto Mercury. The probe was launched in 2004 and traveled more than six and a half years before it started orbiting Mercury on March 18, 2011. Now, MESSENGER is running out of fuel and NASA says it will hit the planet's surface at 8,750 mph (3.91 kilometers per second) around April 30. You won't be able to see it hit because Messenger will crash on the side of Mercury facing away from Earth. There's no way to save the spacecraft, but mission operators at the Johns Hopkins University Applied Physics Laboratory (APL) in Laurel, Maryland, have been doing what they can to delay the inevitable. They've been using the little bit of fuel left on board to maneuver the spacecraft to keep it in orbit. They'll do one final maneuver on Friday, April 24. \\\"Following this last maneuver, we will finally declare the spacecraft out of propellant, as this maneuver will deplete nearly all of our remaining helium gas,\\\" mission systems engineer Daniel O'Shaughnessy said at a recent media briefing. \\\"At that point, the spacecraft will no longer be capable of fighting the downward push of the sun's gravity.\\\" But rather than mourn the loss, scientists held a briefing to celebrate the mission's success. \\\"For the first time in history we now have real knowledge about the planet Mercury that shows it to be a fascinating world as part of our diverse solar system,\\\" said John Grunsfeld, associate administrator for the Science Mission Directorate at NASA Headquarters in Washington. One of MESSENGER's big findings: It sent back data indicating that ice in Mercury's shadowed polar regions, if spread over an area the size of Washington, would be more than two miles thick, NASA said. It also took some amazing photos of the planet. So the MESSENGER mission is ending, but scientists say they'll be busy for years studying data from the probe. And if you want to see Mercury with your own eyes, you may be in luck if you can find an area with dark skies. It will be visible in the night sky just before dusk until about the end of May. Your favorite astronomy website will have some helpful guides. Here are a few we found:. \u2022 Earthsky.org. \u2022  Astronomy. \u2022 Sky and Telescope. \u2022 Stardate.\\n\", \"original_answer\": \"Here is a summary of the article in 150 words:\\n\\nNASA's MESSENGER spacecraft is set to crash onto the surface of Mercury on April 30 after running out of fuel. The probe has been orbiting the planet since 2011 and has provided valuable data about Mercury's surface, geology, and atmosphere. Despite the impending crash, scientists are celebrating the mission's success and the new insights into the planet's composition and properties. MESSENGER's data showed that Mercury's poles have ice deposits up to 2 miles thick and captured stunning images of the planet's terrain. Although the spacecraft will no longer be visible in the night sky, Mercury will be visible for the next few weeks before dusk.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:b08df7f48fd23d34ca9181763ad2b0e60fe3eeb08eae2b1e873b9f93ebd52be5",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39
+  ]
+}

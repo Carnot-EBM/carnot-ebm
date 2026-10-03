@@ -1,0 +1,106 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.3344657279667445,
+  "exclusion_reason": null,
+  "family_id": "sha256:b90420f38984c82d198a48a0b428e4ceafc7e8def3cd243085a5f100d191027a",
+  "input_tokens": 745,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 745,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 768
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:232b5a2c34b339e40cd4960e99fca10e1ee42c18a33190da67968b42daa3ff58",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832533,
+    "id": "chatcmpl-uBg2TwSZVL49vbszmHVrD2sXU7NksDTR",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 536.396,
+      "predicted_n": 23,
+      "predicted_per_second": 42.87876867090732,
+      "predicted_per_token_ms": 23.321565217391303,
+      "prompt_ms": 658.426,
+      "prompt_n": 667,
+      "prompt_per_second": 1013.0219645032244,
+      "prompt_per_token_ms": 0.9871454272863569
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 745,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 768
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Baked sweet potato fries that are caramelized and crispy on the outside and tender on the inside. No fryer needed here. Consider making a double batch, this one\u2019s addictive. Jump to the Baked Sweet Potato Fries recipe now or watch our quick, straight-forward recipe video showing you how we make it.\\\\n\\\\npassage 2:Heat oven to 450 degrees F. Line two baking sheets with aluminum foil then slide into the oven so they become hot. Scrub then cut the sweet potatoes into 1/2-inch sticks. Add to a large bowl and toss with olive oil, salt, and pepper. Tumble sweet potatoes onto hot baking sheets and spread into one layer.\\\\n\\\\npassage 3:Instructions. 1  Preheat oven to 450 degrees (F). 2  Peel the sweet potatoes (if preferred) and cut off the pointy ends. 3  Place the sweet potato wedges in a large bowl, then add in the olive oil, salt, sugar, seasoning, and black pepper.  Arrange the sweet potato wedges in a single layer on the prepared baking sheet. Bake for 30 minutes, then turn on the broiler and bake for another 3-5 minutes, or until they're well browned and crispy. Keep an eye here - it's easy to burn when the broiler is on! Cool wedges on pan for 5 minutes, then serve at once!\\\\n\\\\n\\\",\\\"question\\\":\\\"how to make oven sweet potato fries crispy\\\"}\", \"original_answer\": \"Based on the given passages, here are the steps to make oven sweet potato fries crispy:\\n\\n1. Preheat the oven to 450\u00b0F (as per Passage 1 and Passage 3).\\n2. Cut the sweet potatoes into 1/2-inch sticks (as per Passage 2).\\n3. Toss the sweet potato sticks with olive oil, salt, and pepper (as per Passage 2).\\n4. Spread the sweet potato sticks out in a single layer on a hot baking sheet (as per Passage 2).\\n5. Bake for 30 minutes, then turn on the broiler and bake for an additional 3-5 minutes, or until the fries are well browned and crispy (as per Passage 3).\\n6. Keep an eye on the fries while they are broiling as they can easily burn (as per Passage 3).\\n7. Cool the fries on the pan for 5 minutes before serving (as per Passage 3).\\n\\nBy following these steps, you should be able to make delicious oven sweet potato fries that are crispy on the outside and tender on the inside, without the need for a fryer.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "policy_design",
+  "source_cluster_id": "sha256:deb6d508920ca369cdba152f8bd1b9d50be2cf1713a351fa230ddc727f3c9925",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ]
+}

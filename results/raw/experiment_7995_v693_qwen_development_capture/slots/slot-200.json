@@ -1,0 +1,107 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.483570997021161,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:4f6667c5f1b8a52586931467f20e6b22992b7c63efa8573d880b998c3c3df85e",
+  "input_tokens": 875,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 875,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 898
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:d1e8687264c0e401c1fb8590a9c6c6d468b873645b5d895cd62f256c03cbc42c",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886121,
+    "id": "chatcmpl-QhkoR80aWmNKqP2J1SIDvAGU5bdz1ocW",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.353,
+      "predicted_n": 23,
+      "predicted_per_second": 42.48614120546114,
+      "predicted_per_token_ms": 23.537086956521737,
+      "prompt_ms": 825.888,
+      "prompt_n": 797,
+      "prompt_per_second": 965.0218915882057,
+      "prompt_per_token_ms": 1.0362459222082812
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 875,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 898
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"3020 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Pizza, Restaurants, Sandwiches, Salad\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-22:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"11:0-22:0\\\",\\\"Sunday\\\":\\\"11:0-21:0\\\",\\\"Thursday\\\":\\\"11:0-21:0\\\",\\\"Tuesday\\\":\\\"14:0-21:0\\\",\\\"Wednesday\\\":\\\"11:0-21:0\\\"},\\\"name\\\":\\\"Giovanni's of Santa Barbara\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-12-05 02:11:56\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"The staff was awesome & very helpful! Will definitely return next time we are in Santa Barbara!\\\"},{\\\"review_date\\\":\\\"2021-11-27 23:50:25\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Grew up in New York and all I've been trying to do since I came\\\\nto SB Is find a decent Chicken Parm Sandwich. I've tried a bunch of places and either it doesn't end up on bread (it was like pizza dough used to make a sandwich), the chicken isn't breaded, or it tastes awful. I finally found a good sandwich here. I'll try a calzone next. Side note: no picture available because I inhaled my sandwich.\\\"},{\\\"review_date\\\":\\\"2021-11-21 04:07:52\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"This is easily the best calzone in SB now that Sal's on Milpas closed. Friendly staff and very generous portions. The owner Andreas used to own IV location and he runs this spot too, really cool guy. Can't go wrong great locals spot! Reliable & good food. Their homemade Italian salad dressing is delicious.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"\\\"Giovanni's of Santa Barbara\\\" is a local eatery situated at 3020 State St, Santa Barbara, CA. The restaurant specializes in serving Pizza, Sandwiches, and Salad. With an overall business star rating of 3.5, Giovanni's is open from Tuesday to Sunday, with extended hours on Fridays and Saturdays. While the restaurant does not offer services like validated parking, reservations, outdoor seating, WiFi, or music, it provides street and lot parking, take-out options, and is suitable for groups. The ambiance is casual, as per the reviews. Customers praise the helpful staff and appreciate the food offerings, particularly the Chicken Parm Sandwich and the calzones. The homemade Italian dressing is also a hit amongst the customers. Based on the reviews, it appears that Giovanni's has become a favorite spot for locals.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "f62012a3bd1b471fe3d4c67fed9b89fa0211d0dc07061d244a697bebbc688551",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ]
+}

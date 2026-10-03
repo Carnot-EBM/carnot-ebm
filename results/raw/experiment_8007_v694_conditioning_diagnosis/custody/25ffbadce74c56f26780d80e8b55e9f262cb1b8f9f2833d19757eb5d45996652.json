@@ -1,0 +1,110 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.3638445700053126,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:550a69582fcc5d1e474a387b3dbba3ea3ef45cf5353adfe88222dbb5aa071e92",
+  "input_tokens": 709,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 1,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 709,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 733
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:23121e9cdc29f624ea0586c38f8acf2cd7499537b10349ae2fe6e5f1d56f8fc1",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 1\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886034,
+    "id": "chatcmpl-oR9elBzgXrRBHZ5QjFoWrEeH6QYHQD8k",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.297,
+      "predicted_n": 24,
+      "predicted_per_second": 42.455558759377816,
+      "predicted_per_token_ms": 23.554041666666667,
+      "prompt_ms": 641.994,
+      "prompt_n": 631,
+      "prompt_per_second": 982.8752293635142,
+      "prompt_per_token_ms": 1.0174231378763867
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 709,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 733
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Welcome to Farkle Ten! Farkle Ten is a unique twist on the game of Farkle geared towards fast and fun online play. Choose How To Play Farkle for a simple set of instructions on how to play or browse the rest of the Farkle Ten guide for hints and tips! Object: The player with the highest score in 10 rounds of play wins! This is a modified version of Farkle geared towards faster online play allowing you to finish up a game in one series instead of waiting on the other player over and over again. How to Play: Each player takes turns rolling the dice. When it's your turn you'll roll all 6 dice.\\\\n\\\\npassage 2:A Farkle occurs when the dice are rolled and no point dice appear. At this point the player loses all the point dice he/she/it has collected during that turn, and the play passes to the player to the left. No points are recorded on the scratch paper. If a player decides not to risk rolling a Farkle then he/she/it can stop rolling and the play passes to the player to the left. Any points collected during that turn are then recorded on the scratch paper. At this point the player may eat some Tostitos\u00ae Chips and salsa.\\\\n\\\\npassage 3:1 Two sets of three of a kind: 2,500 points. 2  Four of a kind is scored as 1,000 points, or double the three of a kind value, or quadruple the three of a kind value.  Five of a kind is scored as 2,000 points, or triple the three of a kind value, or six times the three of a kind value.\\\\n\\\\n\\\",\\\"question\\\":\\\"how play farkle\\\"}\", \"original_answer\": \"To play Farkle, players take turns rolling six dice. The goal is to have the highest score after 10 rounds. Players can collect points during their turn, but if they roll a Farkle (a roll without any points), they lose all the points they've collected during that turn and play passes to the next player. Players can choose to stop rolling at any point during their turn to avoid the risk of rolling a Farkle. The points are then recorded. Points are awarded based on the number of dice rolled, with two sets of three of a kind yielding 2,500 points, four of a kind yielding 1,000 points, and five of a kind yielding 2,000 points.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "036eb66d23d5a54f346c60da3eb509f2e28b2167b076a9d6b3781cbaecad2bcd",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ]
+}

@@ -1,0 +1,108 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.2884933260502294,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:c1f73e3a3ed2fd53257d3c524941b4e33b36f34dafe5bfd35c133f2c1b4d4af2",
+  "input_tokens": 696,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 696,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 719
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:454f614e60a808c766cf4506f5ff91d40944d20d49c241d707717fa65404d4b2",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885859,
+    "id": "chatcmpl-n1qCYP2F0bJayIiaJZafnoQ6Yb05pLUk",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 534.623,
+      "predicted_n": 23,
+      "predicted_per_second": 43.02096991711916,
+      "predicted_per_token_ms": 23.244478260869567,
+      "prompt_ms": 616.364,
+      "prompt_n": 618,
+      "prompt_per_second": 1002.6542757201913,
+      "prompt_per_token_ms": 0.9973527508090615
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 696,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 719
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"Santa Barbara Airport, 500 Fowler Rd\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":null},\\\"business_stars\\\":3.0,\\\"categories\\\":\\\"American (Traditional), Restaurants\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":null,\\\"name\\\":\\\"Overlook Cafe\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2012-02-01 15:05:42\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"The overlook cafe is now closed.   The new restaurant needs to actually open in time for 6am flights.\\\"},{\\\"review_date\\\":\\\"2011-07-23 00:34:55\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"For airport food, Overlook does well. The chicken Caesar had freshly grilled real chicken, freshly rinsed crisp romaine, and authentic Parmesan. Coupled with the view, this is far better than most airport dives.\\\"},{\\\"review_date\\\":\\\"2010-10-27 00:38:56\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"Could be better, could be worse.  Overlook Cafe has a nice view of the runway and the hills.  It's in the lobby, before security.  My chicken quesadilla was pretty average.  The upside is Blue Moon on tap and a quick kitchen.  Prices could be worse I guess.  But if you can afford to fly through this airport, you either have dough or an expense account.  No dude, no dough.  I have an expense account...\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"The Overlook Cafe is a traditional American restaurant located at Santa Barbara Airport, 500 Fowler Rd, Goleta, CA. The restaurant is known for offering a nice view of the runway and the hills. Customers have appreciated the freshly grilled chicken and freshly rinsed crisp romaine in their Caesar salad. However, some have mentioned that the restaurant can improve its offering as the chicken quesadilla was considered average. The restaurant does not offer WiFi or parking facilities but is favorable for groups and has outdoor seating available. There is a mixed review about its opening hours, especially for early morning flights. The restaurant has an overall rating of 3 stars.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "calibration",
+  "source_cluster_id": "5b45824eed88aa75bc490f7d185ab37a732b65ffeb2929d63703b309e81abc9f",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]
+}

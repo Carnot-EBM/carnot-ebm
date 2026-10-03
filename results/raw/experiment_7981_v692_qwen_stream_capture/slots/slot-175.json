@@ -1,0 +1,99 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.5027297449996695,
+  "exclusion_reason": null,
+  "family_id": "sha256:087c254da5defc7b6d2e710fe5a200c4cc85de934206ead4ad1236a230951449",
+  "input_tokens": 917,
+  "invocation_finished_at": "2026-10-01T11:45:20.390206+00:00",
+  "invocation_started_at": "2026-10-01T11:45:18.887477+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 917,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 939
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:c3c089f437ceafeaa178b12ca274f069eb7e08f757aee3c3cc68bb735b28452f",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.95,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855120,
+    "id": "chatcmpl-XcaepLS8gjam1rUucIoFOyHzuoAXJmg0",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 516.224,
+      "predicted_n": 22,
+      "predicted_per_second": 42.61715844284652,
+      "predicted_per_token_ms": 23.464727272727274,
+      "prompt_ms": 851.126,
+      "prompt_n": 839,
+      "prompt_per_second": 985.7529907440262,
+      "prompt_per_token_ms": 1.0144529201430275
+    },
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 917,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 939
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"146 S Fairview Ave\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":null,\\\"valet\\\":false,\\\"validated\\\":null},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":2.0,\\\"categories\\\":\\\"Food, Burgers, Restaurants, Fast Food, Coffee & Tea\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"5:0-0:0\\\",\\\"Monday\\\":\\\"5:0-0:0\\\",\\\"Saturday\\\":\\\"5:0-0:0\\\",\\\"Sunday\\\":\\\"5:0-0:0\\\",\\\"Thursday\\\":\\\"5:0-0:0\\\",\\\"Tuesday\\\":\\\"5:0-0:0\\\",\\\"Wednesday\\\":\\\"5:0-0:0\\\"},\\\"name\\\":\\\"McDonald's\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-12-17 23:12:29\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"I was charged for somebody else's order when I picked up my order, when I went into a tell the manager so he can fix it he told me that I needed to call the one 800 number that they don't fix it on site. I called the one 800 number and they informed me that it does need to be fixed inside the branch.\\\\nI don't like that the management is not aware of the proper procedures.\\\\nIn the end I paid $22.00 for and iced coffee.\\\"},{\\\"review_date\\\":\\\"2021-12-07 20:34:19\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"I was given the wrong order entirely not happy allergic to all of the food that was given to me\\\"},{\\\"review_date\\\":\\\"2021-11-29 23:22:19\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"I like their coffee as a rule, when they manage to make it properly.\\\\nStopped by there to get a coffee and apple pie. I see the fellow pour it out of the beginning of the brew. On complaining that it is a bad product that way, I was rewarded with a blank look.\\\\n\\\\nI just left. Left the apple pie, left their poor excuse of a coffee.\\\\n\\\\nIt would mean something if there was an adult on site that one could speak to but I just give up. Its tiring and just becomes easier, better, make my own or go elsewhere.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"McDonald's is a fast food restaurant located in Goleta, CA, offering a range of burgers, coffee, and other menu items. The restaurant is open seven days a week from 5am to midnight, with outdoor seating and free WiFi available. According to customer reviews, the restaurant has a clean and well-maintained environment, but some customers have reported issues with incorrect orders and poor customer service. One reviewer noted that they were charged for someone else's order, and another reviewer received a wrong order that they were allergic to. Some customers have also expressed frustration with the quality of the coffee and the lack of an adult staff member to speak to regarding their concerns. Overall, this McDonald's location has received mixed reviews, with an average rating of 2.0 stars out of 5.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_admission",
+  "source_cluster_id": "sha256:d0970d6bb3db0a3b8729b70b3dcfd1bd0fadfe9b0029e6247b5db7afa1fd19f1",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ]
+}

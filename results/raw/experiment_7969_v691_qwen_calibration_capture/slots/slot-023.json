@@ -1,0 +1,76 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 0.0,
+  "exclusion_reason": "answer_units_over_budget",
+  "family_id": "sha256:05ad385674b31db4df072502c87fc402c4e87e69ccc0be1596817c1cfd63923b",
+  "input_tokens": null,
+  "parsed": {
+    "citation_valid": false,
+    "completed": false,
+    "finish_reason": null,
+    "probability": null,
+    "schema_valid": false,
+    "source_sentence_id": null,
+    "status": "invalid_envelope",
+    "syntax_valid": false,
+    "usage": {}
+  },
+  "public_eligible": false,
+  "public_hash": "sha256:0f78d2979363500a7d6d57172db6926f49b6989b8c7c34577ac1d8cf0d1b6d91",
+  "raw_response": {},
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"819 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":true,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":false,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":2.0,\\\"categories\\\":\\\"Restaurants, Japanese\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":null,\\\"name\\\":\\\"Sakura Express\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2014-06-06 23:24:08\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"I was so hungry and craving Japanese food so I was super excited there was a Sakura right next to Swarovski where I work!\\\\n\\\\nBut the portion was super teeny and it didn't make me full at all :( I got a beef teriyaki bowl, which was delicious, but it was $10 and I'm still hungry right now.\\\\n\\\\nThe employees are nice and the food is good though!\\\"},{\\\"review_date\\\":\\\"2014-05-06 03:08:38\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"I really need to stop assuming restaurants have online menus and take more pictures of menus. Sigh. Anyway, my mum and I came here for lunch when we were checking out the Paseo Nuevo Shopping Center in SB. As usual, this is a Japanese restaurant owned by Koreans. The lady behind the counter was really friendly but the male employee (co-owner?) was definitely less so. We ordered at the counter and were given a number for our order. The food is a bit pricey, but my mum wanted Asian food so this is where we ended up. Since it was a nice day, we took a seat at a table on the patio and waited for our food and water to be brought to us.\\\\n\\\\nWhen the lady took our order, she had asked if we wanted anything to drink. I told her two waters, please, and she acknowledged my request. And yet the water never came... not cool.\\\\n\\\\nAfter a while, the male employee brought us our food. My mum had gotten the Beef Curry Bowl and I got the Dragon Roll. He also brough us utensils and one napkin each. He dropped my napkin on the floor, so he picked it up and walked away. I thought he was going to bring me another napkin, but he didn't. We chalked it up to him being weird and also very unfriendly. Is he the same unfriendly owner that the other Yelpers have been ranting about? While he wasn't outright rude to us, I can totally picture him being rude to customers.\\\\n\\\\nAs for the food... my roll was okay. It wasn't great, it wasn't bad, it was just fine. But my mum did not like her beef curry bowl at all. She thought the meat was mediocre and the curry was bland. She was not a fan of the food at all. While I don't think this place merits just one star, at least not in my experience, they definitely can't get higher than two stars, since they really were just meh.\\\"},{\\\"review_date\\\":\\\"2014-04-06 22:16:35\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Not worth one dollar I paid! Half my food was cold, small portion for the $$ and dirty place. Our table was cleaned with a rag that smelled badly, food took A LONG TIME to arrive at our table. Avoid this place if possible!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Sakura Express is a Japanese restaurant located in Santa Barbara, California. The restaurant serves food from a variety of categories, including restaurants and Japanese cuisine. The business has no specific hours of operation and offers parking services such as garage parking, street parking, validated parking, lot parking, and valet parking. The restaurant does not offer reservations, outdoor seating, WiFi, or good group dining options. The restaurant has a rating of 2.0 stars out of 5.0 stars based on customer reviews.\\nOne customer reviewed the restaurant on June 6, 2014, and gave the restaurant a rating of 3.0 stars. The customer was excited to try the restaurant since it was located near their workplace and offered Japanese cuisine. However, the customer found the portion size to be small and not filling. The beef teriyaki bowl was delicious, but the customer felt hungry afterward. The customer also noted that the employees were friendly, but the food was priced higher than expected.\\nAnother customer reviewed the restaurant on May 6, 2014, and gave the restaurant a rating of 2.0 stars. The customer was shopping at the Paseo Nuevo Shopping Center in Santa Barbara and decided to try the restaurant. The customer found the restaurant to be expensive, but the owner was unfriendly. The customer ordered at the counter and had to wait for their food to be delivered to their table. The customer also noted that the restaurant did not provide water despite requesting it.\\nA third customer reviewed the restaurant on April 6, 2014, and gave the restaurant a rating of 1.0 stars. The customer was disappointed with the quality of the food and service at the restaurant. The customer also noted that the restaurant was dirty, and their table was cleaned with a rag that smelled badly. The food took a long time to arrive at their table, and the customer did not recommend the restaurant to others.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 0,
+  "role": "fit",
+  "source_cluster_id": "sha256:a85409abbc8aa48634ffc83510b9c1573aeaa782919d1adf0870881a379e0d83",
+  "started": false,
+  "status": "excluded",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26
+  ]
+}

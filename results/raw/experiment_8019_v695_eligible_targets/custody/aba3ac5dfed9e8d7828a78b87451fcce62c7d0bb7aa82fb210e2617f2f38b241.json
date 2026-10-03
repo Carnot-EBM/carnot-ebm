@@ -1,0 +1,106 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.383096111996565,
+  "exclusion_reason": null,
+  "family_id": "sha256:dcad9a309adf01da730e538ccfa6430f937ebf99e0e51bc2630b78f8ff381779",
+  "input_tokens": 844,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 844,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 867
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:f7f342a938c846357fe04fc3c8260f04bb6c6099fbdfd9f5ee7aa4609d034533",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832989,
+    "id": "chatcmpl-yzaP1a4iOSZrgfiCpmBilxhYQ0PXa0dt",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.237,
+      "predicted_n": 23,
+      "predicted_per_second": 42.49524699900414,
+      "predicted_per_token_ms": 23.532043478260867,
+      "prompt_ms": 730.674,
+      "prompt_n": 766,
+      "prompt_per_second": 1048.347142501307,
+      "prompt_per_token_ms": 0.9538825065274151
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 844,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 867
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Arizona Republican Kari Lake Receives Another Big Endorsement\\nArizona Republican Kari Lake, who announced earlier this month that she was joining the race for Senator Kyrsten Sinema's seat in 2024, earned another big endorsement over the weekend as she seeks to achieve a more successful campaign than in 2022.\\nThe news comes after Lake's first major endorsement came from former President and Republican presidential primary frontrunner Donald Trump, who announced his support for her Senate campaign shortly after Lake officially joined the race.\\nLake Receives Another Endorsement\\nRepublican Kari Lake received another major endorsement from the high-ranking members of the GOP this week after Senator John Barrasso, a member of the Republican Party leadership in the Senate, announced that he would be supporting her in her bid to unseat incumbent Kyrsten Sinema.\\n\u201cKari Lake will shine brightly for Arizona. She is a generational communicator who is giving voice to Arizona citizens,\u201d he said in a statement.\\n\u201cJoe Biden\u2019s policies have crushed Arizona. Arizonans are dealing with record inflation \u2013 up 20 percent under the Biden administration. Arizona is also on the front lines of the worst illegal immigration crisis in American history. Nearly 8 million illegal immigrants under Biden, equal to the population of Arizona,\u201d Barrasso continued. \u201cThe U.S. Senate needs a Senator from Arizona that understands these issues, and will fight hard to solve them.\u201d\\nThe endorsement marks a major step for Lake in her pursuit of election victory, something that eluded her in her 2022 bid for Arizona governor, in which she narrowly lost to Democrat Katie Hobbs.\\nSince her loss, Lake has embarked on numerous legal battles to try and overturn the results of that election, claiming rampant election and voter fraud in the state's most populous county.\\nLake's arguments have thus far been unproven in court, with the fiery Republican's lawyers even receiving sanctions earlier this year related to a frivolous lawsuit.\\nAll of that combined has led some within the GOP leadership structure to begin questioning whether or not Lake would be able to conduct a winning campaign in 2024, especially with her likely opponent coming in the form of Democrat Ruben Gallego, a rising star within the party that has proven to be very popular among the Democratic leadership and Arizona voters in recent years.\\nNevertheless, with Lake entering the race the GOP leadership appears poised to rally the troops around the controversial Republican in their bid to take back the Senate in 2024.\", \"original_answer\": \"Arizona Republican Kari Lake, who is running for Senator Kyrsten Sinema's seat in 2024, has received another major endorsement from Senator John Barrasso. Barrasso praised Lake as a strong advocate for Arizona citizens and criticized President Biden's policies on inflation and illegal immigration. This endorsement is significant for Lake, who narrowly lost her bid for Arizona governor in 2022 and has since been involved in legal battles challenging the election results. Some within the GOP have expressed doubts about Lake's ability to win in 2024, especially against likely Democratic opponent Ruben Gallego. However, the GOP leadership seems determined to support Lake in their quest to regain control of the Senate.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "tune",
+  "source_cluster_id": "sha256:826fff81bbf961f5f6ca6089671ccd0335946ecfa29ece820970c1a7be8d43af",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ]
+}

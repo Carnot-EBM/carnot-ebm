@@ -1,0 +1,103 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.2935249829897657,
+  "exclusion_reason": null,
+  "family_id": "sha256:8d1b818c239f4a6d9f126d95fdf07562cb0ccc54724b47c217302ecdf238b163",
+  "input_tokens": 633,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": 6,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 633,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 658
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:4f521c09c79e8eabf8866432997228f2ee13de3d768fc62cbfc46edb88b95b43",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": 6\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832632,
+    "id": "chatcmpl-hyIzy93PhDek91Fzcq0EchgrhO3F61eu",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 588.444,
+      "predicted_n": 25,
+      "predicted_per_second": 42.48492634813169,
+      "predicted_per_token_ms": 23.53776,
+      "prompt_ms": 585.633,
+      "prompt_n": 555,
+      "prompt_per_second": 947.6924968367562,
+      "prompt_per_token_ms": 1.0551945945945946
+    },
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 633,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 658
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:This is because the chicken we eat today are young and have under developed bone structure. When the chick is frozen, the blood seeps into the bone and forms ice crystals, only to be released when heated. I was taught in school to buy fresh, never frozen chicken to alleviate this problem, or cook it longer.\\\\n\\\\npassage 2:Heat the shortening in a large, cast iron skillet over medium-high heat. In a brown paper lunch bag, combine the flour, salt, and pepper. Shake two chicken pieces in the bag to coat, and place them in the skillet. Repeat until all of the chicken is coated and in the skillet. Fry the chicken over medium-high heat until all of the pieces have been browned on both sides. Turn the heat to medium-low, cover, and cook for 25 minutes.\\\\n\\\\npassage 3:Here's how you do it! 1  In a pot or a very deep pan, heat the oil to 350F. 2  Gently lower the chicken pieces into the oil.They should be completely submerged. 3  Cook the chicken until it reaches an internal temperature of 165F. This'll take about 10 minutes for white meat, 14 for dark, and maybe 7 minutes for wings.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to get chicken completely done when frying\\\"}\", \"original_answer\": \"Based on the given passages, here is how to get chicken completely done when frying:\\n\\nAccording to passage 3, the chicken should be cooked until it reaches an internal temperature of 165\u00b0F (white meat) to 14\u00b0F (dark meat), and 7\u00b0F for wings. This indicates that the chicken should be cooked until it is fully cooked and reaches a safe internal temperature to avoid foodborne illness.\\n\\nTherefore, to get chicken completely done when frying, you should heat the oil to 350\u00b0F (as stated in passage 1) and gently lower the chicken pieces into the oil, making sure they are completely submerged (as stated in passage 2). Then, cook the chicken until it reaches the recommended internal temperature, which varies depending on the type of meat (as specified in passage 3).\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "tune",
+  "source_cluster_id": "sha256:d164b6bfb6d273af7610870e37f2b75c4328dadb255d90e7e0129b6ece0920c8",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]
+}

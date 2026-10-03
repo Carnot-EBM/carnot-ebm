@@ -1,0 +1,116 @@
+{
+  "arm": "swap",
+  "capture_identity": "sha256:c690c1f517fbce73c5da6a2d1e99e3819c3de93e1045fe76d1c8215b54691541",
+  "censor_status": false,
+  "denominator": 1,
+  "donor_group_id": "sha256:1e5d3e5d327aa79fb6ce771bbf622201b5aebb41cc48183de3114e7a2976d32d",
+  "duration_s": 1.326738920994103,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:2f9c803bd5757ba9621e30216073739c79e96def6bb2f654c4031b3256f4ce9e:swap",
+  "group_id": "sha256:2f9c803bd5757ba9621e30216073739c79e96def6bb2f654c4031b3256f4ce9e",
+  "input_byte_upper_bound": 2936,
+  "input_tokens": 709,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 1.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 709,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 730
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:abd2e874680f410ec4a1ac679b11186b9d489453c68231b1c9be2ef67a15aa27",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"unsupported_probability\": 1.0,\n\"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790925826,
+    "id": "chatcmpl-F1g9lnF2jHqZrCbyvGfwhdRop4yz0AoW",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 490.715,
+      "predicted_n": 21,
+      "predicted_per_second": 42.79469753319136,
+      "predicted_per_token_ms": 23.36738095238095,
+      "prompt_ms": 639.317,
+      "prompt_n": 631,
+      "prompt_per_second": 986.9908042489093,
+      "prompt_per_token_ms": 1.0131806656101427
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 709,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 730
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 32,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Sinigang Cooking Instructions: Boil sampalok in water until the shell shows cracks. Let cool then peal off the shells and with a strainer, pour samplalok (including water) into a bowl. Gently massage the sampalok meat off the seeds, strain again. In a pot, saut garlic and onion then add the tomatoes. Let simmer for 5 minutes. Add pork and fish sauce then add the rice wash. Bring to a boil then simmer for 15 minutes then add the gabi. Continue to simmer for another 15 minutes or until the pork is tender. Add the horse radish and simmer for 10 minutes then add the string beans, kangkong and sili (for spice-optional). Let boil for 2 minutes.\\\\n\\\\npassage 2:1 Next add pork, cover, and let it simmer for 3 minutes. 2  Remove scum from the broth and then add onions, tomatoes, siling mahaba, (finger peppers) msg, (vetsin) and the sinigang mix and let cook for 10 minutes.\\\\n\\\\npassage 3:1 Add eggplant and cook it for an additional 10 minutes after adding the eggplant wait five minutes then add the string beans (sitaw). 2  Finally add the water spinach (Kangkong) and add salt if needed. 3  Let it cook for three more minutes and it\u2019s ready. 4  Serve with rice.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to cook sinigang na baboy\\\"}\", \"original_answer\": \"Saturday's deadly earthquake in Nepal was the inevitable \\\"big one\\\" that experts had been expecting, given its history of seismic activity. Tremors of magnitude 4 or 5 occur several times a year in the country, and there had not been a major earthquake since 1934. The fragile infrastructure of landlocked Nepal meant the consequences of a major earthquake were potentially devastating, and this was realised when a magnitude-7.8 earthquake hit less than 50 miles from the capital, Kathmandu. What made this earthquake different from the one in 1934 was the size and density of Kathmandu's population, which has exploded over the last few decades. The buildings in the city are not equipped to handle an earthquake of this size, which is why the scale of the disaster is so large. The challenge now will be getting aid into the country, particularly if landslides start\u00a0and if everything is not resolved before monsoon season starts.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69410,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "seed": 69410,
+  "source_cluster_id": "2e7e64c2b3fb8a1dc50ccb8148d8d3f89944c7ce2f04a267c4d0a8d5139c56ef",
+  "source_hash": "sha256:d8b2f991fd275c48ae884c8fea6323512b55b232f2c43a481e40d31ea1d5c454",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ]
+}

@@ -1,0 +1,101 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.1062562169972807,
+  "exclusion_reason": null,
+  "family_id": "sha256:beeb27c00a17e0482f16131495fd8d358573a8d807b38b94741bf3c366f4bcda",
+  "input_tokens": 473,
+  "invocation_finished_at": "2026-10-01T11:42:24.308575+00:00",
+  "invocation_started_at": "2026-10-01T11:42:23.202317+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 2,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 473,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 495
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:419ddc71ef325c6311533fc2bc1e8543e560165ae6bbba53a2b069480bc634e8",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"unsupported_probability\": 0.0,\n\"source_sentence_id\": 2\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790854944,
+    "id": "chatcmpl-rhVx0bBQmqke5W4tyhbnKok5MbncGXlR",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 511.421,
+      "predicted_n": 22,
+      "predicted_per_second": 43.0173966262629,
+      "predicted_per_token_ms": 23.24640909090909,
+      "prompt_ms": 478.957,
+      "prompt_n": 395,
+      "prompt_per_second": 824.7086899241477,
+      "prompt_per_token_ms": 1.2125493670886076
+    },
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 473,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 495
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Live weather in Buenos Aires. The latest and today's weather in Buenos Aires, Argentina updated regularly. Monday 17 April. 00:50 GMT | 21:50 ART.\\\\n\\\\npassage 2:Winter temperatures in Buenos Aires drop to between 7 and 17 degrees Celsius (45 to 63 degrees Fahrenheit) from late May to early September. Average daylight hours in winter range eleven hours in early and late winter, and ten daylight hours each day in mid-winter. Summer is the rainy season in Argentina.\\\\n\\\\npassage 3:Buenos Aires has a warm humid temperate climate with hot summers and no dry season. The temperature typically varies from 47\u00b0F to 83\u00b0F over the course of the year, and is rarely below 39\u00b0F or above 90\u00b0F. The warm season lasts for 105 days, from November 29 to March 14, with an average daily high temperature above 77\u00b0F.\\\\n\\\\n\\\",\\\"question\\\":\\\"weather in buenos aires argentina\\\"}\", \"original_answer\": \"Based on the given passages, the weather in Buenos Aires, Argentina can be described as having hot summers and a warm humid temperate climate. Winter temperatures range from 7 to 17 degrees Celsius (45 to 63 degrees Fahrenheit) with average daylight hours of 10 to 11 hours. The warm season lasts for 105 days, with an average daily high temperature above 77\u00b0F.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_update",
+  "source_cluster_id": "sha256:f5ae67cf43a2a75ed3e3f47ba9d5650c5d761e701560f6b9a2056c93146b9801",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ]
+}

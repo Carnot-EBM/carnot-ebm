@@ -1,0 +1,115 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.3600269900634885,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:bfbca99369e5eb234959437f9b941e12eea503e175f6bc7dff7f5576393645b5",
+  "input_tokens": 766,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 766,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 789
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:7f29a43f2c4530ca7adaa57a16c6f6547cbc4dc25e6e7c05dd7af3e33afe4a5c",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886344,
+    "id": "chatcmpl-Wn06FiFR3Q81eWL00PEkvSr8vu54LqKU",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 548.674,
+      "predicted_n": 23,
+      "predicted_per_second": 41.91924530777839,
+      "predicted_per_token_ms": 23.855391304347826,
+      "prompt_ms": 689.582,
+      "prompt_n": 688,
+      "prompt_per_second": 997.7058565913843,
+      "prompt_per_token_ms": 1.0022994186046512
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 766,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 789
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:\u00bb VirtualBox Download. \u00bb Ubuntu Download (ISO). After Downloading, start installing VirtualBox on your windows 7 machine. Step 1 \u00bb VirtualBox installation is very simple, just double click the downloaded setup file and install with default setup options (I mean \u201cNext\u201d for ALL).Step 2 \u00bb New. Step 3 \u00bb Now Click \u201c Hide Description \u201d for more options.fter Downloading, start installing VirtualBox on your windows 7 machine. Step 1 \u00bb VirtualBox installation is very simple, just double click the downloaded setup file and install with default setup options (I mean \u201cNext\u201d for ALL). Step 2 \u00bb New.\\\\n\\\\npassage 2:3. Select the amount of memory your VM will use and click \u201cNext. \u201d When you chose your operating system in the previous step, VirtualBox automatically recommends the proper amount of memory to use. If you feel this amount isn\u2019t correct, you can move the slider or type a new amount in the box.Click \u201cNext\u201d when you\u2019re done.. In next window you will see Install Options. You can choose to try ubuntu without installing, you can choose install ubuntu option, you can also check for disk and memory for defects and problems and you can also choose to boot from existing hard disk. Choose to install ubuntu option here.\\\\n\\\\npassage 3:Back to Oracle VM VirtualBox Manager, click on the new Ubuntu virtual machine and hit 'Start' button. Now you shall see a 'Welcome' screen. Click 'Install Ubuntu' button. Note that the installation process may differ a little bit from version to version.ack to Oracle VM VirtualBox Manager, click on the new Ubuntu virtual machine and hit 'Start' button. Now you shall see a 'Welcome' screen. Click 'Install Ubuntu' button. Note that the installation process may differ a little bit from version to version.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to install ubuntu in virtualbox\\\"}\", \"original_answer\": \"To install Ubuntu in VirtualBox, first download VirtualBox and Ubuntu (ISO). Begin by installing VirtualBox on your machine by double clicking the downloaded setup file and install with the default setup options. After that, create a new virtual machine in VirtualBox. \\n\\nNext, select the amount of memory for your virtual machine (VM), VirtualBox automatically recommends the proper amount of memory to use based on your chosen operating system, you can adjust this if necessary. \\n\\nAfter setting up your VM, go back to the Oracle VM VirtualBox Manager, click on the new Ubuntu virtual machine and hit the 'Start' button. You should see a 'Welcome' screen appear. Click the 'Install Ubuntu' button. \\n\\nThe exact installation process may vary slightly depending on the version of Ubuntu you are installing.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "5cf0e42921d9c552439661f23058dc45658c4669e1cf4138c45d82cef87c4d53",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18
+  ]
+}

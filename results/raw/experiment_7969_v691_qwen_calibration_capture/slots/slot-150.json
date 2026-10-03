@@ -1,0 +1,107 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.3494441129732877,
+  "exclusion_reason": null,
+  "family_id": "sha256:e98520841f7de12f2dada80fb98dd9cd6ef76fa6a67d368fe6eca8ab26b5bb79",
+  "input_tokens": 691,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 691,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 715
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:6fc242de9cd16254d0e2a169112901c4ee9e5734646d759a13275ca20a97d92f",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832680,
+    "id": "chatcmpl-wGNUbDKA8wC38MmohlWRr1yfXFEobqJC",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.775,
+      "predicted_n": 24,
+      "predicted_per_second": 42.49479881368687,
+      "predicted_per_token_ms": 23.532291666666666,
+      "prompt_ms": 629.957,
+      "prompt_n": 613,
+      "prompt_per_second": 973.0822897435856,
+      "prompt_per_token_ms": 1.0276623164763459
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 691,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 715
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Full Definition of HOMOPHONE. 1. : one of two or more words pronounced alike but different in meaning or derivation or spelling (as the words to, too, and two).2. : a character or group of characters pronounced the same as another character or group.\u2014 ho\u00b7moph\u00b7o\u00b7nous \\\\\\\\h\u014d-\u02c8mae-\u02c8m\u00e4-f\u0259\\\\\\\\ n\u0259s. adjective one of two or more words pronounced alike but different in meaning or derivation or spelling (as the words to, too, and two).\\\\n\\\\npassage 2:Noun. (plural homophones). 1  A word which is pronounced the same as another word but differs in spelling or meaning or origin, for example: carat, caret, carrot, and karat. 2  A letter or group of letters which are pronounced the same as another letter or group of letters.oun. (plural homophones). 1  A word which is pronounced the same as another word but differs in spelling or meaning or origin, for example: carat, caret, carrot, and karat. 2  A letter or group of letters which are pronounced the same as another letter or group of letters.\\\\n\\\\npassage 3:noun. The definition of a homophone is one of two or more words that sound the same but that mean different things. An example of a set of homophones is the word beat which could mean something the stroke made on a drum and the word beet which is a red root vegetable.oun. (plural homophones). 1  A word which is pronounced the same as another word but differs in spelling or meaning or origin, for example: carat, caret, carrot, and karat. 2  A letter or group of letters which are pronounced the same as another letter or group of letters.\\\\n\\\\n\\\",\\\"question\\\":\\\"examples of homophone your dictionary\\\"}\", \"original_answer\": \"Here are some examples of homophones from the provided passages:\\n\\n1. To, too, and two are homophones, pronounced the same but having different meanings and spellings.\\n2. Carat, caret, carrot, and karat are also homophones, each pronounced the same but differing in spelling and meaning.\\n3. Beat can be a homophone of either \\\"beat\\\" (meaning the act of striking something) or \\\"beet\\\" (a red root vegetable).\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "tune",
+  "source_cluster_id": "sha256:5f2fe33085f72b9879fb377a8cb780aa2eb8ab7a82f2f9380e0bda6c27212869",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ]
+}

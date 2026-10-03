@@ -1,0 +1,108 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.3331297829281539,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:52274955e21c3152fb617fb0bad895651b1768c221aafd39a8be9e524287ef7f",
+  "input_tokens": 711,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 5,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 711,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 735
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:a2e209a4f58dc0476f5737c480e1d246109ff1b4ff54ec74cc8ac912515c2d28",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 5\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886115,
+    "id": "chatcmpl-8ywWOTHxD171bhCbed0gpbwscJDdkrEe",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.456,
+      "predicted_n": 24,
+      "predicted_per_second": 42.44362072380521,
+      "predicted_per_token_ms": 23.560666666666666,
+      "prompt_ms": 644.246,
+      "prompt_n": 633,
+      "prompt_per_second": 982.543935080699,
+      "prompt_per_token_ms": 1.0177661927330173
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 711,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 735
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Federal Court Hands Kari Lake Another Loss in Election Case\\nA federal appeals court has handed Republican Kari Lake another loss in her ongoing legal battle that claims there was rampant fraud and misconduct during the 2022 midterm election in Arizona, resulting in her loss to Democratic Governor Katie Hobbs.\\nThis latest legal defeat comes as Lake has failed to sway courts thus far in favor of her argument that electronic voter tabulation resulted in inaccuracies that made them untrustworthy for use in U.S. elections.\\nLake Handed Appellate Loss\\nRepublican Kari Lake, who narrowly lost to Governor Katie Hobbs in the 2022 race for Arizona governor, was handed another defeat in court last week as a federal appeals court threw out her lawsuit that had been previously dismissed.\\nThe suit, which was also brought by fellow Republican Mark Finchem, claimed that electronic voter tabulation systems used in Arizona during elections were not trustworthy and had sought to have them blocked from use in elections.\\nThe 9th U.S. Circuit Court of Appeals said that Lake and Finchem's claims didn\u2019t show \u201ca plausible inference that their individual votes in future elections will be adversely affected by the use of electronic tabulation, particularly given the robust safeguards in Arizona law, the use of paper ballots, and the post-tabulation retention of those ballots.\u201d\\nThe lawsuit targeted long lines that appeared in Arizona's most populous county during Election Day, the result of a printer error. County officials have repeatedly said that despite the delays, any and all voters who came out to the polls were eventually allowed to cast their ballots.\\nLake announced earlier this month that she would now be running in the race to replace incumbent Senator Kyrsten Sinema, in a campaign that will see her match up with a rising star within the Democratic Party, Rep. Ruben Gallego, in what could turn out to be a rare three-way race for the Senate seat.\\nAt DailyNewsNow we bring you the latest news from the West Coast and around the country, covering a wide range of topics from politics and campaign news to entertainment and local interest stories. Please feel free to share the story with friends and join the conversation in the comments below!\", \"original_answer\": \"A federal appeals court dismissed a lawsuit by Republican Kari Lake, who claimed rampant fraud and misconduct during the 2022 Arizona midterm elections. The lawsuit argued that electronic voter tabulation resulted in inaccuracies, making them unreliable for U.S. elections. However, the court stated that Lake's claims didn't show a plausible inference that their individual votes in future elections would be adversely affected by electronic tabulation. This is Lake's latest legal defeat in her ongoing battle over the election results.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "5435360490cbbf831f1d59b8aabb6421a36c6c46c5ed2c967374b7db805e5898",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]
+}

@@ -1,0 +1,113 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.5343608340481296,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:a66d6bb1f6d7d829bd1425ce61286262251473f769874600c877e702e16b1f17",
+  "input_tokens": 957,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 957,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 980
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:416619ca4777f1f0db3f73e1b52383f44f16746f019a753596993206fb03f476",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885873,
+    "id": "chatcmpl-4YFZ6wzWAkHCUzLFOogDITgrssFLUVrc",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 536.284,
+      "predicted_n": 23,
+      "predicted_per_second": 42.88772366880235,
+      "predicted_per_token_ms": 23.316695652173912,
+      "prompt_ms": 863.691,
+      "prompt_n": 879,
+      "prompt_per_second": 1017.7250891812002,
+      "prompt_per_token_ms": 0.9825836177474403
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 957,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 980
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"428 Chapala St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Seafood, Restaurants, Sushi Bars, Food, Desserts, Japanese\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"17:0-23:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"17:30-23:0\\\",\\\"Sunday\\\":\\\"17:0-22:0\\\",\\\"Thursday\\\":\\\"17:0-22:0\\\",\\\"Tuesday\\\":\\\"17:0-22:0\\\",\\\"Wednesday\\\":\\\"17:0-22:0\\\"},\\\"name\\\":\\\"Yume Sushi Japanese Restaurant\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2019-12-29 18:50:48\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"This place is now open under a different name. We came on Christmas day. The food was good and the service was great. You can tell they are attentive and care about their customers. We were seated immediately, every item was explained to us in detail, and there is a good value for the price of the items.\\\"},{\\\"review_date\\\":\\\"2019-10-24 18:45:16\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I love this place. Atmosphere is what you expect for sushi-- Staff is nice and attentive. I literally come here just for the yellowtail. It is the best quality in the area. So fresh and buttery. Gyoza is good too. I like to sit at the sushi bar for a quick meal. You can have a full satisfying meal in 20 minutes when you sit with the chefs.\\\"},{\\\"review_date\\\":\\\"2019-10-18 02:01:08\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"WOW this was fantastic. Excellent service, even while sat in our own quiet section. All of the food was incredible, a very unique menu with a lot of authenticity compared to a lot of the standard SB japanese fare. Eggplant misoyaki and chili poppers were both some of the best preparations I've ever seen for the dishes. The curry was savory and extremely flavorful and the soba was generous. 10/10 can't believe it's taken me so long to eat here!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Yume Sushi Japanese Restaurant, located at 428 Chapala St, Santa Barbara, CA, is well known for its seafood, sushi, and desserts. The restaurant operates from 5 PM onwards throughout the week, with extended hours on Fridays and Saturdays. The establishment offers street and lot parking, accepts reservations, facilitates takeout, and is suitable for groups. However, it doesn't offer outdoor seating or Wi-Fi. The ambiance is described as classy and casual. With an average rating of 4 stars, customers consistently compliment the attentive service, quality of food, and the value for the price. Special mentions include the yellowtail sushi and the eggplant misoyaki. Despite being closed on Mondays, it remains a popular sushi spot in Santa Barbara.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "calibration",
+  "source_cluster_id": "01d2c2fd6c57a33e228e0c115b8eedebdbeb7f5c6d95795f4226d05b8b6e49ea",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+  ]
+}

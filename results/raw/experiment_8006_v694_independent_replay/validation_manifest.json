@@ -1,0 +1,153 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--parallel-mode",
+        "--data-file=/tmp/carnot-8006-5hal_qhi/.coverage",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/independent_replay_8006.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8006_v694_independent_replay.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-8006-5hal_qhi/pytest",
+        "tests/python/test_independent_replay_8006.py",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_source_boundary_7852.py",
+        "tests/python/test_experiment_7942_v689_sentence_labels.py",
+        "-q"
+      ],
+      "cwd": "/home/ianblenke/github.com/ianblenke/carnot",
+      "deadline_s": 180,
+      "name": "unit_consumers_e2e015_e2e019_issued_mutation",
+      "required": true
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--data-file=/tmp/carnot-8006-5hal_qhi/.coverage",
+        "/tmp/carnot-8006-5hal_qhi"
+      ],
+      "cwd": "/home/ianblenke/github.com/ianblenke/carnot",
+      "deadline_s": 60,
+      "name": "coverage_combine",
+      "required": true
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/carnot-8006-5hal_qhi/.coverage",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/independent_replay_8006.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8006_v694_independent_replay.py",
+        "--fail-under=100"
+      ],
+      "cwd": "/home/ianblenke/github.com/ianblenke/carnot",
+      "deadline_s": 60,
+      "name": "coverage_report",
+      "required": true
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "json",
+        "--data-file=/tmp/carnot-8006-5hal_qhi/.coverage",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/independent_replay_8006.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8006_v694_independent_replay.py",
+        "-o",
+        "/tmp/carnot-8006-5hal_qhi/coverage.json"
+      ],
+      "cwd": "/home/ianblenke/github.com/ianblenke/carnot",
+      "deadline_s": 60,
+      "name": "coverage_json",
+      "required": true
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/reporting/independent_replay_8006.py",
+        "scripts/experiments/experiment_8006_v694_independent_replay.py",
+        "tests/python/test_independent_replay_8006.py"
+      ],
+      "cwd": "/home/ianblenke/github.com/ianblenke/carnot",
+      "deadline_s": 60,
+      "name": "ruff_check",
+      "required": true
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/reporting/independent_replay_8006.py",
+        "scripts/experiments/experiment_8006_v694_independent_replay.py",
+        "tests/python/test_independent_replay_8006.py"
+      ],
+      "cwd": "/home/ianblenke/github.com/ianblenke/carnot",
+      "deadline_s": 60,
+      "name": "ruff_format",
+      "required": true
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "--follow-imports=silent",
+        "python/carnot/reporting/independent_replay_8006.py",
+        "scripts/experiments/experiment_8006_v694_independent_replay.py"
+      ],
+      "cwd": "/home/ianblenke/github.com/ianblenke/carnot",
+      "deadline_s": 60,
+      "name": "strict_mypy",
+      "required": true
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_independent_replay_8006.py",
+        "python/carnot/reporting/independent_replay_8006.py",
+        "scripts/experiments/experiment_8006_v694_independent_replay.py"
+      ],
+      "cwd": "/home/ianblenke/github.com/ianblenke/carnot",
+      "deadline_s": 60,
+      "name": "spec_coverage",
+      "required": true
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q"
+      ],
+      "cwd": "/home/ianblenke/github.com/ianblenke/carnot",
+      "deadline_s": 120,
+      "name": "full_pytest",
+      "required": false
+    }
+  ],
+  "config": {
+    "budget": "all saved issued rows; repeated arms and delays never multiply sources",
+    "error": "int(target not in issued_set) only when issued eligible and target binary",
+    "gates": [
+      "valid_static_reader",
+      "valid_issued_reader",
+      "all_owned_checks",
+      "100% added statements"
+    ],
+    "phase": "(issue_slot-1)%(delay+1)",
+    "release": "issue then release at issue_slot+delay",
+    "static": "original seal and original access receipt; later seals cannot repair custody"
+  },
+  "environment": {
+    "CARNOT_8006_COVERAGE": "/tmp/carnot-8006-5hal_qhi/.coverage",
+    "COVERAGE_FILE": "/tmp/carnot-8006-5hal_qhi/.coverage-health",
+    "JAX_PLATFORMS": "cpu",
+    "OPENBLAS_NUM_THREADS": "1",
+    "PYTHONUNBUFFERED": "1"
+  }
+}

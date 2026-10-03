@@ -1,0 +1,97 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.2622284420067444,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:89365712392d6eb6965ed7985c8f695b2889f5303c352125de0a3e29a2fd1af2",
+  "input_tokens": 703,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 703,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 725
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:70b6dc4c07390eabc0b8fdf4fae71dcb9f7afe9d5c96cfdcaf0b31363851243a",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"unsupported_probability\": 0.0,\n\"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886089,
+    "id": "chatcmpl-CW3fHD498OnPebCgWD2BPC9G8TuEUpVH",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 516.879,
+      "predicted_n": 22,
+      "predicted_per_second": 42.56315307838005,
+      "predicted_per_token_ms": 23.494500000000002,
+      "prompt_ms": 633.507,
+      "prompt_n": 625,
+      "prompt_per_second": 986.5715769517939,
+      "prompt_per_token_ms": 1.0136112
+    },
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 703,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 725
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Current best savings from the Walmart weekly sales ad, valid 3/19 - 3/30/2017: $31.12 Pampers Huge Pack; $8.47 Sparkle Paper Towels; $3.97 Irish Spring Deodorant Soap; $4.94 Ajax Ultra Triple Action Orange Dish Liquid; $5.88 Clorox Disinfecting Wipes Value Pack; $5.47 Bounty Quilted Napkins; $1.32 Great Value Organic Canned Vegetables; $1.98 Great ...\\\\n\\\\npassage 2:Current best savings from the Walmart weekly sales ad, valid 4/17 - 4/27/2017: $3.98 Kellogg's Special K Cereal; $4.98 Quaker Chewy Granola Bars; $2.68 Pace Chunky Salsa; $2.98 Heinz Ketchup; $8.98 Totino's Pizza Rolls; $0.98 each Del Monte Whole Kernel Corn or Cut Green Beans; $1.25 each Campbell's Cream of Mushroom or Chicken Soup; $5.98 Birds Eye ...\\\\n\\\\npassage 3:Current best savings from the Walmart weekly sales ad, valid 3/31 - 4/16/2017: $1.98 lb Sam's Choice Bone-in Spiral Cut Ham; $2.97 lb Asparagus; $0.86 Organic Whole Carrots 1 lb; $2.98 each Fresh Pineapple; $3.46 each Marketside Organic Baby Spinach; $3.24 each Marketside Butterflake Rolls; $1.94 lb Boneless Center Cut Pork Loin; $0.97 lb Fresh ...\\\\n\\\\n\\\",\\\"question\\\":\\\"walmart weekly sales ad\\\"}\", \"original_answer\": \"The Walmart weekly sales ad provides information on the best savings for various products during specific time periods. For example, from 3/19 - 3/30/2017, savings included $31.12 for a Pampers Huge Pack and $8.47 for Sparkle Paper Towels. From 4/17 - 4/27/2017, savings included $3.98 for Kellogg's Special K Cereal and $4.98 for Quaker Chewy Granola Bars. From 3/31 - 4/16/2017, savings included $1.98 per pound for Sam's Choice Bone-in Spiral Cut Ham and $2.97 per pound for Asparagus.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "9dc38a2440908fea5b716998ec72d49143670edd7c697e0ed758e1bc0805d386",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0
+  ]
+}

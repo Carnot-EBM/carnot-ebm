@@ -1,0 +1,111 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.4496081320103258,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:d48c2f5b2bd3d3cec5dceb1bb0333429796677c76d90ff765bb99e7101198c2e",
+  "input_tokens": 864,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 864,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 885
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:ea0c3c09db57b5bd055befa5bd850c8f897cd63d2a47a73d59323ccb7a578560",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885993,
+    "id": "chatcmpl-Ozqbtmk3P7K9tGBHmnQLViVFKARQYCeM",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 492.943,
+      "predicted_n": 21,
+      "predicted_per_second": 42.601274386693795,
+      "predicted_per_token_ms": 23.47347619047619,
+      "prompt_ms": 823.142,
+      "prompt_n": 786,
+      "prompt_per_second": 954.8777732153139,
+      "prompt_per_token_ms": 1.0472544529262087
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 864,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 885
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"226 S Milpas St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":true,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Sandwiches, Food, Delis, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":null,\\\"name\\\":\\\"Norton's Pastrami and Deli\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2015-03-04 04:36:40\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"By far my most guilty pleasure when it comes to food. Best pastrami hands down. I will drive clear across town to get one. The shop is so cute too.\\\"},{\\\"review_date\\\":\\\"2014-11-21 16:59:31\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"if you want to get sick, eat their pastrami. 2 hours after ingesting pastrami, I started puking and that didn't stop for 12 hours. Beware\\\"},{\\\"review_date\\\":\\\"2014-10-29 23:48:25\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"One word sums up the Pastrami Dip S-A-L-T-Y!\\\\n\\\\nRoll is soft crunchy with a nice chew. The strami is thin cut and piled high.  My first bite screamed overly salted. Second bite screamed no flavor and I mean zero flavor. The \\\\\\\"dip\\\\\\\" [au jus] was NOT real flavored but from bullion and tasted chemically. And it too was salty. Came with a small one inch high cup of pickles which were olive green in color yet crunchy. These pickles were the most salted of all. \\\\n\\\\nOh yeah, $13.68 for the strami and diet Coke. Really?\\\\n\\\\nWon't be back unless I want to jack up my blood pressure.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Norton's Pastrami and Deli, located at 226 S Milpas St, Santa Barbara, CA, is a restaurant that specializes in sandwiches, food, and deli services. The establishment does not take reservations but offers amenities such as outdoor seating, take-out services, and is suitable for groups. It does not provide WiFi, and the ambiance is more divey than classy or trendy. They have a parking lot but do not offer garage, street, validated, or valet parking. The business has an average rating of 4.0 stars. However, reviews are mixed with one customer praising the quality of the pastrami and the shop's charm, while another two customers had negative experiences regarding the overly salted and flavorless pastrami, claiming it caused sickness and was overpriced.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "ce8b5eea8e35900c23923947481c7d7fe387265f3ee92df667e3ceaba12aa12d",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ]
+}

@@ -1,0 +1,124 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.583008382935077,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:ec577adc6b699588108b2448135e6edaebe1e99594b3b9fb81db3ece85366bba",
+  "input_tokens": 983,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 983,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1006
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:5d9fb427a3f69262c490bc22a871c0b27a488e4652d9dd46c8482eed8144be70",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886108,
+    "id": "chatcmpl-uTr2yRDFfbrgJ5LY6Z7hm6ALJU7r30fi",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.784,
+      "predicted_n": 23,
+      "predicted_per_second": 42.452342631011625,
+      "predicted_per_token_ms": 23.55582608695652,
+      "prompt_ms": 922.65,
+      "prompt_n": 905,
+      "prompt_per_second": 980.8703191892916,
+      "prompt_per_token_ms": 1.0195027624309392
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 983,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1006
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"As ash from Chile's Calbuco Volcano spread east into Argentina, geologists warned of the potential for more activity Friday. Evacuations in the region involved not only people but animals as well. \\\"There is more seismic activity ... and we think there will be more activity today,\\\" Helmuth Huerta, a spokesman for Chile's National Geological and Mining Service, told CNN. The volcano has already erupted twice this week, spewing ash to a depth of about 23\u00bd inches (60 centimeters) in some places, according to the Ministry of Interior and Public Safety. New advisories say airborne ash could reach an altitude of 12,000 feet. Calbuco erupted twice in 24 hours, the geological agency said early Thursday. The agency said it was evaluating a spectacular nighttime eruption but indicated it was \\\"stronger than the first one.\\\" In Ensenada, houses, trees and even sheep were blanketed gray with ash, CNN's Shasta Darlington reported. People were removing salmon -- a staple of the local economy -- amid fear of contamination from ash and lava. Trucks were used to evacuate farm animals and pets. Authorities issued a red alert for the popular tourist towns of Puerto Montt and Puerto Varas in the south. People were being evacuated to Port Montt on 22 buses and military trucks, the interior ministry said. Officials said that volcanic flows from Calbuco caused rising water levels in the R\u00edo Blanco. A 12-mile (20-kilometer) exclusion zone was established around the crater. Military and police forces were helping evacuate more than 4,400 residents, the Interior Ministry said. An additional 2,000 residents of Chamiza were being evacuated as a preventive measure after river levels rose due to volcanic flows. More evacuations were expected in Lago Chapo and Correntoso. The first eruption on Wednesday set off a bit of a panic in the region. \\\"At the beginning, it was small, and later, the cloud grew. And later, there was a huge cloud over you and true terror starts,\\\" a Puerto Montt resident said. Another person said: \\\"It was impressive to see an enormous mushroom cloud, with the immense force of the volcano, and to see the ashes. At that point, there was a lot of panic, lots of chaos, traffic jams, people going to supermarkets, everyone looking for water, trying to take out money from the ATMs.\\\" Magma expanse under Yellowstone supervolcano more vast than thought. The eruption is a first for many in the region. The last major eruption was 1962. There was a minor eruption in 1972. Calbuco also belched out a bit of gas and smoke in 1996. Alejandro Verges, regional director of the Interior Ministry, said that officials are concerned there might be a third eruption. \\\"The situation is relatively calm right now, although people are understandably anxious about what could happen tonight,\\\" he said.\\n\", \"original_answer\": \"As ash from Chile's Calbuco Volcano spread east into Argentina, geologists have warned of the potential for more activity today. The volcano has already erupted twice this week and new advisories say airborne ash could reach an altitude of 12,000 feet. This has led to evacuation not only of people but animals as well. The Interior Ministry has said that the military and police forces were helping evacuate more than 4,400 residents with an additional 2,000 residents of Chamiza being evacuated as a preventive measure after river levels rose due to volcanic flows. More evacuations were expected in Lago Chapo and Correntoso.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "d514c064fba381626b9fd493f2839a1d0def73133e9535c261cb8d4cd792b4d1",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27
+  ]
+}

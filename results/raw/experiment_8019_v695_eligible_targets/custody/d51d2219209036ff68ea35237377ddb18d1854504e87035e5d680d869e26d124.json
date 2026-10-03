@@ -1,0 +1,115 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.41646469803527,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:b27bd094c47edf79adc6469674a73b42334c890432ec20e5844cc8672e5af6e9",
+  "input_tokens": 832,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 832,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 855
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:aae92566dc32106dbf8887c5fbf54912961591c672a5d727a0969d7b729ca2d5",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886082,
+    "id": "chatcmpl-p529zgf1GovUlUqfp8oPCr02qDWdmhEK",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.347,
+      "predicted_n": 23,
+      "predicted_per_second": 42.48661209907878,
+      "predicted_per_token_ms": 23.53682608695652,
+      "prompt_ms": 732.012,
+      "prompt_n": 754,
+      "prompt_per_second": 1030.0377589438426,
+      "prompt_per_token_ms": 0.970838196286472
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 832,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 855
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Home Remedies to make Hair Grow Faster. \u2022 Regular hot oil massage (at least once a week) serves as a highly effective home treatment for hair growth as it improves blood circulation and nourishes the hair shafts. The hair and scalp massage can be done with coconut, rosemary, castor or olive oil.ell first off, to make your hair grow, you need to keep it healthy. My frtiaove home remedy is mayonnaise. Mayo has oil and eggs in it, which is really good for moisturizing your hair. Just put some mayo in your hair, cover with a plastic shower cap and leave it in for about 25 min or so.\\\\n\\\\npassage 2:Cool and strain the mixture and use it to wash your hair regularly to promote hair growth. Another home remedy is to mix minced onion in a mild shampoo. Allow the mixture stand for about 15 days and then use the shampoo regularly. It will help in hair growth as well as add shine to your hair. These home remedies will be effective only when you eat a healthy diet, sleep well, exercise regularly and avoid using chemicals on your hair. 2  As hair grows more when you are taking rest, it is important to enjoy a sound sleep of 6 to 7 hours daily to make your hair grow faster.\\\\n\\\\npassage 3:3. Massage your scalp. Massaging promotes blood flow to the scalp, which in turn stimulates the hair follicles. In addition, deep condition your hair once a week with a hot oil treatment or deep conditioning hair mask. 1  Apply the oil (preferably warm) or conditioner to your hair.2  Gently rub your fingers on your scalp in a circular motion for three to five minutes. Apply it on your hair and scalp and leave it on for half an hour. 2  Finally, rinse it out and shampoo your hair as usual. 3  Apply a mixture of two egg yolks and two tablespoons of extra-virgin olive oil on your scalp. 4  Leave it on for 15 to 20 minutes.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to make your hair grow longer with home remedies\\\"}\", \"original_answer\": \"To make your hair grow longer with home remedies, you can use a variety of techniques and ingredients. Regular hot oil massages using coconut, rosemary, castor, or olive oil can improve blood circulation and nourish hair shafts. Another remedy involves applying mayonnaise to your hair, covering it with a plastic shower cap, and leaving it in for about 25 minutes. Onion mixed with a mild shampoo can also promote hair growth and add shine to your hair. Massaging your scalp stimulates the hair follicles and promotes growth. Apply a mixture of two egg yolks and two tablespoons of extra-virgin olive oil on your scalp and leave it on for 15 to 20 minutes. It is crucial to maintain a healthy diet, get regular exercise, and sleep 6 to 7 hours daily. Avoid using chemicals on your hair for these remedies to be effective.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "5501c8bef6a9bc58e00dfa72cc0d4628223a1bd53fbf967f08f53c091c7166f6",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18
+  ]
+}

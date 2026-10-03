@@ -1,0 +1,103 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.2967722709290683,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:79c548ec3618f28bab1c757bf7ba1c9d4f9f8c54ad35c06daa446727a9c4c1c2",
+  "input_tokens": 740,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 740,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 761
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:a5a4f3aa39cb2ec2f64465f96d50641e52b5e8852fd75d9de7cca5c15fcff1e1",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886263,
+    "id": "chatcmpl-etHXrdr7ZH1zOHFAchm4ZkSs8m3w7m1b",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 491.689,
+      "predicted_n": 21,
+      "predicted_per_second": 42.709924362757754,
+      "predicted_per_token_ms": 23.413761904761905,
+      "prompt_ms": 671.817,
+      "prompt_n": 662,
+      "prompt_per_second": 985.3873897207127,
+      "prompt_per_token_ms": 1.0148293051359516
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 740,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 761
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"634 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":true,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":true,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":2.5,\\\"categories\\\":\\\"Nightlife, Dance Clubs, Bars\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"20:0-2:0\\\",\\\"Saturday\\\":\\\"20:0-2:0\\\",\\\"Thursday\\\":\\\"20:0-2:0\\\"},\\\"name\\\":\\\"Tonic Nightclub\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2018-01-29 00:07:18\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"This place closed down for good last night. Its done! You could see it coming for a while now. They wouldn't have liquor in stock and seriously said they didn't carry Jack Daniels or Clicquot at one point.\\\"},{\\\"review_date\\\":\\\"2018-01-17 00:50:28\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Went to checkout this place while in SB for the weekend and had a great night. Great music, great drinks, and overall a fun night. One of the bartenders, Joel, gave us great service and made us great drinks throughout the night despite the busy bar. Will definitely be back on our next visit!\\\"},{\\\"review_date\\\":\\\"2017-12-24 07:31:20\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"Left a tab open at the bar, when it came time to closing out and paying for my drinks the bar tender had lost my card.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Tonic Nightclub, located at 634 State St in Santa Barbara, CA, is a trendy nightlife venue that offers dance clubs and bars. Operating from 8:00 PM to 2:00 AM on Thursdays, Fridays, and Saturdays, the club provides free Wi-Fi and is suitable for group outings. The venue also offers outdoor seating and accepts reservations. Parking facilities include garage and street parking, though no validation is provided. Customer reviews on the nightclub have been mixed. While a 5-star review praised the great music, drinks, and service from a bartender named Joel, other reviews mentioned issues with stock availability and lost cards. The business has an average rating of 2.5 stars.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "e6b1538bb99e3b339b046ea821f380d84f613afd0bd9faf9af8695eb64e2aaf6",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ]
+}

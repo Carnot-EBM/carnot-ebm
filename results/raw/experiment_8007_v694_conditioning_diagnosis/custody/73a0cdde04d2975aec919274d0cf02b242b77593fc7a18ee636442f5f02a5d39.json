@@ -1,0 +1,108 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.2576805819990113,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:126270251ab99fe541ef3c7070be3f5524d5c1ec05acc939525d1ca10891ae66",
+  "input_tokens": 614,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 614,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 638
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:6f4417d664d02617b57ffadaf283bc82cdeef6f42ccbf2d346f5c9c25c574ba2",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886322,
+    "id": "chatcmpl-qG75ew4HU7Fiy8aSV7Y6NnE8J5VvjHsg",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.948,
+      "predicted_n": 24,
+      "predicted_per_second": 42.48178593428068,
+      "predicted_per_token_ms": 23.5395,
+      "prompt_ms": 577.139,
+      "prompt_n": 536,
+      "prompt_per_second": 928.7190780730465,
+      "prompt_per_token_ms": 1.0767518656716417
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 614,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 638
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:How Does a Well Tank Work? There are various designs of well tanks, but the basic principle is quite simple: there is pressurized air on the top of the tank and a reservoir of water on the bottom. As the water pump fills the reservoir with water, it compresses the air on the top. When the pressure gets to around 50psi, a switch turns the pump off. Then, as the water is used, the compressed air pushes the water out of the tank. When the pressure drops to around 30psi, the pump switches back on and the cycle repeats itself.\\\\n\\\\npassage 2:Your well tank is under a lot of pressure to perform. There are various designs of well tanks, but the basic principle is quite simple: there is pressurized air on the top of the tank and a reservoir of water on the bottom. As the water pump fills the reservoir with water, it compresses the air on the top.\\\\n\\\\npassage 3:This is where air is pumped into the tank. The air valve on some tanks is in a different place, so you may have to look for it. In older Amtrol tanks, the air valve is located inconveniently on the bottom of the tank. When the RO tank is empty of water, it should have a pressure of five to 10 psi air. As water is forced into the tank by operation of the RO unit, pressure inside the tank increases.\\\\n\\\\n\\\",\\\"question\\\":\\\"how does a pressure tank work\\\"}\", \"original_answer\": \"A pressure tank works by utilizing pressurized air and a reservoir of water. The water pump fills the tank's reservoir with water which compresses the air at the top of the tank. Once the pressure reaches approximately 50psi, a switch will turn the pump off. As water is consumed, the compressed air will push the remaining water out of the tank. When the pressure drops to around 30psi, the pump switches back on and refills the reservoir, compressing the air again. This cycle repeats itself continually. Some tanks may also have an air valve that is used to pump air into the tank.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "08fbe7d08e96c453ad2d69e672179ab89a284f5337b771bf1809c2b19bb2efd0",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]
+}

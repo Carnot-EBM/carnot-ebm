@@ -1,0 +1,109 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.2464016770245507,
+  "exclusion_reason": null,
+  "family_id": "sha256:30dfa9edbc6d60987862eb926100efa4a1546bbcec0b708615327267dea37686",
+  "input_tokens": 639,
+  "invocation_finished_at": "2026-10-01T11:46:24.620008+00:00",
+  "invocation_started_at": "2026-10-01T11:46:23.373604+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 639,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 662
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:fb071d1aae5f58203eaace25b565b9d8f4b2ca3ec587999288d37cb189333c16",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855184,
+    "id": "chatcmpl-a2Ky4tUyhHMYPk6K7sRkzfHQ3mKTl02I",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.049,
+      "predicted_n": 23,
+      "predicted_per_second": 42.58872805986123,
+      "predicted_per_token_ms": 23.480391304347826,
+      "prompt_ms": 588.563,
+      "prompt_n": 561,
+      "prompt_per_second": 953.1689895559185,
+      "prompt_per_token_ms": 1.0491319073083778
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 639,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 662
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Kate Middleton shows 'Arrogance' after Gesture in France, says Stanton\\nA Royal Confidence Transcending the Rugby Field\\nOn her visit to the Rugby World Cup, Kate Middleton, the Princess of Wales, demonstrated an unexpected and powerful display of confidence.\\nAccording to body language expert Darren Stanton, her 'bone-crushing' handshake and other gestures signified a profound level of inner belief and self-assurance.\\nThe princess was present in Marseille to cheer on the England rugby team, who had just recorded a victory against Argentina in the World Cup quarter-final. However, her support did not stop at the stands.\\nAs the royal patron of the English RFU, Middleton paid a surprise visit to the dressing room, congratulating the players on their recent victory.\\nStanton analyzed the princess's body language during her interactions with the players. He pointed out a particular photo of Middleton shaking hands with one of the rugby players.\\n\\\"It's a fantastic handshake. If you zoom in on that you can see it's a real bone crusher handshake, which is in a positive sense,\\\" Stanton explained.\\nThis powerful gesture, according to Stanton, is a sign of respect and rapport. He also noted that Middleton's other gestures, such as placing her hand on a player's arm, indicated genuine happiness and respect.\\nStanton believes that these gestures, along with Middleton's overall demeanor, highlight her growing confidence in her royal role.\\n\\\"If we look at how the Princess of Wales has evolved, she used to be pretty quiet and downplay a lot of things. Whereas she handles things with a lot of self-assurance nowadays. In terms of how she walks, she walks with a swagger,\\\" Stanton said.\\nIn Stanton's view, Middleton's powerful presence at the Rugby World Cup is a testament to her growing confidence and inner belief, making her a fascinating figure both on and off the rugby field.\", \"original_answer\": \"Kate Middleton showed confidence and self-assurance during a visit to the Rugby World Cup, according to body language expert Darren Stanton. Her firm handshake and other gestures signified a deep level of inner belief, and her interaction with players in the dressing room showed genuine happiness and respect. Stanton believes Middleton's growing confidence in her royal role was evident in her demeanor and presence.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_update",
+  "source_cluster_id": "sha256:9e4c97549ced4ef7412d6726d8ca01e332bc1aaaa64d6ae44a2934033f9840d3",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ]
+}

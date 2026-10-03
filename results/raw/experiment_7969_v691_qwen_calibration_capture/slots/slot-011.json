@@ -1,0 +1,103 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.312508995004464,
+  "exclusion_reason": null,
+  "family_id": "sha256:8a7a871fac4390c81e7c30d296d02c91b4c9c5ea2f686f110be2bf5d49aab905",
+  "input_tokens": 721,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 1,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 721,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 745
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:064819675e46c24b2956e1ac7b937fbc23b1963055f8bcb5e2e02f57aa345e74",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 1\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832485,
+    "id": "chatcmpl-JSlV6Ga5HDZSN3XmbbyU6xFTTelZgl4T",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 557.064,
+      "predicted_n": 24,
+      "predicted_per_second": 43.08302098143122,
+      "predicted_per_token_ms": 23.211,
+      "prompt_ms": 623.853,
+      "prompt_n": 643,
+      "prompt_per_second": 1030.6915250868394,
+      "prompt_per_token_ms": 0.9702223950233281
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 721,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 745
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Governor Abbott Wins Court Ruling on Detaining Immigrants\\nTexas Governor Greg Abbott passed an executive order two years ago that has been held up in court. This month, the U.S. Fifth Circuit Court of Appeals reversed a district court ruling preventing state police and Department of Public Safety from stopping any vehicle carrying illegal immigrants.\\nThe federal government and a nonprofit challenged Governor Abbott\u2019s law saying it was unlawful.\\nThe three-panel judge panel from New Orleans ruled 2-1 the law was legal according to The Guardian.\\nAccording to Courthouse News Service, Oldham wrote for the majority:\\n\u201cGA-37 expressly tasks someone other than the governor with its enforcement. As we have said, where the challenged law \u2018makes clear that [another agency] is the agency responsible for the [law\u2019s] administration and enforcement,\u2019 only that agency is a proper defendant under Ex parte Young.\u201d\\nHe also added:\\n\u201c[E]ven assuming the governor has directed DPS to pull over plaintiffs via this executive order, that instruction is in the past. DPS alone will enforce the order in the future.\u201d\\nHear what Governor Abbott said two years ago on the executive order:\\nThis is good news for Governor Abbott who continues to send migrants to sanctuary cities as they overwhelm border cities such as El Paso, Del Rio, Brownsville, and other cities.\\nAccording to a press release, Governor Abbott has bussed over 60,000 migrants to sanctuary cities.\\nOver 12,500 migrants to Washington, D.C. since April 2022\\nOver 21,800 migrants to New York City since August 2022\\nOver 17,200 migrants to Chicago since August 2022\\nOver 3,200 migrants to Philadelphia since November 2022\\nOver 5,100 migrants to Denver since May 18\\nOver 1,000 migrants to Los Angeles since June 14\\nGovernor Abbott is also challenging President Biden over allowing illegal immigrants in Texas which you can find out more here.\\nDo you think this was a victory for Governor Abbott?\", \"original_answer\": \"The U.S. Fifth Circuit Court of Appeals has ruled in favor of Texas Governor Greg Abbott's executive order that allows state police and Department of Public Safety to stop vehicles carrying illegal immigrants. The court overturned a district court ruling that deemed the order unlawful. The ruling states that the responsibility of enforcing the law falls on a different agency, not the governor. Governor Abbott has been sending migrants to sanctuary cities, with over 60,000 migrants being bussed to these cities. This decision is seen as a victory for Governor Abbott.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "policy_design",
+  "source_cluster_id": "sha256:3cab23f4f849c8902f113594282ae0d29254df03ff5b772025ddc23af3385e6d",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]
+}

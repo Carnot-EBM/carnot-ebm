@@ -1,0 +1,106 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.4631167839979753,
+  "exclusion_reason": null,
+  "family_id": "sha256:33dd1ee8a7e3dd04a20499ca88d1adc2d4817ddb74a7ddea8394e2a648a5c358",
+  "input_tokens": 930,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 930,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 952
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:06488044527ce9e05baa05ed9f9113ed4a902469b1bcc3ce3f1a78615c62f803",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.95,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832486,
+    "id": "chatcmpl-V54QFzyraBTGTlUWTJCgpm8RSxG7FH9j",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 509.273,
+      "predicted_n": 22,
+      "predicted_per_second": 43.1988344169041,
+      "predicted_per_token_ms": 23.14877272727273,
+      "prompt_ms": 833.201,
+      "prompt_n": 852,
+      "prompt_per_second": 1022.5623829064054,
+      "prompt_per_token_ms": 0.9779354460093896
+    },
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 930,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 952
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":null,\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":null},\\\"business_stars\\\":3.0,\\\"categories\\\":\\\"Restaurants, Mexican\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":null,\\\"name\\\":\\\"Chilitos Restaurant\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2017-02-26 13:13:48\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"They used to have a cart by the library and a location inside the University Center. They closed August 2011. There's now a Wahoo's Fish Taco store.\\\"},{\\\"review_date\\\":\\\"2011-10-12 20:19:13\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Why would anyone give Chilitos 5 stars when they have garbage ass  food and Super Cucas is just a 10 minute walk away in IV? Because they serve pitchers of beer. That's why. What the fuck else are you going to do when you have some general ed 7 pm Theater class? You're going to hit up Chilitos and get fucked up. That's what.\\\\n\\\\n\\\\nNote: Freebirds is overated garbo by the way for all of you noobs out there. So yourself a favor and get a ranchero burrito from Super Cucas. Your boner/wet vag will thank met later.\\\"},{\\\"review_date\\\":\\\"2010-11-11 07:27:29\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"I got a basic chicken burrito.  Somehow, it ended up being $7.07.\\\\n\\\\nThe guys working there were okay - it was the burrito that was so utterly disappointing. After handling the burrito, the tortilla left a powdery coating on my hands.  I couldn't even tell if there was chicken in the burrito after a couple bites, and I couldn't tell if there was salsa in it until I'd worked my way well into it.  And really, those pinto beans?  It made for a filling burrito, but I wanted a good burrito.\\\\n\\\\nI give it credit for not being nasty - it was just bland, and the powdery tortilla made me feel like I'd just handled a bag of cocaine when I'd finished.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Based on the provided structured data, here is an objective overview of Chilitos Restaurant:\\n\\nChilitos Restaurant is a Mexican restaurant located in Goleta, California, with a rating of 3.0 out of 5 stars. The restaurant has been in operation since 2011, according to the structured data, although it appears to have closed its original location and is now only operating as a takeout or delivery option. Reviews of the restaurant are mixed, with some customers praising the availability of pitchers of beer and the convenience of having a restaurant near their college campus. However, other customers have expressed disappointment with the quality of the food, particularly with regard to the burritos, which have been described as bland and lacking in flavor. One reviewer also noted that the tortillas were powdery and left a residue on their hands. Overall, while Chilitos may offer some benefits for customers in need of a quick and easy meal, the quality of the food is not consistently high enough to warrant a higher rating.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:4ebcffdc816a91a00370c53a8871ca93c0beeb036deb76c44afc3c9ce70aad09",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ]
+}

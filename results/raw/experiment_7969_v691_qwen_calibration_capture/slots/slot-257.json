@@ -1,0 +1,109 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.2150681089842692,
+  "exclusion_reason": null,
+  "family_id": "sha256:383aa4a3c451ef8921cb717442fe0a1c78f24b7cc19b0f52152f3eff57320764",
+  "input_tokens": 594,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 594,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 617
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:aef2ef5937feb2b3b7db34eb954749df02d8e8dcd9b0c6bea2e63b6ad9c7c4ca",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832833,
+    "id": "chatcmpl-Q8hQIq3Fv8S6Vcr8hzlDlHFzwKvgLXKi",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.095,
+      "predicted_n": 23,
+      "predicted_per_second": 42.50639906116301,
+      "predicted_per_token_ms": 23.52586956521739,
+      "prompt_ms": 537.657,
+      "prompt_n": 516,
+      "prompt_per_second": 959.7196725793582,
+      "prompt_per_token_ms": 1.0419709302325582
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 594,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 617
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Preheat oven to 350\u00b0F. Mix brown sugar and pumpkin pie spice in large bowl. Add sweet potatoes; toss well. Spread in 13x9-inch baking dish. Mix orange juice and vanilla; pour over sweet potatoes. Dot with butter. Cover. Bake 40 minutes. Remove from oven and stir. Bake, uncovered, 15 to 20 minutes longer or until sweet potatoes are fork tender.\\\\n\\\\npassage 2:Ready In. 1  Preheat oven to 350 degrees F (175 degrees C). 2  Coat the bottom of a glass or non-stick baking dish with olive oil, just enough to coat. 3  Wash and peel the sweet potatoes. 4  Cut them into medium size pieces. 5  Place the cut sweet potatoes in the baking dish and turn them so that they are coated with the olive oil.\\\\n\\\\npassage 3:1 Cut them into medium size pieces. 2  Place the cut sweet potatoes in the baking dish and turn them so that they are coated with the olive oil. 3  Sprinkle moderately with oregano, and salt and pepper (to taste). 4  Bake in a preheated 350 degrees F (175 degrees C) oven for 60 minutes or until soft.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to cook cut sweet potatoes\\\"}\", \"original_answer\": \"To cook cut sweet potatoes, follow passage 2:\\n\\n1. Preheat oven to 350 degrees F (175 degrees C).\\n2. Coat the bottom of a glass or non-stick baking dish with olive oil, just enough to coat.\\n3. Wash and peel the sweet potatoes.\\n4. Cut them into medium size pieces.\\n5. Place the cut sweet potatoes in the baking dish and turn them so that they are coated with the olive oil.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "policy_design",
+  "source_cluster_id": "sha256:fde46ef92177908d6b9b52c92421b13c9732afc4f31586a3c8f384a51d669bd3",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17
+  ]
+}

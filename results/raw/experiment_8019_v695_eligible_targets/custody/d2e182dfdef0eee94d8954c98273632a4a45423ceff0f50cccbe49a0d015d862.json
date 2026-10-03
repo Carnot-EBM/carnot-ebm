@@ -1,0 +1,96 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.1296190930297598,
+  "exclusion_reason": null,
+  "family_id": "sha256:db09312479c057cb5a315cb5fbf782f44f51c9ef2b20122cd84414a5d7b9a5e1",
+  "input_tokens": 446,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 446,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 470
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:80839af1902860059c551580b441ce9f48c1a2fa603304149717b5794104b0d3",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832708,
+    "id": "chatcmpl-K9VbiBMNzMO1GsqNanIWFtFDyU1s9sTm",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.529,
+      "predicted_n": 24,
+      "predicted_per_second": 42.51331641067155,
+      "predicted_per_token_ms": 23.522041666666667,
+      "prompt_ms": 444.462,
+      "prompt_n": 368,
+      "prompt_per_second": 827.9672952918361,
+      "prompt_per_token_ms": 1.2077771739130434
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 446,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 470
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Knots are intertwined loops of rope, cord, string or other flexible material, used to fasten two such ropes to one another or to another object. Knots, Bends, Hitches, Splices and Seizings are all ways of fastening cords or ropes, either to some other object such as a spar, or a ring, or to one another.\\\\n\\\\npassage 2:The knot is a critical link between you and the fish; it is critical to your fishing success to know how to tie knots correctly as well as which knot to use in which scenario. The below are links to videos and tips on the most important fishing knots.\\\\n\\\\npassage 3:The knot is simple to tie, very strong if tied correctly, with no crossing, and works for most every type of line. To Tie: Start by 1) doubling your ... To Tie: Start by 1) doubling your line and passing it through the eye of the hook or split ring.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to tie knots in rope\\\"}\", \"original_answer\": \"To tie a knot in a rope, you intertwine loops of the rope, cord, string or other flexible material. This can be used to fasten two ropes to one another or to another object. One simple knot can be tied by doubling your line and passing it through the eye of the hook or split ring. It's important to tie knots correctly to ensure their strength and effectiveness.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:b8c23aea3f8a6b0f650bde1ebb13d138a15f4642b937e1738b4cdc0f7959804d",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ]
+}

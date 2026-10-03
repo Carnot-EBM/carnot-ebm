@@ -1,0 +1,109 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.5539359140093438,
+  "exclusion_reason": null,
+  "family_id": "sha256:e7718e6243981b60f1e74b55a7557eb160a28b3b5c1c9de83820693f4d5c6a1b",
+  "input_tokens": 934,
+  "invocation_finished_at": "2026-10-01T11:43:50.961503+00:00",
+  "invocation_started_at": "2026-10-01T11:43:49.407566+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 934,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 957
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:896a2fb0c4ff35afbb7635cd21d3793202bc03c38fa7bdf5f758a28631d40e70",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855030,
+    "id": "chatcmpl-VlFr5qjv5CvN1IN6NL09JdNoFQnyKLCF",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.422,
+      "predicted_n": 23,
+      "predicted_per_second": 42.5593332617843,
+      "predicted_per_token_ms": 23.496608695652174,
+      "prompt_ms": 872.699,
+      "prompt_n": 856,
+      "prompt_per_second": 980.865109275936,
+      "prompt_per_token_ms": 1.0195081775700934
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 934,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 957
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"223 Anacapa St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":false,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":3.0,\\\"categories\\\":\\\"Books, Mags, Music & Video, Adult, Nightlife, Adult Entertainment, Shopping, Bookstores\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"10:0-4:0\\\",\\\"Monday\\\":\\\"10:0-4:0\\\",\\\"Saturday\\\":\\\"10:0-4:0\\\",\\\"Sunday\\\":\\\"10:0-4:0\\\",\\\"Thursday\\\":\\\"10:0-4:0\\\",\\\"Tuesday\\\":\\\"10:0-4:0\\\",\\\"Wednesday\\\":\\\"10:0-4:0\\\"},\\\"name\\\":\\\"For Adults Only\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2019-05-23 02:46:17\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Violet was so amazing and was so informative & helpful! I really enjoyed my experience in the store because of her :)\\\"},{\\\"review_date\\\":\\\"2018-06-08 05:04:03\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"This place rocks!! Ryan was super helpful and kind. A true pleasure to shop here. ;) Excellent customer service.\\\"},{\\\"review_date\\\":\\\"2018-05-29 18:40:30\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Sold us a defective toy and said if we had any problems we could return it. Came in the next day to return the defective toy. The guy working the counter said he didn't know how to process returns. He was clearly not alright and said he was stressed because the store was \\\\\\\"messed up\\\\\\\" and he just got back from Vegas. He was visibly shaking and his face was red around his eyes. I persisted asking for s return and he called the manager, who made me stand there for 25 mins while they tried to find a replacement, which they couldn't. After 25 mins they told me to drive another store and get a replacement. I am not from SB and didn't have time to drive to another store. They refused to refund me. If I had bought from Amazon this wouldn't have happened and it would have been cheaper. Now I know. Avoid this place.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"For Adults Only is a bookstore located at 223 Anacapa St, Santa Barbara, CA. It specializes in books, magazines, music, and video, but also offers adult entertainment services. Customers can shop during Monday to Sunday hours. The store has a good reputation based on the positive reviews left by their customers. In particular, Violet received high praise for being informative and helpful, and Ryan was noted as a kind and reliable staff member who provided excellent customer service. On the other hand, one reviewer had a negative experience with the store's management and customer service when they were unable to receive a refund for a faulty product. Overall, the store seems like a fun and enjoyable place to shop for adults, with a focus on providing excellent customer experiences.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "calibration_replay",
+  "source_cluster_id": "sha256:7690840cb821d085319f543b95587cac02f3ff636cede440c70c3fb4bf98e0d1",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ]
+}

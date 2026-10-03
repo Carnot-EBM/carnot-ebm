@@ -1,0 +1,105 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.194157542893663,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:12c6f30757a98c945758d661fd3d060f1e43b1de4eb36b0f9811bd2537b9120c",
+  "input_tokens": 469,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 469,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 493
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:06d4c74d516560b674002cbcb5e731be8347b85a672003c81466a0ba4618f368",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886124,
+    "id": "chatcmpl-DwvQtqFBFcVdFSQq6xfTdfGAxHSCvb7h",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.168,
+      "predicted_n": 24,
+      "predicted_per_second": 42.46524927101322,
+      "predicted_per_token_ms": 23.548666666666666,
+      "prompt_ms": 489.777,
+      "prompt_n": 391,
+      "prompt_per_second": 798.3225018733015,
+      "prompt_per_token_ms": 1.2526265984654732
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 469,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 493
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Structure is the most important thing to get right if you want to keep the interviewer\u2019s attention. But the good news is, it can be fairly simple to do. The key thing is not to waffle on. Write the presentation out, learn it and time it.\\\\n\\\\npassage 2:Read these job interview tips to find out how to deliver a successful presentation. Delivered well, with the desired impact, a presentation can certainly enhance your chances of success. However, for many it is an obstacle that can have the opposite effect \u2013 due to nerves, lack of preparation and focus.\\\\n\\\\npassage 3:First of all, letalet\u00e2 s be clear why employers do. This with a good supply of, candidates employers want to get more out of the hiring, process but the reason they ask for a presentation is to get a real sense of whether you can communicate and. Influence learn from the classic mistakes people make in. presentations\\\\n\\\\n\\\",\\\"question\\\":\\\"how to do a good job interview presentation\\\"}\", \"original_answer\": \"To deliver a successful job interview presentation, start by structuring your presentation effectively. Keep it concise and clear to retain the interviewer's attention. Write out your presentation, learn it, and time it to ensure it is not too long. Employers often ask for presentations to assess your communication and influence skills, so avoid common presentation mistakes. Prepare well for your presentation to avoid nerves and maintain focus, as a well-delivered presentation can enhance your chances of success in the job interview.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "978c22a79c8b1f5faba8f85d76047d19722df93d72f629c7d68a493494f53d31",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ]
+}

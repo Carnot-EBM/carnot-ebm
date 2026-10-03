@@ -1,0 +1,106 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.5791854920098558,
+  "exclusion_reason": null,
+  "family_id": "sha256:ae6b7449f6c56747504c5b1fe6659bc416a2bf45fb766bfa9e4ff653853f948f",
+  "input_tokens": 945,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 945,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 969
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:eedf00b5864c592a0f0bc8d43bdf89d6f624a498417879d13654492d13ac967a",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832967,
+    "id": "chatcmpl-xgEEO9Dmb9NhDO0wWV7LaefXtshFzMIX",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.553,
+      "predicted_n": 24,
+      "predicted_per_second": 42.43634106794589,
+      "predicted_per_token_ms": 23.564708333333332,
+      "prompt_ms": 877.617,
+      "prompt_n": 867,
+      "prompt_per_second": 987.9024677051608,
+      "prompt_per_token_ms": 1.0122456747404844
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 945,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 969
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"508 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Restaurants, Vegetarian, Salad, Coffee & Tea, Tex-Mex, American (Traditional), Burgers, Food, Sandwiches, Mexican, Juice Bars & Smoothies\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-15:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"11:0-20:0\\\",\\\"Sunday\\\":\\\"11:0-20:0\\\",\\\"Thursday\\\":\\\"11:0-20:0\\\",\\\"Tuesday\\\":\\\"11:0-20:0\\\",\\\"Wednesday\\\":\\\"11:0-20:0\\\"},\\\"name\\\":\\\"The Natural Cafe\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-12 21:27:15\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Is this location under new management? All new crew when I returned from the holidays. Still one of my local favorites but have seen a slight dip in quality lately. Still 5 Stars but hopefully will be a 5 plus again soon.\\\"},{\\\"review_date\\\":\\\"2022-01-12 05:06:20\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"While staying in Santa Barbara, I was looking for a healthier option for a quick lunch. I stopped in to grab a a salad and ate outside at The Natural Cafe. The service was great and the salad was super fresh and tasty. The price was fair too (Santa Barbara can be pricey). They had a nice water station and appear to be taking Covid precautions seriously. I was happy with my Chicken Cesar salad. It was loaded with nicely seasoned chicken, tomato, avocado, parmesan, and zesty croutons. I swapped the dressing for oil and vinegar. I would highly recommend Natural Cafe and plan to return when I am in Santa Barbara!\\\"},{\\\"review_date\\\":\\\"2022-01-01 16:08:18\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Got there by chance while driving from Seattle to San Diego because it is close to 101. Great food - Zen burger - and very friendly staff. They serve wine and gave great sweets. This will become our place for lunch while on the way.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"The Natural Cafe is a popular restaurant located in Santa Barbara, CA, offering a variety of vegetarian, vegan, and gluten-free options. According to customer reviews, the cafe has a casual and relaxed atmosphere, with outdoor seating available. The menu includes salads, sandwiches, burgers, and Mexican dishes, all made with fresh and healthy ingredients. The service is friendly and attentive, and the prices are reasonable for the quality of food offered. One reviewer noted a slight dip in quality recently, but overall, the cafe maintains a 4-star rating and is considered a local favorite. Customers appreciate the healthy options, good service, and convenient location near Highway 101. The Natural Cafe is a great spot for a quick, delicious meal while visiting Santa Barbara.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:689894e56ec676d824905e006862d941fdfae775993f09210455c2451a2498d5",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ]
+}

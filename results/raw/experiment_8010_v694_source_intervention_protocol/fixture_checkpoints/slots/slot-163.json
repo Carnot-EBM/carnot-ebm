@@ -1,0 +1,84 @@
+{
+  "arm": "swap",
+  "capture_identity": "sha256:c690c1f517fbce73c5da6a2d1e99e3819c3de93e1045fe76d1c8215b54691541",
+  "censor_status": false,
+  "denominator": 1,
+  "donor_group_id": "sha256:95f310aeda315bec83a9c4b1903933b2d2e4f97cef572efbba68e087024ca425",
+  "duration_s": 0.003116535022854805,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:58f471adbcc86c18e9d9c9f2d29f4eda0edb5307ae3bf1134dbda5eb306d0ae3:swap",
+  "group_id": "sha256:58f471adbcc86c18e9d9c9f2d29f4eda0edb5307ae3bf1134dbda5eb306d0ae3",
+  "input_byte_upper_bound": 2493,
+  "input_tokens": 30,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.25,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 18,
+      "prompt_tokens": 30
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:41623cf43e26791283d77623c0f6c4a7a0c89aae8dd470cf8919e7a1460995c1",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "message": {
+          "content": "{\"unsupported_probability\": 0.25, \"source_sentence_id\": null}"
+        }
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "usage": {
+      "completion_tokens": 18,
+      "prompt_tokens": 30
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 32,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Place your Le Creuset grill pan in the soapy solution and scrub gently with a nylon dish scrubber. Run plain, warm water over your Le Creuset grill pan to rinse the soapy solution away. Hand dry your Le Creuset cast iron grill pan with a dish towel to prevent rust.\\\\n\\\\npassage 2:Tackle difficult food stains on your Le Creuset grill pan by soaking it before washing. Cover your grill pan with warm water only, no soap, and allow the grill pan to remain submerged in the water for 15 minutes to loosen stuck-on food particles. Remove your Le Creuset grill pan from the water. Pour 1 tsp. mild hand dish-washing detergent in your kitchen sink and fill the sink with hot water.\\\\n\\\\npassage 3:These are videos on YouTube that also show how to clean the Le Creuset cookware (put in browser address bar: how to clean enamel cookware Le Creuset YouTube -- or paste the links below into your browser address bar):\\\\n\\\\n\\\",\\\"question\\\":\\\"how to clean le creuset grill pan\\\"}\", \"original_answer\": \"Empty Bowl Gourmet Noodle Bar is a popular restaurant located at 38 W Victoria St, Ste 109 in Santa Barbara, CA. Known for its unique blend of Comfort Food, Asian Fusion, Chinese, Tapas/Small Plates, Noodles, and Thai cuisines, it has received an average rating of 4.5 stars. The restaurant offers free Wi-Fi and outdoor seating, and is suitable for groups. Despite not accepting reservations, it also caters to take-out orders. Customers praise the restaurant for its delicious Thai food, highlighting dishes such as the Northern Thailand Curry Noodle, Bangkok noodles, and pan-fried pancit noodles. The establishment is also noted for its trendy and casual ambience, and its location within Santa Barbara's public market. It operates from 11 am to 9 pm from Tuesday to Sunday.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69410,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "seed": 69410,
+  "source_cluster_id": "39794fd4bf545ebf1ff524af305598ba9e6b090d132627a72624da2dffcb82a8",
+  "source_hash": "sha256:8e764ab084eecde597f3b26c29fcaeb75797e85a975b42cdc4a3f8a6d8ee8788",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ]
+}

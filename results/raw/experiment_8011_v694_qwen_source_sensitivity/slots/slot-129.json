@@ -1,0 +1,113 @@
+{
+  "arm": "duplicate",
+  "capture_identity": "sha256:c690c1f517fbce73c5da6a2d1e99e3819c3de93e1045fe76d1c8215b54691541",
+  "censor_status": false,
+  "denominator": 1,
+  "donor_group_id": "sha256:f95d7c69f346808f4d25da0c8c768ac6c89a7f64f4d6d278707c3e06eea722d2",
+  "duration_s": 1.5085539190331474,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:f95d7c69f346808f4d25da0c8c768ac6c89a7f64f4d6d278707c3e06eea722d2:duplicate",
+  "group_id": "sha256:f95d7c69f346808f4d25da0c8c768ac6c89a7f64f4d6d278707c3e06eea722d2",
+  "input_byte_upper_bound": 3786,
+  "input_tokens": 926,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 926,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 949
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:321f32f47b3123b57a5ed4bcd84abd58e270995ac7a90fcf76542d16212bb143",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790925817,
+    "id": "chatcmpl-n6SA3QUgI33G01RvXzkcIjsSD9bxFRZk",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 538.923,
+      "predicted_n": 23,
+      "predicted_per_second": 42.67771091603068,
+      "predicted_per_token_ms": 23.431434782608697,
+      "prompt_ms": 849.276,
+      "prompt_n": 848,
+      "prompt_per_second": 998.4975437902402,
+      "prompt_per_token_ms": 1.001504716981132
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 926,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 949
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 32,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"422 N Milpas St, Ste 1\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Mexican, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"10:0-21:0\\\",\\\"Monday\\\":\\\"10:0-21:0\\\",\\\"Saturday\\\":\\\"8:0-21:0\\\",\\\"Sunday\\\":\\\"8:0-21:0\\\",\\\"Thursday\\\":\\\"10:0-21:0\\\",\\\"Tuesday\\\":\\\"10:0-21:0\\\",\\\"Wednesday\\\":\\\"10:0-21:0\\\"},\\\"name\\\":\\\"Altamirano Mexican Restaurant\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2020-07-28 16:18:46\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"Ambience: What ambiance?\\\\n\\\\nService: We are still laughing. The waitress never even cracked a smile. We were very thankful for our ONE water refill.\\\\n\\\\nFood: It's never a good sign when you hear the microwave dinger go off more than the order bell. Seriously? $40.00 for that??\\\\n\\\\nTime with friends: Priceless.\\\"},{\\\"review_date\\\":\\\"2013-11-27 19:08:19\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Sad to have to report that they have closed this location. Thank you to the Ortiz family for many good meals over the years!\\\"},{\\\"review_date\\\":\\\"2013-10-11 14:57:32\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"My husband and I are addicted to the Shrimp Ala Diablo. The salsa bar is fantastic,  and the service from Beto's family and the crew is wonderful. Tacos Altamirano are unbelievably tasty as well. Skip the place up the street. This has no line and the food is fresh and wonderful. Love, love, love this place!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Altamirano Mexican Restaurant, located at 422 N Milpas St, Ste 1 in Santa Barbara, CA, is a popular local dining spot that specializes in Mexican cuisine. The restaurant operates from 10:00 AM to 9:00 PM from Monday to Friday and 8:00 AM to 9:00 PM on weekends. It offers a variety of services such as take-out and is also suitable for group dining. However, it doesn't provide Wi-Fi, music, outdoor seating, or reservations. Their parking options include street parking and a parking lot, but there's no garage, validation service, or valet parking. The restaurant has a 4-star business rating. However, reviews mention mixed feelings about the ambiance and service. One reviewer praised the Shrimp Ala Diablo and the salsa bar, along with the wonderful service from Beto's family. Another reviewer was less pleased, mentioning the lack of ambiance and frequent use of the microwave. The restaurant was reported to have closed, as per one of the reviews.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69410,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "seed": 69410,
+  "source_cluster_id": "2a35b035f2db9376eccab1436156f5bd6c7a655e9728ec1c8fb90c2a55a72057",
+  "source_hash": "sha256:09d90c108910f4467566cc130fbb3f2846dae1d08e4fab9d5c3d747ff213a2e1",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ]
+}

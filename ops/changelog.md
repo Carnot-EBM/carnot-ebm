@@ -1,5 +1,38 @@
 # Carnot — Changelog
 
+## 2026-10-02 — Exp8027 extension copy and shutdown repair
+
+- Fix SIGSEGV after a passing pytest summary by atomically replacing copied
+  extension files instead of truncating loaded shared library inodes.
+- Apply the same copy helper to build outputs and published binary evidence.
+  Add subprocess shutdown and interrupted-copy regressions; preserve all
+  original tests and the conductor source.
+- Verify 92 subset tests, 40 downstream/fix-gate tests, 42 adjacent tests,
+  437/437 Python/CLI statements, scoped lint/type/spec checks and applicable
+  native/CLI E2E checks. Cold replay and terminal readers pass against the
+  preserved published measurement.
+- All 17 owned validation commands pass, including 48 unit/consumer/E2E tests
+  and 244/244 native executable source lines (raw LLVM macro counts retained).
+- Retain validation evidence in the Exp8027 `fixgate-validation/` directory.
+  Global spec gaps, unrelated workspace formatting differences and the prior
+  failed full-suite health diagnostic remain recorded separately.
+
+## 2026-10-01 — Exp7967 blocked-source custody and private storage repair
+
+- Handle missing or malformed historical source JSON while retaining blocked
+  operands, readiness zero and byte hashes of the historical failure logs.
+  Unavailable summary fields are no longer claimed as imported.
+- Implement private temporary-directory scope for library and child files,
+  restoring environment variables and Python's cache after exceptions.
+  Preserve all original test assertions and add child cleanup coverage.
+- Verify 238 affected/transitive tests, 109 conductor/core/fix-gate tests,
+  all 25 frozen command checks, E2E-015/016 and 831/831 measured statements.
+  Ruff, formatting, strict mypy and scoped spec coverage pass.
+- Private terminal publication and cold replay pass. Qualification correctly
+  remains zero because two historical blocked fixture primaries omit the
+  readiness field required by their reader gates. Global spec traceability
+  still has 1,142 unrelated missing references. The conductor source is unchanged.
+
 ## 2026-09-30 — V689 direct sentence annotation replay
 
 - Bootstrap the repository root before the Exp7942 CLI imports its producer,
@@ -21167,3 +21200,109 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-10-01: Preserve board custody and bound compatible workload acceleration (⚠️ Research Finding) — honest_verdict=complete_null_historical_board_scope; results/experiment_7964_v690_hardware_evidence.json
 - 2026-10-01: Independently reduce thirteen outcomes and decide the three PRD gaps (⚠️ Blocked) — honest_verdict=complete_blocked_missing_science; results/experiment_7965_v690_capstone.json
 - 2026-10-01: Completed operational retrospective for milestone 2026.09.690. All 7 completed experiments were compute-bound, totaling 35.5 wall-time minutes (averaging 5 minutes per experiment) reconstructed from disk-mtime fallback data. The slowest experiment was 'Bind activation-aware authority and freeze current research methods' (9.2 minutes), followed by 'Independently reduce thirteen outcomes and decide the three PRD gaps' (7.38 minutes), 'Measure bounded Qwen response support against human annotations' (7.12 minutes), 'Rebuild full-response support targets from original human spans' (3.72 minutes), and 'Preserve board custody and bound compatible workload acceleration' (3.05 minutes). The locked GPU-idle indicator on compute-bound tasks is false, while static monitor telemetry recorded 0% utilization across both RTX 3090 GPUs with 4MB allocated. Recommended operational improvements include granular task phase timing receipts to isolate compute stages, continuous execution-time GPU utilization logging, and restricting DualGPURunner strictly to verified concurrent multi-model workloads. Estimated time savings are 0% pending empirical measurement of phase receipts. Artifact: results/operational_retro_2026_09_690.json.
+- 2026-10-01: Bind thirteen tasks across UTC rollover and freeze research methods (⚠️ Research Finding) — honest_verdict=complete_circular_positive_contract_methods; results/experiment_7966_v691_contract_methods.json
+- 2026-10-01: Qualify fitting with private scratch and the artifact guard enabled (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_checks; results/experiment_7967_v691_private_training_qualification.json
+- 2026-10-01: Qualify complete-response labels for disjoint calibration roles (⚠️ Research Finding) — honest_verdict=complete_null_response_role_transport; results/experiment_7968_v691_response_role_targets.json
+- 2026-10-01: Capture bounded Qwen judgments for fitting and calibration (⚠️ Research Finding) — honest_verdict=complete_null_qwen_calibration_capture; results/experiment_7969_v691_qwen_calibration_capture.json
+- 2026-10-01: Train small response-energy calibrators against same-information controls (⚠️ Research Finding) — honest_verdict=complete_null_qwen_energy_calibration; results/experiment_7972_v691_qwen_energy_calibration.json
+
+- 2026-10-01: Fixed Exp7975 repository-health command planning when reusing prior measurements. The frozen plan keeps hash-bound health receipts; execution preserves failures without rerunning or reporting their commands as current. Original tests remain intact. Verification: 106 affected tests, 147 core/conductor tests, 18 frozen checks, E2E-016/017, scoped Ruff/strict mypy/spec coverage; 254/254 affected module/CLI statements. Historical health and 1,142 existing global traceability gaps remain recorded. `scripts/research_conductor.py` is unchanged. Evidence: `results/raw/experiment_7975_v691_arc_supervisor_delta/fixgate-validation/`.
+- 2026-10-01: Assess new live ARC supervisor outcomes for transferable refinement (⚠️ Research Finding) — honest_verdict=complete_disqualified_supervisor_delta_prerequisites; results/experiment_7975_v691_arc_supervisor_delta.json
+- 2026-10-01: Measure complete decision-service cost for each qualified branch (⚠️ Research Finding) — honest_verdict=complete_null_service_cost; results/experiment_7976_v691_service_cost.json
+- 2026-10-01: Preserve all board obligations and map current measured workload (⚠️ Research Finding) — honest_verdict=complete_null_historical_board_scope_current_host_mapping; results/experiment_7977_v691_hardware_evidence.json
+- 2026-10-01: Independently reduce thirteen outcomes and decide the three PRD gaps (⚠️ Research Finding) — honest_verdict=complete_disqualified_terminal_verification; results/experiment_7978_v691_capstone.json
+- 2026-10-01: Completed operational retrospective for milestone 2026.10.691. All 9 completed experiments were compute-bound, totaling 63.6 wall-time minutes (averaging 7 minutes per experiment) reconstructed from disk-mtime fallback data. The slowest experiment was 'Independently reduce thirteen outcomes and decide the three PRD gaps' (20.58 minutes), followed by 'Capture bounded Qwen judgments for fitting and calibration' (13.85 minutes), 'Bind thirteen tasks across UTC rollover and freeze research methods' (8.24 minutes), 'Measure complete decision-service cost for each qualified branch' (5.72 minutes), and 'Qualify complete-response labels for disjoint calibration roles' (3.86 minutes). The locked GPU-idle indicator on compute-bound tasks is false, while static monitor telemetry recorded 0% utilization across both RTX 3090 GPUs with 4MB allocated. Recommended operational improvements include granular task phase timing receipts to isolate compute stages, continuous execution-time GPU utilization logging, profiling capstone outcome reduction and Qwen calibration tasks, and restricting DualGPURunner strictly to verified concurrent multi-model workloads. Estimated time savings are 0% pending empirical measurement of phase receipts. Artifact: results/operational_retro_2026_10_691.json.
+
+## 2026-10-01 — Stage V692 source evidence and continuous-learning plan
+
+- Record current arXiv and secondary-source findings before experiment design,
+  including source alignment, delayed ACI, sparse spline learning and access limits.
+- Preserve the V691 design and create a matching thirteen-task V692 design/YAML
+  contract. Use the mandated Qwen model for bounded capture and explicit CPU
+  substrates for cached scoring, replay and audits.
+- Separate new multivariate fitting from continuous-learning prerequisites.
+  Freeze evaluation custody, feedback windows, action rules, controls and
+  minimum support. Include ARC, service costs and hardware evidence boundaries.
+- Apply adversarial planning review: fixed windows and candidate ties, inert
+  predicate handling, positive controls, exact energy/classifier parity and
+  explicit limits on small-stream inference.
+- Validate schema, failure history, exclusion rules, task/gate/hash agreement,
+  113 existing tests including E2E-018, scoped Ruff and spec traceability.
+  No implementation, active-roadmap change or conductor-source change was made.
+- 2026-10-01: Freeze thirteen tasks and separate historical authority from new evidence (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_validation; results/experiment_7979_v692_contract_methods.json
+- 2026-10-01: Join public source features and reserve evaluation sources before label access (⚠️ Research Finding) — honest_verdict=complete_null_evidence_preparation; results/experiment_7980_v692_evidence_features.json
+- 2026-10-01: Capture bounded Qwen judgments for delayed feedback and reserved evaluation (⚠️ Research Finding) — honest_verdict=complete_disqualified_owned_terminal_provenance; results/experiment_7981_v692_qwen_stream_capture.json
+- 2026-10-01: Fit a small conditional energy using Qwen and source evidence (⚠️ Research Finding) — honest_verdict=complete_null_multivariate_fit; results/experiment_7982_v692_multivariate_energy.json
+- 2026-10-01: Test whether source features add signal beyond scalar confidence (⚠️ Research Finding) — honest_verdict=complete_null_evidence_ablation; results/experiment_7984_v692_evidence_ablation.json
+- 2026-10-01: Review new live ARC supervisor outcomes for transferable refinement (⚠️ Research Finding) — honest_verdict=complete_disqualified_supervisor_delta_prerequisites; results/experiment_7988_v692_arc_supervisor_delta.json
+- 2026-10-01: Preserve board evidence and bound acceleration of the measured service (⚠️ Blocked) — honest_verdict=complete_blocked_required_custody_or_service; results/experiment_7990_v692_hardware_evidence.json
+- 2026-10-01: Independently reduce thirteen outcomes and decide the three PRD gaps (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_validation; results/experiment_7991_v692_capstone.json
+- 2026-10-01: Fixed Exp7992's mutable-roadmap fixture dependency using the saved V693 invocation bytes. Malformed live authority now publishes a replayable blocked result. Damaged roadmap mappings use valid block YAML with all current task values intact. All original test/helper functions are unchanged; the conductor subset passes 92 tests and roadmap/gate/fix-erasure consumers pass 116. Combined V693 module/CLI coverage is 260/260 statements; scoped Ruff, strict mypy and spec traceability pass. No skips or reverts were added, and `scripts/research_conductor.py` is unchanged. Evidence: `/tmp/carnot7992-fixgate-brqr737a/`.
+  Final verification: all 14 required frozen checks pass, including E2E-018; the actual repository-wide diagnostic reached its 180-second deadline with failures. Reconciliation reports only the 1,142 existing global traceability gaps. Durable evidence: `results/raw/experiment_7992_v693_contract_methods/fixgate-validation/`.
+- 2026-10-01: Completed operational retrospective for milestone 2026.10.692. All 9 completed experiments were compute-bound, totaling 117.5 wall-time minutes (averaging 13 minutes per experiment) reconstructed from disk-mtime fallback data. The slowest experiment was 'Join public source features and reserve evaluation sources before label access' (22.29 minutes), followed by 'Test whether source features add signal beyond scalar confidence' (21.65 minutes), 'Fit a small conditional energy using Qwen and source evidence' (20.18 minutes), 'Capture bounded Qwen judgments for delayed feedback and reserved evaluation' (15.97 minutes), and 'Freeze thirteen tasks and separate historical authority from new evidence' (10.72 minutes). The locked GPU-idle indicator on compute-bound tasks is false, while static monitor telemetry recorded 0% utilization across both RTX 3090 GPUs with 4MB allocated outside active runs. Recommended operational improvements include granular task phase timing receipts to isolate compute stages, continuous execution-time GPU utilization logging, profiling data join and ablation workflows, and restricting DualGPURunner strictly to verified concurrent multi-model workloads. Estimated time savings are 0% pending empirical measurement of phase receipts. Artifact: results/operational_retro_2026_10_692.json.
+- 2026-10-01: Freeze thirteen tasks with immutable producer evidence (⚠️ Blocked) — honest_verdict=complete_blocked_authority; results/experiment_7992_v693_contract_methods.json
+- 2026-10-01: Recover authenticated stream rows with explicit invocation scope (⚠️ Research Finding) — honest_verdict=complete_null_historical_capture_custody; results/experiment_7993_v693_capture_custody.json
+- 2026-10-01: Seal a source-disjoint development cohort and feedback schedule (⚠️ Research Finding) — honest_verdict=complete_null_development_cohort; results/experiment_7994_v693_development_cohort.json
+- 2026-10-01: Capture bounded Qwen judgments with owned call receipts (⚠️ Research Finding) — honest_verdict=complete_null_qwen_development_capture; results/experiment_7995_v693_qwen_development_capture.json
+- 2026-10-01: Train a local spline energy head for incremental updates (⚠️ Research Finding) — honest_verdict=complete_null_sparse_training; results/experiment_7996_v693_sparse_energy_training.json
+- 2026-10-01: Measure frozen typed decisions on the new development stream (⚠️ Research Finding) — honest_verdict=complete_disqualified_typed_development_decisions; results/experiment_7997_v693_typed_development_decisions.json
+- 2026-10-01: Learn sparse energy updates from randomized delayed feedback (⚠️ Research Finding) — honest_verdict=complete_null_selective_feedback_learning; results/experiment_7998_v693_selective_feedback_learning.json
+- 2026-10-01: Independently audit later benefit retention and recovery (⚠️ Research Finding) — honest_verdict=complete_null_learning_causal_audit; results/experiment_7999_v693_learning_causal_audit.json
+- 2026-10-02: Test delayed confidence using the state that issued each prediction (⚠️ Research Finding) — honest_verdict=complete_null_delayed_confidence; results/experiment_8000_v693_delayed_confidence.json
+- 2026-10-02: Qualify supervisor evidence before generalization refinement (⚠️ Research Finding) — honest_verdict=complete_null_no_new_outcomes; results/experiment_8001_v693_arc_supervisor_qualification.json
+- 2026-10-02: Measure complete service cost and sparse durable updates (⚠️ Research Finding) — honest_verdict=complete_null_service_cost; results/experiment_8002_v693_service_cost.json
+- 2026-10-02: Bound sparse-update hardware compatibility and preserve board custody (⚠️ Research Finding) — honest_verdict=complete_null_cpu_sparse_boundary_no_device_execution; results/experiment_8003_v693_hardware_sparse_boundary.json
+- 2026-10-02: Independently decide verifier learning and deployment gaps (⚠️ Blocked) — honest_verdict=complete_blocked_v693_prerequisites; results/experiment_8004_v693_capstone.json
+- 2026-10-02: Completed operational retrospective for milestone 2026.10.693. All 13 completed experiments were compute-bound, totaling 198.6 wall-time minutes (averaging 15 minutes per experiment) reconstructed from disk-mtime fallback data. The slowest experiment was 'Capture bounded Qwen judgments with owned call receipts' (27.98 minutes), followed by 'Independently audit later benefit retention and recovery' (24.81 minutes), 'Measure complete service cost and sparse durable updates' (23.05 minutes), 'Train a local spline energy head for incremental updates' (20.55 minutes), and 'Measure frozen typed decisions on the new development stream' (19.83 minutes). The locked GPU-idle indicator on compute-bound tasks is false, while static monitor telemetry recorded 0% utilization across both RTX 3090 GPUs with 4MB allocated outside active runs. Recommended operational improvements include granular task phase timing receipts to isolate compute stages, continuous execution-time GPU utilization logging, profiling Qwen judgment capture and causal audit workflows, and restricting DualGPURunner strictly to verified concurrent multi-model workloads. Estimated time savings are 0% pending empirical measurement of phase receipts. Artifact: results/operational_retro_2026_10_693.json.
+## 2026-10-02 — Plan V694 decision-sensitive energy learning
+
+- Stage thirteen experiments, Exp8005–Exp8017, across four phases; preserve
+  V693's design and leave the active roadmap and conductor unchanged.
+- Record the primary/secondary literature scan before experiment design,
+  including ADOWIP update allocation and all source-access limits.
+- Bind the complete design table and machine contract to executable YAML.
+  Declare exact gates, failure lineage, bounded Qwen generation, progress
+  output, chunked writes and independent scientific acceptance conditions.
+- Align the reporting planning requirement and PRD traceability. Experimental
+  results remain pending.
+
+- 2026-10-02: Bind all thirteen tasks to complete immutable planning authority (⚠️ Research Finding) — honest_verdict=complete_circular_positive_contract_methods; results/experiment_8005_v694_contract_methods.json
+- 2026-10-02: Reconstruct static custody and delayed issued errors from original receipts (⚠️ Research Finding) — honest_verdict=complete_null_independent_replay; results/experiment_8006_v694_independent_replay.json
+- 2026-10-02: Freeze decision headroom and ingest budgeted online adaptation methods (⚠️ Research Finding) — honest_verdict=complete_null_conditioning_diagnosis; results/experiment_8007_v694_conditioning_diagnosis.json
+- 2026-10-02: Train converged energy heads with explicit saturation controls (⚠️ Blocked) — honest_verdict=complete_blocked_calibration_target_support; results/experiment_8008_v694_conditioned_energy_fit.json
+- 2026-10-02: Seal full-source and placebo interventions before bounded inference (⚠️ Research Finding) — honest_verdict=complete_null_source_intervention_protocol; results/experiment_8010_v694_source_intervention_protocol.json
+- 2026-10-02: Measure bounded Qwen source dependence against duplicate controls (✅ Complete) — honest_verdict=complete_positive_source_sensitivity; results/experiment_8011_v694_qwen_source_sensitivity.json
+- 2026-10-02: Assess new supervisor outcomes for live ARC generalization (⚠️ Research Finding) — honest_verdict=complete_null_no_new_outcomes; results/experiment_8014_v694_arc_supervisor_delta.json
+- 2026-10-02: Bound cumulative quantization error and preserve each board obligation (⚠️ Blocked) — honest_verdict=complete_blocked_no_qualified_update_trajectory_or_board_custody; results/experiment_8016_v694_hardware_update_boundary.json
+- 2026-10-02: Independently decide all thirteen outcomes and the three PRD gaps (⚠️ Research Finding) — honest_verdict=complete_disqualified_v694_owned_checks; results/experiment_8017_v694_capstone.json
+- 2026-10-02: Completed operational retrospective for milestone 2026.10.694. All 9 completed experiments were compute-bound, totaling 41.5 wall-time minutes (averaging 5 minutes per experiment) reconstructed from disk-mtime fallback data. The slowest experiment was 'Bind all thirteen tasks to complete immutable planning authority' (9.32 minutes), followed by 'Measure bounded Qwen source dependence against duplicate controls' (8.44 minutes), 'Independently decide all thirteen outcomes and the three PRD gaps' (5.32 minutes), 'Seal full-source and placebo interventions before bounded inference' (4.24 minutes), and 'Reconstruct static custody and delayed issued errors from original receipts' (3.86 minutes). The locked GPU-idle indicator on compute-bound tasks is false, while static monitor telemetry recorded 0% utilization across both RTX 3090 GPUs with 4MB allocated outside active runs. Recommended operational improvements include granular task phase timing receipts to isolate compute stages, continuous execution-time GPU utilization logging, profiling task binding and Qwen source dependence workflows, and restricting DualGPURunner strictly to verified concurrent multi-model workloads. Estimated time savings are 0% pending empirical measurement of phase receipts. Artifact: results/operational_retro_2026_10_694.json.
+
+- 2026-10-02: Freeze thirteen tasks and qualify immutable terminal readers (⚠️ Blocked) — honest_verdict=complete_blocked_authority; results/experiment_8018_v695_contract_methods.json
+- 2026-10-02: Freeze complete-label eligibility before fitting or evaluation (⚠️ Research Finding) — honest_verdict=complete_disqualified_eligible_targets; results/experiment_8019_v695_eligible_targets.json
+- 2026-10-02: Fit calibrated source energies on the sealed eligible cohort (⚠️ Research Finding) — honest_verdict=complete_null_qualified_energy_fit; results/experiment_8020_v695_qualified_energy_fit.json
+- 2026-10-02: Measure calibrated decisions with complete prediction custody (⚠️ Research Finding) — honest_verdict=complete_disqualified_typed_decision_checks; results/experiment_8021_v695_typed_decision_test.json
+- 2026-10-02: Qualify fixed-answer Qwen scoring and source-removal controls (⚠️ Research Finding) — honest_verdict=complete_null_likelihood_protocol; results/experiment_8022_v695_likelihood_protocol.json
+- 2026-10-02: Capture source-conditioned likelihoods and freeze small decision heads (⚠️ Research Finding) — honest_verdict=complete_disqualified_likelihood_calibration; results/experiment_8023_v695_likelihood_calibration.json
+- 2026-10-02: Test equal-budget continuous learning on qualified energy decisions (⚠️ Research Finding) — honest_verdict=complete_null_causal_online_updates; results/experiment_8025_v695_causal_online_updates.json
+- 2026-10-02: Independently reconstruct learning benefit retention and restart behavior (⚠️ Research Finding) — honest_verdict=complete_disqualified_learning_retention_audit; results/experiment_8026_v695_learning_retention_audit.json
+- 2026-10-02: Measure loaded native update parity and complete transaction cost (⚠️ Research Finding) — honest_verdict=complete_disqualified_native_update_cost; results/experiment_8027_v695_native_update_cost.json
+- 2026-10-02: Inspect only new live supervisor outcomes for transferable refinement (⚠️ Research Finding) — honest_verdict=complete_null_no_new_outcomes; results/experiment_8028_v695_arc_supervisor_delta.json
+- 2026-10-02: Keep board custody independent and quantify measured workload limits (⚠️ Research Finding) — honest_verdict=complete_null_independent_hardware_custody; results/experiment_8029_v695_hardware_workload_boundary.json
+- 2026-10-02: Independently decide source utility continuous learning and deployment (⚠️ Blocked) — honest_verdict=complete_blocked_v695_capstone; results/experiment_8030_v695_capstone.json
+- 2026-10-02: Completed operational retrospective for milestone 2026.10.695. All 12 completed experiments were compute-bound, totaling 61.0 wall-time minutes (averaging 5 minutes per experiment) reconstructed from disk-mtime fallback data. The slowest experiment was 'Test equal-budget continuous learning on qualified energy decisions' (10.11 minutes), followed by 'Capture source-conditioned likelihoods and freeze small decision heads' (10.09 minutes), 'Freeze thirteen tasks and qualify immutable terminal readers' (8.35 minutes), 'Measure loaded native update parity and complete transaction cost' (7.36 minutes), and 'Fit calibrated source energies on the sealed eligible cohort' (4.95 minutes). The locked GPU-idle indicator on compute-bound tasks is false, while static monitor telemetry recorded 0% utilization across both RTX 3090 GPUs with 4MB allocated outside active runs. Recommended operational improvements include granular task phase timing receipts to isolate compute stages, continuous execution-time GPU utilization logging, profiling continuous learning and likelihood capture workflows, and restricting DualGPURunner strictly to verified concurrent multi-model workloads. Estimated time savings are 0% pending empirical measurement of phase receipts. Artifact: results/operational_retro_2026_10_695.json.
+- 2026-10-02: Bind thirteen tasks to the complete V696 design (⚠️ Research Finding) — honest_verdict=complete_circular_positive_contract_methods; results/experiment_8031_v696_contract_methods.json
+- 2026-10-02: Seal evaluation access and independent learning methods before labels (⚠️ Research Finding) — honest_verdict=complete_disqualified_sealed_methods; results/experiment_8032_v696_sealed_methods.json
+- 2026-10-02: Test cache and execution-shape causes of duplicate likelihood drift (⚠️ Research Finding) — honest_verdict=complete_disqualified_scoring_isolation; results/experiment_8033_v696_scoring_isolation.json
+- 2026-10-02: Learn from bounded recent feedback under equal update budgets (⚠️ Research Finding) — honest_verdict=complete_disqualified_windowed_checks; results/experiment_8038_v696_windowed_online_learning.json
+- 2026-10-02: Independently test later loss retention and process recovery (⚠️ Research Finding) — honest_verdict=complete_null_learning_benefit; results/experiment_8039_v696_learning_benefit_audit.json
+- 2026-10-02: Measure repaired native updates and complete durable transaction cost (⚠️ Research Finding) — honest_verdict=complete_null_native_transaction_cost; results/experiment_8040_v696_native_transaction_cost.json
+- 2026-10-02: Assess only new live supervisor outcomes for transferable refinement (⚠️ Research Finding) — honest_verdict=complete_null_no_new_outcomes; results/experiment_8041_v696_arc_supervisor_delta.json
+- 2026-10-02: Bound quantized decision fallback and preserve each board obligation (⚠️ Research Finding) — honest_verdict=complete_null_bounded_fallback_custody; results/experiment_8042_v696_precision_fallback_boundary.json
+- 2026-10-02: Independently decide source utility learning benefit and deployment gaps (⚠️ Blocked) — honest_verdict=complete_blocked_v696_capstone; results/experiment_8043_v696_capstone.json
+- 2026-10-02: Completed operational retrospective for milestone 2026.10.696. All 9 completed experiments were compute-bound, totaling 34.2 wall-time minutes (averaging 4 minutes per experiment) reconstructed from disk-mtime fallback data. The slowest experiment was 'Bind thirteen tasks to the complete V696 design' (6.36 minutes), followed by 'Independently test later loss retention and process recovery' (5.54 minutes), 'Test cache and execution-shape causes of duplicate likelihood drift' (5.50 minutes), 'Learn from bounded recent feedback under equal update budgets' (3.80 minutes), and 'Measure repaired native updates and complete durable transaction cost' (3.47 minutes). The locked GPU-idle indicator on compute-bound tasks is false, while static monitor telemetry recorded 0% utilization across both RTX 3090 GPUs with 4MB allocated outside active runs. Recommended operational improvements include granular task phase timing receipts to isolate compute stages, continuous execution-time GPU utilization logging, profiling design binding, loss retention, and likelihood drift workflows, and restricting DualGPURunner strictly to verified concurrent multi-model workloads. Estimated time savings are 0% pending empirical measurement of phase receipts. Artifact: results/operational_retro_2026_10_696.json.
+- 2026-10-03: Bind thirteen tasks and preserve terminal V696 evidence (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_validation; results/experiment_8044_v697_contract_methods.json
+- 2026-10-03: Qualify scorer validation workspaces before new model calls (⚠️ Research Finding) — honest_verdict=complete_circular_positive_scorer_workspace; results/experiment_8045_v697_scorer_workspace.json
+- 2026-10-03: Seal source decisions and feedback acceptance before evaluator access (⚠️ Research Finding) — honest_verdict=complete_null_branch_protocols; results/experiment_8046_v697_branch_protocols.json
+- 2026-10-03: Learn persistent energy updates with released-feedback acceptance checks (⚠️ Research Finding) — honest_verdict=complete_null_feedback_constrained_learning; results/experiment_8051_v697_feedback_constrained_learning.json
+- 2026-10-03: Audit future learning benefit retention and crash recovery independently (⚠️ Research Finding) — honest_verdict=complete_null_learning_benefit; results/experiment_8052_v697_learning_benefit_audit.json
+- 2026-10-03: Measure accepted and rejected update costs through the native binding (⚠️ Research Finding) — honest_verdict=complete_null_guarded_transaction_cost; results/experiment_8053_v697_guarded_transaction_cost.json

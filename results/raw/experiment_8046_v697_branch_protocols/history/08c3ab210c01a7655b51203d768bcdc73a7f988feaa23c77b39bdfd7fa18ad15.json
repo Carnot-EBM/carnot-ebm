@@ -1,0 +1,222 @@
+{
+  "code": [
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8008_v694_conditioned_energy_fit.py",
+      "sha256": "sha256:f174acad1c50077d2163c3692da91de40bc6dd8640312cf09ae8a823f8c08ce6"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8008_v694_conditioned_energy_fit.py",
+      "sha256": "sha256:3963e74a61fee9bbd78a69653d1f49ea7da32e67391627ae159f422de4f4a713"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_conditioned_energy_8008.py",
+      "sha256": "sha256:72c708a68bb306361a227ca305a63d4b8b4d59666aa94c122a1eaa36c84b7166"
+    }
+  ],
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--parallel-mode",
+        "--data-file=/tmp/carnot-8008-cf5ueopz/.coverage",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8008_v694_conditioned_energy_fit.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8008_v694_conditioned_energy_fit.py",
+        "-m",
+        "pytest",
+        "-n0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "--basetemp=/tmp/carnot-8008-cf5ueopz/pytest",
+        "tests/python/test_conditioned_energy_8008.py"
+      ],
+      "name": "owned_units",
+      "scope": "owned",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "pytest",
+        "-n0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "--basetemp=/tmp/carnot-8008-cf5ueopz/consumers",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_sparse_energy_7996.py",
+        "tests/python/test_qwen_energy_calibration_7972.py",
+        "tests/python/test_source_boundary_7852.py"
+      ],
+      "name": "consumer_and_E2E-015",
+      "scope": "owned",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--data-file=/tmp/carnot-8008-cf5ueopz/.coverage",
+        "/tmp/carnot-8008-cf5ueopz"
+      ],
+      "name": "coverage_combine",
+      "scope": "owned",
+      "timeout_s": 900.0
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/carnot-8008-cf5ueopz/.coverage",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8008_v694_conditioned_energy_fit.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8008_v694_conditioned_energy_fit.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "name": "coverage_report",
+      "scope": "owned",
+      "timeout_s": 900.0
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "json",
+        "--data-file=/tmp/carnot-8008-cf5ueopz/.coverage",
+        "-o",
+        "/tmp/carnot-8008-cf5ueopz/coverage.json"
+      ],
+      "name": "coverage_json",
+      "scope": "owned",
+      "timeout_s": 900.0
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_8008_v694_conditioned_energy_fit.py",
+        "scripts/experiments/experiment_8008_v694_conditioned_energy_fit.py",
+        "tests/python/test_conditioned_energy_8008.py"
+      ],
+      "name": "ruff_check",
+      "scope": "owned",
+      "timeout_s": 900.0
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_8008_v694_conditioned_energy_fit.py",
+        "scripts/experiments/experiment_8008_v694_conditioned_energy_fit.py",
+        "tests/python/test_conditioned_energy_8008.py"
+      ],
+      "name": "ruff_format",
+      "scope": "owned",
+      "timeout_s": 900.0
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "--follow-imports=silent",
+        "python/carnot/experiment_8008_v694_conditioned_energy_fit.py",
+        "scripts/experiments/experiment_8008_v694_conditioned_energy_fit.py"
+      ],
+      "name": "strict_mypy",
+      "scope": "owned",
+      "timeout_s": 900.0
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "python/carnot/experiment_8008_v694_conditioned_energy_fit.py",
+        "scripts/experiments/experiment_8008_v694_conditioned_energy_fit.py",
+        "tests/python/test_conditioned_energy_8008.py"
+      ],
+      "name": "spec_coverage",
+      "scope": "owned",
+      "timeout_s": 900.0
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q"
+      ],
+      "name": "full_pytest",
+      "scope": "repository_health",
+      "timeout_s": 120
+    }
+  ],
+  "config": {
+    "acceptance": "all converged owned heads, numerical audits, CLI replay and owned checks",
+    "arms": [
+      "conditioned_energy",
+      "linear",
+      "intercept_only",
+      "equal_information_spline",
+      "fixed_step",
+      "frozen_v693",
+      "isotonic"
+    ],
+    "calibration_bounds": [
+      [
+        -8.0,
+        8.0
+      ],
+      [
+        0.25,
+        4.0
+      ]
+    ],
+    "calibration_groups": 62,
+    "calibration_l2": 0.0001,
+    "clip_q": [
+      0.0001,
+      0.9999
+    ],
+    "compute_matching": "same maximum budget and paired full-batch steps; record Hessian overhead",
+    "decision_benefit": "unassessed",
+    "fit_budget_s": 600,
+    "gradient_tolerance": 1e-08,
+    "initialization": "fit_prevalence_intercept_then_converged_two_coefficient_linear_then_local_residuals",
+    "intercept_novelty": false,
+    "knots": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.1111111111111111,
+      0.2222222222222222,
+      0.3333333333333333,
+      0.4444444444444444,
+      0.5555555555555556,
+      0.6666666666666666,
+      0.7777777777777778,
+      0.8888888888888888,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "learning_rate": 0.01,
+    "max_steps": 2000,
+    "optimizer": "damped_Newton_backtracking",
+    "penalties": [
+      0.0001,
+      0.001,
+      0.01
+    ],
+    "seeds": [
+      17,
+      29,
+      43,
+      71,
+      101
+    ],
+    "selection": "tune_binary_log_loss"
+  }
+}

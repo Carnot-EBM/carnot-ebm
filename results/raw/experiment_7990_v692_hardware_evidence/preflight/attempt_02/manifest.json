@@ -1,0 +1,180 @@
+{
+  "code_config_hashes": [
+    {
+      "path": "python/carnot/reporting/experiment_7990_v692_hardware_evidence.py",
+      "sha256": "sha256:17740f91428c285b9dcf5862727e921f96dae73fc6454e390801689039fde98f"
+    },
+    {
+      "path": "python/carnot/reporting/validation_7990.py",
+      "sha256": "sha256:2c3a8c9370af0ab2ea0ec7fa3ceadcee5ad4bcd392cfba2221dbef7bbb69debe"
+    },
+    {
+      "path": "scripts/experiments/experiment_7990_v692_hardware_evidence.py",
+      "sha256": "sha256:86a09e1922253d4cb01cd24f69d2a2f0771ee0a58637dcbc48be65acc68b5fe1"
+    },
+    {
+      "path": "tests/python/test_experiment_7990_v692_hardware_evidence.py",
+      "sha256": "sha256:63ac9206bcf2210d0559f9226903d3c3fa9a44dd42899bfb83029fe2c7a9badf"
+    },
+    {
+      "path": "tests/python/test_primary_publication_7928.py",
+      "sha256": "sha256:80b0f1f21b9267801da0ac7dfb9c225690f90ca5cfb9d378c2ce5357a5e95b9d"
+    },
+    {
+      "path": "tests/python/test_service_cost_7989.py",
+      "sha256": "sha256:62a639ef591a9830aa37a4e4cac35c1041145e202ada41bf0bf0cab2288d63c1"
+    }
+  ],
+  "commands": [
+    {
+      "argv": [
+        "/usr/bin/env",
+        "CARNOT_7990_COVERAGE_DIR=/tmp/carnot-7990-preflight2-lklg3xwk",
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "run",
+        "--parallel-mode",
+        "--data-file=/tmp/carnot-7990-preflight2-lklg3xwk/.coverage",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/experiment_7990_v692_hardware_evidence.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/validation_7990.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7990_v692_hardware_evidence.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-7990-preflight2-lklg3xwk/tests",
+        "-q",
+        "tests/python/test_experiment_7990_v692_hardware_evidence.py",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_service_cost_7989.py"
+      ],
+      "classification": "required",
+      "deadline_s": 300,
+      "expected_exit": 0,
+      "name": "owned_tests",
+      "required_reason": null
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "combine",
+        "--data-file=/tmp/carnot-7990-preflight2-lklg3xwk/.coverage",
+        "/tmp/carnot-7990-preflight2-lklg3xwk"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "name": "coverage_combine",
+      "required_reason": null
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "report",
+        "--data-file=/tmp/carnot-7990-preflight2-lklg3xwk/.coverage",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/experiment_7990_v692_hardware_evidence.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/validation_7990.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7990_v692_hardware_evidence.py",
+        "--fail-under=100"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "name": "changed_coverage",
+      "required_reason": null
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "json",
+        "--data-file=/tmp/carnot-7990-preflight2-lklg3xwk/.coverage",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/experiment_7990_v692_hardware_evidence.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/validation_7990.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7990_v692_hardware_evidence.py",
+        "-o",
+        "/tmp/carnot-7990-preflight2-lklg3xwk/coverage.json"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "name": "coverage_json",
+      "required_reason": null
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/reporting/experiment_7990_v692_hardware_evidence.py",
+        "python/carnot/reporting/validation_7990.py",
+        "scripts/experiments/experiment_7990_v692_hardware_evidence.py",
+        "tests/python/test_experiment_7990_v692_hardware_evidence.py"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "name": "ruff_check",
+      "required_reason": null
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/reporting/experiment_7990_v692_hardware_evidence.py",
+        "python/carnot/reporting/validation_7990.py",
+        "scripts/experiments/experiment_7990_v692_hardware_evidence.py",
+        "tests/python/test_experiment_7990_v692_hardware_evidence.py"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "name": "ruff_format",
+      "required_reason": null
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "--follow-imports=silent",
+        "python/carnot/reporting/experiment_7990_v692_hardware_evidence.py",
+        "python/carnot/reporting/validation_7990.py",
+        "scripts/experiments/experiment_7990_v692_hardware_evidence.py"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "name": "strict_mypy",
+      "required_reason": null
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7990_v692_hardware_evidence.py",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_service_cost_7989.py"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "name": "spec_coverage",
+      "required_reason": null
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q"
+      ],
+      "classification": "repository_health",
+      "deadline_s": 300,
+      "expected_exit": 0,
+      "name": "full_pytest",
+      "required_reason": null
+    }
+  ]
+}

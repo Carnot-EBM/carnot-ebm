@@ -1,0 +1,108 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.385853152954951,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:f1a4d6650e055c5457544fb6206a9ccdf4fc2ddc20dce3f89d540ffd325a6630",
+  "input_tokens": 840,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 840,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 863
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:de23a2e60694282a1ab09c515e1be491ebc594012b7463fd7396b6b46e26184a",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886181,
+    "id": "chatcmpl-McLHyXS9uLs4j29ijLjHTTWvwKDS925n",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.523,
+      "predicted_n": 23,
+      "predicted_per_second": 42.472803555896974,
+      "predicted_per_token_ms": 23.544478260869568,
+      "prompt_ms": 733.075,
+      "prompt_n": 762,
+      "prompt_per_second": 1039.457081471882,
+      "prompt_per_token_ms": 0.9620406824146982
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 840,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 863
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"185 S Patterson Ave, Ste G\\\",\\\"attributes\\\":{\\\"Ambience\\\":{},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":2.5,\\\"categories\\\":\\\"Pizza, Sandwiches, Chicken Wings, Restaurants\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"10:30-1:0\\\",\\\"Monday\\\":\\\"10:30-0:0\\\",\\\"Saturday\\\":\\\"10:30-1:0\\\",\\\"Sunday\\\":\\\"10:30-0:0\\\",\\\"Thursday\\\":\\\"10:30-0:0\\\",\\\"Tuesday\\\":\\\"10:30-0:0\\\",\\\"Wednesday\\\":\\\"10:30-0:0\\\"},\\\"name\\\":\\\"Domino's Pizza\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-12-24 03:28:29\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Ordered on the app. Over an hour and a half later no pizza. If they don't have drivers they should make a note or put a wait time. 30 min on prep and out for delivery now and still says in quality check. I went to the store to possibly pick it up but it was already out for delivery. I came back home and the pizza is still not here!\\\"},{\\\"review_date\\\":\\\"2021-05-22 03:11:42\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Terrible, just terrible. I know it's fast food, but this location just doesn't care. Food is not cooked, it arrives late and they lie through the tracker. Just skip this location.\\\"},{\\\"review_date\\\":\\\"2021-01-18 01:11:34\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"I enjoy Domino's Pizza but this is not the location to order from. The last couple times I've ordered from the Patterson location there have been mistakes in my orders e.g. giving me a smaller pizza than I ordered (and paid for), not giving me sauces that I paid for, etc. Funny how these mistakes are always in the direction of ripping off the customer.\\\\n\\\\nI recommend you order from somewhere else.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Domino's Pizza, located at 185 S Patterson Ave, Ste G, Goleta, CA, is a restaurant that serves pizza, sandwiches, and chicken wings. The restaurant is open every day of the week, with extended hours on Fridays and Saturdays. Although the restaurant does not offer any parking facilities, Wi-Fi, or outdoor seating, it does provide takeout services and can accommodate groups. However, it has a low overall rating of 2.5 stars. Customers have complained about the long wait times for delivery and inaccuracies in their orders. Some customers have reported that they did not receive what they paid for, while others have criticized the restaurant's tracking system, alleging that it provides incorrect information.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "f42447a4ce18a9373286f07d63cea8f4ed6cf1d87ed779fc233e7265044c6dde",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]
+}

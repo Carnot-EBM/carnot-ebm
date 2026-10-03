@@ -1,0 +1,117 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.4552501510479487,
+  "exclusion_reason": null,
+  "family_id": "sha256:065353f0b786df2ff4137b4b4b05840a84cdcb6808f0049f7f864ba90aa242aa",
+  "input_tokens": 842,
+  "invocation_finished_at": "2026-10-01T11:46:04.566433+00:00",
+  "invocation_started_at": "2026-10-01T11:46:03.111181+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 13,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 842,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 867
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:e982477d0819a3fe0996b0d68fd63c58f7ba61de4045d20c0527b6ee0b19321e",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 13\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855164,
+    "id": "chatcmpl-0B3x33INnGyeTbOCCoiidVQHHDyauFB4",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 589.14,
+      "predicted_n": 25,
+      "predicted_per_second": 42.43473537699019,
+      "predicted_per_token_ms": 23.5656,
+      "prompt_ms": 730.631,
+      "prompt_n": 764,
+      "prompt_per_second": 1045.6714812265016,
+      "prompt_per_token_ms": 0.9563232984293193
+    },
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 842,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 867
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Royal Caribbean and U.S. Government Partner to Evacuate Americans from Israel\\nIn a case of taking lemons and making lemonade, Royal Caribbean has turned a humanitarian crisis \u2014 and a major disruption to its business \u2014 into a situation where it has helped potentially thousands.\\nWe wrote previously about how the ongoing war in Israel meant the cancellation of some cruises and ports of call in Haifa.\\nThis included Rhapsody of the Seas, which was homeported in Haifa, having cruises from the port canceled. In fact, after originally canceling the two upcoming cruises on the ship, Royal Caribbean later made the call to cancel all the voyages until November when the ship was already planned to reposition.\\nAt the same time, for many people in the region wanting to evacuate from the war, options were limited. A number of major airlines \u2014 including American Airlines and Delta \u2014 suspended flights from Israel.\\nSo with a cruise ship with no passengers and people not able to leave the country, Royal Caribbean and the U.S. government seem to have worked together to solve the problem.\\nIn a posting on the U.S. Embassy in Israel website, the government posted a notice (Security Alert #10) that:\\n\u201cThe U.S. government is assisting U.S. nationals and their immediate family members with a valid travel document to depart Haifa via sea for Cyprus on October 16, 2023. Boarding begins at 0800 AM local time. U.S. citizens must arrive at Haifa port passenger terminal no later than 0900 AM local time. Boarding will proceed in order of arrival and is on a space limited basis.\u201d\\nWhile there is no specific mention of Royal Caribbean or Rhapsody of the Seas, video on Good Morning America showed the ship boarding earlier today, and CruiseMapper.com shows Rhapsody currently en route from Haifa to Cyprus.\\nMeanwhile, the New York Post reports that 2,500 Americans stranded in Israel were allowed to evacuate via the ship. Rhapsody of the Seas has a maximum capacity of roughly 2,400 at full capacity.\\nFrom Cyprus, it is anticipated that the American passengers can then fly the rest of the way home. The Post also reports that chartered flights by the U.S. State Department will also be available from Israel this week. Still, this single cruise ship can carry roughly 10 times the number of passengers as a jet.\\nThere is no word on if the Royal Caribbean vessel will return to evacuate more people who hope to depart Israel.\", \"original_answer\": \"Royal Caribbean's Rhapsody of the Seas partnered with the US government to evacuate 2,500 Americans from Israel, who were affected by the ongoing war in the region. The cruise ship, which had been canceling voyages due to the conflict, worked with the US government to transport those with valid travel documents from Haifa to Cyprus, where they could continue their journey home. This collaboration demonstrated resourcefulness in addressing a challenging situation, turning a crisis into an opportunity to help others.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "sha256:dca883a4fb2df92ee2e13872b7799d697b0608d171bf68bae3bbe98a3fcde7e9",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23
+  ]
+}

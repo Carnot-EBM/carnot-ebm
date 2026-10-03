@@ -1,0 +1,104 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.6929838070063852,
+  "exclusion_reason": null,
+  "family_id": "sha256:5566e7af57a355bb51a55433649544769092270801ce9505c6ec30569a13fc0a",
+  "input_tokens": 1128,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1128,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1151
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:7bfe71c56d453df2414a1f9eae290deb8cf3120484d025c3cb3c34588e9814b7",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832698,
+    "id": "chatcmpl-9TEUt1FYador6vrrBmCyGVSyitrXPxpc",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.73,
+      "predicted_n": 23,
+      "predicted_per_second": 42.45657430823473,
+      "predicted_per_token_ms": 23.553478260869564,
+      "prompt_ms": 1015.235,
+      "prompt_n": 1050,
+      "prompt_per_second": 1034.2433032746112,
+      "prompt_per_token_ms": 0.9668904761904762
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1128,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1151
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"721 Chapala St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":true,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Ramen, Vegetarian, Sushi Bars, Japanese, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-20:30\\\",\\\"Monday\\\":\\\"11:0-20:30\\\",\\\"Saturday\\\":\\\"11:0-20:30\\\",\\\"Sunday\\\":\\\"11:0-20:30\\\",\\\"Thursday\\\":\\\"11:0-20:30\\\",\\\"Tuesday\\\":\\\"11:0-20:30\\\",\\\"Wednesday\\\":\\\"11:0-20:30\\\"},\\\"name\\\":\\\"Sachi Ramen And Robata Bar\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-13 01:29:40\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I tried this one night, and decided the get the spicy tonkotsu ramen. And holy moly I'm glad I did!!! I like eating meat broth but not actual meat, so I got it with tofu but kept the pork broth. It's so full of flavor and delicious!!! A must have at sachi!\\\"},{\\\"review_date\\\":\\\"2022-01-10 01:47:10\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Been coming here again and again and am always left thinking about how delicious the meal I just had was. I usually go for the spicy miso chashu ramen, but every ramen I try is just as good. Rice bowls and spicy tuna roll is also very delicious. Best ramen shop in town no question. Only disappointment was that due to the lack of staffing, they are only doing takeout at the moment (1/9/22), so next time I'll be calling ahead.\\\"},{\\\"review_date\\\":\\\"2022-01-08 04:09:21\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I've been coming here since they opened and am glad they have remained in business throughout the pandemic. I and always get the same thing: the Spicy Crispy Chicken Black Garlic Ramen. The broth is full bodied and very flavorful, and has a nice spicy kick to it but still mild for someone (like me) who likes super spicy things. One tip to get the most bang for your buck if you have leftover broth: if you have instant noodles or ramen/udon/etc at home, you can add it to the broth to get another delicious meal out of it. 10/10 highly recommended.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Sachi Ramen And Robata Bar is a local business located at 721 Chapala St in Santa Barbara, CA. The establishment offers a variety of Japanese cuisine, including ramen, sushi bars, and vegetarian options. Customers have praised the flavorful and delicious dishes served at Sachi Ramen And Robata Bar.\\n\\nThe restaurant operates from 11:00 AM to 8:30 PM every day of the week. They provide outdoor seating and offer free WiFi to their customers. Takeout service is available, making it convenient for those who prefer to enjoy their meals at home. The restaurant is also suitable for groups, as they offer seating for larger parties.\\n\\nReviewers have specifically mentioned the spicy tonkotsu ramen and the spicy miso chashu ramen as must-try dishes. The broth is described as full-bodied, flavorful, and with a nice spicy kick. Customers appreciate the option to customize their meals, such as adding tofu while keeping the pork broth.\\n\\nSachi Ramen And Robata Bar has received a 4.0-star rating from customers, indicating a high level of satisfaction with the food and overall dining experience. Despite the challenges posed by the pandemic, the business has remained open and continues to serve its loyal customers.\\n\\nOverall, Sachi Ramen And Robata Bar is highly recommended for those seeking delicious and authentic Japanese cuisine in Santa Barbara.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:62d07e15d625d06f23eb7bab2f4980eb1ceb56459c49a7225fb6ccb431ef25c6",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ]
+}

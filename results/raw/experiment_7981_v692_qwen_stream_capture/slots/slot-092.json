@@ -1,0 +1,145 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 2.1227366030216217,
+  "exclusion_reason": null,
+  "family_id": "sha256:51040339e8b3037940a20ab4c3189de4a0f1a837b39dd24278039b8e0849fc46",
+  "input_tokens": 1716,
+  "invocation_finished_at": "2026-10-01T11:43:22.163787+00:00",
+  "invocation_started_at": "2026-10-01T11:43:20.041049+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1716,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1739
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:6c8b6b07f6f16965073070c7ede076376f1ebbe494ff00ec3582cd62e6afa1d8",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855002,
+    "id": "chatcmpl-nMP6XWFfgsJj5uux01vLOv363ducNosK",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.199,
+      "predicted_n": 23,
+      "predicted_per_second": 42.57690221566497,
+      "predicted_per_token_ms": 23.48691304347826,
+      "prompt_ms": 1437.31,
+      "prompt_n": 1638,
+      "prompt_per_second": 1139.6288900793843,
+      "prompt_per_token_ms": 0.8774786324786324
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1716,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1739
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Vidarbha, India (CNN)Yogita Kanhaiya is expecting a baby soon. She already has a two-year-old son. Her husband, Moreshwor, a cotton farmer, won't be around to see his children grown up. He committed suicide early in the pregnancy. Eight years back, Yogita's father-in-law, also a cotton farmer, took his own life. \\\"He was in so much debt,\\\" 25-year-old Yogita said of her late husband. \\\"He wasn't getting any money from cotton. He chose death over distress.\\\" It's a familiar story in families across Western India's cotton production belt, where, a cotton lobbyist group claims, one cotton farmer commits suicide every eight hours. \\\"We get reports of two to three farmer suicides every day,\\\" said Kishor Tiwari, leader of the farmers advocacy group, Vidarbha Jan Andolan Samiti (VJAS). Vidarbha, in the eastern region of the state of Maharashtra, is known as the epicenter of the suicide crisis. According to VJAS data, some 2,900 farmers from the area have taken their lives since 2013; more than 500 have died since the start of this year. There are a number of reasons for the hopelessness among Vidarbha farmers. Unseasonal rain and hail destroyed many crops earlier this year. But they've also had to contend with the flipside: a plentiful harvest in 2014 drove prices down while production costs rose, leaving many farmers either lacking income or burdened with debt from loans taken out to help keep them afloat. Last year was a record year for cotton production, resulting in a glut of cotton on the world market. India produced 40 million bales of the fiber in 2013/14 crop year, and is the second largest global cotton grower, after China. The record surplus of cotton in the global market pushed down prices hurting farmers, particularly in Vidarbha, which is becoming increasingly reliant on cotton. \\\"Our land mostly supports only two crops: cotton and soybean. But for the past few years, soybean yield has consistently been decreasing. So we mostly depend on cotton,\\\" said Murali Dhidkar, a local cotton farmer. He said in the past year, cotton prices had halved. \\\"I'm getting around 50 dollars per quintal. Just a year ago it was 100 dollars. I've never seen such a low price. The costs of pesticides, fertilizers and seeds are increasing but the cotton price is falling down.\\\" He points out the dismal condition of debt-ridden farmers like himself in Vidarbha, many of whom are forced to take out loans or give up farming. \\\"Government officials do not come to the village and listen to our plight. Just a few days ago, my neighbor burnt himself alive,\\\" Dhidkar said. Tiwari, from the farmers advocacy group, said many farmers in Vidarbha had lost hope that the situation would improve. \\\"It is an epidemic. How many more farmers need to commit suicide before the government steps in to find a solution to this problem?\\\" More than 50% of India's population is involved in the agricultural and allied sector, which contributes 18% of the country's GDP.  Government data shows 11,772 farmers committed suicide in 2013 across India. That is 44 deaths every day. Earlier this month, Prime Minister Narendra Modi raised the amount of compensation paid for damaged crops, and lowered the threshold for farmers to claim payouts. However, that failed to appease farmers who are angry about the government's Land Acquisition Bill, which critics say makes it easier for the government to seize farmers' land. Modi's ruling BJP Party said the old rules were unnecessarily restrictive and the new bill is needed to spur investment and smooth the way for growth. The government is expected to reintroduce the new land bill when parliament reopens this week. On Sunday, thousands of farmers gathered in Delhi at a rally led by opposition Congress party to protest against the bill. Waving flags, they blasted Modi government's policies as \\\"pro-industrialist and anti-farmer.\\\" Tiwari, of the farmer's advocacy group, said the government needs to do more to stop the wave of suicides across the country. He said Modi's push to open bank accounts for every Indian household, neglected to address the major concern in farming households of falling incomes. \\\"Prime Minister Modi boasts about India rising, but he is not willing to talk about India dying,\\\" Tiwari said. He says, for a start, the government should guarantee a better market price for cotton and waive farmers' overdue debt. Divisional Commissioner of the Vidarbha region, Dnyaneshwar Rajurkar said the state government is aware of the situation and is planning to roll out relief programs to help local cotton farmers. The plans include halving bank loan interest rates and waiving loans from private money lenders. Rajurkar said the government is also planning to deploy doctors to counsel farmers in distress. Just days away from her baby's birth, Kanhaiya said she worries about how she's going to feed her family. \\\"I have to pay the loan back both to bank and private money lenders. I have no clue how I will pay the debt. Once the baby is born, I will look for work. I will have to do labor jobs all my life to pay the loan,\\\" she said, despair in her voice. \\\"I did receive compensation from the local state government after my husband's death. But it is very minimal. That does nothing to solve the grave problem I am in.\\\"\\n\", \"original_answer\": \"Here is a summary of the article in 200 words:\\n\\nIn the western Indian state of Maharashtra, a high number of cotton farmers are committing suicide due to debt and crop failures. The region of Vidarbha is particularly affected, with one farmer killing themselves every eight hours, according to a cotton lobbyist group. The suicides are driven by a combination of factors, including unseasonal rains, hail, and a record cotton surplus that has driven down prices. Many farmers are burdened with debt from loans taken out to keep their farms afloat, and the government's recent changes to land acquisition laws have done little to ease their struggles. One widow, Yogita Kanhaiya, is facing financial uncertainty after her husband's suicide left her with a two-year-old son and a newborn to care for. The government has announced plans to provide relief to cotton farmers, including halving bank loan interest rates and waiving loans from private money lenders, but it remains to be seen if these measures will be enough to stem the tide of suicides.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "sha256:b80353386bf25600326f31032edee33aacba551503331cb49b3517c4e6b7926c",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51
+  ]
+}

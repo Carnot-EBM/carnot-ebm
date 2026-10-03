@@ -1,0 +1,131 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 2.0646066500339657,
+  "exclusion_reason": null,
+  "family_id": "sha256:5968c223e0fcbcd2ff39c6e4c69b034ed14fe9749f3408fc69e4bbe654ca8412",
+  "input_tokens": 1636,
+  "invocation_finished_at": "2026-10-01T11:43:05.220957+00:00",
+  "invocation_started_at": "2026-10-01T11:43:03.156349+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1636,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1659
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:61e4d7502edb023e29c12baffcdf033edeaa6fb01e1429e72669a051bf54df07",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790854985,
+    "id": "chatcmpl-jrHNTd3jMYUHmk2brP56Ce7qrfpejcOY",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 538.916,
+      "predicted_n": 23,
+      "predicted_per_second": 42.67826525840761,
+      "predicted_per_token_ms": 23.43113043478261,
+      "prompt_ms": 1381.301,
+      "prompt_n": 1558,
+      "prompt_per_second": 1127.9221545485018,
+      "prompt_per_token_ms": 0.8865860077021822
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1636,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1659
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"On Thursday, NPR -- headquartered in Washington, just 40 miles away from Baltimore -- ran its latest update on the urban turmoil that has erupted in the wake of the death of 25-year-old Freddie Gray because of still-unexplained spinal injuries that occurred while he was under police custody. Unfortunately, while it was a freshly produced segment, it was hardly a new story. Titled \\\"Baltimore Unrest Reveals Tensions Between African-Americans And Asians,\\\" the five-minute piece is urgently introduced with the promise that it will reveal \\\"what's really happening in the more troubled neighborhoods of this majority black city,\\\" going on state that a key ingredient of the unrest was African-Americans \\\"targeting Asian-owned businesses for destruction.\\\" A similar claim was made after Ferguson's uprising in August of last year. Indeed, it has been a toxic feature of the coverage of many episodes of mass metropolitan violence since the late 1980s, the era during which the trope of widespread hostility between Asian and black communities first took root in the media consciousness. Yes, interethnic tensions continue to exist, though they are hardly limited to Asians and blacks. And yes, this has resulted in troubling incidents and tragedies on both sides. But while reports say that during the chaotic social breakdowns of the past year, black-owned businesses were mostly protected during bouts of violence, there's little evidence to suggest a pattern in which Asian businesses have been actively targeted out of racial animus. Instead, it seems as if Asian-owned stores have experienced damage partly because they make up a portion of establishments operating in the most economically vulnerable and socially volatile of neighborhoods. In other words, they were collateral damage, along with other stores in the vicinity of riots. So it's time to call this persistent meme what it is: A misleading, hyperbolic and dangerous distraction, one that shifts blame away from the real issues. As Jennifer Lee, sociology professor at University of California, Irvine, and author of the 2002 book \\\"Civility in the City: Blacks, Jews and Koreans in Urban America,\\\" notes, \\\"the mainstream media continues to pit minority groups against one another to draw attention from larger structural problems that plague poor, disadvantaged communities. By directing our attention to interminority conflict, it directs blame away from the structures that perpetuate gross inequality and toward individual problems.\\\" Let's be honest. There were then -- and still are -- legitimate issues that exist between immigrant storeowners and the largely African American customers they serve that are rooted in extensive cultural differences. There's no denying that friction exists in the daily transaction between embattled communities trying hard to coexist under economic and social pressures. For example, in 1993, the robbery and shooting of Joel Lee, a 21-year-old Korean American at Towson State University, and the subsequent acquittal of his killer, was a point of contention between the Korean and African American communities. But things are different now. Decades after the height of media-inflamed tension between Asian and African Americans, patterns of immigration have shifted. Stores once operated by recent Korean immigrants are now owned by strivers from South Asia, the Middle East and Africa. The population of Baltimore has shrunk and its economy has contracted. Among merchants, there's ever-greater recognition that they and their customers are tied by a red thread, surviving or failing together. For decades, black and Asian advocacy groups have been trying to bridge differences between the communities. For example, the Baltimore-based Korean-American Grocers & Licensed Beverage Association of Maryland, founded in 1995, has worked to support its entrepreneurial members in their own attempts to address longstanding issues of neglect and abuse by Baltimore's police, while also encouraging them to build deeper ties with their constituents. A KAGRO-sponsored annual scholarship program has given hundreds of thousands of dollars in college grants to children growing up in the Baltimore neighborhoods their member retailers serve. These aren't the kind of stories you'll hear in the media. It's easier to focus on attention-grabbing anecdotes rather than the long, hard work of adjustment and accommodation going on within and around communities. Back in 1995, the Baltimore Sun profiled Soon Jae and Eun Ja Lee, owners of Lee's Food Market in the West Baltimore's Sandtown neighborhood -- the same part of the city that NPR called out as a locus of Asian-black tension. The story highlighted the Lees' openness to the community, their politeness and care for their customers and their outstanding generosity, which includes both free snacks to schoolchildren and the distribution of tens of thousands of free food baskets to needy local families each year. I spoke with Eun Ja Lee, calling her without warning to check on the status of the Lees' four-decade-old business after the violence of Monday and Tuesday. Were they open? Were they safe? \\\"Oh, of course we're open, we're always open!\\\" said Mrs. Lee, warmly and brightly. \\\"This week, many customers came in and said to me 'Mrs. Lee, don't worry you are part of our community, you are our family. We will make sure you are OK -- just stay open!' We love it. We love it.\\\" And yet, no one has come and interviewed her at their untouched and fully operational family market, nor have they talked with her customers, stoutly loyal after 37 years of patronage. Reinforcing the tired narrative of black-Asian interracial tension generates heat, but not light. There's a far more complex and nuanced relationship between these two urban populations, one that is in an ongoing state of evolution -- and it deserves to be told, not buried under cliches and clickbait.\\n\", \"original_answer\": \"Here is a summary of the article in 200 words or less:\\n\\nThe recent NPR report on the Baltimore unrest, titled \\\"Baltimore Unrest Reveals Tensions Between African-Americans And Asians,\\\" perpetuates a misleading and dangerous narrative that has been present in media coverage of metropolitan violence since the 1980s. This narrative posits that African-Americans target Asian-owned businesses with racial animus. However, there is little evidence to support this claim, and the reality is that Asian-owned stores are often caught in the crossfire of violence due to their presence in economically vulnerable neighborhoods. The media's focus on interethnic tension distracts from the real issues of structural inequality and poverty. Advocacy groups have been working to bridge the divide between the African American and Asian communities, and examples of cooperation and generosity exist, such as the Korean-American Grocers & Licensed Beverage Association of Maryland's scholarship program. The article argues that the media should focus on the complex and nuanced relationship between these communities, rather than reinforcing simplistic and inaccurate stereotypes.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_admission",
+  "source_cluster_id": "sha256:12460a22834a11dbe24c78ff4661bd32efe89709e16c440e0f6490a1f2475dab",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37
+  ]
+}

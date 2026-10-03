@@ -1,0 +1,85 @@
+{
+  "arm": "swap",
+  "capture_identity": "sha256:c690c1f517fbce73c5da6a2d1e99e3819c3de93e1045fe76d1c8215b54691541",
+  "censor_status": false,
+  "denominator": 1,
+  "donor_group_id": "sha256:301fccc8d0afc00d4d8e326af719f60385c895229bc06606499bd9369147cfcd",
+  "duration_s": 0.0031021079048514366,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:f95d7c69f346808f4d25da0c8c768ac6c89a7f64f4d6d278707c3e06eea722d2:swap",
+  "group_id": "sha256:f95d7c69f346808f4d25da0c8c768ac6c89a7f64f4d6d278707c3e06eea722d2",
+  "input_byte_upper_bound": 3445,
+  "input_tokens": 30,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.25,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 18,
+      "prompt_tokens": 30
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:60d9cb00cdea3e836a7d2a769332e61a5204732da19b3c01120548ab363abc3d",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "message": {
+          "content": "{\"unsupported_probability\": 0.25, \"source_sentence_id\": null}"
+        }
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "usage": {
+      "completion_tokens": 18,
+      "prompt_tokens": 30
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 32,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"634 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":null,\\\"lot\\\":false,\\\"street\\\":null,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":null},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Breweries, American (New), Arts & Entertainment, Music Venues, Restaurants, Brewpubs, Food, Nightlife\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"16:0-22:0\\\",\\\"Monday\\\":\\\"16:0-21:0\\\",\\\"Saturday\\\":\\\"12:0-22:0\\\",\\\"Sunday\\\":\\\"12:0-21:0\\\",\\\"Thursday\\\":\\\"16:0-21:0\\\",\\\"Tuesday\\\":\\\"16:0-21:0\\\",\\\"Wednesday\\\":\\\"16:0-21:0\\\"},\\\"name\\\":\\\"M. Special Brewing Company\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-16 21:09:13\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"This random little storefront is the coolest, chillest brewery on the strip! Not a ton of options, but a solid variety for tastes of all types! A great place to stop for a cool drink while walking the strip!\\\"},{\\\"review_date\\\":\\\"2021-10-01 13:23:33\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Great atmosphere with great beer. Had the great fruit ipa and it was great and easy to drink.\\\"},{\\\"review_date\\\":\\\"2021-09-17 20:28:18\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Stopped in for a quick flight. Lots of choices for IPAs. We had the Sabado Tarde (sweet and light), platonic IPA (light IPA flavor - easy drinking), greatland special (smooth bitter), Gtown (grapefruit, my favorite). Lots of people watching on the front patio.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Altamirano Mexican Restaurant, located at 422 N Milpas St, Ste 1 in Santa Barbara, CA, is a popular local dining spot that specializes in Mexican cuisine. The restaurant operates from 10:00 AM to 9:00 PM from Monday to Friday and 8:00 AM to 9:00 PM on weekends. It offers a variety of services such as take-out and is also suitable for group dining. However, it doesn't provide Wi-Fi, music, outdoor seating, or reservations. Their parking options include street parking and a parking lot, but there's no garage, validation service, or valet parking. The restaurant has a 4-star business rating. However, reviews mention mixed feelings about the ambiance and service. One reviewer praised the Shrimp Ala Diablo and the salsa bar, along with the wonderful service from Beto's family. Another reviewer was less pleased, mentioning the lack of ambiance and frequent use of the microwave. The restaurant was reported to have closed, as per one of the reviews.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69410,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "seed": 69410,
+  "source_cluster_id": "2a35b035f2db9376eccab1436156f5bd6c7a655e9728ec1c8fb90c2a55a72057",
+  "source_hash": "sha256:325c0588374b4699b87669da937c99e5e550db7e22342432e57bacab4a84ef51",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ]
+}

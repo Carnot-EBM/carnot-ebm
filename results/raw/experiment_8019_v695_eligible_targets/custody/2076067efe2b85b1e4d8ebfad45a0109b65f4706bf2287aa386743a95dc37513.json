@@ -1,0 +1,106 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.3584561960306019,
+  "exclusion_reason": null,
+  "family_id": "sha256:a9c1118bcf3d96d2bf51fc1cf7ba652954a2303e833e89020738d8092aa6b3df",
+  "input_tokens": 808,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 808,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 831
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:23ebdb6f505eca1dba88fb742a79a35631a644ee5e928c6ce6e742f40204c165",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832534,
+    "id": "chatcmpl-xfbU03v0xs3V07WfhK1Ha3eJrSDwRigf",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 536.796,
+      "predicted_n": 23,
+      "predicted_per_second": 42.84681704036542,
+      "predicted_per_token_ms": 23.33895652173913,
+      "prompt_ms": 700.925,
+      "prompt_n": 730,
+      "prompt_per_second": 1041.48090023897,
+      "prompt_per_token_ms": 0.9601712328767122
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 808,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 831
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Tragic End for Atlanta Teen in Jail Over Misdemeanor Bench Warrant: Family Seeks Clarity\\nIn a tragic twist, 19-year-old Noni Battiste-Kosoko was found lifeless in her cell in an Atlanta city jail on July 11, sparking outcry and a demand for justice from her grieving family.\\nBattiste-Kosoko had been detained since May over a misdemeanor bench warrant, without the possibility of bail. Distraught, her mother, Shashu Battiste, implored the authorities for answers during an interview with 11 Alive, saying, \u201cMy child was arrested for a misdemeanor and lost her life in custody. We need answers!\u201d\\nReports from the Fulton County Sheriff\u2019s Department describe a grim scene: Battiste-Kosoko was found alone during dinner time, with no visible injuries. Adding another layer to the mystery, Fox 5 Atlanta reported that the teen had a known mental health diagnosis.\\nPromising to leave no stone unturned, the family emphasized their intent to investigate this tragic event fully. They assert that if any negligence on the part of the jail staff is identified, those responsible will face the consequences.\\nAn anonymous source from the same jail claimed to Fox 5 that the institution had failed to address Battiste-Kosoko\u2019s evident needs, stating, \u201cFrom the moment she arrived, it was evident she required specialized attention. Clearly, she needed support.\u201d\\nThis incident emerges amid a broader probe by the Department of Justice into Fulton County Jail\u2019s treatment of inmates, especially those with mental health challenges. Allegations suggest a pattern of neglect, discrimination against those with mental conditions, and subpar medical care. Kristen Clarke, from the Justice Department\u2019s civil rights division, emphasized that incarceration doesn't strip individuals of their basic rights, asserting, \u201cInmates retain their constitutional and civil rights. These aren't forfeited upon entering a facility.\u201d\\nA significant statistic shared by Clarke highlights that a staggering 87% of Fulton County Jail's inmates are Black, which she flags as a \u201cracial justice concern.\u201d\\nClarke also recalled the harrowing case of 35-year-old Lashawn Thompson, who passed away in the same facility last September. His cell conditions, riddled with bedbugs and trash, exposed a systemic issue. After his demise, evidence unveiled that the mental health ward where Thompson was housed was plagued with insects, with most inmates in the unit showing signs of malnutrition and severe neglect.\\nThis disturbing pattern underscores the urgent need for reform and accountability within correctional facilities.\", \"original_answer\": \"Here is a summary of the article in 97 words:\\n\\nNoni Battiste-Kosoko, a 19-year-old woman, died in an Atlanta city jail on July 11 after being held there since May for a misdemeanor bench warrant. Her family is seeking answers and justice, alleging that the jail failed to provide adequate care for her mental health needs. The death has sparked outrage and calls for reform within the correctional system, particularly regarding the mistreatment of inmates with mental health issues.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "tune",
+  "source_cluster_id": "sha256:12065b9b84a76a7b535e532cd72d2fd1a2ab83420a3c563b1766ded123742bff",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ]
+}

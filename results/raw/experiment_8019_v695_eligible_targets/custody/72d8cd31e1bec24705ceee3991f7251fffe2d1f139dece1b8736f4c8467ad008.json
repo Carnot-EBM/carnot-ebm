@@ -1,0 +1,113 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.6951471419888549,
+  "exclusion_reason": null,
+  "family_id": "sha256:1cc23e2f4d0c51de99cd4bda3dbe2fe91dc08745327fcc98c3aada008f40925a",
+  "input_tokens": 1166,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1166,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1189
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:403921786aaf7eee04bbe16b5c17b7f2fcee95f0b40ea5fbc1045b6b9cc3bba7",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832601,
+    "id": "chatcmpl-MbgCve7tT9CkS1gT9dbHfRTkfgwWXYOl",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.893,
+      "predicted_n": 23,
+      "predicted_per_second": 42.52227335166105,
+      "predicted_per_token_ms": 23.51708695652174,
+      "prompt_ms": 1035.551,
+      "prompt_n": 1088,
+      "prompt_per_second": 1050.6483987751449,
+      "prompt_per_token_ms": 0.9517931985294117
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1166,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1189
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"832 N Milpas St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":false,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Food, Mexican, Restaurants, Bakeries\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"7:0-17:0\\\",\\\"Saturday\\\":\\\"7:0-17:0\\\",\\\"Sunday\\\":\\\"7:0-14:0\\\",\\\"Thursday\\\":\\\"7:0-17:0\\\",\\\"Tuesday\\\":\\\"7:0-17:0\\\",\\\"Wednesday\\\":\\\"7:0-17:0\\\"},\\\"name\\\":\\\"La Tapatia Bakery\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-10-05 07:34:42\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"For Hispanic Heritage month I wanted to review one of my favorite bakeries in town. \\\\nLa Tapatia Bakery has been in business for over 40 years. \\\\nThe variety of Pan dulce decorates the glass shelves, my favorite being the conchas. Which do you chose, vanilla or chocolate? Both!!! You be the judge, especially when they are warm right out of the oven!!\\\\nMake sure to pick up the empanadas as well, pumpkin filling or pineapple, even vanilla pudding. They are all delicious. Polvorones and the marranitos are my families favorites. \\\\nIf Pan Dulce is too sweet for you, La Tapatia also offers menudo and pozole on weekends, along with other delicious Mexican dishes which they serve on a daily basis. \\\\nI love supporting  my neighborhood and the LatinX community, they work hard to serve Santa Barbara and Goleta county. \\\\nAlways greeting you with a smile, La Tapatia Bakery is a great choice for any craving you may have.\\\"},{\\\"review_date\\\":\\\"2021-10-04 17:22:00\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Best Mexican food I've found in town. There's a long line out the door for a reason. I almost don't want to leave this review because I want to keep this place for myself!  Caldo de Res, burritos, nachos (fantastic), tortes are all just delicious. It's once of those places where you really want to try other things but you're so in love with what you've already tried it makes for difficult decisions.\\\"},{\\\"review_date\\\":\\\"2021-10-02 12:18:22\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Would you like to pay $26 + $4 or tip for a burnt torta, two drinks and terrible presentation? Then check out La\\\\nTapatia! $26 dollars shouldn't look like this. I'm this picture, the camarones a la diabla were around $13. Came with gummy tortillas. The flavor was there yes but the presentation was terrible. It seriously looks like you lift the lid up on the throne and this is what you see inside after a long night. \\\\n\\\\nNever coming back again.\\\\n\\\\nNo vale la pena comer algo que est\u00e1 quemado y se parece mal.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"La Tapatia Bakery is a well-established business in Santa Barbara, California, offering Mexican food and bakery items. Open from 7:00 am to 5:00 pm from Tuesday to Saturday, and until 2:00 pm on Sundays, the bakery enjoys a 4-star rating. Customers can avail of free Wi-Fi and takeout services, but reservations and outdoor seating are not provided. The bakery is recognized for its variety of Pan dulce, empanadas, and Mexican dishes served daily. It is also known for its warm and friendly service. Despite some criticism about the presentation and pricing of their offerings, many customers consider La Tapatia Bakery to be one of the best places for Mexican food in town, with special mentions for their Caldo de Res, burritos, nachos, and tortes. Street and parking lot options are available for customers.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:c2dbf56a5d652a0465f47eb5c44f408db70c7b4a72aa8f251aa8a4265d1ed6be",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21
+  ]
+}

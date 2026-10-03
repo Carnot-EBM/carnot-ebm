@@ -1,0 +1,110 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.210684378980659,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:444d7816eb44121cce42c3d661fe90260badc1f52664cd7c325d732f8382c41a",
+  "input_tokens": 620,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 620,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 641
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:63fe9e16998ee065e3c6e3f05e6f2ef4a8f7d45904aef92f7f35211d1dc2768d",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886267,
+    "id": "chatcmpl-3qmRmdEfcOBzr5Knqn3Bt1tPNcpLwp3C",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 492.615,
+      "predicted_n": 21,
+      "predicted_per_second": 42.62963977954386,
+      "predicted_per_token_ms": 23.457857142857144,
+      "prompt_ms": 581.971,
+      "prompt_n": 542,
+      "prompt_per_second": 931.3178835371522,
+      "prompt_per_token_ms": 1.0737472324723247
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 620,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 641
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:(Panama City, Florida - FL, USA) 1  Panama City's history dates from when its first residents arrived some 13,000 years ago during the last ice age. The ancient shell midden (an archaeological site comprising mainly mollusk shells) in Oaks By The Bay Park contains some of the few surviving landmarks from Panama City's earliest residents.\\\\n\\\\npassage 2:Panama City Beach Tourism: Best of Panama City Beach. Panama City Beach, Florida. Panama City Beach, with its trademark white sand and warm Gulf waters, attracts everyone from spring breakers to retirees, singles to families. As a result, the city offers a range of activities for all ages and interests.\\\\n\\\\npassage 3:Check it out HERE. J.E. Churchwell moved to the Panama City Beach area in the 1920's. He purchased land from a Mr. Sharpless and Mr. Brown in the 1930's that was already named Long Beach Resort. In the 1940's his nephew, Guy Churchwell, moved to Long Beach Resort from Holmes Co., FL. His family back in Holmes Co. questioned why he would want to buy all that sand that couldn't be farmed! Guy Churchwell became the Mayor of Long Beach Resort until the City of Panama City Beach was incorporated in the 1970's.\\\\n\\\\n\\\",\\\"question\\\":\\\"history of panama city beach, fl\\\"}\", \"original_answer\": \"Panama City Beach's earliest known inhabitants arrived around 13,000 years ago during the last ice age, evidenced by an archaeological site in Oaks By The Bay Park. The modern development of Panama City Beach started in the 1920s when J.E. Churchwell moved to the area and purchased land that was already named Long Beach Resort. In the 1940s, his nephew Guy Churchwell became the Mayor of Long Beach Resort. The City of Panama City Beach was incorporated in the 1970s. Today, the city is known for its white sandy beaches and warm Gulf waters, attracting visitors of all ages and interests.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "9611115713891610b16de4894c237528a6a9f96c0cc7de5bf750919c61853b13",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ]
+}

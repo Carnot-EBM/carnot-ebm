@@ -1,0 +1,100 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.430216982960701,
+  "exclusion_reason": null,
+  "family_id": "sha256:16689efa9d0cef09a0895974dc9dc3a20ee22c73743b5827f8e09711b7485bae",
+  "input_tokens": 830,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 830,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 854
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:eaa326e0f8c54556dbcf42fc7b885a2ba1fdc8bdcd6ff1606ef10044daaeb202",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832963,
+    "id": "chatcmpl-RPCP08KmJwWPJKhGC09VMoUQiE3mQynQ",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 566.031,
+      "predicted_n": 24,
+      "predicted_per_second": 42.400504566004344,
+      "predicted_per_token_ms": 23.584625,
+      "prompt_ms": 730.156,
+      "prompt_n": 752,
+      "prompt_per_second": 1029.9168944718663,
+      "prompt_per_token_ms": 0.9709521276595744
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 830,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 854
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"4945 Carpinteria Ave\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":true,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Cupcakes, Bakeries, Food, Breakfast & Brunch, Restaurants, Coffee & Tea\\\",\\\"city\\\":\\\"Carpinteria\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"8:0-17:0\\\",\\\"Monday\\\":\\\"8:0-17:0\\\",\\\"Saturday\\\":\\\"8:0-17:0\\\",\\\"Sunday\\\":\\\"8:0-17:0\\\",\\\"Thursday\\\":\\\"8:0-17:0\\\",\\\"Tuesday\\\":\\\"8:0-17:0\\\",\\\"Wednesday\\\":\\\"8:0-17:0\\\"},\\\"name\\\":\\\"Crushcakes & Cafe\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2020-05-07 05:34:41\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Closed for good! Take your political ideology, virtue signaling, and mediocre food out of Carp forever!!! Bye bye, cc. Hope you never come back! Sincerely, all of Carp.\\\"},{\\\"review_date\\\":\\\"2020-04-11 15:33:12\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Amazing salads and cupcakes!!!!!!  Staff isn't always happy but their food and baked goods are stellar!!!!\\\"},{\\\"review_date\\\":\\\"2020-03-03 00:30:46\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"We love coming here. The staff is very friendly and the food is very good. Usually I don't leave feeling overly stuffed or guilty which can happen when eating out. I love the atmosphere of this place too.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Crushcakes & Cafe is a popular breakfast and brunch spot located in Carpinteria, California. According to their menu, they offer a variety of cupcakes, salads, sandwiches, and other tasty treats. The cafe has a cozy and inviting atmosphere, with both indoor and outdoor seating options. They also offer free Wi-Fi and take-out services for customers on the go.\\n\\nWhile the business has received mostly positive reviews, there have been some complaints about the staff's friendliness. However, many customers rave about the delicious food and relaxed atmosphere. One reviewer particularly enjoyed the salads and cupcakes, while another appreciated the fact that they didn't feel overly full or guilty after eating at the cafe.\\n\\nIt's worth noting that Crushcakes & Cafe has a 3.5-star rating overall, indicating that it's a solid choice for those looking for a casual breakfast or brunch spot in the area. Additionally, the cafe is open seven days a week, making it a convenient option for visitors and locals alike.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "tune",
+  "source_cluster_id": "sha256:347b026323ccba61e1431f25b7f137ffe9fb5cb2455b0d10848bd1ab1644a566",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ]
+}

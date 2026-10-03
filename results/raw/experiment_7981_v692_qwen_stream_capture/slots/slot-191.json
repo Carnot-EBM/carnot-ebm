@@ -1,0 +1,102 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.2157421499723569,
+  "exclusion_reason": null,
+  "family_id": "sha256:ae46065f788a98dfaa03cefab166691c4cbd5bbac360f5d5659cb559e9ccd2ee",
+  "input_tokens": 635,
+  "invocation_finished_at": "2026-10-01T11:45:43.753197+00:00",
+  "invocation_started_at": "2026-10-01T11:45:42.537454+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 635,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 657
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:da65fe2c8f1ee9466be44c05c1c044f8230c3a0a948acd1586599a67d742759d",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855143,
+    "id": "chatcmpl-uwVwcdJ18NRnxubZcSagfiZIHWyrxTQO",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 515.575,
+      "predicted_n": 22,
+      "predicted_per_second": 42.67080444164282,
+      "predicted_per_token_ms": 23.435227272727275,
+      "prompt_ms": 587.53,
+      "prompt_n": 557,
+      "prompt_per_second": 948.0366959985023,
+      "prompt_per_token_ms": 1.054811490125673
+    },
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 635,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 657
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Differences between ATVs and UTVs[edit] UTVs differ from all-terrain vehicles (ATVs) in that UTVs typically have a side-by-side seating arrangement, many have seat belts and roll-over protection, and most have a cargo box at the rear of the vehicle. UTVs generally have a higher payload capability and are longer and wider than ATVs. While most ATVs can carry 125 to 200 lbs. of cargo in addition to the operator's weight, UTV payloads run from 800 to 1350 lbs. above the operator/passenger's weight.\\\\n\\\\npassage 2:yeya's blog. Difference between quad bike and ATV. Well, they both those terms: quad and ATV usually refer to the same thing \u2013 quad bike or ATV machine, an off-road motorbike \u2013 like vehicle with handle bars and more than 2 wheels. ATV is any bike with more wheels, like 3 wheeler, 4 wheeler and even 6 wheeler.\\\\n\\\\npassage 3:The ATV is more physically demanding to ride, and the rider must use balance to manipulate and control the vehicle, Kaiser says. It's fun, and they're small enough to really manhandle around, whereas a UTV is large enough that you're just strapped in and along for the ride.\\\\n\\\\n\\\",\\\"question\\\":\\\"difference between utv and atv\\\"}\", \"original_answer\": \"Based on the given passages, the main differences between UTVs and ATVs are:\\n\\n1. Seating arrangement: UTVs have a side-by-side seating arrangement, while ATVs have a single seat.\\n2. Size and payload capacity: UTVs are generally larger and have a higher payload capacity than ATVs. UTVs can carry up to 1350 lbs. of cargo, while ATVs can carry up to 200 lbs. in addition to the operator's weight.\\n3. Roll-over protection: UTVs typically have roll-over protection, while ATVs do not.\\n4. Physical demands: ATVs are more physically demanding to ride, as riders need to use their balance to manipulate and control the vehicle, while UTVs are larger and more stable, making them less physically demanding to ride.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "sha256:5e903a07eddb3bb7ab132a694706f515a23b3f6429f712ae50e19d3fb1f2436e",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ]
+}

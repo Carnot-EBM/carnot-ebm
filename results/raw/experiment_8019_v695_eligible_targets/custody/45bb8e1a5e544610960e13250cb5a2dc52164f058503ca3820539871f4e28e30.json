@@ -1,0 +1,108 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.2777816049056128,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:413a9e68e5eae87180d4dc72ac8d3e04536a52b8d891f43876187ead62ab7bd8",
+  "input_tokens": 662,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 2,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 662,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 686
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:9e1039acb201295d1a5c520320e5020c1a4386f44af90d9c0e12f20a64b93ace",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 2\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885921,
+    "id": "chatcmpl-lVIETuR0LD2HVufMQDdeW77oEYunwdhy",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 562.88,
+      "predicted_n": 24,
+      "predicted_per_second": 42.63786242183058,
+      "predicted_per_token_ms": 23.453333333333333,
+      "prompt_ms": 606.865,
+      "prompt_n": 584,
+      "prompt_per_second": 962.3227571206116,
+      "prompt_per_token_ms": 1.039152397260274
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 662,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 686
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Chicago Leaders Look For Answers to the Migrant Crisis in Texas\\nChicago Mayor Brandon Johnson was planning to travel to the southern border and figure out the issues that he is feeling with the effect of supporting migrants. On Monday, his staff said he was not but his staff would continue with the travel.\\nTexas Governor Greg Abbott bussed over 15,000 migrants to Chicago since August 2022 according to a press release. The number of migrants has caused Chicago to become overwhelmed.\\nAdditional migrants arrived from El Paso and other migrants arrived on their own so the City is supporting around 18,500 migrants according to the Office of Emergency Management and Communications.\\nIn addition to supporting local residents, the city has to now support migrants as well. Many arrive with health issues and then they cannot work for six months based on U.S. immigration policies.\\nMayor Johnson thought it would be good to travel to Latin America to get a better understanding of the situation which is very similar to what New York City Mayor Eric Adams did recently.\\nThe Mayor\u2019s office said according to NBC Chicago:\\n\\\"With the weather growing colder and hundreds of migrants arriving each day, it is more important than ever that every stakeholder at the state, federal, and local level work diligently to address this challenge, while continuing to meet the needs of Chicago and Illinois residents.\\\"\\nOn Wednesday, Mayor Johnson\u2019s staff will visit El Paso according to CBS 4.\\nTwenty-fifth Ward Alderman Byron Sigcho-Lopez who is part of the delegation said:\\n\\\"We still have a failed response from the federal government, state government has not set up one single shelter, the hope is we can connect the dots and raise awareness of what going on at the border.\\\"\\nChicago wants to see the migrant crisis up close and raise awareness among President Joe Biden and the federal government since this problem is bigger than one city.\\nDo you think Chicago leaders will get any answers solved on their Latin America trip?\", \"original_answer\": \"Chicago is grappling with an influx of approximately 18,500 migrants, largely from Texas. This has prompted Chicago leaders to plan visits to the US southern border and Latin America. The aim is to understand the situation better and urge the federal government to assist, as the crisis is beyond the city's capacity alone. The migrants' arrival has strained local resources as they often have health issues and cannot work for six months due to US immigration policies.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "calibration",
+  "source_cluster_id": "cff4d04bfd4334d7aeacccd9a8435c6708a45a2931ca25f7561b2b9bb2a836eb",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]
+}

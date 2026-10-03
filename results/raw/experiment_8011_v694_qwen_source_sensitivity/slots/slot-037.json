@@ -1,0 +1,125 @@
+{
+  "arm": "duplicate",
+  "capture_identity": "sha256:c690c1f517fbce73c5da6a2d1e99e3819c3de93e1045fe76d1c8215b54691541",
+  "censor_status": false,
+  "denominator": 1,
+  "donor_group_id": "sha256:28997cbca0a956e6c493725a304c30ee4c32de0ad1ca95f82b4573720e116435",
+  "duration_s": 1.375991487991996,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:28997cbca0a956e6c493725a304c30ee4c32de0ad1ca95f82b4573720e116435:duplicate",
+  "group_id": "sha256:28997cbca0a956e6c493725a304c30ee4c32de0ad1ca95f82b4573720e116435",
+  "input_byte_upper_bound": 3425,
+  "input_tokens": 806,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 806,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 829
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:2e5e6635631966f5ba85a4dc06d53de84933a4e7b10afa8452f848d2a4b553e2",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790925733,
+    "id": "chatcmpl-as3uReZzJ3ilquwwkT3Q1API0jHEkgPn",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 533.707,
+      "predicted_n": 23,
+      "predicted_per_second": 43.09480670105508,
+      "predicted_per_token_ms": 23.204652173913043,
+      "prompt_ms": 691.817,
+      "prompt_n": 728,
+      "prompt_per_second": 1052.301403405814,
+      "prompt_per_token_ms": 0.9502980769230769
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 806,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 829
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 32,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"'Big Brother 25' Spoilers: Felica Exposes Cirie's Voting Plan To Jag, Chaos Erupts\\nBig Brother 25 (BB25) spoilers tease that Felica Cannon doesn't hold back and exposes Cirie Fields' game to Jag Bains. Big Brother Network reports that Felica tells Jag that Cirie wants to force Jag to break the tie and send Blue Kim out the door on eviction night.\\nJag won the Head of Household competition. He nominated Blue Kim and America Lopez for eviction. Jag won the Power of Veto competition and decided to keep the nominations the same. Blue or America will leave the house with the nominations set and become the third jury member.\\nFelica reveals that Cirie wanted to keep Blue over America. When Felica refused to get on board, she decided they should force the voting to two for America and two for Blue, forcing Jag to break the tie. Cirie thinks it would put blood on Jag's hands.\\nBig Brother 25 spoilers say that Jag informs Felica that he plans to tell Blue she is leaving on eviction night. He doesn't want her to leave angry, fearing she could become a bitter jury member.\\nFelica shares with Jag that she fears that Cirie was trying to get her to vote to evict America to implode her game. She worries that Cirie's plan was to expose her as the one who voted to keep Blue, making her next week's target.\\nJag calls Cirie, Felica, and Matt Klotz to the HOH room. He tells everyone that Blue will go home this week. He adds that he will tell her she's leaving Wednesday so she's not blindsided by the vote. He doesn't discuss splitting the vote or bringing up anything else.\\nBig Brother 25 spoilers say that Jag plans to chat with Matt later about the bombshell of him planning to target him during the double eviction. He intends to allow Matt to explain himself before deciding to target him next.\\nBB25 fans, do you think Blue will get any votes to stay on Thursday's live eviction? Keep watching Big Brother 25, airing on CBS and streaming Paramount Plus. Please share your thoughts with me in the comments section below. Remember to follow me to read more of my content.\", \"original_answer\": \"Big Brother 25 contestant Felica Cannon has exposed a strategic voting plan by Cirie Fields to Jag Bains. Fields had planned to force Bains to break a tie vote and evict Blue Kim. Bains, who won the Head of Household and Power of Veto competitions, had nominated Kim and America Lopez for eviction. Bains plans to inform Kim of her impending eviction to prevent her from becoming a hostile jury member. Cannon fears Fields' plan would make her the next eviction target. Bains has revealed that he plans to discuss targeting another contestant, Matt Klotz, after the double eviction.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69410,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "seed": 69410,
+  "source_cluster_id": "0da03f4b3769d35f3ea76b5f96d862ae3efe2be51f325f0cd259a144752dc0d3",
+  "source_hash": "sha256:61a481681cfa84e57f1a39ba72fdeb06c0e103836ce7209ff2596c0d886d4749",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22
+  ]
+}

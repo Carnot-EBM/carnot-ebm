@@ -1,0 +1,112 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.4787290540407412,
+  "exclusion_reason": null,
+  "family_id": "sha256:6b9f97030ac82bc9b30114e66f67483f653391cb63674438a3dc2b0041f354de",
+  "input_tokens": 863,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 863,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 886
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:960f16ff1d7639c9a82ce1c7bacda15eb36bafdf7ec66313f6de20852380d196",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832775,
+    "id": "chatcmpl-AAMeOHTyxVx1O4ntyLqlcnzOtrAltErg",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.425,
+      "predicted_n": 23,
+      "predicted_per_second": 42.48049129611673,
+      "predicted_per_token_ms": 23.540217391304346,
+      "prompt_ms": 822.21,
+      "prompt_n": 785,
+      "prompt_per_second": 954.7439218691089,
+      "prompt_per_token_ms": 1.0474012738853504
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 863,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 886
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Warm weather Eastern US but big changes coming this weekend, Tropical Storm Philippe to Nova Scotia\\nThe warm dry weather pattern that dominates the weather in the Eastern US will come into its own today and Wednesday. Warm fall days usually start with some low clouds and fog and we saw that in a few places this morning. Satellite loops and radar loops are nice and quiet and we will have sunshine all day long. Temperatures will rise to the lower 80s in most places today. There are no weather issues as far as rain is concerned and that will be the case probbaly into the first part of Friday\\nTonight we will be warm and there will be some patchy low clouds and fog. Warm Wednesday morning lows will be in the 50s inland and low to mid 60s in warmer urban locations. Wednesday will be the warmest day of this stretch with sunshine taking highs up to the low and middle 80s and a few places could possibly set record high temperatures for the day.\\nYou will likely notice humidity levels going up over the next few days especially as the wind turns more southeast with time. That will start to impact temperatures some beginning Thursday. We will probably have clouds to start the day with the long nights producing low clouds and fog, and then developing sunshine taking highs to the mid and upper 70s.\\nA cold front will approach Friday as low pressure moves east across the Great Lakes and into Southeastern Canada. The front will be slowing down as it heads east and this is going to be due to Tropical Storm Philippe which will be moving up the east coast offshore. Philippe will be headed possibly for Nova Scotia over the weekend so the front slows until the tropical cyclone moves northward and then swing through the Eastern US Friday night and Saturday.\\nFriday we will see arriving clouds and perhaps a couple of scattered showers during the day. Friday highs will be in the mid to upper 70s. Showers and a few thunderstorms will become more numerous overnight into Saturday and it looks like we will have to wait until late in the day Saturday for a front to pass and for showers to end. Saturday highs will be in the upper 60s to around or just over 70. The front moves offshore and then we see the arrivial of much cooler air and also the beginning of what will be a new pattern for next week and beyond. Sunday will be colder with clouds and some sun along with the chance for an instability shower. Highs will just be in the upper 50s and lower 60s. Next week we could see at least a few days where daytime highs do not get out of the 50s.\", \"original_answer\": \"The Eastern US is set to enjoy warm, dry weather on 24 and 25 October, with sunshine and temperatures up to the lower 80s. However, a cold front will approach on Friday and Tropical Storm Philippe is expected to move up the east coast offshore, possibly heading for Nova Scotia over the weekend. This will cause the front to slow before swinging through the Eastern US on Friday night and Saturday, bringing clouds, scattered showers and possible thunderstorms. After the front moves offshore, much cooler air will arrive, marking the start of a new weather pattern.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:f784527a8ab855aa499017a5f3d516e1dc0b68cd30b719cc01d2b5e03091e2f9",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20
+  ]
+}

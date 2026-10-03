@@ -1,0 +1,107 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.3767532149795443,
+  "exclusion_reason": null,
+  "family_id": "sha256:75f08266a3b99800d3da277ae9e0bae54d1b3bf287b9d5cf52d15d25f23e68da",
+  "input_tokens": 766,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 1,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 766,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 790
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:941c67cb15169d0b55435c848f4ca841cf959c0bb3663168fb5bbe23010bfa6d",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 1\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832766,
+    "id": "chatcmpl-i7OUXCLo3GDTP3Tu7LfEShmbjDtXweNH",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 572.303,
+      "predicted_n": 24,
+      "predicted_per_second": 41.93582769966259,
+      "predicted_per_token_ms": 23.845958333333332,
+      "prompt_ms": 686.905,
+      "prompt_n": 688,
+      "prompt_per_second": 1001.5941068997897,
+      "prompt_per_token_ms": 0.9984084302325581
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 766,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 790
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:1 Place the roast (ribs down or fat side up) in roasting pan. 2  Sear the rib roast for 15 minutes at 450\u00b0F, then turn the oven to 325\u00b0F for the rest of the cooking time. 3  Every 1/2 hour, baste the cut ends of the roast with the fat accumulated in the roasting pan.irections. 1  Preheat oven to 450\u00b0F. 2  Pat the rib roast dry with a paper towel or napkin. 3  Smear the cut ends of the roast with the butter. 4  Place the roast (ribs down or fat side up) in roasting pan.\\\\n\\\\npassage 2:Season the roast all over with the remaining 2 1/2 teaspoons salt and 1 teaspoon of pepper. Place the roast in a roasting pan and add 1 1/2 cups red wine and 1/2 cup beef stock to the bottom of the pan.Roast for 20 minutes. Reduce the heat to 350 degrees F and continue to roast to the desired degree of doneness, about 18 minutes per pound for rare and 22 minutes per pound for medium.eason the roast all over with the remaining 2 1/2 teaspoons salt and 1 teaspoon of pepper. Place the roast in a roasting pan and add 1 1/2 cups red wine and 1/2 cup beef stock to the bottom of the pan.\\\\n\\\\npassage 3:Directions. Allow roast to stand at room temperature for at least 1 hour. Preheat the oven to 375 degree F. Rub roast with House Seasoning; place roast on a rack in the pan with the rib side down and the fatty side up.Roast for 1 hour.Turn off oven.irections. Allow roast to stand at room temperature for at least 1 hour. Preheat the oven to 375 degree F. Rub roast with House Seasoning; place roast on a rack in the pan with the rib side down and the fatty side up.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to cook standing rib roast\\\"}\", \"original_answer\": \"To cook a standing rib roast, place the roast in a roasting pan with the ribs down or fat side up. Sear it for 15 minutes at 450\u00b0F, then reduce the heat to 325\u00b0F for the rest of the cooking time. Baste the cut ends of the roast every 1/2 hour with the fat accumulated in the roasting pan. Optionally, season the roast with salt and pepper before cooking. Roast for 18-22 minutes per pound for desired level of doneness.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:c7ba0b005a33ee0b629219d50da2fc99328543d09af1f58e99e3ee95470f07bc",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ]
+}

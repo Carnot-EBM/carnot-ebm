@@ -1,0 +1,105 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.1763225910253823,
+  "exclusion_reason": null,
+  "family_id": "sha256:6c6c5ce19fde4df4a69b35cbca1a357f428d625f0aa5f9e17fe63d6935d48d6e",
+  "input_tokens": 602,
+  "invocation_finished_at": "2026-10-01T11:41:34.569816+00:00",
+  "invocation_started_at": "2026-10-01T11:41:33.393491+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 602,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 623
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:12fab1a3e4a9805a6e8610de3baf7a70f0385fdc9cce65360ffaf0db4479a31d",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"unsupported_probability\": 0.0,\n\"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790854894,
+    "id": "chatcmpl-hkjXKjOEm01P6EpqDObu0JroNWQtqP6g",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 484.7,
+      "predicted_n": 21,
+      "predicted_per_second": 43.325768516608214,
+      "predicted_per_token_ms": 23.08095238095238,
+      "prompt_ms": 578.453,
+      "prompt_n": 524,
+      "prompt_per_second": 905.8644349670587,
+      "prompt_per_token_ms": 1.1039179389312976
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 602,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 623
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Form to Fast. 1  Start form shooting in the middle of the paint until you make five baskets. 2  Move to the right block (low post) and form shoot off the backboard until you make five baskets. 3  Move to the left block (low post) and form shoot off the backboard until you make five baskets.\\\\n\\\\npassage 2:FACT #3: Proper shooting form is the #1 most important skill for youth basketball coaches to master and teach. FACT #4: A team with just a couple of good shooters on the floor will make your offense infinitely more dangerous and actually give your team more lay ups.\\\\n\\\\npassage 3:Analyze Your Grip. Your fingers need to be spread apart enough to balance the basketball in just one hand, and the ball should sit right on your finger pads. Leave a bit of space between your palm and the ball. Give Smooth Delivery. When you shoot, the ball should start going right up with no dipping. Your elbow needs to be right under the ball, and your shooting hand needs to be in direct line to the rim. The ball needs to stay in front of you and should not go behind your head at all. Your body should release all with the shot: your legs, your core, and your arm all coordinated with one graceful movement.\\\\n\\\\n\\\",\\\"question\\\":\\\"ways to improve your shooting in basketball\\\"}\", \"original_answer\": \"To improve shooting in basketball, one should start by practicing form shooting in the middle of the paint and gradually move to shooting off the backboard from the right and left blocks. Proper shooting form is crucial, as it is the most important skill to master and teach in youth basketball. Analyzing grip and ensuring the ball is balanced on the finger pads, with a bit of space between the palm and the ball, is important. The ball should start going up without any dipping, with the elbow right under the ball and the shooting hand in a direct line to the rim. The body should release all components of the shot, including the legs, core, and arm, in a coordinated movement.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "sha256:f839b5c149c938de761d9c39ae7d10a6f08669f3cabf69095fcb5067ace4dc74",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]
+}

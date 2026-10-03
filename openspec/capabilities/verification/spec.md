@@ -1,4 +1,29 @@
+
+
 # Verification Capability Specification
+
+## REQ-VERIFY-7968: Isolate complete-response calibration roles
+
+Reuse Exp7955 freeze/check_roles/join and its authenticated all-role union.
+Preserve the pinned 640-family allocation and all exclusions. Export public
+bytes separately from evaluator labels for all eight roles. An authenticated
+unsupported span anywhere gives y=1, including implicit_true and due_to_null.
+Unknown or poor-quality annotation never gives y=0. Keep the alternative
+implicit_true-excluded target descriptive. Reject normalized-source leakage.
+Readiness measures custody and role isolation, without downstream class floors.
+All roles remain exposed development. Preserve original evaluation labels.
+
+### SCENARIO-VERIFY-7968-CUSTODY
+
+Check Unicode offsets, duplicate source clusters, unknown annotation, swapped
+roles, truncated responses and evaluator metadata injected into public rows.
+Keep 64 intended evaluation slots and the original 62 eligible labels.
+
+### SCENARIO-VERIFY-7968-ACCESS
+
+Capture reads public bytes and role IDs only. Fitting reads fit/tune labels;
+threshold design reads policy_design labels. Evaluation and retention label
+access requires hash-bound head and policy seals. Cross-role access fails.
 
 ## REQ-VERIFY-7942: Authenticate human sentence targets
 
@@ -47193,6 +47218,47 @@ freezes real CLI routes and reduces current coverage and fixture receipts.
 `test_training_coverage_7954.py` checks each exception category, external blocks,
 owned failures, unchanged historical scores and cold primitive reconstruction.
 The current producer's terminal evidence is `experiment_7954_v690_training_coverage.json`.
+
+## REQ-VERIFY-7967: Qualify fitting with private mutable storage
+
+Exp7967 SHALL adapt the unchanged Exp7954 command freezer with distinct scratch
+and archive roots. Reject scratch inside the checkout before children start.
+Each route gets its own publication directory. Pytest basetemp, coverage and
+child fixture files stay in one private workspace. Keep the artifact guard on.
+Archive closed evidence only after children exit. Preserve original argv and
+measured paths. Readiness requires every frozen route, nonempty 100 percent
+statement coverage, real numerical fixture predictions and current readers.
+External missing, retired or invalid prerequisites are terminal blocked.
+Owned failures are terminal disqualified with readiness zero.
+
+### SCENARIO-VERIFY-7967-ROOTS
+
+Reject checkout or results-nested scratch before freezing or spawning children.
+A private mirrored protected tree reproduces the guarded rename failure.
+Atomic replacement in private storage stays on one filesystem. Child guard
+environment remains enabled. Historical failed logs retain their byte hashes.
+Library-created and child temporary files inherit the private scratch root;
+restore the caller's temporary-directory environment and Python cache on exit,
+including exceptional exits.
+
+### SCENARIO-VERIFY-7967-QUALIFICATION
+
+Run unchanged affected and transitive tests, eleven fitting routes, E2E-015/016,
+and the current script from outside the checkout without PYTHONPATH. Preserve
+historical fixture dates. Failed or missing receipts cannot qualify readiness.
+Fixture predictions are circular_positive; natural source data remains exposed.
+The numerical callable remains carnot.verify.energy_fit_7930.fit_heads.
+
+### Implementation Status (REQ-VERIFY-7967)
+
+Implemented in `python/carnot/verify/private_training_7967.py`; private
+temporary storage is restored after normal and exceptional exits.
+The unchanged terminal custody assertions and added child cleanup regression
+pass. The affected/transitive suite passes 238 tests; all 25 frozen command
+checks, E2E-015/016 and 100 percent coverage of seven measured modules/CLIs
+pass. The missing readiness field in two historical blocked fixture primaries
+keeps the separately checked consumer qualification at zero.
+
 # REQ-VERIFY-7955: Rebuild complete-response human support targets
 
 Exp7955 SHALL freeze original source and whole-response bytes and public window
@@ -47245,3 +47311,597 @@ with Holm correction for Brier and cost. Benefit requires both gains >=.02,
 both CI95 lower bounds >0, both adjusted p<.05, automation >=.20 and no extra
 false accepts. Otherwise publish a valid null or insufficient-data null.
 Implicit-true-excluded targets, annotation strata and sensitivity are descriptive.
+
+# REQ-VERIFY-7969: Capture only unmeasured calibration roles
+
+Freeze 384 public slots: fit 256, tune 64, policy_design 32 and
+calibration_replay 32, ordered by public hash. Preserve exclusions. Reuse the
+Exp7958 full_source messages, sentence IDs, grammar, revision and decoder
+without changes: temperature 0, seed 69058, 96 output and 6000 input tokens.
+Never generate evaluation, online or retention responses. Never truncate,
+repair, retry or replace the mandated Q4_K_M model. Seal each request and raw
+reply before evaluator access; this task opens no evaluator labels.
+
+## SCENARIO-VERIFY-7969-CAPTURE
+
+Test public-only role access, exact prompt identity, exclusions, token admission,
+strict parsing, failed calls, expired budgets and eight-row checkpoints. Resume
+only matching code/config/input identity and never repeat a started request.
+Bound load plus capture to 3000 seconds, 384 calls and 36864 output tokens.
+Capture readiness needs every admitted slot accounted for, 128 valid independent
+fit clusters and 32 tune clusters. Readiness is validity, never decision benefit.
+
+## SCENARIO-VERIFY-7969-REPLAY
+
+Cold-reconstruct requests, parses, denominators and role counts without model
+execution. Reject changed code, input, raw response, request or reduction hashes.
+Censored, excluded and failed slots remain in the intended denominator.
+
+### Implementation Status (REQ-VERIFY-7969)
+
+Implemented in `python/carnot/verify/qwen_calibration_capture_7969.py`.
+The fixed role roster, unchanged full-source prompt, public hash order,
+strict parser, eight-slot checkpoints and matching checkpoint resume are
+covered by `tests/python/test_qwen_calibration_capture_7969.py`.
+Scientific accuracy and decision benefit remain unmeasured in this capture.
+# REQ-VERIFY-7972: Calibrate one fixed response judgment
+
+Implementation: `python/carnot/verify/qwen_energy_calibration_7972.py`.
+Gradient, fitting and reducer tests: `tests/python/test_qwen_energy_calibration_7972.py`.
+
+Exp7972 uses only the scalar unsupported_probability q from authenticated
+Exp7969 fit/tune replies and unchanged Exp7958 full_source evaluation replies.
+Human targets come from Exp7968 roles and historical Exp7955 complete responses.
+No source ID, span, role, text or evaluation label enters a predictor.
+Authenticate each producer's own date, exact role/request hashes, renderer,
+GGUF hash, grammar, temperature, seed and token limits. Reject protocol drift.
+
+Freeze raw_qwen, Platt on logit(clip(q,1e-4,1-1e-4)), fit-only isotonic,
+Gibbs conditional E(q,y) with one width-8 tanh layer, and a descriptive
+eight-coefficient cubic spline with clamped knots 0/.2/.4/.6/.8/1.
+Gibbs probabilities use the energy difference. Spline E0=0 and E1=-spline(q).
+Fit BCE plus L2=1e-3, full-batch 200 gradient steps at .01, with initialization
+seeds 69101/69102/69103. Both energy heads receive the same seventeen
+geometrically spaced tune-only temperatures from .25 to 4. Standard Platt
+and isotonic controls receive no temperature search. Count all parameter
+updates, including regularization. Require real changed parameters.
+
+### SCENARIO-VERIFY-7972-1: Seal before evaluation
+
+Require 128 independent valid fit clusters with 16 per class, and 32 tune
+clusters with four per class. Insufficient support is complete_null_* with
+readiness zero. Seal heads, then design descriptive policies using only
+policy_design labels at target automation .50, then seal policies before
+evaluation access. Role restrictions and exact hashes remain enforced.
+
+### SCENARIO-VERIFY-7972-2: Reduce same-information decisions
+
+Use losses accept=5y, reject=1-y, escalate=.25, with ties escalating.
+Invalid replies always escalate, including in intended-action denominators.
+Probability metrics identify valid-pair denominators. Average initialization
+seeds within original source clusters before 10000 paired bootstrap draws
+and sign randomization tests. Holm-correct six Gibbs cost/Brier comparisons
+against raw_qwen, Platt and isotonic. Benefit requires cost gain >=.02,
+positive cost/Brier lower bounds and adjusted p<.05 against all three,
+automation >=.20 and no extra false accepts. Require 32 evaluation clusters
+and eight per class. The spline cannot replace the registered primary.
+Risk-coverage thresholds are fixed before evaluation; no conformal guarantee.
+Synthetic distortion recovery is circular_positive, separate from human science.
+## V692 administrative evidence boundary (2026-10-01)
+
+### REQ-VERIFY-7979-V692
+
+Freeze future scoring and delayed feedback gates without executing science.
+Authority fixture acceptance is circular_positive and contributes zero independent
+sources. Historical positive counters cannot become current model invocations.
+Authenticate frozen producer identities and source bytes during cold replay.
+
+### SCENARIO-VERIFY-7979-CUSTODY
+
+A historically failed capstone stays disqualified while an honest producer date
+rollover remains valid. A changed source hash or forged date fails with exact
+path, hash, field, operator, expected and observed operands.
+
+Implementation: the V692 contract methods module freezes current scoring and
+delayed feedback methods. Its private custody and CLI tests reference this
+requirement. Imported historical failures retain their original verdicts.
+
+## V692 lexical evidence boundary (2026-10-01)
+
+### REQ-VERIFY-7980
+
+A public-only subprocess accepts only opaque family IDs and exact original
+source/answer bytes. Reuse source_alignment.pair_features on deduplicated
+complete source windows and complete answer sentences. Export mean and maximum
+of overlap, negation mismatch, numeric mismatch and uncovered fraction.
+Empty and over-budget inputs abstain; lexical signals are not certificates.
+Group by source ID and normalized bytes and reject cross-role duplicates.
+Keep labels, quality, roles and annotation metadata out of feature inputs.
+Use the existing exact-byte response annotation join for reserved evaluator
+rows, in a separate process after roster and feature seals; only that process
+may inspect reserved annotations. Predictor routes cannot open evaluator files.
+
+### SCENARIO-VERIFY-7980-FEATURES
+
+Cold public extraction remains byte identical when evaluator labels, roles
+and annotations change. Label-bearing public fields fail closed. Missing q
+stays null. Deduplicated windows do not multiply independent sources.
+
+### SCENARIO-VERIFY-7980-PREDICATES
+
+Freeze 16 unary slots: each feature above its fit-role quartile25 or quartile75
+using linear interpolation. Preserve constant or duplicate slots as inert.
+Use only fit labels and sealed Exp7972 Gibbs predictions to rank absolute
+covariance with signed residual y minus mean Gibbs probability. Choose eight
+nonconstant, fit-truth-vector-distinct conjunctions of active unary slots;
+break ties lexicographically and preserve vacancies. Save all selection traces.
+
+Implementation: `python/carnot/verify/evidence_features_7980.py` reuses the
+existing alignment, exact annotation join and sealed Gibbs predictor.
+`tests/python/test_evidence_features_7980.py` verifies public fields,
+complete deduplicated windows, deterministic reservation and inert slots.
+Private CLI tests verify cold extraction after changed evaluator metadata.
+
+## REQ-VERIFY-7981: Fixed full-source delayed-feedback judgments
+
+Freeze calibration_replay32, online_update96, online_admission64 and retention32
+from Exp7980. Append the fixed reserved96 only when fresh_panel_ready_score=1.
+Never capture fit, tune, policy_design or old evaluation. Keep complete inputs,
+the Exp7969 prompt and grammar, seed69058, temperature0, 6000 input tokens and
+96 output tokens. Bound load to300s, calls to120s and measured work to3000s.
+Require the pinned Q4_K_M current model and a measured10s floor. Never inspect
+evaluator labels during generation. Resume only exact model, protocol and public
+byte identity, with original invocation timestamps and no uncertain-call retry.
+
+### SCENARIO-VERIFY-7981-BRANCHES
+
+Stream readiness requires at least64 online_update,48 online_admission,24
+calibration_replay and24 retention independent usable sources. Reserved readiness
+requires at least64 of its fixed96 sources, without replacements or class-label
+access. Retain excluded, failed and censored slots. A valid branch permits a null
+overall verdict when its sibling is unavailable. No valid branch means blocked.
+
+### SCENARIO-VERIFY-7981-RESUME
+
+Reject changed identities and public labels. Retain failed and interrupted calls
+without retry. Preserve timestamps on reuse and count current and resumed calls
+separately. Overlong complete inputs escalate and remain excluded rows.
+
+Implementation: `python/carnot/verify/qwen_stream_capture_7981.py` reuses the
+historical full-source request and parser. `tests/python/test_qwen_stream_capture_7981.py`
+verifies independent branch floors, public-field isolation, complete input
+admission, failed calls and timestamp-preserving checkpoint reuse.
+
+## REQ-VERIFY-7982: Matched source-aware binary heads
+
+Join original Exp7980 fit, tune and policy rosters to authenticated Exp7969 q.
+Use clipped logit(q) and eight public features, normalized with fit-only means
+and scales. Require 128 fit groups with 16 per class and 32 tune groups with
+4 per class. Reject role overlap, hidden predictor fields and unknown-label
+substitution. Open only fit and tune targets in this experiment.
+
+### SCENARIO-VERIFY-7982-FITTING
+
+Fit an eight-unit tanh conditional energy on x plus binary y and normalize
+exactly over both labels. Compare identical inputs with linear logistic,
+quadratic logistic and a sixteen-unit sigmoid MLP. Use seeds 69201/69202/69203,
+200 Adam steps, learning rate .01, L2 .001 and the same 17 temperatures from
+.25 to 4 selected on tune Brier. Verify analytical gradients by central finite
+differences and exact sigmoid(E0-E1) parity within 1e-12. Average seeds before
+comparison; seeds do not multiply independent sources. Export all qualified
+checkpoints and measured optimizer work, including a descriptive additive
+cubic spline residual with fixed fit-quantile knots and coefficient touches.
+
+### SCENARIO-VERIFY-7982-SEALS
+
+Seal checkpoints and predictions before any policy or evaluation target access.
+Retain frozen Exp7972 scalar heads as descriptive controls. Synthetic separable
+and shuffled-label fixtures are circular wiring checks. Small fit gains cannot
+change the primary arm or hyperparameters. This is a bounded architecture and
+training comparison, with no foundation-model or normalization-benefit claim.
+
+Implementation: `python/carnot/verify/multivariate_energy_7982.py` reuses
+Exp7972 numerical primitives and its analytical binary-energy gradient pattern.
+`tests/python/test_multivariate_energy_7982.py` checks every coefficient,
+normalization, fit-only scaling, seed means, null inputs and circular fixtures.
+
+## REQ-VERIFY-7984: Matched scalar and source-feature mechanism controls
+
+Four nine-input Gibbs heads SHALL use Exp7982's exact 97-parameter capacity,
+seeds, Adam budget, fit normalization and tune Brier temperature rule: full,
+q_only, source_only, and q_donor. Masked inputs remain zero in the same head.
+Donors SHALL be a seed69284 permutation within public power-of-two source byte
+length bins and roles, excluding normalized same-source pairs. Unmatchable bins
+SHALL be explicit exclusions. Full response bytes and qualifiers SHALL persist.
+Erased evidence SHALL use the existing null-location lexical features; original
+human truth SHALL never be assigned to donor or erased sources.
+
+### SCENARIO-VERIFY-7984-MECHANISM
+
+Given public rows with qualified fit/tune targets, when matched heads score
+original evaluation bytes and erased, donor and unchanged duplicates, then
+unchanged scores agree within 1e-12 and exact intervention hashes are retained.
+Changing labels cannot change the frozen donor mapping. Policies are fitted
+only on original policy_design. Cost is accept=5*y, reject=1-y, escalate=.25.
+
+### SCENARIO-VERIFY-7984-INFORMATION
+
+Full versus q_only and source_only Brier and cost differences SHALL use paired
+original source clusters, seed means, 10000 bootstrap/sign-flip draws and Holm
+across four tests. Fewer than 32 eligible clusters or 8 per class gives a valid
+null. An added-information finding requires full versus q_only Brier gain at
+least .01, positive paired lower bound and adjusted p below .05. Historical
+Exp7958 full/erased q is a separate protocol contrast. Probability movement or
+lower energy alone SHALL NOT imply improved truth detection or architecture
+advantage. No generator, text reranker or span extractor is changed.
+
+Implementation: `python/carnot/verify/evidence_ablation_7984.py` reuses the
+qualified Exp7982 binary head and Exp7980 lexical measurements. Tests in
+`tests/python/test_evidence_ablation_7984.py` exercise exact byte mapping,
+matched target eligibility, inference failures, parity and information gates.
+
+
+## REQ-VERIFY-7988: Preserve audit qualification and observational limits
+
+The current supervisor audit SHALL validate exact predecessor custody, primitive
+counts and new statement coverage. A repaired historical diagnostic SHALL NOT
+replace a disqualified primary. No synthetic control may supply a live firing.
+
+### SCENARIO-VERIFY-7988-QUALIFICATION
+
+Private tests SHALL observe blocked external gates, disqualified owned checks,
+zero model calls, valid empty controls and rejection of altered cold summaries.
+Required command receipts SHALL contain actual exits and immutable log hashes.
+## REQ-VERIFY-7989: Bound engineering claims by measured source work
+
+Reuse the qualified public lexical extraction, frozen normalization and exact
+binary head scoring. Timing repetitions and head seeds SHALL NOT increase the
+independent source count. No measured scientific benefit is required for cost
+readiness. No compatible authenticated board kernel means compatible_fraction=0.
+
+### SCENARIO-VERIFY-7989-ACCOUNTING
+
+Private controls SHALL prove adjacent spans sum to elapsed CPU time, persisted
+and no-write decisions agree, missing acquisition stays unknown, and altered
+primitive rows fail cold replay. Source-level paired intervals SHALL compare
+CPU service only. Cached CPU cost SHALL never form a live-model speedup ratio.
+
+Implementation: the Exp7989 service reuses Exp7980 lexical extraction and
+Exp7982 binary scoring. `tests/python/test_service_cost_7989.py` verifies
+source counts, missing costs, persisted decisions and cold accounting.
+
+Storage-repair verification SHALL reopen the response on the declared volume,
+check its filesystem observation, and cold-replay the same paired timing rows.
+Health-reuse verification SHALL preserve failed historical diagnostics and
+reject altered receipt bytes without launching a new full-suite child.
+
+## REQ-VERIFY-7990: Reject acceleration and custody overclaims
+
+Cold reduction SHALL reconstruct board custody, service placement, coefficient
+touches and conditional bounds from exact upstream bytes. Synthetic fixtures
+SHALL NOT establish accelerator performance or independent scientific benefit.
+
+### SCENARIO-VERIFY-7990-BOUNDS
+
+Tests SHALL exercise nonzero compatible fractions, known and unknown transfer,
+invalid operands and complete-kernel limits. Unknown acquisition and learning
+costs SHALL remain unknown. Current pretrained loads and generation calls are
+zero; imported fitted heads SHALL remain separate trained_head_specs.
+
+### SCENARIO-VERIFY-7990-REPLAY
+
+Private cold replay SHALL reject altered board receipts, operation mappings,
+readiness and aggregate bounds. Disqualification requires failed owned check
+receipts. Immutable logs SHALL be archived only after supervised children exit.
+## V692 capstone validation boundary (2026-10-01)
+
+### REQ-VERIFY-7991-V692
+
+Freeze required commands before reduction. Keep the pytest artifact guard
+enabled and all mutable fixtures in private scratch outside the checkout.
+Require affected unit and consumer tests, private E2E-018 authority routes,
+real capstone success and blocked cold replay, nonempty 100 percent new
+statement coverage, scoped Ruff check and format, strict mypy and spec coverage
+on actual test paths. Preserve unrelated full-suite failures as historical
+diagnostics. Archive receipts only after supervised children exit. Progress
+messages and child heartbeats shall remain at most sixty seconds apart.
+
+### SCENARIO-VERIFY-7991-TERMINAL
+
+A failed owned required check sets verdict_class=disqualified, science_ready
+false and capstone_execution_ready_score=0. Final-byte adversarial verification
+and strict row lint travel with the primary through a hash-bound nested
+sidecar. A scientific null may be ready after all owned checks; a blocked
+result remains ready zero even when validation passes and paper_ready is true.
+
+## V693 producer custody (2026-10-01)
+
+### REQ-VERIFY-7992-V693
+
+Historical failed verdicts, code identities, dates and dispatch skips remain
+immutable evidence. Verify saved snapshots rather than comparing historical
+code hashes to mutable checkout files. New invocation snapshots bind current
+code, commands and exact published bytes; owned failure sets readiness zero.
+
+### SCENARIO-VERIFY-7992-CUSTODY
+
+A changed primitive summary or frozen source fails cold replay. A later
+manifest or capability append cannot change the original producer identity.
+Absent original historical code bytes are explicitly unavailable, never
+reconstructed from current code and never a universal science gate.
+
+2026-10-01 repair verification: SCENARIO-REPORT-7992-FROZEN-FIXTURE separates
+private oracle bytes from live authority. Invalid live YAML is snapshotted
+unchanged and publishes readiness zero with an exact `authority_yaml` operand;
+cold replay succeeds for that blocked result. Existing custody assertions are
+unchanged. Combined V693 module and CLI statement coverage is 260/260.
+
+## REQ-VERIFY-7993: Invocation scope and authenticated reduction
+
+Cached reduction, blocked zero-call work, resume-only work, genuine owned live
+call evidence and mixed historical/current evidence SHALL use the actual
+adversarial provenance classifier. Contradictory declared live counts SHALL
+continue to fail. Historical counters SHALL never become current invocation
+claims. Every recovered probability SHALL bind complete source/answer bytes,
+original role, human-label file, request and response hashes, server identity,
+completion times, GGUF identity and token totals. Cold replay SHALL reject drift.
+
+### SCENARIO-VERIFY-7993-SCOPE
+
+The original candidate's unscoped resumed zero counters SHALL remain observable.
+The new audit SHALL cite this exact contradiction without deleting its evidence
+or changing a validator. Current validation failures SHALL clear readiness.
+
+Implementation: `python/carnot/reporting/capture_custody_7993.py`; verification
+is in `tests/python/test_capture_custody_7993.py`. The unchanged provenance
+classifier and terminal validators retain the original live-count rejection.
+
+## REQ-VERIFY-7994: Seal bounded source-disjoint development evidence
+
+Select at most 384 official TRAIN normalized complete-source groups using
+SHA256 with salt `V693-development`. Exclude all original 640 source groups,
+exact and normalized duplicates, and explicitly recorded historical evaluation
+identities. Select the lowest stable response ID before annotations. Never
+decode official TEST records. Retain invalid boundaries and shortfalls without
+replacement. Freeze public bytes, eight existing lexical features, IDs, roles
+and ordering before a separate evaluator process opens selected annotations.
+
+### SCENARIO-VERIFY-7994-ISOLATION
+
+Public feature bytes remain identical after evaluator metadata and label
+permutations. Only the evaluator derives complete-response y from validated
+original spans. Offset or lineage errors remain unavailable, never negatives.
+Role IDs, human labels and historical model names never enter features.
+
+### SCENARIO-VERIFY-7994-CHRONOLOGY
+
+Roles contain the first 64 calibration groups, next 256 stream groups and
+last 64 retention groups. Freeze 256 stream slots and reveal at slot plus 20.
+Unavailable slots do not compress chronology. Calibration fitting may access
+only calibration labels. Retention access requires an independent audit seal.
+Future-label access and duplicate-role mutations must fail.
+
+Implementation: `python/carnot/verify/development_cohort_7994.py` reuses the
+existing complete-source features and exact original annotation join.
+Verification: `tests/python/test_development_cohort_7994.py` and the Exp7994
+private CLI tests cover source duplicates, metadata permutations, invalid spans,
+empty responses, future feedback denial and retention audit authorization.
+
+## REQ-VERIFY-7995: Bound independent development judgments
+
+Use only the sealed public calibration (64), stream (256), and retention (64)
+slots. Reuse Exp7969's full-source prompt, grammar, seed and decoder. Own a free
+CUDA lease and the exact cached unsloth/Qwen3.8-27B-GGUF Q4_K_M revision through
+llama.cpp with its embedded tokenizer. Authenticate server model, CUDA offload,
+PID identity and before/resident/after memory; stop only owned processes.
+Attempt at most 384 calls, 96 output and 6000 input tokens each, with 120-second
+call, 300-second load and 3000-second measured-work caps and a 10-second floor.
+No retry, replacement, CPU fallback or duration padding is allowed.
+
+### SCENARIO-VERIFY-7995-READINESS
+
+Every intended slot remains accounted for, including excluded, failed and
+censored responses. Authenticated complete capture with passing owned checks
+may be ready even with censoring. Independent usable role gates are 48
+calibration, 224 stream and 48 retention sources. Missing roles remain zero.
+These support gates make no class-balance, accuracy or benefit claim. Missing
+external prerequisites block with exact operands; failed owned checks
+disqualify; complete valid capture is null.
+
+Implementation: `python/carnot/verify/qwen_development_capture_7995.py` freezes
+public requests, checkpoints started calls, binds raw bytes to owned receipts
+and reduces independent role support. Its matching Python tests exercise
+interruption, no retry, censoring, token admission, overlap and byte mutations.
+
+## REQ-VERIFY-7996: Sparse residual spline training
+
+Train only qualified historical fit rows, using tune rows only to select a
+0.5/1/2 temperature by log loss. Each multivariate arm receives q and the eight
+fixed lexical features. Fit min/max scaling on fit rows and count clipped
+values. Freeze cubic clamped knots at four copies of each boundary and eight
+internal knots i/9. Each input has 12 coefficients; the spline has 109 including
+its intercept. E(x,0)=0 and E(x,1)=-[logit(clipped q)+b+sum c B]. Initialize
+spline residuals and b to zero. Use 200 batch gradient steps, rate .01, L2 .001,
+and seeds 17/29/43/71/101; seed 17 is primary. Train logistic and eight-tanh MLP
+controls with the same inputs and budget. Save an identical-coefficient sigmoid
+control without fitting and frozen Exp7972 scalar controls.
+
+### SCENARIO-VERIFY-7996: Numerical readiness
+
+One-example data gradients touch at most four basis coefficients per input and
+one intercept. Lazy global decay implements exact L2 without touching every
+stored coefficient. Report both physical writes and logical decay. Dense/sparse
+updates and gradients, zero-step identity, sign, finite differences, knot
+boundaries, saturated inputs and save/load predictions must agree. Report every
+seed's loss increases, state bytes and measured CPU work. Synthetic separable
+holdout is a circular positive control with headroom; it is not natural evidence.
+No FPGA speed or normalization advantage follows from this mechanism.
+
+## REQ-VERIFY-7997: Frozen typed decisions on development sources
+
+Use sealed sparse, logistic, MLP, scalar and raw-q arms without coefficient
+refitting. Select one temperature per arm from 0.5/1/2 by calibration Brier;
+ties prefer 1, then 0.5, then 2. Primary comparisons use seed 17.
+Unsupported content is y=1. Costs are accept=5*y, reject=1-y, escalate=.25.
+Accept below .05, reject above .75, and escalate at ties or failed predictions.
+Retain one source/arm/seed row, failed known targets and unknown cost bounds
+[0,5]. Independent sources, never seeds, determine support and uncertainty.
+Use 10000 paired source-group bootstrap and sign-resampling draws. Require
+192 eligible groups and 20 per class. Holm-adjust the two primary cost tests.
+Benefit requires gain >=.02, positive 95% lower bounds and adjusted p<.05
+against both controls, no extra false accepts, automation >=.50 and Brier
+degradation upper bound <=.01. AUROC and reliability are descriptive.
+
+### SCENARIO-VERIFY-7997-GATES
+
+Known-benefit and no-headroom circular oracle fixtures run before natural data.
+Verify independently reduced totals, disjoint source roles, unchanged heads,
+censored bounds and sigmoid identity. A powered null closes this static method
+in this scope; an underpowered null does not refute it.
+
+Implementation: `scripts/experiments/experiment_7997_v693_typed_development_decisions.py`
+uses a label-free predictor and separate reporting evaluator.
+`tests/python/test_typed_development_7997.py` and
+`tests/python/test_experiment_7997_v693_typed_development_decisions.py`
+verify the frozen decision and custody requirements.
+
+## REQ-VERIFY-7998: Selected-label update boundary
+
+The sparse learner receives only public observations and due selected labels.
+All adaptive arms share basis, initial coefficients, temperature and optimizer.
+A prediction must reach durable storage before its due feedback can be requested.
+Keep missing slots and pending terminal feedback. Dense-gradient parity checks
+use identical selected past labels. No pretrained model is invoked.
+
+Implementation: `python/carnot/verify/selective_feedback_7998.py` implements
+selected due-label updates and independent dense parity. Its matching unit tests
+trace to REQ-SELF-7998 and REQ-VERIFY-7998.
+
+## REQ-VERIFY-7999: Independent row and crash reconstruction
+
+Reconstruct source identity, propensities, source-keyed draws, due times, sparse
+updates, costs and Brier from primitive records. Compare reconstructed gradients
+with coefficient changes in saved states. Reject leaked future targets,
+missing updates, forged propensities and changed group IDs. Crash immediately
+before and after atomic slot-128 commit for each primary arm; independently
+restore weights, RNG, pending and seen IDs and compare later predictions with
+uninterrupted replay. Preserve raw receipts and historical producer bytes.
+
+### SCENARIO-VERIFY-7999-MUTATION
+
+Private producer fixtures and mutated rows test the separate reducer. Cold replay
+rejects drift even if an attacker recomputes a local shard hash.
+
+Implementation: `python/carnot/verify/learning_causal_audit_7999.py` owns the separate primitive reducer and atomic recovery. `tests/python/test_learning_causal_audit_7999.py` rejects the four registered mutations and corrupt saved gradients.
+
+## REQ-VERIFY-8000: Preserve issued confidence state under delayed feedback
+
+Freeze the historical Exp7972 first Gibbs head and one calibration-only Brier
+choice from temperatures 0.5, 1, 2, with ascending deterministic ties. No model
+loads or coefficient fits occur. Scores are 1-p_y. Use order statistic
+ceil((n+1)*(1-alpha)); rank above n means an infinite cutoff. Singleton supported
+accepts, singleton unsupported rejects, and empty or full sets escalate.
+Compare fixed calibration confidence, scalar current-alpha ACI, and saved issued
+alpha ACI with delays 20, 24, 36, gamma .01, clipping [.01,.50], and trailing 64
+due observations. Issue before releasing labels; keep unresolved states.
+
+The recurrence from https://arxiv.org/html/2609.07251v1 section 4 is
+alpha_(t+tau)=alpha_t+gamma*(target-error_t). This experiment uses binary scores
+and clipping. Since issue precedes feedback at slot t, the saved-state update
+becomes alpha_(t+1)=clip(issue_alpha_(t-delay)+.01*(.10-error_(t-delay))).
+Thus effective phase spacing is delay+1; it is a timing adaptation of the paper.
+Scalar ACI instead uses current alpha as the update base. No theorem transfers.
+
+### SCENARIO-VERIFY-8000-CAUSAL
+
+Quantile boundaries, empty/full sets, future-label mutation, known-responsive
+and no-shift fixtures, and JSON restart at slot 128 SHALL preserve issued sets
+and subsequent feedback updates. Confidence SHALL preserve point Brier exactly.
+
+Implementation: `python/carnot/verify/delayed_confidence_8000.py` owns the binary
+quantile, issue-before-release state machine, persisted slot128 restart and paired
+fixed-window block reduction. `tests/python/test_delayed_confidence_8000.py`
+references this requirement and exercises boundary sets, delayed identity,
+future outcomes, controls and support floors.
+# REQ-VERIFY-8001: Repair owned qualification before admitting supervisor evidence
+
+The current audit SHALL qualify E2E-017 and the entire owned statement denominator
+before reading natural outcomes. Historical failed primaries SHALL remain failed.
+Private receipt and replay mutations SHALL test missing, corrupt, fixture, live
+wrapper and frame evidence. Protocol controls SHALL NOT count as natural samples.
+
+## SCENARIO-VERIFY-8001-READINESS
+
+Tests SHALL prove qualification failure prevents scanning, readiness is zero for
+failed owned checks, an empty qualified frontier is a terminal null, and cold
+replay rejects invented firings. Coverage SHALL include actual private CLI success,
+blocked, exception and replay routes without exclusions or a lower threshold.
+
+Implementation for REQ-VERIFY-8001: the Exp8001 qualification tests exercise the
+original shared CLI entrypoint and preserve the Exp7988 268/269 failure operand.
+Current qualification covers every owned statement before opening the frontier.
+
+## REQ-VERIFY-8002: Complete cost reconstruction
+
+Authenticate immutable measured inputs and code snapshots. Recompute each
+response, sparse physical coefficient change, global logical decay, encoded
+checkpoint bytes, exclusive phase total and source-group paired interval.
+A sub-microsecond sparse kernel or 100x component gain remains an unmeasured
+target; acquisition and model generation remain outside the accelerated fraction.
+
+### SCENARIO-VERIFY-8002-DRIFT
+
+Changed rows, summaries, receipts, producer bytes or frozen owned code SHALL
+fail cold replay. Fixture feedback SHALL never claim natural learning evidence.
+
+Implementation for REQ-VERIFY-8002: cold replay in `service_cost_8002.py`
+reconstructs deterministic work and validates paired rows before reduction.
+`tests/python/test_service_cost_8002.py` asserts producer, commit, row, timing,
+source-join and frozen-code rejection paths.
+# REQ-VERIFY-8003: CPU fixed-point sparse head and update
+
+For qualified Exp7996 seed 17, emulate signed 16- and 24-bit arithmetic with
+12 fractional bits, saturation and round-to-nearest ties-to-even. Freeze cubic
+basis and logit lookup grids using fit geometry before accessing tune data.
+Use at most 128 distinct fit/tune source groups plus explicit knot/saturation
+fixtures. Save float64 and fixed probabilities, gradients, one-step coefficients,
+typed actions, touches and saturation counts for every unit and format.
+
+### SCENARIO-VERIFY-8003-BOUNDARY
+
+Probability error SHALL be <=0.01, typed-action agreement SHALL be >=0.99 outside
+a 0.01 margin around thresholds 0.05 and 0.75, and unexpected saturation SHALL
+be zero. Report near-threshold units separately. A failed format is a valid null
+with diagnostics. This qualifies CPU emulation only. Known board kernels do not
+implement arbitrary spline updates. Service bounds include host readout, transfer
+assumptions and persistence; unknown service yields null bounds.
+
+### SCENARIO-VERIFY-8003-REPLAY
+
+Cold replay SHALL reconstruct deterministic primitive numerical rows and gates,
+reject altered receipts, readiness, coefficients and bounds, and verify sealed
+current validation logs. Fixtures remain circular controls, never hardware results.
+# REQ-VERIFY-8004: Checked private publication and complete new statements
+
+Implementation: `python/carnot/reporting/v693_capstone_validation.py` freezes
+the command manifest and binds terminal receipts to exact prospective bytes.
+`tests/python/test_experiment_8004_v693_capstone.py` covers the owned routes.
+
+Freeze actual commands and code identities before V693 measurements. Keep the
+artifact guard enabled. Use private scratch outside the checkout. Test real CLI
+success, blocked, cold replay, malformed input, expected-negative replay and
+publication rejection before executing current work. Require nonempty 100%
+statement coverage on added files, affected consumers, private E2E-018,
+scoped Ruff check/format, strict mypy and explicit-path spec coverage.
+Run the full Python suite once; retain unrelated failures as diagnostics.
+Do not weaken an owned check. Emit flushed progress and supervise children
+with elapsed-time messages at most sixty seconds apart.
+
+### SCENARIO-VERIFY-8004-TERMINAL
+
+Check actual prospective final bytes with adversarial verification, strict row
+lint, both primary readers and independent cold replay before publication.
+Bind receipts to the published hash in a nested sidecar. Publication rejection
+SHALL leave the old primary intact. Owned failure zeroes readiness; blocked
+work stays zero even when its owned checks pass. Ops and traceability updates
+are reserved for the conductor reconciler by the task's final instruction.

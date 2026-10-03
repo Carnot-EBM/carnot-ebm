@@ -1,0 +1,128 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.7785104590002447,
+  "exclusion_reason": null,
+  "family_id": "sha256:42464e87e4a0f2329bc14671e6e55505e15962f85a80e7396cf794af1ca7e11f",
+  "input_tokens": 1120,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": 10,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 26,
+      "prompt_tokens": 1120,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1146
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:7d35ebd86c867d83b899f4f549eb8ec60477007a6705ca73777d58e67434f3b7",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": 10\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832701,
+    "id": "chatcmpl-EhKgGMdpwpTkLPEFLkvd5uY00OFLeX4J",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 614.806,
+      "predicted_n": 26,
+      "predicted_per_second": 42.28976294961337,
+      "predicted_per_token_ms": 23.646384615384616,
+      "prompt_ms": 1015.225,
+      "prompt_n": 1042,
+      "prompt_per_second": 1026.373464010441,
+      "prompt_per_token_ms": 0.9743042226487524
+    },
+    "usage": {
+      "completion_tokens": 26,
+      "prompt_tokens": 1120,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1146
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"The greater adjutant stork is a majestic bird. Standing about 5 feet tall with an average wingspan of 8 feet, it soars over the Boragaon landfill like a great protector. It knows the residents and shies away from strangers. \\\"They are intelligent birds. Every time I got close to them they would fly away,\\\" photographer Timothy Bouldry said. The dirty, wet conditions of the landfill attracted the endangered stork, and the stork attracted Bouldry. Through a series of photos taken within a day, he captures what it's like to live inside one of the largest dumping grounds in India. The Boragaon landfill is located in the city of Guwahati, about 300 miles from Bangladesh near the Bhutanese border. It's 94 acres of mostly fresh waste, surrounded by swamplands. (Other landfills, Bouldry says, contain older, compacted trash.) For the past seven years, Bouldry has traveled the world photographing landfills. He's visited places such as Haiti, Venezuela and Colombia. The greater adjutant stork initially drew Bouldry to Boragaon, but he became connected with the people. About 100 families live inside the Boragaon landfill. Every day, they search the area for treasure -- a tiny scrap of metal, a bit of plastic, maybe a bone. They use large hooks to sort through the garbage, which sometimes reaches two or three stories high. They work in teams, and more than often they are barefoot. \\\"They don't look at the things they're doing as being unsanitary or unhealthy or unsafe,\\\" Bouldry said. They collect plastic, metal and wires and sell it by the pound. The families make around $2 per day. Their homes are constructed by recycled materials, with sometimes several families living in one shanty at a time. With no electricity, no running water -- and an overabundance of trash -- they are experts at repurposing. \\\"You might see a refrigerator being used as a closet,\\\" he said. Social media. Follow @CNNPhotos on Twitter to join the conversation about photography. Some of the children living in Boragaon go to school on scholarship, but most of them work in the landfill to provide for their families. But don't be deceived: The people living here feel anything but destitute. Bouldry uses words such as \\\"love,\\\" \\\"hope\\\" and \\\"spirituality\\\" to describe them. \\\"I found that the landfill community is content,\\\" Bouldry said. \\\"They are not jaded by modern civilization.\\\" Bouldry lives and works inside the La Chureca landfill in Nicaragua, one of the largest landfills in the world. He helps the people living there grow gardens fertilized with compost he makes with organic waste from local smoothie shops. In addition to his photography, he teaches English and yoga classes a few times per week. But why? Bouldry went to art school in Boston. He's no stranger to sophisticated civilization. He said he found humanitarian photo projects to be the most fulfilling, and he became especially intrigued by landfills even though they are \\\"scary, dirty and kind of grotesque.\\\" \\\"This is my 'thank you' to the informal recyclers of the world,\\\" he said. Timothy Bouldry is a photographer based in New Hampshire. You can follow him on Facebook and Twitter.\\n\", \"original_answer\": \"The greater adjutant stork has been spotted in the Boragaon landfill in Guwahati, India, where it has drawn the attention of photographer Timothy Bouldry. Bouldry has been visiting and living in the landfill for the past seven years, documenting the lives of the 100 families who reside there and make a living by searching through the garbage for valuable items. Despite the dirty and wet conditions, the residents have created their own community with homes made from recycled materials and a sense of hope and spirituality. Bouldry has also taught English and yoga classes to the residents and helps them grow gardens using compost made from local smoothie shop waste. His work highlights the resilience and resourcefulness of the informal recyclers of the world.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:4289a1f89b0db6d0e4ea8a3270aa08dde95395f9af4e109bc78b726d5f204645",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36
+  ]
+}

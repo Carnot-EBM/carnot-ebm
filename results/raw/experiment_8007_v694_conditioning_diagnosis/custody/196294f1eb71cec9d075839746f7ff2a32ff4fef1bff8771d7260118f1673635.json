@@ -1,0 +1,109 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.1595826459815726,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:776b00082b489e65e1103e5bf49defbcc7c356f9d8bcda3d0bd800dfe2516a80",
+  "input_tokens": 525,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 525,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 548
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:8364d5e4791daacc7ba394a1e9109ff427b953f4ed92c82b25a68990c30c9ffe",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885958,
+    "id": "chatcmpl-3ow7XP3U0n5IOlHm6audcf3HE3eaEhtg",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.622,
+      "predicted_n": 23,
+      "predicted_per_second": 42.543588681185746,
+      "predicted_per_token_ms": 23.505304347826087,
+      "prompt_ms": 499.635,
+      "prompt_n": 447,
+      "prompt_per_second": 894.6530967606353,
+      "prompt_per_token_ms": 1.117751677852349
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 525,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 548
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"The quaint town of Dunblane, Scotland, has been set abuzz by the wedding of tennis legend Andy Murray to his long-term girlfriend, Kim Sears. Saturday's event -- dubbed \\\"the royal wedding of Scotland\\\" -- took place at Dunblane Cathedral, with cheering crowds spilling onto the streets to support their home-grown talent. The grand slam and Olympic champion donned a traditional blue and green tartan kilt, while his bride dazzled in a vintage-style gown by British designer Jenny Packham. The people of Dunblane braved wind, rain and even snow to catch a glimpse of the happy couple, having seen Murray grow from a young boy into a British sporting legend. \\\"Absolutely fabulous to see them today, especially Andy coming back to his hometown,\\\" said one lady in the crowd. \\\"He's a hero. He's done something that all local boys would really strive to do. He's a superstar,\\\" added another. The couple met at the U.S. Open in 2005 and got engaged in November last year. Before the ceremony, and understandably lost for words, Murray resorted to a series of emoticons to sum up his excitement for the day. Fellow tennis veteran Rafael Nadal and First Minister of Scotland Nicola Sturgeon posted their congratulatory messages on Twitter. But any plans for a honeymoon have been put on hold as the world number three returns to tournament action next week.\\n\", \"original_answer\": \"Tennis star, Andy Murray, married long-term girlfriend, Kim Sears, in his hometown of Dunblane, Scotland. The local hero wore a traditional tartan kilt for the ceremony at Dunblane Cathedral. Despite the weather, locals turned out in force to celebrate the event, dubbed \\\"the royal wedding of Scotland\\\".\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "f2a26e6cafdba7f5721371c5a9545b7c1881102b16b76657c13d908084fab1e9",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ]
+}

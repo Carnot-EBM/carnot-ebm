@@ -1,0 +1,114 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.3458111809450202,
+  "exclusion_reason": null,
+  "family_id": "sha256:c59a436ea5c58f973c500106b5092ee0c82ef4c6b551fb9c28aaa1581a0ffc4b",
+  "input_tokens": 712,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 13,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 712,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 737
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:33f0b70553db9584ee9b2a666f75f9e3678295a98f2c36e2c4334fce0f8612f8",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 13\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832580,
+    "id": "chatcmpl-E5zSjwYly0A9m6VtmYcs3ljM8XaREfmC",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 587.37,
+      "predicted_n": 25,
+      "predicted_per_second": 42.56260959871972,
+      "predicted_per_token_ms": 23.4948,
+      "prompt_ms": 639.195,
+      "prompt_n": 634,
+      "prompt_per_second": 991.8725897417845,
+      "prompt_per_token_ms": 1.0081940063091483
+    },
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 712,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 737
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Place the bowl inside the microwave. Cook for 2 minutes. The water will need to be boiling. Allow the bowl to sit inside the microwave for 15 minutes. This will allow the steam from the water to remove the smoke odor and help clean the inside of the microwave. Open the door and remove the bowl.Saturate a sponge or cloth in the water and wipe the inside of the microwave. Keep the microwave door open for several hours.he water will need to be boiling. Allow the bowl to sit inside the microwave for 15 minutes. This will allow the steam from the water to remove the smoke odor and help clean the inside of the microwave. Open the door and remove the bowl.\\\\n\\\\npassage 2:1 Place the bowl in the microwave and heat it on full power for about five minutes. 2  Turn off the microwave and leave the bowl inside for 10-15 minutes. 3  The steam shall help loosen the dirt and food particle baked into the walls. 4  Furthermore, the vinegar shall absorb the smells, even the smell of burnt food. Place the bowl in the microwave and heat it on full power for about five minutes. 2  Turn off the microwave and leave the bowl inside for 10-15 minutes. 3  The steam shall help loosen the dirt and food particle baked into the walls. 4  Furthermore, the vinegar shall absorb the smells, even the smell of burnt food.\\\\n\\\\npassage 3:Best Answer: Try microwaving a bowl of vinegar. It will smell like vinegar for a little while but it should help absorb some of the smell. It will also loosen up any baked-on crud in your microwave, and make it really easy to clean.eport Abuse. Wash out the microwave and all the kitchen surfaces with water and lemon juice (cooks use lemon to get rid of onion and garlic odor on their hands). Burn candles throughout your house. For some reason candles burn odors out of the air. Light one in every room in a safe place.\\\\n\\\\n\\\",\\\"question\\\":\\\"how do i get the smell of smoke out of my microwave\\\"}\", \"original_answer\": \"Passage 2 suggests heating a bowl of vinegar in the microwave for five minutes, then leaving it inside for 10-15 minutes to help remove the smell of smoke. The vinegar will absorb the smells, including the smell of burnt food.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:4a29d8a01277660b6201ea540f8ce1a45fcde99ed37241d4a63ed4af8562f401",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22
+  ]
+}

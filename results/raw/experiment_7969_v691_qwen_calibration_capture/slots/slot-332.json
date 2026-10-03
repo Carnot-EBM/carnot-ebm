@@ -1,0 +1,102 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.233822665992193,
+  "exclusion_reason": null,
+  "family_id": "sha256:5490523e3f2048f3535ec04d0a506937d8b05a2d0a8be09bc7ef2bf72f90afb0",
+  "input_tokens": 588,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 588,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 612
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:dfc6244045c5a6ef940f11e07cd2489e493ddbe13b0449f7f53e372e281e6cb8",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832939,
+    "id": "chatcmpl-nW4BLdgkdmHwConfHuTX4I4UYPzWy64P",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.255,
+      "predicted_n": 24,
+      "predicted_per_second": 42.45871332407498,
+      "predicted_per_token_ms": 23.552291666666665,
+      "prompt_ms": 536.901,
+      "prompt_n": 510,
+      "prompt_per_second": 949.8957908441222,
+      "prompt_per_token_ms": 1.0527470588235293
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 588,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 612
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:The first way is when a stock you own appreciates in value-that is, when people who want to buy the stock decide that a share is worth more than you paid for it.ince stock prices fluctuate constantly when the market is open, you never really know how much you're going to make until you sell. The second way is when the company that owns the stock issues dividends-a payout that companies sometimes make to shareholders.\\\\n\\\\npassage 2:Dividend Stocks. A safer way to make money on stocks is to invest in a company that pays dividends. Some companies have reached their plateau in terms of growth. You might see some increase over time, but the real advantages of these stocks are their stability and dividends.ividend Stocks. A safer way to make money on stocks is to invest in a company that pays dividends. Some companies have reached their plateau in terms of growth. You might see some increase over time, but the real advantages of these stocks are their stability and dividends.\\\\n\\\\npassage 3:If you hang onto a stock that has gone up in value, you have what's known as unrealized gains. Only when you sell the stock you can lock in your gains. Since stock prices fluctuate constantly when the market is open, you never really know how much you're going to make until you sell.The second way is when the company that owns the stock issues dividends-a payout that companies sometimes make to shareholders.ince stock prices fluctuate constantly when the market is open, you never really know how much you're going to make until you sell. The second way is when the company that owns the stock issues dividends-a payout that companies sometimes make to shareholders.\\\\n\\\\n\\\",\\\"question\\\":\\\"how do i make money on stocks\\\"}\", \"original_answer\": \"To make money on stocks, you can invest in a stock that appreciates in value or choose a company that pays dividends. Selling the stock when its value increases allows you to realize your gains. Dividends are payouts made by companies to shareholders. These two methods offer potential ways to make money on stocks.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "calibration_replay",
+  "source_cluster_id": "sha256:013ad3094165e8b77e42b0feefa68f121b34c9e9af4c32834def36226568ec44",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ]
+}

@@ -1,0 +1,112 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.5366445810068399,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:3a943279a51554bff59d95722f71860900e46c7890af7881ec013b460e49edc3",
+  "input_tokens": 954,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 954,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 977
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:e936741ce9d18172ffef17e5b8b3bb46e99c2eae4788b11ac37ef0d8d15db33c",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886301,
+    "id": "chatcmpl-HT8ftWed5TgMngR9wEXPhDh8coTPMFGJ",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.459,
+      "predicted_n": 23,
+      "predicted_per_second": 42.47782380568058,
+      "predicted_per_token_ms": 23.54169565217391,
+      "prompt_ms": 880.467,
+      "prompt_n": 876,
+      "prompt_per_second": 994.926556020839,
+      "prompt_per_token_ms": 1.005099315068493
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 954,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 977
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"819-B State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":null,\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":null},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Coffee & Tea, Restaurants, Cafes, Food, Acai Bowls, Juice Bars & Smoothies\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"9:0-20:0\\\",\\\"Monday\\\":\\\"8:0-20:0\\\",\\\"Saturday\\\":\\\"8:0-20:0\\\",\\\"Sunday\\\":\\\"8:0-20:0\\\",\\\"Thursday\\\":\\\"8:0-18:0\\\",\\\"Tuesday\\\":\\\"8:0-20:0\\\",\\\"Wednesday\\\":\\\"8:0-20:0\\\"},\\\"name\\\":\\\"Oakberry A\u00e7a\u00ed Bowls and Smoothies\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-12-22 19:05:43\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Great A\u00e7a\u00ed! We stopped here for a quick lunch and it didn't disappoint! Lots of fresh fruit available ans a great variety of toppings. A\u00e7a\u00ed was a bit thinner than other types I've had but still had great flavor. The chai pudding topping was my favorite - never had that before and it was a nice addition! Would stop by again for sure!\\\"},{\\\"review_date\\\":\\\"2021-11-19 00:38:41\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Love this place for a quick lunch or a pick me up! There are plenty of choices for toppings and they have gluten free options. I like adding coconut, peanut butter, bananas, strawberries and granola. My reasoning for the four stars is i feel it is a little overpriced.\\\"},{\\\"review_date\\\":\\\"2021-10-19 03:30:05\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"5 star acai bowl, service, and location.  So impressed with this last minute find.  It ended up being a light dinner kinda night for us and with not much open at almost 8pm, but these bowls hit the spot.  \\\\n\\\\nOnce you choose the size you want, there is a large list of toppings which are unlimited.  I chose everything that sounded good and I was so impressed with how well they all went together.  My first time having peanut butter with my acai and chai pudding but it messed well.  Fresh, flavorful and filling.  \\\\n\\\\nI know where to stop now when in Santa Barbara.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Oakberry A\u00e7a\u00ed Bowls and Smoothies is a highly-rated local business in Santa Barbara, CA, located at 819-B State St. This establishment specializes in Coffee & Tea, Restaurants, Cafes, Food, Acai Bowls, Juice Bars & Smoothies, and operates from 8:00 AM to 20:00 PM on most days. The business has a 4.5-star rating, with customers praising its great A\u00e7a\u00ed, variety of fresh fruit, and diverse topping options. Some customers have expressed that the A\u00e7a\u00ed at Oakberry is thinner than other types but still has a great flavor. The chai pudding topping, in particular, was received favorably. While some customers believe the pricing is a bit high, the quality of the food and the gluten-free options available make it a preferred choice for many. The business provides outdoor seating and take-out service, making it a convenient option for many customers.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "a99d380eba2ed691b7be44d7b8e1bf7ed7dea9ebeed04c34bbfb4a0fcb5947f6",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ]
+}

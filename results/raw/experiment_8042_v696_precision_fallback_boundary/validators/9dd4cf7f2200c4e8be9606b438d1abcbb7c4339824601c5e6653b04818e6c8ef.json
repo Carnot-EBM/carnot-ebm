@@ -1,0 +1,66 @@
+{
+  "primary_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8042_v696_precision_fallback_boundary.json",
+  "primary_sha256": "sha256:9dd4cf7f2200c4e8be9606b438d1abcbb7c4339824601c5e6653b04818e6c8ef",
+  "report": {
+    "candidate_sha256": "sha256:9dd4cf7f2200c4e8be9606b438d1abcbb7c4339824601c5e6653b04818e6c8ef",
+    "flagged_adversarial": false,
+    "passed": true,
+    "receipts": [
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8042_v696_precision_fallback_boundary/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+          "--json",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8042_v696_precision_fallback_boundary/terminal_candidate.json"
+        ],
+        "duration_s": 45.60162636800669,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8042_v696_precision_fallback_boundary/terminal_logs/9dd4cf7f2200c4e8be9606b438d1abcbb7c4339824601c5e6653b04818e6c8ef/00_adversarial.log",
+        "log_sha256": "sha256:8f94dc90c273293b6f6c35bcd532bb012d66498cd216f3f63cad86e0e0d65256",
+        "name": "adversarial",
+        "output_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8042_v696_precision_fallback_boundary/terminal_candidate.json\",\n      \"loaded\": true,\n      \"exp_id\": 8042,\n      \"title\": \"\",\n      \"honest_verdict\": \"complete_null_bounded_fallback_custody\",\n      \"flag_count\": 0,\n      \"max_severity\": -1,\n      \"flags\": [],\n      \"gate_version\": \"07ddacadae8c3b8d3250ad0977bda6f747d5bcb02bb7af3119b80db2547b62c7\"\n    }\n  ],\n  \"flagged_count\": 0\n}\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8042_v696_precision_fallback_boundary/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py",
+          "--strict",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8042_v696_precision_fallback_boundary/terminal_candidate.json"
+        ],
+        "duration_s": 1.525268173078075,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8042_v696_precision_fallback_boundary/terminal_logs/9dd4cf7f2200c4e8be9606b438d1abcbb7c4339824601c5e6653b04818e6c8ef/01_row_consistency.log",
+        "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+        "name": "row_consistency",
+        "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8042_v696_precision_fallback_boundary.py --cold-replay /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8042_v696_precision_fallback_boundary/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8042_v696_precision_fallback_boundary.py",
+          "--cold-replay",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8042_v696_precision_fallback_boundary/terminal_candidate.json"
+        ],
+        "duration_s": 24.24300795001909,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8042_v696_precision_fallback_boundary/cold_logs/9dd4cf7f2200c4e8be9606b438d1abcbb7c4339824601c5e6653b04818e6c8ef/00_cold_reduce.log",
+        "log_sha256": "sha256:97451978a611d3b555169a8c38898cd2c8ba9de81223500ae74ae83e48fbaf1b",
+        "name": "cold_reduce",
+        "output_tail": "d_s=17.950 completed=19969 pending=3711\n[exp8042] small_head_load_before elapsed_s=18.056 completed=20128 pending=3552\n[exp8042] small_head_load_after elapsed_s=18.056 completed=20128 pending=3552\n[exp8042] numeric elapsed_s=18.142 completed=20225 pending=3455\n[exp8042] small_head_load_before elapsed_s=18.347 completed=20438 pending=3242\n[exp8042] small_head_load_after elapsed_s=18.347 completed=20438 pending=3242\n[exp8042] numeric elapsed_s=18.382 completed=20481 pending=3199\n[exp8042] numeric elapsed_s=18.631 completed=20737 pending=2943\n[exp8042] small_head_load_before elapsed_s=18.640 completed=20748 pending=2932\n[exp8042] small_head_load_after elapsed_s=18.640 completed=20748 pending=2932\n[exp8042] numeric elapsed_s=18.869 completed=20993 pending=2687\n[exp8042] small_head_load_before elapsed_s=18.931 completed=21058 pending=2622\n[exp8042] small_head_load_after elapsed_s=18.931 completed=21058 pending=2622\n[exp8042] numeric elapsed_s=19.058 completed=21249 pending=2431\n[exp8042] small_head_load_before elapsed_s=19.102 completed=21312 pending=2368\n[exp8042] small_head_load_after elapsed_s=19.102 completed=21312 pending=2368\n[exp8042] numeric elapsed_s=19.280 completed=21505 pending=2175\n[exp8042] small_head_load_before elapsed_s=19.394 completed=21622 pending=2058\n[exp8042] small_head_load_after elapsed_s=19.394 completed=21622 pending=2058\n[exp8042] numeric elapsed_s=19.523 completed=21761 pending=1919\n[exp8042] small_head_load_before elapsed_s=19.685 completed=21932 pending=1748\n[exp8042] small_head_load_after elapsed_s=19.685 completed=21932 pending=1748\n[exp8042] numeric elapsed_s=19.760 completed=22017 pending=1663\n[exp8042] small_head_load_before elapsed_s=19.976 completed=22242 pending=1438\n[exp8042] small_head_load_after elapsed_s=19.976 completed=22242 pending=1438\n[exp8042] numeric elapsed_s=19.997 completed=22273 pending=1407\n[exp8042] small_head_load_before elapsed_s=20.147 completed=22496 pending=1184\n[exp8042] small_head_load_after elapsed_s=20.147 completed=22496 pending=1184\n[exp8042] numeric elapsed_s=20.170 completed=22529 pending=1151\n[exp8042] numeric elapsed_s=20.418 completed=22785 pending=895\n[exp8042] small_head_load_before elapsed_s=20.438 completed=22806 pending=874\n[exp8042] small_head_load_after elapsed_s=20.439 completed=22806 pending=874\n[exp8042] numeric elapsed_s=20.656 completed=23041 pending=639\n[exp8042] small_head_load_before elapsed_s=20.730 completed=23116 pending=564\n[exp8042] small_head_load_after elapsed_s=20.730 completed=23116 pending=564\n[exp8042] numeric elapsed_s=20.900 completed=23297 pending=383\n[exp8042] small_head_load_before elapsed_s=21.021 completed=23426 pending=254\n[exp8042] small_head_load_after elapsed_s=21.021 completed=23426 pending=254\n[exp8042] numeric elapsed_s=21.106 completed=23553 pending=127\n[exp8042] numeric elapsed_s=21.191 completed=23680 pending=0\n[exp8042] small_head_load_before elapsed_s=0.000 completed=0 pending=2\n[exp8042] small_head_load_after elapsed_s=0.000 completed=0 pending=2\n[exp8042] numeric elapsed_s=0.000 completed=1 pending=1\n[exp8042] numeric elapsed_s=0.001 completed=2 pending=0\n[exp8042] small_head_load_before elapsed_s=0.000 completed=0 pending=2\n[exp8042] small_head_load_after elapsed_s=0.000 completed=0 pending=2\n[exp8042] numeric elapsed_s=0.000 completed=1 pending=1\n[exp8042] numeric elapsed_s=0.000 completed=2 pending=0\n[exp8042] small_head_load_before elapsed_s=0.000 completed=0 pending=128\n[exp8042] small_head_load_after elapsed_s=0.000 completed=0 pending=128\n[exp8042] numeric elapsed_s=0.000 completed=1 pending=127\n[exp8042] numeric elapsed_s=0.019 completed=128 pending=0\n[exp8042] small_head_load_before elapsed_s=0.000 completed=0 pending=2\n[exp8042] small_head_load_after elapsed_s=0.000 completed=0 pending=2\n[exp8042] numeric elapsed_s=0.000 completed=1 pending=1\n[exp8042] numeric elapsed_s=0.000 completed=2 pending=0\n{\"passed\": true, \"rows_checksum\": \"sha256:a407dd703511f48b9bc4fccce6bfecf2cd23b8126bc5c2821f9b38129ab34647\"}\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      }
+    ]
+  }
+}

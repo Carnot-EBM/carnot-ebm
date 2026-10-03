@@ -1,0 +1,112 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.2635374220553786,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:2798cd1f974a90ef05b1d10d77cd4f6e5f607cfc445afc8e8b3de1be11a90acc",
+  "input_tokens": 650,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 650,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 673
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:73c22d7cfe107a3441133b2200f6aace2023a543d9ce95e94bdd6e009f02f9cd",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886264,
+    "id": "chatcmpl-omLDLt9y0OpkFdq0GHlpInx8vv2Wp4K7",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.344,
+      "predicted_n": 23,
+      "predicted_per_second": 42.48684754980197,
+      "predicted_per_token_ms": 23.536695652173915,
+      "prompt_ms": 601.496,
+      "prompt_n": 572,
+      "prompt_per_second": 950.9622674132496,
+      "prompt_per_token_ms": 1.0515664335664334
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 650,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 673
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Kayahan, one of Turkey's best-loved singers and songwriters, died of cancer Friday at the age of 66. He had performed most recently in Istanbul on Valentine's Day. The performer, who was also an accomplished guitarist, was first diagnosed with cancer in 1990, the year he competed in the Eurovision Song Contest, and the year before he released the album that ignited his career. The cancer returned in 2005 and then again in 2014, Turkey's semiofficial Anadolu Agency reported. He died Friday in a hospital in Istanbul, five days after his 66th birthday. \\\"We are in grief over losing Kayahan, who contributed to Turkish music with countless compositions and marked a generation with his songs,\\\" Prime Minister Ahmet Davutoglu tweeted. The singer, whose full name was Kayahan Acar, was born in Izmir province, in western Turkey on March 29, 1949. He grew up in Ankara, Turkey's capital, before moving to Istanbul. In 1990, he competed in the Eurovision Song Contest, finishing 17th. The following year he released an album titled \\\"I Made a Vow,\\\" which catapulted him to prominence. Though he recorded nearly 20 albums, that one would remain his most popular. His final album was released in 2007. Other artists recorded his material throughout his career. Videos available online show a vibrant performer with a thick shock of dark hair as he accompanies himself on guitar and croons in a clear tenor. Kayahan was best known for his love songs. More recent videos show a  frailer performer, seated and without a guitar, but still clearly glorying in the joy of singing a song.\\n\", \"original_answer\": \"Beloved Turkish singer-songwriter Kayahan died of cancer last Friday, aged 66. Kayahan, who was first diagnosed with cancer in 1990, had a career spanning several decades, with his most popular album \\\"I Made a Vow\\\" released in 1991. The singer, known for his love songs, continued performing until recently, with his last performance in Istanbul on Valentine's Day. His death comes five days after his 66th birthday.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "c57d0fa6271d611ffad3c304190b167b25feb3e02640f8bff9bcc8431e983bbc",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ]
+}

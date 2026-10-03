@@ -1,0 +1,115 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.5063039190135896,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:aa3de565344c87f427babcf523bf2e8642ea457da638c3dda82e370adf491fbc",
+  "input_tokens": 906,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 906,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 929
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:4364f3bb34b7e00d0945c954b6efcaf1b85bc6e649ee3e6c84899e13d74f32f8",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886166,
+    "id": "chatcmpl-WCcan1XCwAEIKq9mT8N1kAUk9JUaS5oh",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.717,
+      "predicted_n": 23,
+      "predicted_per_second": 42.45759317134224,
+      "predicted_per_token_ms": 23.55291304347826,
+      "prompt_ms": 849.089,
+      "prompt_n": 828,
+      "prompt_per_second": 975.1627921219095,
+      "prompt_per_token_ms": 1.025469806763285
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 906,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 929
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Beijing (CNN)Amid tight security, a Chinese court has convicted veteran journalist Gao Yu for revealing state secrets and sentenced her to seven years in prison. Gao, 71, immediately said she would appeal, her lawyer Mo Shaoping told CNN Friday. After a closed trial last November, the No. 3 Intermediate People's Court in Beijing had twice delayed handing down a verdict, giving Gao's supporters some hope that the authorities' apparent hesitation may lead to her acquittal and release. \\\"Today's conviction is mainly based on a forced confession that she had since retracted,\\\" Mo said. \\\"This is a totally wrong judgment that doesn't respect the facts or the evidence.\\\" The government had accused Gao of disclosing a highly confidential \\\"Document No. 9\\\" issued by the ruling Communist Party leadership in 2013 to an overseas Chinese-language news organization, according to her lawyer. The document revealed the Party's ideological battle plan to counter advocates of constitutional democracy, banning public discussions on topics ranging from press freedom, civil rights to judicial independence. \\\"There is no defense against state secret charges in China, anything the Party or the government want to label as state secrets will be labeled and treated as such -- they can even do it retroactively,\\\" said Nicholas Bequelin, the Hong Kong-based East Asia director of Amnesty International. \\\"Her sentencing is in line with the very stern approach President Xi Jinping's team has taken on dissent, information control and challenges to the Party,\\\" he added. Beijing police detained Gao in late April of last year -- ahead of the sensitive 25th anniversary of the Tiananmen Square crackdown -- and state broadcaster CCTV soon aired her \\\"confession\\\" on national television. Expressing \\\"deep remorse\\\" in the video, Gao told interrogators she \\\"deeply regretted that her behavior had harmed national interests and violated the law.\\\" Mo, her lawyer, said the authorities had extracted the confession by threatening her son's safety and released the police video to CCTV without her knowledge. He added the alleged recipient of the leaked document even publicly denied that Gao was his source. An outspoken journalist and press freedom advocate, Gao began her career as a reporter for the state-run China News Service in 1979 and, in recent years, had been writing columns for overseas Chinese-language publications. She was arrested after the Tiananmen Square protests in 1989 and released more than a year later. She was imprisoned for another six years for leaking state secrets in 1993 -- though the government has never disclosed details of that case. Since Xi took power over two years ago, his government has jailed hundreds of activists across China despite rising international concern. \\\"We are in the midst of one of the most severe crackdowns on human rights activists,\\\" said Bequelin of Amnesty International. \\\"What the state used to tolerate, it doesn't tolerate anymore.\\\"\\n\", \"original_answer\": \"China has sentenced journalist Gao Yu to seven years in prison for revealing state secrets, in a verdict that has been met with widespread criticism and condemnation. Gao was convicted of leaking state secrets to foreign contacts, specifically a strategy paper known as Document No 9, which contains the Chinese Communist Party's plan to oppose the democratic movement. Gao's lawyer, Mo Shaoping, has confirmed that his 71-year-old client will appeal the sentence. In recent years, under the rule of President Xi Jinping, the Chinese government has imprisoned hundreds of activists and critics across the country.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "bf4f3d957945da44754fb0330477537ad1ef6a7f0078d0873c9e85b175f5f324",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18
+  ]
+}

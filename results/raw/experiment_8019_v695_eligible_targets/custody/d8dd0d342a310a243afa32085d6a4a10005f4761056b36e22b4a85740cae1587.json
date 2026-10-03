@@ -1,0 +1,111 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.355342256021686,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:9ebc220a04bc198acc99d9b07ce4b127a1ff5cf5358ba20c46b97445a1f4db0b",
+  "input_tokens": 817,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 817,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 840
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:c9f3512c6183fd13794229dd4f64701feea897f81a2491ad0d97cec55e131354",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885870,
+    "id": "chatcmpl-dxjA0gm2RmXG4tlHJWq1Nl6vnOAHu7ud",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 535.947,
+      "predicted_n": 23,
+      "predicted_per_second": 42.914691191479754,
+      "predicted_per_token_ms": 23.30204347826087,
+      "prompt_ms": 700.263,
+      "prompt_n": 739,
+      "prompt_per_second": 1055.3177877454614,
+      "prompt_per_token_ms": 0.9475818673883627
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 817,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 840
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"214 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":null,\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":null},\\\"business_stars\\\":3.0,\\\"categories\\\":\\\"Burgers, Beer Bar, Restaurants, Nightlife, Bars\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":null,\\\"name\\\":\\\"American Ale\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2017-04-19 21:46:18\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"First they relocate from Close (relocate)  the Cota location to the Union ale spot on state.. actually, Yankee Noodle.. forgot about that 3 month debacle. Don't head over there cause now that location is closed. worst part is, when you have a craving for a PBnJ burger and the biz is run into the ground.. there isn't anywhere else to go. DISAPPOINTING!\\\"},{\\\"review_date\\\":\\\"2016-12-26 17:30:03\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Cool place in the funk zone. Very good beer selection, haven't tried the food yet. Service was pretty good, really like the vibe of the place.  Will be back.\\\"},{\\\"review_date\\\":\\\"2016-11-12 01:46:39\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Food was ehh. It took forever to get, when I got it the burger had no flavor at all. Salad looked like it came out of a bag. I ordered a beer and it was warm and flat. Last time I'm ever coming here. Place does have some potential though it's nicely decorated.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"American Ale is a local business located at 214 State St, Santa Barbara, CA. It is categorized as a restaurant, beer bar, and nightlife spot that also offers burgers. The business doesn\u2019t take reservations, but offers outdoor seating and is suitable for groups. It also provides a take-out service. However, the ambience isn't particularly noted for being romantic, intimate, classy, hipster, divey, touristy, trendy, upscale, or casual. \\n\\nThe business has an average rating of 3 stars. One customer review highlighted a good selection of beer and a pleasant vibe, promising to return despite not having tried the food yet. However, other reviews were less favorable, with one customer expressing disappointment over the closure of their previous location and the unavailability of a favorite menu item. Another customer criticized the food quality and service, describing the burger as flavorless and the beer as warm and flat, but acknowledged the nice decoration of the place.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "calibration",
+  "source_cluster_id": "787b8334c76865effee86f5c55c661393c4df444bec2af80ebe7ecd92c523c8b",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ]
+}

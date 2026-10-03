@@ -1,0 +1,101 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.1738096799817868,
+  "exclusion_reason": null,
+  "family_id": "sha256:450eb70fb31f9c5522d1cc6f81f9dc5f526d4d63b045e6e097339c5d07e14380",
+  "input_tokens": 513,
+  "invocation_finished_at": "2026-10-01T11:43:18.063501+00:00",
+  "invocation_started_at": "2026-10-01T11:43:16.889689+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 2,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 513,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 537
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:690963e22f1f263318e32962bcd3ade5dd4f70e7a49d4cb610f932424fee8383",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 2\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790854998,
+    "id": "chatcmpl-GN3AGCnHzouTbJy6MOjirZfV8Mx8LJM4",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 562.899,
+      "predicted_n": 24,
+      "predicted_per_second": 42.6364232304552,
+      "predicted_per_token_ms": 23.454125,
+      "prompt_ms": 492.272,
+      "prompt_n": 435,
+      "prompt_per_second": 883.6578151916015,
+      "prompt_per_token_ms": 1.1316597701149425
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 513,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 537
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Arthritis of the spine (osteoarthritis) typically accompanies degenerative disc disease, and refers to the inflammation, pain and swelling of joints near the vertebrae (called facet joints).\\\\n\\\\npassage 2:Common symptoms of degenerative disc disease and arthritis overlap, including: 1  Neck and back pain. 2  Radiating pain (radiculopathy) 3  Sciatica. 4  Muscle weakness, stiffness or soreness. 5  Loss of mobility and flexibility. 6  Tingling or numbness in the extremities. 7  And more.\\\\n\\\\npassage 3:Degenerative disc disease (ddd) and arthritis are very similar, and often are considered the same. Arthritis, however, is a broader term that can include arthritis to any joint in the body and can include different causes, such as autoimmune, infectious, overuse, traumatic, aging, etc. Ddd is specific to the spine and refers to arthritis that is usually age or overuse related.\\\\n\\\\n\\\",\\\"question\\\":\\\"is degenerative disc disease and arthritis the same thing?\\\"}\", \"original_answer\": \"Based on the given passages, it appears that degenerative disc disease (DDD) and arthritis are not exactly the same thing, but they are closely related and share many similarities. DDD is a specific type of arthritis that affects the spine and is typically caused by age or overuse, while arthritis is a broader term that can refer to inflammation and damage to any joint in the body, with various possible causes. The symptoms of DDD and arthritis can also be similar, such as pain, stiffness, and limited mobility. Therefore, while DDD is a type of arthritis, not all arthritis is DDD.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_admission",
+  "source_cluster_id": "sha256:f1711f86b514ea88ef0d87220a8df6249c3eeaccd830b9fdb67a43d5ecec33e5",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ]
+}

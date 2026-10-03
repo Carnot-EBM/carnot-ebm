@@ -1,0 +1,108 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.6187087770085782,
+  "exclusion_reason": null,
+  "family_id": "sha256:08d8de3bc858c1839d8ce0446f33b5910cd73511434d72aa1613f6671879e2a2",
+  "input_tokens": 1001,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1001,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1025
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:bc83f6efba101f7941767a1035ad8b9bd8c3561e62b7ad7b1120f24c342919cb",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832869,
+    "id": "chatcmpl-rZan2RZbq5e2ivPKYe9k2vz4L21Tn2ga",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.682,
+      "predicted_n": 24,
+      "predicted_per_second": 42.426663743940935,
+      "predicted_per_token_ms": 23.570083333333333,
+      "prompt_ms": 926.93,
+      "prompt_n": 923,
+      "prompt_per_second": 995.7601976416775,
+      "prompt_per_token_ms": 1.004257854821235
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1001,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1025
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"811 State St, Ste B\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":null,\\\"romantic\\\":false,\\\"touristy\\\":null,\\\"trendy\\\":null,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":false,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Caterers, Italian, Food Delivery Services, American (New), Event Planning & Services, Restaurants, Food\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-21:0\\\",\\\"Monday\\\":\\\"11:0-21:0\\\",\\\"Saturday\\\":\\\"11:0-21:0\\\",\\\"Sunday\\\":\\\"11:0-21:0\\\",\\\"Thursday\\\":\\\"11:0-21:0\\\",\\\"Tuesday\\\":\\\"11:0-21:0\\\",\\\"Wednesday\\\":\\\"11:0-21:0\\\"},\\\"name\\\":\\\"California Pasta\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-04 04:01:42\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"New girl working was very nice tonight for our takeout order! Answered phone politely,  gave us appropriate amount of napkins, utensils and condiments. We felt like valued customers! Thanks\\\"},{\\\"review_date\\\":\\\"2021-12-24 21:48:07\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"The minestrone was aweful. I got a bowl of onion and celery and maybe 3 pieces of pasta. I'm going to go try them again next week because I work close by but the minestrone was not good to me. I know it's usually a hit or miss but this was a complete miss and I had to go buy lunch again else where.\\\"},{\\\"review_date\\\":\\\"2021-11-29 03:38:23\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Very sad to write this review because I used to love this place. I ordered a Cajun pasta and it tasted sour like vinegar, as if they had poured a whole bottle of Tabasco. I double checked and asked to see if it was Cajun sauce and was reassured it was. I asked if I could get something else because it didn't taste like Cajun sauce. The lady went to ask the manager who said I could buy a new meal with a 10% discount off. Not sure who taught them how to fix a meal.... I had barely eaten it. I asked for a side of sauce because they wouldn't take it back. They brought me a side of Alfredo sauce and it tasted worse. It tasted putrid and awful. Will not be returning...\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"California Pasta is a casual Italian restaurant located in Santa Barbara, CA. According to their listings, they offer catering services, food delivery, event planning, and takeout options. The restaurant is open seven days a week from 11 am to 9 pm. They have outdoor seating available and free Wi-Fi for their customers. Based on customer reviews, the restaurant seems to have a friendly staff, with one reviewer complimenting the new employee who assisted them with their takeout order. However, there have been some complaints about the quality of the food, with one reviewer expressing disappointment with the Minestrone soup and another reviewer describing their Cajun pasta as tasting sour and like vinegar. It's worth noting that the restaurant has a 3.5-star rating overall, indicating that some customers have had positive experiences dining there.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "tune",
+  "source_cluster_id": "sha256:81e4a94755c14081b9cd65fd8fa61a8f869f323e63d1a801976194fbde476552",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+  ]
+}

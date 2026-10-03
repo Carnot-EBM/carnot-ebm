@@ -1,0 +1,108 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.5230286109726876,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:1529ff8d4cf65ae87469c90f70f97fa3b1c2caf8bedce8cd3f4a7e1dab080f18",
+  "input_tokens": 861,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 861,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 884
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:e24f64f68c4161d183ec3bd192b94db60e737d95af55ed5e7ae2f4b32f499d9f",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886361,
+    "id": "chatcmpl-Ugk5nbqkkPdvspgwtMZYUQV7avowV06R",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.541,
+      "predicted_n": 23,
+      "predicted_per_second": 42.47139182444173,
+      "predicted_per_token_ms": 23.54526086956522,
+      "prompt_ms": 823.19,
+      "prompt_n": 783,
+      "prompt_per_second": 951.1777353952308,
+      "prompt_per_token_ms": 1.0513282247765008
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 861,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 884
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"5764 Calle Real\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":null},\\\"business_stars\\\":3.0,\\\"categories\\\":\\\"Restaurants, Mexican\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":null,\\\"name\\\":\\\"Rudy's Restaurant\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2014-09-30 03:09:30\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"Went for lunch.  Shared the chicken salad.  Portions were ample.  Food was good.  Service was ok...  I do like the indoor seating and atmosphere so I'd return for just that if I were already in the area...\\\"},{\\\"review_date\\\":\\\"2014-03-04 03:41:22\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"CLOSED!  The same place is now called PALOMA Mexican Restaurant (which is pretty good!).\\\"},{\\\"review_date\\\":\\\"2013-08-11 05:28:16\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"i went in today to buy a burrito in the afternoon\\\\nthe girl was very nice and she was trying her best to help all the customers to the orders they wanted.\\\\nthe cook however, is a different story.\\\\nas i stood there waiting for my food, there was this lady with her daughter who had ordered something and changed her mind about it. as the cashier went in to tell the cook she didn't want her order anymore, the cook simply yelled at her and said \\\\\\\"well I'm not making anything else\\\\\\\". \\\\nthen next thing you know, after the lady left all i hear is the cook yelling at the cashier i don't care what you have to say. it upset the girl very much. i could tell in her face when she handed me my food.\\\\nthis has happened various times since iv gone. the owner NEEDS to get a new cook because this guy is making him loose clients.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Rudy's Restaurant is a Mexican eatery located at 5764 Calle Real, Goleta, CA. The establishment is perfect for casual dining and is well-suited for group outings. While the restaurant doesn't offer outdoor seating or reservations, it does provide a takeout option. There is no information about the availability of Wi-Fi or live music. The restaurant also offers a parking lot for its patrons but does not provide valet, garage, street, or validated parking. The business has an average rating of 3 stars. Reviews indicate adequate portion sizes and satisfactory food. However, the customer service experience appears to be inconsistent with some complaints about the attitude of the cook. One review also indicates that the restaurant may be closed and replaced by another establishment named PALOMA Mexican Restaurant.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "e9b64cec68b7d84b399e69b3d8a868970149cf55fcc9db421dd09897a3741bf1",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]
+}

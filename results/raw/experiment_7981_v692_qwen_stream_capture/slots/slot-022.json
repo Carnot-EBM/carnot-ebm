@@ -1,0 +1,113 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.333335175004322,
+  "exclusion_reason": null,
+  "family_id": "sha256:d6f2049b03560bef3feb82fdf859871cbfeef7695b9f4c6af1dd107455b708d6",
+  "input_tokens": 752,
+  "invocation_finished_at": "2026-10-01T11:41:46.124049+00:00",
+  "invocation_started_at": "2026-10-01T11:41:44.790712+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 752,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 776
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:1c237db0b24b9cbdd60bfd128a15a649d7abc820365d37608fbb200e7c50a4ab",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790854906,
+    "id": "chatcmpl-mB1rntHR3D0XJSW6hoQfPdwCFxSTMRtx",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 563.947,
+      "predicted_n": 24,
+      "predicted_per_second": 42.55719065798736,
+      "predicted_per_token_ms": 23.497791666666668,
+      "prompt_ms": 652.248,
+      "prompt_n": 674,
+      "prompt_per_second": 1033.3492781886644,
+      "prompt_per_token_ms": 0.9677270029673591
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 752,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 776
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"In 2022, a Louisiana mother of 2 and Lyft driver vanished into thin air after picking up a passenger\\nMysterious Disappearance: A Year Without Ella Goodie, The Lyft Driver in Louisiana\\nA year has passed since Ella Goodie, a 33-year-old mother of two from Scott, Louisiana, mysteriously vanished after picking up a passenger. The echoes of her disappearance reverberate through the tight-knit community as the desperate search continues.\\nElla, who balanced her time between driving for Lyft and offering independent rides, was last in contact on March 9, 2022. That day, she informed her brother of her plans to ferry a passenger to Houston, Texas. Alarm bells rang when she failed to return home, leading to her being reported missing.\\nThe passenger in question, Brandon Fransisco, aged 37, was not new to Ella. She had chauffeured him before, but on that fateful day, she was operating independently, not under the Lyft platform. Investigations reveal that her vehicle, a black 2012 Audi Q5 SUV, did make its way to Houston. Curiously, it was spotted in Louisiana only 12 hours later and was last seen in Dallas, Texas on March 10. A twist to the tale came when her SUV was discovered on April 1, 2022, sans Ella. Further clues led to the last known location of her phone, which pinged in Iowa, Louisiana.\\nJessica Goodie, Ella\u2019s cousin, reminiscing about her, says, \\\"Ella had a magnetic aura. Every room she entered, her energy was palpable. She loved deeply, and her absence is deeply felt. Her children, parents, and our entire family yearn for her return.\\\"\\nIn an unsettling turn of events, Fransisco, the last known person to be with her, was convicted of unrelated charges in 2022. He had been released on bail and was due to commence a 30-year prison term on the very day Ella disappeared. He is currently in detention.\\nThe Scott Police Department urges anyone with pertinent information to come forward. Please reach out to them at 337-233-3715. The community remains hopeful, clinging to the belief that answers about Ella\u2019s whereabouts will soon surface.\", \"original_answer\": \"Ella Goodie, a Louisiana mother of two who worked as a Lyft driver, mysteriously vanished after picking up a passenger in March 2022. The passenger, Brandon Francisco, was charged with unrelated crimes and released on bail, and his vehicle was found abandoned in Iowa. The Scott Police Department is urging anyone with information to come forward.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_update",
+  "source_cluster_id": "sha256:74d1ffc3d20c3298e8da98727be0014b3601a66d1174160a2037d2c880f85cb2",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ]
+}

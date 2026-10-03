@@ -1,0 +1,104 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.5905588240129873,
+  "exclusion_reason": null,
+  "family_id": "sha256:80d66d286a260c4f5dc159ba56842cd51cd46233f9e5bfd93eb027958d0223b8",
+  "input_tokens": 1032,
+  "invocation_finished_at": "2026-10-01T11:46:26.225955+00:00",
+  "invocation_started_at": "2026-10-01T11:46:24.635396+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1032,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1055
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:fcbeebb3c92d59ef1c810d33528200fa81c36058e82fd56cdb227be3bbc0f3af",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855186,
+    "id": "chatcmpl-SvlxIc5vfQzkGsEJYR0OjZZUjIfTmvNi",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.989,
+      "predicted_n": 23,
+      "predicted_per_second": 42.51472765620003,
+      "predicted_per_token_ms": 23.521260869565218,
+      "prompt_ms": 931.644,
+      "prompt_n": 954,
+      "prompt_per_second": 1023.9962904285328,
+      "prompt_per_token_ms": 0.976566037735849
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1032,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1055
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"888 Embarcadero Del N\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":null},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Hot Dogs, Restaurants\\\",\\\"city\\\":\\\"Isla Vista\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-3:0\\\",\\\"Monday\\\":\\\"11:0-22:0\\\",\\\"Saturday\\\":\\\"11:0-3:0\\\",\\\"Sunday\\\":\\\"11:0-22:0\\\",\\\"Thursday\\\":\\\"11:0-3:0\\\",\\\"Tuesday\\\":\\\"11:0-22:0\\\",\\\"Wednesday\\\":\\\"11:0-22:0\\\"},\\\"name\\\":\\\"Dogtown\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2012-06-28 16:27:59\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Had a BBQ Burger and Crisscut fries from this location which was very delicious. However, this restaurant is no longer here and is being replaced with The Habit Burger [!!!!].\\\"},{\\\"review_date\\\":\\\"2012-06-14 00:40:03\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"This is my favorite place in Isla Vista hands down.  Not only are the hotdogs/sausages great but their burgers are surprisingly the cheapest and most delicious in town!  It does not end there, the sweet potatoe fries are AMAZINGLY delicious, affordable and plentiful!\\\"},{\\\"review_date\\\":\\\"2012-04-11 03:18:49\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"This place was a go-to when I lived in Isla Vista.  I'd always go for hotdog, sourkraut and mustard, simple and delicious. \\\\n\\\\nWhat really sets this place a part from your average hot-dog joint are the dogtown fries.  Think of them as Nacho fries.  They are so amazing.  The fries are loaded with beans, guacamole, onions, jalapenos, grated cheese, & bacon bits.  \\\\n\\\\nThese alone give them 4/5 stars. The missing star is the price (but really, what isn't over priced in Isla Vista) and for being a hot dog place, I really wish the hot dogs were amazing instead of okay.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Dogtown is a local business located at 888 Embarcadero Del N in Isla Vista, CA. The establishment offers hot dogs and other restaurant cuisine. It operates from 11:00 am to 10:00 pm from Monday to Sunday, except on Thursdays and Fridays when it closes at 3:00 am. The restaurant provides outdoor seating and takeout services, making it convenient for customers who prefer to dine outside or take their food to go. It is also suitable for groups and offers a casual ambience.\\n\\nCustomers have generally had positive experiences at Dogtown, giving it an average rating of 4.0 stars. One customer praised the BBQ Burger and Crisscut fries, which they found delicious. However, it is worth noting that this particular location has been replaced with The Habit Burger. Another customer highlighted Dogtown as their favorite place in Isla Vista, mentioning the great hotdogs, burgers, and surprisingly affordable sweet potato fries. The customer also praised the dogtown fries, which are loaded with beans, guacamole, onions, jalapenos, grated cheese, and bacon bits. However, they were not completely satisfied with the price and wished the hotdogs were better. Overall, Dogtown seems to be a popular choice for those seeking tasty hotdogs, burgers, and fries in Isla Vista.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "sha256:331aaa441acd39d0c7fe220c85a15dc737748d760509dcb9ef8093d3ee906f8d",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ]
+}

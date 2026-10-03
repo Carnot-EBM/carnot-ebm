@@ -1,0 +1,98 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.5035952710313722,
+  "exclusion_reason": null,
+  "family_id": "sha256:bafee38b4f54cdb86560e9076ef3a11d03ceee64a770e07912454b008fb7ccf5",
+  "input_tokens": 865,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": 5,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 865,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 888
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:ab4d13cf9778a7caf054d782f1f4ed65af6d1eeecc730c2cbd66676083c50a3e",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.95,\n \"source_sentence_id\": 5\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832828,
+    "id": "chatcmpl-Y6a6nV3Pp0W5TAzTjpQ29plwQUsAFM8N",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.221,
+      "predicted_n": 23,
+      "predicted_per_second": 42.496503276849936,
+      "predicted_per_token_ms": 23.531347826086957,
+      "prompt_ms": 822.265,
+      "prompt_n": 787,
+      "prompt_per_second": 957.1123664512049,
+      "prompt_per_token_ms": 1.0448094027954256
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 865,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 888
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"1048 Casitas Pass Rd\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":null,\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":null},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Restaurants, Pizza\\\",\\\"city\\\":\\\"Carpinteria\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-23:0\\\",\\\"Monday\\\":\\\"11:0-23:0\\\",\\\"Saturday\\\":\\\"11:0-23:0\\\",\\\"Sunday\\\":\\\"11:0-23:0\\\",\\\"Thursday\\\":\\\"11:0-23:0\\\",\\\"Tuesday\\\":\\\"11:0-23:0\\\",\\\"Wednesday\\\":\\\"11:0-23:0\\\"},\\\"name\\\":\\\"Little Caesars Pizza\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-09-19 08:09:14\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Best pizza choice in Carpinteria! This location is always clean and the staff is great. The pizza and cheese bread never disappoints.\\\"},{\\\"review_date\\\":\\\"2019-10-20 02:08:05\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Great customer service. Very good price. Pizzas are fresh and delicious. My kids love this place. I highly recommended\\\"},{\\\"review_date\\\":\\\"2019-03-24 01:14:30\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"this past Monday at work my Mgr purchased a pretzel crust pizza and I had a slice which was very good later that day I had to go back and after was talking with the owner about it and I bought one for dinner took it home my wife had a slice or two and I finished it off I would buy it again\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Little Caesars Pizza is a popular local business located at 1048 Casitas Pass Rd in Carpinteria, CA. It falls under the categories of Restaurants and Pizza. The business operates from 11:00 AM to 11:00 PM every day of the week. According to customer reviews, Little Caesars Pizza has received an average rating of 4.5 stars.\\n\\nCustomers have praised the cleanliness of the location and the great service provided by the staff. The pizza and cheese bread offered by Little Caesars Pizza are highly regarded and never disappoint. Customers have mentioned that the pizzas are fresh, delicious, and reasonably priced. Families with children particularly enjoy dining at this establishment.\\n\\nThe business attributes include options for takeout and being good for groups. However, there is no information available about the availability of outdoor seating, WiFi, or business parking. The ambience is described as casual, with no specific themes mentioned.\\n\\nIn conclusion, Little Caesars Pizza in Carpinteria is a highly recommended local business that offers delicious and fresh pizzas at a reasonable price. The staff is friendly, and the location is always clean. It is a popular choice for families and individuals looking for a satisfying pizza experience.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "calibration_replay",
+  "source_cluster_id": "sha256:4ea2e0e0ddde844ee4a48fbbda3c148df7c312459c7bb66f33afe37fba6c9121",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ]
+}

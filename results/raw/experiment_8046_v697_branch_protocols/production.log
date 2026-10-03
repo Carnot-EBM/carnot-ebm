@@ -1,0 +1,113 @@
+[exp8032] phase=8046_start_preconditions elapsed_s=0.155 completed=0 pending=0
+[exp8032] phase=8046_preconditions elapsed_s=0.160 completed=0 pending=0
+[exp8032] phase=8046_historical_chunk elapsed_s=0.969 completed=1 pending=10
+[exp8032] phase=8046_historical_chunk elapsed_s=1.001 completed=2 pending=9
+[exp8032] phase=8046_historical_chunk elapsed_s=1.099 completed=3 pending=8
+[exp8032] phase=8046_historical_chunk elapsed_s=1.170 completed=4 pending=7
+[exp8032] phase=8046_historical_chunk elapsed_s=1.199 completed=5 pending=6
+[exp8032] phase=8046_historical_chunk elapsed_s=1.309 completed=6 pending=5
+[exp8032] phase=8046_historical_chunk elapsed_s=1.373 completed=7 pending=4
+[exp8032] phase=8046_historical_chunk elapsed_s=1.405 completed=8 pending=3
+[exp8032] phase=8046_historical_chunk elapsed_s=1.523 completed=9 pending=2
+[exp8032] phase=8046_historical_chunk elapsed_s=1.579 completed=10 pending=1
+[exp8032] phase=8046_historical_chunk elapsed_s=1.601 completed=11 pending=0
+[exp8032] phase=8046_methods_sealed elapsed_s=5.153 completed=512 pending=0
+[exp8032] phase=8046_before_owned_validation elapsed_s=5.171 completed=512 pending=9
+[exp7303-validation] before_subprocess consumer_contracts elapsed_s=0.000 unit=1/9
+[exp7303-validation:consumer_contracts] ........................                                                 [100%]
+[exp7303-validation:consumer_contracts] 24 passed in 17.22s
+[exp7303-validation] subprocess_outstanding consumer_contracts elapsed_s=20.001
+[exp7303-validation] after_subprocess consumer_contracts elapsed_s=20.486 exit=0 unit=1/9
+[exp7303-validation] before_subprocess combined_cli_coverage elapsed_s=0.000 unit=2/9
+[exp7303-validation] subprocess_outstanding combined_cli_coverage elapsed_s=20.001
+[exp7303-validation] subprocess_outstanding combined_cli_coverage elapsed_s=40.001
+[exp7303-validation:combined_cli_coverage] ......                                                                   [100%]
+[exp7303-validation:combined_cli_coverage] 6 passed in 44.06s
+[exp7303-validation] after_subprocess combined_cli_coverage elapsed_s=49.344 exit=0 unit=2/9
+[exp7303-validation] before_subprocess combine elapsed_s=0.000 unit=3/9
+[exp7303-validation:combine] Combined 9 files
+[exp7303-validation] after_subprocess combine elapsed_s=0.077 exit=0 unit=3/9
+[exp7303-validation] before_subprocess coverage_json elapsed_s=0.000 unit=4/9
+[exp7303-validation:coverage_json] Wrote JSON report to /tmp/carnot-8046-sw54cdjd/coverage.json
+[exp7303-validation] after_subprocess coverage_json elapsed_s=0.069 exit=0 unit=4/9
+[exp7303-validation] before_subprocess ruff_check elapsed_s=0.000 unit=5/9
+[exp7303-validation:ruff_check] All checks passed!
+[exp7303-validation] after_subprocess ruff_check elapsed_s=0.012 exit=0 unit=5/9
+[exp7303-validation] before_subprocess ruff_format elapsed_s=0.000 unit=6/9
+[exp7303-validation:ruff_format] 3 files already formatted
+[exp7303-validation] after_subprocess ruff_format elapsed_s=0.011 exit=0 unit=6/9
+[exp7303-validation] before_subprocess strict_mypy elapsed_s=0.000 unit=7/9
+[exp7303-validation:strict_mypy] pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.inference.*', 'carnot.models.*', 'carnot.pipeline.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.pipeline.verify_repair', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.*', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl']
+[exp7303-validation:strict_mypy] Success: no issues found in 1 source file
+[exp7303-validation] after_subprocess strict_mypy elapsed_s=0.079 exit=0 unit=7/9
+[exp7303-validation] before_subprocess spec_coverage elapsed_s=0.000 unit=8/9
+[exp7303-validation:spec_coverage] OK: All tests reference specification requirements.
+[exp7303-validation] after_subprocess spec_coverage elapsed_s=0.020 exit=0 unit=8/9
+[exp7303-validation] before_subprocess repository_health elapsed_s=0.000 unit=9/9
+[exp7303-validation:repository_health] ============================= test session starts ==============================
+[exp7303-validation:repository_health] platform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0
+[exp7303-validation:repository_health] rootdir: /home/ianblenke/github.com/ianblenke/carnot
+[exp7303-validation:repository_health] configfile: pyproject.toml
+[exp7303-validation:repository_health] plugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2
+[exp7303-validation:repository_health] created: 4/4 workers
+[exp7303-validation] subprocess_outstanding repository_health elapsed_s=20.001
+[exp7303-validation] subprocess_outstanding repository_health elapsed_s=40.001
+[exp7303-validation] subprocess_outstanding repository_health elapsed_s=60.002
+[exp7303-validation] after_subprocess repository_health elapsed_s=60.079 exit=124 unit=9/9
+[exp8032] phase=8046_after_owned_validation elapsed_s=135.350 completed=9 pending=0
+[exp8032] phase=8046_before_publication elapsed_s=135.371 completed=512 pending=1
+[exp7303-validation] before_subprocess cold_reduction elapsed_s=0.000 unit=1/1
+[exp7303-validation:cold_reduction] [exp8032] phase=8046_start_preconditions elapsed_s=0.167 completed=0 pending=0
+[exp7303-validation:cold_reduction] [exp8032] phase=8046_cold_reduction_passed elapsed_s=0.932 completed=0 pending=0
+[exp7303-validation] after_subprocess cold_reduction elapsed_s=2.263 exit=0 unit=1/1
+[exp7303-validation] before_subprocess adversarial elapsed_s=0.000 unit=1/2
+[exp7303-validation:adversarial] {
+[exp7303-validation:adversarial]   "reports": [
+[exp7303-validation:adversarial]     {
+[exp7303-validation:adversarial]       "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8046_v697_branch_protocols/terminal_candidate.json",
+[exp7303-validation:adversarial]       "loaded": true,
+[exp7303-validation:adversarial]       "exp_id": 8046,
+[exp7303-validation:adversarial]       "title": "",
+[exp7303-validation:adversarial]       "honest_verdict": "complete_null_branch_protocols",
+[exp7303-validation:adversarial]       "flag_count": 0,
+[exp7303-validation:adversarial]       "max_severity": -1,
+[exp7303-validation:adversarial]       "flags": [],
+[exp7303-validation:adversarial]       "gate_version": "07ddacadae8c3b8d3250ad0977bda6f747d5bcb02bb7af3119b80db2547b62c7"
+[exp7303-validation:adversarial]     }
+[exp7303-validation:adversarial]   ],
+[exp7303-validation:adversarial]   "flagged_count": 0
+[exp7303-validation:adversarial] }
+[exp7303-validation] after_subprocess adversarial elapsed_s=0.817 exit=0 unit=1/2
+[exp7303-validation] before_subprocess strict_rows elapsed_s=0.000 unit=2/2
+[exp7303-validation:strict_rows] 
+[exp7303-validation:strict_rows] verdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.
+[exp7303-validation:strict_rows]   No row/verdict contradictions among the artifacts that could be checked.
+[exp7303-validation] after_subprocess strict_rows elapsed_s=0.039 exit=0 unit=2/2
+[exp7303-validation] before_subprocess cold_reduction elapsed_s=0.000 unit=1/1
+[exp7303-validation:cold_reduction] [exp8032] phase=8046_start_preconditions elapsed_s=0.168 completed=0 pending=0
+[exp7303-validation:cold_reduction] [exp8032] phase=8046_cold_reduction_passed elapsed_s=0.932 completed=0 pending=0
+[exp7303-validation] after_subprocess cold_reduction elapsed_s=2.242 exit=0 unit=1/1
+[exp7303-validation] before_subprocess adversarial elapsed_s=0.000 unit=1/2
+[exp7303-validation:adversarial] {
+[exp7303-validation:adversarial]   "reports": [
+[exp7303-validation:adversarial]     {
+[exp7303-validation:adversarial]       "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8046_v697_branch_protocols.json",
+[exp7303-validation:adversarial]       "loaded": true,
+[exp7303-validation:adversarial]       "exp_id": 8046,
+[exp7303-validation:adversarial]       "title": "",
+[exp7303-validation:adversarial]       "honest_verdict": "complete_null_branch_protocols",
+[exp7303-validation:adversarial]       "flag_count": 0,
+[exp7303-validation:adversarial]       "max_severity": -1,
+[exp7303-validation:adversarial]       "flags": [],
+[exp7303-validation:adversarial]       "gate_version": "07ddacadae8c3b8d3250ad0977bda6f747d5bcb02bb7af3119b80db2547b62c7"
+[exp7303-validation:adversarial]     }
+[exp7303-validation:adversarial]   ],
+[exp7303-validation:adversarial]   "flagged_count": 0
+[exp7303-validation:adversarial] }
+[exp7303-validation] after_subprocess adversarial elapsed_s=0.806 exit=0 unit=1/2
+[exp7303-validation] before_subprocess strict_rows elapsed_s=0.000 unit=2/2
+[exp7303-validation:strict_rows] 
+[exp7303-validation:strict_rows] verdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.
+[exp7303-validation:strict_rows]   No row/verdict contradictions among the artifacts that could be checked.
+[exp7303-validation] after_subprocess strict_rows elapsed_s=0.058 exit=0 unit=2/2
+[exp8032] phase=8046_complete elapsed_s=141.625 completed=512 pending=0

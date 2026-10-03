@@ -1,0 +1,113 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.831533316988498,
+  "exclusion_reason": null,
+  "family_id": "sha256:3c24cc4f1ed28334b67285557fe55142a5b58db1b2397748f3063ba365e494c5",
+  "input_tokens": 1306,
+  "invocation_finished_at": "2026-10-01T11:43:08.646387+00:00",
+  "invocation_started_at": "2026-10-01T11:43:06.814853+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1306,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1330
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:64a5eb290c9de817898dc25a4cc40055346612a56cac34ec14a5be9f25e7fe77",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790854988,
+    "id": "chatcmpl-DFsnbLI3HHZKt4PzQlfe5BIDLQjlUWDd",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 563.914,
+      "predicted_n": 24,
+      "predicted_per_second": 42.559681086123064,
+      "predicted_per_token_ms": 23.496416666666665,
+      "prompt_ms": 1135.943,
+      "prompt_n": 1228,
+      "prompt_per_second": 1081.0401578248204,
+      "prompt_per_token_ms": 0.925035016286645
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1306,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1330
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"7014 Marketplace Dr\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Food, Juice Bars & Smoothies, Restaurants\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"7:0-18:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"8:0-22:0\\\",\\\"Sunday\\\":\\\"8:0-22:0\\\",\\\"Thursday\\\":\\\"7:0-22:0\\\",\\\"Tuesday\\\":\\\"7:0-22:0\\\",\\\"Wednesday\\\":\\\"7:0-22:0\\\"},\\\"name\\\":\\\"Blenders in the Grass\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-11 02:18:03\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"This place is a sweet treat for anyone wanting a fruit smoothie type of drink. And for the price, what a steal! I love that it's non-pretentious and makes smoothies accessible to everyone. It's great that you get a free supplement (we went for immunity boost, you know, for covid) added to your drink. Some are definitely way healthier than others, so beware when you order. \\\\n\\\\nRed Mango - 5/5 Yummy! Really loved this as a fruity, refreshing drink. \\\\nDate - 3/5 I would just get something else. It didn't taste of dates at all - just like a plain ol' sweet milkshake.\\\"},{\\\"review_date\\\":\\\"2022-01-01 19:14:41\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Whether you're completing a morning workout or finishing up finals week, getting a smoothie is the perfect way to celebrate no matter the occasion!\\\\n\\\\nJamba doesn't have a large presence in Santa Barbara, which I quickly found out soon after moving here for undergrad. Instead, there's a local chain when it comes to blended drinks... and it's a hundred times better.\\\\n\\\\nYou have the option of customizing your own smoothie or choosing from their pre-set menu. Most of their blends are a mix of fruits, juice, and sherbet/yogurt/ice milk.\\\\n\\\\nEvery drink comes with one free supplement. You can add chia seeds, probiotic, calcium, antioxidants, etc.\\\\n\\\\nPre-COVID, I loved their reusable cups and how they would give a small discount for bringing it in.\\\\n\\\\nMy all time favorite has to be Blue Banana, which is a creamy concoction of milk, blueberries, banana, and \\\\\\\"ice milk\\\\\\\". Great consistency, decently sweet, and super refreshing.\\\\n\\\\nPeanut Butter is a close second, which is an indulging blend of chocolate, peanut butter, milk, banana. It's super sweet, basically a milkshake.\\\\n\\\\nI don't know if they still use ice cream to make their creamy smoothies, but that's probably why it's super delicious. Drink responsibility and in moderation.\\\\n\\\\nHappy New Year!\\\"},{\\\"review_date\\\":\\\"2021-12-15 18:08:04\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Green smoothie with chia was so energizing that it's my \\\\\\\"go to\\\\\\\" snack. I bought 3 and redistributed them into 5 home containers. Mental clarity, energy and ... other benefits if green. Very reasonably priced and worth the drive.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Blenders in the Grass is a popular local business in Goleta, CA that specializes in fresh fruit smoothies, juice bars, and healthy restaurant options. With a 4.5-star rating and overwhelmingly positive customer reviews, this establishment is a must-visit for anyone looking for a quick, nutritious drink or snack.\\n\\nThe menu offers a variety of pre-set smoothie options, including the highly-recommended Blue Banana and Peanut Butter blends, as well as the option to create your own custom smoothie with a choice of fruits, juices, and supplements. All drinks come with one free supplement, such as chia seeds or probiotics, and customers can also opt for a reusable cup for a small discount.\\n\\nReviewers rave about the delicious and refreshing flavors, with some mentioning that the smoothies are \\\"super sweet\\\" and \\\"indulging.\\\" One customer noted that the Green smoothie with chia was particularly energizing and became their \\\"go-to\\\" snack.\\n\\nIn addition to their tasty drinks, Blenders in the Grass also offers a welcoming atmosphere, with outdoor seating and free Wi-Fi. Although they do not offer valet or garage parking, there is ample lot parking available.\\n\\nOverall, Blenders in the Grass is an excellent choice for anyone looking for a quick, healthy drink or snack in the Goleta area. With its convenient location, friendly atmosphere, and delicious smoothies, it's no wonder this local business is thriving.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_update",
+  "source_cluster_id": "sha256:3bb1979fb145483f77c8dcb603dbc38e7d6a094c6a29e7ee21f8b6e541e34ab7",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ]
+}

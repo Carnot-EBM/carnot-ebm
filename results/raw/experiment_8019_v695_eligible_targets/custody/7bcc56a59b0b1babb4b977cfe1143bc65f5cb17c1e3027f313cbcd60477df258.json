@@ -1,0 +1,104 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.2595640500076115,
+  "exclusion_reason": null,
+  "family_id": "sha256:f38cd94054d7cbe44bba077eb106937c5ab4578e049ec0a7be0a836a28848d77",
+  "input_tokens": 596,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 596,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 620
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:c126ae35ab49eea6a8997e1c006981050b17145efc8b947bc3fa73900a85aef4",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832875,
+    "id": "chatcmpl-IhE55p6dLb33P5jEwTcUaJilA4bszh6i",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 566.116,
+      "predicted_n": 24,
+      "predicted_per_second": 42.39413830381053,
+      "predicted_per_token_ms": 23.588166666666666,
+      "prompt_ms": 563.638,
+      "prompt_n": 518,
+      "prompt_per_second": 919.0295899140937,
+      "prompt_per_token_ms": 1.0881042471042472
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 596,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 620
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Step 1: Start with a circle. Draw a large circle and make a horizontal line below it for the chin. Then sketch the jawline. Draw a vertical line down the center of the face and make sure both sides of the face are symmetrical. Step 2: Draw guidelines on the face. There are 2 ways to do this step: Ruler or no ruler.\\\\n\\\\npassage 2:Ruler: Make a ruler beside your drawing that is the same height. The ruler should be marked so there are 8 equal spaces. Always start with the center line. Draw faint lines through the face on the markings labelled CENTER LINE, 2, 3, A, and C. As you get used to this, you won\u2019t need to draw the ruler on the side.\\\\n\\\\npassage 3:Face drawing: the heroic male. In this tutorial we\u2019ll draw a character face of a hero-like character. In the process we\u2019ll review an optimal placement of the facial features and the best ways to emphasize the features of the face that will make our character look manly and heroic. Evil skull drawing.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to sketch realistic faces\\\"}\", \"original_answer\": \"To sketch realistic faces, start by drawing a circle and making a horizontal line below it for the chin. Then, draw the jawline and make sure both sides of the face are symmetrical. Next, draw guidelines on the face using either a ruler or without one. If using a ruler, make a ruler beside your drawing that is the same height and draw faint lines through the face on labeled markings such as CENTER LINE, 2, 3, A, and C. This will help ensure symmetry and balance in the face. When drawing a heroic male character, focus on placing facial features optimally and emphasizing features that make the character appear manly and heroic. For example, place the eyes slightly above the center of the face and draw the eyebrows thicker and more arched. Additionally, consider drawing the nose larger and giving it a slight upturn.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:3d400f2922fc4f70b269bddb44ff358b0f1d9e94191276f8438b8e278e17e163",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ]
+}

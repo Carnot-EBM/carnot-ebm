@@ -1,0 +1,107 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.4620422220323235,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:5762702900b06ce25d95cdf7d70872888857885279738afd68f754d239049153",
+  "input_tokens": 918,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 918,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 939
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:150d8d3fb63ad8f91974c6fb4a6540891ebaea676c301a3e926cc6bbb75df95a",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886305,
+    "id": "chatcmpl-RFl7HGeiMo4Dcz62Eb7chfLdQbOkBXTg",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 493.121,
+      "predicted_n": 21,
+      "predicted_per_second": 42.58589676773043,
+      "predicted_per_token_ms": 23.48195238095238,
+      "prompt_ms": 853.641,
+      "prompt_n": 840,
+      "prompt_per_second": 984.020214586694,
+      "prompt_per_token_ms": 1.0162392857142857
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 918,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 939
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"3973 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Restaurants, Juice Bars & Smoothies, Food\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"7:0-18:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"8:0-22:0\\\",\\\"Sunday\\\":\\\"8:0-22:0\\\",\\\"Thursday\\\":\\\"7:0-22:0\\\",\\\"Tuesday\\\":\\\"7:0-22:0\\\",\\\"Wednesday\\\":\\\"7:0-22:0\\\"},\\\"name\\\":\\\"Blenders In the Grass\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-11-13 01:01:40\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"It's a vision has a very well trained polite staff that the moment is relaxing. Did you order make your smoothie granite think it's busy and never had a bad experience with employees or the quality of their product.Five stars just for consistency keep up the good work\\\"},{\\\"review_date\\\":\\\"2021-07-06 03:21:49\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Absolutely love love this place!!! My sister in law recommended this place and I tried the mango tropical with bee pollen and it was soooooo good and refreshing. This shop is super busy and I can see why. I think their prices are really reasonable! I can't wait to come back and Larry more. Highly highly recommend it. Will definitely return here soon when I'm in the area\\\"},{\\\"review_date\\\":\\\"2021-06-26 22:34:50\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"This was my go to spot for the longest time for a peanut butter smoothie that'll basically replace my lunch. And whenever I ordered this, I'd specifically ask for soy blend not because I'm better than people it's literally because I'm lactose intolerant and don't want to spend hours of my life on the toilet. For some reason or another that didn't get through any of y'all today cause now I'm writing this as my butthole is burning due to how many times I've had to frequent the toilet. Please get your lives together.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Blenders In the Grass, located at 3973 State St, Santa Barbara, CA, is a local restaurant known for its juice bars and smoothies. The business is open every day of the week, with varying hours. It offers amenities like outdoor seating, takeout options, and is suitable for groups. However, it doesn't provide WiFi or music. The ambiance of the place is casual, and it provides lot parking. With a rating of 4 stars, the business is appreciated by customers for its consistent quality and well-trained staff. Some customers enjoy their mango tropical with bee pollen, while others prefer their peanut butter smoothie. Though some patrons have had problems with their specific orders, many highly recommend the place and find its prices reasonable.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "ca29e2655a1d5eeaac55b92ec12a4b6c67afd467fa40dcb2d4d77b4307f0b2f6",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ]
+}

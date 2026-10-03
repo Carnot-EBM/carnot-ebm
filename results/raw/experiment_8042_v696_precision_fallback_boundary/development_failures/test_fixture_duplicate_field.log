@@ -1,0 +1,83 @@
+.....F....                                                               [100%]
+=================================== FAILURES ===================================
+_________________________ test_qualified_source_loader _________________________
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261002T222745-1588075-25fab9f6/test_qualified_source_loader0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f0255073b00>
+
+    def test_qualified_source_loader(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+        """SCENARIO-REPORT-8042-SEAL: final bindings, logs and journal rows authenticate."""
+        monkeypatch.setattr(
+            h.history,
+            "authenticate",
+            lambda *a: dict(
+                boards=plan()["boards"],
+                checks=[],
+                cited_upstream_artifacts=[],
+                historical_failed_operands=[],
+            ),
+        )
+        from carnot import experiment_8038_v696_windowed_online_learning as producer
+        from carnot.verify import windowed_online_8038 as window
+        from test_causal_online_8025 import fixture
+    
+        data = fixture(64)
+        trajectory = tmp_path / "trajectory"
+        measured = window.measure(data, trajectory)
+        for eid, (stem, ready) in h.SOURCES.items():
+            path = tmp_path / "results" / (stem + ".json")
+            terminal = tmp_path / f"terminal{eid}.json"
+            sidecar = tmp_path / f"sidecar{eid}.json"
+            log = tmp_path / f"check{eid}.log"
+            log.write_text("passed original check\n")
+>           v = dict(
+                experiment_id=eid,
+                task_id=f"exp{eid}-fixture",
+                run_date="20261002",
+                verdict_class="null",
+                flagged_adversarial=False,
+                terminal_validation_sidecar_path=str(terminal),
+                validation_receipts=[
+                    dict(required=True, passed=True, log_path=str(log), log_sha256=sha256_file(log))
+                ],
+                **{ready: 1},
+                trajectory_directory=str(trajectory),
+                trajectory_seal=producer.reference(trajectory / "seal.json"),
+                transaction_rows=[],
+                **measured,
+            )
+E           TypeError: dict() got multiple values for keyword argument 'trajectory_seal'
+
+tests/python/test_precision_fallback_8042.py:155: TypeError
+----------------------------- Captured stdout call -----------------------------
+[exp8038] phase=benchmark_before elapsed_s=0.249 completed=0 pending=256
+[exp8038] phase=small_head_load_before elapsed_s=0.249 completed=0 pending=256
+[exp8038] phase=small_head_load_after elapsed_s=0.249 completed=0 pending=256
+[exp8038] phase=block_recent64_seed_101 elapsed_s=0.253 completed=35 pending=221
+[exp8038] phase=block_recent64_seed_101 elapsed_s=0.255 completed=51 pending=205
+[exp8038] phase=stream_recent64_seed_101 elapsed_s=0.256 completed=64 pending=192
+[exp8038] phase=small_head_load_before elapsed_s=0.256 completed=64 pending=192
+[exp8038] phase=small_head_load_after elapsed_s=0.256 completed=64 pending=192
+[exp8038] phase=block_cumulative_seed_101 elapsed_s=0.259 completed=99 pending=157
+[exp8038] phase=block_cumulative_seed_101 elapsed_s=0.261 completed=115 pending=141
+[exp8038] phase=stream_cumulative_seed_101 elapsed_s=0.262 completed=128 pending=128
+[exp8038] phase=small_head_load_before elapsed_s=0.262 completed=128 pending=128
+[exp8038] phase=small_head_load_after elapsed_s=0.262 completed=128 pending=128
+[exp8038] phase=block_newest16_seed_101 elapsed_s=0.265 completed=163 pending=93
+[exp8038] phase=block_newest16_seed_101 elapsed_s=0.267 completed=179 pending=77
+[exp8038] phase=stream_newest16_seed_101 elapsed_s=0.268 completed=192 pending=64
+[exp8038] phase=small_head_load_before elapsed_s=0.268 completed=192 pending=64
+[exp8038] phase=small_head_load_after elapsed_s=0.269 completed=192 pending=64
+[exp8038] phase=block_frozen_no_write_seed_101 elapsed_s=0.271 completed=227 pending=29
+[exp8038] phase=block_frozen_no_write_seed_101 elapsed_s=0.272 completed=243 pending=13
+[exp8038] phase=stream_frozen_no_write_seed_101 elapsed_s=0.273 completed=256 pending=0
+[exp8038] phase=benchmark_after_trajectories_sealed elapsed_s=0.274 completed=256 pending=0
+=============================== warnings summary ===============================
+python/carnot/extraction/coace_extractor.py:122
+  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead
+    if hasattr(ast, "Num"):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_precision_fallback_8042.py::test_qualified_source_loader
+1 failed, 9 passed, 1 warning in 24.77s

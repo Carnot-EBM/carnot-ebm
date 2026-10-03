@@ -1,0 +1,103 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.5257896689581685,
+  "exclusion_reason": null,
+  "family_id": "sha256:dcf6ba246fc9cddc5f3f7d91b35c339854e8ad94ff28511e8d1354df815b6fa1",
+  "input_tokens": 884,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": 10,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 884,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 908
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:b7cba468dc524839360791fb865366d849ad8cb67ec339cd0910c554dff5b33c",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.95,\n \"source_sentence_id\": 10\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832860,
+    "id": "chatcmpl-qh8QbAwWFFGwkM7tkRzYz0hvatEVJaEu",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.536,
+      "predicted_n": 24,
+      "predicted_per_second": 42.43761670344594,
+      "predicted_per_token_ms": 23.563999999999997,
+      "prompt_ms": 845.782,
+      "prompt_n": 806,
+      "prompt_per_second": 952.964239011944,
+      "prompt_per_token_ms": 1.0493573200992556
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 884,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 908
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"2840 De La Vina St, Ste C\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":null,\\\"classy\\\":null,\\\"divey\\\":null,\\\"hipster\\\":null,\\\"intimate\\\":null,\\\"romantic\\\":false,\\\"touristy\\\":null,\\\"trendy\\\":null,\\\"upscale\\\":null},\\\"BusinessParking\\\":{\\\"garage\\\":null,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Chinese, Restaurants, Szechuan\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-21:30\\\",\\\"Monday\\\":\\\"11:0-21:0\\\",\\\"Saturday\\\":\\\"11:0-21:30\\\",\\\"Sunday\\\":\\\"11:0-21:0\\\",\\\"Thursday\\\":\\\"11:0-21:0\\\",\\\"Tuesday\\\":\\\"11:0-21:0\\\",\\\"Wednesday\\\":\\\"11:0-21:0\\\"},\\\"name\\\":\\\"New Si Chuan Garden\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-06-03 16:03:47\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Our family and friends frequented this restaurant before the pandemic. I think this was one of the best Chinese restaurants in Santa Barbara area. Sad to learn it is closed. Hope it'll reopen after things are getting better.\\\"},{\\\"review_date\\\":\\\"2021-03-11 22:08:07\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"I ordered a shrimp  Fried Rice $9.99 from this place for lunch. I got a big box of rice, and  I could not find the shrimps. I went in to ask the guy and he said only 4 shrimp comes in the shrimp fried rice LOL!!! And  had the nerve to get loud about it.. And I ordered spicy fried chicken . And got a bowl of spice popcorn chicken for $15.99.  Unbelievable!\\\"},{\\\"review_date\\\":\\\"2020-12-04 03:33:58\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Not open till 9pm. Last time they weren't open like yelp hour says. Very disappointed.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"New Si Chuan Garden is a Chinese restaurant located at 2840 De La Vina St, Ste C in Santa Barbara, CA. The restaurant offers a variety of Chinese dishes, and is categorized under restaurants and Szechuan cuisine. The restaurant is open from Monday through Sunday, with hours varying by day.\\n\\nThe restaurant has free WiFi available and is good for groups. Customers can also make reservations, although there is no outdoor seating or valet parking available. Parking options include street parking and lot parking, which are validated.\\n\\nBased on customer reviews, New Si Chuan Garden appears to be a popular restaurant that served high-quality Chinese food. However, some customers have expressed disappointment with their experiences there, such as not being able to find the shrimp in their Fried Rice and the restaurant not being open until 9pm. Overall, the restaurant has a rating of 4 out of 5 stars.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "calibration_replay",
+  "source_cluster_id": "sha256:ad5ea8ae86de995a7eca2c4df746a05d365a8ba4f9377c8b706d052ae6145be5",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]
+}

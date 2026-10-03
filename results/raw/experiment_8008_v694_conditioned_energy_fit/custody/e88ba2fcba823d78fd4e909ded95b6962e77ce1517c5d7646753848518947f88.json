@@ -1,0 +1,143 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 2.164489942952059,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:3627a1cfeac3feb1b52f266ba0799ac834eb520930cf7b24f03a8220c66d4f4d",
+  "input_tokens": 1825,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1825,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1848
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:dfb0fe3ffc2c416cf4820e26e89b4be26035d667b08f7536cf6e9a2928ecccdd",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885853,
+    "id": "chatcmpl-rbiCpnrEKaGOvRRV5kyxp18R4wUx0qTP",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 536.692,
+      "predicted_n": 23,
+      "predicted_per_second": 42.855119882539704,
+      "predicted_per_token_ms": 23.334434782608696,
+      "prompt_ms": 1486.519,
+      "prompt_n": 1747,
+      "prompt_per_second": 1175.228839994645,
+      "prompt_per_token_ms": 0.85089811104751
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1825,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1848
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"President Abraham Lincoln never lost his ardor for the United States to remain united during the Civil War. In his Second Inaugural address he attempted to salve the nation with an eloquent summation of his philosophy and plans for putting it into practice. \\\"With malice toward none, with charity for all, with firmness in the right as God gives us to see the right,\\\" he orated, \\\"let us strive on to finish the work we are in to bind up the nations' wounds, to care for him who shall have borne the battle for his widow and his orphan, to do all which may achieve and cherish a just and lasting peace among ourselves and with all nations.\\\" The spirit of Lincoln's second inaugural was self-evident on April 9, 1865 -- 150 years ago -- when Confederate Gen. Robert E. Lee dramatically surrendered his approximately 28,000 troops to Union General Ulysses S. Grant at Appomattox Courthouse (McLean House) in Virginia.  Over 600,000 Americans -- Northerners and Southerners alike -- had perished in the bloody Civil War.  But the carnage was now about to end. The historic meeting between Grant and Lee began with pleasantries about the weather and their mutual service in the Mexican War.  The good fellowship was palpable.  Lee, in fact, had to abruptly remind the chatty Grant about the diplomatic business at hand.   After all, they were at Appomattox Courthouse to hash out terms of surrender. Grant purposely ended up being generous to Confederate soldiers. They would be paroled, not condemned to prison camps.  Rebel officers were even allowed to maintain their sidearms.  Personal property of Southerners would now be respected.  Even rations were provided by Grant for Lee's hungry soldiers. It was Palm Sunday and in the spirit of Christian reconciliation Grant ordered that no celebration occur within Union Army ranks.  \\\"The Confederates were now our prisoners,\\\" Grant wrote, \\\"and we did not want to exult over their downfall.\\\" The myth-making about Appomattox started from the moment Lee left the courthouse on his horse to travel to Richmond.   Surrendering hadn't been easy for Lee.  Sullen from defeat, his own family property in Arlington had been confiscated by Union forces (converted into a Union cemetery with lines of white crosses on the lawn). All 11,000 acres of his Virginia land holdings had been stripped from him by the U.S. government.  With no real home, Lee rode to Richmond, depressed and destitute, rendezvousing with his sick wife Mary Curtis Lee at a spare apartment.  Remarkably, the stoic Lee didn't express bitterness in public. When news reached Lee that Lincoln had been murdered, in fact, he was distraught, calling it \\\"a crime\\\" that was \\\"unexampled\\\" and \\\"deplorable.\\\" Although much remained unresolved between the victors and vanquished, the little courthouse became a symbol of unity, just like the \\\"Star Spangled Banner\\\" from the War of 1812. One post-Appomattox story that has long interested me was that of Littleberry Walker.  After being present at Lee's dramatic surrender at Appomattox, Walker, a battle-fatigued Confederate, laid down his rifle and journeyed back to red-clay, Georgia, traveling mainly on foot, passing ragged clusters of Rebel amputees, many hobbling on bayonet crutches, others with arms or heads swathed in bandages and all heading in the same direction: home. Upon arriving in Atlanta, a weary Walker found the Confederate railroad-city smoldered in ruin, the handiwork of Gen. William T. Sherman's \\\"scorched earth policy.\\\"  (One-hundred-twenty years later, Walker's great-grandson, 39th President Jimmy Carter, would construct his Carter Center, an NGO dedicated to diplomatically resolving global conflicts, on the very hilltop overlooking Atlanta on which Gen. Sherman once stood.) Upon leaving Atlanta, Walker continued walking south, anxious for his kinfolk.  Unfortunately, he returned to Sumter County only to learn that his father had died and that the family farm was teetering on the brink of bankruptcy. One suspects Inman, the main character of novelist Charles Frazier's \\\"Cold Mountain,\\\" spoke for the battle-hardened Civil War veterans like Walker, when he lamented that, \\\"What you have lost will not be returned to you.  It will always be lost.  You're left with only your scars to mark the void.  All you can do is go on or not.  But if you go on, it's knowing you carry scars with you.\\\" As we reflect on the sesquicentennial of Lee's surrender at that forlorn Virginia courthouse, today marvelously maintained by the National Park Service, we recognize that the scars of the Civil War are still with us.  The Mason-Dixon Line divide still exists.  Almost all the old Confederate States are now considered \\\"Red\\\" (Republican), while the Union States are \\\"blue\\\" (Democrat) -- a residual variation of Big Federal Government versus States' Rights paradigm of the Civil War era. While the old spiritual \\\"Slavery Chain Done Broke at Last\\\" was sung by blacks in the hours following the Appomattox surrender, racism sadly continues to be a crippling national scourge. While there no longer are beatings in Congress (like in 1856 when Preston Brooks of South Carolina caned Charles Sumner of Massachusetts on the Congressional floor) the gridlock on Capital Hill in 2015, the inability to get anything done, is similarly cold-cocking the spirit of our participatory democracy. All American eyes should be fixated on Appomattox today.  The McLean house is our collective sanctuary of national healing.  As a public place, the McLean parlor remains small but the legacy which Grant and Lee made at the truce table is timeless in world history. For while the scars of the monstrous Civil War still remain, the wounds have closed since 1865, in large part, because of the civility of Grant and Lee.  With grace and dignity, these brave West Point generals gave righteous credence to Lincoln's \\\"with malice toward none\\\" finery.\\n\", \"original_answer\": \"150 years ago Confederate Gen. Robert E. Lee surrendered his 28,000 troops to Union General Ulysses S. Grant at Appomattox Courthouse (McLean House) in Virginia, marking the end of the American Civil War. As a result of the war 600,000 Americans died, and Lee lost his family property and all his land holdings which were stripped from him by the U.S. government. In the spirit of Christian reconciliation Grant ordered that no celebration occur within Union Army ranks. He also arranged for the Confederate soldiers to be paroled and not imprisoned, allowed rebel officers to keep their sidearms, and arranged for their personal property to be respected, and even arranged for rations to be provided for Lee's hungry soldiers. Lee returned to Richmond to meet his sick wife in a spare apartment, and was reportedly distraught when he heard that Lincoln had been murdered.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "calibration",
+  "source_cluster_id": "2e6db6dec2913d8e336a3951911144739d792ccc1ffa7aeafa0276f6512f845d",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46
+  ]
+}

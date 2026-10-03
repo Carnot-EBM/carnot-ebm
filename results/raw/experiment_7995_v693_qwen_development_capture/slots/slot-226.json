@@ -1,0 +1,110 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.2829189089825377,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:2418a68500f558767cce0e5f21238f4d06c31fc8fb9b761d0bb62d8793233c78",
+  "input_tokens": 658,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 658,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 682
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:697b1cc261b86341b4bffacbc0eb710cf93d77d159284a41e7c93b0586670f12",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886160,
+    "id": "chatcmpl-AaC4IT9LBYkJmSzFFfqNC2vN1Oue6sQa",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.474,
+      "predicted_n": 24,
+      "predicted_per_second": 42.44226967110778,
+      "predicted_per_token_ms": 23.56141666666667,
+      "prompt_ms": 603.589,
+      "prompt_n": 580,
+      "prompt_per_second": 960.9187708854865,
+      "prompt_per_token_ms": 1.0406706896551725
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 658,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 682
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:If the twisted knee is still sore after five days, it is best to see a doctor. There may be something else wrong with the knee. Once the knee is no longer sore, strengthening exercises are normally prescribed to strengthen the tendons and reduce the chance for repeated injury.o treat a twisted knee, there are three things you should do as soon as possible after the injury occurs: rest, ice, and elevate. Avoid putting any weight or pressure on the knee by using crutches or a cane when walking.\\\\n\\\\npassage 2:The most important thing to consider when trying to treat a twisted knee is to decide the extent of the damage. A twisted knee is also known as a sprained or strained knee. The knee is a major joint that attaches the thigh bone to the shin bone through a series of tendons and ligaments.o treat a twisted knee, there are three things you should do as soon as possible after the injury occurs: rest, ice, and elevate. Avoid putting any weight or pressure on the knee by using crutches or a cane when walking.\\\\n\\\\npassage 3:A knee sprain occurs when one or more ligaments in your knee are suddenly stretched or torn. Ligaments are tissues that hold bones together. Ligaments support the knee and keep the joint and bones lined up. They help you to be able to walk, twist and turn. There are 4 ligaments that help support the knee.Ask your caregiver which of these ligaments was sprained in your knee.Ligaments are often sprained because of an exercise or sports-related injury.igaments are tissues that hold bones together. Ligaments support the knee and keep the joint and bones lined up. They help you to be able to walk, twist and turn. There are 4 ligaments that help support the knee.\\\\n\\\\n\\\",\\\"question\\\":\\\"what helps sore twisted knee\\\"}\", \"original_answer\": \"To help a sore twisted knee, it is suggested to rest, ice, and elevate the knee as soon as possible after the injury. Avoiding putting any weight or pressure on the knee by using crutches or a cane when walking might also help. If the knee remains sore after five days, it is recommended to see a doctor. Once the knee is no longer sore, strengthening exercises may be prescribed to strengthen the tendons and reduce the chance of repeated injury.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "45ec73b22f2642b00137c707255106a20f389bc1b55f92647bd060b4aa30e1a9",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ]
+}

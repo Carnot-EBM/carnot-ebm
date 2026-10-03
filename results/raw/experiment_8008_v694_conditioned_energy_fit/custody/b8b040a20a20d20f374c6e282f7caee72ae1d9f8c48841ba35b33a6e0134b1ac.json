@@ -1,0 +1,132 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.7938059800071642,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:cb1c4d395dd3816b021a4d1c27568b5541fca86e2d388df0c8edfed84dcdb480",
+  "input_tokens": 1293,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1293,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1316
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:1f3a808a3432c88428fe08258e2a77fa19bba37226d8bdf527475c29c362b131",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886056,
+    "id": "chatcmpl-vah0yOZ6itwEd68cwGNRtDIgFJx5cWyp",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 542.192,
+      "predicted_n": 23,
+      "predicted_per_second": 42.42039720246702,
+      "predicted_per_token_ms": 23.573565217391305,
+      "prompt_ms": 1133.328,
+      "prompt_n": 1215,
+      "prompt_per_second": 1072.063868535852,
+      "prompt_per_token_ms": 0.9327802469135802
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1293,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1316
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Shanghai, China (CNN)With a well-paid job in finance and his own apartment, Li Lifei is living the Chinese dream. But there's one missing ingredient -- his own car. The 26-year old has his eye on a Volkswagen Tiguan but Shanghai, like many large Chinese cities, rations license plates as it looks for a solution to its gridlocked roads and polluted skies. To register for a license plate auction, prospective car buyers like Li must put down a deposit in exchange for disc containing software they can use to bid online. The auctions take place once a month on a Saturday morning. \\\"I've been trying for six months with no success,\\\" Li told CNN. To boost his chances, Li upgraded the speed of his Internet connection from 10 to 50 mbps but to no avail. Each month there are around 10,000 license plates available. At the most recent auction on Saturday, Li said the final price was 80,600 yuan ($13,000) -- around three times the price of a cheap Chinese car and a third of what Li plans to spend on his SUV. It's possible to get a temporary license, but that has to be renewed every month, and Li says he doesn't want to use a huangniu, or middleman, some of whom employ hundreds of bidders to obtain the coveted registration. \\\"I know people who've been trying for more than a year,\\\" he said. Another option would be to buy a hybrid vehicle that automatically qualifies for a license plate -- a selling point not lost on the car manufacturers showing their latest models and concepts at the Shanghai Auto Show this week. Toyota, Volkswagen and Volvo all launched gasoline-electric hybrids for the Chinese market at the show, while Chinese manufacturer BYD has been an early pioneer of electric and hybrid cars. \\\"The infrastructure (charging stations) for electric vehicles is not quite there yet but that's the advantage of a hybrid -- you can have both,\\\" said Volvo CEO Hakan Samuelsson. But Chinese drivers haven't wholeheartedly embraced the concept. Even though China overtook the United States as the world's largest car market in 2009, sales of electric and hybrid vehicles, while increasing quickly, still lag behind the U.S., where more than 100,000 were sold last year. And it's thought many are sold to local authorities and state industries, which are responding to central government directives. Few Chinese have American-style garages where the vehicles can be charged overnight. Li said he thought it would be inconvenient. \\\"I don't want a hybrid car. I thought maybe a Tesla but it's too expensive,\\\" he said, referring to the hyper luxury electric sports car developed by Elon Musk that has seen weak sales in China. For others, the hassles of buying and owning a car have become too much and some affluent city dwellers are spurning cars. Shanghai resident Lei Gu, 35, learned to drive as a student and Microsoft employee in Seattle and loved driving her compact Geo on the open U.S. roads. But when she returned to China nine years ago, she chose not to purchase a car. \\\"I used to love driving but I don't think I could drive here even if I wanted to. \\\"Even though we have traffic rules, people don't follow them. I can barely cross the street.\\\" She's also put off by the congested traffic and the high cost of parking. If Shanghai's extensive subway system doesn't take her where she wants to go, she uses a popular Uber-like taxi app -- or rents a car. She's not alone. A recent report by consultants Bain & Company suggested that even though China's love affair with the car began late, it may already be souring. Of 2,137 people it surveyed, some 40% said cars were losing their appeal as a status symbol. Gu says luxury cars like BMWs and Mercedes are still an important way to \\\"show face\\\" among many of her friends. \\\"If you've been working for 10 years and don't have a car, people might wonder if you have financial problems,\\\" she said. But she prefers to spend her money on other things like traveling abroad. \\\"I do care about face but there are other ways to show it.\\\"\\n\", \"original_answer\": \"In an attempt to tackle gridlocked roads and polluted skies, Shanghai, and other large Chinese cities, have begun to ration licence plates, which has led to them being auctioned off at high prices. Prospective buyers must put down a deposit to obtain a disc containing software that allows them to bid online. Cars with an electric or hybrid engine are not subject to the same process, which has led to an increase in sales for these types of vehicles. The rationing of license plates has also led to a number of people choosing not to own a car, with 40% of the 2,137 people surveyed by Bain & Company suggesting that cars are losing their appeal as a status symbol.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "6754f367eb671563e0b5b4cc407e797638d07df92a9c6048c49c575bdee4015f",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35
+  ]
+}

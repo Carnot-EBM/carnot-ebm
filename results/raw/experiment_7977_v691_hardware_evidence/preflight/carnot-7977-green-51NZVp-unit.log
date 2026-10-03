@@ -1,0 +1,163 @@
+FFFF
+=================================== FAILURES ===================================
+________________________ test_custody_and_current_work _________________________
+
+tmp_path = PosixPath('/tmp/carnot-7977-green-51NZVp/pytest/test_custody_and_current_work0')
+
+    def test_custody_and_current_work(tmp_path: Path) -> None:
+        """SCENARIO-REPORT-7977-CUSTODY, SCENARIO-HW-7977-SCOPE: keep all obligations."""
+>       value = q.read_evidence(authority(tmp_path), "20261001")
+                                ^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_experiment_7977_v691_hardware_evidence.py:54: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/python/test_experiment_7977_v691_hardware_evidence.py:33: in authority
+    value = json.loads(source.read_text())
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/__init__.py:346: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <json.decoder.JSONDecoder object at 0x7fbb1d85be90>
+s = '{"candidate_id":"candidate_02","candidate_json_to_return":{"actions":[{"action":"pickup","args":{"item":"payload_47"}...e_facts":{"exit":[1,2],"grid_size":4,"items":{"payload_47":[1,1],"sealed_relay_47":[0,2]},"objective":"Deliver payload'
+_w = <built-in method match of re.Pattern object at 0x7fbb1d842330>
+
+    def decode(self, s, _w=WHITESPACE.match):
+        """Return the Python representation of ``s`` (a ``str`` instance
+        containing a JSON document).
+    
+        """
+        obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+        end = _w(s, end).end()
+        if end != len(s):
+>           raise JSONDecodeError("Extra data", s, end)
+E           json.decoder.JSONDecodeError: Extra data: line 2 column 1 (char 1468)
+
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/decoder.py:341: JSONDecodeError
+____________________ test_required_custody_failure[missing] ____________________
+
+tmp_path = PosixPath('/tmp/carnot-7977-green-51NZVp/pytest/test_required_custody_failure_0')
+kind = 'missing'
+
+    @pytest.mark.parametrize(
+        "kind", ["missing", "malformed", "stub", "terminal", "board_receipt", "retired"]
+    )
+    def test_required_custody_failure(tmp_path: Path, kind: str) -> None:
+        """SCENARIO-REPORT-7977-CUSTODY: external failures are terminal blocked."""
+>       root = authority(tmp_path)
+               ^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_experiment_7977_v691_hardware_evidence.py:91: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/python/test_experiment_7977_v691_hardware_evidence.py:33: in authority
+    value = json.loads(source.read_text())
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/__init__.py:346: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <json.decoder.JSONDecoder object at 0x7fbb1d85be90>
+s = '{"candidate_id":"candidate_02","candidate_json_to_return":{"actions":[{"action":"pickup","args":{"item":"payload_47"}...e_facts":{"exit":[1,2],"grid_size":4,"items":{"payload_47":[1,1],"sealed_relay_47":[0,2]},"objective":"Deliver payload'
+_w = <built-in method match of re.Pattern object at 0x7fbb1d842330>
+
+    def decode(self, s, _w=WHITESPACE.match):
+        """Return the Python representation of ``s`` (a ``str`` instance
+        containing a JSON document).
+    
+        """
+        obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+        end = _w(s, end).end()
+        if end != len(s):
+>           raise JSONDecodeError("Extra data", s, end)
+E           json.decoder.JSONDecodeError: Extra data: line 2 column 1 (char 1468)
+
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/decoder.py:341: JSONDecodeError
+___________________ test_required_custody_failure[malformed] ___________________
+
+tmp_path = PosixPath('/tmp/carnot-7977-green-51NZVp/pytest/test_required_custody_failure_1')
+kind = 'malformed'
+
+    @pytest.mark.parametrize(
+        "kind", ["missing", "malformed", "stub", "terminal", "board_receipt", "retired"]
+    )
+    def test_required_custody_failure(tmp_path: Path, kind: str) -> None:
+        """SCENARIO-REPORT-7977-CUSTODY: external failures are terminal blocked."""
+>       root = authority(tmp_path)
+               ^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_experiment_7977_v691_hardware_evidence.py:91: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/python/test_experiment_7977_v691_hardware_evidence.py:33: in authority
+    value = json.loads(source.read_text())
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/__init__.py:346: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <json.decoder.JSONDecoder object at 0x7fbb1d85be90>
+s = '{"candidate_id":"candidate_02","candidate_json_to_return":{"actions":[{"action":"pickup","args":{"item":"payload_47"}...e_facts":{"exit":[1,2],"grid_size":4,"items":{"payload_47":[1,1],"sealed_relay_47":[0,2]},"objective":"Deliver payload'
+_w = <built-in method match of re.Pattern object at 0x7fbb1d842330>
+
+    def decode(self, s, _w=WHITESPACE.match):
+        """Return the Python representation of ``s`` (a ``str`` instance
+        containing a JSON document).
+    
+        """
+        obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+        end = _w(s, end).end()
+        if end != len(s):
+>           raise JSONDecodeError("Extra data", s, end)
+E           json.decoder.JSONDecodeError: Extra data: line 2 column 1 (char 1468)
+
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/decoder.py:341: JSONDecodeError
+_____________________ test_required_custody_failure[stub] ______________________
+
+tmp_path = PosixPath('/tmp/carnot-7977-green-51NZVp/pytest/test_required_custody_failure_2')
+kind = 'stub'
+
+    @pytest.mark.parametrize(
+        "kind", ["missing", "malformed", "stub", "terminal", "board_receipt", "retired"]
+    )
+    def test_required_custody_failure(tmp_path: Path, kind: str) -> None:
+        """SCENARIO-REPORT-7977-CUSTODY: external failures are terminal blocked."""
+>       root = authority(tmp_path)
+               ^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_experiment_7977_v691_hardware_evidence.py:91: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/python/test_experiment_7977_v691_hardware_evidence.py:33: in authority
+    value = json.loads(source.read_text())
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/__init__.py:346: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <json.decoder.JSONDecoder object at 0x7fbb1d85be90>
+s = '{"candidate_id":"candidate_02","candidate_json_to_return":{"actions":[{"action":"pickup","args":{"item":"payload_47"}...e_facts":{"exit":[1,2],"grid_size":4,"items":{"payload_47":[1,1],"sealed_relay_47":[0,2]},"objective":"Deliver payload'
+_w = <built-in method match of re.Pattern object at 0x7fbb1d842330>
+
+    def decode(self, s, _w=WHITESPACE.match):
+        """Return the Python representation of ``s`` (a ``str`` instance
+        containing a JSON document).
+    
+        """
+        obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+        end = _w(s, end).end()
+        if end != len(s):
+>           raise JSONDecodeError("Extra data", s, end)
+E           json.decoder.JSONDecodeError: Extra data: line 2 column 1 (char 1468)
+
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/decoder.py:341: JSONDecodeError
+=========================== short test summary info ============================
+FAILED tests/python/test_experiment_7977_v691_hardware_evidence.py::test_custody_and_current_work
+FAILED tests/python/test_experiment_7977_v691_hardware_evidence.py::test_required_custody_failure[missing]
+FAILED tests/python/test_experiment_7977_v691_hardware_evidence.py::test_required_custody_failure[malformed]
+FAILED tests/python/test_experiment_7977_v691_hardware_evidence.py::test_required_custody_failure[stub]
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! KeyboardInterrupt !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_experiment_7977_v691_hardware_evidence.py:35: KeyboardInterrupt
+(to show a full traceback on KeyboardInterrupt use --full-trace)
+4 failed in 59.37s

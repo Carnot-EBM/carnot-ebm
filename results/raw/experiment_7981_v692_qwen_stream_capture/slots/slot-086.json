@@ -1,0 +1,139 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.9958970890147611,
+  "exclusion_reason": null,
+  "family_id": "sha256:e8a344c79979e8e64a64b5cae947f77aad3901691427458a78f61ce71184769d",
+  "input_tokens": 1506,
+  "invocation_finished_at": "2026-10-01T11:43:13.897626+00:00",
+  "invocation_started_at": "2026-10-01T11:43:11.901728+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1506,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1530
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:66ceaeb2ad118ee72ce95654815d7a79f3a6d1fec2ff05c819730654e8883717",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790854993,
+    "id": "chatcmpl-3daE9j8ZjdxNFU8ANH1UDttFzLqRQjCs",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.056,
+      "predicted_n": 24,
+      "predicted_per_second": 42.54896676925695,
+      "predicted_per_token_ms": 23.502333333333336,
+      "prompt_ms": 1293.775,
+      "prompt_n": 1428,
+      "prompt_per_second": 1103.7467875016907,
+      "prompt_per_token_ms": 0.9060049019607844
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1506,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1530
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Lagos, Nigeria (CNN)A day after winning Nigeria's presidency, Muhammadu Buhari told CNN's Christiane Amanpour that he plans to aggressively fight corruption that has long plagued Nigeria and go after the root of the nation's unrest. Buhari said he'll \\\"rapidly give attention\\\" to curbing violence in the northeast part of Nigeria, where the terrorist group Boko Haram operates. By cooperating with neighboring nations Chad, Cameroon and Niger, he said his administration is confident it will be able to thwart criminals and others contributing to Nigeria's instability. For the first time in Nigeria's history, the opposition defeated the ruling party in democratic elections. Buhari defeated incumbent Goodluck Jonathan by about 2 million votes, according to Nigeria's Independent National Electoral Commission. The win comes after a long history of military rule, coups and botched attempts at democracy in Africa's most populous nation. In an exclusive live interview from Abuja, Buhari told Amanpour he was not concerned about reconciling the nation after a divisive campaign. He said now that he has been elected he will turn his focus to Boko Haram and \\\"plug holes\\\" in the \\\"corruption infrastructure\\\" in the country. \\\"A new day and a new Nigeria are upon us,\\\" Buhari said after his win Tuesday. \\\"The victory is yours, and the glory is that of our nation.\\\" Earlier, Jonathan phoned Buhari to concede defeat. The outgoing president also offered a written statement to his nation. \\\"I thank all Nigerians once again for the great opportunity I was given to lead this country, and assure you that I will continue to do my best at the helm of national affairs until the end of my tenure,\\\" Jonathan said. \\\"I promised the country free and fair elections. I have kept my word.\\\" Buhari, 72, will be sworn in on May 29. He will take the helm at a critical time, as Nigeria grapples with Boko Haram, serious economic woes and corruption. This isn't Buhari's first time leading Nigeria, but it's his first time in nearly 30 years. A military coup brought Buhari to power in late 1983, closing a brief period of popular rule by Shehu Shagari. But Buhari himself was ousted by another military coup in August 1985. Read more: Who is Nigeria's Muhammadu Buhari? His presidential win is the result of his fourth attempt to lead the country since he was ousted 30 years ago. Buhari is a Sunni Muslim from Nigeria's poorer North, while Jonathan comes from a Christian and animist South that is rich with oil. Buhari praised voters for exercising their right peacefully. \\\"Your vote affirms that you believe Nigeria's future can be better than what it is today,\\\" he said in his statement. \\\"You voted for change, and now change has come.\\\" Buhari campaigned as a born-again democrat to allay fears about his strict military regime. He stressed that Nigeria's security needs to be the next government's focus. His campaign was also fiercely anti-corruption. He ran under the slogan of \\\"new broom,\\\" and his supporters were often pictured holding brooms in the lead-up to the vote. Despite years of democracy, analysts say, corruption has hindered Nigeria from building a stable economy. One of Buhari's biggest challenges will be Boko Haram, which has been terrorizing Nigeria as it tries to institute a strict version of Sharia law in the country. In the past few years, the terror group has bombed churches and mosques, killed hundreds of people and kidnapped more than 200 teenage girls from a boarding school. Even the presidential vote had to be postponed because of the radical militants. The election was originally scheduled for February 14, but was delayed six weeks because the military needed more time to secure areas controlled by Boko Haram. Yet the violence persisted. On Saturday, residents in the northeastern state of Gombe said at least 11 people were killed in attacks at polling stations, apparently by Boko Haram extremists. Jonathan had been criticized for not doing enough to combat Boko Haram. Before the election, African affairs analyst Ayo Johnson said the vote would come down to who could make Nigeria feel safe. \\\"Many Nigerians will not forget (Buhari) was a military leader during a dictatorship,\\\" Johnson said. \\\"Or maybe they will feel that they need a military leader to address fundamental problems such as terrorism.\\\" Boko Haram isn't the only obstacle facing the new president. The economy is another major issue. Nigeria overtook South Africa last year as the region's largest economy. Nigeria is one of Africa's largest oil producers and is a major supplier of crude oil to the United States. It also hosts many international oil companies and workers. But many complain that the country's vast wealth from oil exports doesn't trickle down to the average citizen. As many as 70% of Nigerians live below the poverty line, surviving on less than a dollar a day. Christian Purefoy reported from Lagos; Holly Yan reported and wrote from Atlanta. CNN's Stephanie Busari, Faith Karimi and Susannah Cullinane contributed to this report.\\n\", \"original_answer\": \"Muhammadu Buhari won Nigeria's presidential election on March 28th with a margin of approximately 2 million votes. He promised to aggressively fight corruption and tackle the root causes of violence and instability in Nigeria, including Boko Haram. Buhari previously held political power in Nigeria through a military coup in 1983 and has struggled with reconciliation after defeating the ruling party in the election. The election faced setbacks due to continued violence by Boko Haram, which led to a delay in the vote. Despite these issues, analysts believe Buhari is the most qualified to tackle the challenges facing Nigeria, particularly Boko Haram.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_update",
+  "source_cluster_id": "sha256:0ae3dde157b82d03c5055b2e71801cb9fa02c4a258b8ce4545ace0d4268201cf",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45
+  ]
+}

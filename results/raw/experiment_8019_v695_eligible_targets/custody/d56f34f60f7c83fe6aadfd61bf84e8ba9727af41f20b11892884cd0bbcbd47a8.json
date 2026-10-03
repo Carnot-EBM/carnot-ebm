@@ -1,0 +1,103 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.4116543809650466,
+  "exclusion_reason": null,
+  "family_id": "sha256:90044f7d4d34f8d1f90e03839a87fa077f161f1455c2502090a2572d428b257f",
+  "input_tokens": 802,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 802,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 826
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:d7b0d30bbe44dfba45e8f7e82d99f318974e2b48cbeb0fe8a0f256416c693c92",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832922,
+    "id": "chatcmpl-IHtqOdlnMIvSpUfoT2bPUV8e3aRgymPJ",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.568,
+      "predicted_n": 24,
+      "predicted_per_second": 42.4352155708951,
+      "predicted_per_token_ms": 23.56533333333333,
+      "prompt_ms": 712.061,
+      "prompt_n": 724,
+      "prompt_per_second": 1016.7668219436256,
+      "prompt_per_token_ms": 0.9835096685082874
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 802,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 826
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Basement Ceiling and Dropped Ceiling Tile Disadvantages. When deciding between dropped ceiling tiles vs drywall ceilings for your basement ceiling, it is important that you consider the height of your unfinished basement.The one key downside of installing dropped ceiling tiles is that your basement ceiling will be lower, compared to installing a drywall ceiling.You will need 3-4 inches of space between your main floor floor-joists and your dropped ceiling tiles.asement Ceiling and Dropped Ceiling Tile Disadvantages. When deciding between dropped ceiling tiles vs drywall ceilings for your basement ceiling, it is important that you consider the height of your unfinished basement.\\\\n\\\\npassage 2:Andrew says. Jason, Take a look a Ceiling Link, it\u2019s a PVC based \u201cdrop ceiling\u201d system that only costs you about 1\u2033 of space, only twice the space of drywall. A 1000 SQ Ft basement (assuming 20X50) would run you $707 in ceiling link parts, $40 in screws and $700 to 900 in panels (2\u2032 X 4\u2032).rywall for the basement ceiling, .5 inch. Carpet and padding maybe .75 of an inch. Otherwise there are no framing elements on the ceiling or the floor. Unless you want install a framed sub-floor, but that\u2019s not the normal case for most finished basements.\\\\n\\\\npassage 3:The cost to install drywall is about $1.50 per square foot. After material and labor are added in, the cost per panel can range from around $40.00 to $60.00. A typical 12x12 room, for example, will use 12 panels.he cost to install drywall is about $1.50 per square foot. After material and labor are added in, the cost per panel can range from around $40.00 to $60.00. A typical 12x12 room, for example, will use 12 panels.\\\\n\\\\n\\\",\\\"question\\\":\\\"drywall vs ceiling tile cost\\\"}\", \"original_answer\": \"Based on the provided passages, it appears that the cost of drywall installation is around $1.50 per square foot, with the total cost ranging from $40 to $60 per panel. The cost of ceiling tiles, on the other hand, is not explicitly mentioned in the passages. However, it can be inferred that the cost of ceiling tiles may be lower than drywall since Andrew suggests using Ceiling Link, a PVC-based drop ceiling system, which costs around $707 for a 1000 sq ft basement. Therefore, it can be concluded that ceiling tiles may be a more cost-effective option than drywall.\\n\\nHowever, it's important to note that the cost comparison between drywall and ceiling tiles may depend on various factors such as location, materials, and installation costs. Therefore, it's recommended to consult with a professional contractor to get a more accurate estimate for both options.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:c8f77e1d2c010b3f5e1b0f74562e884f0cc9c3186ed7254772a403c616d00f37",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]
+}

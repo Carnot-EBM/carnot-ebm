@@ -1,0 +1,63 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 0.0,
+  "exclusion_reason": "answer_units_over_budget",
+  "family_id": "sha256:6546a305cfbcf4780f9bd09c9e28210ed2b52b0acd8deaa64a03ebf3df932b0a",
+  "input_tokens": null,
+  "invocation_finished_at": null,
+  "invocation_started_at": null,
+  "parsed": {
+    "citation_valid": false,
+    "completed": false,
+    "finish_reason": null,
+    "probability": null,
+    "schema_valid": false,
+    "source_sentence_id": null,
+    "status": "invalid_envelope",
+    "syntax_valid": false,
+    "usage": {}
+  },
+  "public_eligible": false,
+  "public_hash": "sha256:95088ef88a195f714b25a3a6dd168f63b977f38cb76b615112890b74d01c94b0",
+  "raw_response": {},
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:A big thankyou to Amy for sharing her tips & tricks for a surprise wedding! As I know you all adore details, here\u2019s a full rundown of the suppliers Amy and Mark used. \u2013 Amy wore her mother\u2019s wedding gown with a floral fascinator from Alannah Hill. \u2013 Julie Dammery of Beautique Creative styled Amy\u2019s hair & makeup.\\\\n\\\\npassage 2:Set a date. Decide together on when you want the event to take place. You can hold it right after you get marriage license or after your engagement party (if you will have one). Choose your Venue. The wedding can take place anywhere from your own backyard to a function room of a hotel, a fancy restaurant, or a beach. The important thing is that the number of guests you plan to invite should fit in your location. Plus, it should not look too obvious like a wedding is about to take place. Prepare your guest list.\\\\n\\\\npassage 3:A lot of friends and family will make a sacrifices to attend someone they love's wedding that they wouldn't for any other life event. So even if you're planning a surprise wedding under the pretext of another big party they might not choose to come even though they wouldn't think of not being there on your wedding day.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to plan a surprise wedding\\\"}\", \"original_answer\": \"Based on the given passages, here are some tips for planning a surprise wedding:\\n\\n1. Set a date: Decide on a date for the surprise wedding and make sure it works for both you and your partner.\\n2. Choose a venue: Select a venue that can accommodate the number of guests you plan to invite and make sure it doesn't look too obvious like a wedding is about to take place.\\n3. Prepare your guest list: Make a list of people you want to invite to the surprise wedding and make sure they are available on the chosen date.\\n4. Hire a professional to help with the preparations: Consider hiring a wedding planner or coordinator to help with the logistics and ensure everything runs smoothly.\\n5. Keep the plans secret: Make sure to keep the surprise wedding plans secret from the guests and only share them with trusted individuals who need to know.\\n6. Use code names or misleading descriptions: When discussing the surprise wedding with vendors, use code names or misleading descriptions to avoid raising suspicions.\\n7. Plan the ceremony and reception: Plan the ceremony and reception accordingly, including the decorations, music, and food.\\n8. Get the necessary legal documents: Make sure to obtain the necessary legal documents such as a marriage license before the surprise wedding.\\n\\nOverall, planning a surprise wedding requires careful attention to detail, good communication with your partner and vendors, and the ability to keep secrets until the big reveal.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 0,
+  "role": "online_update",
+  "source_cluster_id": "sha256:4fbb275cac21ea318278ec01ba98dbbb246e30d7a3b11e28dc2ee6c6d241aa15",
+  "started": false,
+  "status": "excluded",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]
+}

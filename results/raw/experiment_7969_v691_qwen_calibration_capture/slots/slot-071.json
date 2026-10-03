@@ -1,0 +1,113 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.6349053820013069,
+  "exclusion_reason": null,
+  "family_id": "sha256:15ff48188a0d013ffa2970a89f5c339b81f91005e1d5d9497a1af532c2f0b931",
+  "input_tokens": 1051,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1051,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1075
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:3034e6182116b774fc5416848e39ff7afa3e85de1811ccc4948cf946a1b1e01a",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832569,
+    "id": "chatcmpl-Au5gUXEJBv80j8nhPXfSIHJ5rj8zZvfw",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 563.764,
+      "predicted_n": 24,
+      "predicted_per_second": 42.5710048885704,
+      "predicted_per_token_ms": 23.490166666666667,
+      "prompt_ms": 955.135,
+      "prompt_n": 973,
+      "prompt_per_second": 1018.7041622388458,
+      "prompt_per_token_ms": 0.981639260020555
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1051,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1075
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"721 Chapala St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Restaurants, Coffee & Tea, Food, Breakfast & Brunch, Diners\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"6:30-23:0\\\",\\\"Monday\\\":\\\"6:30-22:0\\\",\\\"Saturday\\\":\\\"7:0-23:0\\\",\\\"Sunday\\\":\\\"7:0-22:0\\\",\\\"Thursday\\\":\\\"6:30-22:0\\\",\\\"Tuesday\\\":\\\"6:30-22:0\\\",\\\"Wednesday\\\":\\\"6:30-22:0\\\"},\\\"name\\\":\\\"Esau's Cafe\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2015-06-09 17:06:43\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"I just learned that Esau's closed and since writing my review, I ate there many times. \\\\n\\\\nThe salads were WONDERFUL. Huge portions and enough to take home. I loved the vegetable salad with feta or goat. \\\\n\\\\nAnd the biscuits were the best. I am so disappointed. \\\\n\\\\nMy boyfriend will be crushed.\\\"},{\\\"review_date\\\":\\\"2015-06-01 21:33:15\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\":(  they are closed now and for good...\\\\nthanks to another GREEDY building owner. He doubled Scott's rent!  DOUBLED!  The only location is now their Carpinteria location on Linden Avenue across from Amtrak.  This was a legacy in Santa Barbara. I grew up standing in line like the rest of us at the old lower state street location, that guy raised his rent through the roof, so they moved.  That space has been vacant for over 9 years...and still is.  \\\\nThis was the BEST place to get lunch and breakfast in SB for decades.  Glad some greedy jerk decided to end that for the rest of us....\\\"},{\\\"review_date\\\":\\\"2015-05-27 04:14:59\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Say it ain't so! KEYT3 News has on their Mobile app that Esau's is closing? The rent is too high? When are people going to realize that there are some things (think tradition) that trump the almighty dollar!  Wow! Perhaps with a little luck it will be replaced with an IHOP, Coco's, or, better yet, another (insert plastic fast food emporium here) because we sure need another one of them (think breakfast tacos?) Yucch. This evening just made a turn for the worst. So sad.........\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Here is an objective overview of Esau's Cafe based on the provided structured data in JSON format:\\n\\nEsau's Cafe is a popular restaurant located in Santa Barbara, California, offering a variety of menu items including breakfast, brunch, and dinner. The cafe has a cozy atmosphere and offers outdoor seating, Wi-Fi, and takeout options. According to customer reviews, the salads and biscuits are must-try items, and the restaurant is particularly known for its vegetarian and vegan options. However, the cafe has recently closed down, with the last review being posted in 2015. Despite its closure, Esau's Cafe remains a beloved local spot, with customers expressing their disappointment and regret over its departure.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:bf883c78a43db763068f4996005897521cdc03ac97e9ebc8227fe544642a4eb3",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21
+  ]
+}

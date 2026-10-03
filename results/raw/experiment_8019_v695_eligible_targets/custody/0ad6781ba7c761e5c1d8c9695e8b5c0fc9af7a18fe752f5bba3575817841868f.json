@@ -1,0 +1,108 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.84575771499658,
+  "exclusion_reason": null,
+  "family_id": "sha256:b53fd507203417f2dbbf8537ec5de76a8a43d65e9ec35e1fb3143f2e4025a23a",
+  "input_tokens": 1340,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1340,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1363
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:94ac29bcd81fa321e199a088865e0644ddc5dea01b7a46f0f6b745db0437a5b8",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832769,
+    "id": "chatcmpl-NPp3IUgWRjHLxDRzgMIWuIR2i5XixTtL",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 542.349,
+      "predicted_n": 23,
+      "predicted_per_second": 42.40811728241408,
+      "predicted_per_token_ms": 23.580391304347827,
+      "prompt_ms": 1168.712,
+      "prompt_n": 1262,
+      "prompt_per_second": 1079.8212048819555,
+      "prompt_per_token_ms": 0.9260792393026941
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1340,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1363
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"901 Embarcadero del Mar, Ste 101\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Desserts, Tea Rooms, Food, Juice Bars & Smoothies, Taiwanese, Chicken Wings, Bubble Tea, Hong Kong Style Cafe, Specialty Food, Coffee & Tea, Restaurants\\\",\\\"city\\\":\\\"Isla Vista\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-23:30\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"12:0-22:0\\\",\\\"Sunday\\\":\\\"11:0-23:0\\\",\\\"Thursday\\\":\\\"11:0-23:0\\\",\\\"Tuesday\\\":\\\"11:0-23:0\\\",\\\"Wednesday\\\":\\\"11:0-23:0\\\"},\\\"name\\\":\\\"Wake Cup\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2019-10-08 23:29:42\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"The boba here is delicious!! I came here for a quick drink for lunch and got a large Jasmine milk tea with boba. The staff there hooked up a good amount of boba without any extra charge. I was sooo surprised! I didn't have to worry about running out of boba before finishing the tea. \\\\n\\\\nThe jasmine milk tea was amazing. It had just the right amount of sweetness and tea flavor. It did not taste watered down whatsoever. I am definitely coming back here for some more milk tea boba soon.\\\"},{\\\"review_date\\\":\\\"2019-09-30 06:19:14\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"Well the milk tea is nice, but it cost us some time to get our drinks. I think it will be better if they hire more staffs, one takes the orders while others prepare the drinks.\\\"},{\\\"review_date\\\":\\\"2019-08-19 02:46:12\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"was given the wrong drink order, when i returned to let the employee (only one working at the store at the time) know he ignored me. he was more interested in making drinks for his friend that was hanging out by the game table (i think kyle was his name ?) and gave him free oreo slush smoothies without lids. i waited for 15 minutes before he actually acknowledged i was a paying customer, after we made contact several times and i'd rang the little metal bell (to which he responded with a glare and condescendingly scoffed \\\\\\\"yes.......?\\\\\\\" before looking away and going back to ignoring me). when he finally decided i was worthy of his attention, he stared at me and tried to argue with me that he didn't mess up my order. i had to pull up my most recent order and previous orders as proof, and even then he did not admit any mistake or apologize. when i asked if he could remake my drink as ordered, he was clearly unhappy and showed it by making the drink as slow as he could and once again incorrectly. by that time i'd already been there for an extra 30 mins and didn't have any more time to waste, so i said thank you apologized for the inconvenience and said goodbye. however this was the worst boba experience i've yet to experience, i don't wish it on anyone else, and will not ever subject myself to such a waste of time and money again :(\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Wake Cup is a local business located at 901 Embarcadero del Mar, Ste 101 in Isla Vista, CA. It offers a variety of desserts, tea rooms, food, juice bars & smoothies, Taiwanese cuisine, chicken wings, bubble tea, Hong Kong style cafe, specialty food, coffee & tea, and restaurant options. The business is open from 11:00 AM to 11:00 PM from Tuesday to Sunday, and until 11:30 PM on Fridays. On Mondays, it remains closed. The business provides free WiFi and has outdoor seating available. It is also suitable for groups and offers takeout services. The business has received an average rating of 3.5 stars.\\n\\nCustomers have left mixed reviews about Wake Cup. One customer had a positive experience with their large Jasmine milk tea with boba. The boba was generously added without any extra charge, and the tea had the right amount of sweetness and flavor. However, another customer mentioned that the service was slow due to a lack of staff. They suggested hiring more staff members to improve the efficiency of serving customers. Additionally, another customer had a negative experience where their drink order was incorrect, and the employee ignored their concerns. The employee seemed more interested in attending to their friend instead. The customer had to provide evidence of the mistake, but the employee did not admit any fault or apologize. Overall, the business has both positive and negative aspects based on customer reviews.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:67ae5fb11a8e8b519ae292fe2c43ce9db87e6402fc323ca37a77b4a74a533b44",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+  ]
+}

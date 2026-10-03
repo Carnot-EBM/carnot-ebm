@@ -1,0 +1,105 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.2596480030333623,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:54558213e498a9eb943bf0958fa1496175060ce5b300ec62c83a8da7cf3ac76f",
+  "input_tokens": 721,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 721,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 742
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:56907f73458ae757546e99c4a8b533477d9c48cc4e0d4722bf3178f67b95de96",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886327,
+    "id": "chatcmpl-BHKAXDROg3dUKuGaySzVpYPRvoj69jsN",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 492.353,
+      "predicted_n": 21,
+      "predicted_per_second": 42.65232465324676,
+      "predicted_per_token_ms": 23.44538095238095,
+      "prompt_ms": 646.738,
+      "prompt_n": 643,
+      "prompt_per_second": 994.2202251916541,
+      "prompt_per_token_ms": 1.0058133748055988
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 721,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 742
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"532 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":false,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":null},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Performing Arts, Nightlife, Comedy Clubs, Arts & Entertainment\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":null,\\\"name\\\":\\\"Comedy Hideaway - Santa Barbara\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2014-10-14 04:18:03\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Great comedy venue at a great price!  Just what SB needed. I highly recommend it - the drink service is a bit slow, I would order 2 when you first arrive. I never got a chance to order a 2nd cocktail :-(\\\"},{\\\"review_date\\\":\\\"2014-07-31 04:43:49\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I've come here for a few girls nights, and on dates.  It's really fun!  I like the food, the regular comics are all fun and talented, and the headliners are consistently hilarious.  I can always count on Comedy Hideaway for a fun downtown activity!  Highly Recommend!\\\"},{\\\"review_date\\\":\\\"2014-07-14 22:41:04\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"If you want to laugh this is the place to go. Good comedians and a great night out in Santa Barbara\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Comedy Hideaway - Santa Barbara is a performing arts, nightlife, comedy club, arts, and entertainment venue located at 532 State St, Santa Barbara, CA. The establishment is rated at 4.5 stars overall. However, it does not offer amenities like business parking, outdoor seating, WiFi, music, or a specific ambience. It is a good place for groups. Customers specifically recommend Comedy Hideaway for its excellent comedy acts, though some have noted that the drink service can be slow. Others have commented that it is a fun venue for girls' nights out and dates, and they appreciate the talent of regular comics and headliners. The venue does not have mentioned hours of operation.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "ac2dc52b3beea10a39e6616ce87b3e523fa77c64a411777bfced68ab519e3148",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ]
+}

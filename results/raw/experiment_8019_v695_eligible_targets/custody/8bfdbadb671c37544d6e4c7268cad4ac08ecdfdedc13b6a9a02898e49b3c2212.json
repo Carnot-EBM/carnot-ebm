@@ -1,0 +1,143 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 2.208623737038579,
+  "exclusion_reason": null,
+  "family_id": "sha256:aae776cda6397757c1133e32c86b3391188970983ac7ad7c0e8f199b3d1689b8",
+  "input_tokens": 1828,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1828,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1851
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:6f61fbf85ed343407c09f4b48303d87e56b38b02ee4e29175d4172be3147abe7",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832678,
+    "id": "chatcmpl-UgQw6qtwfUw2QbcLfBMIeuAF6FiGWYdQ",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 542.877,
+      "predicted_n": 23,
+      "predicted_per_second": 42.36687131707551,
+      "predicted_per_token_ms": 23.603347826086953,
+      "prompt_ms": 1532.591,
+      "prompt_n": 1750,
+      "prompt_per_second": 1141.8571556273005,
+      "prompt_per_token_ms": 0.8757662857142856
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1828,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1851
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Australia has recalled its ambassador to Indonesia for consultations after two Australians were among eight drug smugglers executed by firing squad early Wednesday. Australian Prime Minister Tony Abbott called the executions \\\"cruel and unnecessary\\\" because both men, Andrew Chan and Myuran Sukumaran, had been \\\"fully rehabilitated\\\" during a decade in prison. Abbott didn't say what permanent actions, if any, would be taken against Indonesia. \\\"This is a dark moment in the relationship, but I'm sure the relationship will be restored,\\\" he said. One of the men's Indonesian lawyers, Todung Mulya Lubis tweeted his apologies. \\\"I failed. I lost,\\\" he said. \\\"I'm sorry.\\\" Indonesian President Joko Widodo appeared to shrug off the diplomatic recall, telling reporters that \\\"our legal sovereignty must be respected. We also respect other countries' legal sovereignty.\\\" Foreign Minister Retno Marsudi said the country had no plans to recall its own ambassador in response. \\\"This is a legal case. This is not a political case so at this very stage, we do not have any plan to call our ambassador back from Canberra,\\\" he said. Six other inmates were executed, including Nigerians Raheem Salami, Silvester Obiekwe Nwolise, Okwudil Oyatanze and Martin Anderson; Indonesian Zainal Abidin and Brazilian Rodrigo Gularte, who was said to be mentally ill. On Wednesday, Brazil's foreign ministry released a statement expressing \\\"deep sadness\\\" at Gularte's execution, saying that Brazilian President Dilma Rousseff had urged her Indonesian counterpart to spare him due to his \\\"psychiatric condition.\\\" Gularte is the second Brazilian to be executed in Indonesia this year, with the first -- Marco Archer Cardoso Moreira -- prompting the country to recall its ambassador for consultations. The Indonesian government had originally announced that nine prisoners would be executed, but at the last moment Filipina Mary Jane Veloso was spared. \\\"We are so happy, so happy. I thought I had lost my daughter already but God is so good. Thank you to everyone who helped us,\\\" her mother Celia Veloso told CNN. Philippines embassy officials said Veloso would be returned to Yogyakarta prison in Central Java later on Wednesday. No reason was given for the reprieve but it may relate to developments in her case late on Tuesday. CNN Philippines reported that Veloso's alleged recruiter, Maria Kristina Sergio and her partner Julius Lacanilao, surrendered to authorities. The report said Sergio had denied all accusations in relation to Veloso's case. Veloso's lawyers claimed the mother-of-two was the victim of human trafficking. They say she was offered work in Malaysia, but when she arrived she was told the job had been filled and wasn't aware the bag she'd been given for the return journey to Indonesia was filled with drugs. A tenth prisoner, Frenchman Serge Atlaoui, was also scheduled to be executed but his case was delayed while a court considers a legal challenge. Candlelight vigils were held for Chan and Sukumaran in the hours ahead of the expected execution. The men's legal teams had been fighting for years for a stay, but it wasn't to be. The men -- then aged in their early twenties -- were arrested in 2005 as part of the \\\"Bali Nine,\\\" a drug smuggling gang that intended to import 8 kilograms (17.6 pounds) of heroin from Bali to Australia. They failed. The pair were transported with other prisoners to Indonesia's so-called \\\"execution island\\\" in March, and after being given 72-hours notice of their execution on Saturday, Chan married his longtime girlfriend, Febyanti Herewila, on Monday in prison. The executions of Sukumaran and Chan came despite the fact that both this week received a court date of May 12 to hear an outstanding legal challenge. On Tuesday, lawyers for the men also said Indonesia's Judicial Commission had yet to properly investigate claims of corruption during their original trial and sentencing. They said three of the men's Indonesian lawyers had been summoned to attend the commission on May 7. However, before the executions, Indonesia insisted that all legal avenues had closed. On Tuesday, the prisoners' families were heard wailing as they boarded a boat for the execution site. Visiting hours were extended until 8 p.m. to give them extra time before they were asked to leave. Under Indonesian law, the death penalty is carried out by a 12-man firing squad, although only three guns are loaded with live ammunition. Prisoners are given the choice of whether to stand or sit, and whether they want to wear a blindfold, hood or nothing. The shots -- aimed at the heart -- are fired from between 5 and 10 meters (16 to 33 feet), according to Amnesty International. After the executions, the rights group released a statement condemning them as \\\"reprehensible\\\" and issue fresh calls for a moratorium on the death penalty. While the Bali Nine have garnered much international attention, their punishment is part of a larger government effort to combat illegal drug trafficking. Indonesian President Widodo has insisted that Indonesia would not be swayed by appeals for clemency because the country is dealing with a \\\"drugs crisis.\\\" He told CNN in January that clemency would not be extended to drug traffickers, leading to an appeal from Chan and Sukumaran that their cases hadn't been properly considered. Lawyers for the two men said they underwent radical rehabilitation during their 10 years in Kerobokan prison and were helping to counsel and support other inmates. Chan was ordained as a Christian minister who led prayer meetings, while Sukumaran became an accomplished painter and established his own art classes inside the Bali prison. The Indonesian government didn't confirm until late Tuesday that the executions were to go ahead. Preparations were clearly underway earlier that day, with the arrival of ambulances at the port where boats leave to go to Nusa Kambangan island where the prisoners were being held. Images showed individual crosses bearing the prisoners' names and the date April 29, 2015. Families were in little doubt as to what lay ahead. When reports of his death emerged, Sukumaran's cousin tweeted: \\\"I love you more than you can imagine. Your legacy will live on. I promise. Save me a place in heaven.\\\" CNN's Tasha Tampubolon contributed to this report.\\n\", \"original_answer\": \"Indonesia has executed eight drug smugglers, including two Australians, by firing squad. The executions were carried out despite appeals for clemency and protests from human rights groups. The two Australians, Andrew Chan and Myuran Sukumaran, were part of the \\\"Bali Nine\\\" drug smuggling ring and had been on death row for ten years. Their executions were widely condemned, with Australian Prime Minister Tony Abbott calling them \\\"cruel and unnecessary.\\\" Indonesian President Joko Widodo defended the executions, stating that his country's legal sovereignty must be respected. The other six prisoners executed included nationals from Nigeria, Brazil, and the Philippines. The executions were carried out at Nusa Kambangan island, where the prisoners were taken by boat. The families of the prisoners were allowed to visit them before the executions, and their lawyers claimed that they had undergone significant rehabilitation during their time in prison. Human rights groups have renewed their calls for a moratorium on the death penalty, describing the executions as \\\"reprehensible.\\\"\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:a0a2c65d0d912e31e9ddc73160c3c14fd6c27a227363fb1a6115d870d1dded01",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51
+  ]
+}

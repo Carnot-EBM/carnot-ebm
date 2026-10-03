@@ -1,0 +1,102 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.0827547441003844,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:13e49aa3dc7b16e2b04940a6c3710553d1c62c120c2bd50d09cb41b2081f8ef2",
+  "input_tokens": 376,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 3,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 376,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 400
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:b088ccae90f5719d737db2ea1442a0a87a623734b5c441c705312e43b0631c4a",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 3\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885920,
+    "id": "chatcmpl-zOmvYMWNejXO61zSVM4rAMXGU79lAKpM",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 562.43,
+      "predicted_n": 24,
+      "predicted_per_second": 42.67197695713244,
+      "predicted_per_token_ms": 23.434583333333332,
+      "prompt_ms": 409.667,
+      "prompt_n": 298,
+      "prompt_per_second": 727.4200753294749,
+      "prompt_per_token_ms": 1.374721476510067
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 376,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 400
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Some people with mental illness have a wild crazy look in their eyes but most do not. Some people without mental illness have a wild crazy look in their eyes. I'm not a fan of Michelle Bachman but watching her on TV or looking at her in photos her eyes look normal to me.\\\\n\\\\npassage 2:Bruce Neben, psychologist264 Views \u2022 Bruce has 160+ answers in. There is no science or observation confirming crazy eyes that I know of. Some people with mental illness have a wild crazy look in their eyes but most do not.\\\\n\\\\npassage 3:They got out of jail and, with the help of programs like Women in Recovery, have transformed their lives, and the lives of their families. But whenever I\u2019m watching the show, I can\u2019t help but feel conflicted about the character with serious mental illness, Suzanne \u201cCrazy Eyes\u201d Warren.\\\\n\\\\n\\\",\\\"question\\\":\\\"does crazy eyes have a mental illness\\\"}\", \"original_answer\": \"Yes, the character Suzanne \\\"Crazy Eyes\\\" Warren is depicted as having a serious mental illness.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "calibration",
+  "source_cluster_id": "12e0dec4490d9b56ca32b57a515bf2926a7f2efe1a44ce25fe3d382fa2964dd0",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ]
+}

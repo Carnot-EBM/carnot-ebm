@@ -1,0 +1,127 @@
+.....F.....                                                              [100%]
+=================================== FAILURES ===================================
+____________________ test_owned_qualification_and_terminal _____________________
+
+tmp_path = PosixPath('/tmp/carnot-7991-3kp_6g6l/unit/test_owned_qualification_and_t0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f1c73b34e90>
+
+    def test_owned_qualification_and_terminal(tmp_path, monkeypatch):
+        """SCENARIO-VERIFY-7991-TERMINAL: failure disqualifies; blocked readiness stays zero."""
+        root = tmp_path / "root"
+        fixture(root)
+        output = tmp_path / "publish/experiment_7991_v692_capstone.json"
+        calls = []
+    
+        def plan(private):
+            counts = {
+                n: dict(summary=dict(num_statements=1, covered_lines=1), missing_lines=[])
+                for n in validation.OWNED
+            }
+            cap.atomic_json(private / "coverage.json", dict(files=counts))
+            cap.atomic_json(
+                private / "cli-receipts" / "negative.json",
+                dict(
+                    name="negative_fixture",
+                    argv=["private"],
+                    expected_exit=0,
+                    actual_exit=0,
+                    passed=True,
+                    classification="required",
+                ),
+            )
+            return dict(
+                commands=[
+                    dict(
+                        name="publication_gate",
+                        argv=["private"],
+                        expected_exit=0,
+                        deadline_s=60,
+                        classification="required",
+                    )
+                ],
+                dependency_hashes={},
+            )
+    
+        def check(cwd, spec, private, durable):
+            log = durable / (spec["name"] + str(len(calls)) + ".log")
+            log.parent.mkdir(parents=True, exist_ok=True)
+            calls.append(spec["name"])
+            report = (
+                dict(flagged_count=0)
+                if spec["name"] == "adversarial_verify"
+                else dict(gates={g: dict(pass_=False) for g in ()})
+            )
+            log.write_text(json.dumps(report))
+            return dict(spec, passed=True, actual_exit=0, log_path=str(log))
+    
+        monkeypatch.setattr(validation, "manifest", plan)
+        monkeypatch.setattr(validation, "run_check", check)
+        assert (
+            validation.qualify(
+                root, root / "design.md", root / "research-roadmap.yaml", "20261001", output
+            )
+            == 0
+        )
+        value = json.loads(output.read_bytes())
+        assert value["verdict_class"] == "blocked"
+        assert value["capstone_execution_ready_score"] == 0
+        selected = json.loads(Path(value["primary_resolution_receipt"]["path"]).read_bytes())
+        assert selected["passed"] and selected["document_sha256"] == cap.sha256_file(output)
+        fixture(root, True)
+        null_output = tmp_path / "null/experiment_7991_v692_capstone.json"
+        assert (
+            validation.qualify(
+                root, root / "design.md", root / "research-roadmap.yaml", "20261001", null_output
+            )
+            == 0
+        )
+        assert json.loads(null_output.read_bytes())["capstone_execution_ready_score"] == 1
+        value["input_root"] = str(root)
+        validation.disqualify(
+            value, "owned_failure", dict(name="required", actual_exit=1, log_path=str(output))
+        )
+        assert value["verdict_class"] == "disqualified" and not value["science_ready"]
+        value["validation_receipts"].append(dict(passed=False, classification="required"))
+>       assert not cap.cold_replay(value, root, root / "design.md", root / "research-roadmap.yaml")
+E       AssertionError: assert not ['source_bytes_changed']
+E        +  where ['source_bytes_changed'] = <function cold_replay at 0x7f1c27e91080>({'G1': False, 'G2': False, 'G3': False, 'G4': False, ...}, PosixPath('/tmp/carnot-7991-3kp_6g6l/unit/test_owned_qualification_and_t0/root'), (PosixPath('/tmp/carnot-7991-3kp_6g6l/unit/test_owned_qualification_and_t0/root') / 'design.md'), (PosixPath('/tmp/carnot-7991-3kp_6g6l/unit/test_owned_qualification_and_t0/root') / 'research-roadmap.yaml'))
+E        +    where <function cold_replay at 0x7f1c27e91080> = cap.cold_replay
+
+tests/python/test_experiment_7991_v692_capstone.py:390: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp7991] phase=owned_qualification_start completed_units=0
+[exp7991] phase=freeze_authority completed_units=0
+[exp7991] phase=reduce_disposition completed_units=1
+[exp7991] phase=reduce_disposition completed_units=2
+[exp7991] phase=reduce_disposition completed_units=3
+[exp7991] phase=reduce_disposition completed_units=4
+[exp7991] phase=reduce_disposition completed_units=5
+[exp7991] phase=reduce_disposition completed_units=6
+[exp7991] phase=reduce_disposition completed_units=7
+[exp7991] phase=reduce_disposition completed_units=8
+[exp7991] phase=reduce_disposition completed_units=9
+[exp7991] phase=reduce_disposition completed_units=10
+[exp7991] phase=reduce_disposition completed_units=11
+[exp7991] phase=reduce_disposition completed_units=12
+[exp7991] phase=reduce_disposition completed_units=13
+[exp7991] phase=published_checked_primary completed_units=13
+[exp7991] phase=owned_qualification_start completed_units=0
+[exp7991] phase=freeze_authority completed_units=0
+[exp7991] phase=reduce_disposition completed_units=1
+[exp7991] phase=reduce_disposition completed_units=2
+[exp7991] phase=reduce_disposition completed_units=3
+[exp7991] phase=reduce_disposition completed_units=4
+[exp7991] phase=reduce_disposition completed_units=5
+[exp7991] phase=reduce_disposition completed_units=6
+[exp7991] phase=reduce_disposition completed_units=7
+[exp7991] phase=reduce_disposition completed_units=8
+[exp7991] phase=reduce_disposition completed_units=9
+[exp7991] phase=reduce_disposition completed_units=10
+[exp7991] phase=reduce_disposition completed_units=11
+[exp7991] phase=reduce_disposition completed_units=12
+[exp7991] phase=reduce_disposition completed_units=13
+[exp7991] phase=published_checked_primary completed_units=13
+[exp7991] phase=cold_replay_start completed_units=0
+=========================== short test summary info ============================
+FAILED tests/python/test_experiment_7991_v692_capstone.py::test_owned_qualification_and_terminal
+1 failed, 10 passed in 193.97s (0:03:13)

@@ -1,0 +1,105 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.37082533800276,
+  "exclusion_reason": null,
+  "family_id": "sha256:6362a02ced735dc7d6fd84a95158e8c95b51f2c9bec8966aa9146e27345a32f1",
+  "input_tokens": 761,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 761,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 785
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:b876b92b5040a72d4428ce5cd86bd26d9522ecadcc52095da43ba8906c7a6d75",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832863,
+    "id": "chatcmpl-xUbVvAWvIPYNatAvh1qCoMrk2W0xUe9Y",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 571.813,
+      "predicted_n": 24,
+      "predicted_per_second": 41.971763496108,
+      "predicted_per_token_ms": 23.825541666666666,
+      "prompt_ms": 687.182,
+      "prompt_n": 683,
+      "prompt_per_second": 993.9142759851101,
+      "prompt_per_token_ms": 1.0061229868228405
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 761,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 785
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"People magazine has anointed Sandra Bullock the world's most beautiful woman of 2015, the publication revealed on Wednesday. Bullock, 50, joins a long line of actresses to receive the honor, including last year's cover girl, Lupita Nyong'o, and Gwyneth Paltrow in 2013. She seems to be taking it all in stride, calling the whole thing \\\"ridiculous.\\\" \\\"Real beauty is quiet. Especially in this town, it's just so hard not to say, 'Oh, I need to look like that,' \\\" she told People. \\\"No, be a good person; be a good mom; do a good job with the lunch; let someone cut in front of you who looks like they're in a bigger hurry. The people I find most beautiful are the ones who aren't trying.\\\" The cover story focuses on Bullock's home life with her son, Louis, 5, and her efforts to stay healthy and fit past her 40s. \\\"I was putting him to bed and told him that even when I'm old and gray and more wrinkly than I am now, I'll still love him and want to tuck him in,\\\" she said. \\\"And he asked why I have wrinkles, and I said, 'Well, I hope some of them are from laughing so much.' And he touched my face and said, 'You're not old, you're just happy.' \\\" The Oscar-winning star of movies including \\\"Gravity,\\\" \\\"The Blind Side\\\" and \\\"Crash\\\" said she's happy with who she is. \\\"As long as I'm healthy and strong and I don't let this mind of mine run amok with insecurities about what I am not, I can look in the mirror and like who I see.\\\" The selection of Bullock, the oldest woman to receive top honors in the history of the list, is a sign that beauty knows no age, say some. \\\"Great choice! Gorgeous, talented, over 50 and FABULOUS! That's the way it's done!\\\" wrote one fan on People's Facebook page. Also making the \\\"most beautiful\\\" cut this year: Gabrielle Union, Ariana Grande and Laverne Cox. The issue hits newsstands Friday.\\n\", \"original_answer\": \"People magazine has named Sandra Bullock the world's most beautiful woman of 2015. This is the fourth time in a row the publication has chosen an African-American woman for the honor. Bullock, who turns 51 in July, joins a long line of actresses to receive the accolade, including last year's cover girl, Lupita Nyong'o. In the interview, Bullock emphasized the importance of inner beauty and being a good person. She also spoke about her son and how he sees her. The issue will hit newsstands on Friday.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:69d6b5d3526b4271d4ab34532411704471a06bc4ea22d760f980f169583c3df3",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ]
+}

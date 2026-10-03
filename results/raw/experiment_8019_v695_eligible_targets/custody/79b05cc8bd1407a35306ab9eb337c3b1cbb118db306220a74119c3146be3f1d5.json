@@ -1,0 +1,119 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.7251989939832129,
+  "exclusion_reason": null,
+  "family_id": "sha256:8d431b843a707d832ec3dcd52f4e87b2cd68abdd221f039ea9144fb5672c4a2e",
+  "input_tokens": 1191,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1191,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1214
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:aa5650527b42c3e0273579edfd59426ae12b8c6e9502bc42a0a1943c1489b09b",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832822,
+    "id": "chatcmpl-9mZAm0kpUV7kNAIDKZznqzLZkWKQh8HQ",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 542.039,
+      "predicted_n": 23,
+      "predicted_per_second": 42.43237110244835,
+      "predicted_per_token_ms": 23.56691304347826,
+      "prompt_ms": 1060.118,
+      "prompt_n": 1113,
+      "prompt_per_second": 1049.883126218025,
+      "prompt_per_token_ms": 0.9524869721473495
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1191,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1214
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"An unmanned Russian spacecraft originally bound for the International Space Station will re-enter the Earth's atmosphere after flight controllers lost contact with it, American astronaut Scott Kelly said Wednesday. The spacecraft  that lost contact with flight controllers will re-enter the Earth's atmosphere in about a week, Roscosmos, the Russian Federal Space Agency, said Wednesday. \\\"Roscosmos (the Russian Federal Space Agency) announced that the Progress will not be docking and will re-enter the Earth's atmosphere,\\\" Kelly said from the space station. The Progress resupply vehicle will come off its orbit and will begin its combustion in the atmosphere between May 5 and May 7, according to Roscosmos. The Progress vehicle does not present any danger to the International Space Station due to a significant difference in orbit, Roscosmos added. The Russia space agency said it is working on its next supply flight to the ISS and expects to launch a new Progress ship in the third quarter of this year. Russia lost contact with ISS Progress 59 during a resupply mission to the International Space Station. The ship is now spinning out of control, NASA said. Even if Russia hadn't lost contact with the craft, the original plan was for Progress to burn up re-entering Earth's atmosphere -- albeit with garbage rather than a full load of equipment for the space station. According to NASA information on the Progress resupply vehicle, \\\"After the cargo is removed and before the Progress undocks, the crew refills it with trash, unneeded equipment and wastewater, which will burn up with the spacecraft when it re-enters the Earth's atmosphere.\\\" The cargo spacecraft launched successfully early Tuesday from the Baikonur Cosmodrome in Kazakhstan. But after it separated from the Soyuz booster rocket's third stage, Russian flight controllers were unable to confirm the health of all the spacecraft's systems, including the deployment of navigational antennae, NASA said. \\\"The spacecraft made another pass over Russian ground stations and continued to experience telemetry problems regarding the deployment of navigational antennas and the pressurization of the manifolds in the propulsion system,\\\" the American space agency said in an update. A planned rendezvous with the ISS six hours later was initially postponed to Thursday but has now been canceled, NASA said in its latest update. \\\"Docking has been called off for the Progress 59 spacecraft,\\\" it said. \\\"Russian flight controllers are continuing to assess the vehicle and what the plan going forward will be. Additional information will be provided as it becomes available.\\\" Few details have been forthcoming so far from Roscosmos. According to NASA, the cargo ship is carrying more than 3 tons of food, fuel, oxygen, spare parts and scientific experiment hardware for the space station. But the hitch will not put the six ISS crew members at risk, NASA said. \\\"The spacecraft was not carrying any supplies critical for the United States Operating Segment (USOS) of the station,\\\" a statement said. \\\"Both the Russian and USOS segments of the station continue to operate normally and are adequately supplied well beyond the next planned resupply flight.\\\" That next flight, which will be the seventh SpaceX commercial resupply services mission to the space station, is not scheduled  to take off before June 19, NASA said. Meanwhile, Russian flight controllers continue their efforts to make contact with Progress 59 as it passes over Russian ground stations. NASA said Tuesday that Russian flight controllers had \\\"confirmed that the vehicle had entered into a slow spin and have issued commands to attempt to control it.\\\" According to Russian state news agency Tass, six attempts to make contact were to be made Wednesday. The U.S. supplies on board the spacecraft include spare parts for the station's environmental control and life support system, backup spacewalk hardware and crew clothing, \\\"all of which are replaceable,\\\" NASA said. U.S. astronaut Terry Virts, from Maryland, is the current space station commander. CNN's Eliott C. McLaughlin, Suzanne Presto and Amanda Barnett contributed to this report.\\n\", \"original_answer\": \"Here is a summary of the news in 163 words:\\n\\nA Russian Progress resupply vehicle headed for the International Space Station (ISS) has lost contact with flight controllers and will re-enter the Earth's atmosphere within a week, American astronaut Scott Kelly announced. The spacecraft, which was carrying over three tons of supplies, including food, fuel, and scientific experiment hardware, will not pose a danger to the ISS due to a significant difference in orbits. Despite efforts to regain contact, the Progress vehicle has entered a slow spin and is currently spinning out of control. The Russian space agency, Roscosmos, is working on a new supply flight to the ISS and plans to launch a new Progress ship in the third quarter of this year.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:588aae5927f0d92b7cb9cccd23e8a482750309165e1089293dd271bcccd3c179",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27
+  ]
+}

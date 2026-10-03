@@ -1,0 +1,84 @@
+.....F...                                                                [100%]
+=================================== FAILURES ===================================
+_________________________ test_live_scalar_control_cli _________________________
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261001T122258-680716-90a1de7c/test_live_scalar_control_cli0')
+
+    def test_live_scalar_control_cli(tmp_path):
+        """SCENARIO-REPORT-7982-CUSTODY: exact frozen scalar controls join successfully."""
+        out = tmp_path/'live'/(e.NAME+'.json')
+>       assert e.main(['--validation-worker', '--output', str(out)]) == 0
+E       AssertionError: assert 1 == 0
+E        +  where 1 = <function main at 0x7fddd726e160>(['--validation-worker', '--output', '/tmp/pytest-carnot-ianblenke/20261001T122258-680716-90a1de7c/test_live_scalar_control_cli0/live/experiment_7982_v692_multivariate_energy.json'])
+E        +    where <function main at 0x7fddd726e160> = e.main
+
+tests/python/test_experiment_7982_v692_multivariate_energy.py:165: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp7982] phase=begin
+[exp7982] phase=authenticate
+[exp7982] phase=fit_benchmark_before
+[exp7982] fit arm=gibbs seed=69201 steps=50/200
+[exp7982] fit arm=gibbs seed=69201 steps=100/200
+[exp7982] fit arm=gibbs seed=69201 steps=150/200
+[exp7982] fit arm=gibbs seed=69201 steps=200/200
+[exp7982] fit arm=gibbs seed=69202 steps=50/200
+[exp7982] fit arm=gibbs seed=69202 steps=100/200
+[exp7982] fit arm=gibbs seed=69202 steps=150/200
+[exp7982] fit arm=gibbs seed=69202 steps=200/200
+[exp7982] fit arm=gibbs seed=69203 steps=50/200
+[exp7982] fit arm=gibbs seed=69203 steps=100/200
+[exp7982] fit arm=gibbs seed=69203 steps=150/200
+[exp7982] fit arm=gibbs seed=69203 steps=200/200
+[exp7982] fit arm=logistic seed=69201 steps=50/200
+[exp7982] fit arm=logistic seed=69201 steps=100/200
+[exp7982] fit arm=logistic seed=69201 steps=150/200
+[exp7982] fit arm=logistic seed=69201 steps=200/200
+[exp7982] fit arm=logistic seed=69202 steps=50/200
+[exp7982] fit arm=logistic seed=69202 steps=100/200
+[exp7982] fit arm=logistic seed=69202 steps=150/200
+[exp7982] fit arm=logistic seed=69202 steps=200/200
+[exp7982] fit arm=logistic seed=69203 steps=50/200
+[exp7982] fit arm=logistic seed=69203 steps=100/200
+[exp7982] fit arm=logistic seed=69203 steps=150/200
+[exp7982] fit arm=logistic seed=69203 steps=200/200
+[exp7982] fit arm=quadratic seed=69201 steps=50/200
+[exp7982] fit arm=quadratic seed=69201 steps=100/200
+[exp7982] fit arm=quadratic seed=69201 steps=150/200
+[exp7982] fit arm=quadratic seed=69201 steps=200/200
+[exp7982] fit arm=quadratic seed=69202 steps=50/200
+[exp7982] fit arm=quadratic seed=69202 steps=100/200
+[exp7982] fit arm=quadratic seed=69202 steps=150/200
+[exp7982] fit arm=quadratic seed=69202 steps=200/200
+[exp7982] fit arm=quadratic seed=69203 steps=50/200
+[exp7982] fit arm=quadratic seed=69203 steps=100/200
+[exp7982] fit arm=quadratic seed=69203 steps=150/200
+[exp7982] fit arm=quadratic seed=69203 steps=200/200
+[exp7982] fit arm=mlp seed=69201 steps=50/200
+[exp7982] fit arm=mlp seed=69201 steps=100/200
+[exp7982] fit arm=mlp seed=69201 steps=150/200
+[exp7982] fit arm=mlp seed=69201 steps=200/200
+[exp7982] fit arm=mlp seed=69202 steps=50/200
+[exp7982] fit arm=mlp seed=69202 steps=100/200
+[exp7982] fit arm=mlp seed=69202 steps=150/200
+[exp7982] fit arm=mlp seed=69202 steps=200/200
+[exp7982] fit arm=mlp seed=69203 steps=50/200
+[exp7982] fit arm=mlp seed=69203 steps=100/200
+[exp7982] fit arm=mlp seed=69203 steps=150/200
+[exp7982] fit arm=mlp seed=69203 steps=200/200
+[exp7982] fit arm=spline seed=69201 steps=50/200
+[exp7982] fit arm=spline seed=69201 steps=100/200
+[exp7982] fit arm=spline seed=69201 steps=150/200
+[exp7982] fit arm=spline seed=69201 steps=200/200
+[exp7982] fit arm=spline seed=69202 steps=50/200
+[exp7982] fit arm=spline seed=69202 steps=100/200
+[exp7982] fit arm=spline seed=69202 steps=150/200
+[exp7982] fit arm=spline seed=69202 steps=200/200
+[exp7982] fit arm=spline seed=69203 steps=50/200
+[exp7982] fit arm=spline seed=69203 steps=100/200
+[exp7982] fit arm=spline seed=69203 steps=150/200
+[exp7982] fit arm=spline seed=69203 steps=200/200
+[exp7982] phase=fit_benchmark_after
+[exp7982] failed=string indices must be integers, not 'str'
+=========================== short test summary info ============================
+FAILED tests/python/test_experiment_7982_v692_multivariate_energy.py::test_live_scalar_control_cli
+1 failed, 8 passed in 15.07s

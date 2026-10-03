@@ -1,0 +1,130 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.8066348200663924,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:7a748ba9245d63fe87620dc34ecd7e6b6340fdf4f67b008c394885c0fc445df5",
+  "input_tokens": 1288,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1288,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1311
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:fa06d528381e3dabde82248e66de25c3fedd76be018ac7e62ed5d2340013d91c",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886168,
+    "id": "chatcmpl-n0cP1Qq1lLl6y2tRu8zYVVpBZnzddCud",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 542.143,
+      "predicted_n": 23,
+      "predicted_per_second": 42.42423124526186,
+      "predicted_per_token_ms": 23.571434782608698,
+      "prompt_ms": 1132.336,
+      "prompt_n": 1210,
+      "prompt_per_second": 1068.5874157493888,
+      "prompt_per_token_ms": 0.9358148760330579
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1288,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1311
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"A former U.S. Army enlistee who posted on Facebook about \\\"the adrenaline rush\\\" of dying in jihad was arrested Friday and charged with trying to detonate a car bomb at Fort Riley military base in Kansas, authorities said. A second man, who allegedly knew about the bomb plot but didn't call authorities, was charged with failing to report a felony. John T. Booker Jr. of Topeka, an American citizen also known as Mohammed Abdullah Hassan, was taken into custody near Manhattan, Kansas, in a van that contained what he thought was a bomb, the criminal complaint said. The \\\"bomb\\\" had actually been put together by two confidential informants with nonexplosive materials, the complaint said. Fort Riley's security was never breached and no people were in danger, the U.S. Justice Department said in a press release. Booker enlisted in the Army last year and was due to ship out to basic training April 7, 2014, said Army spokesman Wayne Hall. The criminal complaint said the FBI questioned him March 24, 2014 about comments posted on Facebook, such as, \\\"Getting ready to be killed in jihad is a HUGE adrenaline rush. I am so nervous. NOT because I'm scare to die but I am eager to meet my lord.\\\" Booker waived his Miranda rights and told the agents he enlisted to commit an insider attack against American soldiers like Maj. Nidal Hassan had done at Fort Hood, Texas, the complaint said. Hassan opened fire in a building in November 2009, killing 13 people and wounding more than 30. His enlistment was terminated March 24, 2014, at the request of Army Criminal Investigation Command, Hall said. Booker began communicating with a confidential informant later in 2014, the complaint said, and often talked about his plans to engage in violent jihad in support of ISIS. He and the informant watched ISIS videos together, the complaint said, and Booker talked about how he wanted to go to Iraq and turn his weapon on American soldiers when ordered to shoot the enemy. On March 9, Booker said he believed ISIS wanted him to commit a truck bombing in the United States and thought a good target would be nearby Fort Riley, a large Army base that's home to the 1st Infantry Division, known as \\\"The Big Red One.\\\" Booker said \\\"that detonating a suicide bomb is his No. 1 aspiration because he couldn't be captured, all evidence would be destroyed and he would be guaranteed to hit his target,\\\"  the criminal complaint said. He made a video with a Fort Riley airfield in the background and said ISIS was coming to kill American soldiers, both abroad and in the United States, the complaint said. Booker acquired components for a bomb and rented a storage locker to store the components, the complaint said. The plan was for confidential informants to build a bomb and for Booker to drive to Fort Riley and detonate it, the complaint said. But the bomb was built with \\\"inert\\\" parts and would never explode, the complaint said. On Friday, the informants and Booker drove to what Booker thought was a little-used utility gate near Fort Riley, the complaint said. While Booker was making final connections on the \\\"bomb,\\\" the FBI arrested him, the complaint said. He was charged with one count of attempting to use a weapon of mass destruction, one count of attempting to damage property by means of an explosive and one count of attempting to provide material support to the Islamic State of Iraq, a designated foreign terrorist organization. If convicted, he could face life in prison. Alexander E. Blair, 28, of Topeka was taken into custody Friday and charged with failing to report a felony. The FBI said agents interviewed Blair after Booker's arrest. Blair said he shared some of Booker's views, knew of his plans to detonate a vehicle bomb at Fort Riley and loaned him money to rent storage space, according to the FBI's criminal complaint. He said he thought Booker would carry out his plan but did not contact authorities, the complaint said. If convicted, Blair faces a maximum of three years in prison.\\n\", \"original_answer\": \"A former U.S. Army enlistee was arrested and charged with attempting to detonate a car bomb at Fort Riley military base in Kansas. John T. Booker Jr., also known as Mohammed Abdullah Hassan, was taken into custody in a van containing what he believed to be a bomb, but was actually a fake created by two confidential informants. The FBI had been monitoring Booker since 2014 after he posted on Facebook about his desire to die in jihad and admitted to agents that he had enlisted with the intention of committing an insider attack. He later began communicating with a confidential informant and frequently discussed his plans to support ISIS through violent jihad, including a potential truck bombing at Fort Riley. A second man, Alexander E. Blair, was charged with failing to report a felony after admitting to authorities that he knew of Booker's plans and had loaned him money to rent storage space for the bomb components.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "eec7901523da78afc53c84826ad507de3e0367b9eec5892678c38cda561398fd",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33
+  ]
+}

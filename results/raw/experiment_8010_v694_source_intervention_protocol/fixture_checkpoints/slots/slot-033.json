@@ -1,0 +1,94 @@
+{
+  "arm": "swap",
+  "capture_identity": "sha256:c690c1f517fbce73c5da6a2d1e99e3819c3de93e1045fe76d1c8215b54691541",
+  "censor_status": false,
+  "denominator": 1,
+  "donor_group_id": "sha256:06f17a2d74ee080ac3b83718c76856d2a5afa768144b685436784833e8c2e705",
+  "duration_s": 0.0019773340318351984,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:a2c036c60686ce1929664f7114aafc8e3841887372db00be3e7ab03b825650c4:swap",
+  "group_id": "sha256:a2c036c60686ce1929664f7114aafc8e3841887372db00be3e7ab03b825650c4",
+  "input_byte_upper_bound": 4153,
+  "input_tokens": 30,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.25,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 18,
+      "prompt_tokens": 30
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:975ad6d8d137ab9cadae694f2ed5e65ed5ade897f6aad67b80e8b79e8d4ed617",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "message": {
+          "content": "{\"unsupported_probability\": 0.25, \"source_sentence_id\": null}"
+        }
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "usage": {
+      "completion_tokens": 18,
+      "prompt_tokens": 30
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 32,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"1027 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Pakistani, Restaurants, Indian\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"17:30-21:30\\\",\\\"Monday\\\":\\\"17:30-21:30\\\",\\\"Saturday\\\":\\\"17:0-21:30\\\",\\\"Sunday\\\":\\\"17:0-21:30\\\",\\\"Thursday\\\":\\\"17:30-21:30\\\",\\\"Tuesday\\\":\\\"17:30-21:30\\\",\\\"Wednesday\\\":\\\"17:30-21:30\\\"},\\\"name\\\":\\\"Spice Avenue\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2013-07-08 17:31:09\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Great place and ambiance. The food had a great taste and was different to most Indian restaurants out there.  The only thing I would recommend is to have some kid friendly options.\\\"},{\\\"review_date\\\":\\\"2013-06-10 04:55:48\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"For the price, a definite NO WAY!  Sat on a nice patio and the service was fine considering we were the only people eating there.  Ordered the lamb samosa to start.  It was dry, small, and had no redeeming flavor whatsoever.  The mint sauce was the only thing that made it taste passable.  For entrees we choose to stay safe with chicken tikka masala with rosemary garlic naan to accompany.  I went to use the restroom while we waited for dinner.  In the kitchen I saw an entire plastic trash can filled with empty plastic pouches soiled with sauces and such.  Made me think that nothing is fresh made on site.  Food tasted like mall food-court food, which isn't necessarily bad except we paid more here than we did at Roy for fresh homemade seafood fettuccine.  We will not be back.\\\"},{\\\"review_date\\\":\\\"2013-05-05 00:19:46\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Spice Avenue is a great place to go for lunch. They have a really good lunch buffet special for $12. The naan is delicious and really fresh! The service is also very friendly. Try there Saag Paneer/Tofu with the naan\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Grassini Family Vineyards is a highly-rated local business located at 24 El Paseo, Santa Barbara, CA. It's not just a winery, but also a wine bar and tasting room, offering local flavors, nightlife, and entertainment. The vineyard is recognized for its Bordeaux style varietals like Malbec, Cabernet Franc, and Cabernet Sauvignon, with a noted favorite being the 2018 Reserve Cabernet Sauvignon. It operates from midday on most weekdays and extends its hours over the weekend. The business offers free WiFi and is good for groups, but does not accept reservations. They offer both garage and street parking, as well as valet service. Customers commend the vineyard for its welcoming staff, ambiance, and location, which is conveniently situated in downtown Santa Barbara yet distant from busy streets. Apart from wine tasting, visitors can also enjoy outdoor seating and board games.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69410,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "seed": 69410,
+  "source_cluster_id": "0d958269563d44012b2290173aec3e186bd24ee29e5adee61d34f77a9839637d",
+  "source_hash": "sha256:f5c021c7d35615d97605c552986ad8924a920b93af8c3f8c36c827240c38e7c1",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+  ]
+}

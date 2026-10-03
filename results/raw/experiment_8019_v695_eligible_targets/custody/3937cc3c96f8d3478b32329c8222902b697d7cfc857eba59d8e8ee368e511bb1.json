@@ -1,0 +1,124 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.9222192480228841,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:d6eb2cb52a805bca36c8530b8fa4edf2138ffb30556861b54d33f1e2f5b2e9a1",
+  "input_tokens": 1456,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1456,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1479
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:4048ff2c0ec7808b55c1750be76fdef76c822656f24ec5a502662ffb99c35472",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886328,
+    "id": "chatcmpl-3oXIcvF9Fhi2I6DQPQUSVe45sLLNceGB",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 542.589,
+      "predicted_n": 23,
+      "predicted_per_second": 42.389359165040204,
+      "predicted_per_token_ms": 23.590826086956525,
+      "prompt_ms": 1259.172,
+      "prompt_n": 1378,
+      "prompt_per_second": 1094.369951047196,
+      "prompt_per_token_ms": 0.9137677793904209
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1456,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1479
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Actress Mindy Kaling's brother says that he posed as a black man years ago to get into medical school and that the experience opened his eyes to what he calls the hypocrisy of affirmative action. The revelation comes as Vijay Chokal-Ingam, who is of Indian descent, is pitching a book about his experiences as a \\\"hard-partying college frat boy who discovered the seriousness and complexity of America's racial problems while posing as a black man.\\\" On his website, AlmostBlack.com, Chokal-Ingam says he hatched the plan in 1998 after realizing in college that his grades weren't going to be good enough to get into med school as an Indian-American. \\\"So, I shaved my head, trimmed my long Indian eyelashes, and applied to medical school as a black man,\\\" he wrote on the website. \\\"My change in appearance was so startling that my own fraternity brothers didn't recognize me at first.\\\" He says he joined an organization for black students and applied to schools using his middle name, JoJo. The plan had some drawbacks, said Chokal-Ingam, who describes himself now as a \\\"professional resume writer, interview coach, and graduate school application consultant.\\\" \\\"Cops harassed me. Store clerks accused me of shoplifting. Women were either scared of me or couldn't keep their hands off me,\\\" he wrote. \\\"What started as a devious ploy to gain admission to medical school turned into a twisted social experiment.\\\" He says it worked. Despite a relatively mediocre 3.1 college grade-point average and a good-but-not-great score of 31 on the Medical College Admission Test, Chokal-Ingam claims he was wooed by several top medical schools. He even posts documents on his website to bolster his claims, including an enthusiastic letter from a dean at the Emory University School of Medicine congratulating him on his \\\"excellent scores\\\" on the MCAT. But there's little evidence to suggest his posturing as a \\\"black\\\" applicant helped him get into these schools. First, there is no point of comparison: Chokal-Ingam never applied to medical schools as an Indian-American. Ultimately, he told CNN he applied at 22 medical schools and interviewed at 11. He was wait-listed at four schools and got into only one. Chokal-Ingam eventually attended Saint Louis University Medical School, dropping out after two years. Affirmative action has been in the news a lot the past few years, with a 2013 Supreme Court ruling that tightened how affirmative action admissions programs have to be structured and a 2014 ruling that upheld the University of Michigan's ban on the use of race in admissions. Chokal-Ingam says his story shows how affirmative action \\\"destroys the dreams of millions of Indian-American, Asian American, and white applicants for employment and higher education.\\\" \\\"It also creates negative stereotypes about the academic abilities and professional skills of African-American and Hispanic professionals, who don't need special assistance in order to compete with other minority groups,\\\" he wrote. But a Saint Louis University spokeswoman disputed the account, telling the Huffington Post that race never played a role in Chokal-Ingam's admission. \\\"His MCAT scores and science grade point average met SLU's criteria for admission at that time, and his race or ethnicity did not factor into his acceptance into the University,\\\" the website quoted SLU spokeswoman Nancy Solomon as saying. As might be expected, Chokal-Ingam's claim hasn't gone over well in some quarters. \\\"How does @VijayIngam disprove the benefits of #affirmativeaction when he never gained admission to SLU based on it?\\\" one Twitter user asked. Some were more blunt. One said Chokal-Ingam \\\"is an idiot.\\\" \\\"Whatever you feel about affirmative action, let's consider that one person's experience over a decade and a half ago -- an experience that ultimately didn't yield any deluge in acceptance letters anyway -- is not really indicative of the current state of college admissions,\\\" wrote Salon's Mary Elizabeth Williams. \\\"Nor is it necessarily an exemplary window into the complex and mysterious vetting process of elite institutions,\\\" she added. \\\"Instead, Chokal-Ingam's story is one of a successful woman's brother liberally using her name to drum up attention and controversy.\\\" Chokal-Ingam's sister, formerly of \\\"The Office\\\" and current star of TV's \\\"The Mindy Project,\\\" is among those who aren't on board, he wrote on his website. She \\\"strongly disapproves of my book,\\\" he wrote, arguing that it will bring shame on the family. But others said they don't see what all the fuss is about. \\\"I don't blame this guy at all he earned the right to get into that school via hardwork and wasn't getting it and felt like others were getting what he wanted to so he did what he had to,\\\" Twitter user josephdiano77 said.\\n\", \"original_answer\": \"Vijay Chokal-Ingam, the brother of actress Mindy Kaling, has stated that he posed as a black man years ago to gain admission to medical school, claiming that the experience exposed the hypocrisy of affirmative action. Chokal-Ingam, who is of Indian descent, is currently pitching a book about his experiences. On his website, AlmostBlack.com, Chokal-Ingam explains that he hatched the plan in 1998 after realising in college that his grades were not going to be good enough to get into medical school as an Indian-American. He applied to schools using his middle name and joined an organisation for black students. Despite his relatively mediocre college grade point average, Chokal-Ingam claims that he was courted by several top medical schools. He eventually attended St Louis University Medical School, dropping out after two years. A St Louis University spokeswoman disputed the account, stating that race never played a role in Chokal-Ingam's admission.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "b5a720825da1a664b71af9b6f3dfcda0e9cf9c0de7b3de1078657289c0543c01",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27
+  ]
+}

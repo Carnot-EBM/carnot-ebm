@@ -1,0 +1,116 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.8135686590103433,
+  "exclusion_reason": null,
+  "family_id": "sha256:45f32f9eab9538a7dd19501f608bc99edef82dbc04df00458e1d52a40a8d9cc5",
+  "input_tokens": 1276,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1276,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1299
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:d96eabd8c77baea4f3552f20cbf7e2d9dc361f28217813ad13244437d15af33c",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832927,
+    "id": "chatcmpl-opOlqAPmsuCZY09YzTHumuyzaQv5aH8B",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 548.709,
+      "predicted_n": 23,
+      "predicted_per_second": 41.91657144315111,
+      "predicted_per_token_ms": 23.856913043478258,
+      "prompt_ms": 1127.338,
+      "prompt_n": 1198,
+      "prompt_per_second": 1062.680402860544,
+      "prompt_per_token_ms": 0.941016694490818
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1276,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1299
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"701 Linden Ave\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":true,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":false,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Restaurants, Food, Do-It-Yourself Food, Nightlife, American (Traditional), Bars\\\",\\\"city\\\":\\\"Carpinteria\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"12:0-2:0\\\",\\\"Monday\\\":\\\"12:0-23:0\\\",\\\"Saturday\\\":\\\"12:0-2:0\\\",\\\"Sunday\\\":\\\"16:30-21:30\\\",\\\"Thursday\\\":\\\"12:0-2:0\\\",\\\"Tuesday\\\":\\\"12:0-23:0\\\",\\\"Wednesday\\\":\\\"12:0-23:0\\\"},\\\"name\\\":\\\"The Palms\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2020-08-01 16:15:37\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Bill? Todd? Done for good? Opening soon? Take out? Set up tables out back? Have fun! Come on!\\\\n\\\\nLouis\\\"},{\\\"review_date\\\":\\\"2020-02-24 21:03:09\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I visited for the first time on Saturday night. My mother and I were on a little get away from home (Los Angeles area) and doing some \\\\\\\"thrifting\\\\\\\" in Santa Barbara. We came for dinner but first had a couple of drinks at the bar. My extra-spicy Bloody Maria was very tasteful and not \\\\\\\"watered down\\\\\\\", I was actually able to taste the tequila (YUMMY)! We didn't know that dinner began at 5pm. When we were seated Trish was our waitress. She was hustling with her tables, as there was a 70th birthday party/dinner happening next to us. Even being busy she was still high spirited, kind and generous. She explained to us how the cooking of YOUR OWN steak happens. Yes you cook your own steak and/or chicken. I ordered the 10oz Rib-eye and my mother ordered the Filet Mignon (it comes bacon wrapped). With both our appetizers (crab and shrimp cocktails), our steak dinners, the salad bar, (chorizo) beans, baked potatoes and bread our bill was ..... UNDER $58.00 AND we had our \\\\\\\"doggy bags\\\\\\\" to bring home. Great for dates, family dinners and celebrations. I will be back to bring my husband. It looks like this will be a regular spot to have dinner when we travel up/down the coast.\\\"},{\\\"review_date\\\":\\\"2020-01-21 03:44:25\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"The steak was amazing as usual and the salad bar was so fresh and crisp,but the service is what made our night. We really appreciated our server Trish who \\\\\\\"went above and beyond\\\\\\\"to make our dining experience so wonderful. We told Trish that we were celebrating a special occasion and she brought over a delicious piece of cheesecake at the end of our dinner.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"The Palms is a local business located at 701 Linden Ave in Carpinteria, CA. It is a restaurant and bar that offers American (Traditional) cuisine. The business has a rating of 3.5 stars. The establishment is open from 12:00 PM to 11:00 PM from Monday to Wednesday, and from 12:00 PM to 2:00 AM from Thursday to Saturday. On Sundays, it operates from 4:30 PM to 9:30 PM.\\n\\nAccording to customer reviews, the business provides a unique dining experience where customers can cook their own steak and chicken. The menu includes options like rib-eye and bacon-wrapped filet mignon. There is also a salad bar available. Customers have praised the quality of the steak and the freshness of the salad bar.\\n\\nThe service at The Palms has been highly regarded by customers. The staff, particularly Trish, has been commended for being friendly, attentive, and going above and beyond to ensure a wonderful dining experience. One customer mentioned that Trish even brought them a delicious piece of cheesecake to celebrate a special occasion.\\n\\nThe atmosphere at The Palms is described as casual and classy, making it suitable for various occasions such as dates, family dinners, and celebrations. However, it should be noted that the business does not offer outdoor seating or WiFi.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:9c3bb79d490ed3c3bac25a2a71b4d045a2da57073ca5753ab74577978dda3200",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+  ]
+}

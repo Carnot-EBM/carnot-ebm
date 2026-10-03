@@ -1,0 +1,140 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 2.0068937910255045,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:bc2a4e09ace0f0d8b99e287f2fb0cda809acce5f380c234f6b2aa3d7d0b2f5e5",
+  "input_tokens": 1493,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1493,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1517
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:f0c40093a4a633eace25feeffebca246852d51f8bb041b5657245adb46db30a6",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886063,
+    "id": "chatcmpl-sEXTILzWvpCVRGOzzNZcHQrzJXSDIgj0",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 566.684,
+      "predicted_n": 24,
+      "predicted_per_second": 42.351645714366384,
+      "predicted_per_token_ms": 23.611833333333333,
+      "prompt_ms": 1303.782,
+      "prompt_n": 1415,
+      "prompt_per_second": 1085.3041382685142,
+      "prompt_per_token_ms": 0.9214007067137808
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1493,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1517
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"In 1944, 16-year-old Yong Soo Lee of Taegu, Korea, was lured by a friend of hers to meet with an older Japanese man. The man took the two of them, and three other teenage girls, by train, then ship, to Taiwan. There, the girls were forced into sexual slavery, serving four to five Japanese soldiers every day for a year. Lee suffered beatings and torture, was infected with a venereal disease, was fed paltry amounts of food, faced temperatures so cold that ice formed on her body, and was never allowed outside. Only the end of World War II brought her relief. Lee is just one example of the over 200,000 women from Korea, China, the Philippines, Indonesia, and other Asian nations, who were kidnapped and sexually enslaved by the Japanese Imperial Army during World War II. These so-called \\\"comfort women\\\" suffered unimaginable physical, emotional, and psychological trauma. When Japanese Prime Minister Shinzo Abe addresses a Joint Meeting of Congress on Wednesday, he has an opportunity to do right by these women, and issue an unequivocal and irrefutable apology -- something that carries the weight of his government. In 2007, in the very same chamber the prime minister will be issuing his address, the House of Representatives sent a profound message to the Japanese government by unanimously passing House Resolution 121, which I authored. The resolution called on the Japanese government to formally acknowledge, apologize, and accept historical responsibility in a clear and unequivocal manner for its Imperial Armed Forces' coercion of young women into sexual slavery; publicly refute any claims that the sexual enslavement and trafficking of the \\\"comfort women\\\" never occurred; and educate current and future generations about this horrible crime. We are still waiting for their government to comply. In 2006, during his first term, Prime Minister Abe unleashed an international firestorm of criticism when he stated that there was no evidence of Japanese coercion and complicity in setting up and running the \\\"comfort women\\\" system. And during his second term, Abe and his right-wing allies have continued to question history -- even trying to dilute and rewrite it. Last year, I, along with 17 of my House colleagues, wrote to the Japanese Ambassador to the United States, calling the timing and contents of the Japanese government report on the 1993 Kono statement: regrettable, unfortunate, unacceptable, and destabilizing. Last year, meanwhile, the Abe administration tried (and failed) to get the United Nations to partially retract their authoritative 1996 report, which called on Japan to apologize to the victims and pay reparations to survivors who had been forced into sex slavery. Most notably, earlier this year, the Japanese government tried unsuccessfully to change passages in U.S. history textbooks about the \\\"comfort women.\\\" Some say that Japan has already apologized enough and it's time to move on. To those people I say, in light of these continued attempts to rewrite history, for every step forward the Japanese government takes toward peace and reconciliation, it takes two steps back. As someone who was put into an internment camp as an infant, I know firsthand that governments must not be ignorant of their pasts. In 1942, during World War II, my government put aside the constitutional rights of Japanese Americans and systematically incarcerated 120,000 of us. We were U.S. citizens, but merely because of our ancestry, the government treated us like the enemy. Decades later, we, the Japanese American community, fought for an apology from our government. In 1988, Congress passed, and President Ronald Reagan signed into law, the Civil Liberties Act, which was a formal apology to United States citizens of Japanese ancestry who were unjustly put into internment camps during World War II. Our government made a mistake, but they apologized for it, and healed many wounds as a result. Japan must now do the same. It must show the maturity of a democratic country, apologize for its mistake, and thereby gain the trust of her sister Asian nations. The German Chancellor Angela Merkel has urged Prime Minister Abe to face Japan's history. Germany knows something about this. After World War II, Germany engaged in a painful national \\\"coming to terms with the past\\\" that ripped open old wounds so that they could properly heal. Time is of the essence. Today, there are fewer than 100 surviving \\\"comfort women\\\" across the Asia-Pacific. Each year, this number declines. Ms. Lee is one of 53 remaining Korean survivors. The survivors are dying by the day. They deserve the justice and apology that has been due to them for the past 70 years. The opportunity to speak to a joint meeting of Congress is an honor that is reserved for heads of state of our closest allies. I will be in the House chamber when Prime Minister Abe delivers his address. Ms. Lee will attend as my guest. Both of us hope the Prime Minister will take the privilege of this opportunity and finally, and firmly, apologize, and commit to educating the future generation honestly and humbly. Ms. Lee and her sisters deserve no less.\\n\", \"original_answer\": \"Japanese Prime Minister, Shinzo Abe, is being urged by a US congressman to apologise for the sexual enslavement of over 200,000 women by the Japanese Imperial Army during World War II.&nbsp;The women, known as &ldquo;comfort women&rdquo;, were taken from Korea, China, the Philippines, Indonesia and other Asian nations. Such an apology has been issued before during a speech by a previous Japanese Prime Minister in 1993, but it was seen as not carrying the weight of the Japanese Government. This is the first time a Japanese Prime Minister has been invited to address a Joint Meeting of Congress.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "fdebd88159cd2f7e1f2404d876b7a1d4a8fd20372e0a66aef406676ce12bd369",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43
+  ]
+}

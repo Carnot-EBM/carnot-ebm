@@ -1,0 +1,98 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.4861437170184217,
+  "exclusion_reason": null,
+  "family_id": "sha256:1545f2c2dcc3c2b5b6f97d3dc899251527c941a62a69a1152529a28946b34083",
+  "input_tokens": 962,
+  "invocation_finished_at": "2026-10-01T11:42:30.943032+00:00",
+  "invocation_started_at": "2026-10-01T11:42:29.456887+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 962,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 983
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:44d92b3393f73e255abfe1365a501ade0842c129a7c15524b4e32c63f2bd61ad",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790854950,
+    "id": "chatcmpl-EED98RUkxreQuYEiiiwZnRQcAIbZECHk",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 488.785,
+      "predicted_n": 21,
+      "predicted_per_second": 42.963675235533,
+      "predicted_per_token_ms": 23.27547619047619,
+      "prompt_ms": 865.228,
+      "prompt_n": 884,
+      "prompt_per_second": 1021.69601538554,
+      "prompt_per_token_ms": 0.9787647058823529
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 962,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 983
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"214 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":false,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Restaurants, Chinese, Nightlife, Burgers, Pizza, Asian Fusion, Ramen, Cocktail Bars, Dim Sum, Bars, Pubs, American (Traditional), Japanese\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:30-23:0\\\",\\\"Monday\\\":\\\"11:30-22:0\\\",\\\"Saturday\\\":\\\"11:30-23:0\\\",\\\"Sunday\\\":\\\"11:30-22:0\\\",\\\"Thursday\\\":\\\"11:30-22:0\\\",\\\"Tuesday\\\":\\\"11:30-22:0\\\",\\\"Wednesday\\\":\\\"11:30-22:0\\\"},\\\"name\\\":\\\"Yankee Noodle\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2017-06-25 08:54:56\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Coming here several times\u3001 food is good but:\\\\n1) you need to improve your order system!\\\\n2) the noodle texture needs to be improved too!!\\\"},{\\\"review_date\\\":\\\"2017-05-08 05:42:13\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"As you can see, the Manager acted like he was going to contact me and never followed through with that. Disappointing since the food was actually good!\\\"},{\\\"review_date\\\":\\\"2016-07-31 17:42:48\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"This place is no longer open. It is now American Ale 2. Not a huge fan as burgers and drinks are overpriced. We stopped by last night looking for Yankee noodle and the place was dead on a Saturday night.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Yankee Noodle is a local business located at 214 State St in Santa Barbara, CA. It is a restaurant that offers a variety of cuisines including Chinese, Asian Fusion, Ramen, Burgers, Pizza, and Japanese. The restaurant also serves as a cocktail bar and pub, providing a nightlife experience to its customers.\\n\\nYankee Noodle is open from 11:30 AM to 10:00 PM from Monday to Sunday, except on Fridays and Saturdays when it stays open until 11:00 PM. The restaurant offers free WiFi and has outdoor seating available. It also takes reservations and is suitable for groups. The parking options include a lot but not a garage or street parking.\\n\\nCustomers have given Yankee Noodle an average rating of 4.0 stars. Some of the reviews mention concerns about the order system and the texture of the noodles, suggesting areas for improvement. However, others appreciate the good quality of the food. One customer expressed disappointment with the manager's lack of follow-up after promising to contact them. Additionally, there is a review stating that the location has changed and is now called American Ale 2, which receives criticism for overpriced burgers and drinks.\\n\\nIn summary, Yankee Noodle is a restaurant and bar in Santa Barbara that offers a diverse menu, good food, and various amenities such as free WiFi and outdoor seating. While there are some areas for improvement mentioned in customer reviews, the overall experience seems positive.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_admission",
+  "source_cluster_id": "sha256:903aa07a86b687534f265cbd3851b1601ae33f83ab2c72f4c65dab95cc2dca50",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ]
+}

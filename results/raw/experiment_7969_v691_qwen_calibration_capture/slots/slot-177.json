@@ -1,0 +1,129 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 2.109788183006458,
+  "exclusion_reason": null,
+  "family_id": "sha256:7c5dc03cbeda377e15bcccd9acf86f81dcdc87620d21d98d6b652e82f3bb0723",
+  "input_tokens": 1729,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1729,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1752
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:82668d2b292c8aef28b59f9f0b6826f8d102e6715f4a372cfefc91512e0219b5",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832716,
+    "id": "chatcmpl-FiCB4TAek7RLMH76Bdk7PhvPkT4SVNK5",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 542.661,
+      "predicted_n": 23,
+      "predicted_per_second": 42.38373496529141,
+      "predicted_per_token_ms": 23.593956521739127,
+      "prompt_ms": 1451.372,
+      "prompt_n": 1651,
+      "prompt_per_second": 1137.5443373580308,
+      "prompt_per_token_ms": 0.8790866141732284
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1729,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1752
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Geography is, in part, destiny for Italy: The country will always be a bridge between Africa and Europe, as the ongoing humanitarian crisis in the Mediterranean so starkly shows. A surge of refugees this year, usually transported by smugglers on overcrowded vessels, has sought to reach Europe via the Libyan coast.  A boatload of 900 migrants who embarked from Libya are now feared dead in the latest sinking. Over 10,000 were rescued off the coast of Italy in the last week alone. European leaders are scrambling to deal with this emergency. There is a backstory here worthy of our attention, and it has to do with Italy's colonial past. Many of the refugees involved in recent disasters come from some of Italy's former colonies in North and East Africa, namely Eritrea (occupied from 1890-1941) and Somalia (1908-1941). As migrants, Libyans are fewer in number, but Libya (1912-1941) plays a central role in the current crisis as the main departure point for Italy. Italy's empire never rivaled that of the British and the French in scope and longevity, but those who lived in its possessions were no less affected. Indeed, the migrants traversing the Mediterranean today form part of a century-long chain of migrations, expulsions, and exiles sparked by Italy's imperial ambition and commercial interests, the post-colonial anger of African leaders, and now mass economic desperation and political strife. Long after the formal end of Italian colonialism, these Eritreans, Somalis, and Libyans have inherited the histories of influence and exploitation that shaped their home countries. It also affects the treatment of Africans who settle in Italy. Libya is an example of the long reach of Italian imperialism. Libya was for a brief period an incorporated province of Italy, on the model of French Algeria, and Libyan families still feel the devastating effects of the fascist dictatorship's persecution of those who resisted Italian occupation. Over 100,000 Libyan men, women, and children were deported to concentration camps deep in the desert in the late 1920s and early 1930s, and much of the ruling class was exiled or executed. Col. Moammar Gadhafi, who ruled from 1969 to 2011, was born during the Italian occupation of his country, and his identity as a revolutionary was shaped by the example of resistance leaders such as Omar al-Mukhtar, who was hanged by the fascists in front of 20,000 of his people in 1931. In 1970, soon after he took power, Gadhafi struck back, expelling the remaining Italian community in Libya. Some of those people had grown up entirely in Libya. They arrived in Italy for the first time, at some of the same ports receiving migrants today. This political intervention did not spell the end of Italian-Libyan commercial dealings, which grew out of colonial-era relations that had made Libya Italy's biggest oil supplier. Since 2004, Italy and Libya have been directly connected by the Greenstream natural gas pipeline, which runs below the Mediterranean, on the same axis as many migrant boats. Commercial concerns, and the cozy relationship of then-Prime Minister Silvio Berlusconi and Gadhafi, also lay behind a historic 2008 Friendship Treaty between Italy and Libya, which promised infrastructure and other aid to Libya worth the equivalent of $5 billion as compensation for the damages inflicted by Italy during the decades of colonial rule. Until his death in 2011, despite deals with Italy and the European Union to control departures from his borders, Gadhafi intermittently used European fears of mass arrivals of migrants from Libya as a political weapon. Given Europe's geography, this weapon was pointed particularly at Italy, Libya's former master, and the principal target of Gadhafi's post-colonial revenge politics. Few Italians learn about this colonial history and its legacies, even though episodes of racist violence against immigrants from former Italian colonies and elsewhere are on the rise. Upon her appointment in 2013 as minister of integration, C\u00e9cile Kyenge, an Italian of Congolese origin, faced ugly racist attacks from fellow Italian politicians, including a comment that she looked like an orangutan. This climate has encouraged those who wish to rehabilitate the \\\"heroes\\\" of fascist imperialism. In 2012, the town of Affile built a publicly-funded memorial to General Rodolfo Graziani, known as \\\"the butcher of Fezzan\\\" for his brutal repression of Libyan resisters in the 1920s -- and for the massacre of Ethiopian civilians he ordered in response to a 1937 attempt on his life. This colonial history and its long-term consequences can help us understand Italians' ambivalent reactions to the emergency on their southernmost shores. Italian rescuers and activists work tirelessly and selflessly, and yet migrants who remain in Italy are often subject to racist attacks. It is ironic that the name chosen for the sea rescue operation organized by the Italian Navy in 2013 was the slogan of the fascist's dictatorship's bid to control the Mediterranean: Mare Nostrum. The program rescued more than 160,000 migrants in one year before it was discontinued due to European Union budget restrictions. It seems to reflect the conflicted attitude of the Italian government to its past aggressions: an admirable and courageous initiative -- advanced under an imperialist banner. The Italian government deserves the full support of the European Union as it responds to the current humanitarian crisis. But it also needs to address the failure of civic education about its colonial past. At 40 years old, Italian Prime Minister Matteo Renzi is of a different generation than those who have sustained a politics of selective memory that is as dangerous in its own way for migrants as the boats now capsizing in the Mediterranean. Setting a new course on this issue is in Italy's interest, now more than ever.\\n\", \"original_answer\": \"The ongoing humanitarian crisis in the Mediterranean, where thousands of refugees are attempting to reach Europe from Africa, has brought attention to Italy's colonial past and its impact on the current situation. Many of the refugees come from former Italian colonies in North and East Africa, such as Eritrea and Somalia, and their migration is linked to Italy's historical influence and exploitation in these regions. The article highlights the story of Libya, which was an Italian colony from 1912 to 1941 and is now a major departure point for migrants. The author argues that Italy's colonial past and its legacy of oppression and exploitation have contributed to the current crisis and that the Italian government must acknowledge and address this history in order to find a solution. The article also notes that the commercial interests and political relationships between Italy and Libya have continued to shape the migration dynamics in the region. The author suggests that Italy's Prime Minister, Matteo Renzi, has an opportunity to set a new course on this issue and address the failures of the past.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "tune",
+  "source_cluster_id": "sha256:3b76f4e112b4671ef311852a186f3d4173536b33a80ac8fabebf36fd0935c828",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37
+  ]
+}

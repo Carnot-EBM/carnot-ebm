@@ -1,0 +1,104 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.2883520940085873,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:7f9328ff10885df14568c0185d7ab7944037f9e33bec8121a07da6c2236cef0b",
+  "input_tokens": 653,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 1,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 653,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 677
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:a1ebd7f5331833f77616a49d24bd6d551744c3afd1f746087dac4300264ef86e",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 1\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886254,
+    "id": "chatcmpl-C8447g2leK5fuKx7tvq77yeBxTWhXAWi",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.295,
+      "predicted_n": 24,
+      "predicted_per_second": 42.45570896611504,
+      "predicted_per_token_ms": 23.55395833333333,
+      "prompt_ms": 600.807,
+      "prompt_n": 575,
+      "prompt_per_second": 957.0461063203325,
+      "prompt_per_token_ms": 1.0448817391304348
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 653,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 677
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:The Claim. The claim behind the Shark Rotator Vacuum is that with it\u2019s ability to swivel side to side you can more easily get your vacuum to cooperate with you, and you\u2019ll be struggling less to get it to go where you want it to go.The Hype.o be fair, there are other vacuums out there that are a fraction of the price of a Shark, but this is trying to appeal to those that want the quality of a Dyson without having to suffer the price tag. The Commitment. Let\u2019s be honest, we\u2019re all just biding our time until robots come along and do our housework for us.\\\\n\\\\npassage 2:Simply stated, Rotator vacuums are the premium line of the Shark vacuums. Enhanced with distinctive features including swivel steering, headlights, ergonomic design, and Anti-Allergen Complete Seal Technology, our Rotator vacuums will deep clean carpets anywhere in your home.lean your home from top to bottom with our lightweight Shark Rocket vacuums. Ergonomically designed for comfort and versatile enough to clean faster and better in every corner, nook, or crevice in your house.\\\\n\\\\npassage 3:The bagless Shark vacuum cleaner models are more expensive and not as good as the bagged vacuums. They are powerful, but the container is very small and has to be dumped often.It\u2019s messy and difficult to clean the container, and it often takes more time than it does to change the bag.he bagless Shark vacuum cleaner models are more expensive and not as good as the bagged vacuums. They are powerful, but the container is very small and has to be dumped often.\\\\n\\\\n\\\",\\\"question\\\":\\\"how does shark vacuum cleaner work\\\"}\", \"original_answer\": \"Shark vacuum cleaners work by utilizing distinct features such as swivel steering, headlights, ergonomic design, and Anti-Allergen Complete Seal Technology. The swivel steering allows the vacuum to easily move side to side and go where the user wants it to go. The Anti-Allergen Complete Seal Technology helps in deep cleaning carpets anywhere in the house. These vacuums are designed to be lightweight and versatile enough to clean quickly and efficiently in every corner, nook, or crevice in the house. Some models of Shark vacuums are bagless, but they have a smaller container that needs to be emptied often, which can be messy and time-consuming.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "b88071d04f6004d127c133d7db680990a8bb4ea93eceb6a85620645c89065b4b",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ]
+}

@@ -1,0 +1,107 @@
+{
+  "arm": "swap",
+  "capture_identity": "sha256:c690c1f517fbce73c5da6a2d1e99e3819c3de93e1045fe76d1c8215b54691541",
+  "censor_status": false,
+  "denominator": 1,
+  "donor_group_id": "sha256:4d9046ec443ab9667420221471b32ed448e475ce66505437a1704ac9720379ef",
+  "duration_s": 1.1442486409796402,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:a8e8af9c64177fc6ca496505977ed6e0abcd9b7bde9980e0f0f29c2d15a9fd8a:swap",
+  "group_id": "sha256:a8e8af9c64177fc6ca496505977ed6e0abcd9b7bde9980e0f0f29c2d15a9fd8a",
+  "input_byte_upper_bound": 2314,
+  "input_tokens": 476,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 1.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 476,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 499
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:b26e95859705b9e3528b12381df5fab832ed2f040324ca3550c1cbe86c2468c8",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 1.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790925785,
+    "id": "chatcmpl-algWSb2NfHFA4imrePq6UF6b3QKERRDF",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 536.675,
+      "predicted_n": 23,
+      "predicted_per_second": 42.85647738389156,
+      "predicted_per_token_ms": 23.333695652173912,
+      "prompt_ms": 483.075,
+      "prompt_n": 398,
+      "prompt_per_second": 823.888630129897,
+      "prompt_per_token_ms": 1.213756281407035
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 476,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 499
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 32,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:As such, it is normally good to think of these two terms as logical phases in the general process of delivering something valuable to the end users. Quality assurance starts with the definition of procedures, rules and policies that govern the selection and use of raw materials for the manufacturing process.\\\\n\\\\npassage 2:Quality Control is focused on the initiation of the evaluation process, while quality assurance is focused on managing the process to ensure the stipulated business goals are realized within the set period of time.\\\\n\\\\npassage 3:In general, the QA activities are done before the product is manufactured or the service delivered (proactive approach). The QC activities are done during the manufacturing process and once the product is manufactured. QA is process oriented. QC is product oriented.\\\\n\\\\n\\\",\\\"question\\\":\\\"what is the difference between quality assurance and quality control\\\"}\", \"original_answer\": \"First, preheat the oven to 500 degrees. Remove the pork tenderloin from the refrigerator and season it as desired. Place the seasoned meat in an uncovered roasting pan on a shelf in the bottom third of your oven. Bake exactly for 5 and a half minutes per pound. Adjust the time more or less according to your oven's accuracy and heat retention. After cooking, remove the pork from the oven, lightly cover it with foil and let it rest for 5-10 minutes to allow the internal juices to redistribute. The roast should be very slightly pink in the center and very moist. After resting for 10 minutes, the roast should reach a safe temperature of 145-150 degrees.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69410,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "seed": 69410,
+  "source_cluster_id": "238d7ace1a5a6138f626ada12f143ef1d0fc5a4d098ab59be90e8ca6c1fcc786",
+  "source_hash": "sha256:c4a57860c338904a8c69ce06abb680360560fa727a9c3e39bce66c9294cd3c1c",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ]
+}

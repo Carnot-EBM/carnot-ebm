@@ -1,0 +1,118 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.357350406004116,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:be3e444dbf8838585bfac09bf9794b9b4e9ec2e42f6aa115a49b8e9cadccdce9",
+  "input_tokens": 773,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 773,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 796
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:6e5ad186abf694fbdda6bb345a6ce7850aac1ba74683131b3f49f435831f79ac",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886270,
+    "id": "chatcmpl-7dFsaOhjkakpC2jJxdKcagH1774L5Rr4",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.607,
+      "predicted_n": 23,
+      "predicted_per_second": 42.46621627859315,
+      "predicted_per_token_ms": 23.548130434782607,
+      "prompt_ms": 694.216,
+      "prompt_n": 695,
+      "prompt_per_second": 1001.1293315048919,
+      "prompt_per_token_ms": 0.9988719424460432
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 773,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 796
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Andrew Getty, one of the heirs to billions of oil money, appears to have died of natural causes, a Los Angeles Police Department spokesman said. The coroner's preliminary assessment is there was no foul play involved in the death of Getty, grandson of oil tycoon J. Paul Getty, said Detective Meghan Aguilar. Andrew Getty, 47, had \\\"several health issues,\\\" Aguilar said, adding that an autopsy will be conducted. There is no criminal investigation underway, he said. Some medication had also been recovered from Getty's home, though investigators don't know whether Getty was taking it or what his medical history was, Ed Winter, assistant chief in the Los Angeles County coroner's office, told CNN affiliate KTLA Tuesday night. KTLA reported that Getty was found on his side near a bathroom in his home. Getty's parents, Ann and Gordon Getty, released a statement confirming their son's death and asking for privacy. Where the Getty family fortune came from. Gordon Getty is one of three living sons of J. Paul Getty, the oil baron who was thought to be the richest man in the world at the time of his death in 1976. Gordon Getty, 81, has a net worth of $2.1 billion, according to Forbes. One other son died in 1958 and another died in 1973. Gordon Getty spearheaded the controversial sale of Getty to Texaco for $10 billion in 1984. In its list of richest American families, Forbes estimated the Gettys' net worth to be about $5 billion. Court records show Andrew Getty had recently filed to get a restraining order against an ex-girlfriend. A hearing in the case had been scheduled for next week. In his request, Getty said he had been diagnosed with a serious medical condition in 2013. \\\"A rise in my blood pressure places me in grave risk of substantial and irreparable injury or death,\\\" he wrote in the petition. \\\"My doctors have advised that heated arguments can cause my blood pressure to rise dangerously.\\\" Andrew Getty had three brothers and three half-sisters. People we've lost in 2015. CNN's Doug Criss, Janet DiGiacomo, Mark Mooney, Mike Love, Julie In and Cheri Mossburg contributed to this report.\\n\", \"original_answer\": \"Andrew Getty, oil tycoon J. Paul Getty's grandson, has died at the age of 47. The Los Angeles Police Department said Getty's death appears to have been from natural causes, and there was no foul play involved. A spokesman said Getty had several health issues and an autopsy will be conducted. There is currently no criminal investigation underway. The Getty family fortune is estimated to be about $5 billion.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "eae59c437097da02eb468f6b6022ce49dc3ccd5df606e5aaa5fabc7171533103",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21
+  ]
+}

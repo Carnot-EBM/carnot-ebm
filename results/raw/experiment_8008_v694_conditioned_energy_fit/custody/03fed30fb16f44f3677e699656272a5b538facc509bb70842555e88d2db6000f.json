@@ -1,0 +1,113 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.2875032770680264,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:155118c1beb04f353b90c5a8439fee8f6e69696d9063e3428b46f31afc5f0916",
+  "input_tokens": 614,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 1,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 614,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 638
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:9aaad052894ce2ef8c736e86a5c4be283ecebadc600572d695f5393b4b3711cf",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 1\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886252,
+    "id": "chatcmpl-qO96xq8poQNLEgidanDpZGhdbCZIZwOn",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.951,
+      "predicted_n": 24,
+      "predicted_per_second": 42.40649808905718,
+      "predicted_per_token_ms": 23.58129166666667,
+      "prompt_ms": 577.325,
+      "prompt_n": 536,
+      "prompt_per_second": 928.4198674923136,
+      "prompt_per_token_ms": 1.077098880597015
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 614,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 638
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:6. OVEN BAKED PORK CHOPS WITH STUFFING. Place pork chops in greased shallow ... with foil and bake in a 350 F oven for 1 hour ... vegetable juice, and you will have your whole meal complete. Serves 4.VEN BAKED PORK CHOPS WITH STUFFING. Place pork chops in greased shallow ... with foil and bake in a 350 F oven for 1 hour ... vegetable juice, and you will have your whole meal complete. Serves 4.\\\\n\\\\npassage 2:You would follow the same directions you \u2026 would use for a regular oven. Set the temperature the same, and place a few on the baking sheet that comes with the toaster oven. To prevent a crispy bottom of the cookie, use a silicone mat and cut to the size of your toaster oven baking tray.he time for cooking can depend on the thickness of the meat but normally the average time is about half an hour. If you like to eat a plain baked pork chop, you can season the meat with freshly ground pepper and salt before baking.\\\\n\\\\npassage 3:Pork chops should be baked for 45 minutes, in a convection oven, at  a temperature of 325A\u00b0. 325\u00e2 pork chops should not be considered  done until the internal temperature is \u2026 a minimum OF\u00b0. 165a 165\u00e26 people found. this usefulhe time for cooking can depend on the thickness of the meat but normally the average time is about half an hour. If you like to eat a plain baked pork chop, you can season the meat with freshly ground pepper and salt before baking.\\\\n\\\\n\\\",\\\"question\\\":\\\"can you cook pork chops in a toaster oven\\\"}\", \"original_answer\": \"Yes, you can cook pork chops in a toaster oven. You would follow the same directions as you would for a regular oven, setting the temperature the same. The cooking time can depend on the thickness of the meat but is normally about half an hour.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "e6a8860577b1b41434e07c000b2aa4fce9cb20729b9e8d4d1973e8f84e700958",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+  ]
+}

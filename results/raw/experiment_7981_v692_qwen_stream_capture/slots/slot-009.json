@@ -1,0 +1,95 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.198655386979226,
+  "exclusion_reason": null,
+  "family_id": "sha256:2887b248c33c103ac9fa3d3f771f5214bc30880bbbfa6df25ad900109560a591",
+  "input_tokens": 573,
+  "invocation_finished_at": "2026-10-01T11:41:29.482182+00:00",
+  "invocation_started_at": "2026-10-01T11:41:28.283526+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 573,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 597
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:0f71a44c1c74273e0c793784423168550fa06684770d6a14fb1f13e6f31ffb37",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790854889,
+    "id": "chatcmpl-3RRCq59mzHOkEbKf770EXAHsxzexdZXu",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 555.393,
+      "predicted_n": 24,
+      "predicted_per_second": 43.212644019640145,
+      "predicted_per_token_ms": 23.141375,
+      "prompt_ms": 514.758,
+      "prompt_n": 495,
+      "prompt_per_second": 961.6169151329361,
+      "prompt_per_token_ms": 1.0399151515151517
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 573,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 597
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:In sociology and social psychology, racial identity and the acquisition of that identity, is often used as a variable in racism studies. Racial ideologies and racial identity affect individuals' perception of race and discrimination.\\\\n\\\\npassage 2:Racism often takes the form of social actions, practices or beliefs, or political systems that consider different races to be ranked as inherently superior or inferior to each other, based on presumed shared inheritable traits, abilities, or qualities.\\\\n\\\\npassage 3:Bigotry is a state of mind where a person views other groups with fear, distrust, prejudice or hatred solely on the basis of ethnicity, race, religion, national origin, gender, disability, sexual orientation, socioeconomic status, or other group characteristics.\\\\n\\\\n\\\",\\\"question\\\":\\\"define bigotry vs racism\\\"}\", \"original_answer\": \"Based on the provided passages, here are my answers to the question:\\n\\n1. Define bigotry: Bigotry is a state of mind where a person views other groups with fear, distrust, prejudice, or hatred solely on the basis of ethnicity, race, religion, national origin, gender, disability, sexual orientation, socioeconomic status, or other group characteristics (Passage 3).\\n2. Define racism: Racism is a complex concept that encompasses various forms of discriminatory behavior, including social actions, practices, or beliefs, or political systems that consider different races to be ranked as inherently superior or inferior to each other based on presumed shared inherent traits, abilities, or qualities (Passage 2).\\n3. Key differences between bigotry and racism: While both bigotry and racism involve discrimination and prejudice towards certain groups, the key difference lies in the basis for these attitudes. Bigotry is based solely on group characteristics such as ethnicity, race, religion, etc., whereas racism is based on the belief that one race is inherently superior or inferior to another (Passage 1).\\n\\nTherefore, while bigotry is a form of discrimination that targets specific groups based on surface-level characteristics, racism is a more systemic and ingrained form of discrimination that is rooted in beliefs about the inherent worth or value of different races.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "sha256:c11319c31a5b0ab58c365f2fee2a86f7ff9d9b7c6fa02801e6b39590d0cfcad0",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1
+  ]
+}

@@ -1,0 +1,100 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.3698130549746566,
+  "exclusion_reason": null,
+  "family_id": "sha256:28b82e65ee64fe12e1f39c1a4dd0e3ebd7016a60d1e0280cf74941cb1378c694",
+  "input_tokens": 786,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 786,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 809
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:4c53de626034e149667d230971636839c8546b23ff48b22e3d6499578d0d7155",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832627,
+    "id": "chatcmpl-jvlIoiLSMItMUXOaBhioiFwTBBkdvgxW",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 539.996,
+      "predicted_n": 23,
+      "predicted_per_second": 42.59290809561553,
+      "predicted_per_token_ms": 23.47808695652174,
+      "prompt_ms": 694.07,
+      "prompt_n": 708,
+      "prompt_per_second": 1020.0700217557306,
+      "prompt_per_token_ms": 0.9803248587570622
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 786,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 809
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"532 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":false,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Bars, Nightlife, Pubs, Comedy Clubs\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":null,\\\"name\\\":\\\"Old Kings Road\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-10-17 23:13:55\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Went last night, Bar tender was really polite and new how to pour a proper Boddingtons Ale. They had the Dodgers game on the outside TV with great seating. You can't visit Santa Barbara without stopping by.\\\"},{\\\"review_date\\\":\\\"2021-05-07 02:35:30\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"We stopped at State St for some drinks and stopped here because the sign read \\\\\\\"No wankers allowed and smoking patio (for the hubby). Our kind of place. No BS, or boogie-ness. Just awesome people people great drinks. The bar staff was Fn awesome, and beyond friendly.\\\\nWill definitely make this a stop everytime we are back in SBA.\\\\nThanks for the hospitality, don't change a thing, You guys are awesome.\\\"},{\\\"review_date\\\":\\\"2020-11-20 22:43:09\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I haven't been to this bar in forever. The gentleman at the bar was really friendly, we were eating at Yona Redz next door and wanted some adult beverages, he was totally fine with us bringing our food to his patio and having drinks from their bar. Awesome for these two businesses to allow sharing of space that is beneficial to both.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Old Kings Road is a well-rated 4-star local business located at 532 State St, Santa Barbara, CA. It is categorized as a bar, a nightlife spot, a pub, and a comedy club. The establishment is known for being casual and good for groups, with free WiFi and outdoor seating facilities. However, there is no business parking available and no live music. Customers particularly commend the polite and friendly bartenders, and praise the establishment for its great drinks and awesome atmosphere. Notably, customers mention the ability to watch games on the outdoor TV and the allowance of food from neighboring restaurants on their patio. The business does not take reservations. The establishment's hours of operation are not provided.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:36480c8a712c21d95a6908c6a4b3420c7084f87f09d340d5d5bc3794cc21c6f2",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ]
+}

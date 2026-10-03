@@ -1,0 +1,100 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.1902695479802787,
+  "exclusion_reason": null,
+  "family_id": "sha256:a5eaceae3099e48aa37d759537bb773644530b4ac9ee825890d5c6cd8dcd1dcd",
+  "input_tokens": 485,
+  "invocation_finished_at": "2026-10-01T11:46:16.381517+00:00",
+  "invocation_started_at": "2026-10-01T11:46:15.191246+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 3,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 485,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 509
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:f218e1eae35e11e2081a13e72c867a80baf9cb2d83b5d07cf631625385194d19",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 3\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855176,
+    "id": "chatcmpl-6bOMfFixE0RkDTiwGc8ZBLlol3asaOvw",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 563.285,
+      "predicted_n": 24,
+      "predicted_per_second": 42.60720594370523,
+      "predicted_per_token_ms": 23.470208333333332,
+      "prompt_ms": 489.605,
+      "prompt_n": 407,
+      "prompt_per_second": 831.2823602700136,
+      "prompt_per_token_ms": 1.202960687960688
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 485,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 509
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:How to Write a Medical Case Study Report. A medical case study report is an article that describes a particular patient's diagnosis and treatment plan. Most of the cases chosen for medical case studies are of unusual diagnoses or include complications in treatment.\\\\n\\\\npassage 2:A case report is a means of communicating something new that has been learnt from clinical. Case reports are the first-line of evidence in the medical literature, and provide medical students. and junior doctors with a great opportunity to develop their writing skills.\\\\n\\\\npassage 3:Write the medical case study report. 1  Follow the standard format for the report: abstract, introduction, case presentation, discussion, conclusion and references. 2  Include additional information as outlined in the writer's guidelines for the publication to which you are submitting.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to write a medical case report\\\"}\", \"original_answer\": \"To write a medical case report, follow these steps:\\n\\n1. Follow the standard format for a medical case study report, which includes:\\n\\t* Abstract\\n\\t* Introduction\\n\\t* Case presentation\\n\\t* Discussion\\n\\t* Conclusion\\n\\t* References\\n2. Include additional information as outlined in the writer's guidelines for the publication to which you are submitting.\\n\\nIt is important to note that medical case reports are used to communicate something new that has been learned from clinical practice, and they provide an opportunity for medical students and junior doctors to develop their writing skills. The case report should describe a particular patient's diagnosis and treatment plan, and most cases chosen for medical case studies are of unusual diagnoses or include complications in treatment.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "sha256:00eda93437d216bd5b45ea38284ddb718858b1bc15295b502d25b97a36fbbf7b",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ]
+}

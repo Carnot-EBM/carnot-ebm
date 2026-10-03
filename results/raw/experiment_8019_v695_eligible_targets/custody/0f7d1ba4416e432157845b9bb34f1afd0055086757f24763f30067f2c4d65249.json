@@ -1,0 +1,98 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.4384200170170516,
+  "exclusion_reason": null,
+  "family_id": "sha256:a21c04ceaecc3ac1b309647ba99427edf4cc4770acf5d2b47e9839c2e00f9f67",
+  "input_tokens": 864,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 864,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 885
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:9d93f1b538ee4689b88852146131ca7a3ba680d4f3a92a37a9b42d52a0b0cf16",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832791,
+    "id": "chatcmpl-u3vnu9ZdZvyxfnd6LoVROOFPdepgIihW",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 492.843,
+      "predicted_n": 21,
+      "predicted_per_second": 42.609918371570664,
+      "predicted_per_token_ms": 23.468714285714288,
+      "prompt_ms": 822.013,
+      "prompt_n": 786,
+      "prompt_per_second": 956.1892573475114,
+      "prompt_per_token_ms": 1.045818066157761
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 864,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 885
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"5599 Hollister Ave\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Breakfast & Brunch, Sandwiches, Salad, Cafes, Restaurants\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"8:0-17:0\\\",\\\"Monday\\\":\\\"8:0-17:0\\\",\\\"Saturday\\\":\\\"8:0-17:0\\\",\\\"Thursday\\\":\\\"8:0-17:0\\\",\\\"Tuesday\\\":\\\"8:0-17:0\\\",\\\"Wednesday\\\":\\\"8:0-17:0\\\"},\\\"name\\\":\\\"Sage & Onion Cafe\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2017-08-07 15:21:51\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"Well S&O got bought out by The Worker Bee Caf\u00e9.   It used to be nice, place with friendly employees, but now I was greeted by a tatted guy who was in a rush, and had the personality of a stale bagel and called me 'dude'.\\\"},{\\\"review_date\\\":\\\"2017-07-26 03:30:25\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Their breakfast burritos are amazing!! This is a nice cozy establishment full of locals. The service was amazing and the lady that took are order was super nice.\\\"},{\\\"review_date\\\":\\\"2017-07-18 18:32:50\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Cute little cafe, awesome friendly service. Food came out fast and delicious. I have a few allergies and they were accommodating, even had gluten-free bread. Good prices and had cold brew and kombucha on tap!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Sage & Onion Cafe is a local business located at 5599 Hollister Ave in Goleta, CA. It offers a variety of food options including breakfast & brunch, sandwiches, salads, and cafe items. The cafe is open from 8:00 am to 5:00 pm Monday through Saturday.\\n\\nThe cafe provides outdoor seating and offers free WiFi for its customers. It also allows takeout orders and welcomes groups. In terms of parking, there is a lot available for customers.\\n\\nCustomers have left mixed reviews for Sage & Onion Cafe. One reviewer mentioned that the cafe was recently bought out by The Worker Bee Caf\u00e9 and expressed disappointment with the change in service. However, another reviewer praised the cafe for its amazing breakfast burritos and friendly service. Another customer described the cafe as cute and appreciated the fast and delicious food, as well as the accommodating staff who catered to their allergies.\\n\\nOverall, Sage & Onion Cafe has received an average rating of 4.0 stars. It appears to be a cozy establishment frequented by locals, offering a range of food options with friendly service.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:2f56cb0fae3efbb01f37a3f241d67500ba112882c94edb4c44b6d76e0b0377bb",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ]
+}

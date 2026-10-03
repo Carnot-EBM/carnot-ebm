@@ -1,0 +1,108 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.3925104410154745,
+  "exclusion_reason": null,
+  "family_id": "sha256:ca86ad75e1e139e19eaf46b7fb13e93a00583c88f4358d8e10509a76666f769b",
+  "input_tokens": 785,
+  "invocation_finished_at": "2026-10-01T11:43:47.867393+00:00",
+  "invocation_started_at": "2026-10-01T11:43:46.474883+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": 7,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 785,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 810
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:86876512f913da37964edc31746f62ac565793df369df35b2f6cab771fc40c66",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": 7\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855027,
+    "id": "chatcmpl-2g0LQKaTN08ZPoYtnP3gYTadbjv07rBU",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 588.778,
+      "predicted_n": 25,
+      "predicted_per_second": 42.46082564226244,
+      "predicted_per_token_ms": 23.55112,
+      "prompt_ms": 692.608,
+      "prompt_n": 707,
+      "prompt_per_second": 1020.7794307891334,
+      "prompt_per_token_ms": 0.9796435643564355
+    },
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 785,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 810
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Chicago City Council Debates 'Sanctuary City' Status as Windy City Overrun with Migrants\\nPritzker hopes other cities will help but says it's voluntary\\nThe Chicago City Council's Committee on Immigrant and Refugee Rights convened at City Hall to discuss the ongoing arrival of migrants in the city, prompting a debate over Chicago's \\\"sanctuary city\\\" status. The meeting, held on Friday morning, primarily centered on issues related to welcoming new arrivals.\\nHowever, the discussion took a turn as two Chicago aldermen announced their intention to file a resolution with the council, potentially leading to a ballot referendum allowing residents to determine if Chicago should continue to be a sanctuary city. This move comes as the city grapples with an increasing number of migrants.\\nAld. Andre Vasquez, who chairs the immigration committee, expressed concerns about the administration's plan to establish military-grade tent base camps for migrants. He stated, \\\"I'm saddened by the possibility that we are on the precipice of this administration moving forward with military-grade tent base camps in our great city.\\\"\\nThe recent influx of migrants, with a record number of buses arriving this week, has led to nearly 2,000 new arrivals being housed in police stations. Additionally, the healthcare needs of migrants have incurred costs for the city, with 353 ambulance calls reported from police stations, shelters, and airports in the past week.\\nVasquez suggested that either the city council or the mayor may need to convene a special full council meeting to address the crisis. However, he stressed the importance of ensuring that the meeting remains focused on substantive solutions rather than devolving into chaos.\\nMeanwhile, Governor JB Pritzker is facing increased pressure from some City Council members to address the growing crisis. Aldermen are seeking more assistance for the city as it shoulders the responsibility of housing and caring for migrants.\\nGovernor Pritzker cited the $330 million in state aid provided to address the situation but also acknowledged the need for other municipalities in the state to offer support voluntarily. He expressed hope that other cities would step forward to assist in managing the ongoing challenges posed by the influx of migrants.\\nAs the debate over Chicago's sanctuary city status continues, the city and state are grappling with the complex issue of accommodating and supporting migrants while maintaining the well-being of local communities.\", \"original_answer\": \"Here is a summary of the article in 96 words:\\n\\nThe Chicago City Council debated the city's \\\"sanctuary city\\\" status as the number of migrants arriving continues to increase. Two aldermen plan to file a resolution for a ballot referendum on the issue. Mayor JB Pritzker seeks help from other cities but emphasizes the need for voluntary support. The city struggles to care for the influx of migrants, with 353 ambulance calls in the past week and over 2,000 housed in police stations. The debate highlights the challenge of balancing support for migrants with the needs of local communities.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "calibration_replay",
+  "source_cluster_id": "sha256:128d48b8db973cd16f77bfb467e1ca39e5dcc41e39c277f9ecf8366f69f84582",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ]
+}

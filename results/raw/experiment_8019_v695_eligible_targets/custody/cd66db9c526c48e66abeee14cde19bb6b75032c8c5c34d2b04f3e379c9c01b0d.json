@@ -1,0 +1,103 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.4422072430024855,
+  "exclusion_reason": null,
+  "family_id": "sha256:bdf6760f303a597d686e952acf972f0b0946d25e0abd20aa793983905f756e30",
+  "input_tokens": 852,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 852,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 873
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:d3e17987ca79f19672e1e61336eade7592c810fe4f512c510389cfeafc016797",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832914,
+    "id": "chatcmpl-IJXJ3uVge4ngdFl3RQxt6M4T6xHH5ijj",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 492.404,
+      "predicted_n": 21,
+      "predicted_per_second": 42.6479070031925,
+      "predicted_per_token_ms": 23.447809523809525,
+      "prompt_ms": 819.857,
+      "prompt_n": 774,
+      "prompt_per_second": 944.0670751118794,
+      "prompt_per_token_ms": 1.0592467700258397
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 852,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 873
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"111 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":null,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":3.0,\\\"categories\\\":\\\"Restaurants, Pizza\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-0:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"11:0-0:0\\\",\\\"Sunday\\\":\\\"11:0-0:0\\\",\\\"Thursday\\\":\\\"11:0-0:0\\\",\\\"Tuesday\\\":\\\"11:0-20:0\\\",\\\"Wednesday\\\":\\\"11:0-0:0\\\"},\\\"name\\\":\\\"Rusty's Pizza Parlor\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-18 19:14:33\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Really good pizza, reasonable prices, nice setting, late hours, quick pickup.....\\\"},{\\\"review_date\\\":\\\"2022-01-06 21:11:26\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Garbage customer service. Owner should just have a self order computer at the counter.Pizza was decent. Don't come here.\\\"},{\\\"review_date\\\":\\\"2021-12-12 01:30:37\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Had a homeless person in here eating, shopping cart and all. Kids are riding around indoors on electric scooters. Staff are unfriendly and unresponsive. Service is slow. \\\\n\\\\nThey must be really underpaid or something because it really seems like no one cares at all here. \\\\n\\\\nBest part of my visit today was find a finger nail in my salad. I'm a dude, it's a a chick's finger nail. Did they seriously not wear gloves when servicing the salad bar or something? People are probably chewing their finger nails while making my food. Disgusting.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Rusty's Pizza Parlor is a casual restaurant located at 111 State St, Santa Barbara, CA. This pizza parlor offers services such as take-outs and is good for group dining. However, they do not offer wifi, outdoor seating or music ambience. The restaurant operates from 11:00 AM until midnight from Tuesday to Sunday, but remains closed on Mondays. Parking is available in the lot, but there are no garage, street, or valet parking options. The business has a mixed rating of 3 stars. While some customers praised the good pizza, reasonable prices, and late hours, others criticized the customer service, slow response from staff, and issues of cleanliness. Notably, complaints included finding a fingernail in a salad and a lack of gloves being used by staff in the salad bar area.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:a7690c698bdd8862b4eb114d77d3c65d55d3a4e4d2bf9e493b22b14ff0591c27",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]
+}

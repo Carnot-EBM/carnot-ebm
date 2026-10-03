@@ -1,0 +1,120 @@
+{
+  "arm": "swap",
+  "capture_identity": "sha256:c690c1f517fbce73c5da6a2d1e99e3819c3de93e1045fe76d1c8215b54691541",
+  "censor_status": false,
+  "denominator": 1,
+  "donor_group_id": "sha256:7ed30c16cbbfa49bb0ff5343184fd7359c5fce2c21bf71729bc137937fcbed2d",
+  "duration_s": 1.4466493549989536,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:e239cb5f4ad379eac0dc58fbbcc427f7db410d30f3bf5430836852ea12fa5d19:swap",
+  "group_id": "sha256:e239cb5f4ad379eac0dc58fbbcc427f7db410d30f3bf5430836852ea12fa5d19",
+  "input_byte_upper_bound": 3520,
+  "input_tokens": 891,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 1.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 891,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 912
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:c64080943c7ed085d2bd81d12e41bcfc3ddc389ef4a3434810726334d471afe1",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"unsupported_probability\": 1.0,\n\"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790925751,
+    "id": "chatcmpl-uNtvHjTvkJ872TIwzAKuEKpBilUiHL6A",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 487.781,
+      "predicted_n": 21,
+      "predicted_per_second": 43.05210740065726,
+      "predicted_per_token_ms": 23.227666666666668,
+      "prompt_ms": 827.87,
+      "prompt_n": 813,
+      "prompt_per_second": 982.0382427192675,
+      "prompt_per_token_ms": 1.018290282902829
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 891,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 912
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 32,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Below are 40 facts about Recycling. Fact 1: Recycling is a process to create new items from old and used materials. This helps in reducing energy and potentially useful materials from being wasted. Fact 2: Recycling is a part of waste disposal hierarchy \u2013 Reduce, Reuse, Recycle.Fact 3: Aluminium cans can actually be recycled and put back onto the shelf at your local grocery store in just about 2 months. Fact 4: Aluminium cans are probably the most recycled item, at least in the United States.act 1: Recycling is a process to create new items from old and used materials. This helps in reducing energy and potentially useful materials from being wasted. Fact 2: Recycling is a part of waste disposal hierarchy \u2013 Reduce, Reuse, Recycle.\\\\n\\\\npassage 2:1 Recycling one ton of newspaper saves 15 trees. 2  Every ton of newspaper recycled saves 4100 kWh or enough energy to power a TV for 31 hours. 3  Recycling a soda can saves 96 percent of the energy used to make a can from ore and produces 95 percent less air pollution and 97 percent less water pollution. Recycling one ton of cardboard saves over nine cubic yards of landfill space. 2  Number of landfills in operation in 1978: 14,000; in 1988: 7,924; in 2001: 1,858; in 2006: 1,754. 3  Recycling one ton of newspaper saves 15 trees. 4  Every ton of newspaper recycled saves 4100 kWh or enough energy to power a TV for 31 hours.\\\\n\\\\npassage 3:There are many fun facts about recycling. Here are a number of fun and interesting recycling facts: If you know a fun recycling fact, please share it! 1  It takes 80-100 years for an aluminum can to decompose (break down) in a landfill.2  Aluminum cans can be recycled into: soda cans, pie plates, license plates, thumbtacks, aluminum foil, and many other items. Glass takes over 1,000,000 (one million) years to decompose in a landfill. 2  Glass can be recycled into jars, jewelry, bottles, dishes, drinking glasses, coffee mugs and many other items. 3  It can take up to 700 years for plastic to decompose (break down) in a landfill.\\\\n\\\\n\\\",\\\"question\\\":\\\"important facts about recycling\\\"}\", \"original_answer\": \"Based on the passages provided, foods that are good for eye health include whole grains such as quinoa, brown rice, whole wheat and oats. These foods are good for your eyes because they have a low glycemic index and contain Vitamin E, Zinc and Niacin. Fish is also beneficial for eye health as it is rich in omega-3 fatty acids which help protect against dry eyes, cataracts, and AMD. Eggs are another food that promotes eye health due to their rich protein content and the presence of lutein and Vitamin A, which protect against dry eye syndrome and can improve night vision. Lastly, almost all kinds of nuts are good for eye health.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69410,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "seed": 69410,
+  "source_cluster_id": "17ff8b455f26cfe20215dab3e8b47c5b687bc7e4ba2c60a4ee6ae06c08f58dac",
+  "source_hash": "sha256:c449b7777352944d9a0b90d3154773d3e2bcf2b48ebcb80ea577b88c586d6d5a",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17
+  ]
+}

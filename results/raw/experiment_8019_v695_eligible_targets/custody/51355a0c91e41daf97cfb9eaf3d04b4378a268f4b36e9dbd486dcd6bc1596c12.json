@@ -1,0 +1,98 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.1106809980119579,
+  "exclusion_reason": null,
+  "family_id": "sha256:96f5e34993b3ed42739d1cfe5e8003e40e30c90895b1d62bbd58807c320ebcfb",
+  "input_tokens": 391,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 3,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 391,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 415
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:cf0f6c8cc974a317053b75c38d592233944663c9308b9a644e08e2842d91e488",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 3\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832899,
+    "id": "chatcmpl-VImSq8V3X8HGXVxS0OjiBbcoCtLf8fqA",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.359,
+      "predicted_n": 24,
+      "predicted_per_second": 42.52612255674136,
+      "predicted_per_token_ms": 23.514958333333336,
+      "prompt_ms": 414.61,
+      "prompt_n": 313,
+      "prompt_per_second": 754.9263162972431,
+      "prompt_per_token_ms": 1.324632587859425
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 391,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 415
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"The Dark Knight returns... again. \\\"The Dark Knight Returns,\\\" published in 1986, is widely credited for resurrecting Batman in pop culture, something we've seen referenced in everything from 1989's \\\"Batman\\\" to the \\\"Dark Knight\\\" trilogy and the upcoming \\\"Batman v. Superman: Dawn of Justice.\\\" Now popular comic book writer Frank Miller is returning to his best-known story. DC Comics (a Time Warner company, like CNN) announced Friday the final chapter in his \\\"The Dark Knight Returns\\\" trilogy, in the form of \\\"The Dark Knight III: The Master Race\\\" (\\\"The Dark Knight Strikes Again\\\" was released in 2001). This third chapter in the grim saga will be released sometime in the fall. \\\"Batman remains my favorite comic book hero and a sequel to Dark Knight is going to be daunting,\\\" said Miller in a press release, \\\"but we'll do our best.\\\" Miller will be joined by acclaimed artist Brian Azzarello.\\n\", \"original_answer\": \"Frank Miller is returning to his iconic \\\"The Dark Knight Returns\\\" series with a new installment, \\\"The Dark Knight III: The Master Race,\\\" 30 years after the original.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:c6eacfab2795004dd5bf42ce3a3ea232f068014dc4e5e859c03b9e54c8ef4acd",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ]
+}

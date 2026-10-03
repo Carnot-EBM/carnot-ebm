@@ -1,0 +1,687 @@
+[exp7978] start current capstone CLI
+[exp7978] phase=qualification_start completed_units=0 elapsed_s=0.000
+[exp7978] phase=start completed_units=0 elapsed_s=0.000
+[exp7978] phase=inputs_hashes_invocations_frozen completed_units=12 elapsed_s=22.582
+[exp7978] phase=independent_reduction completed_units=1 elapsed_s=22.743
+[exp7978] phase=independent_reduction completed_units=2 elapsed_s=22.979
+[exp7978] phase=independent_reduction completed_units=3 elapsed_s=23.876
+[exp7978] phase=independent_reduction completed_units=4 elapsed_s=23.993
+[exp7978] phase=independent_reduction completed_units=5 elapsed_s=24.230
+[exp7978] phase=independent_reduction completed_units=6 elapsed_s=24.274
+[exp7972] uncertainty completed_units=1/6 elapsed_s=0.014
+[exp7972] uncertainty completed_units=2/6 elapsed_s=0.018
+[exp7972] uncertainty completed_units=3/6 elapsed_s=0.022
+[exp7972] uncertainty completed_units=4/6 elapsed_s=0.026
+[exp7972] uncertainty completed_units=5/6 elapsed_s=0.030
+[exp7972] uncertainty completed_units=6/6 elapsed_s=0.034
+[exp7972] uncertainty completed_units=1/6 elapsed_s=0.015
+[exp7972] uncertainty completed_units=2/6 elapsed_s=0.019
+[exp7972] uncertainty completed_units=3/6 elapsed_s=0.023
+[exp7972] uncertainty completed_units=4/6 elapsed_s=0.027
+[exp7972] uncertainty completed_units=5/6 elapsed_s=0.031
+[exp7972] uncertainty completed_units=6/6 elapsed_s=0.035
+[exp7978] phase=independent_reduction completed_units=7 elapsed_s=24.433
+[exp7978] phase=independent_reduction completed_units=8 elapsed_s=24.475
+[exp7978] phase=independent_reduction completed_units=9 elapsed_s=24.516
+[exp7978] phase=independent_reduction completed_units=10 elapsed_s=24.914
+[exp7978] phase=independent_reduction completed_units=11 elapsed_s=24.982
+[exp7978] phase=independent_reduction completed_units=12 elapsed_s=25.157
+[exp7978] phase=independent_reduction completed_units=13 elapsed_s=25.305
+[exp7303-validation] before_subprocess publication_gate elapsed_s=0.000 unit=1/1
+[exp7303-validation:publication_gate] {
+[exp7303-validation:publication_gate]   "paper_ready": true,
+[exp7303-validation:publication_gate]   "gates": {
+[exp7303-validation:publication_gate]     "G1": {
+[exp7303-validation:publication_gate]       "pass": true,
+[exp7303-validation:publication_gate]       "detail": "FoVer dual-condition AUROC artifact present (experiment_2850_fover_dual_condition_integrity_v4.json); CI reported=True",
+[exp7303-validation:publication_gate]       "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+[exp7303-validation:publication_gate]     },
+[exp7303-validation:publication_gate]     "G2": {
+[exp7303-validation:publication_gate]       "pass": true,
+[exp7303-validation:publication_gate]       "detail": "reproducer confirmed: GitHub Actions workflow 'FoVer Headline Independent Reproducer' (.github/workflows/reproduce-fover-headline.yml), run 26725185125 on Carnot-EBM/carnot-ebm, 2026-05-31, conclusion=success. Clean ubuntu-latest runner, fresh CPU-only install from a clean checkout (non-operator environment), recomputed the FoVer headline AUROC via scripts/reproduce_fover_headline.py and asserted the published CIs: condition_A (production) AUROC in [0.9027, 0.9235] and learning_contribution in [0.0125, 0.0245] \u2014 both PASS. This is a CI-run independent reproducer per the Phase-1 ship gate ('could be a teammate, a CI run, or an external user'). Internally further de-risked by exp3430 (fresh git worktree + venv) and the local run on 2026-05-31 (AUROC 0.9131 within CI). NOTE: G2 attests the FoVer verifier-ensemble headline reproduces; it does NOT attest the broader energy-descent existential claim, which remains an honest-negative (Route-1/Route-2 bounded). Run: https://github.com/Carnot-EBM/carnot-ebm/actions/runs/26725185125"
+[exp7303-validation:publication_gate]     },
+[exp7303-validation:publication_gate]     "G3": {
+[exp7303-validation:publication_gate]       "pass": true,
+[exp7303-validation:publication_gate]       "detail": "no retracted phrasings asserted as live claims",
+[exp7303-validation:publication_gate]       "hits": []
+[exp7303-validation:publication_gate]     },
+[exp7303-validation:publication_gate]     "G4": {
+[exp7303-validation:publication_gate]       "pass": true,
+[exp7303-validation:publication_gate]       "detail": "experiment_2850_fover_dual_condition_integrity_v4.json: random_seed/seeds=True, reproducibility_checksum=True",
+[exp7303-validation:publication_gate]       "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+[exp7303-validation:publication_gate]     }
+[exp7303-validation:publication_gate]   },
+[exp7303-validation:publication_gate]   "unmet_gates": [],
+[exp7303-validation:publication_gate]   "note": "Stable 4-condition gate (ops/north-star.md \u00a72). Replaces the redefinable publication_blocker_count. Report unmet_gates, not a count."
+[exp7303-validation:publication_gate] }
+[exp7303-validation] after_subprocess publication_gate elapsed_s=0.066 exit=0 unit=1/1
+[exp7303-validation] before_subprocess unit elapsed_s=0.000 unit=1/1
+[exp7303-validation] subprocess_outstanding unit elapsed_s=30.001
+[exp7303-validation] subprocess_outstanding unit elapsed_s=60.002
+[exp7303-validation] subprocess_outstanding unit elapsed_s=90.002
+[exp7303-validation:unit] ................                                                         [100%]
+[exp7303-validation:unit] 16 passed in 94.29s (0:01:34)
+[exp7303-validation] after_subprocess unit elapsed_s=98.420 exit=0 unit=1/1
+[exp7303-validation] before_subprocess consumers_e2e018 elapsed_s=0.000 unit=1/1
+[exp7303-validation:consumers_e2e018] ........................................................................ [ 43%]
+[exp7303-validation:consumers_e2e018] ........................................................................ [ 86%]
+[exp7303-validation] subprocess_outstanding consumers_e2e018 elapsed_s=30.001
+[exp7303-validation:consumers_e2e018] ......................                                                   [100%]
+[exp7303-validation:consumers_e2e018] 166 passed in 53.80s
+[exp7303-validation] after_subprocess consumers_e2e018 elapsed_s=56.581 exit=0 unit=1/1
+[exp7303-validation] before_subprocess cli_success elapsed_s=0.000 unit=1/1
+[exp7303-validation:cli_success] [exp7978] start current capstone CLI
+[exp7303-validation:cli_success] [exp7978] phase=start completed_units=0 elapsed_s=0.000
+[exp7303-validation:cli_success] [exp7978] phase=inputs_hashes_invocations_frozen completed_units=12 elapsed_s=27.212
+[exp7303-validation:cli_success] [exp7978] phase=independent_reduction completed_units=1 elapsed_s=27.225
+[exp7303-validation:cli_success] [exp7978] phase=independent_reduction completed_units=2 elapsed_s=27.237
+[exp7303-validation:cli_success] [exp7978] phase=independent_reduction completed_units=3 elapsed_s=27.239
+[exp7303-validation:cli_success] [exp7978] phase=independent_reduction completed_units=4 elapsed_s=27.252
+[exp7303-validation:cli_success] [exp7978] phase=independent_reduction completed_units=5 elapsed_s=27.254
+[exp7303-validation:cli_success] [exp7978] phase=independent_reduction completed_units=6 elapsed_s=27.267
+[exp7303-validation:cli_success] [exp7978] phase=independent_reduction completed_units=7 elapsed_s=27.268
+[exp7303-validation:cli_success] [exp7978] phase=independent_reduction completed_units=8 elapsed_s=27.280
+[exp7303-validation:cli_success] [exp7978] phase=independent_reduction completed_units=9 elapsed_s=27.286
+[exp7303-validation:cli_success] [exp7978] phase=independent_reduction completed_units=10 elapsed_s=27.294
+[exp7303-validation:cli_success] [exp7978] phase=independent_reduction completed_units=11 elapsed_s=27.306
+[exp7303-validation:cli_success] [exp7978] phase=independent_reduction completed_units=12 elapsed_s=27.349
+[exp7303-validation:cli_success] [exp7978] phase=independent_reduction completed_units=13 elapsed_s=27.370
+[exp7303-validation] after_subprocess cli_success elapsed_s=29.904 exit=0 unit=1/1
+[exp7303-validation] before_subprocess cli_block elapsed_s=0.000 unit=1/1
+[exp7303-validation:cli_block] [exp7978] start current capstone CLI
+[exp7303-validation:cli_block] [exp7978] phase=start completed_units=0 elapsed_s=0.000
+[exp7303-validation:cli_block] [exp7978] phase=inputs_hashes_invocations_frozen completed_units=12 elapsed_s=0.503
+[exp7303-validation:cli_block] [exp7978] phase=independent_reduction completed_units=1 elapsed_s=0.514
+[exp7303-validation:cli_block] [exp7978] phase=independent_reduction completed_units=2 elapsed_s=0.526
+[exp7303-validation:cli_block] [exp7978] phase=independent_reduction completed_units=3 elapsed_s=0.528
+[exp7303-validation:cli_block] [exp7978] phase=independent_reduction completed_units=4 elapsed_s=0.541
+[exp7303-validation:cli_block] [exp7978] phase=independent_reduction completed_units=5 elapsed_s=0.542
+[exp7303-validation:cli_block] [exp7978] phase=independent_reduction completed_units=6 elapsed_s=0.555
+[exp7303-validation:cli_block] [exp7978] phase=independent_reduction completed_units=7 elapsed_s=0.556
+[exp7303-validation:cli_block] [exp7978] phase=independent_reduction completed_units=8 elapsed_s=0.568
+[exp7303-validation:cli_block] [exp7978] phase=independent_reduction completed_units=9 elapsed_s=0.574
+[exp7303-validation:cli_block] [exp7978] phase=independent_reduction completed_units=10 elapsed_s=0.582
+[exp7303-validation:cli_block] [exp7978] phase=independent_reduction completed_units=11 elapsed_s=0.594
+[exp7303-validation:cli_block] [exp7978] phase=independent_reduction completed_units=12 elapsed_s=0.636
+[exp7303-validation:cli_block] [exp7978] phase=independent_reduction completed_units=13 elapsed_s=0.656
+[exp7303-validation] after_subprocess cli_block elapsed_s=3.205 exit=0 unit=1/1
+[exp7303-validation] before_subprocess cli_failure elapsed_s=0.000 unit=1/1
+[exp7303-validation:cli_failure] [exp7978] start current capstone CLI
+[exp7303-validation:cli_failure] usage: experiment_7978_v691_capstone.py [-h] --date {20261001} [--root ROOT]
+[exp7303-validation:cli_failure]                                         [--design DESIGN] [--active ACTIVE]
+[exp7303-validation:cli_failure]                                         [--output OUTPUT] [--evidence-only]
+[exp7303-validation:cli_failure]                                         [--cold-replay COLD_REPLAY]
+[exp7303-validation:cli_failure]                                         [--terminal-recheck TERMINAL_RECHECK]
+[exp7303-validation:cli_failure] experiment_7978_v691_capstone.py: error: the following arguments are required: --date
+[exp7303-validation] after_subprocess cli_failure elapsed_s=2.403 exit=2 unit=1/1
+[exp7303-validation] before_subprocess cli_replay elapsed_s=0.000 unit=1/1
+[exp7303-validation:cli_replay] [exp7978] start current capstone CLI
+[exp7303-validation:cli_replay] [exp7978] phase=start completed_units=0 elapsed_s=0.000
+[exp7303-validation:cli_replay] [exp7978] phase=inputs_hashes_invocations_frozen completed_units=12 elapsed_s=27.237
+[exp7303-validation:cli_replay] [exp7978] phase=independent_reduction completed_units=1 elapsed_s=27.249
+[exp7303-validation:cli_replay] [exp7978] phase=independent_reduction completed_units=2 elapsed_s=27.261
+[exp7303-validation:cli_replay] [exp7978] phase=independent_reduction completed_units=3 elapsed_s=27.263
+[exp7303-validation:cli_replay] [exp7978] phase=independent_reduction completed_units=4 elapsed_s=27.276
+[exp7303-validation:cli_replay] [exp7978] phase=independent_reduction completed_units=5 elapsed_s=27.278
+[exp7303-validation:cli_replay] [exp7978] phase=independent_reduction completed_units=6 elapsed_s=27.291
+[exp7303-validation:cli_replay] [exp7978] phase=independent_reduction completed_units=7 elapsed_s=27.292
+[exp7303-validation:cli_replay] [exp7978] phase=independent_reduction completed_units=8 elapsed_s=27.304
+[exp7303-validation:cli_replay] [exp7978] phase=independent_reduction completed_units=9 elapsed_s=27.310
+[exp7303-validation:cli_replay] [exp7978] phase=independent_reduction completed_units=10 elapsed_s=27.318
+[exp7303-validation:cli_replay] [exp7978] phase=independent_reduction completed_units=11 elapsed_s=27.330
+[exp7303-validation:cli_replay] [exp7978] phase=independent_reduction completed_units=12 elapsed_s=27.374
+[exp7303-validation:cli_replay] [exp7978] phase=independent_reduction completed_units=13 elapsed_s=27.394
+[exp7303-validation:cli_replay] {"errors": []}
+[exp7303-validation] after_subprocess cli_replay elapsed_s=29.839 exit=0 unit=1/1
+[exp7303-validation] before_subprocess cli_terminal elapsed_s=0.000 unit=1/1
+[exp7303-validation:cli_terminal] [exp7978] start current capstone CLI
+[exp7303-validation:cli_terminal] [exp7303-validation] before_subprocess adversarial_verify elapsed_s=0.000 unit=1/1
+[exp7303-validation:cli_terminal] [exp7303-validation:adversarial_verify] {
+[exp7303-validation:cli_terminal] [exp7303-validation:adversarial_verify]   "reports": [
+[exp7303-validation:cli_terminal] [exp7303-validation:adversarial_verify]     {
+[exp7303-validation:cli_terminal] [exp7303-validation:adversarial_verify]       "artifact": "/tmp/carnot-7978-terminal-qixsgrmx/candidate.json",
+[exp7303-validation:cli_terminal] [exp7303-validation:adversarial_verify]       "loaded": true,
+[exp7303-validation:cli_terminal] [exp7303-validation:adversarial_verify]       "exp_id": 7978,
+[exp7303-validation:cli_terminal] [exp7303-validation:adversarial_verify]       "title": "",
+[exp7303-validation:cli_terminal] [exp7303-validation:adversarial_verify]       "honest_verdict": "complete_blocked_missing_science",
+[exp7303-validation:cli_terminal] [exp7303-validation:adversarial_verify]       "flag_count": 0,
+[exp7303-validation:cli_terminal] [exp7303-validation:adversarial_verify]       "max_severity": -1,
+[exp7303-validation:cli_terminal] [exp7303-validation:adversarial_verify]       "flags": [],
+[exp7303-validation:cli_terminal] [exp7303-validation:adversarial_verify]       "gate_version": "197e0a5eacacb09ce6607ae8bdfd507498082857f0d02ec2003a62c251b69a24"
+[exp7303-validation:cli_terminal] [exp7303-validation:adversarial_verify]     }
+[exp7303-validation:cli_terminal] [exp7303-validation:adversarial_verify]   ],
+[exp7303-validation:cli_terminal] [exp7303-validation:adversarial_verify]   "flagged_count": 0
+[exp7303-validation:cli_terminal] [exp7303-validation:adversarial_verify] }
+[exp7303-validation:cli_terminal] [exp7303-validation] after_subprocess adversarial_verify elapsed_s=0.620 exit=0 unit=1/1
+[exp7303-validation:cli_terminal] [exp7303-validation] before_subprocess strict_rows elapsed_s=0.000 unit=1/1
+[exp7303-validation:cli_terminal] [exp7303-validation:strict_rows]
+[exp7303-validation:cli_terminal] [exp7303-validation:strict_rows] verdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.
+[exp7303-validation:cli_terminal] [exp7303-validation:strict_rows]   No row/verdict contradictions among the artifacts that could be checked.
+[exp7303-validation:cli_terminal] [exp7303-validation] after_subprocess strict_rows elapsed_s=0.026 exit=0 unit=1/1
+[exp7303-validation:cli_terminal] [exp7303-validation] before_subprocess terminal_cold_replay elapsed_s=0.000 unit=1/1
+[exp7303-validation:cli_terminal] [exp7303-validation:terminal_cold_replay] [exp7978] start current capstone CLI
+[exp7303-validation:cli_terminal] [exp7303-validation:terminal_cold_replay] [exp7978] phase=start completed_units=0 elapsed_s=0.000
+[exp7303-validation:cli_terminal] [exp7303-validation:terminal_cold_replay] [exp7978] phase=inputs_hashes_invocations_frozen completed_units=12 elapsed_s=24.223
+[exp7303-validation:cli_terminal] [exp7303-validation:terminal_cold_replay] [exp7978] phase=independent_reduction completed_units=1 elapsed_s=24.224
+[exp7303-validation:cli_terminal] [exp7303-validation:terminal_cold_replay] [exp7978] phase=independent_reduction completed_units=2 elapsed_s=24.225
+[exp7303-validation:cli_terminal] [exp7303-validation:terminal_cold_replay] [exp7978] phase=independent_reduction completed_units=3 elapsed_s=24.226
+[exp7303-validation:cli_terminal] [exp7303-validation:terminal_cold_replay] [exp7978] phase=independent_reduction completed_units=4 elapsed_s=24.227
+[exp7303-validation:cli_terminal] [exp7303-validation:terminal_cold_replay] [exp7978] phase=independent_reduction completed_units=5 elapsed_s=24.227
+[exp7303-validation:cli_terminal] [exp7303-validation:terminal_cold_replay] [exp7978] phase=independent_reduction completed_units=6 elapsed_s=24.228
+[exp7303-validation:cli_terminal] [exp7303-validation:terminal_cold_replay] [exp7978] phase=independent_reduction completed_units=7 elapsed_s=24.229
+[exp7303-validation:cli_terminal] [exp7303-validation:terminal_cold_replay] [exp7978] phase=independent_reduction completed_units=8 elapsed_s=24.229
+[exp7303-validation:cli_terminal] [exp7303-validation:terminal_cold_replay] [exp7978] phase=independent_reduction completed_units=9 elapsed_s=24.230
+[exp7303-validation:cli_terminal] [exp7303-validation:terminal_cold_replay] [exp7978] phase=independent_reduction completed_units=10 elapsed_s=24.231
+[exp7303-validation:cli_terminal] [exp7303-validation:terminal_cold_replay] [exp7978] phase=independent_reduction completed_units=11 elapsed_s=24.232
+[exp7303-validation:cli_terminal] [exp7303-validation:terminal_cold_replay] [exp7978] phase=independent_reduction completed_units=12 elapsed_s=24.235
+[exp7303-validation:cli_terminal] [exp7303-validation:terminal_cold_replay] [exp7978] phase=independent_reduction completed_units=13 elapsed_s=24.237
+[exp7303-validation:cli_terminal] [exp7303-validation:terminal_cold_replay] {"errors": []}
+[exp7303-validation:cli_terminal] [exp7303-validation] after_subprocess terminal_cold_replay elapsed_s=25.652 exit=0 unit=1/1
+[exp7303-validation] after_subprocess cli_terminal elapsed_s=28.858 exit=0 unit=1/1
+[exp7303-validation] before_subprocess e2e015 elapsed_s=0.000 unit=1/1
+[exp7303-validation:e2e015] ...                                                                      [100%]
+[exp7303-validation:e2e015] 3 passed in 4.20s
+[exp7303-validation] after_subprocess e2e015 elapsed_s=7.008 exit=0 unit=1/1
+[exp7303-validation] before_subprocess e2e017 elapsed_s=0.000 unit=1/1
+[exp7303-validation:e2e017] ......                                                                   [100%]
+[exp7303-validation:e2e017] 6 passed in 2.82s
+[exp7303-validation] after_subprocess e2e017 elapsed_s=5.307 exit=0 unit=1/1
+[exp7303-validation] before_subprocess e2e016_fixture elapsed_s=0.000 unit=1/1
+[exp7303-validation:e2e016_fixture] [exp7868] phase=fixture event=begin elapsed_s=0.000 completed_units=0
+[exp7303-validation:e2e016_fixture] [exp7868] phase=fixture event=batch elapsed_s=0.001 completed_units=6
+[exp7303-validation:e2e016_fixture] [exp7868] phase=fixture event=batch elapsed_s=0.002 completed_units=12
+[exp7303-validation:e2e016_fixture] [exp7868] phase=fixture event=batch elapsed_s=0.003 completed_units=18
+[exp7303-validation:e2e016_fixture] [exp7868] phase=fixture event=batch elapsed_s=0.004 completed_units=24
+[exp7303-validation:e2e016_fixture] [exp7868] phase=fixture event=complete elapsed_s=0.005 completed_units=24
+[exp7303-validation:e2e016_fixture] {"independent_families": 24}
+[exp7303-validation] after_subprocess e2e016_fixture elapsed_s=1.275 exit=0 unit=1/1
+[exp7303-validation] before_subprocess e2e016_replay elapsed_s=0.000 unit=1/1
+[exp7303-validation:e2e016_replay] {"families": 24, "rows": 24}
+[exp7303-validation] after_subprocess e2e016_replay elapsed_s=1.271 exit=0 unit=1/1
+[exp7303-validation] before_subprocess e2e016_wrong_date elapsed_s=0.000 unit=1/1
+[exp7303-validation:e2e016_wrong_date] Traceback (most recent call last):
+[exp7303-validation:e2e016_wrong_date]   File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7868_v683_intervention_protocol.py", line 7, in <module>
+[exp7303-validation:e2e016_wrong_date]     raise SystemExit(main())
+[exp7303-validation:e2e016_wrong_date]                      ^^^^^^
+[exp7303-validation:e2e016_wrong_date]   File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7868_v683_intervention_protocol.py", line 852, in main
+[exp7303-validation:e2e016_wrong_date]     raise ValueError("run_date_mismatch")
+[exp7303-validation:e2e016_wrong_date] ValueError: run_date_mismatch
+[exp7303-validation] after_subprocess e2e016_wrong_date elapsed_s=1.265 exit=1 unit=1/1
+[exp7303-validation] before_subprocess cli_negative_replay elapsed_s=0.000 unit=1/1
+[exp7303-validation:cli_negative_replay] [exp7978] start current capstone CLI
+[exp7303-validation:cli_negative_replay] [exp7978] phase=start completed_units=0 elapsed_s=0.000
+[exp7303-validation:cli_negative_replay] [exp7978] phase=inputs_hashes_invocations_frozen completed_units=12 elapsed_s=27.119
+[exp7303-validation:cli_negative_replay] [exp7978] phase=independent_reduction completed_units=1 elapsed_s=27.131
+[exp7303-validation:cli_negative_replay] [exp7978] phase=independent_reduction completed_units=2 elapsed_s=27.144
+[exp7303-validation:cli_negative_replay] [exp7978] phase=independent_reduction completed_units=3 elapsed_s=27.145
+[exp7303-validation:cli_negative_replay] [exp7978] phase=independent_reduction completed_units=4 elapsed_s=27.158
+[exp7303-validation:cli_negative_replay] [exp7978] phase=independent_reduction completed_units=5 elapsed_s=27.160
+[exp7303-validation:cli_negative_replay] [exp7978] phase=independent_reduction completed_units=6 elapsed_s=27.173
+[exp7303-validation:cli_negative_replay] [exp7978] phase=independent_reduction completed_units=7 elapsed_s=27.174
+[exp7303-validation:cli_negative_replay] [exp7978] phase=independent_reduction completed_units=8 elapsed_s=27.187
+[exp7303-validation:cli_negative_replay] [exp7978] phase=independent_reduction completed_units=9 elapsed_s=27.192
+[exp7303-validation:cli_negative_replay] [exp7978] phase=independent_reduction completed_units=10 elapsed_s=27.200
+[exp7303-validation:cli_negative_replay] [exp7978] phase=independent_reduction completed_units=11 elapsed_s=27.212
+[exp7303-validation:cli_negative_replay] [exp7978] phase=independent_reduction completed_units=12 elapsed_s=27.256
+[exp7303-validation:cli_negative_replay] [exp7978] phase=independent_reduction completed_units=13 elapsed_s=27.276
+[exp7303-validation:cli_negative_replay] {"errors": ["sample_size_budget_changed"]}
+[exp7303-validation] after_subprocess cli_negative_replay elapsed_s=29.794 exit=1 unit=1/1
+[exp7303-validation] before_subprocess cli_blocked_replay elapsed_s=0.000 unit=1/1
+[exp7303-validation:cli_blocked_replay] [exp7978] start current capstone CLI
+[exp7303-validation:cli_blocked_replay] Traceback (most recent call last):
+[exp7303-validation:cli_blocked_replay]   File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7978_v691_capstone.py", line 56, in <module>
+[exp7303-validation:cli_blocked_replay]     raise SystemExit(main())
+[exp7303-validation:cli_blocked_replay]                      ^^^^^^
+[exp7303-validation:cli_blocked_replay]   File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7978_v691_capstone.py", line 37, in main
+[exp7303-validation:cli_blocked_replay]     errors = cap.cold_replay(json.loads(args.cold_replay.read_bytes()), root, design, active)
+[exp7303-validation:cli_blocked_replay]              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[exp7303-validation:cli_blocked_replay]   File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v691_capstone.py", line 591, in cold_replay
+[exp7303-validation:cli_blocked_replay]     snapshots=Path(value["authority_snapshots"]["active"]["snapshot_path"]).parent,
+[exp7303-validation:cli_blocked_replay]                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+[exp7303-validation:cli_blocked_replay] KeyError: 'snapshot_path'
+[exp7303-validation] after_subprocess cli_blocked_replay elapsed_s=2.413 exit=1 unit=1/1
+[exp7303-validation] before_subprocess coverage_combine elapsed_s=0.000 unit=1/1
+[exp7303-validation:coverage_combine] Combined 7 files, skipped 1
+[exp7303-validation] after_subprocess coverage_combine elapsed_s=0.058 exit=0 unit=1/1
+[exp7303-validation] before_subprocess coverage_report elapsed_s=0.000 unit=1/1
+[exp7303-validation:coverage_report] Name                                                   Stmts   Miss  Cover   Missing
+[exp7303-validation:coverage_report] ------------------------------------------------------------------------------------
+[exp7303-validation:coverage_report] python/carnot/reporting/v691_capstone.py                 186      0   100%
+[exp7303-validation:coverage_report] python/carnot/reporting/v691_capstone_validation.py      159      0   100%
+[exp7303-validation:coverage_report] scripts/experiments/experiment_7978_v691_capstone.py      40      0   100%
+[exp7303-validation:coverage_report] ------------------------------------------------------------------------------------
+[exp7303-validation:coverage_report] TOTAL                                                    385      0   100%
+[exp7303-validation] after_subprocess coverage_report elapsed_s=0.077 exit=0 unit=1/1
+[exp7303-validation] before_subprocess coverage_json elapsed_s=0.000 unit=1/1
+[exp7303-validation:coverage_json] Wrote JSON report to /tmp/carnot-7978-validation-3x10wtd1/coverage.json
+[exp7303-validation] after_subprocess coverage_json elapsed_s=0.080 exit=0 unit=1/1
+[exp7303-validation] before_subprocess ruff elapsed_s=0.000 unit=1/1
+[exp7303-validation:ruff] All checks passed!
+[exp7303-validation] after_subprocess ruff elapsed_s=0.014 exit=0 unit=1/1
+[exp7303-validation] before_subprocess format elapsed_s=0.000 unit=1/1
+[exp7303-validation:format] 4 files already formatted
+[exp7303-validation] after_subprocess format elapsed_s=0.011 exit=0 unit=1/1
+[exp7303-validation] before_subprocess mypy elapsed_s=0.000 unit=1/1
+[exp7303-validation:mypy] pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.inference.*', 'carnot.pipeline.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.pipeline.verify_repair', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl', 'carnot.verify.*']
+[exp7303-validation:mypy] Success: no issues found in 3 source files
+[exp7303-validation] after_subprocess mypy elapsed_s=0.143 exit=0 unit=1/1
+[exp7303-validation] before_subprocess spec elapsed_s=0.000 unit=1/1
+[exp7303-validation:spec] OK: All tests reference specification requirements.
+[exp7303-validation] after_subprocess spec elapsed_s=0.022 exit=0 unit=1/1
+[exp7303-validation] before_subprocess current_authority_consumers elapsed_s=0.000 unit=1/1
+[exp7303-validation] subprocess_outstanding current_authority_consumers elapsed_s=30.001
+[exp7303-validation] subprocess_outstanding current_authority_consumers elapsed_s=60.001
+[exp7303-validation:current_authority_consumers] .............                                                            [100%]
+[exp7303-validation:current_authority_consumers] 13 passed in 72.70s (0:01:12)
+[exp7303-validation] after_subprocess current_authority_consumers elapsed_s=75.564 exit=0 unit=1/1
+[exp7303-validation] before_subprocess e2e019 elapsed_s=0.000 unit=1/1
+[exp7303-validation] subprocess_outstanding e2e019 elapsed_s=30.001
+[exp7303-validation:e2e019] ............                                                             [100%]
+[exp7303-validation:e2e019] 12 passed in 42.31s
+[exp7303-validation] after_subprocess e2e019 elapsed_s=45.086 exit=0 unit=1/1
+[exp7303-validation] before_subprocess checkpoint_consumers elapsed_s=0.000 unit=1/1
+[exp7303-validation] subprocess_outstanding checkpoint_consumers elapsed_s=30.001
+[exp7303-validation:checkpoint_consumers] ...........................                                              [100%]
+[exp7303-validation:checkpoint_consumers] 27 passed in 32.76s
+[exp7303-validation] after_subprocess checkpoint_consumers elapsed_s=35.615 exit=0 unit=1/1
+[exp7303-validation] before_subprocess repository_full_suite elapsed_s=0.000 unit=1/1
+[exp7303-validation:repository_full_suite] ============================= test session starts ==============================
+[exp7303-validation:repository_full_suite] platform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0
+[exp7303-validation:repository_full_suite] rootdir: /home/ianblenke/github.com/ianblenke/carnot
+[exp7303-validation:repository_full_suite] configfile: pyproject.toml
+[exp7303-validation:repository_full_suite] plugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2
+[exp7303-validation:repository_full_suite] created: 4/4 workers
+[exp7303-validation] subprocess_outstanding repository_full_suite elapsed_s=30.001
+[exp7303-validation] subprocess_outstanding repository_full_suite elapsed_s=60.001
+[exp7303-validation:repository_full_suite] 4 workers [74249 items]
+[exp7303-validation:repository_full_suite] 
+[exp7303-validation:repository_full_suite] ........................................................................ [  0%]
+[exp7303-validation:repository_full_suite] ........................................................................ [  0%]
+[exp7303-validation:repository_full_suite] ........................................................................ [  0%]
+[exp7303-validation:repository_full_suite] ...............................................F.........F.............. [  0%]
+[exp7303-validation:repository_full_suite] ........................................................................ [  0%]
+[exp7303-validation:repository_full_suite] ........................................................................ [  0%]
+[exp7303-validation:repository_full_suite] ........................................................................ [  0%]
+[exp7303-validation:repository_full_suite] ................................................F......................F [  0%]
+[exp7303-validation:repository_full_suite] ............................F........................................... [  0%]
+[exp7303-validation:repository_full_suite] ........................................................................ [  0%]
+[exp7303-validation:repository_full_suite] ........................................................................ [  1%]
+[exp7303-validation:repository_full_suite] ........................................................................ [  1%]
+[exp7303-validation:repository_full_suite] ........................................................................ [  1%]
+[exp7303-validation:repository_full_suite] ...F.................................................................... [  1%]
+[exp7303-validation:repository_full_suite] ...Fssssss........s..................................................... [  1%]
+[exp7303-validation:repository_full_suite] .....F........F......F.........F......FFF............................... [  1%]
+[exp7303-validation:repository_full_suite] ........................................................................ [  1%]
+[exp7303-validation:repository_full_suite] ................................................ssssssssssssssss........ [  1%]
+[exp7303-validation] subprocess_outstanding repository_full_suite elapsed_s=90.002
+[exp7303-validation:repository_full_suite] ........................................................................ [  1%]
+[exp7303-validation:repository_full_suite] .............................................................F.......... [  1%]
+[exp7303-validation:repository_full_suite] ............F.F......................................................... [  2%]
+[exp7303-validation:repository_full_suite] ........................................................................ [  2%]
+[exp7303-validation:repository_full_suite] ........................................................................ [  2%]
+[exp7303-validation:repository_full_suite] ........................................................................ [  2%]
+[exp7303-validation:repository_full_suite] ........................................................................ [  2%]
+[exp7303-validation:repository_full_suite] ......................................F................................. [  2%]
+[exp7303-validation:repository_full_suite] ...............................F........................................ [  2%]
+[exp7303-validation:repository_full_suite] .................................FF..................................... [  2%]
+[exp7303-validation:repository_full_suite] ........................................................................ [  2%]
+[exp7303-validation:repository_full_suite] ........................................................................ [  2%]
+[exp7303-validation:repository_full_suite] ........................................................................ [  3%]
+[exp7303-validation] subprocess_outstanding repository_full_suite elapsed_s=120.002
+[exp7303-validation:repository_full_suite] ........................................................................ [  3%]
+[exp7303-validation:repository_full_suite] ........................................................................ [  3%]
+[exp7303-validation:repository_full_suite] ........................................................................ [  3%]
+[exp7303-validation:repository_full_suite] ....F.........................................................F......... [  3%]
+[exp7303-validation:repository_full_suite] ........................................................................ [  3%]
+[exp7303-validation:repository_full_suite] .........................................F.............................. [  3%]
+[exp7303-validation:repository_full_suite] ........................................................................ [  3%]
+[exp7303-validation:repository_full_suite] ........................................................................ [  3%]
+[exp7303-validation:repository_full_suite] .................................................................F...... [  3%]
+[exp7303-validation:repository_full_suite] ........................................................................ [  3%]
+[exp7303-validation:repository_full_suite] ........................................................................ [  4%]
+[exp7303-validation:repository_full_suite] ........................................................................ [  4%]
+[exp7303-validation:repository_full_suite] ........................................................................ [  4%]
+[exp7303-validation:repository_full_suite] ..................................................................s..... [  4%]
+[exp7303-validation:repository_full_suite] ........................................................................ [  4%]
+[exp7303-validation:repository_full_suite] ........................................................................ [  4%]
+[exp7303-validation:repository_full_suite] ........................................................................ [  4%]
+[exp7303-validation:repository_full_suite] ........................................................................ [  4%]
+[exp7303-validation:repository_full_suite] ........................................................................ [  4%]
+[exp7303-validation:repository_full_suite] ........................................................................ [  4%]
+[exp7303-validation:repository_full_suite] ........................................................................ [  5%]
+[exp7303-validation:repository_full_suite] ................F....................................................... [  5%]
+[exp7303-validation:repository_full_suite] ........................................................................ [  5%]
+[exp7303-validation:repository_full_suite] ........................................................................ [  5%]
+[exp7303-validation] subprocess_outstanding repository_full_suite elapsed_s=150.002
+[exp7303-validation:repository_full_suite] ........................................................................ [  5%]
+[exp7303-validation:repository_full_suite] ........................................................................ [  5%]
+[exp7303-validation:repository_full_suite] ........................................................................ [  5%]
+[exp7303-validation:repository_full_suite] ..........................................................F............. [  5%]
+[exp7303-validation:repository_full_suite] .........F..F.F......................................................... [  5%]
+[exp7303-validation:repository_full_suite] ........................................................................ [  5%]
+[exp7303-validation:repository_full_suite] ........................................................................ [  6%]
+[exp7303-validation:repository_full_suite] ........................................................................ [  6%]
+[exp7303-validation:repository_full_suite] ........................................................................ [  6%]
+[exp7303-validation:repository_full_suite] ........................................................................ [  6%]
+[exp7303-validation] subprocess_outstanding repository_full_suite elapsed_s=180.002
+[exp7303-validation:repository_full_suite] ........................................................................ [  6%]
+[exp7303-validation:repository_full_suite] ........................................................................ [  6%]
+[exp7303-validation:repository_full_suite] ........................................................................ [  6%]
+[exp7303-validation:repository_full_suite] ........................................................................ [  6%]
+[exp7303-validation:repository_full_suite] ........................................................................ [  6%]
+[exp7303-validation:repository_full_suite] ........................................................................ [  6%]
+[exp7303-validation:repository_full_suite] ........................................................................ [  6%]
+[exp7303-validation:repository_full_suite] ........................................................................ [  7%]
+[exp7303-validation:repository_full_suite] ........................................................................ [  7%]
+[exp7303-validation:repository_full_suite] ........................................................................ [  7%]
+[exp7303-validation] subprocess_outstanding repository_full_suite elapsed_s=210.003
+[exp7303-validation:repository_full_suite] ........................................................................ [  7%]
+[exp7303-validation:repository_full_suite] ........................................................................ [  7%]
+[exp7303-validation:repository_full_suite] ......F.F..........................................F.................... [  7%]
+[exp7303-validation:repository_full_suite] ........................................................................ [  7%]
+[exp7303-validation:repository_full_suite] ...............................s........................................ [  7%]
+[exp7303-validation:repository_full_suite] ................................sssss.....ssssss........................ [  7%]
+[exp7303-validation:repository_full_suite] ........................................................................ [  7%]
+[exp7303-validation:repository_full_suite] ........................................................................ [  8%]
+[exp7303-validation:repository_full_suite] ................F....................................................... [  8%]
+[exp7303-validation:repository_full_suite] ........................................................................ [  8%]
+[exp7303-validation:repository_full_suite] ........................................................................ [  8%]
+[exp7303-validation:repository_full_suite] ........................................................................ [  8%]
+[exp7303-validation:repository_full_suite] ........................................................................ [  8%]
+[exp7303-validation:repository_full_suite] ........................................................................ [  8%]
+[exp7303-validation:repository_full_suite] ........................................................................ [  8%]
+[exp7303-validation:repository_full_suite] ........................................................................ [  8%]
+[exp7303-validation:repository_full_suite] ........................................................................ [  8%]
+[exp7303-validation:repository_full_suite] ........................................................................ [  9%]
+[exp7303-validation:repository_full_suite] ........................................................................ [  9%]
+[exp7303-validation:repository_full_suite] ........................................................................ [  9%]
+[exp7303-validation:repository_full_suite] ........................................................................ [  9%]
+[exp7303-validation] subprocess_outstanding repository_full_suite elapsed_s=240.003
+[exp7303-validation:repository_full_suite] ........................................................................ [  9%]
+[exp7303-validation:repository_full_suite] ........................................................................ [  9%]
+[exp7303-validation:repository_full_suite] ........................................................................ [  9%]
+[exp7303-validation:repository_full_suite] ............................................FFFFFFFFFFFFFFFFFFFFFFFFFFFF [  9%]
+[exp7303-validation:repository_full_suite] FFFF..........F.......F......................FF......................... [  9%]
+[exp7303-validation] subprocess_outstanding repository_full_suite elapsed_s=270.003
+[exp7303-validation] subprocess_outstanding repository_full_suite elapsed_s=300.003
+[exp7303-validation:repository_full_suite] ........................................................................ [  9%]
+[exp7303-validation:repository_full_suite] ........................................FF.............................. [  9%]
+[exp7303-validation:repository_full_suite] ........................................................................ [ 10%]
+[exp7303-validation] subprocess_outstanding repository_full_suite elapsed_s=330.003
+[exp7303-validation] subprocess_outstanding repository_full_suite elapsed_s=360.003
+[exp7303-validation:repository_full_suite] ........................................................................ [ 10%]
+[exp7303-validation:repository_full_suite] ........................................................................ [ 10%]
+[exp7303-validation:repository_full_suite] ........................................................................ [ 10%]
+[exp7303-validation:repository_full_suite] ........................................................................ [ 10%]
+[exp7303-validation:repository_full_suite] ........................................................................ [ 10%]
+[exp7303-validation:repository_full_suite] ......................s................................................. [ 10%]
+[exp7303-validation:repository_full_suite] .......................................................................F [ 10%]
+[exp7303-validation:repository_full_suite] ........................................................................ [ 10%]
+[exp7303-validation:repository_full_suite] ........................................................................ [ 10%]
+[exp7303-validation:repository_full_suite] ........................................................................ [ 11%]
+[exp7303-validation:repository_full_suite] ........................................................................ [ 11%]
+[exp7303-validation:repository_full_suite] ........................................................................ [ 11%]
+[exp7303-validation:repository_full_suite] ........................................................................ [ 11%]
+[exp7303-validation] subprocess_outstanding repository_full_suite elapsed_s=390.004
+[exp7303-validation:repository_full_suite] ........................................................................ [ 11%]
+[exp7303-validation:repository_full_suite] ........................ssssssssssssss.................................. [ 11%]
+[exp7303-validation:repository_full_suite] .................................................F.....F................ [ 11%]
+[exp7303-validation:repository_full_suite] ........................................................................ [ 11%]
+[exp7303-validation:repository_full_suite] .........................................................FFF..FFFFF..... [ 11%]
+[exp7303-validation:repository_full_suite] .....s......................................................F.F..FF..... [ 11%]
+[exp7303-validation:repository_full_suite] ........................................................................ [ 12%]
+[exp7303-validation:repository_full_suite] ........................................................................ [ 12%]
+[exp7303-validation:repository_full_suite] ........................................................................ [ 12%]
+[exp7303-validation] subprocess_outstanding repository_full_suite elapsed_s=420.004
+[exp7303-validation:repository_full_suite] .........................................F.............................. [ 12%]
+[exp7303-validation:repository_full_suite] ...........................F............................................ [ 12%]
+[exp7303-validation:repository_full_suite] .FF..F.F..............................................FssF....FFFFFFFFFF [ 12%]
+[exp7303-validation:repository_full_suite] FFF..........................................FF.F..F..FF................ [ 12%]
+[exp7303-validation:repository_full_suite] .........................................FFF............................ [ 12%]
+[exp7303-validation:repository_full_suite] ...............................FF....................................... [ 12%]
+[exp7303-validation:repository_full_suite] ........................................................................ [ 12%]
+[exp7303-validation:repository_full_suite] ........................................................................ [ 12%]
+[exp7303-validation] subprocess_outstanding repository_full_suite elapsed_s=450.004
+[exp7303-validation:repository_full_suite] ....................................sss................................. [ 13%]
+[exp7303-validation:repository_full_suite] ...........................................sssssssssssssss.............. [ 13%]
+[exp7303-validation:repository_full_suite] ........................................................................ [ 13%]
+[exp7303-validation:repository_full_suite] ........................................................................ [ 13%]
+[exp7303-validation:repository_full_suite] ........................................................................ [ 13%]
+[exp7303-validation:repository_full_suite] .............................................s........F................. [ 13%]
+[exp7303-validation:repository_full_suite] ........................................................................ [ 13%]
+[exp7303-validation:repository_full_suite] ........................................................................ [ 13%]
+[exp7303-validation:repository_full_suite] ........................................................................ [ 13%]
+[exp7303-validation:repository_full_suite] .........................F.............................................. [ 13%]
+[exp7303-validation:repository_full_suite] ........................................................................ [ 14%]
+[exp7303-validation:repository_full_suite] ........................................................................ [ 14%]
+[exp7303-validation:repository_full_suite] ........................................................................ [ 14%]
+[exp7303-validation:repository_full_suite] ........................................................................ [ 14%]
+[exp7303-validation:repository_full_suite] ........................................................................ [ 14%]
+[exp7303-validation] subprocess_outstanding repository_full_suite elapsed_s=480.005
+[exp7303-validation:repository_full_suite] ........................................................................ [ 14%]
+[exp7303-validation:repository_full_suite] ............s........................................................... [ 14%]
+[exp7303-validation:repository_full_suite] ........................................................................ [ 14%]
+[exp7303-validation:repository_full_suite] ........................................................................ [ 14%]
+[exp7303-validation:repository_full_suite] ...........................................s.............F.............. [ 14%]
+[exp7303-validation:repository_full_suite] .............FFFF........................FFF............................ [ 15%]
+[exp7303-validation:repository_full_suite] .............F....FF.................................................... [ 15%]
+[exp7303-validation:repository_full_suite] sssssssssssF..FF........FF.................................F............ [ 15%]
+[exp7303-validation:repository_full_suite] ........................................................................ [ 15%]
+[exp7303-validation] subprocess_outstanding repository_full_suite elapsed_s=510.005
+[exp7303-validation:repository_full_suite] ........................F...FF.....F....FFFFFF.F..FFF.F.FF.............. [ 15%]
+[exp7303-validation:repository_full_suite] ........................................................................ [ 15%]
+[exp7303-validation:repository_full_suite] ........................F.....................F......................... [ 15%]
+[exp7303-validation:repository_full_suite] ....................................................................F... [ 15%]
+[exp7303-validation:repository_full_suite] ..................................F...F.FFFF.F.......................... [ 15%]
+[exp7303-validation:repository_full_suite] .............................FF.................F.F.F......FF........F.. [ 15%]
+[exp7303-validation:repository_full_suite] ..FF.F.......F............F...F.............................F........... [ 16%]
+[exp7303-validation:repository_full_suite] ........................................................................ [ 16%]
+[exp7303-validation:repository_full_suite] ........................................................................ [ 16%]
+[exp7303-validation:repository_full_suite] ........................................................................ [ 16%]
+[exp7303-validation:repository_full_suite] ........................................................................ [ 16%]
+[exp7303-validation:repository_full_suite] ........................................................................ [ 16%]
+[exp7303-validation] subprocess_outstanding repository_full_suite elapsed_s=540.005
+[exp7303-validation:repository_full_suite] ........................................................................ [ 16%]
+[exp7303-validation:repository_full_suite] ........................................F............................... [ 16%]
+[exp7303-validation:repository_full_suite] ........FFF.F........................................................... [ 16%]
+[exp7303-validation:repository_full_suite] ........................................................................ [ 16%]
+[exp7303-validation:repository_full_suite] ........................................................................ [ 16%]
+[exp7303-validation:repository_full_suite] ........................F............................................... [ 17%]
+[exp7303-validation:repository_full_suite] .....F.F.....F.......................................................... [ 17%]
+[exp7303-validation:repository_full_suite] ............................F.F...FF.................................... [ 17%]
+[exp7303-validation:repository_full_suite] ...............................F........................................ [ 17%]
+[exp7303-validation:repository_full_suite] ..........F..........F.................................................. [ 17%]
+[exp7303-validation:repository_full_suite] .................................................................F...... [ 17%]
+[exp7303-validation:repository_full_suite] ................................................F..F.F....F.......F..... [ 17%]
+[exp7303-validation:repository_full_suite] ..F...F......F.......................................................... [ 17%]
+[exp7303-validation:repository_full_suite] ........................................................................ [ 17%]
+[exp7303-validation:repository_full_suite] ........................................................................ [ 17%]
+[exp7303-validation:repository_full_suite] ........................................................................ [ 18%]
+[exp7303-validation:repository_full_suite] ........................................................................ [ 18%]
+[exp7303-validation:repository_full_suite] ........................................................................ [ 18%]
+[exp7303-validation:repository_full_suite] ........................................................................ [ 18%]
+[exp7303-validation:repository_full_suite] ........................................................................ [ 18%]
+[exp7303-validation:repository_full_suite] ........................................................................ [ 18%]
+[exp7303-validation:repository_full_suite] ........................................................................ [ 18%]
+[exp7303-validation:repository_full_suite] ........................................................................ [ 18%]
+[exp7303-validation:repository_full_suite] ........................................................................ [ 18%]
+[exp7303-validation:repository_full_suite] .....................................F...F.F..........F................. [ 18%]
+[exp7303-validation:repository_full_suite] ...........................................F..........................F. [ 19%]
+[exp7303-validation] subprocess_outstanding repository_full_suite elapsed_s=570.005
+[exp7303-validation:repository_full_suite] ..................................F..................................... [ 19%]
+[exp7303-validation:repository_full_suite] ........................................................................ [ 19%]
+[exp7303-validation:repository_full_suite] ........................................................................ [ 19%]
+[exp7303-validation:repository_full_suite] ........................................................................ [ 19%]
+[exp7303-validation:repository_full_suite] ............................................F..................F........ [ 19%]
+[exp7303-validation:repository_full_suite] .................................F...................................... [ 19%]
+[exp7303-validation:repository_full_suite] ..............F.F..F..F.........F....................................... [ 19%]
+[exp7303-validation:repository_full_suite] ............F.F..F..........F......F.................................... [ 19%]
+[exp7303-validation:repository_full_suite] ..............F...F...............................F..................... [ 19%]
+[exp7303-validation:repository_full_suite] ........................................................F.FFF........... [ 19%]
+[exp7303-validation:repository_full_suite] .F............................F......................................... [ 20%]
+[exp7303-validation:repository_full_suite] ........................................................................ [ 20%]
+[exp7303-validation:repository_full_suite] ........F..F......................................s............F........ [ 20%]
+[exp7303-validation:repository_full_suite] F....................................................................... [ 20%]
+[exp7303-validation:repository_full_suite] .............................F.................F..F..................... [ 20%]
+[exp7303-validation:repository_full_suite] ........................F............................................... [ 20%]
+[exp7303-validation:repository_full_suite] ...................................................................FF... [ 20%]
+[exp7303-validation:repository_full_suite] ........................................................................ [ 20%]
+[exp7303-validation:repository_full_suite] ........................................................................ [ 20%]
+[exp7303-validation:repository_full_suite] ........................................................................ [ 20%]
+[exp7303-validation] subprocess_outstanding repository_full_suite elapsed_s=600.006
+[exp7303-validation:repository_full_suite] .F/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:353: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.
+[exp7303-validation:repository_full_suite] Plugin: 140521740323920, Hook: pytest_sessionfinish
+[exp7303-validation:repository_full_suite] OSError: cannot send (already closed?)
+[exp7303-validation:repository_full_suite] For more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning
+[exp7303-validation:repository_full_suite]   config.hook.pytest_sessionfinish(
+[exp7303-validation:repository_full_suite] /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:353: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.
+[exp7303-validation:repository_full_suite] Plugin: 140153871280048, Hook: pytest_sessionfinish
+[exp7303-validation:repository_full_suite] OSError: cannot send (already closed?)
+[exp7303-validation:repository_full_suite] For more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning
+[exp7303-validation:repository_full_suite]   config.hook.pytest_sessionfinish(
+[exp7303-validation:repository_full_suite] /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:353: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.
+[exp7303-validation:repository_full_suite] Plugin: 139829283580544, Hook: pytest_sessionfinish
+[exp7303-validation:repository_full_suite] OSError: cannot send (already closed?)
+[exp7303-validation:repository_full_suite] For more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning
+[exp7303-validation:repository_full_suite]   config.hook.pytest_sessionfinish(
+[exp7303-validation:repository_full_suite] Fatal Python error: Segmentation fault
+[exp7303-validation:repository_full_suite] 
+[exp7303-validation:repository_full_suite] Current thread 0x00007f781f6ba780 (most recent call first):
+[exp7303-validation:repository_full_suite]   <no Python frame>
+[exp7303-validation] after_subprocess repository_full_suite elapsed_s=748.570 exit=-15 unit=1/1
+[exp7978] phase=start completed_units=0 elapsed_s=0.000
+[exp7978] phase=inputs_hashes_invocations_frozen completed_units=12 elapsed_s=1.951
+[exp7978] phase=independent_reduction completed_units=1 elapsed_s=2.014
+[exp7978] phase=independent_reduction completed_units=2 elapsed_s=2.356
+[exp7978] phase=independent_reduction completed_units=3 elapsed_s=3.276
+[exp7978] phase=independent_reduction completed_units=4 elapsed_s=3.377
+[exp7978] phase=independent_reduction completed_units=5 elapsed_s=3.628
+[exp7978] phase=independent_reduction completed_units=6 elapsed_s=3.673
+[exp7972] uncertainty completed_units=1/6 elapsed_s=0.015
+[exp7972] uncertainty completed_units=2/6 elapsed_s=0.019
+[exp7972] uncertainty completed_units=3/6 elapsed_s=0.023
+[exp7972] uncertainty completed_units=4/6 elapsed_s=0.027
+[exp7972] uncertainty completed_units=5/6 elapsed_s=0.032
+[exp7972] uncertainty completed_units=6/6 elapsed_s=0.036
+[exp7972] uncertainty completed_units=1/6 elapsed_s=0.016
+[exp7972] uncertainty completed_units=2/6 elapsed_s=0.020
+[exp7972] uncertainty completed_units=3/6 elapsed_s=0.025
+[exp7972] uncertainty completed_units=4/6 elapsed_s=0.029
+[exp7972] uncertainty completed_units=5/6 elapsed_s=0.033
+[exp7972] uncertainty completed_units=6/6 elapsed_s=0.038
+[exp7978] phase=independent_reduction completed_units=7 elapsed_s=3.843
+[exp7978] phase=independent_reduction completed_units=8 elapsed_s=3.885
+[exp7978] phase=independent_reduction completed_units=9 elapsed_s=3.928
+[exp7978] phase=independent_reduction completed_units=10 elapsed_s=4.347
+[exp7978] phase=independent_reduction completed_units=11 elapsed_s=4.421
+[exp7978] phase=independent_reduction completed_units=12 elapsed_s=4.598
+[exp7978] phase=independent_reduction completed_units=13 elapsed_s=4.755
+[exp7303-validation] before_subprocess adversarial_verify elapsed_s=0.000 unit=1/1
+[exp7303-validation:adversarial_verify] {
+[exp7303-validation:adversarial_verify]   "reports": [
+[exp7303-validation:adversarial_verify]     {
+[exp7303-validation:adversarial_verify]       "artifact": "/tmp/carnot-7978-validation-3x10wtd1/terminal/candidate.json",
+[exp7303-validation:adversarial_verify]       "loaded": true,
+[exp7303-validation:adversarial_verify]       "exp_id": 7978,
+[exp7303-validation:adversarial_verify]       "title": "",
+[exp7303-validation:adversarial_verify]       "honest_verdict": "complete_disqualified_cold_replay",
+[exp7303-validation:adversarial_verify]       "flag_count": 0,
+[exp7303-validation:adversarial_verify]       "max_severity": -1,
+[exp7303-validation:adversarial_verify]       "flags": [],
+[exp7303-validation:adversarial_verify]       "gate_version": "197e0a5eacacb09ce6607ae8bdfd507498082857f0d02ec2003a62c251b69a24"
+[exp7303-validation:adversarial_verify]     }
+[exp7303-validation:adversarial_verify]   ],
+[exp7303-validation:adversarial_verify]   "flagged_count": 0
+[exp7303-validation:adversarial_verify] }
+[exp7303-validation] after_subprocess adversarial_verify elapsed_s=0.946 exit=0 unit=1/1
+[exp7303-validation] before_subprocess strict_rows elapsed_s=0.000 unit=1/1
+[exp7303-validation:strict_rows] 
+[exp7303-validation:strict_rows] verdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.
+[exp7303-validation:strict_rows]   No row/verdict contradictions among the artifacts that could be checked.
+[exp7303-validation] after_subprocess strict_rows elapsed_s=0.029 exit=0 unit=1/1
+[exp7303-validation] before_subprocess terminal_cold_replay elapsed_s=0.000 unit=1/1
+[exp7303-validation:terminal_cold_replay] [exp7978] start current capstone CLI
+[exp7303-validation:terminal_cold_replay] [exp7978] phase=start completed_units=0 elapsed_s=0.000
+[exp7303-validation:terminal_cold_replay] [exp7978] phase=inputs_hashes_invocations_frozen completed_units=12 elapsed_s=24.154
+[exp7303-validation:terminal_cold_replay] [exp7978] phase=independent_reduction completed_units=1 elapsed_s=24.220
+[exp7303-validation:terminal_cold_replay] [exp7978] phase=independent_reduction completed_units=2 elapsed_s=24.473
+[exp7303-validation:terminal_cold_replay] [exp7978] phase=independent_reduction completed_units=3 elapsed_s=25.412
+[exp7303-validation:terminal_cold_replay] [exp7978] phase=independent_reduction completed_units=4 elapsed_s=25.517
+[exp7303-validation:terminal_cold_replay] [exp7978] phase=independent_reduction completed_units=5 elapsed_s=25.770
+[exp7303-validation:terminal_cold_replay] [exp7978] phase=independent_reduction completed_units=6 elapsed_s=25.817
+[exp7303-validation:terminal_cold_replay] [exp7972] uncertainty completed_units=1/6 elapsed_s=0.015
+[exp7303-validation:terminal_cold_replay] [exp7972] uncertainty completed_units=2/6 elapsed_s=0.019
+[exp7303-validation:terminal_cold_replay] [exp7972] uncertainty completed_units=3/6 elapsed_s=0.024
+[exp7303-validation:terminal_cold_replay] [exp7972] uncertainty completed_units=4/6 elapsed_s=0.029
+[exp7303-validation:terminal_cold_replay] [exp7972] uncertainty completed_units=5/6 elapsed_s=0.033
+[exp7303-validation:terminal_cold_replay] [exp7972] uncertainty completed_units=6/6 elapsed_s=0.038
+[exp7303-validation:terminal_cold_replay] [exp7972] uncertainty completed_units=1/6 elapsed_s=0.016
+[exp7303-validation:terminal_cold_replay] [exp7972] uncertainty completed_units=2/6 elapsed_s=0.021
+[exp7303-validation:terminal_cold_replay] [exp7972] uncertainty completed_units=3/6 elapsed_s=0.025
+[exp7303-validation:terminal_cold_replay] [exp7972] uncertainty completed_units=4/6 elapsed_s=0.030
+[exp7303-validation:terminal_cold_replay] [exp7972] uncertainty completed_units=5/6 elapsed_s=0.034
+[exp7303-validation:terminal_cold_replay] [exp7972] uncertainty completed_units=6/6 elapsed_s=0.039
+[exp7303-validation:terminal_cold_replay] [exp7978] phase=independent_reduction completed_units=7 elapsed_s=25.990
+[exp7303-validation:terminal_cold_replay] [exp7978] phase=independent_reduction completed_units=8 elapsed_s=26.035
+[exp7303-validation:terminal_cold_replay] [exp7978] phase=independent_reduction completed_units=9 elapsed_s=26.079
+[exp7303-validation:terminal_cold_replay] [exp7978] phase=independent_reduction completed_units=10 elapsed_s=26.505
+[exp7303-validation:terminal_cold_replay] [exp7978] phase=independent_reduction completed_units=11 elapsed_s=26.579
+[exp7303-validation:terminal_cold_replay] [exp7978] phase=independent_reduction completed_units=12 elapsed_s=26.765
+[exp7303-validation:terminal_cold_replay] [exp7978] phase=independent_reduction completed_units=13 elapsed_s=26.927
+[exp7303-validation:terminal_cold_replay] {"errors": ["reproducibility_checksum_changed", "source_bytes_changed"]}
+[exp7303-validation] after_subprocess terminal_cold_replay elapsed_s=28.490 exit=1 unit=1/1
+[exp7303-validation] before_subprocess adversarial_verify elapsed_s=0.000 unit=1/1
+[exp7303-validation:adversarial_verify] {
+[exp7303-validation:adversarial_verify]   "reports": [
+[exp7303-validation:adversarial_verify]     {
+[exp7303-validation:adversarial_verify]       "artifact": "/tmp/carnot-7978-validation-3x10wtd1/terminal/candidate.json",
+[exp7303-validation:adversarial_verify]       "loaded": true,
+[exp7303-validation:adversarial_verify]       "exp_id": 7978,
+[exp7303-validation:adversarial_verify]       "title": "",
+[exp7303-validation:adversarial_verify]       "honest_verdict": "complete_disqualified_terminal_verification",
+[exp7303-validation:adversarial_verify]       "flag_count": 0,
+[exp7303-validation:adversarial_verify]       "max_severity": -1,
+[exp7303-validation:adversarial_verify]       "flags": [],
+[exp7303-validation:adversarial_verify]       "gate_version": "197e0a5eacacb09ce6607ae8bdfd507498082857f0d02ec2003a62c251b69a24"
+[exp7303-validation:adversarial_verify]     }
+[exp7303-validation:adversarial_verify]   ],
+[exp7303-validation:adversarial_verify]   "flagged_count": 0
+[exp7303-validation:adversarial_verify] }
+[exp7303-validation] after_subprocess adversarial_verify elapsed_s=0.904 exit=0 unit=1/1
+[exp7303-validation] before_subprocess strict_rows elapsed_s=0.000 unit=1/1
+[exp7303-validation:strict_rows] 
+[exp7303-validation:strict_rows] verdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.
+[exp7303-validation:strict_rows]   No row/verdict contradictions among the artifacts that could be checked.
+[exp7303-validation] after_subprocess strict_rows elapsed_s=0.028 exit=0 unit=1/1
+[exp7303-validation] before_subprocess terminal_cold_replay elapsed_s=0.000 unit=1/1
+[exp7303-validation:terminal_cold_replay] [exp7978] start current capstone CLI
+[exp7303-validation:terminal_cold_replay] [exp7978] phase=start completed_units=0 elapsed_s=0.000
+[exp7303-validation:terminal_cold_replay] [exp7978] phase=inputs_hashes_invocations_frozen completed_units=12 elapsed_s=24.056
+[exp7303-validation:terminal_cold_replay] [exp7978] phase=independent_reduction completed_units=1 elapsed_s=24.121
+[exp7303-validation:terminal_cold_replay] [exp7978] phase=independent_reduction completed_units=2 elapsed_s=24.374
+[exp7303-validation:terminal_cold_replay] [exp7978] phase=independent_reduction completed_units=3 elapsed_s=25.287
+[exp7303-validation:terminal_cold_replay] [exp7978] phase=independent_reduction completed_units=4 elapsed_s=25.391
+[exp7303-validation:terminal_cold_replay] [exp7978] phase=independent_reduction completed_units=5 elapsed_s=25.645
+[exp7303-validation:terminal_cold_replay] [exp7978] phase=independent_reduction completed_units=6 elapsed_s=25.693
+[exp7303-validation:terminal_cold_replay] [exp7972] uncertainty completed_units=1/6 elapsed_s=0.015
+[exp7303-validation:terminal_cold_replay] [exp7972] uncertainty completed_units=2/6 elapsed_s=0.019
+[exp7303-validation:terminal_cold_replay] [exp7972] uncertainty completed_units=3/6 elapsed_s=0.024
+[exp7303-validation:terminal_cold_replay] [exp7972] uncertainty completed_units=4/6 elapsed_s=0.028
+[exp7303-validation:terminal_cold_replay] [exp7972] uncertainty completed_units=5/6 elapsed_s=0.032
+[exp7303-validation:terminal_cold_replay] [exp7972] uncertainty completed_units=6/6 elapsed_s=0.037
+[exp7303-validation:terminal_cold_replay] [exp7972] uncertainty completed_units=1/6 elapsed_s=0.016
+[exp7303-validation:terminal_cold_replay] [exp7972] uncertainty completed_units=2/6 elapsed_s=0.021
+[exp7303-validation:terminal_cold_replay] [exp7972] uncertainty completed_units=3/6 elapsed_s=0.025
+[exp7303-validation:terminal_cold_replay] [exp7972] uncertainty completed_units=4/6 elapsed_s=0.030
+[exp7303-validation:terminal_cold_replay] [exp7972] uncertainty completed_units=5/6 elapsed_s=0.034
+[exp7303-validation:terminal_cold_replay] [exp7972] uncertainty completed_units=6/6 elapsed_s=0.038
+[exp7303-validation:terminal_cold_replay] [exp7978] phase=independent_reduction completed_units=7 elapsed_s=25.863
+[exp7303-validation:terminal_cold_replay] [exp7978] phase=independent_reduction completed_units=8 elapsed_s=25.907
+[exp7303-validation:terminal_cold_replay] [exp7978] phase=independent_reduction completed_units=9 elapsed_s=25.950
+[exp7303-validation:terminal_cold_replay] [exp7978] phase=independent_reduction completed_units=10 elapsed_s=26.368
+[exp7303-validation:terminal_cold_replay] [exp7978] phase=independent_reduction completed_units=11 elapsed_s=26.440
+[exp7303-validation:terminal_cold_replay] [exp7978] phase=independent_reduction completed_units=12 elapsed_s=26.628
+[exp7303-validation:terminal_cold_replay] [exp7978] phase=independent_reduction completed_units=13 elapsed_s=26.789
+[exp7303-validation:terminal_cold_replay] {"errors": ["reproducibility_checksum_changed", "source_bytes_changed"]}
+[exp7303-validation] after_subprocess terminal_cold_replay elapsed_s=28.396 exit=1 unit=1/1
+[exp7978] phase=published_checked_bytes completed_units=13 elapsed_s=1293.676

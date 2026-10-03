@@ -1,0 +1,107 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.2746175299980678,
+  "exclusion_reason": null,
+  "family_id": "sha256:94e81de5b39bab79b415497c6afe9436176308dadf0df48b67da93442763319c",
+  "input_tokens": 690,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 690,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 713
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:5acc94334db7e70adbe9d2b11e94ae9aef00143dcab464f4c9a88fb9dc668322",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832648,
+    "id": "chatcmpl-1uz3cP7Kx9OZUlKOIWbG3YkYYhbTSfCa",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.556,
+      "predicted_n": 23,
+      "predicted_per_second": 42.5487831048032,
+      "predicted_per_token_ms": 23.5024347826087,
+      "prompt_ms": 621.996,
+      "prompt_n": 612,
+      "prompt_per_second": 983.9291571006888,
+      "prompt_per_token_ms": 1.0163333333333333
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 690,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 713
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Volleyball battles Barnstable in 3-0 loss\\n( Oct. 23, 2023 ) The volleyball team lost its second-straight match Monday, but the Whalers battled against Barnstable, one of the top teams in Div. 1, in the 3-0 loss.\\n\u201cI'm not disheartened,\u201d coach Andrew Viselli said. That is the preeminent program to be able to say that you battled against, so I feel good about that. Obviously I want the win, however, when you put a team like that against the ropes, that's a win in and of itself.\u201d\\nNantucket hung right with the Red Hawks in the first two sets. Set one was tied 15-15 and then 20-20, but Barnstable finished with a 5-1 run to take the set 25-21.\\nLate in set two, the Whalers won five out of six points to pull with 23-21, forcing a Red Hawks timeout. The team would trade the final three points and Barnstable won the set 25-22 before closing out the match with a 25-15 third set.\\nDespite sharing the same final score, Viselli said Monday\u2019s match was a big step up for Nantucket from its first match against the Red Hawks earlier this season.\\n\u201cIt was night and day,\u201d Viselli said. \u201cWe went into their gym and we were afraid, we were tense. You can\u2019t even say that we played when we went to Barnstable. The aura, the mystique, the fans, everything, they just played scared. This time they were like \u2018we're here to play\u2019 and they played and they just came up short.\u201d\\nNow 10-7 on the year, Nantucket will wrap up the regular season this week with matches Wednesday at Sturgis East and Friday at home against St. John Paul II.\", \"original_answer\": \"The volleyball team lost to Barnstable 3-0 in their second consecutive loss. However, coach Andrew Viselli expressed satisfaction with the team's performance, stating that battling against a top team like Barnstable is a victory in itself. Nantucket performed better compared to their previous match against Barnstable earlier in the season. With a record of 10-7, the team will finish the regular season with matches against Sturgis East and St. John Paul II.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:4986aaef70bc54627cd9e182b71cd2090ba70fcf94d5b6720d76d2f75d7146ec",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ]
+}

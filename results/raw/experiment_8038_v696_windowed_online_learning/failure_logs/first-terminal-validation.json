@@ -1,0 +1,91 @@
+{
+  "publication": {
+    "primary_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8038_v696_windowed_online_learning.json",
+    "primary_sha256": "sha256:201b0141dd01703c174c42186073286f377fa3de91cc6c1884a0b1839833fef6",
+    "sidecar_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8038_v696_windowed_online_learning/validators/201b0141dd01703c174c42186073286f377fa3de91cc6c1884a0b1839833fef6.json"
+  },
+  "published": {
+    "passed": true,
+    "receipts": [
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8038_v696_windowed_online_learning.py --cold-replay /home/ianblenke/github.com/ianblenke/carnot/results/experiment_8038_v696_windowed_online_learning.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8038_v696_windowed_online_learning.py",
+          "--cold-replay",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8038_v696_windowed_online_learning.json"
+        ],
+        "duration_s": 4.460698279901408,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8038_v696_windowed_online_learning/terminal_logs/201b0141dd01703c174c42186073286f377fa3de91cc6c1884a0b1839833fef6/00_cold_reduction.log",
+        "log_sha256": "sha256:0447feb9e650c4a6c7f2240c6c54ab15da2f4e59ffcbb16ae8c9d7977f4124fe",
+        "name": "cold_reduction",
+        "output_tail": "[exp8038] phase=begin_no_pretrained_loads_or_generations elapsed_s=0.000 completed=0 pending=0\n{\"passed\": true, \"sha256\": \"sha256:201b0141dd01703c174c42186073286f377fa3de91cc6c1884a0b1839833fef6\"}\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py /home/ianblenke/github.com/ianblenke/carnot/results/experiment_8038_v696_windowed_online_learning.json --json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "scripts/adversarial_verify.py",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8038_v696_windowed_online_learning.json",
+          "--json"
+        ],
+        "duration_s": 29.077989382087253,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8038_v696_windowed_online_learning/terminal_logs/201b0141dd01703c174c42186073286f377fa3de91cc6c1884a0b1839833fef6/01_adversarial.log",
+        "log_sha256": "sha256:c9a2da39e991c6b62dce00dfef31e8112f26038a58e807a0357e47c274c3146b",
+        "name": "adversarial",
+        "output_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8038_v696_windowed_online_learning.json\",\n      \"loaded\": true,\n      \"exp_id\": 8038,\n      \"title\": \"\",\n      \"honest_verdict\": \"complete_disqualified_windowed_checks\",\n      \"flag_count\": 0,\n      \"max_severity\": -1,\n      \"flags\": [],\n      \"gate_version\": \"197e0a5eacacb09ce6607ae8bdfd507498082857f0d02ec2003a62c251b69a24\"\n    }\n  ],\n  \"flagged_count\": 0\n}\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/experiment_8038_v696_windowed_online_learning.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "scripts/verdict_row_consistency_lint.py",
+          "--strict",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8038_v696_windowed_online_learning.json"
+        ],
+        "duration_s": 0.8091198629699647,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8038_v696_windowed_online_learning/terminal_logs/201b0141dd01703c174c42186073286f377fa3de91cc6c1884a0b1839833fef6/02_strict_rows.log",
+        "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+        "name": "strict_rows",
+        "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      }
+    ]
+  },
+  "readers": {
+    "document_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8038_v696_windowed_online_learning.json",
+    "document_sha256": "sha256:201b0141dd01703c174c42186073286f377fa3de91cc6c1884a0b1839833fef6",
+    "document_status": "\u26a0\ufe0f Research Finding",
+    "gate_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8038_v696_windowed_online_learning.json",
+    "gate_sha256": "sha256:201b0141dd01703c174c42186073286f377fa3de91cc6c1884a0b1839833fef6",
+    "gates": [
+      {
+        "actual": 0,
+        "artifact_field": "learning_trajectory_ready_score",
+        "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8038_v696_windowed_online_learning.json",
+        "artifact_sha256": "sha256:201b0141dd01703c174c42186073286f377fa3de91cc6c1884a0b1839833fef6",
+        "expected": 0,
+        "op": "==",
+        "passed": true,
+        "reason": "actual=0 == expected=0",
+        "upstream": "exp8038-windowed-online-learning",
+        "upstream_final": true
+      }
+    ],
+    "passed": true,
+    "summary": "1 gate(s) satisfied",
+    "task_id": "exp8038-windowed-online-learning"
+  }
+}

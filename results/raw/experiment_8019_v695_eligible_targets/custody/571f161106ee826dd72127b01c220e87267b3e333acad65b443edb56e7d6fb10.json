@@ -1,0 +1,102 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.5527548500103876,
+  "exclusion_reason": null,
+  "family_id": "sha256:aae795eb133397cac0c6b4d2108525d009405c83301ed30fbc788ffce873fed7",
+  "input_tokens": 951,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 951,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 974
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:df7d96bf3b638ca5721ab816931836ffa6a6cef02abc3fd293d4446f2b6cd6b5",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832938,
+    "id": "chatcmpl-IoRZdA6q7L6Ei4Aj37PvP01iQ0aet6jf",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.415,
+      "predicted_n": 23,
+      "predicted_per_second": 42.481275915887075,
+      "predicted_per_token_ms": 23.53978260869565,
+      "prompt_ms": 879.141,
+      "prompt_n": 873,
+      "prompt_per_second": 993.0147723743974,
+      "prompt_per_token_ms": 1.0070343642611683
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 951,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 974
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"2001 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":null,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":false,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Restaurants, Breakfast & Brunch, Sandwiches, American (Traditional)\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"8:0-14:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"7:30-14:0\\\",\\\"Sunday\\\":\\\"7:30-14:0\\\",\\\"Thursday\\\":\\\"8:0-14:0\\\",\\\"Tuesday\\\":\\\"8:0-14:0\\\",\\\"Wednesday\\\":\\\"8:0-14:0\\\"},\\\"name\\\":\\\"Garrett's Old Fashioned Restaurant\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-15 17:50:34\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"What a treat! Been overlooking this spot for far too long. We were there on a particularly busy morning and you could tell they were a little stressed but nevertheless the food was great prices were reasonable and the service was friendly. Something about sitting having breakfast at the counter in a bustling diner that is a nice reminder to slow down and enjoy the world around you.\\\"},{\\\"review_date\\\":\\\"2022-01-02 21:37:59\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Lots of food. Great friendly service. I had eggs Benedict delish.  Hubby had eggs with 2 giant italian sausage. Had to take extra home.\\\"},{\\\"review_date\\\":\\\"2021-12-30 20:15:42\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"This was our first time at Garrett's and we will definitely return when we're back in town. The service was friendly and fast, and everyone was pleased with their food. Blueberry pancakes were delicious and got 5 star ratings by grown ups and kids alike. The French toast and breakfast burrito were also winners.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Garrett's Old Fashioned Restaurant is a local business located at 2001 State St in Santa Barbara, CA. It is a restaurant that specializes in serving breakfast and brunch dishes, including sandwiches and American (Traditional) cuisine. The restaurant has received positive reviews from customers, with an average rating of 4.0 stars.\\n\\nCustomers have praised the food, prices, and friendly service at Garrett's. Despite the busy mornings, the staff manages to provide great service and delicious food. The ambiance of the bustling diner adds to the overall experience, reminding customers to slow down and enjoy their meal.\\n\\nThe restaurant offers outdoor seating and takeout options for convenience. While there is no WiFi available, customers appreciate the opportunity to disconnect and focus on their dining experience.\\n\\nGarrett's does not take reservations and is not particularly suitable for large groups. However, customers have mentioned that the service is fast and friendly, ensuring a pleasant dining experience.\\n\\nSome popular menu items include eggs Benedict, Italian sausage with eggs, blueberry pancakes, French toast, and breakfast burritos. Overall, Garrett's Old Fashioned Restaurant provides a satisfying breakfast and brunch experience for locals and visitors alike, and it is highly recommended for its tasty food and welcoming atmosphere.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:75ac20e6096a0fcf0839418012b21d1efae8b692ea1ff60ce7975c6229bbeb65",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ]
+}

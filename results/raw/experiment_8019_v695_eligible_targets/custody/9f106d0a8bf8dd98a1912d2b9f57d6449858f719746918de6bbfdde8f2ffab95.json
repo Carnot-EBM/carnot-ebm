@@ -1,0 +1,122 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.5510359039762989,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:b46b583a8be7367f9651c77c336dd9e66f12bd3e8fcaa09ef2a008aae03d7090",
+  "input_tokens": 937,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 937,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 960
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:c7f61d72e1418acc98955124fc2b548c3ef05d7620cd187a404b2d38bc161307",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886155,
+    "id": "chatcmpl-ehIEvg6hoSTyqrqgvylKnJjcyrjhKB83",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.899,
+      "predicted_n": 23,
+      "predicted_per_second": 42.44333353632319,
+      "predicted_per_token_ms": 23.56082608695652,
+      "prompt_ms": 876.341,
+      "prompt_n": 859,
+      "prompt_per_second": 980.2120407466957,
+      "prompt_per_token_ms": 1.0201874272409779
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 937,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 960
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"A 7-month pregnant woman didn't show up for her 2019 doctor's appointment and disappeared in Florida\\nFlorida Mystery: The Unexplained Disappearance of Pregnant Jasmine Robinson.\\nIn the small town of Archer, Florida, Jasmine Robinson led a life full of promise and joy. Brought up by her grandmother and deeply bonded with her aunt and elder sister, Shantavia, Jasmine had a radiant personality. Her prowess on the basketball court during her high school years earned her the nickname \u201cBeezy,\u201d which stuck even into her adult life. A church choir singer with an infectious sense of humor, she was a beacon of happiness to those around her.\\n2018 brought a new chapter to Jasmine's life when she learned she was expecting a baby. Eagerly looking forward to motherhood, she had chosen the name \\\"Jamillia\\\" for her soon-to-be-born daughter. However, fate had different plans, and in a twist of events, Jasmine mysteriously disappeared in 2019, while she was seven months into her pregnancy.\\nOn the evening of February 18, 2019, after being dropped home by her grandmother, Jasmine was alone. It's unclear where her grandmother headed, but something had perturbed Jasmine that day, though she refrained from discussing it with anyone. Later that night, during a seemingly routine phone call with her aunt, Jasmine gave no hint of any distress. They made plans for her prenatal checkup the next day.\\nHowever, when the time came, Jasmine was nowhere to be found. Calls to her went unanswered, and it soon became evident that something was amiss. Growing increasingly anxious, her family reported her missing on February 20th.\\nDisturbingly, in the days leading up to her disappearance, Jasmine had confided in her sister Shantavia about unwelcome attention she was receiving from her unborn child's father. His insistent calls at her workplace and on her personal phone were unsettling to Jasmine. He didn\u2019t seem supportive of the pregnancy, but Jasmine was determined to embrace motherhood, regardless of his views.\\nThe police investigation hinted at Jasmine not being alone when she last left her grandmother\u2019s home. Indications suggest that her departure wasn't of her own volition. Adding to the mystery, all her personal belongings, including essentials like her purse, remained untouched at her home. While authorities have questioned several individuals, it remains unknown if the baby's father has been cleared of suspicion.\\nThe quest to uncover the truth about Jasmine Robinson and her unborn child remains ongoing. Today, were she with us, Jasmine would be celebrating her 27th birthday. Anyone with potentially valuable information is urged to reach out to the Alachua County Sheriff\u2019s Office at 352\u2013367\u20134083. A reward of $10,000 awaits credible leads.\", \"original_answer\": \"Jasmine Robinson, a pregnant woman, mysteriously disappeared from her home in Archer, Florida, in February 2019. Known for her vibrant personality and expecting her first child, Robinson failed to show up for a doctor's appointment and was reported missing two days later. Prior to her disappearance, she had expressed discomfort over the persistent attention from her unborn child's father. The police suggest she did not leave her home willingly, and her personal belongings were found untouched. The investigation into her disappearance and that of her unborn child continues. A $10,000 reward is being offered for credible leads.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "b691b199a2addc6fd2fe84e7e0118313c90b3cee65966eda184cf0a098212fa1",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25
+  ]
+}

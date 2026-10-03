@@ -1,0 +1,111 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.5413285200484097,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:ee7d50c6b1ec17016490f9f74fc653c219dfa753a01165e1e18182d8f833c7b6",
+  "input_tokens": 865,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 865,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 889
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:c9e09c8d18f1215b060fec6d0b3339285df3446290792190121422d11d0520af",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886223,
+    "id": "chatcmpl-T8OUyYsCVVg4NbFWd6lMaMQGeq09syhL",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 566.068,
+      "predicted_n": 24,
+      "predicted_per_second": 42.39773313453507,
+      "predicted_per_token_ms": 23.586166666666667,
+      "prompt_ms": 824.141,
+      "prompt_n": 787,
+      "prompt_per_second": 954.9336824645297,
+      "prompt_per_token_ms": 1.0471931385006352
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 865,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 889
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"New York (CNN)Jake Tapper is the next anchor of CNN's Sunday morning political interview program \\\"State of the Union.\\\" CNN announced Tapper's promotion on Friday morning. He will take over the program in June; he'll remain the channel's chief Washington correspondent and the anchor of the weekday afternoon newscast \\\"The Lead.\\\" Among his peers, Tapper is seen as an authority on politics, something a program like \\\"State of the Union\\\" demands. He received rave reviews when he was the interim anchor of ABC's Sunday morning hour \\\"This Week\\\" in 2010. \\\"I couldn't be more excited about this election season and the new platform I will have at CNN to cover it,\\\" Tapper said in a statement. \\\"'State Of The Union' has a rich tradition and I hope to not only build on its history but expand the definition of what a Sunday show can be.\\\" Tapper thanked CNN Worldwide CEO Jeff Zucker \\\"for the confidence he continues to show in me and to my colleagues at CNN for the incredible support on air and off that I've received since beginning this adventure two years ago.\\\" Tapper joined CNN from ABC in 2013 to anchor \\\"The Lead.\\\" On \\\"State of the Union,\\\" he succeeds Candy Crowley, who signed off the program last December. A rotation of fill-in hosts have been anchoring the program this year. Zucker announced Tapper's appointment on the network's editorial conference call on Friday morning. \\\"I am thrilled that Jake will take on this additional role at such a pivotal time in the election cycle,\\\" Zucker said in a statement. \\\"He has the perfect combination of skills that make him uniquely qualified -- he's a relentless reporter, a gifted storyteller, and a terrific interviewer who doesn't stop until he gets answers. We are lucky to have him on both 'The Lead' and 'State of the Union.'\\\" Sunday political programs are among the most prestigious chairs at television networks. And changes are afoot: CBS is about to say goodbye to Bob Schieffer, the longtime moderator of \\\"Face the Nation,\\\" who will be succeeded by John Dickerson in June. Additionally, NBC replaced David Gregory with Chuck Todd on the original Sunday public affairs program, \\\"Meet the Press,\\\" last fall. With the anchor moves at the other networks, CNN may see an opportunity for what's known in the industry as share-shifting -- viewers switching networks and sampling the new anchors. With his new position, Tapper will become the second man to work weekdays and Sunday mornings. ABC's George Stephanopoulos is both a co-host of \\\"Good Morning America\\\" and the moderator of \\\"This Week.\\\" There is precedent for this at CNN: for many years Wolf Blitzer anchored on the weekdays and led the Sunday morning program \\\"Late Edition,\\\" the forerunner to \\\"State of the Union.\\\"\\n\", \"original_answer\": \"CNN has announced that Jake Tapper will be the anchor of its Sunday morning political interview program, \\\"State of the Union\\\", taking over from Candy Crowley. Tapper, who will start in June, will continue his existing roles as the channel's Chief Washington Correspondent and anchor of weekday afternoon newscast \\\"The Lead\\\". Tapper, who joined CNN from ABC in 2013, received critical acclaim when he was the interim anchor of ABC's Sunday morning hour \\\"This Week\\\" in 2010.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "e31cefa81e289f483f00f558ca26aa973f75dd6fe2f4986e82eab8242c14f9f6",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ]
+}

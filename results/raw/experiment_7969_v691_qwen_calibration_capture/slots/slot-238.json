@@ -1,0 +1,107 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.652671632997226,
+  "exclusion_reason": null,
+  "family_id": "sha256:fa1f633574da1620e4704ff0d393fbedd16171303ba2a59530cf37804425df51",
+  "input_tokens": 1087,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1087,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1111
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:a3a58c3c1754279924c1bbde033c982c3d84b5efa0b01c1da3811086fb264535",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832805,
+    "id": "chatcmpl-EwXJTWRKFARNI0D8ZDR9JHI8HYwIRpFj",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 566.545,
+      "predicted_n": 24,
+      "predicted_per_second": 42.36203655490738,
+      "predicted_per_token_ms": 23.606041666666666,
+      "prompt_ms": 971.079,
+      "prompt_n": 1009,
+      "prompt_per_second": 1039.0503759220414,
+      "prompt_per_token_ms": 0.9624172447968284
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1087,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1111
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"901 Embarcadero Del Mar, Ste 104\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":null},\\\"business_stars\\\":2.5,\\\"categories\\\":\\\"Restaurants, Chinese, Dim Sum, Cantonese\\\",\\\"city\\\":\\\"Isla Vista\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"9:0-22:0\\\",\\\"Monday\\\":\\\"16:30-22:0\\\",\\\"Saturday\\\":\\\"9:0-22:0\\\",\\\"Sunday\\\":\\\"9:0-22:0\\\",\\\"Thursday\\\":\\\"9:0-22:0\\\",\\\"Tuesday\\\":\\\"9:0-22:0\\\",\\\"Wednesday\\\":\\\"9:0-22:0\\\"},\\\"name\\\":\\\"Hanamura Cantonese Dim Sum\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2019-08-08 02:03:34\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Dim Sum was really, really good.  Best I have found outside China town.  I would end my comments there, but when we went, the door was broken, so we had to go around the corner to another restaurant that was serving for them and their server was new and obviously untrained.  Hopefully by the time you go, the students will be back and they will have faster service.  But, I have to finish with \\\\\\\"The dim sum was awesome.\\\\\\\"\\\"},{\\\"review_date\\\":\\\"2019-06-26 07:19:22\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"I was a little skeptical but still excited to try this restaurant since it replaced Sorisso's, but the price and service was not worth the food. The dim sum servings were small and didn't come out hot/fresh and were pricy for their portions. I might be bias because I grew up going to quality dim sum for a great price, but objectively I don't think I'd come back unless they lowered their prices. Not on this college student budget at least !\\\"},{\\\"review_date\\\":\\\"2019-06-21 00:10:59\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"WTH just happened here?\\\\n\\\\nWe went in today, were seated and put in our order for 4 types of dim sum. The server brought out half our order and then announced to us that they were closing in FOUR MINUTES! She then proceeded to box up our food and hand us a bill. \\\\n\\\\nThere was another person besides our table, and that guy told the server he would be done soon but she started hustling him out too.\\\\n\\\\nFor the record the posted hours say they close at 10:00 PM. If some emergency came up, they should have warned us when we first came in. But there was no notice, no warning whatsoever. How can a business be run like that? Still smh.\\\\n\\\\nHey, owner, if you're reading this, I'd like an explanation please. You can't build a reputation on shoddy service, no matter how good your food is (it had become cold and soggy by the time we got home to \\\\\\\"enjoy\\\\\\\" it, so I can only rate you based on that quality and the terrible service we received).\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Based on the provided structured data, Hanamura Cantonese Dim Sum is a local restaurant located in Isla Vista, California, offering a variety of Chinese and Dim Sum dishes. The business has a rating of 2.5 stars and receives mixed reviews from customers. While some reviewers praise the quality of the dim sum, others have criticized the small serving sizes, poor service, and inconvenience of the restaurant's closure without adequate notice. Despite these issues, the business is noted for its casual atmosphere and excellent food.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:6e9170b11d19f848cddd7faa7479f6e22598b8daf262cb71916b9a05129a4a43",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ]
+}

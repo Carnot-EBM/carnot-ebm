@@ -1,0 +1,104 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.1548687770264223,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:c983eafcc88aa64fc6301d157b2f5aee651ea7764d28b3793e28bc95bbc5abb9",
+  "input_tokens": 543,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 543,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 564
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:dad3cc4e780a9b513ff136f108b9665b7a09d9295b084d32c2d144568a36fa28",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"unsupported_probability\": 0.0,\n\"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886159,
+    "id": "chatcmpl-Fl8HwttxcP9Ob82gcBKKP12EDvuRuxaQ",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 492.655,
+      "predicted_n": 21,
+      "predicted_per_second": 42.62617856309182,
+      "predicted_per_token_ms": 23.459761904761905,
+      "prompt_ms": 527.223,
+      "prompt_n": 465,
+      "prompt_per_second": 881.9797315367501,
+      "prompt_per_token_ms": 1.1338129032258064
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 543,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 564
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Girls should be able to play on boys' sports teams! Girls and boys have the same muscle structure. If a girl feels as if the league that they are playing in isn't competitive enough, they should be able to play in a more competitive league! Also, there are lots of girls who are stronger than boys!\\\\n\\\\npassage 2:Why they should play on the same teams: Boys and girls should be able to play on the same team because it could be considered a sexist matter you should not discriminate agai \u2026 nst anyone. Boys and girls have equal rights. It could help boys and girls to learn to work together as a team.\\\\n\\\\npassage 3:No, girls should not play boys' sports. Girls should play on all-girl teams and boys should play on all-boy teams for many sports. Males are stronger and more aggressive in general, meaning females are more likely to be injured when playing on all-male teams.\\\\n\\\\n\\\",\\\"question\\\":\\\"should girls be allowed to play on boys sports teams pros and cons\\\"}\", \"original_answer\": \"Pros of girls being allowed to play on boys' sports teams include: \\n1. Girls and boys have the same muscle structure and there are many girls who are stronger than boys, suggesting that girls can also perform well in competitive sports (passage 1).\\n2. It can be viewed as a matter of equality and non-discrimination, as boys and girls should have equal rights to participate in sports (passage 2).\\n3. It could provide an opportunity for boys and girls to learn to work together as a team (passage 2).\\n\\nCons of girls being allowed to play on boys' sports teams include:\\n1. Males are generally stronger and more aggressive, which means females are more likely to be injured when playing on all-male teams (passage 3).\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "a719d306972ca879df35796b5e2c6c5a0d8edc32aa1286581bd38c3abfd0383c",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ]
+}

@@ -1,0 +1,107 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.573735689977184,
+  "exclusion_reason": null,
+  "family_id": "sha256:dab7ff24f4c12b0103598380255364ee89d52850aebcd9e0484688af4c495277",
+  "input_tokens": 971,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 971,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 994
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:788356aa5662eb305042e8522b608cd363953647f37e582843d7277deed343e7",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832691,
+    "id": "chatcmpl-My2BBswXh6pZGRAlggsy8FzhbV5QZlou",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.115,
+      "predicted_n": 23,
+      "predicted_per_second": 42.50482799404932,
+      "predicted_per_token_ms": 23.526739130434784,
+      "prompt_ms": 882.685,
+      "prompt_n": 893,
+      "prompt_per_second": 1011.6859355262637,
+      "prompt_per_token_ms": 0.9884490481522956
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 971,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 994
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"1311 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":true,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":false,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Restaurants, Food, American (New), Wine Bars, Nightlife, Venues & Event Spaces, Bars, Event Planning & Services\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"17:0-21:30\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"17:0-21:30\\\",\\\"Thursday\\\":\\\"17:0-21:0\\\",\\\"Tuesday\\\":\\\"17:0-21:0\\\",\\\"Wednesday\\\":\\\"17:0-21:0\\\"},\\\"name\\\":\\\"Jane\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-10-27 19:07:05\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"We went to Jane in Santa Barbara Monday for dinner. We made reservations which was helpful. We ordered the Kale  salad with Salmon and the Grilled chicken with chilies. The salmon was moist and the salad dressing had some lemon in it which gave the salad a great flavor. The grilled chicken was moist and flavorful. We have been to the Jane restaurant in Goleta and in Santa Barbara many times and the food and service are always great.\\\"},{\\\"review_date\\\":\\\"2021-10-24 20:00:08\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I've been to both locations in Santa Barbara, and have thoroughly enjoyed both. I've only gotten the fettuccine and chicken, and every time I go I'm always tempted to try something new but have a hard time straying from a delicious meal. Atmosphere is great and the service is also great. I also love the pasilla chiles appetizer and the onion rings, and both are great starters for a meal.\\\"},{\\\"review_date\\\":\\\"2021-10-07 16:55:50\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"We love Jane, both locations. Excellent starters, salads, burgers, mains, drinks and dessert. Besides the delicious menu, we also enjoy the great service. From greetings from the front to exceptional service, we are always pleased. Never ever had a bad meal or experience there. They don't always have it, but when they do try a soft serve Ice Cream Sunday. That's my daughter's favorite. Jane's coconut cake is mine!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Jane is a popular restaurant located at 1311 State St, Santa Barbara, CA. It offers a variety of American (New) cuisine, as well as wine and other nightlife options. The restaurant provides services suitable for groups and offers outdoor seating. It is open from 17:00 to 21:00 on weekdays, and until 21:30 on Fridays and Saturdays. Street parking is available, and customers can enjoy free WiFi. Customers have praised the food and service at Jane, highlighting dishes such as the Kale salad with Salmon, Grilled chicken with chilies, and the coconut cake. The restaurant also offers takeout and reservation services. With a 4.0-star rating, Jane has been described as a classy and romantic venue.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "policy_design",
+  "source_cluster_id": "sha256:5a536806b9d084caf6a154089ef0b3da3a2f12098564996a9452989b503b3ecb",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ]
+}

@@ -1,0 +1,116 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.5545844429871067,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:29feeac0a42ab1bee9a8a3a8a776d3a7c9c3f0902d80a911a77f968e0f667d4c",
+  "input_tokens": 1043,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 1043,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1064
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:9fbc2e1c960ec2784ad396da7d3da4cdd5dbb746018dd9c07f516773d407896d",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885872,
+    "id": "chatcmpl-jksGCT3BJkkXPigZaDf8NOf3Xx6QqvEa",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 488.415,
+      "predicted_n": 21,
+      "predicted_per_second": 42.996222474739724,
+      "predicted_per_token_ms": 23.257857142857144,
+      "prompt_ms": 943.873,
+      "prompt_n": 965,
+      "prompt_per_second": 1022.3833079238415,
+      "prompt_per_token_ms": 0.9781067357512954
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 1043,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1064
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"418 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":null,\\\"classy\\\":null,\\\"divey\\\":null,\\\"hipster\\\":null,\\\"intimate\\\":null,\\\"romantic\\\":null,\\\"touristy\\\":null,\\\"trendy\\\":true,\\\"upscale\\\":null},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Vegan, American (New), Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"12:0-23:0\\\",\\\"Monday\\\":\\\"12:0-20:0\\\",\\\"Saturday\\\":\\\"12:0-14:30\\\",\\\"Sunday\\\":\\\"12:0-20:0\\\",\\\"Thursday\\\":\\\"12:0-20:0\\\",\\\"Wednesday\\\":\\\"12:0-20:0\\\"},\\\"name\\\":\\\"Modern Times Kitchen\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-04 02:24:26\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Come for the food, stay for the ambience\\\\n1. Amazing comfort food. And it's easy on your heart and your body because it is plant-based. All vegan options.\\\\n2. Feel good about what you're doing for yourself, the community and the globe. Did you know Modern Times kitchens are cooperatively owned?!\\\\n3. Great beer from craft beer to root beer\\\\n4. Really cool art installation and lots of good outside seating\\\\nThis is a hidden gem and worth a find. You have to walk down an alley There's a restaurant in front that you can often enter through as well. However that was going through some remodeling\\\\n\\\\nThere's lots of parking lots nearby. Friendly service and a great vibe  all around. \\\\nOur favorite item is the taco melt. I can't remember what it's called but I have a picture of it on my review\\\"},{\\\"review_date\\\":\\\"2021-12-20 22:43:31\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"The Quick: The most incredible indulgent (guilt free) food and awesome beer. Lots of different options and variety. The much wrap supreme is what dreams are made of. So much goodness...and it's plant based!! A must visit for meat eaters and vegans alike\\\"},{\\\"review_date\\\":\\\"2021-12-07 15:29:20\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Love modern times kitchen!\\\\n\\\\nGreat beer as one might expect and particularly enjoyed the various stouts they had on tap. The food is good as well. They've carved out a nice section of the street where they've been able to put together a lively patio. \\\\n\\\\nA must stop when you're taking a day in Santa Barbara  - you won't regret it as a quick place to refresh and recharge.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Modern Times Kitchen is a popular restaurant located at 418 State St, Santa Barbara, CA. Known for its vegan and American cuisine, the establishment has a comfortable outdoor seating arrangement and offers free WiFi. The restaurant operates from 12:00 to 20:00 on most days, with extended hours on Fridays and shorter hours on Saturdays. Conveniently, there is a parking lot available for customers. The restaurant is trendy and offers a relaxed ambiance. Customers appreciate the cooperatively owned kitchen, the wide variety of craft beers, and the art installations. Special mentions have been made for the vegan comfort food, with the taco melt and the much wrap supreme being favorites. Modern Times Kitchen is rated 4.5 stars, and is a must-visit for both vegans and meat eaters.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "calibration",
+  "source_cluster_id": "a245c018bace02de79d94b5deadf9af8e50fd489110ddd5adaa2e42879437b18",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ]
+}

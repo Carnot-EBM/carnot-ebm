@@ -1,0 +1,121 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.7010760019766167,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:0abcdaf2c0f87debf58673c71bd6e593c77c922a574a69ccdfc211d299948971",
+  "input_tokens": 1131,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1131,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1154
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:60b4c2468078233476c4e1d343c20066944da35b035b4c7bb8cfcb3720ad78f7",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886099,
+    "id": "chatcmpl-M9uOjEqkdIIMT66taLxP2LnaoQHIfs84",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 542.202,
+      "predicted_n": 23,
+      "predicted_per_second": 42.41961482989735,
+      "predicted_per_token_ms": 23.574,
+      "prompt_ms": 1021.66,
+      "prompt_n": 1053,
+      "prompt_per_second": 1030.6755672141417,
+      "prompt_per_token_ms": 0.9702374169040835
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1131,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1154
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Beijing (CNN)China's state prosecutors on Friday formally charged the country's former security czar with accepting bribes, making him the highest-ranking Chinese Communist Party official ever to face corruption charges. Zhou Yongkang, 72, was also charged with abuse of power and leaking state secrets, the Supreme People's Procuratorate, the highest prosecution authority in China, said. As a member of the ruling Communist Party's Politburo Standing Committee -- China's top decision-making body -- Zhou was one of nine men who effectively ruled the country of more than 1.3 billion people. He retired in 2012. At the height of his power, Zhou controlled police forces, spy agencies, court systems as well as prosecution offices across China -- and wasn't shy in deploying his vast assets to crush dissent and unrest in the name of \\\"preserving social stability.\\\" Now, prosecutors have accused Zhou of \\\"taking advantage of his posts to seek benefits for others and illegally accepting huge amounts of money\\\" during his long political career. His alleged actions have caused heavy losses to public assets and greatly harmed national interests, they added. Zhou was notified of his legal rights during the investigation and his lawyer's views were heard, according to a statement by the prosecutors. His case will be tried in Tianjin, a city near the Chinese capital, Beijing. The president of China's supreme court recently told reporters there would be \\\"open\\\" trials for accused former leaders like Zhou. However, the charge of leaking state secrets may allow authorities to shield certain legal proceedings from public view in Zhou's case. Zhou has not been seen in public since he attended an anniversary event at his alma mater in October 2013. He was expelled from the Communist Party and arrested last December. State media have painted an intricate web of officials, cronies and tycoons -- some with alleged mafia connections -- orbiting around Zhou before the crumbling of his power structure last summer. Zhou and his family members were said to have accumulated enormous wealth, in a blatant exchange between money and power. He was also found to have affairs with multiple women and allegedly traded power for sex, state-run Xinhua news agency reported last year. Analysts have viewed his shocking downfall as a watershed moment in the secretive world of Chinese politics, now ruled by President Xi Jinping. Xi has been spearheading a massive anti-corruption campaign,  targeting both \\\"tigers\\\" and \\\"flies\\\" --  high-ranking, and low-level, officials. Zhou is by far the biggest tiger caught in Xi's dragnet to date. \\\"The important thing here is that Xi has proven he's powerful enough to break this taboo of never incriminating former Politburo Standing Committee members,\\\" longtime political analyst Willy Lam, a professor at the Chinese University of Hong Kong, said last year, when the government revealed its formal investigation into Zhou. Many observers also note Zhou's patronage of Bo Xilai, a former Communist leader sentenced to life in prison for corruption in 2013. Bo's spectacular downfall the year before -- complete with tales of murder, bribery and betrayal -- attracted global attention. State media have cited his subsequent conviction as a prime example of Xi's resolve to clean up the party. The former Chongqing Communist Party chief's supporters, however, have long called him a political victim --  the former high-flying politician was once considered Xi's main challenger for the top spot of Chinese leadership. Political watchers see similarities between the Bo and Zhou cases. \\\"The people being investigated for corruption are on the losing side of factional struggles,\\\" said Lam, who has predicted a suspended death sentence for Zhou.\\n\", \"original_answer\": \"China's state prosecutors have formally charged Zhou Yongkang, the country's former security czar, with accepting bribes, abuse of power and leaking state secrets. Zhou was once part of the ruling Communist Party's Politburo Standing Committee, which is China's top decision-making body, and one of nine men who effectively ruled China. At the height of his power, Zhou controlled police forces, spy agencies, court systems and prosecution offices across China. Now, prosecutors have accused Zhou of \\\"taking advantage of his posts to seek benefits for others and illegally accepting huge amounts of money\\\" during his long political career. His alleged actions have caused heavy losses to public assets and greatly harmed national interests, they added. His case will be tried in Tianjin, a city near the Chinese capital, Beijing. Zhou was expelled from the Communist Party and arrested last December.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "a1421953e1000416c7e493b05045e872d7626f19f5628bbbdfce0c5acb40d99d",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+  ]
+}

@@ -1,0 +1,98 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.3938868949771859,
+  "exclusion_reason": null,
+  "family_id": "sha256:beef5ad0be4bf8e705405c44c5a1eeabed22f607ae406f9f8a2a1fde4844e337",
+  "input_tokens": 827,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 827,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 850
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:fce54abdc7937d88667bd88dde0bd35075d8a86694daed44297e2edde1d80500",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.95,\n \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832999,
+    "id": "chatcmpl-Ndhi5GhkWuoYh7oEkLe5SCOtZPWRjIgy",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.069,
+      "predicted_n": 23,
+      "predicted_per_second": 42.50844162204821,
+      "predicted_per_token_ms": 23.52473913043478,
+      "prompt_ms": 730.933,
+      "prompt_n": 749,
+      "prompt_per_second": 1024.717723785901,
+      "prompt_per_token_ms": 0.9758785046728972
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 827,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 850
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"7038 Market Pl Dr\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Seafood, Breakfast & Brunch, American (Traditional), Restaurants, Burgers\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"8:0-14:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"8:0-20:0\\\",\\\"Sunday\\\":\\\"8:0-20:0\\\",\\\"Thursday\\\":\\\"8:0-20:0\\\",\\\"Tuesday\\\":\\\"8:0-20:0\\\",\\\"Wednesday\\\":\\\"8:0-20:0\\\"},\\\"name\\\":\\\"On The Alley - Goleta\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-19 02:31:51\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I love their fish and chips, clam chowder, taste just like New England.. they are the best place for fish and chips, and Clam chowder\\\"},{\\\"review_date\\\":\\\"2022-01-10 17:02:59\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Great vegetarian options surprisingly! The avocado tacos and veggie burger are both awesome!\\\"},{\\\"review_date\\\":\\\"2021-12-10 19:21:58\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I rescind my previous 1 star rating due to the most professional and kind manager at this establishment. Not only did they reach out to me after I had left my bad experience, but they went the extra mile of taking care of my next meal with a personal apology and explanation of how they corrected the person whom I had the bad experience with. I will continue my usual Friday lunches here knowing I'm cared for. Thank you Kerry B. for reaching out and the manager at the establishment for personally talking with me and sorting it out.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"On The Alley - Goleta is a popular seafood restaurant located in Goleta, California, offering a variety of breakfast, brunch, and American dishes. The establishment has a rating of 4.0 stars and receives excellent reviews for its food quality, particularly in seafood dishes such as fish and chips and clam chowder. Customers also appreciate the restaurant's vegetarian options, including avocado tacos and a veggie burger. The restaurant offers free WiFi and outdoor seating, and while parking can be limited, the business provides validated parking for customers. Despite some initial negative reviews, the management team has been praised for their professionalism and kindness in addressing customer concerns. Overall, On The Alley - Goleta is a great spot for seafood lovers and those looking for a cozy, casual dining experience.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:fc2d67c2a922bdd762ddcf6c025614467624ff216baac526338611c057bbfb3a",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ]
+}

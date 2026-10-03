@@ -1,0 +1,480 @@
+.....F                                                                   [100%]
+=================================== FAILURES ===================================
+______________ test_main_owned_checks_block_and_terminal_failures ______________
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261002T070326-1190058-c7d644cf/test_main_owned_checks_block_a0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7ff84f33e7b0>
+
+            e.legacy.QwenRuntime,
+            "load",
+            lambda self: (_ for _ in ()).throw(RuntimeError("load failed")),
+        )
+        with pytest.raises(RuntimeError):
+            e.live(frozen, dict(protocol={}), tmp_path / "failed")
+        ledger = e.c.Ledger(tmp_path / "failed/ledger.json")
+        assert ledger.counts()["model_loads_failed"] == 1
+    
+    
+    def test_main_owned_checks_block_and_terminal_failures(tmp_path, monkeypatch):
+        """SCENARIO-REPORT-8011-CUSTODY: validation never starts another model call."""
+        frozen = panel()
+        monkeypatch.setattr(
+            e, "authenticate", lambda root: dict(panel=frozen, checks=[], references=[], protocol={})
+        )
+        mode = ["ok"]
+    
+        def fake_live(panel, plan, raw):
+            rows = e.c.capture(
+                panel["slots"],
+                None,
+                raw / "slots",
+                e.canonical_hash(panel),
+                ledger=e.c.Ledger(raw / "ledger.json"),
+                deadline_s=0,
+            )
+>           return dict(
+                rows=rows,
+                ledger=[],
+                checks=[dict(passed=False, field="lease", expected=True, observed=False)],
+                measured_duration_s=0,
+            )
+E           AssertionError: assert 1 == 0
+E            +  where 1 = <function main at 0x7ff84f364d60>(['--output', '/tmp/pytest-carnot-ianblenke/20261002T070326-1190058-c7d644cf/test_main_owned_checks_block_a0/ok/experiment_8011_v694_qwen_source_sensitivity.json'])
+E            +    where <function main at 0x7ff84f364d60> = e.main
+E            +  and   0 = int('ok' == 'cold_fail'
+E               
+E               - cold_fail
+E               + ok)
+
+tests/python/test_source_sensitivity_8011.py:172: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8010] phase=start elapsed_s=0.000 units=0 pending=0
+[exp8010] phase=before_capture elapsed_s=0.006 units=0 pending=192
+[exp7995] before_slot=0 elapsed_s=0.000
+[exp7995] checkpoint completed_slots=1
+[exp7995] before_slot=1 elapsed_s=0.000
+[exp7995] checkpoint completed_slots=2
+[exp7995] before_slot=2 elapsed_s=0.000
+[exp7995] checkpoint completed_slots=3
+[exp7995] before_slot=3 elapsed_s=0.000
+[exp7995] checkpoint completed_slots=4
+[exp7995] before_slot=4 elapsed_s=0.000
+[exp7995] checkpoint completed_slots=5
+[exp7995] before_slot=5 elapsed_s=0.000
+[exp7995] checkpoint completed_slots=6
+[exp7995] before_slot=6 elapsed_s=0.000
+[exp7995] checkpoint completed_slots=7
+[exp7995] before_slot=7 elapsed_s=0.001
+[exp7995] checkpoint completed_slots=8
+[exp7995] before_slot=8 elapsed_s=0.001
+[exp7995] checkpoint completed_slots=9
+[exp7995] before_slot=9 elapsed_s=0.001
+[exp7995] checkpoint completed_slots=10
+[exp7995] before_slot=10 elapsed_s=0.001
+[exp7995] checkpoint completed_slots=11
+[exp7995] before_slot=11 elapsed_s=0.001
+[exp7995] checkpoint completed_slots=12
+[exp7995] before_slot=12 elapsed_s=0.001
+[exp7995] checkpoint completed_slots=13
+[exp7995] before_slot=13 elapsed_s=0.001
+[exp7995] checkpoint completed_slots=14
+[exp7995] before_slot=14 elapsed_s=0.001
+[exp7995] checkpoint completed_slots=15
+[exp7995] before_slot=15 elapsed_s=0.001
+[exp7995] checkpoint completed_slots=16
+[exp7995] before_slot=16 elapsed_s=0.001
+[exp7995] checkpoint completed_slots=17
+[exp7995] before_slot=17 elapsed_s=0.001
+[exp7995] checkpoint completed_slots=18
+[exp7995] before_slot=18 elapsed_s=0.001
+[exp7995] checkpoint completed_slots=19
+[exp7995] before_slot=19 elapsed_s=0.001
+[exp7995] checkpoint completed_slots=20
+[exp7995] before_slot=20 elapsed_s=0.001
+[exp7995] checkpoint completed_slots=21
+[exp7995] before_slot=21 elapsed_s=0.001
+[exp7995] checkpoint completed_slots=22
+[exp7995] before_slot=22 elapsed_s=0.002
+[exp7995] checkpoint completed_slots=23
+[exp7995] before_slot=23 elapsed_s=0.002
+[exp7995] checkpoint completed_slots=24
+[exp7995] before_slot=24 elapsed_s=0.002
+[exp7995] checkpoint completed_slots=25
+[exp7995] before_slot=25 elapsed_s=0.002
+[exp7995] checkpoint completed_slots=26
+[exp7995] before_slot=26 elapsed_s=0.002
+[exp7995] checkpoint completed_slots=27
+[exp7995] before_slot=27 elapsed_s=0.002
+[exp7995] checkpoint completed_slots=28
+[exp7995] before_slot=28 elapsed_s=0.002
+[exp7995] checkpoint completed_slots=29
+[exp7995] before_slot=29 elapsed_s=0.002
+[exp7995] checkpoint completed_slots=30
+[exp7995] before_slot=30 elapsed_s=0.002
+[exp7995] checkpoint completed_slots=31
+[exp7995] before_slot=31 elapsed_s=0.002
+[exp7995] checkpoint completed_slots=32
+[exp7995] before_slot=32 elapsed_s=0.002
+[exp7995] checkpoint completed_slots=33
+[exp7995] before_slot=33 elapsed_s=0.002
+[exp7995] checkpoint completed_slots=34
+[exp7995] before_slot=34 elapsed_s=0.002
+[exp7995] checkpoint completed_slots=35
+[exp7995] before_slot=35 elapsed_s=0.002
+[exp7995] checkpoint completed_slots=36
+[exp7995] before_slot=36 elapsed_s=0.002
+[exp7995] checkpoint completed_slots=37
+[exp7995] before_slot=37 elapsed_s=0.003
+[exp7995] checkpoint completed_slots=38
+[exp7995] before_slot=38 elapsed_s=0.003
+[exp7995] checkpoint completed_slots=39
+[exp7995] before_slot=39 elapsed_s=0.003
+[exp7995] checkpoint completed_slots=40
+[exp7995] before_slot=40 elapsed_s=0.003
+[exp7995] checkpoint completed_slots=41
+[exp7995] before_slot=41 elapsed_s=0.003
+[exp7995] checkpoint completed_slots=42
+[exp7995] before_slot=42 elapsed_s=0.003
+[exp7995] checkpoint completed_slots=43
+[exp7995] before_slot=43 elapsed_s=0.003
+[exp7995] checkpoint completed_slots=44
+[exp7995] before_slot=44 elapsed_s=0.003
+[exp7995] checkpoint completed_slots=45
+[exp7995] before_slot=45 elapsed_s=0.003
+[exp7995] checkpoint completed_slots=46
+[exp7995] before_slot=46 elapsed_s=0.003
+[exp7995] checkpoint completed_slots=47
+[exp7995] before_slot=47 elapsed_s=0.003
+[exp7995] checkpoint completed_slots=48
+[exp7995] before_slot=48 elapsed_s=0.003
+[exp7995] checkpoint completed_slots=49
+[exp7995] before_slot=49 elapsed_s=0.003
+[exp7995] checkpoint completed_slots=50
+[exp7995] before_slot=50 elapsed_s=0.003
+[exp7995] checkpoint completed_slots=51
+[exp7995] before_slot=51 elapsed_s=0.003
+[exp7995] checkpoint completed_slots=52
+[exp7995] before_slot=52 elapsed_s=0.004
+[exp7995] checkpoint completed_slots=53
+[exp7995] before_slot=53 elapsed_s=0.004
+[exp7995] checkpoint completed_slots=54
+[exp7995] before_slot=54 elapsed_s=0.004
+[exp7995] checkpoint completed_slots=55
+[exp7995] before_slot=55 elapsed_s=0.004
+[exp7995] checkpoint completed_slots=56
+[exp7995] before_slot=56 elapsed_s=0.004
+[exp7995] checkpoint completed_slots=57
+[exp7995] before_slot=57 elapsed_s=0.004
+[exp7995] checkpoint completed_slots=58
+[exp7995] before_slot=58 elapsed_s=0.004
+[exp7995] checkpoint completed_slots=59
+[exp7995] before_slot=59 elapsed_s=0.004
+[exp7995] checkpoint completed_slots=60
+[exp7995] before_slot=60 elapsed_s=0.004
+[exp7995] checkpoint completed_slots=61
+[exp7995] before_slot=61 elapsed_s=0.004
+[exp7995] checkpoint completed_slots=62
+[exp7995] before_slot=62 elapsed_s=0.004
+[exp7995] checkpoint completed_slots=63
+[exp7995] before_slot=63 elapsed_s=0.004
+[exp7995] checkpoint completed_slots=64
+[exp7995] before_slot=64 elapsed_s=0.004
+[exp7995] checkpoint completed_slots=65
+[exp7995] before_slot=65 elapsed_s=0.004
+[exp7995] checkpoint completed_slots=66
+[exp7995] before_slot=66 elapsed_s=0.004
+[exp7995] checkpoint completed_slots=67
+[exp7995] before_slot=67 elapsed_s=0.005
+[exp7995] checkpoint completed_slots=68
+[exp7995] before_slot=68 elapsed_s=0.005
+[exp7995] checkpoint completed_slots=69
+[exp7995] before_slot=69 elapsed_s=0.005
+[exp7995] checkpoint completed_slots=70
+[exp7995] before_slot=70 elapsed_s=0.005
+[exp7995] checkpoint completed_slots=71
+[exp7995] before_slot=71 elapsed_s=0.005
+[exp7995] checkpoint completed_slots=72
+[exp7995] before_slot=72 elapsed_s=0.005
+[exp7995] checkpoint completed_slots=73
+[exp7995] before_slot=73 elapsed_s=0.005
+[exp7995] checkpoint completed_slots=74
+[exp7995] before_slot=74 elapsed_s=0.005
+[exp7995] checkpoint completed_slots=75
+[exp7995] before_slot=75 elapsed_s=0.005
+[exp7995] checkpoint completed_slots=76
+[exp7995] before_slot=76 elapsed_s=0.005
+[exp7995] checkpoint completed_slots=77
+[exp7995] before_slot=77 elapsed_s=0.005
+[exp7995] checkpoint completed_slots=78
+[exp7995] before_slot=78 elapsed_s=0.005
+[exp7995] checkpoint completed_slots=79
+[exp7995] before_slot=79 elapsed_s=0.005
+[exp7995] checkpoint completed_slots=80
+[exp7995] before_slot=80 elapsed_s=0.005
+[exp7995] checkpoint completed_slots=81
+[exp7995] before_slot=81 elapsed_s=0.005
+[exp7995] checkpoint completed_slots=82
+[exp7995] before_slot=82 elapsed_s=0.006
+[exp7995] checkpoint completed_slots=83
+[exp7995] before_slot=83 elapsed_s=0.006
+[exp7995] checkpoint completed_slots=84
+[exp7995] before_slot=84 elapsed_s=0.006
+[exp7995] checkpoint completed_slots=85
+[exp7995] before_slot=85 elapsed_s=0.006
+[exp7995] checkpoint completed_slots=86
+[exp7995] before_slot=86 elapsed_s=0.006
+[exp7995] checkpoint completed_slots=87
+[exp7995] before_slot=87 elapsed_s=0.006
+[exp7995] checkpoint completed_slots=88
+[exp7995] before_slot=88 elapsed_s=0.006
+[exp7995] checkpoint completed_slots=89
+[exp7995] before_slot=89 elapsed_s=0.006
+[exp7995] checkpoint completed_slots=90
+[exp7995] before_slot=90 elapsed_s=0.006
+[exp7995] checkpoint completed_slots=91
+[exp7995] before_slot=91 elapsed_s=0.006
+[exp7995] checkpoint completed_slots=92
+[exp7995] before_slot=92 elapsed_s=0.006
+[exp7995] checkpoint completed_slots=93
+[exp7995] before_slot=93 elapsed_s=0.006
+[exp7995] checkpoint completed_slots=94
+[exp7995] before_slot=94 elapsed_s=0.006
+[exp7995] checkpoint completed_slots=95
+[exp7995] before_slot=95 elapsed_s=0.006
+[exp7995] checkpoint completed_slots=96
+[exp7995] before_slot=96 elapsed_s=0.006
+[exp7995] checkpoint completed_slots=97
+[exp7995] before_slot=97 elapsed_s=0.006
+[exp7995] checkpoint completed_slots=98
+[exp7995] before_slot=98 elapsed_s=0.007
+[exp7995] checkpoint completed_slots=99
+[exp7995] before_slot=99 elapsed_s=0.007
+[exp7995] checkpoint completed_slots=100
+[exp7995] before_slot=100 elapsed_s=0.007
+[exp7995] checkpoint completed_slots=101
+[exp7995] before_slot=101 elapsed_s=0.007
+[exp7995] checkpoint completed_slots=102
+[exp7995] before_slot=102 elapsed_s=0.007
+[exp7995] checkpoint completed_slots=103
+[exp7995] before_slot=103 elapsed_s=0.007
+[exp7995] checkpoint completed_slots=104
+[exp7995] before_slot=104 elapsed_s=0.007
+[exp7995] checkpoint completed_slots=105
+[exp7995] before_slot=105 elapsed_s=0.007
+[exp7995] checkpoint completed_slots=106
+[exp7995] before_slot=106 elapsed_s=0.007
+[exp7995] checkpoint completed_slots=107
+[exp7995] before_slot=107 elapsed_s=0.007
+[exp7995] checkpoint completed_slots=108
+[exp7995] before_slot=108 elapsed_s=0.007
+[exp7995] checkpoint completed_slots=109
+[exp7995] before_slot=109 elapsed_s=0.007
+[exp7995] checkpoint completed_slots=110
+[exp7995] before_slot=110 elapsed_s=0.007
+[exp7995] checkpoint completed_slots=111
+[exp7995] before_slot=111 elapsed_s=0.007
+[exp7995] checkpoint completed_slots=112
+[exp7995] before_slot=112 elapsed_s=0.008
+[exp7995] checkpoint completed_slots=113
+[exp7995] before_slot=113 elapsed_s=0.008
+[exp7995] checkpoint completed_slots=114
+[exp7995] before_slot=114 elapsed_s=0.008
+[exp7995] checkpoint completed_slots=115
+[exp7995] before_slot=115 elapsed_s=0.008
+[exp7995] checkpoint completed_slots=116
+[exp7995] before_slot=116 elapsed_s=0.008
+[exp7995] checkpoint completed_slots=117
+[exp7995] before_slot=117 elapsed_s=0.008
+[exp7995] checkpoint completed_slots=118
+[exp7995] before_slot=118 elapsed_s=0.008
+[exp7995] checkpoint completed_slots=119
+[exp7995] before_slot=119 elapsed_s=0.008
+[exp7995] checkpoint completed_slots=120
+[exp7995] before_slot=120 elapsed_s=0.008
+[exp7995] checkpoint completed_slots=121
+[exp7995] before_slot=121 elapsed_s=0.008
+[exp7995] checkpoint completed_slots=122
+[exp7995] before_slot=122 elapsed_s=0.008
+[exp7995] checkpoint completed_slots=123
+[exp7995] before_slot=123 elapsed_s=0.008
+[exp7995] checkpoint completed_slots=124
+[exp7995] before_slot=124 elapsed_s=0.008
+[exp7995] checkpoint completed_slots=125
+[exp7995] before_slot=125 elapsed_s=0.008
+[exp7995] checkpoint completed_slots=126
+[exp7995] before_slot=126 elapsed_s=0.008
+[exp7995] checkpoint completed_slots=127
+[exp7995] before_slot=127 elapsed_s=0.009
+[exp7995] checkpoint completed_slots=128
+[exp7995] before_slot=128 elapsed_s=0.009
+[exp7995] checkpoint completed_slots=129
+[exp7995] before_slot=129 elapsed_s=0.009
+[exp7995] checkpoint completed_slots=130
+[exp7995] before_slot=130 elapsed_s=0.009
+[exp7995] checkpoint completed_slots=131
+[exp7995] before_slot=131 elapsed_s=0.009
+[exp7995] checkpoint completed_slots=132
+[exp7995] before_slot=132 elapsed_s=0.009
+[exp7995] checkpoint completed_slots=133
+[exp7995] before_slot=133 elapsed_s=0.009
+[exp7995] checkpoint completed_slots=134
+[exp7995] before_slot=134 elapsed_s=0.009
+[exp7995] checkpoint completed_slots=135
+[exp7995] before_slot=135 elapsed_s=0.009
+[exp7995] checkpoint completed_slots=136
+[exp7995] before_slot=136 elapsed_s=0.009
+[exp7995] checkpoint completed_slots=137
+[exp7995] before_slot=137 elapsed_s=0.009
+[exp7995] checkpoint completed_slots=138
+[exp7995] before_slot=138 elapsed_s=0.009
+[exp7995] checkpoint completed_slots=139
+[exp7995] before_slot=139 elapsed_s=0.009
+[exp7995] checkpoint completed_slots=140
+[exp7995] before_slot=140 elapsed_s=0.009
+[exp7995] checkpoint completed_slots=141
+[exp7995] before_slot=141 elapsed_s=0.009
+[exp7995] checkpoint completed_slots=142
+[exp7995] before_slot=142 elapsed_s=0.010
+[exp7995] checkpoint completed_slots=143
+[exp7995] before_slot=143 elapsed_s=0.010
+[exp7995] checkpoint completed_slots=144
+[exp7995] before_slot=144 elapsed_s=0.010
+[exp7995] checkpoint completed_slots=145
+[exp7995] before_slot=145 elapsed_s=0.010
+[exp7995] checkpoint completed_slots=146
+[exp7995] before_slot=146 elapsed_s=0.010
+[exp7995] checkpoint completed_slots=147
+[exp7995] before_slot=147 elapsed_s=0.010
+[exp7995] checkpoint completed_slots=148
+[exp7995] before_slot=148 elapsed_s=0.010
+[exp7995] checkpoint completed_slots=149
+[exp7995] before_slot=149 elapsed_s=0.010
+[exp7995] checkpoint completed_slots=150
+[exp7995] before_slot=150 elapsed_s=0.010
+[exp7995] checkpoint completed_slots=151
+[exp7995] before_slot=151 elapsed_s=0.010
+[exp7995] checkpoint completed_slots=152
+[exp7995] before_slot=152 elapsed_s=0.010
+[exp7995] checkpoint completed_slots=153
+[exp7995] before_slot=153 elapsed_s=0.010
+[exp7995] checkpoint completed_slots=154
+[exp7995] before_slot=154 elapsed_s=0.010
+[exp7995] checkpoint completed_slots=155
+[exp7995] before_slot=155 elapsed_s=0.010
+[exp7995] checkpoint completed_slots=156
+[exp7995] before_slot=156 elapsed_s=0.010
+[exp7995] checkpoint completed_slots=157
+[exp7995] before_slot=157 elapsed_s=0.010
+[exp7995] checkpoint completed_slots=158
+[exp7995] before_slot=158 elapsed_s=0.011
+[exp7995] checkpoint completed_slots=159
+[exp7995] before_slot=159 elapsed_s=0.011
+[exp7995] checkpoint completed_slots=160
+[exp7995] before_slot=160 elapsed_s=0.011
+[exp7995] checkpoint completed_slots=161
+[exp7995] before_slot=161 elapsed_s=0.011
+[exp7995] checkpoint completed_slots=162
+[exp7995] before_slot=162 elapsed_s=0.011
+[exp7995] checkpoint completed_slots=163
+[exp7995] before_slot=163 elapsed_s=0.011
+[exp7995] checkpoint completed_slots=164
+[exp7995] before_slot=164 elapsed_s=0.011
+[exp7995] checkpoint completed_slots=165
+[exp7995] before_slot=165 elapsed_s=0.011
+[exp7995] checkpoint completed_slots=166
+[exp7995] before_slot=166 elapsed_s=0.011
+[exp7995] checkpoint completed_slots=167
+[exp7995] before_slot=167 elapsed_s=0.011
+[exp7995] checkpoint completed_slots=168
+[exp7995] before_slot=168 elapsed_s=0.011
+[exp7995] checkpoint completed_slots=169
+[exp7995] before_slot=169 elapsed_s=0.011
+[exp7995] checkpoint completed_slots=170
+[exp7995] before_slot=170 elapsed_s=0.011
+[exp7995] checkpoint completed_slots=171
+[exp7995] before_slot=171 elapsed_s=0.011
+[exp7995] checkpoint completed_slots=172
+[exp7995] before_slot=172 elapsed_s=0.012
+[exp7995] checkpoint completed_slots=173
+[exp7995] before_slot=173 elapsed_s=0.012
+[exp7995] checkpoint completed_slots=174
+[exp7995] before_slot=174 elapsed_s=0.012
+[exp7995] checkpoint completed_slots=175
+[exp7995] before_slot=175 elapsed_s=0.012
+[exp7995] checkpoint completed_slots=176
+[exp7995] before_slot=176 elapsed_s=0.012
+[exp7995] checkpoint completed_slots=177
+[exp7995] before_slot=177 elapsed_s=0.012
+[exp7995] checkpoint completed_slots=178
+[exp7995] before_slot=178 elapsed_s=0.012
+[exp7995] checkpoint completed_slots=179
+[exp7995] before_slot=179 elapsed_s=0.012
+[exp7995] checkpoint completed_slots=180
+[exp7995] before_slot=180 elapsed_s=0.012
+[exp7995] checkpoint completed_slots=181
+[exp7995] before_slot=181 elapsed_s=0.012
+[exp7995] checkpoint completed_slots=182
+[exp7995] before_slot=182 elapsed_s=0.012
+[exp7995] checkpoint completed_slots=183
+[exp7995] before_slot=183 elapsed_s=0.012
+[exp7995] checkpoint completed_slots=184
+[exp7995] before_slot=184 elapsed_s=0.012
+[exp7995] checkpoint completed_slots=185
+[exp7995] before_slot=185 elapsed_s=0.012
+[exp7995] checkpoint completed_slots=186
+[exp7995] before_slot=186 elapsed_s=0.012
+[exp7995] checkpoint completed_slots=187
+[exp7995] before_slot=187 elapsed_s=0.013
+[exp7995] checkpoint completed_slots=188
+[exp7995] before_slot=188 elapsed_s=0.013
+[exp7995] checkpoint completed_slots=189
+[exp7995] before_slot=189 elapsed_s=0.013
+[exp7995] checkpoint completed_slots=190
+[exp7995] before_slot=190 elapsed_s=0.013
+[exp7995] checkpoint completed_slots=191
+[exp7995] before_slot=191 elapsed_s=0.013
+[exp7995] checkpoint completed_slots=192
+[exp8010] phase=after_capture_before_validation elapsed_s=0.026 units=192 pending=0
+[exp8010] phase=cold_reduction elapsed_s=0.034 units=192 pending=0
+[exp7303-validation] before_subprocess fresh_process_cold_reduction elapsed_s=0.000 unit=1/1
+[exp7303-validation:fresh_process_cold_reduction] [exp8010] phase=start elapsed_s=0.000 units=0 pending=0
+[exp7303-validation:fresh_process_cold_reduction] [exp8010] phase=replay_passed elapsed_s=0.182 units=0 pending=0
+[exp7303-validation] after_subprocess fresh_process_cold_reduction elapsed_s=1.510 exit=0 unit=1/1
+[exp7303-validation] before_subprocess adversarial elapsed_s=0.000 unit=1/2
+[exp7303-validation:adversarial] {
+[exp7303-validation:adversarial]   "reports": [
+[exp7303-validation:adversarial]     {
+[exp7303-validation:adversarial]       "artifact": "/tmp/pytest-carnot-ianblenke/20261002T070326-1190058-c7d644cf/test_main_owned_checks_block_a0/ok/raw/experiment_8011_v694_qwen_source_sensitivity/experiment_8011_v694_qwen_source_sensitivity.json",
+[exp7303-validation:adversarial]       "loaded": true,
+[exp7303-validation:adversarial]       "exp_id": 8011,
+[exp7303-validation:adversarial]       "title": "",
+[exp7303-validation:adversarial]       "honest_verdict": "complete_blocked_source_sensitivity",
+[exp7303-validation:adversarial]       "flag_count": 2,
+[exp7303-validation:adversarial]       "max_severity": 2,
+[exp7303-validation:adversarial]       "flags": [
+[exp7303-validation:adversarial]         {
+[exp7303-validation:adversarial]           "kind": "SUBSTRATE_CLASS_MISMATCH",
+[exp7303-validation:adversarial]           "severity": "critical",
+[exp7303-validation:adversarial]           "detail": "inference_substrate_class=model_bounded_generation claims a model ran, but honest_verdict='complete_blocked_source_sensitivity' is a blocked_* verdict. Declare blocked_no_run when preconditions failed."
+[exp7303-validation:adversarial]         },
+[exp7303-validation:adversarial]         {
+[exp7303-validation:adversarial]           "kind": "SUBSTRATE_CLASS_MISMATCH",
+[exp7303-validation:adversarial]           "severity": "critical",
+[exp7303-validation:adversarial]           "detail": "inference_substrate_class=model_bounded_generation claims a model ran, but typed invocation evidence says it did not (['generation_calls_attempted', 'generation_calls_completed', 'model_loads_attempted', 'model_loads_completed']). Contradictory."
+[exp7303-validation:adversarial]         }
+[exp7303-validation:adversarial]       ],
+[exp7303-validation:adversarial]       "gate_version": "197e0a5eacacb09ce6607ae8bdfd507498082857f0d02ec2003a62c251b69a24"
+[exp7303-validation:adversarial]     }
+[exp7303-validation:adversarial]   ],
+[exp7303-validation:adversarial]   "flagged_count": 1
+[exp7303-validation:adversarial] }
+[exp7303-validation] after_subprocess adversarial elapsed_s=0.593 exit=1 unit=1/2
+[exp7303-validation] before_subprocess strict_rows elapsed_s=0.000 unit=2/2
+[exp7303-validation:strict_rows] 
+[exp7303-validation:strict_rows] verdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.
+[exp7303-validation:strict_rows]   No row/verdict contradictions among the artifacts that could be checked.
+[exp7303-validation] after_subprocess strict_rows elapsed_s=0.038 exit=0 unit=2/2
+[exp8011] rejected=ValueError:terminal_rejected
+=========================== short test summary info ============================
+FAILED tests/python/test_source_sensitivity_8011.py::test_main_owned_checks_block_and_terminal_failures
+1 failed, 5 passed in 17.94s

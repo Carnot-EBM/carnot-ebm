@@ -1,0 +1,109 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.1829668580321595,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:893751472074bd3df40b6ef9b83ef5449f8d89596e6db141898eb5dea5b563a1",
+  "input_tokens": 538,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 538,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 561
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:b7fdda5d08ecc08047b908aed4a249c9b0d6345d781dd6e3ff46991bde0f8fd9",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885937,
+    "id": "chatcmpl-EM6mDBmM1kFZA3uOMHbU1hm4iRFuk34W",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 539.751,
+      "predicted_n": 23,
+      "predicted_per_second": 42.61224157065017,
+      "predicted_per_token_ms": 23.467434782608695,
+      "prompt_ms": 522.924,
+      "prompt_n": 460,
+      "prompt_per_second": 879.6689385073166,
+      "prompt_per_token_ms": 1.136791304347826
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 538,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 561
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:BLACK-Black feathers give the mystical wisdom that comes with true spiritual initiation. 1  Black, iridescent feathers give mystical insight. Black and white mixed feathers give union and protection. 2  Black (or gray) feathers banded or mixed with white give hope, balance and harmony.\\\\n\\\\npassage 2:PINK-Pink feathers attract love. GRAY-Gray feathers symbolize peace and neutrality. BROWN-Brown feathers give stability and respect. They also symbolize the home and grounding. 1  Brown feathers striped in black, like the tail feathers of a pheasant, give a balance between the physical and spiritual life.\\\\n\\\\npassage 3:FEATHER COLOR & MEANING. WHITE-White feathers symbolize purification, spirituality, hope, protection, peace, and blessings of the Moon. RED-Red feathers symbolize physical vitality, courage, good fortune, and life. BLUE-Blue feathers symbolize mental abilities, peace, protection. And psychic awareness. YELLOW-Yellow feathers bring cheerfulness, mental alertness, prosperity, and blessings from the Sun.\\\\n\\\\n\\\",\\\"question\\\":\\\"color of feathers meaning\\\"}\", \"original_answer\": \"Feather colors have different meanings. Black feathers symbolize mystical wisdom and spiritual initiation, while black and white mixed feathers symbolize union and protection. Gray feathers represent peace and neutrality. Brown feathers symbolize stability, respect, and grounding. Pink feathers are associated with attracting love. White feathers symbolize purification, spirituality, hope, protection, peace, and blessings of the Moon. Red feathers symbolize physical vitality, courage, good fortune, and life. Blue feathers symbolize mental abilities, peace, protection, and psychic awareness. Yellow feathers bring cheerfulness, mental alertness, prosperity, and blessings from the Sun.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "52ae6c79dc729baad26b73eef34b26f72df50a681426e7f88eaa53099151c9c9",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ]
+}

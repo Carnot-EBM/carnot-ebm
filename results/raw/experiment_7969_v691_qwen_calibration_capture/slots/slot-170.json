@@ -1,0 +1,102 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.1759470039978623,
+  "exclusion_reason": null,
+  "family_id": "sha256:25a6b14f2b4ac6d47d14abe263515deb6c47ab6d651feefb14707323bcc50765",
+  "input_tokens": 497,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 2,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 497,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 521
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:7e3089dd6983e4f03ec2333c67e635b545496db86f15fa660213978c5cb9613e",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 2\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832706,
+    "id": "chatcmpl-TQbeYsZaFND2a52L9gmGaraMjnOFByDg",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 571.444,
+      "predicted_n": 24,
+      "predicted_per_second": 41.99886603061717,
+      "predicted_per_token_ms": 23.810166666666664,
+      "prompt_ms": 493.428,
+      "prompt_n": 419,
+      "prompt_per_second": 849.1613771411431,
+      "prompt_per_token_ms": 1.1776324582338902
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 497,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 521
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"\\\"Jake the dog and Finn the human. The fun will never end. Adventure Time.\\\" So begins the dreamy theme song intro to the strangely addictive Cartoon Network TV show that's centered around psychedelic characters like the Ice King, Marceline the Vampire Queen and, of course, Jake and Finn. Now, mega-fans of the hit show can experience \\\"Adventure Time\\\" in the skies. Thai Smile, a subsidiary of Thailand flag carrier Thai Airways, on Thursday unveiled colorful new livery featuring Jake, Finn and the beloved Princess Bubblegum sprawled across an Airbus A320 at Bangkok's Suvarnabhumi International Airport. The interior of the plane also has an Adventure Time theme, with overhead bins, head rests and even air sickness bags covered in the faces of characters from the show. Airlines show off their new flying colors. The Adventure Time plane is the result of a partnership between Thai Airways subsidiary Thai Smile and Cartoon Network Amazone, a new water park near the Thai resort city of Pattaya featuring attractions based on shows that appear on the Turner Broadcasting System channel. Turner Broadcasting is a parent company of CNN. Check out these cool airline liveries. The inaugural Thai Smile Adventure Time flight takes place on April 4, heading from Bangkok to Phuket.\\n\", \"original_answer\": \"Thai Airways subsidiary Thai Smile has partnered with Turner Broadcasting's Cartoon Network Amazone to create a new Airbus A320 livery featuring characters from the popular animated series \\\"Adventure Time\\\". The interior of the plane is also themed after the show, with decorations covering the overhead bins, head rests, and air sickness bags. The first flight will take off from Bangkok to Phuket on April 4th.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:033fc70ede2572e89fd5ae141251cc4553f61be5c89ca6a60ac26832f596cf32",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ]
+}

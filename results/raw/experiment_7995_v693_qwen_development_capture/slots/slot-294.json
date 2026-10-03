@@ -1,0 +1,112 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.5160118989879265,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:15bb3f6a50686396b91fbd9544875612a649a8aaab0457b26763a89b6feda54f",
+  "input_tokens": 868,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 868,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 891
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:ee546b9a417020b8c7df9079bd26a94a033f5eaef5f86be567068e1bfc8c62c0",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886261,
+    "id": "chatcmpl-LrE1qUvlG0CYN3uGgIawYPrVebwx38am",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.611,
+      "predicted_n": 23,
+      "predicted_per_second": 42.46590264968769,
+      "predicted_per_token_ms": 23.548304347826086,
+      "prompt_ms": 823.413,
+      "prompt_n": 790,
+      "prompt_per_second": 959.4213353444748,
+      "prompt_per_token_ms": 1.0422949367088608
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 868,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 891
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"3404 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":null},\\\"business_stars\\\":5.0,\\\"categories\\\":\\\"Pop-Up Restaurants, Restaurants, Food, Donuts\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"10:0-11:0\\\"},\\\"name\\\":\\\"Kin Bakeshop\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-03-14 02:06:26\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Was very lucky to grab a box as they sell out in under a minute! I drove up from Ventura and it was well worth it! Absolutely fantastic flavors and the owner, Tommy, could not have been kinder or more appreciative! The whole experience was so easy and pleasant. The mochi donuts are such a unique treat and I must say I am craving them and cannot wait for Mor Doughnuts to return! Would love to see them setup a storefront where scoring a box wasn't so difficult. I will say though I was slightly disappointed though not to receive one of the beautiful shiny boxes like what I had seen in the photos.\\\"},{\\\"review_date\\\":\\\"2021-02-25 19:11:27\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I was excited to have gotten a box last Sunday. The flavors were so unique and the style of the donuts were new to me and so very delicious. In addition to a wonderful product, the owner seems to be a wonderful person. I was having a bad day and my short interaction with Tommy was enough to turn my day around. Thanks for the kindness and the introduction to mochi donuts! Highly recommend you keep trying to get a box if you haven't already. It is well worth the effort :)\\\"},{\\\"review_date\\\":\\\"2021-02-25 07:38:01\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"AMAZING donuts!!! The best flavors!! Tommy nailed the flavors and has hands down the best customer service I've seen! You've missed out if you're in SB and not grabbing these donuts!!!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Kin Bakeshop, located at 3404 State St in Santa Barbara, CA, is a pop-up restaurant renowned for its unique and delicious mochi donuts. The restaurant offers take-out options, and although it doesn't offer wifi, outdoor seating, or validated parking, it has a lot for customers to park their vehicles. Despite its limited hours, only opening on Saturdays, the business boasts a perfect 5-star rating. Reviewers rave about the fantastic flavors of the donuts and commend the owner, Tommy, for his exceptional customer service. Customers have reported positive experiences and have expressed a desire for Kin Bakeshop to have a more permanent storefront. However, the donuts sell out quickly, creating a sense of exclusivity and demand for their product.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "8c0038ca223e4d735dc006d43e3d8d29bdf6440318c8a6ca1da54e2e7b0f1b56",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ]
+}

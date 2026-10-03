@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "access_policy": {
+      "const": "evaluator_only"
+    },
+    "annotation_rows": {
+      "type": "array"
+    },
+    "rows": {
+      "items": {
+        "properties": {
+          "eligible_y": {
+            "enum": [
+              0,
+              1,
+              null
+            ]
+          },
+          "y": {
+            "enum": [
+              0,
+              1,
+              null
+            ]
+          }
+        },
+        "required": [
+          "family_id",
+          "role",
+          "y",
+          "eligible_y",
+          "target_eligible"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "schema",
+    "role",
+    "rows",
+    "annotation_rows",
+    "access_policy"
+  ],
+  "type": "object"
+}

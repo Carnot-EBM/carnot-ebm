@@ -1,0 +1,245 @@
+{
+  "code": [
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8007_v694_conditioning_diagnosis.py",
+      "sha256": "sha256:2b195bb6cc6ca3e640517f1a6d1591c4e0e43303246bffb3d65d2188b3dda0a9"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8007_v694_conditioning_diagnosis.py",
+      "sha256": "sha256:503a97c2414aa36a7c250b12138dd9c70e5009170beea66b542cf22c970fce37"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_conditioning_diagnosis_8007.py",
+      "sha256": "sha256:7f8571cd25a7ce5de816c21122a3094e6d0637abcb0430855c83f1ecdcbe909b"
+    }
+  ],
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--parallel-mode",
+        "--data-file=/tmp/carnot-8007-c7ghayi0/.coverage",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8007_v694_conditioning_diagnosis.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8007_v694_conditioning_diagnosis.py",
+        "-m",
+        "pytest",
+        "-n0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "--basetemp=/tmp/carnot-8007-c7ghayi0/pytest",
+        "tests/python/test_conditioning_diagnosis_8007.py"
+      ],
+      "name": "owned_units",
+      "scope": "owned",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "pytest",
+        "-n0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "--basetemp=/tmp/carnot-8007-c7ghayi0/consumers",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_sparse_energy_7996.py",
+        "tests/python/test_qwen_energy_calibration_7972.py",
+        "tests/python/test_source_boundary_7852.py"
+      ],
+      "name": "consumer_and_E2E-015",
+      "scope": "owned",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--data-file=/tmp/carnot-8007-c7ghayi0/.coverage",
+        "/tmp/carnot-8007-c7ghayi0"
+      ],
+      "name": "coverage_combine",
+      "scope": "owned",
+      "timeout_s": 900.0
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/carnot-8007-c7ghayi0/.coverage",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8007_v694_conditioning_diagnosis.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8007_v694_conditioning_diagnosis.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "name": "coverage_report",
+      "scope": "owned",
+      "timeout_s": 900.0
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "json",
+        "--data-file=/tmp/carnot-8007-c7ghayi0/.coverage",
+        "-o",
+        "/tmp/carnot-8007-c7ghayi0/coverage.json"
+      ],
+      "name": "coverage_json",
+      "scope": "owned",
+      "timeout_s": 900.0
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_8007_v694_conditioning_diagnosis.py",
+        "scripts/experiments/experiment_8007_v694_conditioning_diagnosis.py",
+        "tests/python/test_conditioning_diagnosis_8007.py"
+      ],
+      "name": "ruff_check",
+      "scope": "owned",
+      "timeout_s": 900.0
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_8007_v694_conditioning_diagnosis.py",
+        "scripts/experiments/experiment_8007_v694_conditioning_diagnosis.py",
+        "tests/python/test_conditioning_diagnosis_8007.py"
+      ],
+      "name": "ruff_format",
+      "scope": "owned",
+      "timeout_s": 900.0
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "--follow-imports=silent",
+        "python/carnot/experiment_8007_v694_conditioning_diagnosis.py",
+        "scripts/experiments/experiment_8007_v694_conditioning_diagnosis.py"
+      ],
+      "name": "strict_mypy",
+      "scope": "owned",
+      "timeout_s": 900.0
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "python/carnot/experiment_8007_v694_conditioning_diagnosis.py",
+        "scripts/experiments/experiment_8007_v694_conditioning_diagnosis.py",
+        "tests/python/test_conditioning_diagnosis_8007.py"
+      ],
+      "name": "spec_coverage",
+      "scope": "owned",
+      "timeout_s": 900.0
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q"
+      ],
+      "name": "full_pytest",
+      "scope": "repository_health",
+      "timeout_s": 120
+    }
+  ],
+  "config": {
+    "alpha": 0.05,
+    "arms": [
+      "raw_q",
+      "historical_fixed_step",
+      "intercept_only"
+    ],
+    "benefit_gate": "both upper_95_gain_bounds_below_zero_and_Holm_p_below_0.05",
+    "block_size": 16,
+    "correction": "Holm",
+    "costs": {
+      "correct": 0,
+      "escalate": 0.5,
+      "supported_reject": 1,
+      "unsupported_accept": 5
+    },
+    "draws": 10000,
+    "exposure": "all roles are previously exposed development",
+    "groups": [
+      "raw_accept",
+      "raw_escalate",
+      "raw_reject"
+    ],
+    "minimum_groups": 32,
+    "minimum_per_class": 4,
+    "optimizer": {
+      "bracket": [
+        -40,
+        40
+      ],
+      "gradient_tolerance": 1e-08,
+      "maxiter": 128,
+      "objective": "fit_BCE_plus_0.001_intercept_squared",
+      "tune_selection": false,
+      "xtol": 1e-12
+    },
+    "primary_outcomes": [
+      "brier",
+      "decision_loss"
+    ],
+    "primary_seed": 17,
+    "saturation_derivative_cutoff": 0.001,
+    "seed": 69407
+  },
+  "method_map": [
+    {
+      "arxiv_id": "2606.25068",
+      "implementation_changes": "Freeze costs, release order and hard update budgets before future adaptation; diagnose decision margins now.",
+      "limitations": "Time-series proxy evidence and projected convex assumptions do not establish binary-verification benefit. Counterfactual probe costs can erase benefit.",
+      "method": "ADOWIP",
+      "retirement_conflicts": "Do not revive retired speculative-update or generator-training claims.",
+      "source_url": "https://arxiv.org/html/2606.25068v1",
+      "status": "adapt_narrow_diagnostic_or_defer_training"
+    },
+    {
+      "arxiv_id": "2602.02056",
+      "implementation_changes": "Reuse clamped local spline derivatives and count coefficient scale and active writes.",
+      "limitations": "Sparse support does not imply convergence or Carnot board speed. Quantization and service cost require their own checks.",
+      "method": "Spline locality",
+      "retirement_conflicts": "Unchanged importance anchoring stays retired; no borrowed FPGA speed claim.",
+      "source_url": "https://arxiv.org/html/2602.02056v4",
+      "status": "adapt_narrow_diagnostic_or_defer_training"
+    },
+    {
+      "arxiv_id": "2604.19592",
+      "implementation_changes": "Freeze source groups and class support; exclude unknown scores and labels. Report group calibration diagnostics without optimizing evaluation outcomes.",
+      "limitations": "Empirical scalar conditioning does not implement the online reduction or satisfy an inherited multicalibration guarantee.",
+      "method": "Multicalibration",
+      "retirement_conflicts": "No confidence-only mechanism is claimed to improve point Brier scores.",
+      "source_url": "https://arxiv.org/html/2604.19592v2",
+      "status": "adapt_narrow_diagnostic_or_defer_training"
+    },
+    {
+      "arxiv_id": "2507.02092",
+      "implementation_changes": "Keep a small normalized decision energy and distinguish optimizer responsiveness from verification utility.",
+      "limitations": "Learned compatibility is not semantic truth. EBT foundation-model results do not transfer to cached Qwen scores.",
+      "method": "EBT",
+      "retirement_conflicts": "No foundation-model or retired energy-as-generator branch.",
+      "source_url": "https://arxiv.org/html/2507.02092v1",
+      "status": "adapt_narrow_diagnostic_or_defer_training"
+    },
+    {
+      "arxiv_id": "2512.15605",
+      "implementation_changes": "Retain exact sigmoid equivalence as a normalization control and distinguish raw offset from learned residual.",
+      "limitations": "The distributional relation supplies no independent correctness certificate.",
+      "method": "ARM-EBM",
+      "retirement_conflicts": "No normalization-only scientific win or generator weight update.",
+      "source_url": "https://arxiv.org/html/2512.15605v4",
+      "status": "adapt_narrow_diagnostic_or_defer_training"
+    }
+  ]
+}

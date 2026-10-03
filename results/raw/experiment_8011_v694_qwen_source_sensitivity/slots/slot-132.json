@@ -1,0 +1,78 @@
+{
+  "arm": "original",
+  "capture_identity": "sha256:c690c1f517fbce73c5da6a2d1e99e3819c3de93e1045fe76d1c8215b54691541",
+  "censor_status": false,
+  "denominator": 1,
+  "donor_group_id": "sha256:7ed30c16cbbfa49bb0ff5343184fd7359c5fce2c21bf71729bc137937fcbed2d",
+  "duration_s": 0.0,
+  "eligibility": false,
+  "exclusion_reason": "paired_context_upper_bound_overrun",
+  "failure_status": false,
+  "family_id": "sha256:7ed30c16cbbfa49bb0ff5343184fd7359c5fce2c21bf71729bc137937fcbed2d:original",
+  "group_id": "sha256:7ed30c16cbbfa49bb0ff5343184fd7359c5fce2c21bf71729bc137937fcbed2d",
+  "input_byte_upper_bound": 3612,
+  "input_tokens": null,
+  "numerator": 0,
+  "parsed": {
+    "citation_valid": false,
+    "completed": false,
+    "finish_reason": null,
+    "probability": null,
+    "schema_valid": false,
+    "source_sentence_id": null,
+    "status": "invalid_envelope",
+    "syntax_valid": false,
+    "usage": {}
+  },
+  "public_eligible": false,
+  "public_hash": "sha256:327564fe11e2db4b44f66b695d189a1278e131f5f5680a27f5594e2064a78e4e",
+  "raw_response": {},
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 32,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Below are 40 facts about Recycling. Fact 1: Recycling is a process to create new items from old and used materials. This helps in reducing energy and potentially useful materials from being wasted. Fact 2: Recycling is a part of waste disposal hierarchy \u2013 Reduce, Reuse, Recycle.Fact 3: Aluminium cans can actually be recycled and put back onto the shelf at your local grocery store in just about 2 months. Fact 4: Aluminium cans are probably the most recycled item, at least in the United States.act 1: Recycling is a process to create new items from old and used materials. This helps in reducing energy and potentially useful materials from being wasted. Fact 2: Recycling is a part of waste disposal hierarchy \u2013 Reduce, Reuse, Recycle.\\\\n\\\\npassage 2:1 Recycling one ton of newspaper saves 15 trees. 2  Every ton of newspaper recycled saves 4100 kWh or enough energy to power a TV for 31 hours. 3  Recycling a soda can saves 96 percent of the energy used to make a can from ore and produces 95 percent less air pollution and 97 percent less water pollution. Recycling one ton of cardboard saves over nine cubic yards of landfill space. 2  Number of landfills in operation in 1978: 14,000; in 1988: 7,924; in 2001: 1,858; in 2006: 1,754. 3  Recycling one ton of newspaper saves 15 trees. 4  Every ton of newspaper recycled saves 4100 kWh or enough energy to power a TV for 31 hours.\\\\n\\\\npassage 3:There are many fun facts about recycling. Here are a number of fun and interesting recycling facts: If you know a fun recycling fact, please share it! 1  It takes 80-100 years for an aluminum can to decompose (break down) in a landfill.2  Aluminum cans can be recycled into: soda cans, pie plates, license plates, thumbtacks, aluminum foil, and many other items. Glass takes over 1,000,000 (one million) years to decompose in a landfill. 2  Glass can be recycled into jars, jewelry, bottles, dishes, drinking glasses, coffee mugs and many other items. 3  It can take up to 700 years for plastic to decompose (break down) in a landfill.\\\\n\\\\n\\\",\\\"question\\\":\\\"important facts about recycling\\\"}\", \"original_answer\": \"Recycling is a process to create new items from old and used materials, thereby reducing energy and potentially useful materials from being wasted. It is a part of the waste disposal hierarchy \u2013 Reduce, Reuse, Recycle. Notably, aluminum cans are among the most recycled items and can be put back onto the store shelves in about 2 months. Recycling one ton of newspaper saves 15 trees and 4100 kWh of energy, enough to power a TV for 31 hours. Other benefits include saving landfill space and reducing air and water pollution. However, not all materials decompose quickly in a landfill; aluminum cans take 80-100 years, and plastic can take up to 700 years. Both aluminum and glass can be recycled into a variety of products.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69410,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 0,
+  "role": "stream",
+  "seed": 69410,
+  "source_cluster_id": "2a41bdf4ce0e13cf16d0bb27396054d549729f1c5854330094ee90437ed837b9",
+  "source_hash": "sha256:c449b7777352944d9a0b90d3154773d3e2bcf2b48ebcb80ea577b88c586d6d5a",
+  "started": false,
+  "status": "excluded",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17
+  ]
+}

@@ -1,0 +1,110 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.7516567810089327,
+  "exclusion_reason": null,
+  "family_id": "sha256:a0fb44b0289d064c6b0ba6a7b8246fd22918dc725f590c297657b439333bef58",
+  "input_tokens": 1194,
+  "invocation_finished_at": "2026-10-01T11:42:56.643557+00:00",
+  "invocation_started_at": "2026-10-01T11:42:54.891898+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1194,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1218
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:5bcc150fd032b95fcb96a066120ebad147492929e5c8ad523fd4b0662bf8558a",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790854976,
+    "id": "chatcmpl-5iu0sB6oO792yCZDhqCbsJGq2dtkUwoT",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 562.631,
+      "predicted_n": 24,
+      "predicted_per_second": 42.65673238765727,
+      "predicted_per_token_ms": 23.442958333333333,
+      "prompt_ms": 1047.881,
+      "prompt_n": 1116,
+      "prompt_per_second": 1065.00642725653,
+      "prompt_per_token_ms": 0.9389614695340502
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1194,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1218
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"129 E Anapamu St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":true,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":true,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Restaurants, French, Bars, Nightlife, Wine Bars, Mediterranean\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"16:30-23:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"16:30-23:0\\\",\\\"Sunday\\\":\\\"16:30-22:0\\\",\\\"Thursday\\\":\\\"16:30-22:0\\\",\\\"Tuesday\\\":\\\"16:30-22:0\\\",\\\"Wednesday\\\":\\\"16:30-22:0\\\"},\\\"name\\\":\\\"The Little Door - Santa Barbara\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2019-07-08 22:24:22\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I really enjoyed this place. The ambiance was great and the food was FANTASTIC. I went with my wife and 1 year old daughter and they were very family friendly. For our entrees we ordered the chicken tandoori and the pan fried salmon. Both were excellent. My one critique was the chicken tandoori had a bit too much couscous, which soaked up a lot of the delicious juices and dried out the dish more than I would've liked. Other than that I was very happy with this place.\\\"},{\\\"review_date\\\":\\\"2019-07-06 03:44:37\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"We had high hopes but overall visit was disappointing. The food was very good.  It just didn't hit the mark in many factors -- Service was pretentious, they changed the fish in the special after we ordered (and we were there at 7:30 so strange they could run out so quickly), the table next to us were told about more specials than we were presented, and didn't like that the dessert menu is on this huge white board they bring to your table.\\\"},{\\\"review_date\\\":\\\"2019-06-30 13:52:35\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Great, unique Santa Barbara spot.  As a local, I had walked by it many times after work and it always looked so inviting.  I was not disappointed.  \\\\n\\\\nAmazing food (the chicken tajine), a fun chat with the owner and excellent fellow guests.  The lemon curd desert was astonishing.  Great live music, not too loud... instrumental and jazzy on the night we were there.\\\\n\\\\nBe aware if you are a party of 2-4 people book outside seating: some of the tables are communal, though the guests we shared with were delightful. Great for parties of 6 or more. Worked find for the two ofus - everyone engaged with each other here and there, but also left you to enjoy your meal with your party.\\\\n\\\\nWill certainly return time and time again.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Sure! Here's an objective overview of The Little Door - Santa Barbara based on the provided structured data in JSON format:\\n\\nThe Little Door - Santa Barbara is a highly-rated restaurant in Santa Barbara, CA that offers French, Mediterranean, and Wine Bar cuisines. With an average rating of 4.5 stars and over 100 reviews, this restaurant is known for its delicious food, cozy atmosphere, and excellent service. The menu features a variety of dishes, including chicken tandoori and pan-fried salmon, which are both highly recommended by reviewers. The restaurant has a trendy and intimate ambiance, with free WiFi and outdoor seating available. The Little Door also offers reservations, takeout, and delivery options.\\n\\nSome reviewers have praised the restaurant's unique and flavorful dishes, while others have noted that the service can be pretentious and that the portions can be small. However, the majority of reviewers agree that The Little Door is a great spot for a romantic dinner or a night out with friends. The restaurant's live music and cozy atmosphere have also been highlighted as strengths by several reviewers. Overall, The Little Door - Santa Barbara is a highly recommended restaurant in the area, offering a unique dining experience with delicious food and a lively atmosphere.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_admission",
+  "source_cluster_id": "sha256:35ffcb260ebe426c97fc4ed3ea77db9e0d01fb3674779cfc50a50f9876b18291",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+  ]
+}

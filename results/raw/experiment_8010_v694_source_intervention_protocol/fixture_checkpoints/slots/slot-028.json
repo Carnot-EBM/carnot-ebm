@@ -1,0 +1,90 @@
+{
+  "arm": "swap",
+  "capture_identity": "sha256:c690c1f517fbce73c5da6a2d1e99e3819c3de93e1045fe76d1c8215b54691541",
+  "censor_status": false,
+  "denominator": 1,
+  "donor_group_id": "sha256:e9b85d668dcedd936af82e3e83c49009debb90f7594fc42956ca8966ebcc56bc",
+  "duration_s": 0.0020148660987615585,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:9f357f23e1b94d812fb2c1df704fcf70fe95e317a042d53d1ae1a0d2a7453f0d:swap",
+  "group_id": "sha256:9f357f23e1b94d812fb2c1df704fcf70fe95e317a042d53d1ae1a0d2a7453f0d",
+  "input_byte_upper_bound": 3067,
+  "input_tokens": 30,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.25,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 18,
+      "prompt_tokens": 30
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:f5518b5f664067fa993b8c935b66bc3799523711725061445fb1cf838c7e7382",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "message": {
+          "content": "{\"unsupported_probability\": 0.25, \"source_sentence_id\": null}"
+        }
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "usage": {
+      "completion_tokens": 18,
+      "prompt_tokens": 30
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 32,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:The tails of the two species are also different. Mule deer have a black tip on the tail and this is quite noticeable against the white rump patch. White tails, as the name implies, don\u2019t have a black tip on the tail. Rather, the top of the tail down to the very tip is the same color as the back and sides of the animal.n this respect, mule deer antlers are similar to those of elk, though the rack is not as large. A white tailed deer has antlers that have a beam, or main antler, that runs the full length of each side of the rack.\\\\n\\\\npassage 2:Buck, or male, white-tailed deer and mule deer have antlers. White-tailed bucks' antlers consist of a main beam with tines growing out from that beam. Mule deer bucks' antlers fork from the beam and then fork again.The result gives a very different look.eproduction. White-tailed deer and mule deer have slightly different reproduction and mating cycles. Mule deer mate from mid-to late November; white-tailed deer breed from late November to early December. Gestation for mule deer is seven months, for white-tailed deer 6 1/2 months.\\\\n\\\\npassage 3:The most noticeable differences between white-tailed and mule deer are the size of their ears, the color of their tails, and the configuration of their antlers.In many cases, body size is also a key difference. The mule deer's tail is black-tipped, whereas the whitetail's is not.Mule deer antlers are bifurcated; they fork as they grow, rather than branching from a single main beam, as is the case with whitetails.Each spring, a buck's antlers start to regrow almost immediately after the old antlers are shed.he mule deer's tail is black-tipped, whereas the whitetail's is not. Mule deer antlers are bifurcated; they fork as they grow, rather than branching from a single main beam, as is the case with whitetails. Each spring, a buck's antlers start to regrow almost immediately after the old antlers are shed.\\\\n\\\\n\\\",\\\"question\\\":\\\"difference between whitetail and mule deer\\\"}\", \"original_answer\": \"You can get your music from iTunes to your Android by first exporting the music to your computer using iTunes. After doing this, you can either transfer the music to your Android wirelessly using a free app or connect the phone to your computer via USB and manually select songs for transfer to your Android phone.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69410,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "seed": 69410,
+  "source_cluster_id": "0c30e30d36ddd17cf0fb5f766b643af9a107dcd039d278f172eb817680c355f7",
+  "source_hash": "sha256:32576bdb766e0e20dea71a167fa7478ddad8a714b39787b6a7336eca9e9885b6",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ]
+}

@@ -1,0 +1,659 @@
+{
+  "MODEL_SPECS": [
+    "unsloth/Qwen3.8-27B-GGUF"
+  ],
+  "acceptance_gate_results": {
+    "benefit": false,
+    "validity": false
+  },
+  "calibration_capture_ready_score": 0,
+  "capacity_receipt": null,
+  "capture_budget": {
+    "bootstrap_draws": 10000,
+    "call_limit": 384,
+    "call_timeout_s": 120,
+    "duration_floor_s": 10,
+    "grammar_sha256": "sha256:21b7f15c0cdb5db56065de0f5ab60db2f316f883c9bcef6a0ce806eda13f600a",
+    "input_tokens": 6000,
+    "intended_families": 384,
+    "load_timeout_s": 300,
+    "max_tokens": 96,
+    "measured_work_cap_s": 3000,
+    "output_tokens": 36864,
+    "seed": 69058,
+    "temperature": 0
+  },
+  "capture_ready_score": 0,
+  "censor_rows": [],
+  "cited_upstream_artifacts": [],
+  "claim_scope": "Public development response-support input capture only; human annotations are fallible; no accuracy, balance or learning benefit claim.",
+  "cleanup": {},
+  "code_config_hashes": [
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7995_v693_qwen_development_capture.py",
+      "sha256": "sha256:6e328e6b184c8ecab23d1ed75a02a8081809f11db3aa3c3cdb8bf1971c599e5d"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/qwen_development_capture_7995.py",
+      "sha256": "sha256:644e31a0b78d7740f3d4b20b0ac7d1bf43f0f1d376c609c76a30c62febf174d9"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7995_v693_qwen_development_capture.py",
+      "sha256": "sha256:e4638eff0cd8ba05fa20a1ae92c0e9acbba2f264403220111e43abc43c89249f"
+    }
+  ],
+  "coverage_statement_counts": {},
+  "current_evaluation_call_count": 0,
+  "current_invocation_ledger": [
+    {
+      "call_id": "private-transcript-load",
+      "ended_monotonic_ns": 545629791850398,
+      "operation": "model_load",
+      "output_tokens": 0,
+      "owner_pid": 894944,
+      "request_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "response_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "scope": "current",
+      "started_monotonic_ns": 545629791777842,
+      "status": "completed"
+    },
+    {
+      "call_id": "calibration-0",
+      "ended_monotonic_ns": 545629798044849,
+      "operation": "generation",
+      "output_tokens": 18,
+      "owner_pid": 894944,
+      "request_sha256": "sha256:04395f956b0caa62f13e224a8e467de8c16651089f93891946b36bbe7124fe4a",
+      "response_sha256": "sha256:efb230698d4953460c4142f685618fca382d4f7e643186b1c0680251d91357b4",
+      "scope": "current",
+      "started_monotonic_ns": 545629797973245,
+      "status": "completed"
+    },
+    {
+      "call_id": "calibration-1",
+      "ended_monotonic_ns": 545629798280091,
+      "operation": "generation",
+      "output_tokens": 18,
+      "owner_pid": 894944,
+      "request_sha256": "sha256:94bfd887da4371a2801b1997829a97927a9213863c9454386ad5a63bea2d0245",
+      "response_sha256": "sha256:efb230698d4953460c4142f685618fca382d4f7e643186b1c0680251d91357b4",
+      "scope": "current",
+      "started_monotonic_ns": 545629798233373,
+      "status": "completed"
+    },
+    {
+      "call_id": "calibration-2",
+      "ended_monotonic_ns": 545629798483433,
+      "operation": "generation",
+      "output_tokens": 18,
+      "owner_pid": 894944,
+      "request_sha256": "sha256:c9f594f60cbc83d18e4d445c7ed9d5d0928bbb04db5853b7a080585e4e88bb51",
+      "response_sha256": "sha256:efb230698d4953460c4142f685618fca382d4f7e643186b1c0680251d91357b4",
+      "scope": "current",
+      "started_monotonic_ns": 545629798437026,
+      "status": "completed"
+    },
+    {
+      "call_id": "calibration-3",
+      "ended_monotonic_ns": 545629798667278,
+      "operation": "generation",
+      "output_tokens": 18,
+      "owner_pid": 894944,
+      "request_sha256": "sha256:9f3cd7fd24f15102d76e7f37e766228d90a77d64c8ab38139878ce6d5b8589c3",
+      "response_sha256": "sha256:efb230698d4953460c4142f685618fca382d4f7e643186b1c0680251d91357b4",
+      "scope": "current",
+      "started_monotonic_ns": 545629798621863,
+      "status": "completed"
+    }
+  ],
+  "duration_s": 0.0071840990567579865,
+  "execution_date": "20261001",
+  "experiment_id": 7995,
+  "flagged_adversarial": false,
+  "gate_check_summary": [],
+  "generated_tokens": 72,
+  "generator_weights_changed": false,
+  "genuine_headroom": null,
+  "gguf_sha256": null,
+  "gpu_lease_receipt": {},
+  "honest_verdict": "complete_disqualified_qwen_development_capture",
+  "inference_mode": "live_gpu",
+  "inference_substrate": "live_llm_inference",
+  "inference_substrate_class": "model_bounded_generation",
+  "milestone": "2026.10.693",
+  "model_identity_receipt": {},
+  "model_invocation_counts": {
+    "generation_calls_attempted": 4,
+    "generation_calls_cancelled": 0,
+    "generation_calls_completed": 4,
+    "generation_calls_failed": 0,
+    "generation_calls_in_flight": 0,
+    "model_loads_attempted": 1,
+    "model_loads_cancelled": 0,
+    "model_loads_completed": 1,
+    "model_loads_failed": 0,
+    "model_loads_in_flight": 0
+  },
+  "model_revision": null,
+  "model_specs": [
+    "unsloth/Qwen3.8-27B-GGUF"
+  ],
+  "offload_evidence": {
+    "layers": null,
+    "loaded_gpu_libraries": null,
+    "native_binary": null,
+    "resident_gpu_receipt": null,
+    "unloaded_gpu_receipt": null
+  },
+  "original_call_receipts": null,
+  "original_capture_code_snapshot": [],
+  "phase_spans": [
+    {
+      "end_s": 0.0071840990567579865,
+      "phase": "owned_work",
+      "start_s": 0
+    }
+  ],
+  "planned_model_specs": [
+    "unsloth/Qwen3.8-27B-GGUF"
+  ],
+  "positive_control_results": {
+    "passed": true,
+    "scope": "private_four_call_transport_only"
+  },
+  "preconditions_checked": [],
+  "production_defaults_changed": false,
+  "protocol_fingerprint": null,
+  "public_role_manifests": {},
+  "random_seed": 69058,
+  "raw_response_shards": [
+    {
+      "path": "/tmp/carnot-7995-vv810c9j/transcript/slots/slot-000.json",
+      "sha256": "sha256:229ae1322b90ac0d7056de49fe2ea95b03b8b3a28c1a41fbee11353a3ee414cb"
+    },
+    {
+      "path": "/tmp/carnot-7995-vv810c9j/transcript/slots/slot-001.json",
+      "sha256": "sha256:52ea653373920c628186f3a0908990ff7f3bc23ce3f1f661b70f16f7baa82787"
+    },
+    {
+      "path": "/tmp/carnot-7995-vv810c9j/transcript/slots/slot-002.json",
+      "sha256": "sha256:cf5ae0cf3e0fd2807a052d8485011b15cfbcea2bedfaa88933f322e91f2f9990"
+    },
+    {
+      "path": "/tmp/carnot-7995-vv810c9j/transcript/slots/slot-003.json",
+      "sha256": "sha256:6563fc7ade1971058197c0502d5970c8984ce4653c1156b780eb4a90e8bfc1d2"
+    }
+  ],
+  "raw_shard_hashes": [
+    {
+      "path": "/tmp/carnot-7995-vv810c9j/transcript/slots/slot-000.json",
+      "sha256": "sha256:229ae1322b90ac0d7056de49fe2ea95b03b8b3a28c1a41fbee11353a3ee414cb"
+    },
+    {
+      "path": "/tmp/carnot-7995-vv810c9j/transcript/slots/slot-001.json",
+      "sha256": "sha256:52ea653373920c628186f3a0908990ff7f3bc23ce3f1f661b70f16f7baa82787"
+    },
+    {
+      "path": "/tmp/carnot-7995-vv810c9j/transcript/slots/slot-002.json",
+      "sha256": "sha256:cf5ae0cf3e0fd2807a052d8485011b15cfbcea2bedfaa88933f322e91f2f9990"
+    },
+    {
+      "path": "/tmp/carnot-7995-vv810c9j/transcript/slots/slot-003.json",
+      "sha256": "sha256:6563fc7ade1971058197c0502d5970c8984ce4653c1156b780eb4a90e8bfc1d2"
+    }
+  ],
+  "reproducibility_checksum": "sha256:5246975698e14d727dbe934dd0d26cd31e15211ab7d283bb27e3d2f059b706f4",
+  "request_rows": [
+    {
+      "family_id": "calibration-0",
+      "public_hash": "sha256:9569da57aaa81e53a2ff69b92777f29cff842a4921bf868e43b96d267efdb1e4",
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"calibration source 0.\", \"original_answer\": \"Answer.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0], \"source_evidence_erased\": false}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "role": "calibration"
+    },
+    {
+      "family_id": "calibration-1",
+      "public_hash": "sha256:62d78e7c7193db70f0e65637a970ac458c899e751d1774b5878f1c38f334ddc8",
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"calibration source 1.\", \"original_answer\": \"Answer.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0], \"source_evidence_erased\": false}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "role": "calibration"
+    },
+    {
+      "family_id": "calibration-2",
+      "public_hash": "sha256:dcf1814e15e37c976c6c07cc33d6ba5f0311d5f86c84e0589ff7f322fc4539fb",
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"calibration source 2.\", \"original_answer\": \"Answer.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0], \"source_evidence_erased\": false}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "role": "calibration"
+    },
+    {
+      "family_id": "calibration-3",
+      "public_hash": "sha256:c068d78ebc4a1e6245c0dd8d54465272baf83dd5505401d5a6ebef7bfb1ef0d0",
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"calibration source 3.\", \"original_answer\": \"Answer.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0], \"source_evidence_erased\": false}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "role": "calibration"
+    }
+  ],
+  "retention_capture_ready_score": 0,
+  "role_completion_counts": {
+    "calibration": {
+      "censored": 0,
+      "completed": 4,
+      "eligible": 4,
+      "excluded": 0,
+      "failed": 0,
+      "independent": 4,
+      "intended": 64,
+      "started": 4
+    },
+    "retention": {
+      "censored": 0,
+      "completed": 0,
+      "eligible": 0,
+      "excluded": 0,
+      "failed": 0,
+      "independent": 0,
+      "intended": 64,
+      "started": 0
+    },
+    "stream": {
+      "censored": 0,
+      "completed": 0,
+      "eligible": 0,
+      "excluded": 0,
+      "failed": 0,
+      "independent": 0,
+      "intended": 256,
+      "started": 0
+    }
+  },
+  "rows": [
+    {
+      "capture_identity": "private-transcript",
+      "censor_status": false,
+      "denominator": 1,
+      "duration_s": 0.0001408240059390664,
+      "eligibility": true,
+      "exclusion_reason": null,
+      "failure_status": false,
+      "family_id": "calibration-0",
+      "input_tokens": 30,
+      "numerator": 1,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 0.25,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 18,
+          "prompt_tokens": 30
+        }
+      },
+      "public_eligible": true,
+      "public_hash": "sha256:9569da57aaa81e53a2ff69b92777f29cff842a4921bf868e43b96d267efdb1e4",
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "message": {
+              "content": "{\"unsupported_probability\": 0.25, \"source_sentence_id\": null}"
+            }
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "usage": {
+          "completion_tokens": 18,
+          "prompt_tokens": 30
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"calibration source 0.\", \"original_answer\": \"Answer.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0], \"source_evidence_erased\": false}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "reserved_tokens": 96,
+      "role": "calibration",
+      "source_cluster_id": "calibration-0",
+      "started": true,
+      "status": "generated",
+      "visible_ids": [
+        0
+      ]
+    },
+    {
+      "capture_identity": "private-transcript",
+      "censor_status": false,
+      "denominator": 1,
+      "duration_s": 8.436804637312889e-05,
+      "eligibility": true,
+      "exclusion_reason": null,
+      "failure_status": false,
+      "family_id": "calibration-1",
+      "input_tokens": 30,
+      "numerator": 1,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 0.25,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 18,
+          "prompt_tokens": 30
+        }
+      },
+      "public_eligible": true,
+      "public_hash": "sha256:62d78e7c7193db70f0e65637a970ac458c899e751d1774b5878f1c38f334ddc8",
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "message": {
+              "content": "{\"unsupported_probability\": 0.25, \"source_sentence_id\": null}"
+            }
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "usage": {
+          "completion_tokens": 18,
+          "prompt_tokens": 30
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"calibration source 1.\", \"original_answer\": \"Answer.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0], \"source_evidence_erased\": false}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "reserved_tokens": 96,
+      "role": "calibration",
+      "source_cluster_id": "calibration-1",
+      "started": true,
+      "status": "generated",
+      "visible_ids": [
+        0
+      ]
+    },
+    {
+      "capture_identity": "private-transcript",
+      "censor_status": false,
+      "denominator": 1,
+      "duration_s": 8.025101851671934e-05,
+      "eligibility": true,
+      "exclusion_reason": null,
+      "failure_status": false,
+      "family_id": "calibration-2",
+      "input_tokens": 30,
+      "numerator": 1,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 0.25,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 18,
+          "prompt_tokens": 30
+        }
+      },
+      "public_eligible": true,
+      "public_hash": "sha256:dcf1814e15e37c976c6c07cc33d6ba5f0311d5f86c84e0589ff7f322fc4539fb",
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "message": {
+              "content": "{\"unsupported_probability\": 0.25, \"source_sentence_id\": null}"
+            }
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "usage": {
+          "completion_tokens": 18,
+          "prompt_tokens": 30
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"calibration source 2.\", \"original_answer\": \"Answer.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0], \"source_evidence_erased\": false}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "reserved_tokens": 96,
+      "role": "calibration",
+      "source_cluster_id": "calibration-2",
+      "started": true,
+      "status": "generated",
+      "visible_ids": [
+        0
+      ]
+    },
+    {
+      "capture_identity": "private-transcript",
+      "censor_status": false,
+      "denominator": 1,
+      "duration_s": 7.579196244478226e-05,
+      "eligibility": true,
+      "exclusion_reason": null,
+      "failure_status": false,
+      "family_id": "calibration-3",
+      "input_tokens": 30,
+      "numerator": 1,
+      "parsed": {
+        "citation_valid": true,
+        "completed": true,
+        "finish_reason": "stop",
+        "probability": 0.25,
+        "schema_valid": true,
+        "source_sentence_id": null,
+        "status": "completed",
+        "syntax_valid": true,
+        "usage": {
+          "completion_tokens": 18,
+          "prompt_tokens": 30
+        }
+      },
+      "public_eligible": true,
+      "public_hash": "sha256:c068d78ebc4a1e6245c0dd8d54465272baf83dd5505401d5a6ebef7bfb1ef0d0",
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "message": {
+              "content": "{\"unsupported_probability\": 0.25, \"source_sentence_id\": null}"
+            }
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "usage": {
+          "completion_tokens": 18,
+          "prompt_tokens": 30
+        }
+      },
+      "request": {
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+        "max_tokens": 96,
+        "messages": [
+          {
+            "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+            "role": "system"
+          },
+          {
+            "content": "{\"complete_source\": \"calibration source 3.\", \"original_answer\": \"Answer.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0], \"source_evidence_erased\": false}",
+            "role": "user"
+          }
+        ],
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "seed": 69058,
+        "temperature": 0,
+        "top_p": 1
+      },
+      "reserved_tokens": 96,
+      "role": "calibration",
+      "source_cluster_id": "calibration-3",
+      "started": true,
+      "status": "generated",
+      "visible_ids": [
+        0
+      ]
+    }
+  ],
+  "run_date": "20261001",
+  "runtime_receipts": [],
+  "sample_size_budget": {
+    "censored": 0,
+    "completed": 4,
+    "eligible": 4,
+    "excluded": 0,
+    "failed": 0,
+    "independent": 4,
+    "independent_unit": "normalized_source_group",
+    "intended": 384,
+    "started": 4,
+    "unit": "complete_response_slot"
+  },
+  "schema": "carnot.exp7995.qwen_development_capture.v1",
+  "server_log": null,
+  "stream_capture_ready_score": 0,
+  "task_id": "exp7995-qwen-development-capture",
+  "terminal_validation_sidecar_path": null,
+  "trained_head_specs": [],
+  "validation_command_manifest_path": null,
+  "validation_receipts": [],
+  "verdict_class": "disqualified",
+  "verifier_is_oracle": false
+}

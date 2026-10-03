@@ -1,0 +1,105 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.2758353359531611,
+  "exclusion_reason": null,
+  "family_id": "sha256:5100f37ca44ef1a9000f2cc1ed35749966fe57e1fd764a79307ce655bab60d50",
+  "input_tokens": 650,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 650,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 673
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:2c6dd1ed81a4a5fa8df95bfcd1bc40cb0c4cccddeb8d7705e8bef374495d5c12",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832563,
+    "id": "chatcmpl-xvQm6eRjv4iMj7rfhVMGo78FQiwaStta",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 538.507,
+      "predicted_n": 23,
+      "predicted_per_second": 42.71067971261284,
+      "predicted_per_token_ms": 23.413347826086955,
+      "prompt_ms": 595.15,
+      "prompt_n": 572,
+      "prompt_per_second": 961.1022431319836,
+      "prompt_per_token_ms": 1.0404720279720279
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 650,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 673
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:It's a single-level home, so the only thing that had to be done was make the shower safe. More grab bars. Installing a grab bar in a tiled shower is fairly straightforward, but there are a few tricks. First, decide where you want the bar. In a tub you'll probably need two bars, one to assist in getting into the tub and one to aid in sitting down, either on a seat or in the tub itself. Stand in the tub or shower and determine a comfortable height for the bar. Next, sit in the tub and determine the position where the bars are most helpful for getting in or out of the tub. Grab bars are equipped with flanges that are screwed to the wall with three hefty Phillips head screws.\\\\n\\\\npassage 2:To help start the hole where you want it, put a piece of masking tape on the tile to keep the business end of the drill bit from slipping until it makes a dimple in the tile. Fortunately, the location of the hole is not micrometer critical, since it will be covered by the grab bar mount.\\\\n\\\\npassage 3:Instructions. Determine where you want the grab bar to go and locate the studs in the wall. Using an electronic stud finder is the easiest way to find the studs. Place the grab bar so the mounting bracket screw holes are on a stud. Mark the holes with a marker. Do this on both ends of the grab bar.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to install grab bar shower\\\"}\", \"original_answer\": \"To install a grab bar in the shower, first decide where you want to place the bar. If you're installing in a tub, you'll likely need two bars: one to assist getting in, and one to assist sitting down. Stand in the tub or shower to determine a comfortable height. Next, sit in the tub to find the most useful positions for the bars. Mark these positions. Use an electronic stud finder to locate the studs in the wall and ensure that the mounting bracket screw holes are on a stud. Mark these holes. Use a drill to start the hole in the tiles where you marked, placing a piece of masking tape on the tile to prevent the drill bit from slipping. The grab bars are then installed with flanges that are screwed to the wall with Phillips head screws.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:918f9845c31894f81e356319930297739e772cea37273b7acc56eb1039649ee7",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ]
+}

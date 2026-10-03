@@ -1,0 +1,648 @@
+{
+  "affected_files": [
+    "python/carnot/experiment_7981_v692_qwen_stream_capture.py",
+    "python/carnot/verify/qwen_stream_capture_7981.py",
+    "scripts/experiments/experiment_7981_v692_qwen_stream_capture.py"
+  ],
+  "capture_manifest": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7981_v692_qwen_stream_capture/validation_command_manifest.json",
+    "sha256": "sha256:3d0c7b5811bb67db8c2e0da7fda7654574f65d884b579db9b8b5b8f11db428ac"
+  },
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--parallel-mode",
+        "--data-file=/tmp/carnot-7969-7fcw0k6i/.coverage",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7981_v692_qwen_stream_capture.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/qwen_stream_capture_7981.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7981_v692_qwen_stream_capture.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-7969-7fcw0k6i/pytest",
+        "tests/python/test_qwen_stream_capture_7981.py",
+        "tests/python/test_experiment_7981_v692_qwen_stream_capture.py",
+        "tests/python/test_qwen_calibration_capture_7969.py",
+        "tests/python/test_experiment_7969_v691_qwen_calibration_capture.py",
+        "tests/python/test_qwen_response_risk_7958.py",
+        "tests/python/test_experiment_7958_v690_qwen_response_risk.py",
+        "tests/python/test_source_boundary_7852.py",
+        "tests/python/test_experiment_7942_v689_sentence_labels.py",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_llama_cpp_process.py",
+        "tests/python/test_current_work_receipt.py",
+        "tests/python/test_gguf_metadata.py",
+        "tests/python/test_gpu_lease_phase_journal.py",
+        "tests/python/test_experiment_7920_v687_qwen_sufficiency.py",
+        "-q"
+      ],
+      "deadline_s": 300,
+      "expected_exit": 0,
+      "failure_reason": null,
+      "name": "unit_consumer_e2e015",
+      "required": true
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-7969-7fcw0k6i/e2e019",
+        "-q",
+        "tests/python/test_experiment_7942_v689_sentence_labels.py"
+      ],
+      "deadline_s": 300,
+      "expected_exit": 0,
+      "failure_reason": null,
+      "name": "e2e019_private",
+      "required": true
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--parallel-mode",
+        "--data-file=/tmp/carnot-7969-7fcw0k6i/.coverage",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7981_v692_qwen_stream_capture.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/qwen_stream_capture_7981.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7981_v692_qwen_stream_capture.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7981_v692_qwen_stream_capture.py",
+        "--date",
+        "20261001",
+        "--fixture-input",
+        "/tmp/carnot-7969-7fcw0k6i/input.json",
+        "--output",
+        "/tmp/carnot-7969-7fcw0k6i/success/experiment_7981_v692_qwen_stream_capture.json"
+      ],
+      "deadline_s": 300,
+      "expected_exit": 0,
+      "failure_reason": null,
+      "name": "fixture_cli",
+      "required": true
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--parallel-mode",
+        "--data-file=/tmp/carnot-7969-7fcw0k6i/.coverage",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7981_v692_qwen_stream_capture.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/qwen_stream_capture_7981.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7981_v692_qwen_stream_capture.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7981_v692_qwen_stream_capture.py",
+        "--date",
+        "20261001",
+        "--cold-replay",
+        "/tmp/carnot-7969-7fcw0k6i/success/experiment_7981_v692_qwen_stream_capture.json"
+      ],
+      "deadline_s": 300,
+      "expected_exit": 0,
+      "failure_reason": null,
+      "name": "cold_fixture_cli",
+      "required": true
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--parallel-mode",
+        "--data-file=/tmp/carnot-7969-7fcw0k6i/.coverage",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7981_v692_qwen_stream_capture.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/qwen_stream_capture_7981.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7981_v692_qwen_stream_capture.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7981_v692_qwen_stream_capture.py",
+        "--date",
+        "20261001",
+        "--root",
+        "/tmp/carnot-7969-7fcw0k6i/missing",
+        "--output",
+        "/tmp/carnot-7969-7fcw0k6i/blocked/experiment_7981_v692_qwen_stream_capture.json"
+      ],
+      "deadline_s": 300,
+      "expected_exit": 0,
+      "failure_reason": null,
+      "name": "blocked_cli",
+      "required": true
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--parallel-mode",
+        "--data-file=/tmp/carnot-7969-7fcw0k6i/.coverage",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7981_v692_qwen_stream_capture.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/qwen_stream_capture_7981.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7981_v692_qwen_stream_capture.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7981_v692_qwen_stream_capture.py",
+        "--date",
+        "20261001",
+        "--fixture-input",
+        "/tmp/carnot-7969-7fcw0k6i/bad-input.json",
+        "--output",
+        "/tmp/carnot-7969-7fcw0k6i/negative/experiment_7981_v692_qwen_stream_capture.json"
+      ],
+      "deadline_s": 300,
+      "expected_exit": 1,
+      "failure_reason": "role_roster",
+      "name": "negative_input_cli",
+      "required": true
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--parallel-mode",
+        "--data-file=/tmp/carnot-7969-7fcw0k6i/.coverage",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7981_v692_qwen_stream_capture.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/qwen_stream_capture_7981.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7981_v692_qwen_stream_capture.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7981_v692_qwen_stream_capture.py",
+        "--date",
+        "20260930"
+      ],
+      "deadline_s": 300,
+      "expected_exit": 2,
+      "failure_reason": "invalid choice",
+      "name": "negative_date_cli",
+      "required": true
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--parallel-mode",
+        "--data-file=/tmp/carnot-7969-7fcw0k6i/.coverage",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7981_v692_qwen_stream_capture.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/qwen_stream_capture_7981.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7981_v692_qwen_stream_capture.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7981_v692_qwen_stream_capture.py",
+        "--date",
+        "20261001",
+        "--cold-replay",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7981_v692_qwen_stream_capture/capture_candidate.json"
+      ],
+      "deadline_s": 300,
+      "expected_exit": 0,
+      "failure_reason": null,
+      "name": "cold_recorded_cli",
+      "required": true
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--keep",
+        "--data-file=/tmp/carnot-7969-7fcw0k6i/.coverage",
+        "/tmp/carnot-7969-7fcw0k6i"
+      ],
+      "deadline_s": 300,
+      "expected_exit": 0,
+      "failure_reason": null,
+      "name": "coverage_combine",
+      "required": true
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "json",
+        "--data-file=/tmp/carnot-7969-7fcw0k6i/.coverage",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7981_v692_qwen_stream_capture.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/qwen_stream_capture_7981.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7981_v692_qwen_stream_capture.py",
+        "-o",
+        "/tmp/carnot-7969-7fcw0k6i/coverage.json"
+      ],
+      "deadline_s": 300,
+      "expected_exit": 0,
+      "failure_reason": null,
+      "name": "coverage_json",
+      "required": true
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/carnot-7969-7fcw0k6i/.coverage",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7981_v692_qwen_stream_capture.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/qwen_stream_capture_7981.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7981_v692_qwen_stream_capture.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "deadline_s": 300,
+      "expected_exit": 0,
+      "failure_reason": null,
+      "name": "coverage_report",
+      "required": true
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_7981_v692_qwen_stream_capture.py",
+        "python/carnot/verify/qwen_stream_capture_7981.py",
+        "scripts/experiments/experiment_7981_v692_qwen_stream_capture.py",
+        "tests/python/test_qwen_stream_capture_7981.py",
+        "tests/python/test_experiment_7981_v692_qwen_stream_capture.py"
+      ],
+      "deadline_s": 300,
+      "expected_exit": 0,
+      "failure_reason": null,
+      "name": "ruff_check",
+      "required": true
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_7981_v692_qwen_stream_capture.py",
+        "python/carnot/verify/qwen_stream_capture_7981.py",
+        "scripts/experiments/experiment_7981_v692_qwen_stream_capture.py",
+        "tests/python/test_qwen_stream_capture_7981.py",
+        "tests/python/test_experiment_7981_v692_qwen_stream_capture.py"
+      ],
+      "deadline_s": 300,
+      "expected_exit": 0,
+      "failure_reason": null,
+      "name": "ruff_format",
+      "required": true
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "--follow-imports=skip",
+        "python/carnot/experiment_7981_v692_qwen_stream_capture.py",
+        "python/carnot/verify/qwen_stream_capture_7981.py",
+        "scripts/experiments/experiment_7981_v692_qwen_stream_capture.py"
+      ],
+      "deadline_s": 300,
+      "expected_exit": 0,
+      "failure_reason": null,
+      "name": "strict_mypy",
+      "required": true
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_qwen_stream_capture_7981.py",
+        "tests/python/test_experiment_7981_v692_qwen_stream_capture.py",
+        "tests/python/test_qwen_calibration_capture_7969.py",
+        "tests/python/test_experiment_7969_v691_qwen_calibration_capture.py",
+        "tests/python/test_qwen_response_risk_7958.py",
+        "tests/python/test_experiment_7958_v690_qwen_response_risk.py",
+        "tests/python/test_source_boundary_7852.py",
+        "tests/python/test_experiment_7942_v689_sentence_labels.py",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_llama_cpp_process.py",
+        "tests/python/test_current_work_receipt.py",
+        "tests/python/test_gguf_metadata.py",
+        "tests/python/test_gpu_lease_phase_journal.py",
+        "tests/python/test_experiment_7920_v687_qwen_sufficiency.py"
+      ],
+      "deadline_s": 300,
+      "expected_exit": 0,
+      "failure_reason": null,
+      "name": "spec_coverage",
+      "required": true
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q"
+      ],
+      "deadline_s": 300,
+      "expected_exit": 0,
+      "failure_reason": null,
+      "name": "repository_health",
+      "required": false
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--parallel-mode",
+        "--data-file=/tmp/carnot-7981-seal-ewxoh1qh/.coverage",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7981_v692_qwen_stream_capture.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/qwen_stream_capture_7981.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7981_v692_qwen_stream_capture.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-7981-seal-ewxoh1qh/pytest",
+        "tests/python/test_qwen_stream_capture_7981.py",
+        "tests/python/test_experiment_7981_v692_qwen_stream_capture.py",
+        "tests/python/test_primary_publication_7928.py",
+        "-q"
+      ],
+      "deadline_s": 300,
+      "expected_exit": 0,
+      "failure_reason": null,
+      "name": "correction_tests",
+      "required": true
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--parallel-mode",
+        "--data-file=/tmp/carnot-7981-seal-ewxoh1qh/.coverage",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7981_v692_qwen_stream_capture.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/qwen_stream_capture_7981.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7981_v692_qwen_stream_capture.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7981_v692_qwen_stream_capture.py",
+        "--fixture-input",
+        "/tmp/carnot-7981-seal-ewxoh1qh/input.json",
+        "--output",
+        "/tmp/carnot-7981-seal-ewxoh1qh/fixture/experiment_7981_v692_qwen_stream_capture.json"
+      ],
+      "deadline_s": 300,
+      "expected_exit": 0,
+      "failure_reason": null,
+      "name": "correction_fixture_cli",
+      "required": true
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--keep",
+        "--data-file=/tmp/carnot-7981-seal-ewxoh1qh/.coverage",
+        "/tmp/carnot-7981-seal-ewxoh1qh"
+      ],
+      "deadline_s": 300,
+      "expected_exit": 0,
+      "failure_reason": null,
+      "name": "correction_coverage_combine",
+      "required": true
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "json",
+        "--data-file=/tmp/carnot-7981-seal-ewxoh1qh/.coverage",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7981_v692_qwen_stream_capture.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/qwen_stream_capture_7981.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7981_v692_qwen_stream_capture.py",
+        "-o",
+        "/tmp/carnot-7981-seal-ewxoh1qh/coverage.json"
+      ],
+      "deadline_s": 300,
+      "expected_exit": 0,
+      "failure_reason": null,
+      "name": "correction_coverage_json",
+      "required": true
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/carnot-7981-seal-ewxoh1qh/.coverage",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7981_v692_qwen_stream_capture.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/qwen_stream_capture_7981.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7981_v692_qwen_stream_capture.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "deadline_s": 300,
+      "expected_exit": 0,
+      "failure_reason": null,
+      "name": "correction_coverage_report",
+      "required": true
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_7981_v692_qwen_stream_capture.py",
+        "python/carnot/verify/qwen_stream_capture_7981.py",
+        "scripts/experiments/experiment_7981_v692_qwen_stream_capture.py",
+        "tests/python/test_qwen_stream_capture_7981.py",
+        "tests/python/test_experiment_7981_v692_qwen_stream_capture.py"
+      ],
+      "deadline_s": 300,
+      "expected_exit": 0,
+      "failure_reason": null,
+      "name": "correction_ruff_check",
+      "required": true
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_7981_v692_qwen_stream_capture.py",
+        "python/carnot/verify/qwen_stream_capture_7981.py",
+        "scripts/experiments/experiment_7981_v692_qwen_stream_capture.py",
+        "tests/python/test_qwen_stream_capture_7981.py",
+        "tests/python/test_experiment_7981_v692_qwen_stream_capture.py"
+      ],
+      "deadline_s": 300,
+      "expected_exit": 0,
+      "failure_reason": null,
+      "name": "correction_ruff_format",
+      "required": true
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "--follow-imports=skip",
+        "python/carnot/experiment_7981_v692_qwen_stream_capture.py",
+        "python/carnot/verify/qwen_stream_capture_7981.py",
+        "scripts/experiments/experiment_7981_v692_qwen_stream_capture.py"
+      ],
+      "deadline_s": 300,
+      "expected_exit": 0,
+      "failure_reason": null,
+      "name": "correction_strict_mypy",
+      "required": true
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_qwen_stream_capture_7981.py",
+        "tests/python/test_experiment_7981_v692_qwen_stream_capture.py"
+      ],
+      "deadline_s": 300,
+      "expected_exit": 0,
+      "failure_reason": null,
+      "name": "correction_spec_coverage",
+      "required": true
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/adversarial_verify.py",
+        "--json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7981_v692_qwen_stream_capture/terminal_candidate.json"
+      ],
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "failure_reason": null,
+      "name": "rejected_terminal_adversarial",
+      "required": true
+    }
+  ],
+  "correction_hashes": [
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7981_v692_qwen_stream_capture.py",
+      "sha256": "sha256:22c9c8be94a0d88030c2919e97fb8dccd82fe75657fe57b36c76cddd8d3f8b96"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/qwen_stream_capture_7981.py",
+      "sha256": "sha256:dcfead55664e254d01a4a6ae8928d9466fef52aaa89d497a4a2544d8944838dc"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7981_v692_qwen_stream_capture.py",
+      "sha256": "sha256:8c647882a28820f8e37b720d651233a67da8ae391f9dc13fd4fb582eb0b32b86"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_qwen_stream_capture_7981.py",
+      "sha256": "sha256:93415c68c666006230675c699befbda3f29b2d9880f6f9dd9109997f6f70e297"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_experiment_7981_v692_qwen_stream_capture.py",
+      "sha256": "sha256:8aa927ff1852808b948fae4891905e3ed0b3b66de5454d34e4a0ff3bffd63dea"
+    }
+  ],
+  "coverage_file": "/tmp/carnot-7969-7fcw0k6i/.coverage",
+  "coverage_includes": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7981_v692_qwen_stream_capture.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/qwen_stream_capture_7981.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7981_v692_qwen_stream_capture.py",
+  "current_date": "20261001",
+  "explicit_tests": [
+    "tests/python/test_qwen_stream_capture_7981.py",
+    "tests/python/test_experiment_7981_v692_qwen_stream_capture.py",
+    "tests/python/test_qwen_calibration_capture_7969.py",
+    "tests/python/test_experiment_7969_v691_qwen_calibration_capture.py",
+    "tests/python/test_qwen_response_risk_7958.py",
+    "tests/python/test_experiment_7958_v690_qwen_response_risk.py",
+    "tests/python/test_source_boundary_7852.py",
+    "tests/python/test_experiment_7942_v689_sentence_labels.py",
+    "tests/python/test_primary_publication_7928.py",
+    "tests/python/test_llama_cpp_process.py",
+    "tests/python/test_current_work_receipt.py",
+    "tests/python/test_gguf_metadata.py",
+    "tests/python/test_gpu_lease_phase_journal.py",
+    "tests/python/test_experiment_7920_v687_qwen_sufficiency.py"
+  ],
+  "frozen_hashes": [
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7981_v692_qwen_stream_capture.py",
+      "sha256": "sha256:45981461952d84492b75d38dc4c7b5aef54fba3815cae462cc36d42a6b8e2b46"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/qwen_stream_capture_7981.py",
+      "sha256": "sha256:dcfead55664e254d01a4a6ae8928d9466fef52aaa89d497a4a2544d8944838dc"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7981_v692_qwen_stream_capture.py",
+      "sha256": "sha256:8c647882a28820f8e37b720d651233a67da8ae391f9dc13fd4fb582eb0b32b86"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_qwen_stream_capture_7981.py",
+      "sha256": "sha256:93415c68c666006230675c699befbda3f29b2d9880f6f9dd9109997f6f70e297"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_experiment_7981_v692_qwen_stream_capture.py",
+      "sha256": "sha256:6a6d23a0f699c029b78a7097b5cdb2ab38cce142a916126729ee111bb803b827"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_qwen_calibration_capture_7969.py",
+      "sha256": "sha256:7512e7e2a5be8635de2ed5321b98c545dada5745044e055cf9b7bea4ba7e6d19"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_experiment_7969_v691_qwen_calibration_capture.py",
+      "sha256": "sha256:f7271b085b48fa33676c584c4801659db43123ede88185fc2cd2ed57462dce26"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_qwen_response_risk_7958.py",
+      "sha256": "sha256:9a1afd73ba0f3ba3b73d179b42fb8f1b7b4974bb436e6046f53c06f2823af1fe"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_experiment_7958_v690_qwen_response_risk.py",
+      "sha256": "sha256:c27bab15221717ff03a33eaf9dd9f9e2524c4ef81a83c27f65ea5cfc07986d07"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_source_boundary_7852.py",
+      "sha256": "sha256:feab9c14e5f9047e247e311a12114998012a5c55a0188ffeeffd42ebe492c70d"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_experiment_7942_v689_sentence_labels.py",
+      "sha256": "sha256:98110a2f1af09c14bb4b48bf0b9e8180315efb4c00a7cb5269fd8999fff66ef7"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_primary_publication_7928.py",
+      "sha256": "sha256:80b0f1f21b9267801da0ac7dfb9c225690f90ca5cfb9d378c2ce5357a5e95b9d"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_llama_cpp_process.py",
+      "sha256": "sha256:321d9a94f2d5a56533eadfc5b0a666313a26ccddad7bf57f77adb258b3766385"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_current_work_receipt.py",
+      "sha256": "sha256:238540f72284baa1c8ed6a5543e0fd3c49db4842dd1945c271a9f827774f8120"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_gguf_metadata.py",
+      "sha256": "sha256:55c3368e248fb4282a5ab55aa706f075d594cd6a9631415a0c673675bf60f14d"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_gpu_lease_phase_journal.py",
+      "sha256": "sha256:bf09728631a3e1a9cdb213f8bf639297801461d74389df3c41468ac18467f2ce"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_experiment_7920_v687_qwen_sufficiency.py",
+      "sha256": "sha256:3efcaf11af21d9f5bd417fe2e49856990083fe02a14875416131bc74925085da"
+    }
+  ],
+  "historical_e2e016_date": null,
+  "scratch_root": "/tmp/carnot-7969-7fcw0k6i",
+  "terminal_commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/adversarial_verify.py",
+        "--json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7981_v692_qwen_stream_capture/terminal_candidate.json"
+      ],
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "name": "adversarial"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7981_v692_qwen_stream_capture/terminal_candidate.json"
+      ],
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "name": "strict_rows"
+    },
+    {
+      "PYTHONPATH": null,
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7981_v692_qwen_stream_capture.py",
+        "--cold-replay",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7981_v692_qwen_stream_capture.json"
+      ],
+      "cwd": "/tmp/carnot-7981-seal-ewxoh1qh",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "name": "cold_primary_external"
+    }
+  ],
+  "transitive_consumers": [
+    "carnot.verify.qwen_response_risk_7958",
+    "carnot.verify.qwen_completion_7932",
+    "carnot.inference.qwen_sufficiency_7920",
+    "carnot.inference.llama_cpp_process",
+    "carnot.inference.sota_models",
+    "carnot.inference.gguf_metadata",
+    "carnot.gpu_lease_phase_journal",
+    "carnot.reporting.primary_publication",
+    "carnot.reporting.current_work_receipt",
+    "carnot.reporting.experiment_7303_validation_scope",
+    "scripts.conductor_gates",
+    "scripts.in_process_doc_reconcile",
+    "carnot.experiment_7969_v691_qwen_calibration_capture",
+    "carnot.verify.qwen_calibration_capture_7969"
+  ]
+}

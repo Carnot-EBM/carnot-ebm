@@ -1,0 +1,123 @@
+{
+  "arm": "duplicate",
+  "capture_identity": "sha256:c690c1f517fbce73c5da6a2d1e99e3819c3de93e1045fe76d1c8215b54691541",
+  "censor_status": false,
+  "denominator": 1,
+  "donor_group_id": "sha256:81c0ccba44ff7823abd93cdc0224648d9412f2d4ed4ac444594967c7b48e91dc",
+  "duration_s": 0.8550090260105208,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:81c0ccba44ff7823abd93cdc0224648d9412f2d4ed4ac444594967c7b48e91dc:duplicate",
+  "group_id": "sha256:81c0ccba44ff7823abd93cdc0224648d9412f2d4ed4ac444594967c7b48e91dc",
+  "input_byte_upper_bound": 5419,
+  "input_tokens": 1208,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1208,
+      "prompt_tokens_details": {
+        "cached_tokens": 1204
+      },
+      "total_tokens": 1231
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:b886258c81faeaba8c8316bdc5ce242b37a7fb764eba96dce3ea9c59a3d6e0a5",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790925873,
+    "id": "chatcmpl-8OgtC8i39na4ZBMWFDJsQWHVmhT0Ujgc",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 1204,
+      "predicted_ms": 541.117,
+      "predicted_n": 23,
+      "predicted_per_second": 42.50467089372539,
+      "predicted_per_token_ms": 23.526826086956522,
+      "prompt_ms": 103.897,
+      "prompt_n": 4,
+      "prompt_per_second": 38.49966794036401,
+      "prompt_per_token_ms": 25.97425
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1208,
+      "prompt_tokens_details": {
+        "cached_tokens": 1204
+      },
+      "total_tokens": 1231
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 32,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"It would be easy to laugh off Vin Diesel's prediction that his film \\\"Furious 7\\\" will win an Oscar next year, but not for the reason you might think. After all, the actor was serious when he recently told Variety \\\"It will probably win best picture at the Oscars, unless the Oscars don't want to be relevant ever.\\\" But rather than ignore it because it's a glossy, blockbuster action film, some might argue that the movie goes against type for Academy Award nominated films because the cast is so diverse. \\\"Furious 7\\\" hits theaters Friday, months after controversy was stirred about the lack of diversity at the Oscars. There were no actors of color nominated and no women in the directing category, which was dominated by white males. Mexican filmmaker Alejandro Gonzalez I\u00f1arritu went on to win best director for \\\"Birdman.\\\" The lack of diversity was so glaring (even with the mostly black cast of the movie \\\"Selma,\\\" which received a nomination for best picture) that it spurred the Twitter hashtag \\\"#OscarsSoWhite.\\\" In contrast, \\\"Furious 7\\\" couldn't be more racially and ethnically inclusive. The cast includes Dwayne \\\"The Rock\\\" Johnson -- a Samoan/black man -- black actors Christopher \\\"Ludacris\\\" Bridges and Tyrese Gibson, Hispanic performer Michelle Rodriguez, Thai martial artist Tony Jaa, Beninese expatriate Djimon Hounsou and the late Paul Walker, a blue-eyed, blond-haired California native. The filmmakers even went so far as to make sure casting directors in Abu Dhabi and Dubai, where key scenes were filmed, found diverse extras. \\\"We were mainly looking for the diverse look of the (United Arab Emirates),\\\" Miranda Davidson, owner of the casting company, told The National. \\\"They really wanted to make sure we reflected the international feel of the country.\\\" Almost since the beginning, the \\\"Fast and Furious\\\" films have had a diverse focus and appeal.  The band of street racers, which encompassed white, black, Asian, Hispanic, male and female and bond as a family, has done well at the box office with each iteration. In 2011, then Boston Globe film critic Wesley Morris wrote, \\\"Go on and laugh your Benetton, Kumbaya, Kashi, quinoa laugh, but it's true: The most progressive force in Hollywood today is the 'Fast and Furious' movies.\\\" \\\"They're loud, ludicrous, and visually incoherent,\\\" he said. \\\"They're also the last bunch of movies you'd expect to see in the same sentence as 'incredibly important.' But they are -- if only because they feature race as a fact of life as opposed to a social problem or an occasion for self-congratulation. (And this doesn't even account for the gay tension between the male leads, and the occasional crypto-lesbian make-out.)\\\" According to the Motion Picture Association of America's 2014 Theatrical Market Statistics Report, while Hispanics make up 17% of the U.S. population they account for 25% of frequent moviegoers. Likewise, women make up 52% of moviegoers. Entertainment Weekly points out that the film franchise is doing a much better job of reflecting its audience than others in Hollywood. \\\"Despite the films' cumulative worldwide gross of almost $2.4 billion, their racial inclusiveness remains an outlier; American movies are still overwhelmingly white,\\\" EW's Chris Lee writes. \\\"According to UCLA's 2015 Hollywood Diversity Report, a mere 16.7% of 2013 films starred minorities in lead roles.\\\" At least one moviegoer tweeted that he appreciated the effort. Diesel told EW the franchise has come a long way from the original 2001 film, which featured segregated gangs of racers pitted against each other. \\\"It doesn't matter what nationality you are,\\\" the star said. \\\"As a member of the audience, you realize you can be a member of that 'family.' That's the beautiful thing about how the franchise has evolved.\\\"\\n\", \"original_answer\": \"Furious 7 star Vin Diesel has predicted that his latest film will win an Oscar for Best Picture, due to its ethnic diversity. This follows a controversy earlier this year regarding the lack of diversity in the Oscar nominations. The Fast and Furious franchise is known for its ethnically diverse cast. Furious 7 is no different, with a racially and ethnically inclusive cast that includes Dwayne 'The Rock' Johnson, Christopher 'Ludacris' Bridges, Tyrese Gibson, Michelle Rodriguez, Tony Jaa, Djimon Hounsou, and the late Paul Walker. The film also made sure to hire diverse extras for key scenes filmed in Abu Dhabi and Dubai. The Fast and Furious films have been praised for their focus on diversity and their representation of race as a fact of life, rather than a social issue.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69410,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "seed": 69410,
+  "source_cluster_id": "3f68deebe62c75c1bee680a5cc7edb33db493a4956730a424b736a37c25e0b07",
+  "source_hash": "sha256:9d7b38c0c86952f549f6ce6456578c5cd562ea529b751dfae4c4fbeb0aa25301",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20
+  ]
+}

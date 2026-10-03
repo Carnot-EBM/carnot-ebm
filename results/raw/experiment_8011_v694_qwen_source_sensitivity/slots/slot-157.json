@@ -1,0 +1,109 @@
+{
+  "arm": "original",
+  "capture_identity": "sha256:c690c1f517fbce73c5da6a2d1e99e3819c3de93e1045fe76d1c8215b54691541",
+  "censor_status": false,
+  "denominator": 1,
+  "donor_group_id": "sha256:95f310aeda315bec83a9c4b1903933b2d2e4f97cef572efbba68e087024ca425",
+  "duration_s": 1.168139414046891,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:95f310aeda315bec83a9c4b1903933b2d2e4f97cef572efbba68e087024ca425:original",
+  "group_id": "sha256:95f310aeda315bec83a9c4b1903933b2d2e4f97cef572efbba68e087024ca425",
+  "input_byte_upper_bound": 2292,
+  "input_tokens": 511,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 511,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 532
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:7793baa0dffba6f598f8ae9726ef6abe07a8bfb759ce2d939300add089a971ed",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"unsupported_probability\": 0.0,\n\"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790925840,
+    "id": "chatcmpl-JQZGLDj6unUvDQWKwSmXRvWJmE1a30Ps",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 494.224,
+      "predicted_n": 21,
+      "predicted_per_second": 42.49085434944479,
+      "predicted_per_token_ms": 23.53447619047619,
+      "prompt_ms": 495.907,
+      "prompt_n": 433,
+      "prompt_per_second": 873.1475861401432,
+      "prompt_per_token_ms": 1.1452817551963048
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 511,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 532
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 32,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Place your Le Creuset grill pan in the soapy solution and scrub gently with a nylon dish scrubber. Run plain, warm water over your Le Creuset grill pan to rinse the soapy solution away. Hand dry your Le Creuset cast iron grill pan with a dish towel to prevent rust.\\\\n\\\\npassage 2:Tackle difficult food stains on your Le Creuset grill pan by soaking it before washing. Cover your grill pan with warm water only, no soap, and allow the grill pan to remain submerged in the water for 15 minutes to loosen stuck-on food particles. Remove your Le Creuset grill pan from the water. Pour 1 tsp. mild hand dish-washing detergent in your kitchen sink and fill the sink with hot water.\\\\n\\\\npassage 3:These are videos on YouTube that also show how to clean the Le Creuset cookware (put in browser address bar: how to clean enamel cookware Le Creuset YouTube -- or paste the links below into your browser address bar):\\\\n\\\\n\\\",\\\"question\\\":\\\"how to clean le creuset grill pan\\\"}\", \"original_answer\": \"To clean a Le Creuset grill pan, firstly tackle difficult food stains by soaking the pan in warm water, without soap, for 15 minutes to loosen stuck-on food particles. After removing the pan from the water, pour 1 tsp. of mild hand dish-washing detergent into your kitchen sink and fill it with hot water. Place your Le Creuset grill pan in this soapy solution and scrub gently with a nylon dish scrubber. Then, rinse the grill pan with plain, warm water to get rid of the soapy solution. Finally, hand dry your Le Creuset cast iron grill pan with a dish towel to prevent rust.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69410,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "seed": 69410,
+  "source_cluster_id": "3665767d031ad9633e59af832dc91b391289d7ee4b560573d4aeb7c93b15b7ea",
+  "source_hash": "sha256:8e764ab084eecde597f3b26c29fcaeb75797e85a975b42cdc4a3f8a6d8ee8788",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ]
+}

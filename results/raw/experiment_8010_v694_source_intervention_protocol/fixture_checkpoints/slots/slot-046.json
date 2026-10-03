@@ -1,0 +1,90 @@
+{
+  "arm": "swap",
+  "capture_identity": "sha256:c690c1f517fbce73c5da6a2d1e99e3819c3de93e1045fe76d1c8215b54691541",
+  "censor_status": false,
+  "denominator": 1,
+  "donor_group_id": "sha256:cc44e5050dbd50a7bfedb4afaf7b448086857ab9a689302d6ca650ea7aee0e6a",
+  "duration_s": 0.002218276960775256,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:0979a7dff07e1b024a151afa424adcbdcab11c32f2c391f626b61428d90858f9:swap",
+  "group_id": "sha256:0979a7dff07e1b024a151afa424adcbdcab11c32f2c391f626b61428d90858f9",
+  "input_byte_upper_bound": 3338,
+  "input_tokens": 30,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.25,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 18,
+      "prompt_tokens": 30
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:b796ba960785e54851b69000706c1c46c0471d7ebea3a6b295f1e34c1d8d4266",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "message": {
+          "content": "{\"unsupported_probability\": 0.25, \"source_sentence_id\": null}"
+        }
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "usage": {
+      "completion_tokens": 18,
+      "prompt_tokens": 30
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 32,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:The factory system was a new way of organizing labor made necessary by the development of machines which were too large to house in a worker's cottage. Furthermore, the efficient use of the new machines required that many of them be installed together where they could all be driven by the.same power source.orking hours were as long as they had been for the farmer, that is, from dawn to dusk, six days per week. Hours were regulated with precision by the factory clock to ensure that a full measure of work was performed.\\\\n\\\\npassage 2:(Answer #1). As more people in the United States went to work in factories, the social structures that had bound Americans together became weaker. America had been a more communal society with informal social structures.With the coming of factories, it became a more rationalized society with more formal structures.Before the factories, people worked out of their own homes. They typically produced most of the things they needed and traded for the few things they did not produce. They lived in places where everyone knew everyone else.ith the rise of factories, all of this changed. Work and home became separate places and ideas. People no longer lived in small communities with a relatively few people who knew them. Informal social pressures could not keep order among large groups of people who did not know one another well.\\\\n\\\\npassage 3:The factory system is a mode of capitalist production that emerged in the late eighteenth century as a result of England \u2019 s Industrial Revolution.Preindustrial England was largely organized around localized forms of production.actory System. BIBLIOGRAPHY. The factory system is a mode of capitalist production that emerged in the late eighteenth century as a result of England \u2019 s Industrial Revolution. Preindustrial England was largely organized around localized forms of production.\\\\n\\\\n\\\",\\\"question\\\":\\\"what did the factory system effect\\\"}\", \"original_answer\": \"To cook a bottom round roast, initially set the crock pot to low and cook for 3 hours. Place the roast on top of onions and carrots with the fat side down. Combine mustard, sugar, Worcestershire sauce, beef broth, and red wine in a separate bowl and pour this over the roast. After 3 hours, turn the roast onto one side and cook for 20 minutes. After 20 minutes, turn the roast on the next side and cook for 20 more minutes, repeating until the roast has the fat side on the bottom again. Continue to cook for about 2 more hours, generally totaling 6 hours of cook time. The roast is done when it can be easily shredded with a fork.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69410,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "seed": 69410,
+  "source_cluster_id": "13b56bdb30dfac0dfbdf609ecba53c61cace35d8f0633bb5b16e3d66a0a7eb47",
+  "source_hash": "sha256:5a34ba309b844496d37624c2c4209f4dd4375f1688357cfb10deaeede660f3fb",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ]
+}

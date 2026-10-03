@@ -1,0 +1,117 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.3978964400012046,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:581ba56b00edd31687611943ac79d5c4e71bd8dee474eb36a131d4e89dc6c391",
+  "input_tokens": 763,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 13,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 763,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 788
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:fcb27e751be80e4f69de55ef2f5cbf1f1a268588f98debc1165bc70452fb20d0",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 13\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886308,
+    "id": "chatcmpl-uxyYQjnTfT7iIqEysMfAbGTD9xDmiTaX",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 597.048,
+      "predicted_n": 25,
+      "predicted_per_second": 41.872680253513956,
+      "predicted_per_token_ms": 23.88192,
+      "prompt_ms": 691.123,
+      "prompt_n": 685,
+      "prompt_per_second": 991.1405061038339,
+      "prompt_per_token_ms": 1.008938686131387
+    },
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 763,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 788
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Hormones: Hormones are chemical substances produced by specific organs of the body like adrenal glands, pituitary glands, pancreas, etc. These are released directly into the blood stream. Each hormone is release for a specific purpose.For example, the TSH hormone released by the pituitary gland in the brain and it targets the thyroid gland in the neck making it to produce thyroid hormones.Similarly other glands produce various hormones targeting specific organs.or example, the TSH hormone released by the pituitary gland in the brain and it targets the thyroid gland in the neck making it to produce thyroid hormones. Similarly other glands produce various hormones targeting specific organs.\\\\n\\\\npassage 2:The pituitary gland is often called the master gland. That is because the pituitary gland produces hormones that regulate other endocrine glands. Some hormones produced by the pituitary gland are: 1. Follicle Stimulating Hormone (FSH): Will be discussed in a later Chapter of the syllabus.2. Luteinising Hormone (LH): Will be discussed in a later Chapter of the syllabus.ome these hormones, called releasing hormones, stimulate the pituitary gland to make other hormones. Others, called release inhibiting hormones, prevent the production of pituitary hormones. An example is growth hormone releasing factor. This causes the production of growth hormone (GH) by the pituitary gland.\\\\n\\\\npassage 3:Best Answer: 1.A hormone is a chemical and a nerve message is an electrical impulse. 2. A hormone affects target organs and a nerve message affects the receiver. 3. A hormone travels through the blood and a nerve message through a nerve. 4.A hormone has long-lasting effects and a nerve message has very short term effects. 5. A hormone is secreted by a gland, a nerve message is initiated by a response to an exterior alteration. hormone has long-lasting effects and a nerve message has very short term effects. 5. A hormone is secreted by a gland, a nerve message is initiated by a response to an exterior alteration.\\\\n\\\\n\\\",\\\"question\\\":\\\"what is the difference to a nerve response and a hormone response\\\"}\", \"original_answer\": \"A hormone response refers to the release of chemical substances by specific organs of the body, such as adrenal glands, pituitary glands, and pancreas. These hormones are released directly into the blood stream and target specific organs to carry out various functions. Hormones have long-lasting effects. On the other hand, a nerve response involves the transmission of electrical impulses, usually as a response to an exterior alteration. Nerve messages affect the receiver and travel through nerves, with their effects being generally short-term.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "4bba96292f5744697455c87faf1d60180fa728719fb6e154b002392f29f030da",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20
+  ]
+}

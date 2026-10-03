@@ -1,0 +1,120 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.5292314359685406,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:9062d87b0510dc603352d1de411a298b8bfe63ffea28303da1a9671b15c77605",
+  "input_tokens": 900,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 900,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 923
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:f559c2ff815f1882558e73b1afbcc33b9a16877766097f69741c79faf378bee2",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886190,
+    "id": "chatcmpl-LxuX1Ox25wD8Dc5nRjLLL5jis0HolwtK",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 542.006,
+      "predicted_n": 23,
+      "predicted_per_second": 42.43495459459859,
+      "predicted_per_token_ms": 23.565478260869565,
+      "prompt_ms": 850.844,
+      "prompt_n": 822,
+      "prompt_per_second": 966.0995435120892,
+      "prompt_per_token_ms": 1.0350900243309002
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 900,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 923
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Mary Ann Johnson's baffling disappearance in 1994: Betrayal and estrangement in Los Angeles\\nMary Ann Johnson, 54: A Mysterious Disappearance from Los Angeles, in 1994\\nIn a story that has puzzled investigators for decades, the mysterious disappearance of Mary Ann Johnson has garnered more questions than answers. The story takes a chilling turn when, days before Christmas in 1994, Mary Ann was approached by three men. They admitted they were paid $800 to inflict physical harm upon her, specifically to break her legs. In a twist of fate or perhaps mercy, the men confessed to Mary Ann about this contract but chose to walk away without harming her. They kept the money but refrained from revealing the identity of the person who hired them or the reasons behind such a violent request.\\nJanuary 19, 1994, marks the last confirmed sighting of Mary Ann. Working as an account representative at Robinson\u2019s May Department Store in Los Angeles, Mary Ann informed her colleagues that she had plans to meet her estranged husband, Andrew Johnson, the following day. Yet, Andrew contradicted this statement, admitting to speaking to Mary Ann on the day she went missing but denying any scheduled meeting. The couple had a history of ups and downs: while they separated in 1993, there was no legal move to divorce. They also co-owned a now-defunct restaurant in Van Nuys, California, named Louisiana West.\\nIn a concerning development, Mary Ann\u2019s vehicle was found parked at the restaurant on January 26. The doors of Louisiana West were locked, and Mary Ann's keys lay inside her car. Whether any evidence was retrieved from the car or restaurant remains unknown. While updates on Mary Ann\u2019s case have been few and far between, she is officially listed as an endangered missing person. Authorities have yet to name a clear person of interest.\\nDescribed as standing at 5 feet 7 inches and weighing 150 pounds, Mary Ann had reddish-brown hair and brown eyes. Details of her last outfit remain unknown. It is also noted that her X-Ray records are not on file. If alive today, Mary Ann Johnson would be 83 years old.\\nShould anyone have any information regarding Mary Ann's case, they are encouraged to contact the Los Angeles Police Department- Adult Missing Persons Unit at (877) 275-5273. The official case number is 941006395.\\nSharing Mary Ann Johnson\u2019s story could be the key to unearthing the truth behind her mysterious disappearance. She is part of our community, and her story deserves to be told.\\nSource\", \"original_answer\": \"The mysterious disappearance of Mary Ann Johnson in 1994 remains unsolved. Days before Christmas that year, three men confessed they were hired to harm her but chose not to. Johnson, an account representative in Los Angeles, was last seen on January 19, 1994. She told colleagues she was meeting her estranged husband, Andrew, the next day, but he denied any such plan. Her vehicle was found at their co-owned restaurant, Louisiana West, a week later. Despite few updates on the case, Johnson is listed as an endangered missing person. Authorities have not named any suspects.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "deb2e3f6acf68127d46ee5b5d3a45afabeeda59303ff3683a0c4c093029a2913",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23
+  ]
+}

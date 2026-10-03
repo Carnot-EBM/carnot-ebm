@@ -1,0 +1,115 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.6440707530127838,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:140a31912cfc3819b9706eccbc7f129da4273694c3b8098c7ca720f80a83bcde",
+  "input_tokens": 1109,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1109,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1132
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:25268b0b3c121d90168070db49c2a4aae632bece6e9fbcfb0bd0914bfd99e9ab",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885857,
+    "id": "chatcmpl-bUqIqEJaPxo8Zdeh8pMr4TB0cSCtDhE6",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 535.291,
+      "predicted_n": 23,
+      "predicted_per_second": 42.967283216045104,
+      "predicted_per_token_ms": 23.273521739130437,
+      "prompt_ms": 977.765,
+      "prompt_n": 1031,
+      "prompt_per_second": 1054.4455978686085,
+      "prompt_per_token_ms": 0.9483656644034918
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1109,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1132
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"214 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Bars, American (Traditional), Restaurants, Cocktail Bars, Nightlife\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-23:0\\\",\\\"Monday\\\":\\\"11:0-23:0\\\",\\\"Saturday\\\":\\\"11:0-23:0\\\",\\\"Sunday\\\":\\\"11:0-23:0\\\",\\\"Thursday\\\":\\\"11:0-23:0\\\",\\\"Tuesday\\\":\\\"11:0-23:0\\\",\\\"Wednesday\\\":\\\"11:0-23:0\\\"},\\\"name\\\":\\\"Union Ale\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2016-09-23 22:32:27\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"2nd transformation in 18 months...same owners, but now it feels like there's even less on the menu, and it's even more disorganized. What remains arrives without salad or fries or even a tidbit of  garnish. Your food comes on a metal tray without napkins or eating tools. If you order a hamburger, expect it to come under a super greasy bun. \\\\n\\\\nThe patio is no longer covered so you'll be sitting in direct sunlight. It feels like this place is having an extended identity crisis. \\\\n\\\\nDamn if the funk zone doesn't need some decent dependable lunch places. This establishment is really missing out on an easy opportunity here. Great location, nice facility, but no thought or care in what they're serving up or in what they want to be.\\\"},{\\\"review_date\\\":\\\"2016-01-10 02:25:11\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"Horrible service. It took 20 minutes to get a drink order when it wasn't even that busy. Their food is goods\\\"},{\\\"review_date\\\":\\\"2016-01-04 20:55:40\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"2 stars for the beer choices which is the only positive remnant of what was one of my go to places downtown. They've all but eliminated all the great food they served. They've now removed all but 2 TVs. Very disappointing business choices. I walked in this past weekend to catch a nationally televised hockey game, something I've done dozens of times here in the past. The bartender acknowledges us but is so busy covering the entire restaurant that he didn't get to us for nearly 10 minutes. We had to walk out and find a more suitable place to catch the game. Can't say I'll have a desire to go back. This town was already lacking decent sports bars with a good beer selection.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Union Ale is a local business located at 214 State St, Santa Barbara, CA. The establishment operates seven days a week from 11:00 to 23:00. It falls under various categories including Bars, American (Traditional), Restaurants, Cocktail Bars, and Nightlife. Union Ale offers outdoor seating and is suitable for groups. However, it doesn't provide WiFi and doesn't take reservations. The ambiance is casual and the business has an overall rating of 3.5 stars. \\n\\nBased on customer reviews, Union Ale has gone through transformations which resulted in a decrease in menu options and organization. Customers have reported a lack of napkins and eating tools, and unappealing food presentation. The uncovered patio has also been a concern. Additionally, service has been criticized for being slow, especially when ordering drinks. The removal of TVs has disappointed some customers who enjoyed watching sports at the establishment. The food and beer choices have been complimented, but overall, the business has received negative feedback about its service and atmosphere.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "calibration",
+  "source_cluster_id": "6385d0c7385bae03aabd75bb936a4d2501fdbdd59e5c363428eb9465892ae0d4",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18
+  ]
+}

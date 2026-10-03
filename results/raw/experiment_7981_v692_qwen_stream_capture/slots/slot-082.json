@@ -1,0 +1,109 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.5575159930158406,
+  "exclusion_reason": null,
+  "family_id": "sha256:1186fd6f5233edf347fb545022f79ad3b9b201587195a1887584d85b742c3979",
+  "input_tokens": 914,
+  "invocation_finished_at": "2026-10-01T11:43:06.797432+00:00",
+  "invocation_started_at": "2026-10-01T11:43:05.239916+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 914,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 938
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:64397c14ce88a85f01b8beb19f2d6ae6eb94dbfec04650a58e8a0368eb131f40",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790854986,
+    "id": "chatcmpl-okP9ftzzjqckKyxTkv9V6XxQrJt841O3",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 563.211,
+      "predicted_n": 24,
+      "predicted_per_second": 42.612804082306624,
+      "predicted_per_token_ms": 23.467125,
+      "prompt_ms": 844.327,
+      "prompt_n": 836,
+      "prompt_per_second": 990.1377073100825,
+      "prompt_per_token_ms": 1.0099605263157894
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 914,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 938
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Preheat the oven to 475 degrees F. Place the tenderloin on a roasting rack. Sprinkle generously with kosher salt and sugar, which will deepen the savory flavors.Press the crushed peppercorns all over the surface of the meat. Insert a meat thermometer and place in the oven until the beef registers 120 to 125 degrees F for medium-rare/rare.Beef will probably cook in 20 to 25 minutes depending on its temp before it goes in the oven.reheat the oven to 475 degrees F. Place the tenderloin on a roasting rack. Sprinkle generously with kosher salt and sugar, which will deepen the savory flavors.\\\\n\\\\npassage 2:3. Roast. Throw that skillet in the oven for about 10 to 15 minutes more, flipping the tenderloin over halfway through cooking, until the meat reaches 140\u00b0F (or, if you don't have a meat thermometer, until it feels firm and springs back when pressed with your finger and the juices run clear when poked with a knife).. Roast. Throw that skillet in the oven for about 10 to 15 minutes more, flipping the tenderloin over halfway through cooking, until the meat reaches 140\u00b0F (or, if you don't have a meat thermometer, until it feels firm and springs back when pressed with your finger and the juices run clear when poked with a knife).\\\\n\\\\npassage 3:Let the tenderloin cool before serving. Pan-roasting pork tenderloin Preheat your oven to 425\u00baF and coat an ovenproof skillet with oil. Sear the tenderloin over medium-high heat until it\u2019s brown on all sides. Roast the tenderloin for 15 to 20 minutes until the internal temperature reads 145\u00baF.ou can grill it or roast it. Grilling pork tenderloin Always cook the tenderloin over indirect heat. Depending on its size, it usually takes 20 to 30 minutes over medium-high heat. Flip the tenderloin every 4 minutes until the internal temperature reaches 135\u00baF to 140\u00baF.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to cook tenderloin in the oven\\\"}\", \"original_answer\": \"Based on the given passages, here is how to cook a tenderloin in the oven:\\n\\n1. Preheat the oven to 475 degrees F.\\n2. Place the tenderloin on a roasting rack.\\n3. Sprinkle generously with kosher salt and sugar.\\n4. Press crushed peppercorns all over the surface of the meat.\\n5. Insert a meat thermometer and place in the oven until the beef registers 120 to 125 degrees F for medium-rare/rare.\\n6. Reheat the oven to 475 degrees F.\\n7. Roast the tenderloin for 20 to 25 minutes, or until it reaches 140 degrees F.\\n\\nNote that the passages do not provide specific instructions on how long to cook the tenderloin, as the recommended cooking time may vary depending on the size and thickness of the meat. It is important to use a meat thermometer to ensure that the tenderloin reaches a safe internal temperature of at least 145 degrees F for medium-rare or 160 degrees F for medium.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_update",
+  "source_cluster_id": "sha256:d856fcaa3d54638ab91846b21ed44cea41d161dc1edd1398df29c5b443ce76e6",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ]
+}

@@ -1,0 +1,115 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.278008144989144,
+  "exclusion_reason": null,
+  "family_id": "sha256:c3ef47b1bbefaca6cdfe7dfc39cf6aa986d1fe13d406cc0ba1b2eee392d6f028",
+  "input_tokens": 614,
+  "invocation_finished_at": "2026-10-01T11:44:52.162044+00:00",
+  "invocation_started_at": "2026-10-01T11:44:50.884033+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.85,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 614,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 638
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:b3324aca8220b62bfc505d5e42fcd38b6f7a4e0ad332cd065da88d8dd2764b99",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.85,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855092,
+    "id": "chatcmpl-R8hvwHeefRFpFb12zl8Giqb0sO9Avgil",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 563.049,
+      "predicted_n": 24,
+      "predicted_per_second": 42.625064603613545,
+      "predicted_per_token_ms": 23.460375,
+      "prompt_ms": 574.715,
+      "prompt_n": 536,
+      "prompt_per_second": 932.6361761916776,
+      "prompt_per_token_ms": 1.0722294776119403
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 614,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 638
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Part 2. 1  1. Do not pay upfront fees. Many companies offer to help you sell your timeshare. 2  2. Write up a new contract. Once you find a buyer, you'll have to draft a new contract. 3  3. Deal with your loan. If you still have a loan on a timeshare, don't expect a new buyer to take over your loan.  4. Close the sale.\\\\n\\\\npassage 2:Finding A Buyer. 1  1. Review your agreement. Before you can sell your timeshare, take some time to review your agreement. 2  2. Ask your property manager about in-house options. Contact the property manager of your timeshare and ask him about in-house options. 3  3. Advertise the property.\\\\n\\\\npassage 3:If you find that buying a timeshare or vacation plan makes sense, comparison shopping is your next step. 1  Evaluate the location and quality of the resort, as well as the availability of units. Visit the facilities and talk to current timeshare or vacation plan owners about their experiences.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to sell a timeshare yourself\\\"}\", \"original_answer\": \"Sure! Here's a brief answer to the question \\\"How to sell a timeshare yourself\\\" based on the given passages:\\n\\nTo sell a timeshare yourself, start by reviewing your agreement and understanding any restrictions or requirements for selling. Next, contact your property manager to ask about in-house options for selling your timeshare, such as listing it through the resort's resale program. If this option is not available, consider advertising the property yourself through online marketplaces or local classifieds. When you find a buyer, draft a new contract and work with them to close the sale. Be sure to address any outstanding loan balance associated with the timeshare, and carefully follow all local and state regulations throughout the process.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "calibration_replay",
+  "source_cluster_id": "sha256:d4ecb06d8a04ef2ada7d9473ad7c9763184759846858557f9ff8306e5762053f",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21
+  ]
+}

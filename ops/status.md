@@ -1,5 +1,104 @@
 # Carnot — Operational Status
 
+**Last Updated:** 2026-10-02
+
+## 2026-10-02 — Exp8027 native library shutdown repair
+
+The original 90-test subset passed its assertions but crashed with exit 139
+during ELF finalization. Repeated copies truncated an already loaded extension
+inode. Build and publication copies now stage a new inode and replace the
+destination atomically, preserving live mappings and previous bytes if a copy
+fails. A new subprocess regression reproduced SIGSEGV before the repair.
+All original test/helper definitions remain unchanged.
+
+The repaired subset passes 92 tests with a normal exit (one existing ast.Num
+deprecation warning). Downstream learning/retention/fix-gate consumers pass
+40 tests; adjacent eligibility/decision checks pass 42 tests. Combined Python
+and direct CLI coverage measures 437/437 statements. All 17 owned validation
+commands pass, including 48 unit/consumer/E2E tests; native coverage measures
+244/244 executable source lines with raw generated-macro counters retained.
+Scoped Ruff, formatting,
+strict mypy and spec traceability pass, as do E2E-003/004 and E2E-015/019.
+The published numerical measurement passes cold replay, adversarial verification
+and strict row consistency; its original timings and scientific verdict remain
+preserved. Evidence is retained under
+`results/raw/experiment_8027_v695_native_update_cost/fixgate-validation/`.
+
+The Rust workspace tests pass. Repository-wide spec traceability retains 1,142
+existing gaps; full-workspace formatting still reports differences in untouched
+Rust files. The prior bounded full-suite diagnostic remains a failed, timed-out
+health check. These scoped results do not establish a repository-wide pass.
+`scripts/research_conductor.py` is byte-identical to HEAD.
+Final reconciliation passes documentation freshness and reports only the
+existing repository-wide spec-traceability gaps.
+
+## 2026-10-01 — Exp7992 test repair
+
+Private V693 validation now reads its saved invocation fixture instead of the
+mutable active roadmap. Malformed live YAML retains its original snapshot and
+publishes a blocked result that passes cold replay. Damaged live flow mappings
+are expressed as valid block YAML, preserving every current task value and
+prompt edit. All original test/helper functions remain unchanged.
+
+The conductor-equivalent subset passes 92 tests (one existing warning), and
+roadmap/gate/fix-erasure consumers pass 116 tests. Combined unit and real CLI
+coverage reaches 260/260 statements across the two V693 modules and CLI. Ruff,
+formatting, strict mypy and scoped spec traceability pass. Repository-wide spec
+traceability retains 1,142 unrelated gaps. Validation evidence and the earlier
+failed consumer receipt remain in `/tmp/carnot7992-fixgate-brqr737a/`.
+`scripts/research_conductor.py` is byte-identical to HEAD; historical primary
+artifacts remain preserved.
+All 14 required frozen checks pass after the recorded consumer recheck,
+including E2E-018 (18 tests). The repository-wide diagnostic reached its
+180-second deadline with failures and is retained as failed health. Final
+reconciliation passes documentation freshness and reports only the existing
+1,142 repository-wide spec-traceability gaps. Durable verification evidence is
+in `results/raw/experiment_7992_v693_contract_methods/fixgate-validation/`.
+
+## 2026-10-01 — Exp7975 health-receipt planning repaired
+
+The frozen validation plan retains an explicit repository-health entry when
+reusing an owned prior measurement. Execution preserves its failed outcome,
+records the receipt source hash, and excludes the reused command from current
+child observations. The saved full-suite diagnostic is retained without rerun.
+All original assertions and prior implementation changes remain intact.
+
+Verification: 106 affected/transitive tests and 147 core/conductor tests pass
+(one existing deprecation warning in the latter). All 18 current frozen checks
+pass, including E2E-016's 24-family fixture/replay and E2E-017's supervisor CLI
+routes. Unit and actual CLI coverage measure 254/254 statements across the four
+affected modules/CLIs. Scoped Ruff, formatting, strict mypy, and spec coverage
+pass. Evidence: `results/raw/experiment_7975_v691_arc_supervisor_delta/fixgate-validation/`.
+`scripts/research_conductor.py` is byte-identical to HEAD. Repository-wide spec
+traceability retains 1,142 pre-existing gaps; historical full-suite health
+remains a failed diagnostic, and these scoped checks do not claim a global pass.
+Final reconciliation passes documentation freshness and reports only the
+pre-existing repository-wide spec traceability gaps.
+
+## 2026-10-01 — Exp7967 test repair verified
+
+Missing and malformed historical sources now publish blocked qualification
+with readiness zero and intact failure-log hashes. Private temporary storage
+works for both library code and children, with environment and cache cleanup
+after normal and exceptional exits. All original test assertions remain.
+
+The affected/transitive suite passes 238 tests. The conductor/core/fix-gate
+subset passes 109 tests with one existing deprecation warning. All 25 frozen
+command checks pass, including E2E-015's three private CLI tests and E2E-016's
+24-family fixture and cold replay. Combined coverage is 831/831 statements
+across seven modules and CLIs, including 298/298 Exp7967 statements. Ruff,
+formatting, strict mypy and scoped spec coverage pass.
+
+The private checked primary and cold replay succeed, while execution
+qualification remains zero: two historical blocked fixture primaries omit
+`fixture_ready_score`, so their unchanged reader gates reject them. This
+repair does not establish natural fitting or an independent verifier win.
+Repository-wide spec traceability retains 1,142 unrelated missing references;
+the full-suite health receipt remains a separate failed diagnostic.
+Final reconciliation passes documentation freshness and fails only the
+repository-wide test-to-spec traceability check.
+Verification evidence is in `/tmp/carnot7967-repair-irihvsy5/`.
+
 ## 2026-09-30 — V689 sentence annotation CLI test repair
 
 - Exp7942 direct script-path execution resolves the repository-owned publication
@@ -17628,3 +17727,37 @@ Scoped Ruff and spec coverage passed. E2E-015/017/018 private tests passed;
 E2E-016 fixture and cold replay passed with the historical 20260929 date.
 Repository-wide test/spec debt remains open; no global-suite pass is claimed.
 Next: normal conductor review and activation of the staged milestone.
+
+## 2026-10-01 — V692 research plan staged
+
+Milestone 2026.10.692 contains thirteen tasks, Exp7979–Exp7991, in four phases.
+The design and staged YAML have matching task tables, machine contracts and a
+full-task digest. The previous V691 design is preserved. Activation has not
+been performed by this planning task.
+
+The plan follows qualified V691 Qwen capture and its scalar-calibration null.
+It tests public source features on a reserved panel, then delayed constraint
+addition, restart/retention and issued-state confidence through separate inputs.
+The small learning replay supports descriptive causal evidence; it cannot meet
+the registered minimum block count for a population-level benefit claim.
+ARC supervisor evidence, complete service cost and board limits remain included.
+
+Validation: schema/prior-failure, exclusion and overdue-priority checks pass;
+113 relevant unit/private CLI tests pass, including E2E-018 authority routes.
+Scoped Ruff, explicit-path spec coverage and exact contract/gate checks pass.
+No new scientific result, hardware execution or publication is claimed.
+`research-roadmap.yaml` and `scripts/research_conductor.py` are unchanged.
+## 2026-10-02 — V694 staged; execution pending
+
+Milestone 2026.10.694 plans thirteen tasks, Exp8005–Exp8017, across four phases.
+The complete design table, full executable JSON and digest match
+`research-roadmap-next.yaml`. The active roadmap and conductor source are
+unchanged. V693's incomplete design is preserved as a historical document.
+
+V693 qualified capture and finite delayed learning, but its independent audit
+found no typed-decision benefit. Static exposure custody and delayed-error
+reconstruction still need resolution. V694 tests optimizer conditioning and
+equal-budget updates selected after label release, with matched classical
+controls and independent retention/restart checks. A bounded Qwen source panel,
+real Rust binding prototype and cumulative precision analysis have explicit
+claim limits. No new science or device speedup is claimed by this plan.

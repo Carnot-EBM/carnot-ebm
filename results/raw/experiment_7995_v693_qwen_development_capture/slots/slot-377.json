@@ -1,0 +1,106 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.2098254369338974,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:b7e0b47845870e3c518f1f52340870d86ccee64ef24ed2f76c2f9dfb13882a44",
+  "input_tokens": 562,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 562,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 585
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:403c32e318334135315e2d63b1a4190f472576f85dff51e8928e2bdd1838057f",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886382,
+    "id": "chatcmpl-TYQJpP8jlHOnpsuBP0wFVa062AHcMHAn",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.329,
+      "predicted_n": 23,
+      "predicted_per_second": 42.4880248425634,
+      "predicted_per_token_ms": 23.53604347826087,
+      "prompt_ms": 530.768,
+      "prompt_n": 484,
+      "prompt_per_second": 911.8861724896752,
+      "prompt_per_token_ms": 1.0966280991735537
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 562,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 585
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:If your's doesn't, use these tips to drain your pool: \u2022 Shut off the power to the pool's filtration system at the circuit breaker and turn off the. automatic water fill valve. \u2022 Find the sewer clean-out port to access the sanitary sewer line.\\\\n\\\\npassage 2:\u2022 Run a drainage hose from the sewer clean-out port to the pool, and connect it to a. submersible pump. Lower the pump into the deepest area of the pool, near the drain. As. you drain, monitor flow into the clean-out port to ensure water doesn't back up into your. home's sink and shower drains.\\\\n\\\\npassage 3:As a result, it's usually a good idea to have a vinyl lined pool drained by professional. However, if you are confident that your pool can withstand the draining process, rent a sump pump and connect it to the sewer drainage pipe. Place the pump in the deepest part of the pool and turn it on.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to safely drain your pool\\\"}\", \"original_answer\": \"To safely drain your pool, first, turn off the power to the pool's filtration system at the circuit breaker and turn off the automatic water fill valve. Then, locate the sewer clean-out port to access the sanitary sewer line. A drainage hose should be run from the sewer clean-out port to the pool and connected to a submersible pump. This pump should be lowered into the deepest area of the pool, near the drain. As you drain, monitor the flow into the clean-out port to ensure water doesn't back up into your home's sink and shower drains. It may be wise to hire a professional if your pool has a vinyl liner, but if you are confident in your pool's ability to withstand the draining process, you can rent a sump pump and connect it to the sewer drainage pipe instead. Place the pump in the deepest part of the pool and turn it on.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "1b9c131646780e66afc104cf87819564d7120a34dc8061f768dc282e8ce296ed",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ]
+}

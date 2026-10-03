@@ -1,0 +1,107 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.519203973992262,
+  "exclusion_reason": null,
+  "family_id": "sha256:84834c09d0934a8777512581760b1b8531b1c548b71c9dc5f0beeee4fc4034d7",
+  "input_tokens": 876,
+  "invocation_finished_at": "2026-10-01T11:44:39.870603+00:00",
+  "invocation_started_at": "2026-10-01T11:44:38.351397+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 876,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 900
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:abb83de9603c74a0dd46e2fd9df73e7519d42eaa23563d8edb78393dd541177d",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855079,
+    "id": "chatcmpl-1bNUtXeVLzGUTdg2nzbxtcdqYYc3lTTN",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.0,
+      "predicted_n": 24,
+      "predicted_per_second": 42.47787610619469,
+      "predicted_per_token_ms": 23.541666666666668,
+      "prompt_ms": 822.982,
+      "prompt_n": 798,
+      "prompt_per_second": 969.6445365755267,
+      "prompt_per_token_ms": 1.0313057644110275
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 876,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 900
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Look for your invoice template that you are using, highlight it, right click on your mouse and Edit Template. This will open up the Basic Customization screen. Let your eyes scan to the bottom section of that page called Company & Transaction Information, and you will see a box that says beside it \u2013 Print Status Stamp.Clicking on that box will make a check mark which will then activate that Status Stamp to be printed when it has been PAID.If you email an invoice that has been paid, then that PAID stamp will appear in the PDF document that QuickBooks sends. And that\u2019s how you get the PAID stamp to appear on a paid invoice.Note: www.quickbookstrained.com is now mobile friendly.From the web address you can choose Options/Mobile formatted and the site will appear in all its living colour for you to view. Check it out.et your eyes scan to the bottom section of that page called Company & Transaction Information, and you will see a box that says beside it \u2013 Print Status Stamp. Clicking on that box will make a check mark which will then activate that Status Stamp to be printed when it has been PAID.\\\\n\\\\npassage 2:Modify a Template. Before you void the invoice you need to create your template. Click the customize manage templates button. Click the Copy button to make a copy of the template, then change the template name to \u201cVoid Invoice\u201d in the Template Name box.Click \u201cOK\u201d to close the window. Un-check the Print Status Stamp box, then click Additional Customization.lick the customize manage templates button. Click the Copy button to make a copy of the template, then change the template name to \u201cVoid Invoice\u201d in the Template Name box. Click \u201cOK\u201d to close the window.\\\\n\\\\npassage 3:(No Ratings Yet) Loading... For QuickBooks 2011, Intuit improved the Paid stamp to reflect the date the customer invoice was paid, as shown in the screenshot below. Unfortunately, a Paid stamp is also applied to vendor bills, and that stamp does not reflect the date the bill was paid.or QuickBooks 2011, Intuit improved the Paid stamp to reflect the date the customer invoice was paid, as shown in the screenshot below.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to add a paid stamp in quickbooks\\\"}\", \"original_answer\": \"Sure! Based on the given passages, here's a brief answer to the question \\\"How to add a paid stamp in QuickBooks\\\":\\n\\nTo add a paid stamp in QuickBooks, follow these steps:\\n\\n1. Open the invoice template you want to use.\\n2. Right-click on the template and select \\\"Edit Template.\\\"\\n3. Scroll down to the \\\"Company & Transaction Information\\\" section.\\n4. Check the box next to \\\"Print Status Stamp.\\\"\\n5. Click \\\"OK\\\" to save the changes.\\n\\nThis will activate the paid stamp on the invoice, and it will be printed when the invoice is marked as paid. If you want to customize the paid stamp to include the date the invoice was paid, you can do so by going to \\\"Additional Customization\\\" and selecting the \\\"Paid\\\" stamp. Then, click \\\"Edit\\\" and change the format of the date field to include the date the invoice was paid.\\n\\nI hope this helps! Let me know if you have any further questions or if you need more information.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_update",
+  "source_cluster_id": "sha256:692954f03ddb7542218bacf3664862a348d03ed00909209aff13323feae19402",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ]
+}

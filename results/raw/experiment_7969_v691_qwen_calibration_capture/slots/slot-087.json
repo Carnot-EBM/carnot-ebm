@@ -1,0 +1,105 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.3004802399664186,
+  "exclusion_reason": null,
+  "family_id": "sha256:2bf38e03ef09b51d359f0f94a077e6f4797170b20c662d106a41517002f9ce21",
+  "input_tokens": 685,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 3,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 685,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 709
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:39d94b36816dc98cccf90debe123ebeeba9d9f6285a4cc595d4d311be860da6d",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 3\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832593,
+    "id": "chatcmpl-brG8f5i7FAA5zZiCkKCy4eKZ2BhJx9Wh",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 563.718,
+      "predicted_n": 24,
+      "predicted_per_second": 42.57447872872606,
+      "predicted_per_token_ms": 23.488249999999997,
+      "prompt_ms": 617.967,
+      "prompt_n": 607,
+      "prompt_per_second": 982.2530976573183,
+      "prompt_per_token_ms": 1.0180675453047776
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 685,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 709
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Paris (CNN)Six survivors of the Paris kosher supermarket siege in January are suing a French media outlet for what they call dangerous live broadcasting during the hostage-taking. According to Paris prosecutor's spokeswoman Agnes Thibault-Lecuivre, the lawsuit was filed March 27 and a preliminary investigation was opened by the prosecutor's office Wednesday. The media outlet, CNN affiliate BFMTV, is accused of endangering the lives of the hostages, who were hiding in a cold room during the attack, by broadcasting their location live during the siege. BFM in a statement Friday said one of its journalists \\\"mentioned only once the presence of a woman hidden inside the Hyper Cacher, on the basis of police sources on the ground.\\\" \\\"Immediately, the chief editor felt that this information should not be released. It therefore has subsequently never been repeated on air or posted on-screen. BFMTV regrets that the mention of this information could cause concern to the hostages, as well as their relatives, that their lives were in danger,\\\" the statement said. Gunman Amedy Coulibaly, also suspected in the slaying of a police officer, stormed the Hyper Cacher Jewish supermarket on January 9, killing four people and taking others hostage. He was killed in the police operation to end the siege. A 24-year-old supermarket employee, Malian-born Lassana Bathily, was hailed as a hero afterward when it emerged that he had risked his life to hide 15 customers from Coulibaly in the cold room. The hostage-taking was the culmination of three days of terror in Paris that began with the January 7 shooting of 12 people at the offices of French satirical magazine Charlie Hebdo. The two brothers blamed for that attack, Cherif and Said Kouachi, were killed on January 9 after a violent standoff at an industrial site. The terror attacks claimed the lives of 17 people and put France on a heightened state of alert. CNN's Ariana Williams reported from Paris, and Laura Smith-Spark wrote from London. CNN's Pierre Meilhan contributed to this report.\\n\", \"original_answer\": \"Six survivors of the Paris kosher supermarket siege are suing a French media outlet for broadcasting their location during the hostage-taking. The lawsuit accuses CNN affiliate BFMTV of putting the lives of the hostages in danger by revealing their hiding place on live television. Despite the criticism, BFMTV maintains that it only mentioned the location of a single hostage on the basis of police sources, and did not intentionally endanger anyone's safety.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "policy_design",
+  "source_cluster_id": "sha256:03e5a37064d8adcd04ea8acf332daeac7a37414ccc3c8df4c1936f5c0e682596",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ]
+}

@@ -1,0 +1,18 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+______________________ test_coverage_environment_override ______________________
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261002T110220-1286083-a6b42264/test_coverage_environment_over0')
+
+    def test_coverage_environment_override(tmp_path):
+        """SCENARIO-REPORT-8019-PUBLICATION: explicit owned coverage resists health environment drift."""
+        commands = e.validation_plan(tmp_path)
+>       assert "--data-file=" + str(tmp_path / ".coverage") in commands[0].argv
+E       AssertionError: assert ('--data-file=' + '/tmp/pytest-carnot-ianblenke/20261002T110220-1286083-a6b42264/test_coverage_environment_over0/.coverage') in ('/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-m', 'coverage', 'run', '--rcfile=/tmp/pytest-carnot-ianblenke/20261002T110220-1286083-a6b42264/test_coverage_environment_over0/coverage.ini', '-m', ...)
+E        +  where '/tmp/pytest-carnot-ianblenke/20261002T110220-1286083-a6b42264/test_coverage_environment_over0/.coverage' = str((PosixPath('/tmp/pytest-carnot-ianblenke/20261002T110220-1286083-a6b42264/test_coverage_environment_over0') / '.coverage'))
+E        +  and   ('/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-m', 'coverage', 'run', '--rcfile=/tmp/pytest-carnot-ianblenke/20261002T110220-1286083-a6b42264/test_coverage_environment_over0/coverage.ini', '-m', ...) = CommandSpec(name='unit_consumers_e2e015_019', argv=('/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-...ce_boundary_7852.py', 'tests/python/test_experiment_7942_v689_sentence_labels.py', '-q'), scope='owned', timeout_s=300).argv
+
+tests/python/test_eligible_targets_8019.py:367: AssertionError
+=========================== short test summary info ============================
+FAILED tests/python/test_eligible_targets_8019.py::test_coverage_environment_override
+1 failed in 2.30s

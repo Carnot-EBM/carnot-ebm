@@ -1,0 +1,107 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.681257477030158,
+  "exclusion_reason": null,
+  "family_id": "sha256:5a7f1f94e355cabc6c8f5802c8c92f8eb2e8b8f2ee625a07b8b14d033b3ad375",
+  "input_tokens": 1085,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1085,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1109
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:c8bd04b1c1302f2a7e685de6d07a3df978244491bc6dd711ee5a66f71a7dd022",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832888,
+    "id": "chatcmpl-DUlXvS3Tyc9FulgBpmKj66JPYPeCtfkF",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 566.062,
+      "predicted_n": 24,
+      "predicted_per_second": 42.398182531242156,
+      "predicted_per_token_ms": 23.585916666666666,
+      "prompt_ms": 970.835,
+      "prompt_n": 1007,
+      "prompt_per_second": 1037.2514381949559,
+      "prompt_per_token_ms": 0.9640863952333665
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1085,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1109
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"1255 Coast Village Rd, Ste 102A\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":true,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":false,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Food, Restaurants, Cafes, Coffee & Tea, Beer, Wine & Spirits, Pizza\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"8:0-21:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"8:0-21:0\\\",\\\"Sunday\\\":\\\"8:0-20:0\\\",\\\"Thursday\\\":\\\"8:0-20:0\\\",\\\"Tuesday\\\":\\\"8:0-20:0\\\",\\\"Wednesday\\\":\\\"8:0-20:0\\\"},\\\"name\\\":\\\"Honor Market\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-18 20:02:39\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Cheesy cheesy pizza \\\\n\\\\nSo good that even being lactose intolerant did not stop me from eating it (my toilet did not like this decision though)\\\\n\\\\nLittle light on sausage but cheesy cheese was exceptional\\\"},{\\\"review_date\\\":\\\"2021-10-02 06:09:24\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Ok possibly the best sandwiches I have ever had. The bread is amazing. Love the pickled pinions. All the food is amazing. Cute little shop with awesome Hugh quality items. I bought a Frama shampoo and conditioner and love them.  Great stop on a drive up the 101 as well. Seating outside as well. Highly recommend.\\\"},{\\\"review_date\\\":\\\"2021-06-20 22:05:50\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"Stopped by on our way to Solvang from Glendora, needed a pick me up after 3 hours on the road with our 7 and 3 year old. We got 2 warm freshly baked chocolate chip cookies which were eaten immediately by the kids, and two Cowboy cookies which were very satisfying!\\\\n\\\\nWorst! Coffee! EVER!!!!\\\\n\\\\nYOU GUYS NEED TO CALL KLATCH COFFEE and ask them how to make coffee. My husband, who is NOT AT ALL picky about coffee even said it was one of the worst hes ever had. He prefers the mochas, which tasted like nestle syrup. I had a regular latte and it didnt taste anything like espresso. Im so bummed.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Sure! Here's an objective overview of Honor Market based on the provided structured data:\\n\\nHonor Market is a locally owned business located in Santa Barbara, California. It offers a variety of products and services including Food, Restaurants, Cafes, Coffee & Tea, Beer, Wine & Spirits, and Pizza. The business has a rating of 4.5 stars out of 5 based on 3 reviews, indicating a high level of customer satisfaction.\\n\\nThe reviews highlight some key aspects of the business. One reviewer praised the cheesy pizza, stating that it was so good that they even ignored their lactose intolerance. Another reviewer enjoyed the sandwiches and described the bread as \\\"amazing.\\\" However, one reviewer was disappointed with the coffee, describing it as one of the worst they had ever had.\\n\\nThe business offers outdoor seating and has free WiFi. It also accepts reservations and provides takeout options. Customers can expect a casual and classy ambiance with a touristy vibe. The business is open seven days a week, with varying hours depending on the day.\\n\\nOverall, Honor Market appears to be a popular local spot for food and drinks, with a focus on high-quality ingredients and a welcoming atmosphere. While the coffee may need some improvement, the majority of reviewers highly recommended the business.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "calibration_replay",
+  "source_cluster_id": "sha256:ff47d8f2fcb2c573392cbe0a5f0be3424a9a02114db4cbe09c05efdc21e4f3bb",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ]
+}

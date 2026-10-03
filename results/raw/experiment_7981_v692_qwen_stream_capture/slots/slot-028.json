@@ -1,0 +1,103 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.4069398309802637,
+  "exclusion_reason": null,
+  "family_id": "sha256:3230dbbfb8dcfd0f066e4ce4e199db60f51c6908c9727ca50865385d75b6ac74",
+  "input_tokens": 818,
+  "invocation_finished_at": "2026-10-01T11:41:54.821674+00:00",
+  "invocation_started_at": "2026-10-01T11:41:53.414732+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": 8,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 818,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 843
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:2340ea0bc3136880fd52c424e08f412a8d31b7904d2d64850e5b0d08b3289f1f",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": 8\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790854914,
+    "id": "chatcmpl-3A1LjBbdl3zNdb7shfT3IW2JP9KuksAK",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 581.686,
+      "predicted_n": 25,
+      "predicted_per_second": 42.97851418119053,
+      "predicted_per_token_ms": 23.26744,
+      "prompt_ms": 693.737,
+      "prompt_n": 740,
+      "prompt_per_second": 1066.6866550292114,
+      "prompt_per_token_ms": 0.9374824324324323
+    },
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 818,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 843
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:\u201cWhat are some of these different symbols I see on the top of my iPhone screen next to my battery? What do they mean?\u201d List of iPhone symbols and meaning: Cell Signal \u2013 Looks like a staircase. This displays if you\u2019re in range of a cell signal. The more cell bars you have the better. Airplane mode \u2013 When you have airplane mode on you cannot use the phone to make calls, get online or use Bluetooth. 4G \u2013 Shows 4G network is available.\\\\n\\\\npassage 2:The battery symbol is usually located at the top right corner of the cell phone. It indicates the amount of battery life currently available. When charging, the battery icon will either light up, show an icon, such as a lightening bolt, through the battery or display the words Charging on the screen.\\\\n\\\\npassage 3:Phone\u2019s Status Icons. 1  The Status Bar appears at the top of every screen. It displays icons indicating that you\u2019ve received notifications (on the left) and icons indicating the phone\u2019s status (on the right), along with the current time.\\\\n\\\\n\\\",\\\"question\\\":\\\"what do the symbols at the top of my phone mean?\\\"}\", \"original_answer\": \"Based on the provided passages, here are the answers to the question:\\n\\nWhat do the symbols at the top of my phone mean?\\n\\nPassage 1 provides a list of common symbols found on an iPhone screen, including:\\n\\n* Cell Signal: Displays the strength of the cell signal (represented by a staircase). More bars indicate a stronger signal.\\n* Airplane Mode: Indicates that the phone is in airplane mode, which disables cellular connectivity and Bluetooth.\\n* 4G: Shows that the phone is connected to a 4G network.\\n\\nPassage 2 explains the location of the battery symbol on the phone and its function:\\n\\n* Battery Symbol: Located at the top right corner of the phone, it shows the remaining battery life. When charging, the symbol may light up or display an icon such as a lightning bolt or display the words Charging on the screen.\\n\\nPassage 3 provides additional information about the status icons displayed on the top of the phone's screen:\\n\\n* Notifications (left): Indicate that the phone has received new notifications.\\n* Phone's Status (right): Display icons indicating the phone's status, such as signal strength, battery level, and whether the phone is locked or unlocked.\\n\\nBased on these passages, the symbols at the top of your phone are likely to represent the following:\\n\\n* Cell Signal: A staircase indicating the strength of the cell signal.\\n* Airplane Mode: An icon or text indicating that the phone is in airplane mode.\\n* 4G: An icon or text indicating that the phone is connected to a 4G network.\\n* Battery: A symbol or icon showing the remaining battery life, and may display an icon or message when charging.\\n* Notifications: Icon(s) indicating that the phone has received new notifications.\\n* Phone's Status: Icon(s) indicating the phone's status, such as signal strength, battery level, and lock/unlock status.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_update",
+  "source_cluster_id": "sha256:3eded74700d6613acebd017d18bab5f10afda3a4f60ca3b8f4319e5073b74677",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ]
+}

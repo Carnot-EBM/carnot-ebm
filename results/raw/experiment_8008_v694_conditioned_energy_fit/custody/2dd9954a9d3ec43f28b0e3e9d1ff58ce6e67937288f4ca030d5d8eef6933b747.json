@@ -1,0 +1,111 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.4913023100234568,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:56a3dcd3726b6422e4ebae4932a3e955caa62a13cc3b02bec343222a62bf2905",
+  "input_tokens": 855,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 855,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 878
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:18c91bd0cd06823f99281fc54f483b365a8d08d4a4583c48651562bc8538b066",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885951,
+    "id": "chatcmpl-tUjoIZCHkmNL9Fzuoh2XenQzhmqMvJA5",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.41,
+      "predicted_n": 23,
+      "predicted_per_second": 42.56027830721119,
+      "predicted_per_token_ms": 23.496086956521737,
+      "prompt_ms": 820.421,
+      "prompt_n": 777,
+      "prompt_per_second": 947.0747335819049,
+      "prompt_per_token_ms": 1.055882882882883
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 855,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 878
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"TransUnion Fined $23 Million for Illegal Practices\\nViolations found in rental background checks, credit freezes\\nOneof America's three major credit bureaus is facing a $23 million fine for its failures with both rental background checks and credit freeze products.\\nThe Consumer Financial Protection Bureau (CFPB) and the Federal Trade Commission (FTC) are taking action against TransUnion for activities the regulators say broke the law and harmed consumers.\\nIn two separate investigations, federal regulators found that TransUnion failed to provide accurate information in rental background checks and failed to properly assist renters seeking to correct inaccurate information.\\nThey also found that TransUnion lied to consumers about security freezes on credit reports, telling them their credit was frozen when in reality, it was placed in a backlog that in some cases took years to complete. All the while, consumer credit information was exposed.\\n\u201cAmericans across the country were put at risk of wrongful housing denials because TransUnion failed to follow the law,\u201d said CFPB Director Rohit Chopra. \u201cWe are ordering TransUnion to cease its yearslong illegal activity, clean up its broken business practices, redress its victims, and pay penalties.\u201d\\nAs a result of the enforcement action against TransUnion on rental background checks, consumers will receive $11 million in payments (refunds for paying for the background checks and additional compensation that may be owed).\\n\u201cConsumers struggling to find housing shouldn\u2019t be shut out by tenant screening reports that are ridden with errors and based on data from secret sources,\u201d said Samuel Levine, Director of the FTC\u2019s Bureau of Consumer Protection. \u201cProtecting consumers looking for housing is critical to a fair economy, and we are proud to partner with the CFPB in obtaining this record-breaking order.\u201d\\nA recent analysis of tenant screening by the National Consumer Law Center (NCLC) found that the reports often contain inaccuracies that can be difficult to correct. The TransUnion case lends additional credence to this claim.\\n\u201cTenant screening scores and recommendations create a misleading veneer of objectivity while concealing underlying racial disparities,\u201d said Ariel Nelson, staff attorney at the National Consumer Law Center. \u201cLandlords frequently make leasing decisions based solely on these tenant screening scores and recommendations, and our research reveals that they are unlikely to hear disputes or to consider mitigating factors.\u201d\\nCredit freeze backlog\\nIn addition to the violations related to rental background checks, the investigation found that TransUnion had a years long backlog of credit freezes that were unfulfilled.\\nSpecifically, some 40,000 requests for security freezes went unfulfilled.\\nAs a result of this violation, TransUnion will pay $3 million to harmed consumers.\\nConsumer groups have consistently called for reform of the credit reporting industry.\", \"original_answer\": \"Credit bureau TransUnion faces a $23m fine from the Consumer Financial Protection Bureau (CFPB) and the Federal Trade Commission (FTC) for illegal activities. The company was found to have failed to provide accurate information in rental background checks and to assist renters in correcting inaccurate data. It also misled consumers about security freezes on credit reports. As a result, TransUnion must pay $11m in refunds and compensation to consumers. It was also revealed that TransUnion had a backlog of unfulfilled security freezes, leading to a further $3m penalty.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "af4db8bde6ba3038ca946dd5b7035f26145559e5b7af457acc8421bc871b11ac",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ]
+}

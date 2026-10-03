@@ -1,0 +1,110 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.5342281899647787,
+  "exclusion_reason": null,
+  "family_id": "sha256:0435acc02f619b575713989996f9a723ea4102c7110dfbe07d9b9965217b0f81",
+  "input_tokens": 884,
+  "invocation_finished_at": "2026-10-01T11:45:58.553639+00:00",
+  "invocation_started_at": "2026-10-01T11:45:57.019410+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 884,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 907
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:e6745c44f97f7c2b31444b67463e838e716e1fe3dbf64b90f992a3ffd2e9e888",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855158,
+    "id": "chatcmpl-9xdhMdVyGEaEMNIHKjrtr4FiY2LFzX4b",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.345,
+      "predicted_n": 23,
+      "predicted_per_second": 42.565398032738344,
+      "predicted_per_token_ms": 23.49326086956522,
+      "prompt_ms": 842.292,
+      "prompt_n": 806,
+      "prompt_per_second": 956.9128045855831,
+      "prompt_per_token_ms": 1.0450272952853599
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 884,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 907
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Tracking Flu in the USA: A Look at Texas\\nI like tracking how the seasonal flu is impacting the USA because it's a more dangerous disease than most Americans think \u2014 Texas and other southern states have been hit hard early into this flu season. About 12,000-52,000 people die each year in the USA on average. It's not at COVID-19 levels, but it's generally the most dangerous infectious disease that hits the world each year.\\nOf course, there is a vaccine for that, though flu vaccine uptake is much lower than other vaccines.\\nLet's take a look at where the flu has been particularly bad, especially in Texas.\\nTexas flu situation\\nWalgreens, the large drugstore chain, publishes data on anti-viral medications prescribed for flu as a good proxy for flu levels in a particular geographic region or city. According to their data, the flu season has been particularly hard on these Texas cities:\\nHarlingen-Weslaco-Brownsville-McAllen, TX\\nBeaumont-Port Arthur, TX\\nEl Paso, TX\\nCorpus Christi, TX\\nHouston, TX\\nOther cities, outside of Texas, which have also been particularly hard hit are:\\nSan Juan, PR\\nLas Cruces, NM\\nNew Orleans, LA\\nColumbus-Tupelo-West Point-Houston, MS\\nHonolulu, HI\\nMiami-Ft. Lauderdale, FL\\nFrom a more general clinical perspective, the US Centers for Disease Control and Prevention (CDC) publishes weekly \\\"Influenza Surveillance Reports.\\\" As of 6 October 2023, the CDC reports:\\nNationally, 444 (1%) positive specimens reported last week. This is early in the flu season (which starts generally on 1 October), so the numbers will be low.\\n1,040 patients with laboratory-confirmed influenza were admitted to a hospital.\\n11 additional influenza-related deaths were reported last week.\\nSummary\\nIf you live in these cities in Texas along with other cities that have been hit hard, you should really consider getting the flu vaccine. The flu is not a trivial disease, it is deadly and can be debilitating for a week or more.\\nPeople often confuse the flu with a common cold \u2014 they are two different diseases with different symptoms and different complications. The common cold is easy to handle, but the flu is not.\\nAnd just to be clear, the flu vaccine will not give you the flu, it will not harm you, and it is not filled with nanobots.\\nThe flu vaccine saves lives.\", \"original_answer\": \"Texas and other southern states in the USA have been hit hard by the seasonal flu early into this flu season. The flu is a more dangerous disease than most Americans think, with an average of 12,000-52,000 deaths each year in the USA. Flu vaccine uptake is lower compared to other vaccines. The flu season has been particularly bad in Texas cities such as Harlingen-Weslaco-Brownsville-McAllen, Beaumont-Port Arthur, El Paso, Corpus Christi, and Houston. Other cities outside of Texas, including San Juan, Las Cruces, New Orleans, Columbus-Tupelo-West Point-Houston, Honolulu, and Miami-Ft. Lauderdale, have also been heavily impacted. The flu vaccine is recommended to prevent the spread of the disease.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_update",
+  "source_cluster_id": "sha256:a7e4613e0f6a93a28b4158957549fa39d9ff931c07cc1cc857f568de430c79b4",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+  ]
+}

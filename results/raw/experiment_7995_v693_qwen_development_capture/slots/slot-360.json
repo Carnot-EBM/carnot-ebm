@@ -1,0 +1,104 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.3467421219684184,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:ba638723319819c4945bf1884b37517ac775de000345e1d3a840689c4d7b89d8",
+  "input_tokens": 849,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 849,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 870
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:e744cd49c811567b638c06bfcb5f2213c1be1f50da7248da21d46cfe3650850d",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886356,
+    "id": "chatcmpl-Qn8lAc4Y4VP35hLdltIBXsxTRbyKKaHh",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 491.648,
+      "predicted_n": 21,
+      "predicted_per_second": 42.71348607133559,
+      "predicted_per_token_ms": 23.411809523809524,
+      "prompt_ms": 734.509,
+      "prompt_n": 771,
+      "prompt_per_second": 1049.6808071786731,
+      "prompt_per_token_ms": 0.9526705577172503
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 849,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 870
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"3613 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":null,\\\"intimate\\\":null,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":true,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Mexican, Vegan, Restaurants, Vegetarian\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-20:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"12:0-20:0\\\",\\\"Sunday\\\":\\\"12:0-20:0\\\",\\\"Thursday\\\":\\\"11:0-20:0\\\",\\\"Tuesday\\\":\\\"11:0-20:0\\\",\\\"Wednesday\\\":\\\"11:0-20:0\\\"},\\\"name\\\":\\\"Vegan GreenGO\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-08-12 22:07:57\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"They have a bathroom but do not allow customers to use it, which is against health department codes!\\\\nAdditionally, the person working there was not very responsive.\\\"},{\\\"review_date\\\":\\\"2021-08-03 04:03:56\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"It's tasty, fresh, and fast. The guac is extra. It's fine to offer guac but let the customer know it's extra before you nearly dallop it on. Server had the scoop ready before I said yes and stopped when I asked if it was extra.\\\"},{\\\"review_date\\\":\\\"2021-07-08 03:27:28\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Al pastor  Great spices in the mince, cashew crema, got the potatoes too. healthy that's it's on spinach bed . | #Vegancarneasada juicy beefy pieces , yum! taco Tuesday $2.22  ~Doesn't have as much customers as the Mexican place next door but it is so much more worth it! Very filling and delicious.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Vegan GreenGO is a popular Mexican restaurant located at 3613 State St, Santa Barbara, CA. The restaurant specializes in vegan and vegetarian cuisine and enjoys a 4-star rating. It is open from Tuesday to Sunday, with varying hours, and offers amenities such as free WiFi, outdoor seating, and is good for groups. The restaurant has a casual, trendy ambience and offers lot parking. It also offers takeout services, which is a plus for customers who prefer to dine at home. Some customers have praised the restaurant for its tasty, fresh, and fast food, particularly the Al pastor and Vegan carne asada, while others expressed dissatisfaction concerning the extra charge for guacamole and the unavailability of their restroom for customers' use. Despite some criticism, Vegan GreenGO remains a favorite amongst vegan and vegetarian food enthusiasts.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "47b6aeee5a8425f8f2da9353b9aaae1674486000a72fd5533a90bd0be31234e6",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ]
+}

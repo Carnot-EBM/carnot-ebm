@@ -1,0 +1,105 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.2860105140134692,
+  "exclusion_reason": null,
+  "family_id": "sha256:8cbf8568b361a914d6abb205c12b5cefd9b5474872aa008e14908a837c550aff",
+  "input_tokens": 598,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 598,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 622
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:b2b19f3102a6bf8eeda90bd220a0db6373745b960049d910691c5a0995d059b3",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832842,
+    "id": "chatcmpl-9af7d01eSByTTVudTznKpBVms5EtDaTU",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.844,
+      "predicted_n": 24,
+      "predicted_per_second": 42.489607750104454,
+      "predicted_per_token_ms": 23.53516666666667,
+      "prompt_ms": 576.569,
+      "prompt_n": 520,
+      "prompt_per_second": 901.8868513569062,
+      "prompt_per_token_ms": 1.1087865384615383
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 598,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 622
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Taylor Swift: New kind of MVP\\nTAYLOR SWIFT is now the talk of the NFL (Wikipedia).\\nThe most prominent issue in the North American sports world is not the dissolution of the Pac-12, the semi-annual collapse of the Los Angeles Dodgers in post-season play, or whether or not college cheerleaders and marching band drum majors should get NIL money like the athletes can.\\nWhat\u2019s on (nearly) everyone\u2019s minds and lips is what\u2019s going to happen with Taylor Swift and Travis Kelce.\\nIs it just a platonic friendship? Since she\u2019s richer than he is, should she pay for all the dates? Does she ever try to give him some hints on route-running? Will he take up singing when his career is over?\\nNot to minimize what Taylor has accomplished, but she has nevertheless become the focus of much attention. If you watch a Kansas City Chiefs game, the camera folks give us almost as many shots of her as they do beer commercials and insurance spots.\\nSo, in a sense, Taylor has become a mascot for the Chiefs. It seems like a natural evolution from the ugly costumes for awkward-looking birds (Seahawks, Ravens, Cardinals) and Wild West themes (Rangers, Chiefs, Cowboys).\\nAnd if there\u2019s anyone who can say with a straight face that the Philly Phanatic \u2013 other than the deeply intoxicated \u2013 represents the City of Brotherly Love well, I haven\u2019t met him or her.\\nSo, the Next Big Thing has been revealed. And if Taylor Swift isn\u2019t singing the theme song for \u201cSunday Night Football\u201d, well, I\u2019ll be a Tampa Bay Buccaneer.\", \"original_answer\": \"Sure! Here's a summary of the news in 65 words:\\n\\nTaylor Swift has become the talking point in the NFL due to her frequent appearances during Kansas City Chiefs games. Fans are speculating about the nature of her relationship with tight end Travis Kelce and whether she will inspire him to pursue music after his playing career ends. Despite never having played football herself, Swift has become a de facto mascot for the team.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "tune",
+  "source_cluster_id": "sha256:207ba1d9c609209b4c08cf224593f568e72bb9c5ae941e03e250f0c26d4b4e65",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ]
+}

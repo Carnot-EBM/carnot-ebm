@@ -1,0 +1,113 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.3040444270009175,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:85ff247649695350540cba7808093ca8b34830f89a72c6b93906573b72965b81",
+  "input_tokens": 685,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 685,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 708
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:53e0bbf53ff70628a46755364391a6d85c31e1cf09e0e2926bd2cdb5d345f95d",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886348,
+    "id": "chatcmpl-YIBuRZYWFjejk2e5aBZh2cTQbF5jbOEU",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.224,
+      "predicted_n": 23,
+      "predicted_per_second": 42.49626771909597,
+      "predicted_per_token_ms": 23.531478260869566,
+      "prompt_ms": 624.387,
+      "prompt_n": 607,
+      "prompt_per_second": 972.1534881411689,
+      "prompt_per_token_ms": 1.028644151565074
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 685,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 708
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Heat the olive oil in a large, heavy soup pot over medium heat and add the onion, leeks and a pinch of salt. Cook, stirring, until tender, about 5 minutes. Add the garlic and cook, stirring, until fragrant, 30 seconds to a minute. Add the turnips, potatoes, water or stock, salt to taste, and the bouquet garni.\\\\n\\\\npassage 2:Method. 1  Heat the oil in a large pan and add the onions, potatoes and leeks. Cook for 3-4 minutes until starting to soften. 2  Add the vegetable stock and bring to the boil. Season well and simmer until the vegetables are tender. 3  Whizz with a hand blender or in a blender until smooth.\\\\n\\\\npassage 3:In a medium saucepan, cover 1/2 of the diced potatoes with cold water, and season with salt. Bring to a boil, and blanch until potatoes are tender, about 5 to 7 minutes. Remove from heat, drain and reserve. In a large pot over medium heat, melt the butter. Add onions and leeks, and stir. Cover pot and saute, stirring occasionally, about 5 minutes. Uncover, and add remaining potatoes, bouquet garni, salt, pepper, chicken stock and cream. Stir. Bring the soup to a simmer over medium heat, uncovered.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to make potato leek soup\\\"}\", \"original_answer\": \"To make potato leek soup, start by heating olive oil in a large soup pot over medium heat. Add onions, leeks, and a pinch of salt, and cook until tender, stirring frequently. This should take about 5 minutes. Add garlic and continue stirring until it becomes fragrant. Next, add turnips, potatoes, and either water or stock. Season with salt to taste and add a bouquet garni. In another method, you can first partially cook some of the diced potatoes in a separate saucepan. Drain these potatoes and set aside. In the large pot, melt butter, add onions and leeks and saute them. Then add the remaining potatoes, bouquet garni, salt, pepper, chicken stock and cream. Bring the soup to a simmer. In both methods, once the vegetables in the soup are tender, use a hand blender or a regular blender to make the soup smooth.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "ce120228aaf763897f65ea5480c63d1875baf9a95a18ffa1463f34e8205dc9b2",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+  ]
+}

@@ -1,0 +1,120 @@
+{
+  "arm": "swap",
+  "capture_identity": "sha256:c690c1f517fbce73c5da6a2d1e99e3819c3de93e1045fe76d1c8215b54691541",
+  "censor_status": false,
+  "denominator": 1,
+  "donor_group_id": "sha256:91ab03de8df8f612b7f68b64eba747d939bf1ae459062989805aec6fb24f9e22",
+  "duration_s": 1.309222741983831,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:4a5f7291e72cb9fe6c81db9ee03872bc503a01e852823693eee38832b8d5b1fe:swap",
+  "group_id": "sha256:4a5f7291e72cb9fe6c81db9ee03872bc503a01e852823693eee38832b8d5b1fe",
+  "input_byte_upper_bound": 3367,
+  "input_tokens": 717,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 1.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 717,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 740
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:ca6ed2b6939fcc427076ae4f26e4255901b87d2226daa18b0c458ac4a45b7174",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 1.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790925811,
+    "id": "chatcmpl-jZqPqus6r8p4MkC8zZBq4v8T5ex07L5Z",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 538.309,
+      "predicted_n": 23,
+      "predicted_per_second": 42.726389490051254,
+      "predicted_per_token_ms": 23.40473913043478,
+      "prompt_ms": 638.151,
+      "prompt_n": 639,
+      "prompt_per_second": 1001.3304061264497,
+      "prompt_per_token_ms": 0.9986713615023474
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 717,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 740
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 32,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"One hundred and forty-seven victims. Many more families affected. Even more broken hopes and dreams. As Kenyans mourned those killed last week in one of the deadliest terrorist attacks in the nation, citizens used social media to share the victims' stories, hopes and dreams. Using the hashtag #147notjustanumber -- a reference to the number of people, mostly students, killed at Garissa University College on Thursday -- Kenyans tweeted pictures of the victims in happier times. Kenyan authorities have not released a list of the victims. The posts provided heart-wrenching details on the victims, including one about an elderly man whose dreams died with his son. He had reportedly taken a loan to educate him at the university, where he was killed by Al-Shabaab terrorists. The attack in Kenya killed 142 students, three security officers and two university security personnel, and was the nation's deadliest since the bombing of the U.S. Embassy in 1998. Kenyan churches mourned the dead during Easter services Sunday as armed guards protected the congregations. In emotional services nationwide, churchgoers wept as they paid tribute to the victims of the massacre. The gunmen who attacked the university in the predawn hours separated Muslims from Christians and killed the latter. The extremist group has also killed Muslims in recent attacks. The Interior Ministry has identified one of the attackers killed by security forces as the son of a government official. The father of suspect Abdirahim Abdullahi is a chief in Mandera and had reported his son missing, officials said. The Islamist extremist group is based in Somalia, but it hasn't confined its terrorism to the nation that shares a border with Kenya. In 2013, militants attacked Nairobi's upscale Westgate Mall, killing nearly 70 people.\\n\", \"original_answer\": \"Padaro Beach Grill is a highly-rated restaurant in Carpinteria, California, offering a wide range of cuisines including traditional American, seafood, burgers, tacos, sandwiches, Mexican, and more. Open from Tuesday to Sunday, the restaurant is appreciated for its delicious food, especially the burgers, sandwiches, and sweet potato fries. Despite being perceived as slightly pricey, customers still recommend the restaurant for its great food and views. The restaurant offers outdoor seating, free Wi-Fi, and is good for group dining. The service, however, is reported to be inconsistent. The restaurant does not offer parking in a garage or lot but has street parking available. It is described as casual yet classy, with a beautiful ambiance, particularly noted for its outdoor seating near the ocean and warm fire pits.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69410,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "seed": 69410,
+  "source_cluster_id": "2976a5849a3f5d733a7297eca7af3b2683e66a8451c5a23f5660c1302da66662",
+  "source_hash": "sha256:327c912f1b1f61e053e380ad23ba9d91e3f205c2b7df3ccc2fe731645d0fd887",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17
+  ]
+}

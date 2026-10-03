@@ -1,0 +1,112 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.3744888229994103,
+  "exclusion_reason": null,
+  "family_id": "sha256:c3588e596ce9f1d0dd63dce16d6858e619d865a87a43e45a82f6dca91313c284",
+  "input_tokens": 733,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 733,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 757
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:9888cec85897177b795349b757434719de880fadffccf8b693b37ee7428d1d95",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832780,
+    "id": "chatcmpl-gUwjPxcJ2v48yC0WitjFYS6JHYWMsHcQ",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.231,
+      "predicted_n": 24,
+      "predicted_per_second": 42.46051614295748,
+      "predicted_per_token_ms": 23.551291666666668,
+      "prompt_ms": 668.537,
+      "prompt_n": 655,
+      "prompt_per_second": 979.7513077062301,
+      "prompt_per_token_ms": 1.0206671755725192
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 733,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 757
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"'The Young and the Restless' Spoilers: Kyle Addresses Audra's Relationship With Tucker\\nThe Young and the Restless (Y&R) spoilers reveal that Kyle Abbott (Michael Mealor) finally addressed Audra Charles' (Zuleyka Silver) relationship with Tucker McCall (Trevor St. John). She's playing a good game of pogo between both guys.\\nWeeks ago, fans saw Audra back in Tucker's bed. The two consoled each other over their ruined reputations. They also came up with an idea to take over Jabot. Tucker encouraged Audra to seduce Kyle to motivate him to get the co-CEO role.\\nAudra knows two things: 1) how to mix business with pleasure and 2) how to charm men with her good looks. On the Wednesday, October 25 episode of Y&R, Kyle talked about Audra's relationship with Tucker. She confirmed that they slept together.\\nThe Young and the Restless spoilers reveal that the trio is in a three-way relationship. The user Arckangel asked on the SoapCentral.com Message Boards: \\\"Is it officially a m\u00e9nage \u00e0 trois? Now that Kyle knows that Audra is sleeping with Tucker and that Tucker knows that Audra is sleeping with Kyle, is it officially a m\u00e9nage \u00e0 trois?\\\"\\nOne fan responded: \\\"LOL!!! it is official to me that it is, and very disgusting I might add!\\\"\\nAnother user argued: \\\"Just playing devil's advocate here.... Kyle's father, Jack, was a certifiable playboy back in the day, so this isn't much of a stretch for Kyle.\\\"\\nY&R fans are already disgusted with Sally Spectra's (Courtney Hope) relationship with Nick Newman (Joshua Morrow) and Adam Newman (Mark Grossman). That love triangle has been going on for about a year now. Sally can't get her head straight about which man she loves more.\\nWhat do you think? Do you think Audra is having a tryst with both Kyle and Tucker? Sound off below in the comment section.\\nFollow my NewsBreak page for more soap opera and reality TV spoilers.\", \"original_answer\": \"Kyle Abbott (Michael Mealor) has finally addressed Audra Charles' (Zuleyka Silver) relationships with both him and Tucker McCall (Trevor St. John) on The Young and the Restless. Fans have been speculating about the nature of their relationship, with some considering it a m\u00e9nage \u00e0 trois. The trio's complicated dynamic has been a focal point of the show, with many viewers expressing their disgust at the situation.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "tune",
+  "source_cluster_id": "sha256:8b6ed982e2b97b93a14355b4d58a71e55f6340666a1c9bfaef803f84982de241",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20
+  ]
+}

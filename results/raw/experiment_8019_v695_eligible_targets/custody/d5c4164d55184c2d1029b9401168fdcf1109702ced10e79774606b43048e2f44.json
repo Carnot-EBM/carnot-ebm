@@ -1,0 +1,108 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.6473272599978372,
+  "exclusion_reason": null,
+  "family_id": "sha256:3c47bf126b32fbdcf8cfcc5229674e33282bdc83a95601d72db2d60ddaa2db1e",
+  "input_tokens": 1092,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1092,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1116
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:3caf49b106a0610f7e56c435d713daffe68803cef7bee29f51520ed052c9dd9b",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832594,
+    "id": "chatcmpl-jXRZdxB4I8yECRYyRaDNlvnjoNgD2js8",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.863,
+      "predicted_n": 24,
+      "predicted_per_second": 42.488178549488985,
+      "predicted_per_token_ms": 23.535958333333337,
+      "prompt_ms": 966.754,
+      "prompt_n": 1014,
+      "prompt_per_second": 1048.8707571936604,
+      "prompt_per_token_ms": 0.9534063116370809
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1092,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1116
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"217 Starnms Wharf\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":null,\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":null},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Public Services & Government, Landmarks & Historical Buildings, Local Flavor, Restaurants, Tours, Shopping, Shopping Centers, Seafood, Hotels & Travel, Boat Tours\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"0:0-0:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"0:0-0:0\\\",\\\"Sunday\\\":\\\"0:0-0:0\\\",\\\"Thursday\\\":\\\"0:0-0:0\\\",\\\"Tuesday\\\":\\\"0:0-0:0\\\",\\\"Wednesday\\\":\\\"0:0-0:0\\\"},\\\"name\\\":\\\"Stearns Wharf\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-16 07:16:37\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Stern Wharf is the perfect place to walk and enjoy the ocean views.  There are restaurants and gift shops.  However, parking is not free, but worth it to enjoy Santa Barbara's scenic views.\\\"},{\\\"review_date\\\":\\\"2022-01-11 00:04:03\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"A wharf you can drive on?! Sweet! This is so cool. There are restaurants you can visit on the wharf as well. It is a working wharf so be mindful and be courteous of your surroundings. \\\\nIt is similar to most wharfs along the PNW  but it's something to do and see while in a new city. You can't drive on all wharfs so I guess that makes it unique. I didn't see many people fishing when I came, but it is permitted! \\\\nCompared to a weekday, this place is packed on a weekend! I was here on a Friday and was able to get around, but come Saturday, it was jam packed with people everywhere.\\\"},{\\\"review_date\\\":\\\"2022-01-07 17:21:18\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"Santa Barbara's most visited destination. It's an old pier dating back to 1872 and its the oldest working wharf in California. It's much wider than other wharfs and the only one I've been to you can drive onto. From the street it looks like the entrance is just an area for turning around in but you can grab a ticket at the booth and drive right onto the wharf. First 90 minutes of parking are free.\\\\n\\\\n-If you do drive go slowly, it sounds and feels like riding a wooden rollercoaster in slow-motion and you are driving on old wood and metal bolts.\\\\n\\\\n-Fishing is allowed at the end of the wharf and you'll see crab traps and fishing happening which is fun for the kids.\\\\n\\\\n-There are free public bathrooms.\\\\n\\\\n-Not much to see and do unless you have dinner plans, hilariously we saw staff rounding up wayward outdoor-seating customers that ran off to take pictures. The concern was seagulls would eat their unguarded food.\\\\n\\\\n-There is a psychic/fortune teller on the pier, super nostalgic though they were closed when we went.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Stearns Wharf is a popular destination in Santa Barbara, offering visitors a range of activities and attractions. With a rich history dating back to 1872, this working wharf is the oldest in California and the only one where you can drive onto it. Visitors can enjoy stunning ocean views, restaurants, gift shops, and free public bathrooms. While parking is not free, it is worth it for the scenic views and unique experience. Reviews mention the wharf's ambiance, with some noting the rustic feel and others commenting on the narrow, winding roads. Some reviewers also mentioned the availability of outdoor seating and the presence of a psychic/fortune teller on the pier. Overall, Stearns Wharf is a must-visit destination for those looking for a quintessential Santa Barbara experience.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:d52dfca2fab339ce0e03281f1c8ff19d7c73edd48cbdcfa69facfed2b0384a29",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+  ]
+}

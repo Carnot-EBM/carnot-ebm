@@ -1,0 +1,114 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.4965985550079495,
+  "exclusion_reason": null,
+  "family_id": "sha256:2d3c825ed4eaf86ae6f63ce4e37ec27d14a886c764ff9ce3095c5fdf0a285a6b",
+  "input_tokens": 888,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 888,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 911
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:1a61f56eb7b1e1116581653c61d4fd3ccd0f3ed006652ce214d2100685785632",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832519,
+    "id": "chatcmpl-Eq7ymdQ4zZ8fKU8qFGLendXpA8J3ZTUq",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 536.317,
+      "predicted_n": 23,
+      "predicted_per_second": 42.885084753979456,
+      "predicted_per_token_ms": 23.31813043478261,
+      "prompt_ms": 827.584,
+      "prompt_n": 810,
+      "prompt_per_second": 978.7526100069601,
+      "prompt_per_token_ms": 1.0217086419753085
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 888,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 911
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Jennifer Aydin returns to social media after RHONJ incident with Danielle Cabral\\nThe Real Housewives of New Jersey star Jennifer Aydin returned to social media after a week-long hiatus.\\nSeason 14 of the hit Bravo show is currently filming, and things got dicey when an altercation between Jennifer and Danielle Cabral happened.\\nIt was reminiscent of the old RHONJ days of flipping tables and pulling hair, but blood was reportedly drawn this time.\\nJennifer stopped posting on social media around the time of the altercation at the event but returned to show she and Teresa Giudice were still thick as thieves.\\nShe and Teresa have been BFFs since she joined the show, and it seems that both are ride-or-die for one another because Tre stuck by her amid the drama surrounding her and Danielle.\\nInterestingly enough, Danielle was attempting to befriend Teresa and Jennifer when she joined the show last season.\\nJennifer Aydin returns to social media\\nJennifer Aydin took a week-long social media hiatus following the altercation with Danielle Cabral.\\nThe Real Housewives of New Jersey star made sure Teresa Giudice was in her social media post, showing they are still living their best lives despite what transpired.\\nShe captioned her share, \u201cOh, Hi! @teresagiudice\u201d\\nHer tongue-in-cheek return likely responded to Melissa Gorga and Danielle sharing photos of them hanging out recently. Their friendship has seemingly grown while filming Season 14, starkly contrasting with how Season 13 ended.\\nWhat happened between Jennifer Aydin and Danielle Cabral?\\nWhile there are various reports about what transpired, no one knows for sure. However, the allegations are that Jennifer Aydin and Danielle Cabral began arguing over a charity donation the latter reportedly failed to make.\\nListen, in the Housewives world, not fulfilling a charity donation is a big deal.\\nThere was also chatter about the same hairdresser they use being brought up, which could have started it all.\\nAllegedly, Jennifer pushed Danielle, and she crumbled up a plastic cup and then threw it at Jennifer, drawing blood.\\nBoth women were suspended from filming The Real Housewives of New Jersey but were cleared to return shortly after.\\nNow, both Danielle and Jennifer will have an interesting time at the reunion and as the season plays out. There are several weeks left for filming, which means anything could happen.\\nMoving forward, it will be interesting to see where the loyalties lie, especially with this altercation still fresh in everyone\u2019s mind. It\u2019s clear Teresa Giudice rolls with Jennifer, and Melissa Gorga rides with Danielle.\\nThe Real Housewives of New Jersey is currently on hiatus.\", \"original_answer\": \"Jennifer Aydin, star of The Real Housewives of New Jersey, returned to social media after a week-long absence due to an altercation with co-star Danielle Cabral. The fight reportedly involved a failed charity donation and resulted in both women being temporarily suspended from filming. Upon her return to social media, Aydin posted a photo with Teresa Giudice, demonstrating their continued friendship amid the drama. The incident is expected to impact relationships on the show moving forward, with Giudice siding with Aydin and Melissa Gorga supporting Cabral. Filming for the current season is ongoing, with the incident likely to feature prominently.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:5c2df92108d88c654e5b03a1bdbc59bb043f97ea1b6306525b2dbf5441d570b5",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22
+  ]
+}

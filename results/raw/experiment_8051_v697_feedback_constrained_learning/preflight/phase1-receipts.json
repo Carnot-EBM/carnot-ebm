@@ -1,0 +1,172 @@
+{
+  "receipts": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -m coverage run --data-file=/tmp/carnot-8051-validation2/.coverage --rcfile=/tmp/carnot-8051-validation2/coverage.ini -m pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-8051-validation2/pytest tests/python/test_feedback_constrained_8051.py tests/python/test_primary_publication_7928.py tests/python/test_response_targets_7955.py tests/python/test_source_boundary_7852.py tests/python/test_experiment_7942_v689_sentence_labels.py -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "run",
+        "--data-file=/tmp/carnot-8051-validation2/.coverage",
+        "--rcfile=/tmp/carnot-8051-validation2/coverage.ini",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-8051-validation2/pytest",
+        "tests/python/test_feedback_constrained_8051.py",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_response_targets_7955.py",
+        "tests/python/test_source_boundary_7852.py",
+        "tests/python/test_experiment_7942_v689_sentence_labels.py",
+        "-q"
+      ],
+      "duration_s": 112.06207716604695,
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-8051-validation2/logs/00_unit_consumers_e2e015_019.log",
+      "log_sha256": "sha256:23933e4db1955cae9953ca3293e6afc629ba548f63a4e6f15df230984a41188d",
+      "name": "unit_consumers_e2e015_019",
+      "output_tail": "..............................................                           [100%]\n46 passed in 105.78s (0:01:45)\n",
+      "passed": true,
+      "scope": "owned",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage combine --data-file=/tmp/carnot-8051-validation2/.coverage /tmp/carnot-8051-validation2",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--data-file=/tmp/carnot-8051-validation2/.coverage",
+        "/tmp/carnot-8051-validation2"
+      ],
+      "duration_s": 0.05118745903018862,
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-8051-validation2/logs/01_coverage_combine.log",
+      "log_sha256": "sha256:b63156f43c1fa4a4f15b79bede960dd0fb31d5fa7a340cd468dce2824eb093ad",
+      "name": "coverage_combine",
+      "output_tail": "Combined 7 files\n",
+      "passed": true,
+      "scope": "owned",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage report --data-file=/tmp/carnot-8051-validation2/.coverage --fail-under=100 --show-missing",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/carnot-8051-validation2/.coverage",
+        "--fail-under=100",
+        "--show-missing"
+      ],
+      "duration_s": 0.07110393792390823,
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-8051-validation2/logs/02_coverage_report.log",
+      "log_sha256": "sha256:92a7c87f1f3d4cf5e9713cd58e2261744dc8754452453e9c2d23f71a57e4b18d",
+      "name": "coverage_report",
+      "output_tail": "Name                                                                        Stmts   Miss  Cover   Missing\n---------------------------------------------------------------------------------------------------------\npython/carnot/experiment_8051_v697_feedback_constrained_learning.py           155      0   100%\npython/carnot/verify/feedback_constrained_8051.py                             231      0   100%\nscripts/experiments/experiment_8051_v697_feedback_constrained_learning.py       7      0   100%\n---------------------------------------------------------------------------------------------------------\nTOTAL                                                                         393      0   100%\n",
+      "passed": true,
+      "scope": "owned",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage json --data-file=/tmp/carnot-8051-validation2/.coverage -o /tmp/carnot-8051-validation2/coverage.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "json",
+        "--data-file=/tmp/carnot-8051-validation2/.coverage",
+        "-o",
+        "/tmp/carnot-8051-validation2/coverage.json"
+      ],
+      "duration_s": 0.08171380101703107,
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-8051-validation2/logs/03_coverage_json.log",
+      "log_sha256": "sha256:aec5ca3660bad60c536560784133c1998d3adf4bfa37952d0d044a1a7d42d328",
+      "name": "coverage_json",
+      "output_tail": "Wrote JSON report to /tmp/carnot-8051-validation2/coverage.json\n",
+      "passed": true,
+      "scope": "owned",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff check python/carnot/experiment_8051_v697_feedback_constrained_learning.py scripts/experiments/experiment_8051_v697_feedback_constrained_learning.py tests/python/test_feedback_constrained_8051.py python/carnot/verify/feedback_constrained_8051.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_8051_v697_feedback_constrained_learning.py",
+        "scripts/experiments/experiment_8051_v697_feedback_constrained_learning.py",
+        "tests/python/test_feedback_constrained_8051.py",
+        "python/carnot/verify/feedback_constrained_8051.py"
+      ],
+      "duration_s": 0.013759481022134423,
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-8051-validation2/logs/04_ruff_check.log",
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff_check",
+      "output_tail": "All checks passed!\n",
+      "passed": true,
+      "scope": "owned",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff format --check python/carnot/experiment_8051_v697_feedback_constrained_learning.py scripts/experiments/experiment_8051_v697_feedback_constrained_learning.py tests/python/test_feedback_constrained_8051.py python/carnot/verify/feedback_constrained_8051.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_8051_v697_feedback_constrained_learning.py",
+        "scripts/experiments/experiment_8051_v697_feedback_constrained_learning.py",
+        "tests/python/test_feedback_constrained_8051.py",
+        "python/carnot/verify/feedback_constrained_8051.py"
+      ],
+      "duration_s": 0.011501528904773295,
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-8051-validation2/logs/05_ruff_format.log",
+      "log_sha256": "sha256:177f260a5645724013185e4b140c7045cc39e56c0c97b120f5cb23599f85f0de",
+      "name": "ruff_format",
+      "output_tail": "4 files already formatted\n",
+      "passed": true,
+      "scope": "owned",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy --strict --follow-imports=silent python/carnot/experiment_8051_v697_feedback_constrained_learning.py scripts/experiments/experiment_8051_v697_feedback_constrained_learning.py python/carnot/verify/feedback_constrained_8051.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "--follow-imports=silent",
+        "python/carnot/experiment_8051_v697_feedback_constrained_learning.py",
+        "scripts/experiments/experiment_8051_v697_feedback_constrained_learning.py",
+        "python/carnot/verify/feedback_constrained_8051.py"
+      ],
+      "duration_s": 0.18251326901372522,
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-8051-validation2/logs/06_strict_mypy.log",
+      "log_sha256": "sha256:44f0e569615bdd9e1bf9ae2bfb8b368ebcaac70fd57c8414ec67feb3e8f0997a",
+      "name": "strict_mypy",
+      "output_tail": "pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.inference.*', 'carnot.pipeline.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.pipeline.verify_repair', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl']\nSuccess: no issues found in 3 source files\n",
+      "passed": true,
+      "scope": "owned",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/check_spec_coverage.py tests/python/test_feedback_constrained_8051.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_feedback_constrained_8051.py"
+      ],
+      "duration_s": 0.02298079594038427,
+      "exit_code": 0,
+      "log_path": "/tmp/carnot-8051-validation2/logs/07_spec_coverage.log",
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "spec_coverage",
+      "output_tail": "OK: All tests reference specification requirements.\n",
+      "passed": true,
+      "scope": "owned",
+      "timed_out": false
+    }
+  ]
+}

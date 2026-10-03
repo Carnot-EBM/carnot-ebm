@@ -1,0 +1,103 @@
+{
+  "arm": "swap",
+  "capture_identity": "sha256:c690c1f517fbce73c5da6a2d1e99e3819c3de93e1045fe76d1c8215b54691541",
+  "censor_status": false,
+  "denominator": 1,
+  "donor_group_id": "sha256:f7a73b357b127d4d8f2c467498cffff01476fa74ab9320f10e23964a5d07c14b",
+  "duration_s": 0.002201625960879028,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:3c31b99d1e59b77fbc8b11da07ccf33ad26e09ebb3f0941f0bb8abc60f761548:swap",
+  "group_id": "sha256:3c31b99d1e59b77fbc8b11da07ccf33ad26e09ebb3f0941f0bb8abc60f761548",
+  "input_byte_upper_bound": 3625,
+  "input_tokens": 30,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.25,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 18,
+      "prompt_tokens": 30
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:da76eefbb6d8086f269db7cf0d6381c8c507268258e060fad6b3a282e2fdf6a2",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "message": {
+          "content": "{\"unsupported_probability\": 0.25, \"source_sentence_id\": null}"
+        }
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "usage": {
+      "completion_tokens": 18,
+      "prompt_tokens": 30
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 32,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Some leagues fit to be tied\\nTWO LEAGUES ended up with more than one champion (Shutterstock).\\nThe 2023 regular season for area high school football finally drew to a close on Friday. Most teams will put away their helmets but some can look forward to a \u201csecond season\u201d of playoffs.\\nCIF-SS will be posting its brackets and first round matchups on Sunday at 10 a.m. at http://www.cifss.org .\\nHere\u2019s how it all (mostly) wound up.\\nSunset League: Los Alamitos defeated Edison 21-10 to finish \u2013 8-2 overall and champions of the SL. The Chargers are second.\\nGarden Grove League: A tie for the GGL crown emerged on Friday after Bolsa Grande beat La Quinta 42-35. Rancho Alamitos and Los Amigos each finished in a deadlock for first at 4-1 while Bolsa and La Quinta tied for third at 3-2. Six-team leagues usually get three playoff spots, but there could be an at-large slot for this bunch after an unusually strong season.\\nBig 4 League: Marina is the champion after beating Segerstrom 21-19. Garden Grove (3-7) snapped a five-game losing streak and finished 2023 on a high note by slamming Katella 42-7.\\nPac 4 League: Laguna Beach defeated Westminster 42-7, but the Lions will make the playoffs as the second-place team.\\nOrange League: We don\u2019t have a final score at our deadline of the Western-Anaheim game. A Pioneer win makes them champs, but a Colonist upset would create a tie for the title.\\nEmpire League: Tustin grabbed the crown here with a 49-17 win over Cypress. Pacifica defeated Valencia 19-14 to finish 3-7 overall and 2-3 in league, good for fourth place.\\nOrange Coast League: In a clash of two school teams that began playing each other in 1916, Orange prevailed over Santa Ana 14-0 and created a three-way tie for first among the Panthers, Saints and St. Margaret\u2019s, all 5-1 in OCL action.\\nFirst round games will be played on Friday, Nov. 3. Second round games are Friday, Nov. 10, semifinals on Friday, Nov. 17 and the finals on Nov. 24 or 25 depending on division.\", \"original_answer\": \"Cajun Kitchen, located at 420 S Fairview Ave in Goleta, CA, is a Cajun/Creole restaurant that does not offer reservations but does provide outdoor seating and takeout service. The establishment is also suitable for groups. The restaurant, however, does not provide WiFi, music, or any kind of parking, including street, garage, valet, or validated parking. The ambiance is not classified as romantic, intimate, classy, hipster, divey, touristy, trendy, upscale, or casual. The business has an average star rating of 3.5. Customers have praised the tasty jambalaya, with one noting the shrimp was farmed, not fresh, but the base was really good. Another customer mentioned the prompt and pleasant service. A UCSB alumni stated that they try to visit the place each time they're in Santa Barbara, praising its consistency in delivering delicious meals.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69410,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "seed": 69410,
+  "source_cluster_id": "0a462e3886e46991f61795de0dda697589d8d5fea0b64256a613d9aa15b4b83b",
+  "source_hash": "sha256:e719666c68070baeed94a458a47bcdab88bfc3ab32dee660b3d5b14f15097719",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25
+  ]
+}

@@ -1,0 +1,56 @@
+.......F...                                                              [100%]
+=================================== FAILURES ===================================
+______________ test_partial_publishes_checked_resumable_identity _______________
+tests/python/test_experiment_7969_v691_qwen_calibration_capture.py:53: in test_partial_publishes_checked_resumable_identity
+    producer.publish(output, value)
+python/carnot/experiment_7969_v691_qwen_calibration_capture.py:711: in publish
+    raise ValueError("candidate_rejected")
+E   ValueError: candidate_rejected
+----------------------------- Captured stdout call -----------------------------
+[exp7303-validation] before_subprocess adversarial elapsed_s=0.000 unit=1/2
+[exp7303-validation:adversarial] {
+[exp7303-validation:adversarial]   "reports": [
+[exp7303-validation:adversarial]     {
+[exp7303-validation:adversarial]       "artifact": "/tmp/carnot-7969-dev-l1uu290s/pytest/test_partial_publishes_checked0/raw/experiment_7969_v691_qwen_calibration_capture/terminal_candidate.json",
+[exp7303-validation:adversarial]       "loaded": true,
+[exp7303-validation:adversarial]       "exp_id": 7969,
+[exp7303-validation:adversarial]       "title": "",
+[exp7303-validation:adversarial]       "honest_verdict": "complete_partial_owned_capture_budget",
+[exp7303-validation:adversarial]       "flag_count": 4,
+[exp7303-validation:adversarial]       "max_severity": 2,
+[exp7303-validation:adversarial]       "flags": [
+[exp7303-validation:adversarial]         {
+[exp7303-validation:adversarial]           "kind": "DURATION_TOO_SHORT",
+[exp7303-validation:adversarial]           "severity": "critical",
+[exp7303-validation:adversarial]           "detail": "duration_s=0.0 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+[exp7303-validation:adversarial]         },
+[exp7303-validation:adversarial]         {
+[exp7303-validation:adversarial]           "kind": "SUBSTRATE_CLASS_MISMATCH",
+[exp7303-validation:adversarial]           "severity": "critical",
+[exp7303-validation:adversarial]           "detail": "inference_substrate_class=blocked_no_run says nothing ran, but honest_verdict='complete_partial_owned_capture_budget' is not a blocked_* verdict. A blocked class must pair with a blocked verdict."
+[exp7303-validation:adversarial]         },
+[exp7303-validation:adversarial]         {
+[exp7303-validation:adversarial]           "kind": "METHODOLOGY_MISSING",
+[exp7303-validation:adversarial]           "severity": "warn",
+[exp7303-validation:adversarial]           "detail": "Compute-bound artifact missing: model_specs/target_model, reproducibility_checksum. Methodology unverifiable."
+[exp7303-validation:adversarial]         },
+[exp7303-validation:adversarial]         {
+[exp7303-validation:adversarial]           "kind": "VERDICT_PREFIX_CLASS_CONTRADICTION",
+[exp7303-validation:adversarial]           "severity": "warn",
+[exp7303-validation:adversarial]           "detail": "honest_verdict opens with the terminal-success prefix 'complete_' but verdict_class='partial'. The conductor is enum-first, so it believes the FIELD: the task is classified partial and re-run toward the 3-fail retire limit, while a reader of the verdict string sees a success. Pick one. If the run genuinely fell short, drop the success prefix. If it completed, declare the class that matches (positive / circular_positive / null)."
+[exp7303-validation:adversarial]         }
+[exp7303-validation:adversarial]       ],
+[exp7303-validation:adversarial]       "gate_version": "197e0a5eacacb09ce6607ae8bdfd507498082857f0d02ec2003a62c251b69a24"
+[exp7303-validation:adversarial]     }
+[exp7303-validation:adversarial]   ],
+[exp7303-validation:adversarial]   "flagged_count": 1
+[exp7303-validation:adversarial] }
+[exp7303-validation] after_subprocess adversarial elapsed_s=0.525 exit=1 unit=1/2
+[exp7303-validation] before_subprocess strict_rows elapsed_s=0.000 unit=2/2
+[exp7303-validation:strict_rows] 
+[exp7303-validation:strict_rows] verdict-row-consistency: checked 0, skipped 1 (no per-unit rows), unreadable 0.
+[exp7303-validation:strict_rows]   NOTE: most artifacts carry no per-unit row container, so their headline claims are not falsifiable from the artifact alone. That is a reporting-shape gap in those experiments, not a clean bill of health from this tool.
+[exp7303-validation] after_subprocess strict_rows elapsed_s=0.045 exit=0 unit=2/2
+=========================== short test summary info ============================
+FAILED tests/python/test_experiment_7969_v691_qwen_calibration_capture.py::test_partial_publishes_checked_resumable_identity
+1 failed, 10 passed in 11.28s

@@ -1,0 +1,106 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.2079148329794407,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:bc42cedd50775035f549634a6e51700266b81de193e46be587203a3c5396c12c",
+  "input_tokens": 563,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 563,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 586
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:7c5d53885ce6d4bee4cd34280fc40c7b4914f6f09db4a3e417ebb797ab814634",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886007,
+    "id": "chatcmpl-IPI5KPxTB5X8FmBWG9wBLqpiQgHWbqxa",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.732,
+      "predicted_n": 23,
+      "predicted_per_second": 42.53493412633246,
+      "predicted_per_token_ms": 23.51008695652174,
+      "prompt_ms": 533.087,
+      "prompt_n": 485,
+      "prompt_per_second": 909.795211663387,
+      "prompt_per_token_ms": 1.0991484536082474
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 563,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 586
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Sorbet has just two main ingredients: fruit and sugar. There may also be some water, flavorings, or acid added to it, but it's essentially blended fruit that's churned and then frozen. No dairy is added to sorbet, which is how it is different from ice cream. Learn how to make it: How To Make Sorbet With Any Fruit.\\\\n\\\\npassage 2:Gelato, Italy's low fat version of ice cream, has become popular with American ice cream lovers because it contains fewer calories than traditional ice cream. Gelato, made with skimmed milk and slightly less sugar than ice cream, contains a minimum of 4 percent milk fat and is flavored with fruits, nuts and chocolate. Gelato is also served at a warmer temperature than ice cream, making the flavors easier to taste.\\\\n\\\\npassage 3:Sherbet: Fruit and Cream. Sherbet is sorbet's creamier cousin. A little cream, milk, egg whites, gelatin, or even buttermilk is added to a sorbet mixture, and the result is a frozen dessert that's richer than sorbet but still lighter than ice cream. It's Sherbet, Not Sherbert. Let's get something straight here.\\\\n\\\\n\\\",\\\"question\\\":\\\"what is the difference between sorbet and gelato\\\"}\", \"original_answer\": \"Sorbet and Gelato are both frozen desserts, but they have different ingredients. Sorbet consists primarily of fruit and sugar, and may also include water, flavorings, or acid. It does not contain any dairy. On the other hand, Gelato is a low-fat version of ice cream from Italy, made with skimmed milk and slightly less sugar than ice cream. It contains a minimum of 4% milk fat and is flavored with fruits, nuts, or chocolate. Unlike sorbet, gelato contains dairy. Additionally, Gelato is served at a warmer temperature than other frozen desserts, which enhances its flavors.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "b3150118f42c60f5005f252f0e5eb594e5d426a221576fa38a5ba737ea8473bf",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ]
+}

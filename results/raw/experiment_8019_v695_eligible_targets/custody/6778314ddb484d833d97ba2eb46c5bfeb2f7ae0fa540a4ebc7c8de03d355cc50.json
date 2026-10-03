@@ -1,0 +1,102 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.6114069879986346,
+  "exclusion_reason": null,
+  "family_id": "sha256:01856a437186625e03ff353250603efdf8367de1648420b35c5397d9cc51767c",
+  "input_tokens": 1022,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1022,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1046
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:314290f60fbf33aa55fde8e3e6bbc543f49f5b098bf7d91a5e27e436e5b5a771",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832572,
+    "id": "chatcmpl-kPpR0D8806XkNldX16h376DAhug6yDJi",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 570.037,
+      "predicted_n": 24,
+      "predicted_per_second": 42.102530186637004,
+      "predicted_per_token_ms": 23.751541666666668,
+      "prompt_ms": 924.678,
+      "prompt_n": 944,
+      "prompt_per_second": 1020.895922688763,
+      "prompt_per_token_ms": 0.9795317796610169
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1022,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1046
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"508 E Haley St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Jazz & Blues, Music Venues, Arts & Entertainment, Nightlife, Restaurants, Bars, Local Flavor, Bagels, Food, Beer, Wine & Spirits, Dive Bars, Delis, Coffee & Tea\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"6:0-18:0\\\",\\\"Monday\\\":\\\"6:0-18:0\\\",\\\"Saturday\\\":\\\"8:0-18:0\\\",\\\"Thursday\\\":\\\"6:0-18:0\\\",\\\"Tuesday\\\":\\\"6:0-18:0\\\",\\\"Wednesday\\\":\\\"6:0-18:0\\\"},\\\"name\\\":\\\"Muddy Waters Cafe\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2015-09-18 02:36:39\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"So sad to hear Muddy's is closing . Great coffee house, eclectic art and people! Not sure where my go to place will be now......\\\"},{\\\"review_date\\\":\\\"2015-08-09 20:19:08\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"So many little spaces, rooms, and nooks to sit on a chair, couch or table.  Perfect for working, meeting up with friends, hanging out.  Great inside and outside space.  Art focused, which I LOVE!\\\\n\\\\nIf I lived closer, this would be a regular spot.\\\"},{\\\"review_date\\\":\\\"2015-05-29 06:16:17\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"Decent coffee at an okay price. Some people like the decorations but I thought it was kind of messy and had a grandma-esque vibe too it. \\\\n\\\\nI got my usual, an iced coffee and HOT DAMN. It was strong...like a too strong for my tastes. I will come back to try their other drinks though. Not giving up on this place just yet!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Here is an objective overview of Muddy Waters Cafe based on the provided structured data:\\n\\nMuddy Waters Cafe is a versatile business located in Santa Barbara, California, that offers a unique blend of jazz, blues, arts, and entertainment. With a rating of 4.0 stars, the cafe has established itself as a popular destination among locals and visitors alike. The business operates from 6:00 AM to 10:00 PM from Monday to Saturday and offers free WiFi to its patrons.\\n\\nThe cafe boasts of having a cozy and intimate atmosphere, with outdoor seating available during pleasant weather. While some reviewers have praised the cafe's eclectic decor, others have found it to be somewhat messy. Despite this, the cafe's strong coffee and relaxed ambiance have earned it a loyal customer base.\\n\\nReviews indicate that Muddy Waters Cafe is a great spot for working, meeting friends, or simply hanging out. Some reviewers have even suggested that the cafe would be a good place to visit regularly due to its comfortable interior and exterior spaces. However, a few patrons have found the cafe's decor to be reminiscent of a grandmother's home, while others have expressed disappointment with the coffee being too strong.\\n\\nIn summary, Muddy Waters Cafe is a well-regarded local business that offers a unique blend of coffee, art, and entertainment. While some patrons have noted issues with the decor and coffee strength, the cafe remains a popular destination for those seeking a relaxed atmosphere and quality time with friends and family.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:1b1919d618650b4f86463bfd23f4f68cec29063e208479ef47336410714463e0",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ]
+}

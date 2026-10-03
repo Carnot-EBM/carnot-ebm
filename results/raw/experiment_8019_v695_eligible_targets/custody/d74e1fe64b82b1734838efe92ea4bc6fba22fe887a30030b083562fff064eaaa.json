@@ -1,0 +1,120 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.8412555881077424,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:ed82b700aed485a0e9743511c83ec5cfb54a66a0470c2a2b33637742e37895e0",
+  "input_tokens": 1329,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.05,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1329,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1353
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:aaeffa419a52efd67b62538d91e341235d1a5065b232ef666bf53b72e309de9f",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.05,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886134,
+    "id": "chatcmpl-uWes0uijWFjwYs2Pitf0sBHLO5ah7jJ7",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 566.499,
+      "predicted_n": 24,
+      "predicted_per_second": 42.365476373303395,
+      "predicted_per_token_ms": 23.604125,
+      "prompt_ms": 1153.408,
+      "prompt_n": 1251,
+      "prompt_per_second": 1084.6118632782157,
+      "prompt_per_token_ms": 0.9219888089528376
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1329,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1353
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"1218 Santa Barbara St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":null,\\\"classy\\\":null,\\\"divey\\\":true,\\\"hipster\\\":false,\\\"intimate\\\":null,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":null,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":null,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Restaurants, Breakfast & Brunch\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"6:30-14:0\\\",\\\"Monday\\\":\\\"6:30-14:0\\\",\\\"Saturday\\\":\\\"6:30-14:0\\\",\\\"Sunday\\\":\\\"6:30-14:0\\\",\\\"Thursday\\\":\\\"6:30-14:0\\\",\\\"Tuesday\\\":\\\"6:30-14:0\\\",\\\"Wednesday\\\":\\\"6:30-14:0\\\"},\\\"name\\\":\\\"Judge For Yourself Cafe\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-07 15:52:23\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"First of all, the name is clever and second, when you step inside to the quaint little diner and get a look at the menu, you smile as your suspicions are confirmed: The owner must be a judge. Read the menu for awhile and besides the wide variety of items (breakfast, specials, Mexican, American burgers, sandwiches, desserts) to peruse, you'll get a kick out of names particularly if you have a legal background. Our server, Roberto, was outstanding. The place is spotless. No loose debris or food lying around. At 1 point, Roberto bent over to pick up a paper the size of a pea off the floor. This is an old place but I looked around and this was the only thing marring the floor. My wife thought \\\\\\\"only an owner\\\\\\\" would bother but Roberto said no. No one had been sitting at that table next to us but he came over, gently picking up the condiments, as he wiped it thoroughly down again.  We sat there eating our food which came out fast. Minutes later, a customer came in and took her seat there. Some unspoken communication took place and within  minutes, her breakfast came out. Ah, the pleasure of being a regular.  Good service doesn't mean anything if the food isn't any good but they hit a home run. We ordered 4 items along with coffee. I forget what my wife ordered but I got an Ortega Special (a 4-egg omelet with onions/Ortega chili's that came with hash browns which was crispy and tasty but not oily), and a club sandwich with home fries and tuna sandwich with fruit to go. Fruit was fresh, sweet and came in big slices (watermelon, honeydew, cantaloupe).  Total cost was $69 including tax. We'll be passing through SB for the night in 3 weeks and we will make a point of stopping in again. I guess there is no better review than to say \\\\\\\"I'm coming back\\\\\\\".\\\"},{\\\"review_date\\\":\\\"2022-01-03 19:05:18\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"I love a good diner breakfast and this was probably the best I've had in Santa Barbara! Very mellow, Hot fresh food, kind, attentive service and the best thick cut bacon. What else do you need? The food felt fresh because of the lack of greasiness often found in diner-style food and indoor seating was available and cute.\\\"},{\\\"review_date\\\":\\\"2021-08-15 18:37:47\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"The place itself is very cute and has great service, however I would steer clear of the blueberry french toast. After I ate my first bite I noticed it was somehow spicy....\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Located at 1218 Santa Barbara St in Santa Barbara, California, Judge For Yourself Cafe is a popular local dining spot. This restaurant, known for its breakfast and brunch offerings, has a unique charm that reflects in its cleverly named menu items. Open daily from 6:30 am to 2:00 pm, the cafe offers a wide variety of food items including Mexican dishes, American burgers, sandwiches, and desserts, with a particular emphasis on clean, fresh, and non-greasy food. It does not take reservations but offers outdoor seating and take-out service. Although the cafe does not provide WiFi, it is considered good for groups. Street parking is available and the ambiance is described as 'divey'. With a strong review score of 4.5 stars, customers highlight the cafe's exceptional service, spotless environment, and the quality of food. Some of their signature dishes include the Ortega Special, a 4-egg omelet with onions and Ortega chili's, and thick-cut bacon. It's a place where regulars are recognized and newcomers are welcomed, contributing to its cozy, intimate atmosphere.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "5f382c55c10d9317bbe4d24d32ffe3491aa55239f2c43bf1a727fca7fc0ccd84",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23
+  ]
+}

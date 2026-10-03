@@ -1,0 +1,37 @@
+....F..............                                                      [100%]
+=================================== FAILURES ===================================
+____________________ test_validation_and_acceptance_routes _____________________
+
+tmp_path = PosixPath('/tmp/carnot-8053-nzkw5_8f/pytest/test_validation_and_acceptance0')
+data = {'cases': [{'arm': 'unconstrained', 'before': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, ...], 'class': 'accepted', 'delta': [0.0,...on-312-x86_64-linux-gnu.so', 'sha256': 'sha256:ee1e82d2891e735fa7824228a3e98f474ca43cf5cc114b89c3c6e4d460e89170'}, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f4a487b1430>
+
+    def test_validation_and_acceptance_routes(tmp_path, data, monkeypatch):
+        """SCENARIO-REPORT-8053-TERMINAL: owned failures cannot grant numerical readiness."""
+        plan = e.validation_plan(tmp_path)
+        assert any(c.name == "repository_health" and c.timeout_s <= 120 for c in plan)
+        assert all(c.timeout_s <= 300 for c in plan)
+        coverage = {p: dict(summary=dict(num_statements=1, missing_lines=0)) for p in e.OWNED}
+        e.atomic_json(tmp_path / "coverage.json", dict(files=coverage))
+        real_commands = e.run_commands
+        monkeypatch.setattr(
+            e,
+            "run_commands",
+            lambda *a, **k: [
+                dict(scope="owned", passed=True),
+                dict(scope="repository_health", passed=False),
+            ],
+        )
+        receipts, counts, health = e.validate(tmp_path / "logs", tmp_path)
+        assert receipts[0]["passed"] and counts and not health[0]["passed"]
+        e.atomic_json(tmp_path / "prior" / "repository_health_receipt.json", dict(rows=health))
+>       assert e.validate(tmp_path / "again", tmp_path)[2] == health
+E       AssertionError: assert [{'passed': F...tory_health'}] == [{'passed': F...tory_health'}]
+E         
+E         Left contains one more item: {'passed': False, 'scope': 'repository_health'}
+E         Use -v to get more diff
+
+tests/python/test_guarded_transaction_8053.py:165: AssertionError
+=========================== short test summary info ============================
+FAILED tests/python/test_guarded_transaction_8053.py::test_validation_and_acceptance_routes
+1 failed, 18 passed in 84.74s (0:01:24)

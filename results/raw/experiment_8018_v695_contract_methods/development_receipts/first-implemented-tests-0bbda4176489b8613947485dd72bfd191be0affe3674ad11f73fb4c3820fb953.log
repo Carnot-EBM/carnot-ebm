@@ -1,0 +1,360 @@
+...F.F.                                                                  [100%]
+=================================== FAILURES ===================================
+_______________________ test_manifest_and_owned_failure ________________________
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261002T101733-1266123-e2523a5b/test_manifest_and_owned_failur0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f15fe697e00>
+
+    def test_manifest_and_owned_failure(tmp_path, monkeypatch):
+        """SCENARIO-REPORT-8018-TERMINAL: owned failures disqualify; health remains separate."""
+        args = inputs(tmp_path)
+        args.fixture_e2e = False
+        manifest = methods.manifest(ROOT, tmp_path / "work")
+        assert manifest["coverage_includes"] == methods.OWNED
+        assert (
+            next(r for r in manifest["commands"] if r["name"] == "repository_full_suite")[
+                "classification"
+            ]
+            == "diagnostic"
+        )
+        monkeypatch.setattr(
+            methods,
+            "manifest",
+            lambda *a: dict(
+                manifest, commands=[dict(name="failed", argv=["private"], expected_exit=0)]
+            ),
+        )
+        monkeypatch.setattr(
+            methods.validation,
+            "run_check",
+            lambda *a: dict(name="failed", argv=["private"], passed=False, actual_exit=1),
+        )
+        monkeypatch.setattr(methods, "publish", lambda *a: None)
+>       value = methods.execute(args, tmp_path / "work")
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_experiment_8018_v695_contract_methods.py:146: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+args = namespace(design=PosixPath('/tmp/pytest-carnot-ianblenke/20261002T101733-1266123-e2523a5b/test_manifest_and_owned_fail...est-carnot-ianblenke/20261002T101733-1266123-e2523a5b/test_manifest_and_owned_failur0/raw/rows.json'), date='20261002')
+private = PosixPath('/tmp/pytest-carnot-ianblenke/20261002T101733-1266123-e2523a5b/test_manifest_and_owned_failur0/work')
+
+    def execute(args: Any, private: Path) -> dict[str, Any]:
+        """Freeze invocation bytes before private checks; outside prerequisites remain terminal."""
+        started = time.monotonic_ns()
+        private.mkdir(parents=True, exist_ok=True)
+        durable = args.raw.parent
+        progress("inputs_before", pending="immutable authority and original failures")
+        assessment = assess(args.design, args.staged, args.active, durable / "authority_snapshots")
+        for name in ("design.md", "active.yaml"):
+            (private / name).write_bytes(
+                gzip.decompress((ROOT / "tests/fixtures/v695" / (name + ".gz")).read_bytes())
+            )
+        atomic_json(private / "negative.json", {"experiment_id": 0})
+        atomic_json(private / "negative-rows.json", {"rows": []})
+        tasks = yaml.safe_load(args.active.read_bytes())["tasks"]
+        freeze = prior.method_freeze(tasks)
+        freeze.update(
+            design_methods=args.design.read_text().split("## Exact task contract", 1)[0]
+            if args.design.is_file()
+            else None,
+            source_roles="Original 704 fit/tune/calibration/stream/retention slots; exclusions preserved; labels evaluator-owned",
+            statistical_choices=dict(
+                draws=10000,
+                multiplicity="Holm three primary hypotheses; absent p=1",
+                source_unit="source group",
+                online_unit="moving block length32; sensitivity16/64",
+                seed_reduction="mean within source or slot",
+                target="y=1 unsupported",
+                harm_directions=dict(Brier="increase", false_accepts="increase"),
+            ),
+            primary_comparisons=[
+                dict(
+                    task="exp8021",
+                    endpoint="cost",
+                    direction="control minus treatment",
+                    minimum=0.02,
+                    comparator="tune-selected strongest nonidentical control",
+                ),
+                dict(
+                    task="exp8024",
+                    endpoint="Brier",
+                    direction="no-intervention comparator minus intervention",
+                    minimum=0.01,
+                    comparator="tune-selected no-intervention control",
+                ),
+                dict(
+                    task="exp8026",
+                    endpoint="later decision cost",
+                    direction="uniform minus decision-loss priority",
+                    minimum=0.02,
+                    comparator="equal-label equal-update uniform selection",
+                ),
+            ],
+            science_pre_gate=False,
+        )
+        frozen = manifest(ROOT, private)
+        frozen.update(
+            authority_snapshots=assessment["authority_snapshots"], method_sha256=canonical_hash(freeze)
+        )
+        refs, history = historical(durable)
+        method_ref = seal(freeze, durable, "method_freeze")
+        manifest_ref = seal(frozen, durable, "validation_command_manifest")
+        refs += [method_ref, manifest_ref]
+        code_refs = [
+            authority.lifecycle._snapshot(
+                ROOT / n, (ROOT / n).read_bytes(), durable / "code", n.replace("/", "_")
+            )
+            for n in frozen["dependency_hashes"]
+        ]
+        refs += [dict(path=s["snapshot_path"], sha256=s["sha256"]) for s in code_refs]
+        progress("inputs_frozen", 13, "private mutations and terminal reader checks")
+        controls = mutations(
+            private / "design.md",
+            private / "active.yaml",
+            private / "absent",
+            durable / "private_mutations",
+        )
+        for row in controls:
+            row.update(
+                raw_numerator=int(row["passed"]),
+                raw_denominator=1,
+                excluded=False,
+                censored=False,
+                exclusion_reason=None,
+                censor_reason=None,
+                effective_independent_groups=0,
+            )
+        receipts = [
+            dict(
+                name="private_circular_mutations",
+                argv=["in_process_private_fixture"],
+                passed=all(r["passed"] for r in controls),
+                actual_exit=0,
+            )
+        ]
+        coverage: dict[str, Any] = {}
+        if not args.fixture_e2e:
+            receipts = []
+            for spec in frozen["commands"]:
+                progress("subprocess_before_" + spec["name"], len(receipts), "owned checks")
+                receipts.append(
+>                   validation.run_check(ROOT, spec, private, durable / "sealed_logs", heartbeat_s=30)
+                )
+E               TypeError: test_manifest_and_owned_failure.<locals>.<lambda>() got an unexpected keyword argument 'heartbeat_s'
+
+python/carnot/reporting/v695_contract_methods.py:327: TypeError
+----------------------------- Captured stdout call -----------------------------
+[exp8018] phase=inputs_before elapsed_s=41.997 completed_units=0 pending=immutable authority and original failures
+[exp8018] phase=inputs_frozen elapsed_s=43.772 completed_units=13 pending=private mutations and terminal reader checks
+[exp7953] phase=mutations completed_units=1/12 elapsed_s=0.308
+[exp7953] phase=mutations completed_units=2/12 elapsed_s=0.531
+[exp7953] phase=mutations completed_units=3/12 elapsed_s=0.754
+[exp7953] phase=mutations completed_units=4/12 elapsed_s=0.978
+[exp7953] phase=mutations completed_units=5/12 elapsed_s=1.199
+[exp7953] phase=mutations completed_units=6/12 elapsed_s=1.415
+[exp7953] phase=mutations completed_units=7/12 elapsed_s=1.636
+[exp7953] phase=mutations completed_units=8/12 elapsed_s=1.858
+[exp7953] phase=mutations completed_units=9/12 elapsed_s=2.076
+[exp7953] phase=mutations completed_units=10/12 elapsed_s=2.294
+[exp7953] phase=mutations completed_units=11/12 elapsed_s=2.513
+[exp7953] phase=mutations completed_units=12/12 elapsed_s=2.773
+[exp8018] phase=subprocess_before_failed elapsed_s=46.577 completed_units=0 pending=owned checks
+_______________________ test_checked_private_publication _______________________
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261002T101733-1266123-e2523a5b/test_checked_private_publicati0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f1656a47740>
+
+    def test_checked_private_publication(tmp_path, monkeypatch):
+        """SCENARIO-REPORT-8018-TERMINAL: real readers select exact terminal bytes and bound sidecars."""
+        args = inputs(tmp_path)
+        args.fixture_e2e = False
+        real = methods.manifest
+        private = tmp_path / "work"
+        private.mkdir()
+        counts = {
+            p: dict(summary=dict(num_statements=1, covered_lines=1), missing_lines=[])
+            for p in methods.OWNED
+        }
+        atomic_json(private / "coverage.json", dict(files=counts))
+        monkeypatch.setattr(
+            methods,
+            "manifest",
+            lambda *a: dict(
+                real(*a),
+                commands=[
+                    dict(
+                        name="private_fixture_check",
+                        argv=[
+                            str(ROOT / ".venv/bin/python"),
+                            "-c",
+                            "print('private protocol check', flush=True)",
+                        ],
+                        expected_exit=0,
+                        deadline_s=60,
+                    )
+                ],
+            ),
+        )
+>       value = methods.execute(args, private)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_experiment_8018_v695_contract_methods.py:226: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/reporting/v695_contract_methods.py:415: in execute
+    publish(value, args.output, args.raw, private, durable)
+python/carnot/reporting/v695_contract_methods.py:423: in publish
+    validation.publish(ROOT, value, checked, private / "terminal", durable / "terminal_validation")
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+root = PosixPath('/home/ianblenke/github.com/ianblenke/carnot')
+artifact = {'MODEL_SPECS': [], 'acceptance_gate_results': {'decision_benefit': None, 'efficiency': None, 'probability_quality': None, 'readiness': 0, ...}, 'activation_confirmed': True, 'activation_observation': 'confirmed', ...}
+output = PosixPath('/tmp/pytest-carnot-ianblenke/20261002T101733-1266123-e2523a5b/test_checked_private_publicati0/work/checked/experiment_8018_fixture.json')
+private = PosixPath('/tmp/pytest-carnot-ianblenke/20261002T101733-1266123-e2523a5b/test_checked_private_publicati0/work/terminal')
+durable = PosixPath('/tmp/pytest-carnot-ianblenke/20261002T101733-1266123-e2523a5b/test_checked_private_publicati0/raw/terminal_validation')
+
+    def publish(
+        root: Path, artifact: dict[str, Any], output: Path, private: Path, durable: Path
+    ) -> None:
+        """Bind validator sidecars to candidate hashes, then atomically copy checked bytes."""
+        private.mkdir(parents=True, exist_ok=True)
+        candidate_path = private / "terminal-candidate.json"
+        for attempt in range(2):
+            atomic_json(candidate_path, artifact)
+            digest = sha256_file(candidate_path)
+            checks = [
+                {
+                    "name": "adversarial_verify",
+                    "argv": [
+                        str(root / ".venv/bin/python"),
+                        str(root / "scripts/adversarial_verify.py"),
+                        "--json",
+                        str(candidate_path),
+                    ],
+                    "expected_exit": 0,
+                    "deadline_s": 120,
+                },
+                {
+                    "name": "verdict_row_consistency",
+                    "argv": [
+                        str(root / ".venv/bin/python"),
+                        str(root / "scripts/verdict_row_consistency_lint.py"),
+                        "--strict",
+                        str(candidate_path),
+                    ],
+                    "expected_exit": 0,
+                    "deadline_s": 120,
+                },
+            ]
+            reports = [run_check(root, spec, private, durable) for spec in checks]
+            atomic_json(
+                durable / f"terminal-{digest[7:]}.json",
+                {
+                    "candidate_sha256": digest,
+                    "published_path": str(output),
+                    "reports": reports,
+                    "passed": all(row["passed"] for row in reports),
+                },
+            )
+            if all(row["passed"] for row in reports):
+                output.parent.mkdir(parents=True, exist_ok=True)
+                temporary = output.with_name(f".{output.name}.checked")
+                shutil.copyfile(candidate_path, temporary)
+                if sha256_file(temporary) != digest:
+                    raise ValueError("published_bytes_differ")
+                temporary.replace(output)
+                return
+            if attempt:
+>               raise ValueError("terminal_recheck_failed")
+E               ValueError: terminal_recheck_failed
+
+python/carnot/reporting/v686_contract_validation.py:360: ValueError
+----------------------------- Captured stdout call -----------------------------
+[exp8018] phase=inputs_before elapsed_s=80.660 completed_units=0 pending=immutable authority and original failures
+[exp8018] phase=inputs_frozen elapsed_s=83.475 completed_units=13 pending=private mutations and terminal reader checks
+[exp7953] phase=mutations completed_units=1/12 elapsed_s=0.233
+[exp7953] phase=mutations completed_units=2/12 elapsed_s=0.475
+[exp7953] phase=mutations completed_units=3/12 elapsed_s=0.716
+[exp7953] phase=mutations completed_units=4/12 elapsed_s=0.958
+[exp7953] phase=mutations completed_units=5/12 elapsed_s=1.200
+[exp7953] phase=mutations completed_units=6/12 elapsed_s=1.436
+[exp7953] phase=mutations completed_units=7/12 elapsed_s=1.678
+[exp7953] phase=mutations completed_units=8/12 elapsed_s=1.920
+[exp7953] phase=mutations completed_units=9/12 elapsed_s=2.161
+[exp7953] phase=mutations completed_units=10/12 elapsed_s=2.403
+[exp7953] phase=mutations completed_units=11/12 elapsed_s=2.646
+[exp7953] phase=mutations completed_units=12/12 elapsed_s=2.934
+[exp8018] phase=subprocess_before_private_fixture_check elapsed_s=86.442 completed_units=0 pending=owned checks
+[exp7303-validation] before_subprocess private_fixture_check elapsed_s=0.000 unit=1/1
+[exp7303-validation:private_fixture_check] private protocol check
+[exp7303-validation] after_subprocess private_fixture_check elapsed_s=0.013 exit=0 unit=1/1
+[exp8018] phase=subprocess_after_private_fixture_check elapsed_s=86.455 completed_units=1 pending=remaining checks
+[exp8018] phase=checks_complete elapsed_s=86.570 completed_units=2 pending=exact terminal bytes
+[exp7303-validation] before_subprocess adversarial_verify elapsed_s=0.000 unit=1/1
+[exp7303-validation:adversarial_verify] {
+[exp7303-validation:adversarial_verify]   "reports": [
+[exp7303-validation:adversarial_verify]     {
+[exp7303-validation:adversarial_verify]       "artifact": "/tmp/pytest-carnot-ianblenke/20261002T101733-1266123-e2523a5b/test_checked_private_publicati0/work/terminal/terminal-candidate.json",
+[exp7303-validation:adversarial_verify]       "loaded": true,
+[exp7303-validation:adversarial_verify]       "exp_id": 8018,
+[exp7303-validation:adversarial_verify]       "title": "",
+[exp7303-validation:adversarial_verify]       "honest_verdict": "complete_circular_positive_contract_methods",
+[exp7303-validation:adversarial_verify]       "flag_count": 1,
+[exp7303-validation:adversarial_verify]       "max_severity": 2,
+[exp7303-validation:adversarial_verify]       "flags": [
+[exp7303-validation:adversarial_verify]         {
+[exp7303-validation:adversarial_verify]           "kind": "TAUTOLOGY",
+[exp7303-validation:adversarial_verify]           "severity": "critical",
+[exp7303-validation:adversarial_verify]           "detail": "ended_monotonic_ns=597251608936622.0 and started_monotonic_ns=597245812994712.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+[exp7303-validation:adversarial_verify]         }
+[exp7303-validation:adversarial_verify]       ],
+[exp7303-validation:adversarial_verify]       "gate_version": "197e0a5eacacb09ce6607ae8bdfd507498082857f0d02ec2003a62c251b69a24"
+[exp7303-validation:adversarial_verify]     }
+[exp7303-validation:adversarial_verify]   ],
+[exp7303-validation:adversarial_verify]   "flagged_count": 1
+[exp7303-validation:adversarial_verify] }
+[exp7303-validation] after_subprocess adversarial_verify elapsed_s=0.711 exit=1 unit=1/1
+[exp7303-validation] before_subprocess verdict_row_consistency elapsed_s=0.000 unit=1/1
+[exp7303-validation:verdict_row_consistency] 
+[exp7303-validation:verdict_row_consistency] verdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.
+[exp7303-validation:verdict_row_consistency]   No row/verdict contradictions among the artifacts that could be checked.
+[exp7303-validation] after_subprocess verdict_row_consistency elapsed_s=0.032 exit=0 unit=1/1
+[exp7303-validation] before_subprocess adversarial_verify elapsed_s=0.000 unit=1/1
+[exp7303-validation:adversarial_verify] {
+[exp7303-validation:adversarial_verify]   "reports": [
+[exp7303-validation:adversarial_verify]     {
+[exp7303-validation:adversarial_verify]       "artifact": "/tmp/pytest-carnot-ianblenke/20261002T101733-1266123-e2523a5b/test_checked_private_publicati0/work/terminal/terminal-candidate.json",
+[exp7303-validation:adversarial_verify]       "loaded": true,
+[exp7303-validation:adversarial_verify]       "exp_id": 8018,
+[exp7303-validation:adversarial_verify]       "title": "",
+[exp7303-validation:adversarial_verify]       "honest_verdict": "complete_disqualified_terminal_validation",
+[exp7303-validation:adversarial_verify]       "flag_count": 1,
+[exp7303-validation:adversarial_verify]       "max_severity": 2,
+[exp7303-validation:adversarial_verify]       "flags": [
+[exp7303-validation:adversarial_verify]         {
+[exp7303-validation:adversarial_verify]           "kind": "TAUTOLOGY",
+[exp7303-validation:adversarial_verify]           "severity": "critical",
+[exp7303-validation:adversarial_verify]           "detail": "ended_monotonic_ns=597251608936622.0 and started_monotonic_ns=597245812994712.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+[exp7303-validation:adversarial_verify]         }
+[exp7303-validation:adversarial_verify]       ],
+[exp7303-validation:adversarial_verify]       "gate_version": "197e0a5eacacb09ce6607ae8bdfd507498082857f0d02ec2003a62c251b69a24"
+[exp7303-validation:adversarial_verify]     }
+[exp7303-validation:adversarial_verify]   ],
+[exp7303-validation:adversarial_verify]   "flagged_count": 1
+[exp7303-validation:adversarial_verify] }
+[exp7303-validation] after_subprocess adversarial_verify elapsed_s=0.659 exit=1 unit=1/1
+[exp7303-validation] before_subprocess verdict_row_consistency elapsed_s=0.000 unit=1/1
+[exp7303-validation:verdict_row_consistency] 
+[exp7303-validation:verdict_row_consistency] verdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.
+[exp7303-validation:verdict_row_consistency]   No row/verdict contradictions among the artifacts that could be checked.
+[exp7303-validation] after_subprocess verdict_row_consistency elapsed_s=0.040 exit=0 unit=1/1
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/pluggy/_callers.py:121
+  /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/pluggy/_callers.py:121: PytestWarning: This test run modified 1 tracked file(s) that were clean before it. Commits are blocked until this is resolved -- run `python3 scripts/test_suite_mutation_check.py --gate` to list every affected file. NOT ATTRIBUTED (1): ['python/carnot/reporting/v694_capstone.py']. This run was not observed writing these; they may be a concurrent agent's in-flight work. Do NOT blanket `git checkout --` them -- check authorship first. Do NOT reach for `--check` here: it needs a baseline taken before the run under a matching --run-id, and this hook keeps its baseline in memory rather than on disk, so `--check` would refuse.
+    res = hook_impl.function(*args)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/python/test_experiment_8018_v695_contract_methods.py::test_manifest_and_owned_failure
+FAILED tests/python/test_experiment_8018_v695_contract_methods.py::test_checked_private_publication
+2 failed, 5 passed, 1 warning in 126.45s (0:02:06)

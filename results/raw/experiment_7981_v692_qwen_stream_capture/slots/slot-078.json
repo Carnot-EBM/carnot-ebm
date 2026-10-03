@@ -1,0 +1,115 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.5458494810154662,
+  "exclusion_reason": null,
+  "family_id": "sha256:62e1f7ee47cf60146a0cc4393e6da34ce58cb41123844634d1a6ac8f8c61a962",
+  "input_tokens": 957,
+  "invocation_finished_at": "2026-10-01T11:42:59.876964+00:00",
+  "invocation_started_at": "2026-10-01T11:42:58.331113+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 957,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 980
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:5e08782aa8973171df5a698fb53690ae3afde78b3f5bdd60c837cf0ef7007160",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790854979,
+    "id": "chatcmpl-5SiddqyfqSNxbjJbIc5rAny8nPcB19uJ",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 537.833,
+      "predicted_n": 23,
+      "predicted_per_second": 42.76420375841572,
+      "predicted_per_token_ms": 23.384043478260867,
+      "prompt_ms": 872.166,
+      "prompt_n": 879,
+      "prompt_per_second": 1007.8356643116103,
+      "prompt_per_token_ms": 0.9922252559726963
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 957,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 980
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Is Hannah Wissmann pregnant again? Here\u2019s why fans think so\\nAnother day, another Duggar pregnancy speculation.\\nHannah Wissmann is on the radar after Joy-Anna Duggar\u2019s video highlights from the Duggar family\u2019s Florida vacation.\\nShe did a good job keeping most of the sisters-in-law out of the video or in very small doses, but Jeremiah Duggar\u2019s wife was seen in the kitchen with Brynley as Jason Duggar and Austin Forsyth chatted.\\nWhile the video quality wasn\u2019t great, it appeared that Hannah may have a baby bump.\\nBrynley was born on Christmas day last year, so it\u2019s entirely possible that Hannah and Jeremiah are expecting again.\\nAnd if she is expecting, there are likely more sisters-in-law announcements on the way.\\nHannah Wissmann appears to have a baby bump\\nJeremiah Duggar and Hannah Wissmann have been married just over a year and welcomed their honeymoon baby in December 2022.\\nThe couple vacationed with the Duggar family in Destin, Florida, and Joy-Anna Duggar may have caught a baby bump in her footage.\\nOn Reddit, the screengrab of Hannah was highlighted (slide number six), as it seemingly showed a growing baby bump as she held Brynley in the kitchen of one of the rental homes.\\nThe Duggars really went on a beach trip with everyone except Jill and Jinger\\nbyu/ttej123 inDuggarsSnark\\nWhich Duggar women are pregnant?\\nJessa Duggar and Ben Seewald are the only couple who have announced they are expecting.\\nSeveral other sisters or sisters-in-law have welcomed newer babies, so it may be a while before some of them announce.\\nJill Duggar and Jinger Duggar have admitted to using family planning, so it\u2019s unlikely either will welcome a baby in the coming months.\\nHannah Wissmann and Jeremiah Duggar are one of the only couples who could be expecting.\\nJedidah Duggar and Katelyn Nakatsu could also be expecting, but when she was seen at Michelle Duggar\u2019s birthday lunch with the sisters and sisters-in-law, she didn\u2019t appear to have a baby bump.\\nMany of the Duggar siblings no longer announce they are growing their family. Kendra Caldwell and Lauren Swanson welcomed babies without saying another or sharing photos of their little ones.\\nJeremiah and Hannah have been relatively active on social media, so they will likely give followers a heads-up if another pregnancy happens. They have shared some of Brynley\u2019s milestones and attend the family get-togethers still.\\nThey have not confirmed a pregnancy, but it wouldn\u2019t be surprising if the next couple of weeks brought one from the couple or another of the Duggar siblings.\\nShiny Happy People: Duggar Family Secrets is currently streaming on Prime Video.\", \"original_answer\": \"Fans are speculating that Hannah Wissmann, wife of Jeremiah Duggar, is pregnant again after a video from the Duggar family's Florida vacation showed her with a possible baby bump. Hannah and Jeremiah welcomed their first child, Brynley, in December 2022. Other Duggar sisters and sisters-in-law have recently had babies, but only Jessa Duggar and Ben Seewald have announced they are expecting. Jill Duggar and Jinger Duggar have admitted to using family planning, making it unlikely they will have a baby soon. Hannah and Jeremiah have been active on social media, sharing updates on Brynley, and may announce a pregnancy in the coming weeks.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_update",
+  "source_cluster_id": "sha256:5ccfb4390485c81fcb3062f599ebbe1bf913edb22752de51098a8dc572320da3",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21
+  ]
+}

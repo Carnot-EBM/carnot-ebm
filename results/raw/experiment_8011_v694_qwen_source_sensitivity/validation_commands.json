@@ -1,0 +1,213 @@
+{
+  "actual_output_token_budget": 6144,
+  "code_config_hashes": [
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8011_v694_qwen_source_sensitivity.py",
+      "sha256": "sha256:1b5e0a9770b2763dec40988790e51d2e878aeac9437df77104e2b56ad546ceb6"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8011_v694_qwen_source_sensitivity.py",
+      "sha256": "sha256:2b14e0eb2a5175ca18b0908d82d7e581a7e6431e31cfe6a2d10353aa7b2490d3"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_source_sensitivity_8011.py",
+      "sha256": "sha256:b4a0fab32931d096f9bd1d47ee2580f7a10b0f08c85f241b2f9e73037300fb7f"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8010_v694_source_intervention_protocol.py",
+      "sha256": "sha256:dbebe00c7c193b944e79d4232d9fb86a844ec7a14fe765ba7c56d9e6456b671f"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/qwen_development_capture_7995.py",
+      "sha256": "sha256:644e31a0b78d7740f3d4b20b0ac7d1bf43f0f1d376c609c76a30c62febf174d9"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7969_v691_qwen_calibration_capture.py",
+      "sha256": "sha256:d3d00733d33748d746a4f1c5a1fd4c2cbb573a65190d575aad6285c1743c8201"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/qwen_sufficiency_7920.py",
+      "sha256": "sha256:dd3d00920d3454f00aba06de0d8862e9fd1750ff23b9d0c115f1dd13b811b254"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/llama_cpp_process.py",
+      "sha256": "sha256:da24f1a661fe70e75169bf753f8a6f9811ac6051acb79b98e80b81d5239573e0"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/gpu_lease_phase_journal.py",
+      "sha256": "sha256:4308c325d2489c64503b9cbdbddc03ef3f02f422f746b77bf1a1ced461fbfa08"
+    }
+  ],
+  "cold_argv": [
+    "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+    "-u",
+    "scripts/experiments/experiment_8011_v694_qwen_source_sensitivity.py",
+    "--cold-replay",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8011_v694_qwen_source_sensitivity/experiment_8011_v694_qwen_source_sensitivity.json"
+  ],
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "run",
+        "--rcfile=/tmp/carnot-8011-g9uowncs/coverage.ini",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_source_sensitivity_8011.py"
+      ],
+      "name": "focused",
+      "scope": "owned",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "combine",
+        "--rcfile=/tmp/carnot-8011-g9uowncs/coverage.ini",
+        "/tmp/carnot-8011-g9uowncs"
+      ],
+      "name": "combine",
+      "scope": "owned",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "json",
+        "--rcfile=/tmp/carnot-8011-g9uowncs/coverage.ini",
+        "--fail-under=100",
+        "-o",
+        "/tmp/carnot-8011-g9uowncs/coverage.json"
+      ],
+      "name": "coverage",
+      "scope": "owned",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_source_boundary_7852.py",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_current_work_receipt.py",
+        "tests/python/test_qwen_development_capture_7995.py",
+        "tests/python/test_experiment_7995_v693_qwen_development_capture.py",
+        "tests/python/test_llama_cpp_process.py"
+      ],
+      "name": "consumers_E2E015_7995",
+      "scope": "owned",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "ruff",
+        "check",
+        "python/carnot/experiment_8011_v694_qwen_source_sensitivity.py",
+        "scripts/experiments/experiment_8011_v694_qwen_source_sensitivity.py",
+        "tests/python/test_source_sensitivity_8011.py"
+      ],
+      "name": "ruff",
+      "scope": "owned",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_8011_v694_qwen_source_sensitivity.py",
+        "scripts/experiments/experiment_8011_v694_qwen_source_sensitivity.py",
+        "tests/python/test_source_sensitivity_8011.py"
+      ],
+      "name": "format",
+      "scope": "owned",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "mypy",
+        "--strict",
+        "python/carnot/experiment_8011_v694_qwen_source_sensitivity.py",
+        "scripts/experiments/experiment_8011_v694_qwen_source_sensitivity.py"
+      ],
+      "name": "mypy",
+      "scope": "owned",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "python/carnot/experiment_8011_v694_qwen_source_sensitivity.py",
+        "scripts/experiments/experiment_8011_v694_qwen_source_sensitivity.py",
+        "tests/python/test_source_sensitivity_8011.py"
+      ],
+      "name": "spec",
+      "scope": "owned",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q"
+      ],
+      "name": "repository_health",
+      "scope": "repository_health",
+      "timeout_s": 120
+    }
+  ],
+  "methods": {
+    "bootstrap_draws": 10000,
+    "call_timeout_s": 120,
+    "context_admission": "conservative_UTF8_byte_upper_bound_then_embedded_tokenizer_at_capture",
+    "independent_unit": "original_source_group",
+    "input_tokens": 6000,
+    "intended_calls": 192,
+    "intended_groups": 64,
+    "max_tokens": 32,
+    "measured_work_cap_s": 2400,
+    "minimum_complete_pairs": 48,
+    "natural_truth_labels": false,
+    "net_lower_CI_gate": 0,
+    "output_token_budget": 6144,
+    "placebo_absolute_mean_gate": 0.01,
+    "placebo_definition": "mean_absolute_paired_difference",
+    "placebo_metric": "mean_source_paired_duplicate_minus_original_risk",
+    "primary_metric": "mean_source_paired_swap_minus_original_risk",
+    "seed": 69410,
+    "selection": "eligible_stream_source_hash_ascending",
+    "sensitivity_lower_CI_gate": 0,
+    "task_cap_s": 4800,
+    "temperature": 0,
+    "tokenizer_reserve_s": 20
+  },
+  "protocol_fingerprint": "sha256:c690c1f517fbce73c5da6a2d1e99e3819c3de93e1045fe76d1c8215b54691541",
+  "task_cap_s": 4800,
+  "transport_reservation_tokens": 18432
+}

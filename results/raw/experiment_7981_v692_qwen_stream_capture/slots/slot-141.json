@@ -1,0 +1,102 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.5832019560039043,
+  "exclusion_reason": null,
+  "family_id": "sha256:918e3ca41e24ac8423b7ca2213997f206f18feae61ae307fdef799dc5ff8afb5",
+  "input_tokens": 931,
+  "invocation_finished_at": "2026-10-01T11:44:29.262850+00:00",
+  "invocation_started_at": "2026-10-01T11:44:27.679645+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 931,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 955
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:a56370966099b4d15e41641b69714d8d5bd42d80592b783bbfa69aeb0c1a2854",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855069,
+    "id": "chatcmpl-nCZALB35qXepWxdKN5v8VqfVHSl2MjcS",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.717,
+      "predicted_n": 24,
+      "predicted_per_second": 42.499163297722575,
+      "predicted_per_token_ms": 23.529875,
+      "prompt_ms": 870.208,
+      "prompt_n": 853,
+      "prompt_per_second": 980.225417371479,
+      "prompt_per_token_ms": 1.020173505275498
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 931,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 955
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"938 Embarcadero Del Norte\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":false,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Arabic, Food, Sandwiches, Bars, Restaurants, Breakfast & Brunch, Hookah Bars, Greek, Salad, Nightlife, Middle Eastern, Mediterranean\\\",\\\"city\\\":\\\"Isla Vista\\\",\\\"hours\\\":{\\\"Monday\\\":\\\"0:0-0:0\\\"},\\\"name\\\":\\\"Aladdin Cafe\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2020-02-29 18:22:41\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Best place in IV hands down. Best food, best customer service etc. Nothing in IV comes close.\\\"},{\\\"review_date\\\":\\\"2020-02-14 04:34:22\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"omg it says temporary closed till the end of February ! I love love love this place .Seriously I am putting the date on my calendar and will go the moment I know they are back . I love this food and the family is super nice.The fattoush salad is great and all their veggie dips are super yummy as well as their falafel  . I can't wait till they open up again !\\\"},{\\\"review_date\\\":\\\"2020-02-07 20:35:05\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I love Aladdin's so much!! They are one of the only authentic middle eastern restaurants in all of sb county and my favorite place to eat in Isla Vista by far!! I was so sad when I thought they closed but I hope that the temporary closing is what is actually going on!! Amazing quality food and kind staff.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Sure! Here's an objective overview of Aladdin Cafe based on the provided structured data:\\n\\nAladdin Cafe is a popular Middle Eastern restaurant located in the heart of Isla Vista, California. With a rating of 4.0 stars out of 5.0, this cozy eatery offers a wide range of delicious Arabic dishes, including sandwiches, salads, hookah, and more. The restaurant is known for its excellent customer service, with many reviewers praising the friendly and welcoming staff.\\n\\nThe menu features a variety of vegetarian and vegan options, such as the popular fattoush salad and tasty falafel. The restaurant also offers takeout and outdoor seating, making it a great option for both casual and intimate gatherings. Additionally, Aladdin Cafe has Wi-Fi available for customers and accepts reservations.\\n\\nOne reviewer raves that Aladdin Cafe is the \\\"best place in IV hands down\\\" with the \\\"best food and best customer service.\\\" Another reviewer expresses disappointment that the restaurant is temporarily closed but looks forward to returning as soon as it reopens. A third reviewer praises the restaurant's authentic Middle Eastern cuisine and kind staff.\\n\\nOverall, Aladdin Cafe seems like a hidden gem in Isla Vista, offering delicious and authentic Middle Eastern cuisine in a warm and inviting atmosphere. Its excellent customer service, variety of vegetarian options, and cozy outdoor seating make it a must-visit spot for anyone looking for a unique and satisfying dining experience.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_update",
+  "source_cluster_id": "sha256:731f8ae6fc14932c7ab4f072d84c2b0d90175d1cf44659e8095955bbe755ee7a",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ]
+}

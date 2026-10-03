@@ -1,0 +1,109 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.7254453509813175,
+  "exclusion_reason": null,
+  "family_id": "sha256:08146eba401c730485e182ecd2828c15b8f4bc966cb4356c6d5ae8d1d320a3bc",
+  "input_tokens": 1146,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1146,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1170
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:9c7477901e5802bd6f0480f0e8c39b0b13d0aee152291c3344a2b04f4962ff1b",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832785,
+    "id": "chatcmpl-8deVTUq1VNPq7u0lV3vhzEvqQkw3ePVD",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 566.296,
+      "predicted_n": 24,
+      "predicted_per_second": 42.38066311610889,
+      "predicted_per_token_ms": 23.59566666666667,
+      "prompt_ms": 1027.863,
+      "prompt_n": 1068,
+      "prompt_per_second": 1039.0489783171492,
+      "prompt_per_token_ms": 0.9624185393258428
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1146,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1170
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"3940 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":2.5,\\\"categories\\\":\\\"Coffee & Tea, Fast Food, Food, Restaurants, Burgers\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"5:0-1:0\\\",\\\"Monday\\\":\\\"5:0-23:30\\\",\\\"Saturday\\\":\\\"4:0-1:0\\\",\\\"Sunday\\\":\\\"4:0-23:30\\\",\\\"Thursday\\\":\\\"5:0-23:30\\\",\\\"Tuesday\\\":\\\"5:0-23:30\\\",\\\"Wednesday\\\":\\\"5:0-23:30\\\"},\\\"name\\\":\\\"McDonald's\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-13 07:58:17\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Came in super last minute, normally they are so rude. My fianc\u00e9 and I were craving McFlurrys ;) you all know... normally the ice cream machine is broken/out of order....\\\\nShe was so sweet she made me my shakes anyways and told me about all the bogo deals!\\\\nShe's the kind of gal you want representation your business :) she even got me on another fries and e em a 2 for 6 deal! \\\\nThanks again, Anabelia!\\\"},{\\\"review_date\\\":\\\"2021-08-25 21:16:43\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"Knocking it down to two stars.  They've been slip sliding downhill lately.  I ordered items including a Big Mac and a few bites in, I noticed there wasn't any burger on the top part of the sandwich.  I lifted the bun and saw that only half the patty was there.  Nice.  Also, they had some tattooed gangsta wannabe working the counter for picking up orders.  He called my number and I picked it up and said thank you.  The A hole just looked off to the side and said \\\\\\\"yep\\\\\\\".  Not loving so much.\\\"},{\\\"review_date\\\":\\\"2021-06-08 05:05:52\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Went to UCSB for four years, came back for graduation and stopped at McDonald's at 10pm. Best customer service I've ever received. Crazy. The employee Boni truly an amazing, sweet, understanding and patient person. 10/10 service by Boni & I've honestly never been so happy leaving a McDonald's, ever in life. Thank you Boni!! U deserve the best!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Based on the provided structured data, here is an objective overview of McDonald's:\\n\\nLocated in Santa Barbara, California, McDonald's is a popular fast food restaurant chain offering a range of coffee, tea, burgers, and other menu items. With a rating of 2.5 out of 5 stars, the business has received mixed reviews from customers. Some reviewers have praised the friendly and efficient service, while others have criticized the quality of the food and the atmosphere.\\n\\nOne reviewer shared a positive experience, stating that they were able to get their McFlurry despite the ice cream machine being broken, and the staff went above and beyond to accommodate them. Another reviewer gave a lower rating, citing poor quality control with their food order, specifically mentioning that only half of the burger patty was present in their Big Mac.\\n\\nThe business has free WiFi and offers takeout services, making it a convenient option for customers. However, some reviewers have noted that the atmosphere can be lacking, with one calling it a \\\"divey\\\" and another mentioning that the staff member who took their order was unfriendly. Despite these issues, one reviewer raved about the exceptional customer service they received, highlighting the employee's kindness and patience. Overall, McDonald's appears to have room for improvement in terms of food quality and customer service, but some reviewers have had positive experiences with the business.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:5093e55d0fae5212e8acdcbe8f911b3b0b4485c9162f1ed9ad715095d6450dec",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17
+  ]
+}

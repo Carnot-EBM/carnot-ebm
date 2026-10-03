@@ -1,0 +1,100 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.4847563380026259,
+  "exclusion_reason": null,
+  "family_id": "sha256:4c4f9411d2d448c83dabf2b3c3facd2dbdbb86b9af9fe3e223c9cb2f29c31baa",
+  "input_tokens": 873,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 873,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 897
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:27c5b144bb94d5f5fae5ce52eec6830e6586a6f8a18ee3e81d2437e9ae2505f1",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832546,
+    "id": "chatcmpl-2DSctd1AdwCXtuQHDIYPaoyjlIIA4MIq",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 562.038,
+      "predicted_n": 24,
+      "predicted_per_second": 42.70173902832193,
+      "predicted_per_token_ms": 23.41825,
+      "prompt_ms": 811.654,
+      "prompt_n": 795,
+      "prompt_per_second": 979.4814046379367,
+      "prompt_per_token_ms": 1.020948427672956
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 873,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 897
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"801 Shoreline Dr\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Cafes, Burgers, American (Traditional), Tacos, Seafood, Restaurants, Mexican\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"8:0-17:30\\\",\\\"Monday\\\":\\\"9:0-17:30\\\",\\\"Saturday\\\":\\\"8:0-17:30\\\",\\\"Sunday\\\":\\\"8:0-17:30\\\",\\\"Thursday\\\":\\\"9:0-17:30\\\",\\\"Tuesday\\\":\\\"9:0-17:30\\\",\\\"Wednesday\\\":\\\"9:0-17:30\\\"},\\\"name\\\":\\\"Shoreline Beach Cafe\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-09 00:26:18\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Great view!  Excellent choice for families with children.  I love that you can sit and eat with your feet in the sand.  Food was average\\\"},{\\\"review_date\\\":\\\"2022-01-03 02:23:19\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Good service, wonderful food along with great atmosphere.  Would \u0111efinitely would go there again.\\\"},{\\\"review_date\\\":\\\"2021-12-26 00:44:48\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Very popular casual dining right on the beach. \\\\nHad the fish tacos, ceviche, quesadillas, enchilada. Everything fresh and tasty. We got a couple of beers to go with and it was just a picture perfect day meal out. \\\\nLove this place and the great service but the view is worth getting here\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Located in Santa Barbara, California, Shoreline Beach Cafe is a popular beachfront restaurant that offers a variety of cuisines including burgers, American traditional, tacos, seafood, and Mexican. The cafe is known for its stunning views of the ocean and its casual, relaxed atmosphere. Customers can enjoy sitting with their feet in the sand while enjoying their meals. The restaurant is suitable for families with children and groups, and it offers outdoor seating, take-out services, and validated parking.\\n\\nAccording to customer reviews, the food at Shoreline Beach Cafe is fresh, tasty, and of average quality, with popular items including fish tacos, ceviche, quesadillas, and enchiladas. The service is good, and the staff is friendly and attentive. The ambiance is classy and casual, making it a great spot for a relaxed, beachside meal.\\n\\nOverall, Shoreline Beach Cafe is a great choice for those looking for a casual dining experience with a beautiful ocean view. It's a popular spot, so it's a good idea to plan ahead and make a reservation to ensure a table with a view.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:97d58013394d6d3b3397b297546c44d053a2f778abfd88506e714a612236e316",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ]
+}

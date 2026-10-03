@@ -1,0 +1,106 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.6042604059912264,
+  "exclusion_reason": null,
+  "family_id": "sha256:698d3a41c5a562fa83c31d2f72353bf210030717d2ad3738c5332e2c48151904",
+  "input_tokens": 999,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 999,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1023
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:8486eccdf12e09acefbb020ea6c3b688eec0f8bed9f857bfc599145edfa319da",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832720,
+    "id": "chatcmpl-HWUqJ3HSa31KIpmQp7pbj8E2XrU3SStB",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.48,
+      "predicted_n": 24,
+      "predicted_per_second": 42.44181933932235,
+      "predicted_per_token_ms": 23.561666666666667,
+      "prompt_ms": 927.184,
+      "prompt_n": 921,
+      "prompt_per_second": 993.3303421974496,
+      "prompt_per_token_ms": 1.00671444082519
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 999,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1023
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"18 E Cota St\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":false,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":5.0,\\\"categories\\\":\\\"American (Traditional), Restaurants, Wine Bars, Pizza, Cocktail Bars, Bars, Vegan, Nightlife\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"16:0-22:0\\\",\\\"Saturday\\\":\\\"16:0-22:0\\\",\\\"Sunday\\\":\\\"16:0-22:0\\\",\\\"Thursday\\\":\\\"16:0-22:0\\\",\\\"Wednesday\\\":\\\"16:0-22:0\\\"},\\\"name\\\":\\\"Venus in Furs\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-12-03 21:35:45\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"This spot has a great ambiance and excellent service (Colin is the best!). The drinks are awesome and very creatively presented. Can't wait to come back during our next SB visit!\\\"},{\\\"review_date\\\":\\\"2021-11-17 20:05:23\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"The bartender graciously poured me a couple of tastes before I decided on my wine . The Albari\u00f1o was my reluctant choice (I had to order SOMEthing) but it was weak at best. Then I saw the price on the bill of $15 and I was shocked! A very small glass as well! Ridiculous.\\\"},{\\\"review_date\\\":\\\"2021-10-19 18:06:35\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"This place has such and awesome vibe/ambiance! I went during the day and at night. I didn't notice much during the daytime but at night, this place is an amazing place to hang out, talk with friends, meet up, or just get a great drink! I can't get enough of their black leather cocktail and while it's much like the Manhattan, it's a tad sweeter with just enough kick to keep your voice deep and low. For those sex gender antagonists, this drink will not make you \\\\\\\"less of a man\\\\\\\" or \\\\\\\" more of a man\\\\\\\". It's now my new favorite drink kicking old fashions, Moscow mules, and traditional Manhattan's done on my favorite drink list. If you don't like cocktail's that's OK. This place is mostly known for their wine as they have a large selection! Don't be fooled by this post as this isn't just a \\\\\\\"bar\\\\\\\" they have amazing vegan food from Rascal's that rivals that of LA and SF.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Venus in Furs is a restaurant located in Santa Barbara, California. The business offers American (Traditional), Restaurants, Wine Bars, Pizza, Cocktail Bars, Bars, Vegan, and Nightlife. The business operates between Wednesday and Sunday from 4 pm to 10 pm. The venue provides outdoor seating and WiFi services. The restaurant accepts reservations and takes out orders. The business has a rating of 5 stars on Google. Customers have left several reviews about the venue. One customer appreciated the ambiance and excellent service offered by Colin, the bartender. Another customer found the wine weak and overpriced. However, another customer was impressed by the unique cocktails served at the venue, which they described as having a tad sweeter flavor with just enough kick to keep one's voice deep and low. The customer also noted that the venue serves amazing vegan food from Rascal's. Overall, Venus in Furs seems like a trendy and upscale establishment that caters to a younger crowd.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "policy_design",
+  "source_cluster_id": "sha256:59f43a5e2d1256ccfeb354dc8386dcfb3ad1224e8058003afcf42d0941e62888",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ]
+}

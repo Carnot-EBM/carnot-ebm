@@ -1,0 +1,96 @@
+{
+  "arm": "swap",
+  "capture_identity": "sha256:c690c1f517fbce73c5da6a2d1e99e3819c3de93e1045fe76d1c8215b54691541",
+  "censor_status": false,
+  "denominator": 1,
+  "donor_group_id": "sha256:a2c036c60686ce1929664f7114aafc8e3841887372db00be3e7ab03b825650c4",
+  "duration_s": 0.0030069290660321712,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:5e8c1281c5c0fadb67d644c0ba69ad9b680be83db02003e9b3e369cda9ddb5bc:swap",
+  "group_id": "sha256:5e8c1281c5c0fadb67d644c0ba69ad9b680be83db02003e9b3e369cda9ddb5bc",
+  "input_byte_upper_bound": 4959,
+  "input_tokens": 30,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.25,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 18,
+      "prompt_tokens": 30
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:76b65a139ed7875924a723af3a62000784a1d185b6e44a3141ea6c7ceefa5198",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "message": {
+          "content": "{\"unsupported_probability\": 0.25, \"source_sentence_id\": null}"
+        }
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "usage": {
+      "completion_tokens": 18,
+      "prompt_tokens": 30
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 32,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"24 El Paseo\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":true,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":true,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Food, Wine Tasting Room, Local Flavor, Nightlife, Wine Bars, Wineries, Bars, Arts & Entertainment, Beer, Wine & Spirits\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"12:0-14:30\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"12:0-18:0\\\",\\\"Sunday\\\":\\\"12:0-15:0\\\",\\\"Thursday\\\":\\\"12:0-14:0\\\",\\\"Tuesday\\\":\\\"12:0-18:0\\\",\\\"Wednesday\\\":\\\"12:0-18:0\\\"},\\\"name\\\":\\\"Grassini Family Vineyards\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-18 19:46:58\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"The tasting room at Grassini Family\u00a0Vineyards\u00a0is everything I've come to love about wine tasting in Santa Barbara!\\\\n\\\\nTo begin with, the tasting room's got an optimal location. \u00a0It's smack-dab in downtown SB, but it's far enough away from the nearest busy street so as not to detract from the ambiance or the quiet enjoyment of wine tasting :-)\\\\n\\\\nI've visited here a couple of times now, and each time I was\u00a0assisted\u00a0by a smiling, friendly host. \u00a0There's outdoor seating that gives you the opportunity to soak up some\u00a0Vitamin\u00a0D while tasting; there's also an open area inside the tasting room that has comfortable chairs for relaxing; they even have some board games available!\\\\n\\\\nNow let's talk about the wines!\\\\n\\\\nWhile Grassini does make a couple of non-red wines, for my money they truly excel at making bold, big, Bordeaux style varietals like Malbec, Cabernet Franc, and (my all-time favorite) Cabernet\u00a0Sauvignon. \u00a0According to our very own CM and local wine guru (Richie D.),\u00a0Grassini Family Vineyards possesses the oldest Cabernet Sauvignon vines in Santa Barbara County :-)\\\\n\\\\nTip: Of all the wines from Grassini I've tried, the one I've enjoyed the most thus far\u00a0is their\u00a02018 Reserve Cabernet Sauvignon ($80 per bottle). \u00a0This wine is refined, rich, and decadent, with a silky, long finish and flavors that continue to unfold with each sip. \u00a0Pair it with a juicy rib-eye or a stuffed crust pizza from Patxi's and I'm positively in Heaven!\\\"},{\\\"review_date\\\":\\\"2022-01-16 21:39:43\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Grassini also has vineyards ins Santa Ynez. is one of the most beautiful wineries I have ever been to! Absolutely a stunning setting. They have a pond area that is so beautiful and peaceful. The staff there is unbelievably nice, kind and accommodating. I really can't say enough good things about them. I coordinated with Rochelle the reservations for a surprise proposal for my niece and she couldn't have been more helpful. We were served by Autumn the day of and she was an absolute life saver and so kind to make the day so perfect and special. I can't thank them enough for everything. Go there enjoy it!! You will fall in love easily!\\\"},{\\\"review_date\\\":\\\"2021-12-25 21:02:48\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Great wine tasting experience. Staff was very accommodating of our larger party. The wine pours were generous and paced out nicely. All of the wine was great - look forward to coming back and ordering a couple of bottles.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Capital One customers have until 27 November to claim their share of a $190m class-action settlement. The lawsuit was settled last year after a 2019 data breach exposed the personal information of approximately 98m Capital One users. The settlement will cover customer claims for out-of-pocket losses, time lost, identity defence and restoration services, as well as administrative costs, service awards and legal expenses. Customers who did not opt into the settlement last year will not receive an email regarding the payment. Any unclaimed electronic payments will be sent out as paper checks in December.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69410,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "seed": 69410,
+  "source_cluster_id": "223a28bc410db1c0f68b7c1f1684cfad5a431bba208d66c19cdc87b2b289c962",
+  "source_hash": "sha256:d694ba3a8ac3dfae79b794171d2278e4d6799dc0105b434970f6ddd228c68315",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18
+  ]
+}

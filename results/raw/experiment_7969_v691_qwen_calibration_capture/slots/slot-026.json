@@ -1,0 +1,101 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.1946346330223605,
+  "exclusion_reason": null,
+  "family_id": "sha256:836a85f09b2cc7c5391e08efb7ac59773ffdbc644b560e7e409f32251f9ad472",
+  "input_tokens": 557,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 557,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 581
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:119074cbc6beafb52b5d4293623e044388a9e8716cd597019e7350b999cae7eb",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832506,
+    "id": "chatcmpl-MFmTP4dhl0g2UljPDDddz7t9UMnMdd3d",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 558.237,
+      "predicted_n": 24,
+      "predicted_per_second": 42.99249243600836,
+      "predicted_per_token_ms": 23.259874999999997,
+      "prompt_ms": 518.598,
+      "prompt_n": 479,
+      "prompt_per_second": 923.6441328350669,
+      "prompt_per_token_ms": 1.0826680584551147
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 557,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 581
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Advantages of fluid flywheel. An ordinary friction clutch would be damaged by prolonged slipping, with increased fuel consumption. But by prolonged slipping, the fluid flywheel will not suffer any mechanical damage. Although it may become so hot as to burn one\u2019s hand if one touched it. When a liquid coupling is used with a conventional clutch and transmission, it enables the driver to use the clutch and gears with less skill and fatigue than with an all mechanical linkage.\\\\n\\\\npassage 2:IN simple terms the disc at the one end of the torque converter will be connected to the input shaft. The disc at the other end of the torque converter will be connected to the output shaft. In between there will be one more disc. The whole arrangement will be housed in a housing with torque transmitting fluid all around with necessary seals. When power is given to the input shaft in a particular torque and speed, the output power can be taken out from the output end at the desired torque, with the related speed.\\\\n\\\\npassage 3:Among them the driving member is connected with the engine flywheel and the driven member is connected to the driven member is connected with the transmission shaft. \u017e These two members are not made to contact with each other.\\\\n\\\\n\\\",\\\"question\\\":\\\"what are the advantages of a fluid flywheel\\\"}\", \"original_answer\": \"Based on the provided passages, the advantages of a fluid flywheel are:\\n\\n1. Reduced mechanical damage: A fluid flywheel does not suffer mechanical damage due to prolonged slipping, unlike an ordinary friction clutch, which can lead to increased fuel consumption.\\n2. Easier operation: With a liquid coupling used with a conventional clutch and transmission, the driver requires less skill and fatigue to operate the clutch and gears compared to an all-mechanical linkage.\\n3. Smooth power transfer: A fluid flywheel enables the power to be transferred smoothly and at the desired torque and speed through the output end.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:f4a23e2e3d6eebf94112fda99f321d61adf9f4a271e57d720cb1fb4ef0b58a9a",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ]
+}

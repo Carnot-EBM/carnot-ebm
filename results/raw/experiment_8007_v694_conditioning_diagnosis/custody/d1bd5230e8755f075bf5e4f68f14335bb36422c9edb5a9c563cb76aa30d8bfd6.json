@@ -1,0 +1,112 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.6180465909419581,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:a1ccfa36cca34b6ace9e8a9f7f94fc409ce8b9accbb36d9678614c6dda956449",
+  "input_tokens": 1049,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1049,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1072
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:3ce2bd872c10b9dc897b971e26c03ec59c6f424ca4b3808fa6846b15c7e20d5e",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885978,
+    "id": "chatcmpl-xPIMKVBcwHT79sCe4OPdUXaPlCpC9eZC",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 542.135,
+      "predicted_n": 23,
+      "predicted_per_second": 42.424857277246446,
+      "predicted_per_token_ms": 23.57108695652174,
+      "prompt_ms": 961.172,
+      "prompt_n": 971,
+      "prompt_per_second": 1010.2250169584631,
+      "prompt_per_token_ms": 0.9898784757981463
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1049,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1072
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"121 E Yanonali St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":null,\\\"divey\\\":false,\\\"hipster\\\":true,\\\"intimate\\\":false,\\\"romantic\\\":null,\\\"touristy\\\":null,\\\"trendy\\\":true,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":null},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Restaurants, Asian Fusion\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"17:0-22:0\\\",\\\"Monday\\\":\\\"11:0-15:0\\\",\\\"Saturday\\\":\\\"17:0-22:0\\\",\\\"Sunday\\\":\\\"17:0-22:0\\\",\\\"Thursday\\\":\\\"17:0-21:0\\\",\\\"Tuesday\\\":\\\"17:0-21:0\\\",\\\"Wednesday\\\":\\\"17:0-21:0\\\"},\\\"name\\\":\\\"Tyger Tyger\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2020-10-19 01:46:32\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"This place is amazing - great food, great people, and their servers are always super nice. Best food in Santa Barbara. Definitely a place to check out when visiting.\\\"},{\\\"review_date\\\":\\\"2020-09-21 02:17:46\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Lucky for me, I found Tyger Tyger through IG and drove over as soon as I saw the menu. Every week, their menu changes slightly to give the customers the best and freshest options. I'm obsessed with the Khao Soi and Fried Chicken Sandwich, they both have so much flavor. Also, there's lots of space to eat even though indoor dining isn't currently open. You must check this place out while in SB!\\\"},{\\\"review_date\\\":\\\"2020-09-20 17:31:55\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"You will see a few reviews on here that says the ambience is amazing and the food is mediocre. I partly agree. \\\\n\\\\nThe first time I ordered from them is when they had their pop-up with a limited menu and ordered the regular and chipotle fried chicken. I thought the fried chicken was OK. It was heavily breaded which I did not like but the flavor of the chipotle was really good so I was torn. I was still determined to give it a second try because I love Asian fusion cuisine!\\\\n\\\\nSecond time I ordered the famous crunchy blue crab, shrimp salad and I thought it was SO refreshing and flavorful! It's around $15 so not bad for a large salad. Mine only had about 3 pieces of shrimp and plenty of blue crab to finish the salad. I do recommend the dish but I believe the other items are hit or miss. \\\\n\\\\nFor my people who are COVID conscious, they clean tables and have a sign to let you know it's been sanitized .\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Tyger Tyger is a trendy Asian Fusion restaurant located at 121 E Yanonali St, Santa Barbara, CA. It is open every day, with specific hours varying between weekdays and weekends. The establishment offers outdoor seating and is suitable for groups. Though they do not offer WiFi or valet services, they have a parking lot for customer convenience. They also provide the option for takeout. Patrons appreciate the changing weekly menu, offering fresh and flavorful dishes like Khao Soi and Fried Chicken Sandwich. The restaurant is praised for its cleanliness, with a special mention of their COVID-19 conscientiousness, including table sanitization. Despite some mixed reviews on certain dishes, the overall feedback is positive, with a business star rating of 4.0. Tyger Tyger has been described as an amazing place with great food and friendly servers.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "564158493edae96ee12bb87f62bd7466dae162d047585f4570333d6501bac946",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ]
+}

@@ -1,0 +1,112 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.404815093963407,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:6d03f79509ceb096a5c6d56574588c1883ccdbf0f939016b85f9e546d0359567",
+  "input_tokens": 796,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 796,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 819
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:39f5f79d84880008fddc77a50ac88ab8266c02c60d18b9e14c93d7b8f44894cb",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886373,
+    "id": "chatcmpl-0kexqDIuLCdwEAPPWpKa1CId8DmGZAdO",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.914,
+      "predicted_n": 23,
+      "predicted_per_second": 42.442158718911124,
+      "predicted_per_token_ms": 23.561478260869563,
+      "prompt_ms": 712.91,
+      "prompt_n": 718,
+      "prompt_per_second": 1007.1397511607357,
+      "prompt_per_token_ms": 0.9929108635097492
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 796,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 819
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"About 150,000 years ago -- give or take 20,000 -- a guy fell into a well. Last month he made science history. The Altamura Man became the oldest Neanderthal to have his DNA extracted by researchers. It took them more than 20 years to get around to doing it. Scientists in southern Italy have known about him since 1993, when spelunkers spied his skull staring blankly back at them from its nook in the Lamalunga cave, deep under the town of Altamura. The cave explorers told researchers at the University of Bari what they'd found, according to their report published in March in the Journal of Human Evolution and Phys.org. Altamura Man's intact skull and jumbled pile of bones made for a great specimen, but they were wedged into a panoply of stalactites and stony globules deposited by water dripping over them for tens of thousands of years. Researchers decided not to rescue the bones for fear that trying to ease them out of the cave's calcified grip would shatter them and ruin Altamura Man. So, they left him forever a cave man. Calcite pebbles line the Neanderthal's eye sockets, nose bone and an upper jaw like a hundred decorative piercings. Analysis of the calcite has shown the bones to be 128,000 to 187,000 years old. Scientists believe Altamura Man wound up in the cave at least that long ago after falling into a prehistoric well, then died in the caverns at its bottom of thirst or hunger. Recently, researchers made an exception, and toted off a chip from his right shoulder blade to the lab. Metrics taken of his skeleton confirm Altamura Man was a Homo neanderthalensis. He will spend perhaps endless eons glaring silently out of his cranny in the world's most secluded spot, or, as Altamura's archeological museum describes it, \\\"in the corner of a small cavity situated between the ground and the back wall.\\\" The scientists hope they will be able to sequence his DNA, to find out more about the evolution of all hominids -- including us. And to hear some of Altamura Man's story about life in Neanderthals' early days in Europe, before he happened to stumble into that darned hole.\\n\", \"original_answer\": \"Scientists have extracted DNA from a Neanderthal known as the Altamura Man, who fell into a well in southern Italy between 128,000 and 187,000 years ago. The Neanderthal's remains were discovered in 1993, but due to being embedded in a stony deposit, researchers were hesitant to remove them for fear of damaging the specimen. Instead, a small chip from the Neanderthal's shoulder bone was removed for analysis. Scientists are now hoping to sequence the DNA to gain a better understanding of hominid evolution.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "ee952f68a2c6cff99fc83acb817422bbacfa6e1c5c504095576ce207e53dfda1",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ]
+}

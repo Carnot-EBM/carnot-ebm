@@ -1,0 +1,158 @@
+Exp8045 start: resolving local code; model invocations=0
+[exp8022] phase=8045_start_preconditions elapsed_s=0.000 completed=0 pending=0
+[exp8022] phase=8045_before_workspace_control elapsed_s=0.115 completed=0 pending=0
+[exp7303-validation] before_subprocess missing_parent elapsed_s=0.000 unit=1/1
+[exp7303-validation:missing_parent] E                                                                        [100%]
+[exp7303-validation:missing_parent] ==================================== ERRORS ====================================
+[exp7303-validation:missing_parent] _______________________ ERROR at setup of test_workspace _______________________
+[exp7303-validation:missing_parent] 
+[exp7303-validation:missing_parent] self = PosixPath('/tmp/carnot-8045-v13zcjc0/reproduction/pytest/focused')
+[exp7303-validation:missing_parent] mode = 448, parents = False, exist_ok = False
+[exp7303-validation:missing_parent] 
+[exp7303-validation:missing_parent]     def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+[exp7303-validation:missing_parent]         """
+[exp7303-validation:missing_parent]         Create a new directory at this given path.
+[exp7303-validation:missing_parent]         """
+[exp7303-validation:missing_parent]         try:
+[exp7303-validation:missing_parent] >           os.mkdir(self, mode)
+[exp7303-validation:missing_parent] E           FileNotFoundError: [Errno 2] No such file or directory: '/tmp/carnot-8045-v13zcjc0/reproduction/pytest/focused'
+[exp7303-validation:missing_parent] 
+[exp7303-validation:missing_parent] ../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1311: FileNotFoundError
+[exp7303-validation:missing_parent] =========================== short test summary info ============================
+[exp7303-validation:missing_parent] ERROR ../../../../../tmp/carnot-8045-v13zcjc0/reproduction/test_private_workspace.py::test_workspace
+[exp7303-validation:missing_parent] 1 error in 0.07s
+[exp7303-validation] after_subprocess missing_parent elapsed_s=0.892 exit=1 unit=1/1
+[exp7303-validation] before_subprocess repaired_parent elapsed_s=0.000 unit=1/1
+[exp7303-validation:repaired_parent] .                                                                        [100%]
+[exp7303-validation:repaired_parent] 1 passed in 0.05s
+[exp7303-validation] after_subprocess repaired_parent elapsed_s=0.867 exit=0 unit=1/1
+[exp8022] phase=8045_after_workspace_control elapsed_s=1.875 completed=0 pending=0
+[exp7303-validation] before_subprocess cpu_fixture_cli elapsed_s=0.000 unit=1/1
+[exp7303-validation:cpu_fixture_cli] Exp8045 start: resolving local code; model invocations=0
+[exp7303-validation:cpu_fixture_cli] [exp8022] phase=8045_start_preconditions elapsed_s=0.000 completed=0 pending=0
+[exp7303-validation:cpu_fixture_cli] [exp8022] phase=8033_before_context_create elapsed_s=0.000 completed=0 pending=0
+[exp7303-validation:cpu_fixture_cli] [exp8022] phase=8033_after_context_create elapsed_s=0.001 completed=0 pending=0
+[exp7303-validation:cpu_fixture_cli] [exp8022] phase=8033_before_eval elapsed_s=0.001 completed=0 pending=4
+[exp7303-validation:cpu_fixture_cli] [exp8022] phase=8033_after_eval elapsed_s=0.001 completed=4 pending=0
+[exp7303-validation:cpu_fixture_cli] [exp8022] phase=8033_before_context_close elapsed_s=0.001 completed=0 pending=0
+[exp7303-validation:cpu_fixture_cli] [exp8022] phase=8033_after_context_close elapsed_s=0.001 completed=0 pending=0
+[exp7303-validation:cpu_fixture_cli] [exp8022] phase=8033_before_context_create elapsed_s=0.000 completed=0 pending=0
+[exp7303-validation:cpu_fixture_cli] [exp8022] phase=8033_after_context_create elapsed_s=0.000 completed=0 pending=0
+[exp7303-validation:cpu_fixture_cli] [exp8022] phase=8033_before_eval elapsed_s=0.000 completed=0 pending=4
+[exp7303-validation:cpu_fixture_cli] [exp8022] phase=8033_after_eval elapsed_s=0.000 completed=4 pending=0
+[exp7303-validation:cpu_fixture_cli] [exp8022] phase=8033_before_context_close elapsed_s=0.000 completed=0 pending=0
+[exp7303-validation:cpu_fixture_cli] [exp8022] phase=8033_after_context_close elapsed_s=0.000 completed=0 pending=0
+[exp7303-validation:cpu_fixture_cli] [exp8022] phase=8033_before_context_create elapsed_s=0.000 completed=0 pending=0
+[exp7303-validation:cpu_fixture_cli] [exp8022] phase=8033_after_context_create elapsed_s=0.000 completed=0 pending=0
+[exp7303-validation:cpu_fixture_cli] [exp8022] phase=8033_before_eval elapsed_s=0.000 completed=0 pending=4
+[exp7303-validation:cpu_fixture_cli] [exp8022] phase=8033_after_eval elapsed_s=0.000 completed=4 pending=0
+[exp7303-validation:cpu_fixture_cli] [exp8022] phase=8033_before_context_close elapsed_s=0.000 completed=0 pending=0
+[exp7303-validation:cpu_fixture_cli] [exp8022] phase=8033_after_context_close elapsed_s=0.000 completed=0 pending=0
+[exp7303-validation:cpu_fixture_cli] [exp8022] phase=8033_before_context_create elapsed_s=0.000 completed=0 pending=0
+[exp7303-validation:cpu_fixture_cli] [exp8022] phase=8033_after_context_create elapsed_s=0.000 completed=0 pending=0
+[exp7303-validation:cpu_fixture_cli] [exp8022] phase=8033_before_eval elapsed_s=0.000 completed=0 pending=4
+[exp7303-validation:cpu_fixture_cli] [exp8022] phase=8033_after_eval elapsed_s=0.000 completed=4 pending=0
+[exp7303-validation:cpu_fixture_cli] [exp8022] phase=8033_before_context_close elapsed_s=0.000 completed=0 pending=0
+[exp7303-validation:cpu_fixture_cli] [exp8022] phase=8033_after_context_close elapsed_s=0.000 completed=0 pending=0
+[exp7303-validation] after_subprocess cpu_fixture_cli elapsed_s=1.425 exit=0 unit=1/1
+[exp8022] phase=8045_before_validation elapsed_s=3.300 completed=0 pending=0
+[exp7303-validation] before_subprocess focused_pytest elapsed_s=0.000 unit=1/10
+[exp7303-validation] subprocess_outstanding focused_pytest elapsed_s=20.001
+[exp7303-validation] subprocess_outstanding focused_pytest elapsed_s=40.001
+[exp7303-validation:focused_pytest] ..................                                                       [100%]
+[exp7303-validation:focused_pytest] 18 passed in 56.34s
+[exp7303-validation] after_subprocess focused_pytest elapsed_s=59.588 exit=0 unit=1/10
+[exp7303-validation] before_subprocess consumer_contracts elapsed_s=0.000 unit=2/10
+[exp7303-validation] subprocess_outstanding consumer_contracts elapsed_s=20.001
+[exp7303-validation:consumer_contracts] ........................                                                 [100%]
+[exp7303-validation:consumer_contracts] 24 passed in 17.98s
+[exp7303-validation] after_subprocess consumer_contracts elapsed_s=21.411 exit=0 unit=2/10
+[exp7303-validation] before_subprocess combined_cli_coverage elapsed_s=0.000 unit=3/10
+[exp7303-validation] subprocess_outstanding combined_cli_coverage elapsed_s=20.001
+[exp7303-validation] subprocess_outstanding combined_cli_coverage elapsed_s=40.002
+[exp7303-validation] subprocess_outstanding combined_cli_coverage elapsed_s=60.002
+[exp7303-validation:combined_cli_coverage] ..................                                                       [100%]
+[exp7303-validation:combined_cli_coverage] 18 passed in 61.82s (0:01:01)
+[exp7303-validation] after_subprocess combined_cli_coverage elapsed_s=67.294 exit=0 unit=3/10
+[exp7303-validation] before_subprocess combine elapsed_s=0.000 unit=4/10
+[exp7303-validation:combine] Combined 8 files, skipped 7
+[exp7303-validation] after_subprocess combine elapsed_s=0.053 exit=0 unit=4/10
+[exp7303-validation] before_subprocess coverage_json elapsed_s=0.000 unit=5/10
+[exp7303-validation:coverage_json] Wrote JSON report to /tmp/carnot-8045-v13zcjc0/coverage.json
+[exp7303-validation] after_subprocess coverage_json elapsed_s=0.087 exit=0 unit=5/10
+[exp7303-validation] before_subprocess ruff_check elapsed_s=0.000 unit=6/10
+[exp7303-validation:ruff_check] All checks passed!
+[exp7303-validation] after_subprocess ruff_check elapsed_s=0.010 exit=0 unit=6/10
+[exp7303-validation] before_subprocess ruff_format elapsed_s=0.000 unit=7/10
+[exp7303-validation:ruff_format] 4 files already formatted
+[exp7303-validation] after_subprocess ruff_format elapsed_s=0.011 exit=0 unit=7/10
+[exp7303-validation] before_subprocess strict_mypy elapsed_s=0.000 unit=8/10
+[exp7303-validation:strict_mypy] pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.models.*', 'carnot.pipeline.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.pipeline.verify_repair', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.*', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl', 'carnot.verify.*']
+[exp7303-validation:strict_mypy] Success: no issues found in 2 source files
+[exp7303-validation] after_subprocess strict_mypy elapsed_s=0.148 exit=0 unit=8/10
+[exp7303-validation] before_subprocess spec_coverage elapsed_s=0.000 unit=9/10
+[exp7303-validation:spec_coverage] OK: All tests reference specification requirements.
+[exp7303-validation] after_subprocess spec_coverage elapsed_s=0.018 exit=0 unit=9/10
+[exp7303-validation] before_subprocess repository_health elapsed_s=0.000 unit=10/10
+[exp7303-validation:repository_health] ============================= test session starts ==============================
+[exp7303-validation:repository_health] platform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0
+[exp7303-validation:repository_health] rootdir: /home/ianblenke/github.com/ianblenke/carnot
+[exp7303-validation:repository_health] configfile: pyproject.toml
+[exp7303-validation:repository_health] plugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2
+[exp7303-validation:repository_health] created: 4/4 workers
+[exp7303-validation] subprocess_outstanding repository_health elapsed_s=20.001
+[exp7303-validation] subprocess_outstanding repository_health elapsed_s=40.002
+[exp7303-validation] subprocess_outstanding repository_health elapsed_s=60.002
+[exp7303-validation] after_subprocess repository_health elapsed_s=60.099 exit=124 unit=10/10
+[exp8022] phase=8045_after_validation elapsed_s=212.024 completed=0 pending=0
+[exp7303-validation] before_subprocess cold_reduction elapsed_s=0.000 unit=1/1
+[exp7303-validation:cold_reduction] Exp8045 start: resolving local code; model invocations=0
+[exp7303-validation:cold_reduction] [exp8022] phase=8045_start_preconditions elapsed_s=0.000 completed=0 pending=0
+[exp7303-validation] after_subprocess cold_reduction elapsed_s=1.500 exit=0 unit=1/1
+[exp7303-validation] before_subprocess adversarial elapsed_s=0.000 unit=1/2
+[exp7303-validation:adversarial] {
+[exp7303-validation:adversarial]   "reports": [
+[exp7303-validation:adversarial]     {
+[exp7303-validation:adversarial]       "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8045_v697_scorer_workspace/terminal_candidate.json",
+[exp7303-validation:adversarial]       "loaded": true,
+[exp7303-validation:adversarial]       "exp_id": 8045,
+[exp7303-validation:adversarial]       "title": "",
+[exp7303-validation:adversarial]       "honest_verdict": "complete_circular_positive_scorer_workspace",
+[exp7303-validation:adversarial]       "flag_count": 0,
+[exp7303-validation:adversarial]       "max_severity": -1,
+[exp7303-validation:adversarial]       "flags": [],
+[exp7303-validation:adversarial]       "gate_version": "07ddacadae8c3b8d3250ad0977bda6f747d5bcb02bb7af3119b80db2547b62c7"
+[exp7303-validation:adversarial]     }
+[exp7303-validation:adversarial]   ],
+[exp7303-validation:adversarial]   "flagged_count": 0
+[exp7303-validation:adversarial] }
+[exp7303-validation] after_subprocess adversarial elapsed_s=0.636 exit=0 unit=1/2
+[exp7303-validation] before_subprocess strict_rows elapsed_s=0.000 unit=2/2
+[exp7303-validation:strict_rows] 
+[exp7303-validation:strict_rows] verdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.
+[exp7303-validation:strict_rows]   No row/verdict contradictions among the artifacts that could be checked.
+[exp7303-validation] after_subprocess strict_rows elapsed_s=0.023 exit=0 unit=2/2
+[exp7303-validation] before_subprocess adversarial elapsed_s=0.000 unit=1/2
+[exp7303-validation:adversarial] {
+[exp7303-validation:adversarial]   "reports": [
+[exp7303-validation:adversarial]     {
+[exp7303-validation:adversarial]       "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8045_v697_scorer_workspace.json",
+[exp7303-validation:adversarial]       "loaded": true,
+[exp7303-validation:adversarial]       "exp_id": 8045,
+[exp7303-validation:adversarial]       "title": "",
+[exp7303-validation:adversarial]       "honest_verdict": "complete_circular_positive_scorer_workspace",
+[exp7303-validation:adversarial]       "flag_count": 0,
+[exp7303-validation:adversarial]       "max_severity": -1,
+[exp7303-validation:adversarial]       "flags": [],
+[exp7303-validation:adversarial]       "gate_version": "07ddacadae8c3b8d3250ad0977bda6f747d5bcb02bb7af3119b80db2547b62c7"
+[exp7303-validation:adversarial]     }
+[exp7303-validation:adversarial]   ],
+[exp7303-validation:adversarial]   "flagged_count": 0
+[exp7303-validation:adversarial] }
+[exp7303-validation] after_subprocess adversarial elapsed_s=0.678 exit=0 unit=1/2
+[exp7303-validation] before_subprocess strict_rows elapsed_s=0.000 unit=2/2
+[exp7303-validation:strict_rows] 
+[exp7303-validation:strict_rows] verdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.
+[exp7303-validation:strict_rows]   No row/verdict contradictions among the artifacts that could be checked.
+[exp7303-validation] after_subprocess strict_rows elapsed_s=0.026 exit=0 unit=2/2
+[exp8022] phase=8045_complete elapsed_s=214.931 completed=4 pending=0

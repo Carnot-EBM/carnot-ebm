@@ -1,0 +1,111 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.554638615984004,
+  "exclusion_reason": null,
+  "family_id": "sha256:43b0d2759d6c48505d235bb0f9536049cf5883a66a4b6f78c8e59f5c2ce296ef",
+  "input_tokens": 898,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 898,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 921
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:d3dae820cc9185ea78644cb90b92309055d3a6a64ffc5eb730ee3922439648db",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832913,
+    "id": "chatcmpl-IxS3l849VJMpq2tyLZxvuJATsy7fAJu8",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.196,
+      "predicted_n": 23,
+      "predicted_per_second": 42.49846635969224,
+      "predicted_per_token_ms": 23.53026086956522,
+      "prompt_ms": 850.313,
+      "prompt_n": 820,
+      "prompt_per_second": 964.3507743619115,
+      "prompt_per_token_ms": 1.0369670731707317
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 898,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 921
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"China's Growing Hold on Michigan Farms\\nOver the last year there has been a rising concern as China has been buying lots of farmland in Michigan.\\nRich now, China has a relatively small amount of U.S. farmland, as of 2021, the Chinese Communist Party owns around .9 percent of American farmland, but the increasing rate at which they are buying is raising warning flags, with a tenfold increase in foreign farmland acquisition since 2009.\\nEarlier this year, four witnesses, including former H.R. McMaster testified in front of Congress over concerns posed by the Chinese government and their rising influence in global markets.\\nOne of which is food security, a point brought up recently by South Dakota Rep. Dusty Johnson who said, \u201cFood security is national security,\\\" he said. \\\"And I think we've seen that Russia was able to exercise undue influence over Europe because they supplied them [with] so much natural gas. And similarly, if China has control over food supplies in South America, Africa, Southeast Asia, even in North America, that can give them more power,more coercive power, over the globe.\\\"\\nLawmakers and authorities are also showing concern as China increases their foothold in Michigan one farm at a time.\\nMichigan lawmakers Tom Kundse, R-Clare, and Matt Hall Richland, have introduced legislation that would make it illegal for \u201ccertain foreign ownership of certain real estate,\u201d thereby making it harder for Chinese owned companies to buy Michigan farmland.\\nNow, many experts believe that China owning land isn\u2019t exactly a threat to U.S. security as evidenced by Michigan State agricultural economist William Knudsen saying, \u201cIf I was worried about foreign ownership of the food supply I would not focus on land,\u201d he said. \u201cI\u2019m focused on things like owning seed companies, major grain shippers and handlers because that\u2019s where the choke points are in the agri-food supply chain.\u201d\\nBut there are other concerns with foreign land buyers.\\nOne is the price of land. It is hard for Michigan farmers to compete with foreign buyers, which makes it harder for farmers to increase their farm size as well as deterring young farmers from starting out.\\nCurrently, Michigan has 1.4 million acres of foreign held farmland, per the USDA. Most of this is held by German and Italian entities. Michigan ranks sixth in the country in foreign held farmland.\\nRight now, Chinese owned companies own 44,000 in the Midwest and it is increasing each year.\\nRecently, China has been making a number of investments in the state of Michigan, including a hotly contested battery factory in Green Charter Township.\", \"original_answer\": \"China's ownership of farmland in Michigan has been raising concerns. Currently, the Chinese Communist Party owns around 0.9% of American farmland, but the rate at which they are acquiring more is increasing rapidly. Lawmakers and authorities are worried about China's growing influence in global markets, especially in terms of food security. Some experts argue that foreign ownership of land is not a threat to US security, but others point out the difficulties faced by local farmers in competing with foreign buyers and expanding their operations. Michigan currently has 1.4 million acres of foreign-held farmland, with Chinese-owned companies owning 44,000 acres in the Midwest. Legislation has been introduced to restrict certain foreign ownership of real estate in Michigan.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:64852ca7578b514736d016c16fcb05e5fa28bf197ee910c1528ce83b893fb9f5",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ]
+}

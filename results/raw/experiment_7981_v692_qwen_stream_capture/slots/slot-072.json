@@ -1,0 +1,121 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.4910110310302116,
+  "exclusion_reason": null,
+  "family_id": "sha256:6671771b5fefc2242a99c4135c18277feb7d8ea5165db9fb5084e68b7c9b3803",
+  "input_tokens": 909,
+  "invocation_finished_at": "2026-10-01T11:42:50.132345+00:00",
+  "invocation_started_at": "2026-10-01T11:42:48.641334+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 909,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 932
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:58020d13956024687f0b538514dac159487ba070be0c6d79fb70cbb7679285e9",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790854970,
+    "id": "chatcmpl-oJxoeqazyncKtGjfYPNz7Cz1FReckoEo",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 537.764,
+      "predicted_n": 23,
+      "predicted_per_second": 42.76969079373108,
+      "predicted_per_token_ms": 23.38104347826087,
+      "prompt_ms": 839.473,
+      "prompt_n": 831,
+      "prompt_per_second": 989.9067629334119,
+      "prompt_per_token_ms": 1.0101961492178098
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 909,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 932
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Big Brother 25\u2019s Cameron Hardin reveals who he thinks is playing the best and worst game\\nCameron Hardin is doing his Big Brother exit interviews today after finishing ninth place.\\nA 6-0 eviction vote sent Cameron to the BB25 jury house.\\nWhat shocked some viewers was Bowie Jane being the person who took out Cameron.\\nBowie Jane and Cameron had worked together for much of the season, but she went in a different direction recently.\\nCameron didn\u2019t play in the Veto Competition (OTEV), and a plan to get him out was put into play.\\nFans will see Cameron again on finale night when he helps decide the Big Brother 25 winner.\\nCameron Hardin talks about his Big Brother regrets\\n\u201cI 100 percent regret having not pulled the trigger on Cory. Looking back I should have known how against the decision Jag was,\u201d Cameron responded when asked if he regretted not going after Cory in Week 9.\\nCameron had nominated Felicia Cannon and Mecole Hayes with a plan to backdoor someone. But he got talked out of it by Jag and didn\u2019t go after Cory.\\nJag Bains and Cory Wurtenberger were named as the houseguests playing the best game. Cameron offered much praise as he discussed a coming showdown between Cory and Jag.\\nWhen naming the person playing the worst game, Cameron joked about it being himself due to where he was sitting. He later said Felicia was \u201ckinda floating in the wind\u201d when he answered further.\\nCameron\u2019s full interview with Sharon Tharp is shared below. He also touches on his experiences with Izzy Gleicher.\\nMore from Big Brother\\nAfter Cameron got evicted, the houseguests played in a secret Head of Household Competition.\\nAs Julie Chen Moonves indicated, the Power of Invisibility has been released on the house.\\nA new Secret HOH was revealed on the live feeds, and they have the power to stay in the shadows all week.\\nThe Invisible HOH also revealed their Big Brother target for eviction, so the stage has been set for chaos and paranoia.\\nMore information on an all-winners season of Big Brother came out. CBS may turn to Big Brother for additional content in the winter as the SAG-AFTRA Strike continues.\\nPrevious episodes of Big Brother 25 are available for streaming on Paramount+.\\nAnd live feed coverage is available through Paramount+ and Pluto TV. Fans can use the Pluto TV option for free.\\nHere are the updated BB25 episode dates and times for October. The schedule likely includes a Double Eviction.\\nBig Brother 25 airs on CBS.\", \"original_answer\": \"Cameron Hardin, who was recently evicted from Big Brother 25, has revealed his thoughts on the game so far. In an interview, he named Jag Bains and Cory Wurtenberger as the houseguests playing the best game, while joking that he himself was playing the worst game due to his current situation. He also mentioned that Felicia Cannon was \\\"floating in the wind\\\" and had regrets about not going after Cory when he had the chance. Additionally, a new Secret HOH has been revealed on the live feeds, and they have the power to stay hidden and target a housemate for eviction, potentially causing chaos and paranoia in the house.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_update",
+  "source_cluster_id": "sha256:c3742a96cbd7dece98673aa7b59a2a54aa6e297add619f7ae5997903b7bac02b",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27
+  ]
+}

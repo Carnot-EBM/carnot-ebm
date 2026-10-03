@@ -1,0 +1,150 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 2.216919308062643,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:f5e6695c5ee658066a1e6b5c0770b1ece31268e6c8c7733bb3e8ef23b6709677",
+  "input_tokens": 1853,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1853,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1876
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:bef03d7477c01680680493881d8fbdec07151bd58da6342d5414c9a246d93b03",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886360,
+    "id": "chatcmpl-YFv5qNU4FxodEQ6fvx4JrdbsJ0tEWiVc",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 543.311,
+      "predicted_n": 23,
+      "predicted_per_second": 42.333028412824326,
+      "predicted_per_token_ms": 23.62221739130435,
+      "prompt_ms": 1554.492,
+      "prompt_n": 1775,
+      "prompt_per_second": 1141.8521291843251,
+      "prompt_per_token_ms": 0.8757701408450704
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1853,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1876
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Tulsa, Oklahoma (CNN)The Tulsa County deputy who shot and killed a man instead of using his Taser now faces a manslaughter charge. Video shows Reserve Deputy Robert Bates announcing he is going to deploy his Taser after an undercover weapons sting on April 2, but then shooting Eric Courtney Harris in the back with a handgun. In a written statement, Tulsa County District Attorney Stephen A. Kunzweiler said Bates is charged with second-degree manslaughter involving culpable negligence. It's a felony charge that could land the volunteer deputy in prison for up to four years if he's found guilty. Scott Wood, an attorney who represents Bates, said the shooting was an \\\"excusable homicide.\\\" \\\"We believe the video itself proves that it was an accident of misfortune that occurred while Deputy Bates was fulfilling his duties as a reserve deputy,\\\" Wood said. \\\"He is not guilty of second-degree manslaughter.\\\" Investigators' efforts to defend Bates and the other deputies involved in the arrest have sparked a mounting chorus of criticism online. Harris' family is demanding an independent investigation of what they call unjustified brutality. They're also questioning why the 73-year-old Bates -- the CEO of an insurance company who volunteers as a certified reserve deputy -- was on the scene in such a sensitive and high-risk sting operation. Daniel Smolen, an attorney representing the Harris family, said Bates paid big money to play a cop in his spare time. \\\"It's absolutely mind boggling that you have a wealthy businessman who's been essentially deputized to go play like he's some outlaw, like he's just cleaning up the streets,\\\" he said. Wood said his client -- who had donated cars and video equipment to the Sheriff's Office -- had undergone all the required training and had participated in more than 100 operations with the task force he was working with the day he shot Harris. But he'd never been the main deputy in charge of arresting a suspect, Wood said, but was thrust into the situation because Harris ran from officers during the arrest. \\\"Probably in the past four of five years since he has been working in conjunction with the task force he has been on, (there were) in excess of 100 operations or search warrants where he was placed on the outer perimeter,\\\" Wood said. \\\"He has never been on an arrest team or been the one who is primarily responsible for the capture or the arrest of a suspect. He is there more in a support mechanism.\\\" Bates, who worked as a police officer for a year in the 1960s, had been a reserve deputy since 2008, with 300 hours of training and 1,100 hours of community policing experience, according to the Sheriff's Office. He was also a frequent contributor to the Tulsa County Sheriff's Office, including $2,500 to the reelection of Sheriff Stanley Glanz. Tulsa County Sheriff's Maj. Shannon Clark denied accusations that Bates had paid to play a cop, describing him as one of many volunteers in the community who have contributed to the agency. \\\"No matter how you cut it up, Deputy Bates met all the criteria on the Council on Law Enforcement Education and Training to be in the role that he was in,\\\" Clark said. After the shooting, Bates told investigators that he was \\\"in a state of shock and disbelief\\\" after realizing he'd fired his gun. He also said he believed there was a \\\"strong possibility\\\" that Harris had a gun. Wood said Monday that Bates is upset over the shooting. \\\"Obviously he is very upset about what happened. He feels badly,\\\" he said. \\\"The incident completely took him by surprise. He has all the requisite training. He is TASER-certified, and if you watch the video you know he was quite shocked when his gun went off.\\\" Authorities say Bates thought he pulled out his Taser but \\\"inadvertently\\\" fired his gun. They've painted Harris as a dangerous, possibly PCP-addled illegal gun dealer who had recently sold methamphetamine to undercover police and who fled police that day in such a way as to give the impression that he had a gun in his waistband. Though Harris was later determined to be unarmed, Sgt. Jim Clark of the Tulsa Police Department, who has been brought in to review the case, excused the behavior of Bates and an officer who is heard cursing at Harris in the video. Clark said Bates was the \\\"victim\\\" of something called \\\"slip and capture,\\\" where in a high-stress situation, a person intends to do one thing and instead does something else. It's a controversial argument that drew sharp criticism online as soon as police started making it. One expert told CNN the claim amounts to \\\"junk science.\\\" \\\"It's not something that's supported by a testable theory. There's no peer-reviewed articles that would support this. ... It's not generally accepted by the scientific community,\\\" said Phil Stinson, an assistant professor of criminal justice at Bowling Green State University. \\\"So it's something that in most courts would not be admissible as evidence.\\\" Andre Harris told reporters Monday that claims his brother was violent and on PCP are false. \\\"He was nonviolent, he was peaceful, he was loving, he was caring, and he was my brother that I'll never see again 'til I see him in heaven,\\\" Harris told reporters, accusing the sheriff's office of trying to persuade him not to hire an attorney and quickly make the case \\\"go away.\\\" He added that the shooting of his brother, who was African-American, wasn't a racial matter. \\\"I don't think this is a racial thing. I don't think this has anything to do with race. It might have a hint there somewhere. ... This is simply evil,\\\" Andre Harris told reporters Monday. \\\"This is a group of people that's spent a lot of time together, spent money together. ... They've gotten real comfortable with how they do things, which when you're the law, I guess you feel like you can do things and get away with it and not get exposed. \\\"Well, we've come to expose it. We've come to pull a mask off the evil. We've come to shine a light on the darkness.\\\" CNN's Ed Lavandera and Jason Morris reported from Tulsa. CNN's Catherine E. Shoichet reported from Atlanta. CNN's Atika Shubert, Chandler Friedman and Eliott C. McLaughlin contributed to this report.\\n\", \"original_answer\": \"A US police officer who shot and killed a man instead of tasering him in a sting operation is now facing a charge of second-degree manslaughter. This felony charge could result in up to four years in prison if found guilty. In a video of the incident, Robert Bates announces that he is going to deploy his taser, but then shoots Eric Courtney Harris in the back with a handgun. Bates' attorney, Scott Wood, stated that the shooting was an \\\"excusable homicide\\\" and that the video proves that it was an accident. The family of Eric Courtney Harris is demanding an independent investigation and is questioning why Bates, a 73-year old CEO of an insurance company who volunteers as a certified reserve deputy, was on the scene in such a high-risk sting operation. Bates had worked as a police officer in the 1960s and has been a reserve deputy since 2008 with 300 hours of training and 1,100 hours of community policing experience.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "f54d8b1abc4d8758ddc860efa57fa4708076606bd1701f145863dcb3f8f9ae5f",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51,
+    52,
+    53
+  ]
+}

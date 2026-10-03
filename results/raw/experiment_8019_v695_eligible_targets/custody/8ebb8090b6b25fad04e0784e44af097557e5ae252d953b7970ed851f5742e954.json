@@ -1,0 +1,106 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.2962932320078835,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:040d75e23644b4563272509806452d9674efec558e57cb7f307d7be7f226e67e",
+  "input_tokens": 633,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 633,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 657
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:68e66d53f3f8b4e02b50e3103852b875bc29d21b11917a488fb68420b5e61eb8",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886304,
+    "id": "chatcmpl-QohcbHyNS3ipAoiC12kAwZWfNTftp2qR",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.029,
+      "predicted_n": 24,
+      "predicted_per_second": 42.475695937730634,
+      "predicted_per_token_ms": 23.542875,
+      "prompt_ms": 589.927,
+      "prompt_n": 555,
+      "prompt_per_second": 940.7943694728331,
+      "prompt_per_token_ms": 1.0629315315315315
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 633,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 657
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:An academic degree or simply a degree is a college or university diploma that is often associated with award a person in recognition that the recipient has completed a particular course. Degrees that are commonly awarded are Associate\u2019s, Bachelor\u2019s, Master\u2019s and Doctoral degrees. diploma is a certificate or deed that is issued by an institution, such as a university, college, or high school that testifies that the recipient has successfully completed a particular course. Degree and diplomas are words that are often used to describe accreditation by school, university of college.\\\\n\\\\npassage 2:An associate\u2019s degree is a degree you can earn in about two years. There are many reasons an associate\u2019s degree can be beneficial in the job market, such as: 1  You have completed some college and would like to finish up a degree as quickly as possible. 2  Your desired job field requires an associate\u2019s degree.ne of the biggest differences between a degree, certificate, and Diploma is the time it takes to earn them. A degree comes in many forms and takes the longest to complete. It can be an associate\u2019s, bachelor\u2019s, master\u2019s, or even a doctorate.\\\\n\\\\npassage 3:Degree Overview. An academic degree can be earned at many levels, including the associate's (two years); bachelor's (four years); master's (two years beyond a bachelor's degree); and doctoral, which is several years beyond a master's degree.iplomas are similar to certificates, and they're often awarded through community or technical schools. For instance, a diploma of nursing is offered as an alternative to an associate's degree or bachelor's degree.\\\\n\\\\n\\\",\\\"question\\\":\\\"what is the difference between diploma and degree\\\"}\", \"original_answer\": \"A degree is an academic credential awarded by a college or university in recognition of the recipient having completed a specific course of study. Degrees are commonly awarded at Associate\u2019s, Bachelor\u2019s, Master\u2019s, and Doctoral levels. A degree takes the longest time to complete among academic credentials. On the other hand, a diploma is a certificate or deed issued by an institution, such as a university, college, or high school, testifying that the recipient has successfully completed a particular course. Diplomas are often awarded through community or technical schools and take less time to complete than a degree.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "9e97c84ae10802c6d80918af7568f2aa5307bc48f6447630d289312b38f6cc48",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ]
+}

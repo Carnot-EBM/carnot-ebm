@@ -1,0 +1,217 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "run",
+        "--data-file=/tmp/carnot8027-fixgate-g1t3hhoz/.coverage",
+        "--rcfile=/tmp/carnot8027-fixgate-g1t3hhoz/coverage.ini",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot8027-fixgate-g1t3hhoz/pytest",
+        "tests/python/test_native_update_8027.py",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_response_targets_7955.py",
+        "tests/python/test_source_boundary_7852.py",
+        "tests/python/test_experiment_7942_v689_sentence_labels.py",
+        "-q"
+      ],
+      "name": "unit_consumers_e2e015_019",
+      "scope": "owned",
+      "timeout_s": 300
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--data-file=/tmp/carnot8027-fixgate-g1t3hhoz/.coverage",
+        "/tmp/carnot8027-fixgate-g1t3hhoz"
+      ],
+      "name": "coverage_combine",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/carnot8027-fixgate-g1t3hhoz/.coverage",
+        "--fail-under=100",
+        "--show-missing"
+      ],
+      "name": "coverage_report",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "json",
+        "--data-file=/tmp/carnot8027-fixgate-g1t3hhoz/.coverage",
+        "-o",
+        "/tmp/carnot8027-fixgate-g1t3hhoz/coverage.json"
+      ],
+      "name": "coverage_json",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_8027_v695_native_update_cost.py",
+        "scripts/experiments/experiment_8027_v695_native_update_cost.py",
+        "tests/python/test_native_update_8027.py"
+      ],
+      "name": "ruff_check",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_8027_v695_native_update_cost.py",
+        "scripts/experiments/experiment_8027_v695_native_update_cost.py",
+        "tests/python/test_native_update_8027.py"
+      ],
+      "name": "ruff_format",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--config-file=/tmp/carnot8027-fixgate-g1t3hhoz/mypy.ini",
+        "python/carnot/experiment_8027_v695_native_update_cost.py",
+        "scripts/experiments/experiment_8027_v695_native_update_cost.py"
+      ],
+      "name": "strict_mypy",
+      "scope": "owned",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_native_update_8027.py"
+      ],
+      "name": "spec_coverage",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q"
+      ],
+      "name": "repository_health",
+      "scope": "repository_health",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "env",
+        "PYO3_PYTHON=/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "RUSTFLAGS=-C link-arg=-L/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib -C link-arg=-lpython3.12",
+        "LD_LIBRARY_PATH=/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib",
+        "cargo",
+        "test",
+        "-p",
+        "carnot-core",
+        "-p",
+        "carnot-python",
+        "numerical_update_8027"
+      ],
+      "name": "cargo_test",
+      "scope": "owned",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "cargo",
+        "fmt",
+        "-p",
+        "carnot-core",
+        "-p",
+        "carnot-python",
+        "--",
+        "--check",
+        "--config",
+        "skip_children=true"
+      ],
+      "name": "cargo_fmt",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "cargo",
+        "clippy",
+        "-p",
+        "carnot-core",
+        "-p",
+        "carnot-python",
+        "--no-deps"
+      ],
+      "name": "cargo_clippy",
+      "scope": "owned",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "rustfmt",
+        "--check",
+        "crates/carnot-core/src/numerical_update_8027.rs",
+        "crates/carnot-python/src/numerical_update_8027.rs"
+      ],
+      "name": "changed_native_fmt",
+      "scope": "owned",
+      "timeout_s": 60
+    }
+  ],
+  "reused_repository_health": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8027_v695_native_update_cost/repository_health_once.json",
+    "sha256": "sha256:ffbab321201db41f46d41f839c13a47f83dd9d4b1c545f67ce407405df47608a"
+  },
+  "scratch": "/tmp/carnot8027-fixgate-g1t3hhoz",
+  "source_hashes": [
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8027_v695_native_update_cost.py",
+      "sha256": "sha256:b9eda489675980c711a6f50fd72ea5685a947d1e1c57723fa701fa9ecea0a907"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8027_v695_native_update_cost.py",
+      "sha256": "sha256:1c5cf278919aa59a5d0ec9722513275fe9d81fb8fbe31728fe97bccc23142399"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/crates/carnot-core/src/numerical_update_8027.rs",
+      "sha256": "sha256:9a6fdcdde2da4d977aad4ec747a2103fae5236e29933565b221fb37e408b2743"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/crates/carnot-python/src/numerical_update_8027.rs",
+      "sha256": "sha256:5d6cf82e605ec94981a371af1e73ce7d56e04b470cd172f1066c17952d949dc4"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/crates/carnot-core/src/lib.rs",
+      "sha256": "sha256:006534e498a34fe16caeb82897565bde08123351873d03085285060b77a527da"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/crates/carnot-python/src/lib.rs",
+      "sha256": "sha256:6a628302d138a087f62fb262ffc9553289baa48c4345ee7f6d500ba47a27eedb"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_native_update_8027.py",
+      "sha256": "sha256:fd4c95e30f4b4a497ba22f23eb5018f69cb5b96bea5f4ad266a4b163c68ca681"
+    }
+  ]
+}

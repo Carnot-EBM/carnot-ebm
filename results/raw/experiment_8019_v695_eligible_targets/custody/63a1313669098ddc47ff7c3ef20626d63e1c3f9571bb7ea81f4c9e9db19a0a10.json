@@ -1,0 +1,103 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.4094454529695213,
+  "exclusion_reason": null,
+  "family_id": "sha256:35ea7ad9018568e19470d19a0dd2b0da471b492b6abad90159c465c3df71fbbc",
+  "input_tokens": 816,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 2,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 816,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 840
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:44a62f46072762066ccacf97a1da39488342042d01f941e8cbb38c4e93b291d7",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 2\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832616,
+    "id": "chatcmpl-oI1GlIAWnebmGcyfOIsn3jJDB917kopN",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.293,
+      "predicted_n": 24,
+      "predicted_per_second": 42.455859173915115,
+      "predicted_per_token_ms": 23.553875,
+      "prompt_ms": 713.441,
+      "prompt_n": 738,
+      "prompt_per_second": 1034.4233090052294,
+      "prompt_per_token_ms": 0.9667222222222223
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 816,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 840
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Governor Abbott Bussed Nearly 60,000 Migrants to Sanctuary Cities\\nTexas continues to bus migrants to sanctuary cities. According to Texas Governor Greg Abbott, he has bussed nearly 60,000 migrants out of border cities that are overwhelmed with the migrants who cross the border.\\nGovernor Abbott said according to a press release on October 20, Texas has bussed the following migrants to sanctuary cities since 2022:\\nOver 12,500 migrants to Washington, D.C. since April 2022\\nOver 21,100 migrants to New York City since August 2022\\nOver 16,500 migrants to Chicago since August 2022\\nOver 3,200 migrants to Philadelphia since November 2022\\nOver 4,600 migrants to Denver since May 18\\nOver 1,000 migrants to Los Angeles since June 14\\nAccording to these numbers, Governor Abbott has bussed over 58,900 migrants to sanctuary cities.\\nAt the end of September, Governor Abbott called for a third special session in October for Texas lawmakers.\\nAccording to a message on X which is formerly Twitter, Governor Abbott said:\\n\u201cTexas will use every tool and strategy at our disposal to respond to Biden\u2019s border crisis \u2013 including building our own border wall. I added additional border wall funding to the agenda for Special Session #3 to continue our efforts to protect Texans \u2013 and Americans.\u201d\\nIn addition, Governor Abbott continues to work on the construction of the border wall. In a recent press release, Governor Abbott said:\\n\u201cWhile President Biden refuses to secure the border, Texas has stepped up as the only state in U.S. history to build our own border wall.\u201d\\nDespite the increase in migrants and fentanyl crossing the southern border, U.S. Congress has done very little.\\nThen President Joe Biden and Vice President Kamala Harris are trying to work internationally to support Latin American countries to reduce the number of migrants arriving.\\nDo you think Texas will bus 100,000 migrants by the end of the year?\", \"original_answer\": \"Governor Abbott has bused nearly 60,000 migrants to sanctuary cities in Texas since 2022. He has bussed over 12,500 migrants to Washington, D.C., over 21,100 migrants to New York City, over 16,500 migrants to Chicago, over 3,200 migrants to Philadelphia, over 4,600 migrants to Denver, and over 1,000 migrants to Los Angeles. Governor Abbott has also announced plans for a third special session in October to address the border crisis. Despite an increase in migrants and fentanyl crossing the southern border, the U.S. Congress has done little to address the issue. President Biden and Vice President Harris are working internationally to reduce the number of migrants arriving. It is not clear if Texas will bus 100,000 migrants by the end of the year.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "tune",
+  "source_cluster_id": "sha256:c386276b84773f0c30bce2c6c0bdcd4142d0fb3afa096aed01efdaa79453fa8e",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]
+}

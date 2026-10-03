@@ -1,6 +1,42 @@
 # Carnot — Traceability Matrix
 
-**Last Updated:** 2026-09-30
+**Last Updated:** 2026-10-02
+**Operational Note:** REQ-PYBIND-8027, SCENARIO-PYBIND-8027-SHUTDOWN and
+REQ-REPORT-8027 map the staged atomic extension copy to
+`python/carnot/experiment_8027_v695_native_update_cost.py` and the repeated-load
+subprocess/interrupted-copy regressions to `tests/python/test_native_update_8027.py`.
+The original passing-summary shutdown crash is reproduced before repair;
+the repaired 92-test subset exits normally. All original test/helper definitions
+are unchanged. Python and CLI coverage measure 437/437 statements, 40 downstream
+learning/fix-gate consumers and 42 adjacent tests pass, and scoped Ruff, strict
+mypy, spec traceability and E2E-003/004/015/019 pass. The published measurement
+passes cold replay and terminal readers with original timings preserved.
+All 17 owned command receipts pass, including 48 unit/consumer/E2E tests and
+244/244 native executable source lines; raw LLVM generated entries are retained.
+Evidence: `results/raw/experiment_8027_v695_native_update_cost/fixgate-validation/`.
+Global spec traceability retains 1,142 legacy gaps and unrelated Rust files
+retain workspace formatting differences; the prior full-suite health timeout
+remains failed. `scripts/research_conductor.py` is unchanged.
+Final reconciliation passes documentation freshness and reports only the
+existing global spec-traceability gaps.
+**Operational Note:** REQ-REPORT-7992-V693, REQ-VERIFY-7992-V693 and
+SCENARIO-REPORT-7992-FROZEN-FIXTURE map to the V693 contract methods/validation
+modules, Exp7992 CLI, immutable `tests/fixtures/v693/active.yaml.gz`, and
+`tests/python/test_experiment_7992_v693_contract_methods.py`. Private authority
+no longer follows mutable live roadmaps; malformed live YAML is preserved and
+publishes a replayable blocked result. The active roadmap's damaged flow
+mappings are serialized as valid block YAML with all current task values intact.
+All nine original test/helper functions have identical ASTs. The conductor
+subset passes 92 tests (one existing warning), roadmap/gate/fix-erasure consumers
+pass 116 tests, and combined V693 module/CLI coverage is 260/260 statements.
+Scoped Ruff, strict mypy and spec traceability pass. Repository-wide spec
+traceability still reports 1,142 unrelated missing references. Validation logs
+and the original failed consumer attempt are retained in
+`/tmp/carnot7992-fixgate-brqr737a/`; `scripts/research_conductor.py` is unchanged.
+All 14 required frozen checks pass after consumer repair, including E2E-018.
+The repository-wide diagnostic reached its 180-second deadline with failures;
+reconciliation reports only the existing global traceability gaps. Durable
+evidence: `results/raw/experiment_7992_v693_contract_methods/fixgate-validation/`.
 **Operational Note:** REQ-REPORT-7942, SCENARIO-REPORT-7942-DIRECT-CLI and
 SCENARIO-REPORT-7942-COVERAGE-WORKSPACE map the direct script-path bootstrap and
 private coverage workspace to `python/carnot/experiment_7942_v689_sentence_labels.py`,
@@ -3486,3 +3522,79 @@ and FR-05/08/09/10 plus NFR-01 through qualification and complete service costs.
 All research tasks remain planned. No implementation capability was promoted.
 The existing reader/fixture suite passed 111 tests with scoped spec coverage;
 private E2E-015–018 checks passed. Historical repository-wide debt is unchanged.
+
+## Exp7967 private storage and terminal custody repair — 2026-10-01
+
+REQ-VERIFY-7967, SCENARIO-VERIFY-7967-ROOTS,
+SCENARIO-VERIFY-7967-QUALIFICATION, REQ-REPORT-7967 and
+SCENARIO-REPORT-7967-REPLAY map to
+`python/carnot/verify/private_training_7967.py`,
+`scripts/experiments/experiment_7967_v691_private_training_qualification.py`
+and `tests/python/test_private_training_7967.py`.
+
+The six original terminal custody cases pass without losing blocked operands
+or historical failure evidence. Added regressions verify child temporary-file
+placement and restoration after exceptions with present and absent environment
+variables. All original assertions remain. REQ-CONDUCTOR-FIXGATE-1's nine
+tests pass; `scripts/research_conductor.py` remains unchanged.
+
+Verification: 238 affected/transitive tests, 109 conductor/core/fix-gate tests,
+all 25 frozen command checks, E2E-015/016, strict mypy, Ruff, formatting and
+scoped spec coverage pass. Seven measured modules/CLIs cover 831/831 statements,
+including all 298 Exp7967 statements. The private primary passes terminal
+validation and cold replay. Execution qualification stays zero because the
+blocked and expected-failure fixture primaries omit the readiness field their
+reader gates require. Global spec traceability retains 1,142 unrelated gaps;
+no full-suite or natural-training qualification follows from these receipts.
+
+
+## Exp7975 repository-health command-plan repair — 2026-10-01
+
+REQ-REPORT-7975 and SCENARIO-REPORT-7975-HEALTH-REUSE map to
+`python/carnot/reporting/arc_supervisor_v691_delta.py`,
+`python/carnot/reporting/arc_supervisor_v690_delta.py`,
+`scripts/experiments/experiment_7975_v691_arc_supervisor_delta.py`,
+`scripts/experiments/experiment_7962_v690_arc_supervisor_delta.py`, and
+`tests/python/test_arc_supervisor_delta_7975.py`.
+
+The planner retains explicit, hash-bound reused repository-health receipts.
+The runner preserves their measured outcomes without launching the saved
+commands or counting them as current child commands. A failed historical
+health measurement remains separate from required validation. All original
+planner and health-reuse assertions remain; an added regression verifies the
+frozen plan, unchanged failure outcome, and absence of a child launch.
+
+Verification: 106 affected/transitive tests, 147 core/conductor tests (one
+existing deprecation warning), all 18 current frozen validation checks, and
+E2E-016/017 pass. The four affected module/CLI files cover 254/254 statements.
+Scoped Ruff, formatting, strict mypy, and spec coverage pass. The ten
+REQ-CONDUCTOR-FIXGATE-1 tests pass; `scripts/research_conductor.py` remains
+byte-identical to HEAD. Historical full-suite health remains failed. Global
+spec traceability retains 1,142 pre-existing gaps. Evidence:
+`results/raw/experiment_7975_v691_arc_supervisor_delta/fixgate-validation/`.
+
+## V692 research planning contract — 2026-10-01
+
+REQ-REPORT-V692-PLAN and SCENARIO-REPORT-V692-PLAN map to
+`openspec/change-proposals/research-roadmap-vNEXT.md` and
+`research-roadmap-next.yaml`. The matching contract contains thirteen tasks,
+Exp7979–Exp7991, over four phases. Prior design history is preserved in
+`openspec/change-proposals/research-roadmap-v691-preserved-20261001.md`.
+The dated literature review precedes the plan in `research-references.md`.
+
+Verification: exact table/machine/YAML/hash and gate-field comparison;
+`validate_prior_failures.py`; `exclusion_manifest_lint.py`;
+`overdue_priority_lint.py`; 113 passing existing roadmap, gate, exclusion and
+private authority CLI tests, including E2E-018. Scoped Ruff and explicit-path
+spec coverage pass. No implementation or new experiment result is claimed.
+No active-roadmap or conductor modification is part of this planning change.
+## V694 planning traceability — 2026-10-02
+
+| Requirement | Planned work | Evidence/status |
+|---|---|---|
+| REQ-REPORT-8005-V694-PLAN | Exp8005–Exp8017, exactly thirteen tasks | Design table/full JSON/digest agree with staged YAML; implementation pending |
+| FR-06, FR-12 | Exp8007–Exp8011 conditioning, typed decisions and source sensitivity | Measured benefit pending; exposed development scope |
+| FR-11 | Exp8012–Exp8013 causal update allocation, retention and recovery | Continuous-learning experiment planned; no generalized benefit claimed |
+| FR-05, FR-08, NFR-01 | Exp8015 real binding parity and current update timing | Opt-in research prototype planned |
+| FR-09, FR-10 | Exp8005–Exp8006 authority and independent replay; all task checks | Existing contract/schema checks used for this planning change |
+| ARC generalization and hardware continuity | Exp8014 and Exp8016 | New supervisor outcomes only; all three board obligations retained |

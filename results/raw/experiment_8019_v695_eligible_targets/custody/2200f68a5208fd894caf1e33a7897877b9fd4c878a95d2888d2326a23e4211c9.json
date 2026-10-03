@@ -1,0 +1,111 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.542900845000986,
+  "exclusion_reason": null,
+  "family_id": "sha256:44e8ebd517800a756233751514d7a9b9fb89ca690ae44f5c7282806ce05426c7",
+  "input_tokens": 971,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 971,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 994
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:af2ce66db0d0076fea09f7ebc6cfad7050b611c41ff42b2487427f088a72bf91",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832834,
+    "id": "chatcmpl-FvK9Abk9XgPnG1CE535wL66GwYRNh11R",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.28,
+      "predicted_n": 23,
+      "predicted_per_second": 42.49187112030742,
+      "predicted_per_token_ms": 23.53391304347826,
+      "prompt_ms": 883.409,
+      "prompt_n": 893,
+      "prompt_per_second": 1010.8568058509704,
+      "prompt_per_token_ms": 0.9892597984322509
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 971,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 994
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"6533 Trigo Rd\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Restaurants, Pizza\\\",\\\"city\\\":\\\"Isla Vista\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-21:0\\\",\\\"Monday\\\":\\\"11:0-21:0\\\",\\\"Saturday\\\":\\\"16:0-21:0\\\",\\\"Sunday\\\":\\\"16:0-21:0\\\",\\\"Thursday\\\":\\\"11:0-21:0\\\",\\\"Tuesday\\\":\\\"11:0-21:0\\\",\\\"Wednesday\\\":\\\"11:0-21:0\\\"},\\\"name\\\":\\\"Pizza My Heart\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-09-14 08:16:42\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I absolutely love the pizza I get here. This is hands down the best vegan and gluten free pizza ever. \\\\n\\\\nI get the vegan rice crust with the vegan mikonos cheese and add whatever toppings i like. Usually i get it with olives garlic mushrooms beyond sausage and pineapple. \\\\n\\\\nI love this pizza soo much and am so glad that iv has the vegan gluten free option.\\\"},{\\\"review_date\\\":\\\"2021-09-04 21:46:39\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Best freaking pizza in town! Love this place. The Big Sur Is my favorite. Friendly staff.\\\"},{\\\"review_date\\\":\\\"2021-04-03 03:50:35\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Customer service: phenomenal. This place understands what people want from a pizza joint. Free ranch (pesto ranch if you know what's good) proves that they are for the people. \\\\n\\\\nPizza: good, but more importantly, cheap. Variety of slices available, and they heat the slices up before serving. Would recommend the Pesto slice. \\\\n\\\\nBeer: the IVPA jar is the best deal in Isla vista. Delicious brawn and a lot of bang for your buck. \\\\n\\\\nAtmosphere: everything you want from a casual pizza joint. Mix of Latin and pop music. Multiple tv's with sports on. Easy place to hang out in for an hour. I spent three hours here and it wasn't enough\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"\\\"Pizza My Heart\\\" is a well-regarded pizza restaurant located at 6533 Trigo Rd, Isla Vista, CA. Open every day of the week, it offers a casual ambiance and is noted for being good for groups. Serving a variety of pizzas, including vegan and gluten-free options, it has received high praise from customers. Diners laud their vegan rice crust pizza with vegan mikonos cheese and their Big Sur pizza. Their customer service is described as phenomenal and they offer free Wi-Fi for customers. In addition to their pizza, they serve a range of beers, with the IVPA jar noted as being great value. Despite not offering reservations or valet parking, they do provide street parking and have a take-out service. Their overall rating is 4 stars.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:e41502ef5d75dfcfc7e977229fdccdcfbed4f715a84a5e9c110df24f5ad2a145",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ]
+}

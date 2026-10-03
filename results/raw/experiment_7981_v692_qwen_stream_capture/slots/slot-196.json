@@ -1,0 +1,113 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.3204025659943,
+  "exclusion_reason": null,
+  "family_id": "sha256:707e236001705f9e1ac0b51c8266e291010617d294208463d372ab524794da0c",
+  "input_tokens": 739,
+  "invocation_finished_at": "2026-10-01T11:45:50.636476+00:00",
+  "invocation_started_at": "2026-10-01T11:45:49.316072+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 739,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 762
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:e073b3f6a048936af90ebeb8acef777df03140ba03c7939281350d99d27029b8",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855150,
+    "id": "chatcmpl-Vosdnmj5BwlXD9ItR9mRmCshi8Ra9aij",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 539.841,
+      "predicted_n": 23,
+      "predicted_per_second": 42.60513743861618,
+      "predicted_per_token_ms": 23.47134782608696,
+      "prompt_ms": 667.626,
+      "prompt_n": 661,
+      "prompt_per_second": 990.0752816696773,
+      "prompt_per_token_ms": 1.0100242057488653
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 739,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 762
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Alyssa Thomas, 32: Car Found Abandoned\\nUpdate: On October 15, 2022, Alyssa's remains were located. Her loved ones continue to seek justice as investigators comb over surveillance footage. Fox 4 News reported two people were seen exiting and walking away from Alyssa's vehicle. Persons of interest or suspects have yet to be named.\\nOriginal Article:\\nDetails regarding her last moments have not been shared with the public, but Alyssa Thomas has been missing for weeks. The 32-year-old woman was reportedly last seen in Dallas, Texas, on September 30, 2022. It is unclear what she was doing when she vanished, but it was stated that a vehicle was found abandoned.\\nAccording to the National Missing and Unidentified Persons System, Alyssa Thomas was using an RPS vehicle, which was later discovered deserted. Once again, circumstances are unclear; how long she had the vehicle, where it was found, and the time lapse between Alyssa going missing and the auto being located haven\u2019t been communicated.\\nUnfortunately, this is all of the information I could find about Alyssa. Her personal connections, as well as her professional life, are unknown. A Facebook group posted a missing person flyer, but there hasn\u2019t been much movement.\\n[Make Sure To Follow!]\\nAt the time of her disappearance, Alyssa Thomas stood 5 feet 4 inches tall and weighed 180 to 200 pounds. She had brown hair and brown eyes. What she was last seen wearing or any distinguishing marks are unknown. Her middle name is \u201cDanyal.\u201d\\nAnyone with information about this case is urged to contact the Dallas Police Department at (214) 671-4268 or their local authorities. The agency case number is 179387-2022.\\nPlease share this story about Alyssa Thomas to help ignite interest in her missing person case. She is our sister, and her life matters.\\n[Make Sure To Follow!],\", \"original_answer\": \"Here is a summary of the article in 75 words or less:\\n\\nAlyssa Thomas, 32, went missing in Dallas, Texas on September 30, 2022. Her abandoned car was found, but details of her last minutes are unclear. Investigators are reviewing surveillance footage and asking for anyone with information to contact the Dallas Police Department. Thomas was 5'4\\\" and weighed 180-200 lbs with brown hair and brown eyes. Her middle name is Danyal.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_admission",
+  "source_cluster_id": "sha256:1448170ae908384373dbf49a427925963648796434dc623866322d7836d61101",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ]
+}

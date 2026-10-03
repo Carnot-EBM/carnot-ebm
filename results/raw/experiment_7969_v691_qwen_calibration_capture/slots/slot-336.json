@@ -1,0 +1,105 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.363831933005713,
+  "exclusion_reason": null,
+  "family_id": "sha256:46b41620d43ecc93b62851292ecd0dba50134fb3a0cdc4a508241e18090753f3",
+  "input_tokens": 733,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 733,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 757
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:e196e6ec4ded42d797a30bcbd7ec7969c14f3012812febdbe50af707d0f9d76e",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832943,
+    "id": "chatcmpl-Dwf8FB8eWza5nZs5O2TTJY4JJE65mTD3",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.589,
+      "predicted_n": 24,
+      "predicted_per_second": 42.50879843567621,
+      "predicted_per_token_ms": 23.524541666666668,
+      "prompt_ms": 666.869,
+      "prompt_n": 655,
+      "prompt_per_second": 982.2019017228271,
+      "prompt_per_token_ms": 1.0181206106870229
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 733,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 757
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Gigi Hadid Receives Backlash Over Her Comments on Israel-Hamas War\\nGigi Hadid is facing criticism for her recent comment about the conflict between Israel and Palestine.\\nThe supermodel, who is of Palestinian descent, expressed her condemnation of the 'terrorizing of innocent people' in a statement that was uploaded to her Instagram account. She showed her love and support for her Palestinian and Jewish friends. Take a look at her statement below.\\nMy thoughts are with all those affected by this unjustifiable tragedy and every day that innocent lives are taken by this conflict too many of which are children. I have deep empathy and heartbreak for the Palestinian struggle and life under occupation, it's a responsibility I hold daily, I also feel a responsibility to my Jewish friends to make it clear, as I have before:\\nWhile I have hopes and dreams for Palestinians, none of them include the harm of a Jewish person.\\nThe terrorizing of innocent people is not in alignment with & does not do any good for the Free Palestine movement. The idea that it does has fueled a painful, decades-long cycle of back&forth retaliation (which no innocent civilian, Palestinian or Israeli, deserves to be a casualty of, and helps perpetuate the false idea that being Pro-Palestine = antisemitic.\\nIf you are hurting, as I share my condolences today with my loved ones, both Palestinian and Jewish, I'm sending you my love & strength whoever and wherever you are. There are a lot of complex, personal, and valid feelings, but every human deserves basic rights, treatment, and security; no matter their nationality, religion, ethnicity, or where they were born.\\nI know my words will never be enough or heal the deep wounds of so many but I pray for the safety of innocent lives, always.Gigi Hadid wrote to her Instagram followers\\nNumerous individuals expressed their disappointment with Gigi Hadid's statement and vented their frustration towards her on social media. Have a look at it here.\\nThe death toll from Hamas' surprise attack on Israel on Saturday surpassed 1,200 on Wednesday, with over 3,000 injured and the fate of an estimated 150 people abducted and taken to the Gaza Strip still unknown.\\nWhat are your thoughts on Gigi Hadid\u2019s statement?\", \"original_answer\": \"Gigi Hadid faced backlash for her comments on the Israel-Hamas war, where she condemned the terrorizing of innocent people and expressed her love and support for both Palestinian and Jewish friends. Many were disappointed with her statement, feeling that it did not address the root causes of the conflict and perpetuated harmful stereotypes. The conflict has resulted in over 1,200 deaths and 3,000 injuries, with many still missing.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:ba11790e1a19a451a259816f04afe78e17cfc26f6829ce41e182b3ef21843f55",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ]
+}

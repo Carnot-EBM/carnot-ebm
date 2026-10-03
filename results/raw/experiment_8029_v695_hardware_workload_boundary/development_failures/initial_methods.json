@@ -1,0 +1,250 @@
+{
+  "acceptance": "custody independent; drift<=0.001; zero disagreement/overflow; identical restart",
+  "artifact_guard_enabled": true,
+  "code": [
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8029_v695_hardware_workload_boundary.py",
+      "sha256": "sha256:9431c7dba293db29f9bc20e44592350c650f14a53ed52c2cc1591e4eff714d87"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/hardware_workload_8029.py",
+      "sha256": "sha256:9f2c80edb24cf18030d11d6e4b85d2b15e59e8db5cb7f14cc81bda7493d53bf0"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8029_v695_hardware_workload_boundary.py",
+      "sha256": "sha256:1a293df95a6925384ba4e539d38199ed77be350007272802479c73aa1712d75e"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_hardware_workload_8029.py",
+      "sha256": "sha256:fe64c8efc3985b85e7319d0649ed6911c88654c833e8de06bead468beffff14e"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/causal_online_8025.py",
+      "sha256": "sha256:2215d92594949a59249008f2e0fb0fbda047a31eea04267a79e69ba0f11bc608"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/fixedpoint_sparse_8003.py",
+      "sha256": "sha256:692039c3744767c727e562d8b3bd81dcc6d945c7ca09dfc144dd4fb98e1bdbef"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/hardware_update_8016.py",
+      "sha256": "sha256:73361f639441898beeccf8dcf5f412c0665cbfce3b2b3dafc8d45a66b6b8a2e6"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/current_work_receipt.py",
+      "sha256": "sha256:428d1696eef0820ce9df519532743aeccb8ec1156eb8c1b52fa0c8f72bf16a10"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/primary_publication.py",
+      "sha256": "sha256:7fe8c6caa2725d68eeae612d2f4a17146b08afc29ff5a8003a4f1ad5f21d1310"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_template.py",
+      "sha256": "sha256:9396db4d8604620a2dc0f26b7b797099e5215d2f1d681cd01a7d1ed7c423c184"
+    }
+  ],
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "carnot.experiment_8029_v695_hardware_workload_boundary",
+        "carnot.reporting.hardware_workload_8029"
+      ],
+      "name": "worktree_imports",
+      "scope": "owned",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-8029-7xnfgsq1/pytest/focused",
+        "tests/python/test_hardware_workload_8029.py",
+        "-q"
+      ],
+      "name": "focused_pytest",
+      "scope": "owned",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-8029-7xnfgsq1/.coverage",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8029_v695_hardware_workload_boundary.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/hardware_workload_8029.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8029_v695_hardware_workload_boundary.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-8029-7xnfgsq1/pytest/coverage",
+        "tests/python/test_hardware_workload_8029.py",
+        "-q"
+      ],
+      "name": "changed_module_coverage",
+      "scope": "owned",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/carnot-8029-7xnfgsq1/.coverage",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8029_v695_hardware_workload_boundary.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/hardware_workload_8029.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8029_v695_hardware_workload_boundary.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "name": "changed_module_coverage_report",
+      "scope": "owned",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_8029_v695_hardware_workload_boundary.py",
+        "python/carnot/reporting/hardware_workload_8029.py",
+        "scripts/experiments/experiment_8029_v695_hardware_workload_boundary.py",
+        "tests/python/test_hardware_workload_8029.py"
+      ],
+      "name": "ruff_check",
+      "scope": "owned",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_8029_v695_hardware_workload_boundary.py",
+        "python/carnot/reporting/hardware_workload_8029.py",
+        "scripts/experiments/experiment_8029_v695_hardware_workload_boundary.py",
+        "tests/python/test_hardware_workload_8029.py"
+      ],
+      "name": "ruff_format",
+      "scope": "owned",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_hardware_workload_8029.py"
+      ],
+      "name": "scoped_spec_coverage",
+      "scope": "owned",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "--follow-imports=silent",
+        "python/carnot/experiment_8029_v695_hardware_workload_boundary.py",
+        "python/carnot/reporting/hardware_workload_8029.py",
+        "scripts/experiments/experiment_8029_v695_hardware_workload_boundary.py"
+      ],
+      "name": "strict_mypy",
+      "scope": "owned",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "json",
+        "--data-file=/tmp/carnot-8029-7xnfgsq1/.coverage",
+        "-o",
+        "/tmp/carnot-8029-7xnfgsq1/coverage.json"
+      ],
+      "name": "coverage_json",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-8029-7xnfgsq1/consumers",
+        "tests/python/test_hardware_update_8016.py",
+        "tests/python/test_primary_publication_7928.py",
+        "-q"
+      ],
+      "name": "consumer_board_mutations",
+      "scope": "owned",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q"
+      ],
+      "name": "full_pytest",
+      "scope": "repository_health",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py"
+      ],
+      "name": "repository_spec_health",
+      "scope": "repository_health",
+      "timeout_s": 60
+    }
+  ],
+  "config": {
+    "accumulator_bits": 32,
+    "action_disagreements_max": 0,
+    "device_execution_budget": 0,
+    "drift_max": 0.001,
+    "fractional_bits": 12,
+    "geometry_venue": "CPU float64 frozen fitted geometry",
+    "model_load_budget": 0,
+    "overflow": "saturate",
+    "overflow_max": 0,
+    "rounding": "nearest_ties_to_even",
+    "scale": 4096,
+    "seed": 69529,
+    "sigmoid_venue": "CPU float64 readout of fixed accumulator",
+    "storage_bits": 24,
+    "trajectory_scope": "all original exposed-development arms and seeds",
+    "update_budget": 8192
+  },
+  "exclusions": "missing, blocked or disqualified current sources; unmatched operations",
+  "roles": "authenticated history; exposed-development update replay; independent current costs",
+  "sources": {
+    "8023": [
+      "experiment_8023_v695_likelihood_calibration",
+      "likelihood_calibration_ready_score"
+    ],
+    "8024": [
+      "experiment_8024_v695_likelihood_decision_test",
+      "likelihood_decision_ready_score"
+    ],
+    "8025": [
+      "experiment_8025_v695_causal_online_updates",
+      "learning_measurement_ready_score"
+    ],
+    "8027": [
+      "experiment_8027_v695_native_update_cost",
+      "native_update_ready_score"
+    ]
+  }
+}

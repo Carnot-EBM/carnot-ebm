@@ -1,0 +1,101 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.3108728070510551,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:16991fdd579ffa35576b394ee6c04a54ad2364b1d3ccbed04a61e4b295b18dbf",
+  "input_tokens": 747,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 747,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 768
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:f8737e5518555a9328c0d6038227f5e73ac2e1870e280ec7e69d5ac7eca52668",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886330,
+    "id": "chatcmpl-SXnJaTA6TvIcQtwTdV2W1aDwz7ErMQ2v",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 492.719,
+      "predicted_n": 21,
+      "predicted_per_second": 42.62064178568312,
+      "predicted_per_token_ms": 23.462809523809522,
+      "prompt_ms": 670.9,
+      "prompt_n": 669,
+      "prompt_per_second": 997.1679833060069,
+      "prompt_per_token_ms": 1.0028400597907323
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 747,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 768
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"3815 State St, Space #G-141\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":false,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":3.0,\\\"categories\\\":\\\"Food, Coffee & Tea, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"5:30-20:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"5:30-20:0\\\",\\\"Sunday\\\":\\\"5:30-20:0\\\",\\\"Thursday\\\":\\\"5:30-20:0\\\",\\\"Tuesday\\\":\\\"5:30-20:0\\\",\\\"Wednesday\\\":\\\"5:30-20:0\\\"},\\\"name\\\":\\\"Starbucks\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-06-30 06:03:44\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Ordered a few Cappuccinos with Carmel, a pink drink for everyone and a pupaccino for my puppy. Each was made very well and my dog loved his little pupaccino.\\\"},{\\\"review_date\\\":\\\"2021-01-01 15:33:32\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"My wife came in to get us coffee so I can't really judge this place I guess. Still the coffee we got was good had no problems with it. The pace is small though and if you don't like dogs probably not the best place for you.\\\"},{\\\"review_date\\\":\\\"2020-10-15 16:26:35\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Took 45 minutes to make a latte with no alterations.... constantly was told \\\\\\\"your drink will be right up\\\\\\\" pathetic attention to customer service\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Starbucks, located at 3815 State St, Space #G-141 in Santa Barbara, CA, is a popular spot for Food, Coffee & Tea, and Restaurants. Open from 5:30 to 20:00 from Tuesday to Sunday, the establishment offers free WiFi, outdoor seating, and takeout services. However, it does not cater to large groups or accept reservations. The lot parking is a convenient feature for customers. With a business rating of 3 stars, customers have had varied experiences. Some have praised the quality of the beverages, particularly the Cappuccinos with Caramel and the 'pupaccino'. However, others have reported long wait times and inadequate customer service. It is also worth noting that the premises are pet-friendly.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "7df3b8897ca66882f7d49a783a23039c69ca1f4aded13caf6b84e7c1abb068c0",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ]
+}

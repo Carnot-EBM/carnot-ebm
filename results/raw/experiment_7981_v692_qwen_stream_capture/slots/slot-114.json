@@ -1,0 +1,101 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.4281660899869166,
+  "exclusion_reason": null,
+  "family_id": "sha256:76725fee734e802e05dd8921d823278d4d91a0ce571f6364c2900f9f2da1df22",
+  "input_tokens": 838,
+  "invocation_finished_at": "2026-10-01T11:43:52.409273+00:00",
+  "invocation_started_at": "2026-10-01T11:43:50.981106+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 838,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 862
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:8a1ee5d7d6717d5ea29568127908cffdd723f78cfabd807a7c0cacde39115167",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855032,
+    "id": "chatcmpl-oI3tun7ULTmLKrOpXkO0vhjqmTxEVLTo",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.211,
+      "predicted_n": 24,
+      "predicted_per_second": 42.53727772056908,
+      "predicted_per_token_ms": 23.508791666666667,
+      "prompt_ms": 728.517,
+      "prompt_n": 760,
+      "prompt_per_second": 1043.2151892131549,
+      "prompt_per_token_ms": 0.9585750000000001
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 838,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 862
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"5221 Cheadle Hall\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":null,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":null,\\\"trendy\\\":null,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":null,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":null},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":false,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":3.0,\\\"categories\\\":\\\"Cafes, Burgers, Sandwiches, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"7:30-17:0\\\",\\\"Monday\\\":\\\"7:30-17:0\\\",\\\"Thursday\\\":\\\"7:30-17:0\\\",\\\"Tuesday\\\":\\\"7:30-17:0\\\",\\\"Wednesday\\\":\\\"7:30-17:0\\\"},\\\"name\\\":\\\"Coral Tree Cafe\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2019-10-25 22:01:52\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Do you need to be a student to buy things at this cafe? The blonde girl thought this was the most prudent question to ask this Gaucho when I went inside to buy an energy drink. First and last time I buy anything here. And I'll continue highlighting each and every micro aggression aimed toward me by making them all public.\\\"},{\\\"review_date\\\":\\\"2019-10-01 17:29:02\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"A bit underrated honestly, sure their coffee isn't amazing but it's also a great value, it costs about half of what starbucks charges for their coffee. Inside seating is usually full but outside seating is fine. What I really liked was the breakfast burrito, I'll have to try more of their food menu to make a complete judgement but the burrito was pretty good.\\\"},{\\\"review_date\\\":\\\"2019-05-22 16:39:11\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Slow slow slow!!  And they often get my order wrong.  But, they have a monopoly on this side of campus, and have no incentive to perform.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Sure! Here's an objective overview of Coral Tree Cafe based on the provided structured data:\\n\\nCoral Tree Cafe is a casual restaurant located in Santa Barbara, CA, offering a variety of menu options including burgers, sandwiches, and breakfast items. The cafe has a rating of 3.0 out of 5 stars based on customer reviews. While some reviewers praised the value of the food and the breakfast burrito, others experienced slow service and incorrect orders. Outdoor seating is available, and WiFi is free. The cafe accepts reservations and offers takeout. Customers have noted that the cafe has a monopoly on the surrounding area, which may affect the quality of service and the incentives for improvement. Overall, Coral Tree Cafe seems to be a convenient option for casual dining, but customers should be prepared for potential issues with service and accuracy of orders.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_admission",
+  "source_cluster_id": "sha256:14163df2671d20117f9b256cbfcc7cea96f39b042925a714d14516d316a1bd63",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ]
+}

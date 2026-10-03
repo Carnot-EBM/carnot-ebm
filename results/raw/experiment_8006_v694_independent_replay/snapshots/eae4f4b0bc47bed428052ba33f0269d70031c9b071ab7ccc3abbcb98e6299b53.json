@@ -1,0 +1,71 @@
+{
+  "code": [
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7997_v693_typed_development_decisions.py",
+      "sha256": "sha256:f663b7ee8d48d74da6145d9da13bd177a71f54872bd0cf0296ed19cbd4b03780"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/typed_development_7997.py",
+      "sha256": "sha256:b48a12ea88c0c05677be9d82d64ff669928831ddff2f06d54a4059112d945f14"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/typed_evaluation_7997.py",
+      "sha256": "sha256:4f1e8bd7ee7898d18a7672e775fce582bb7396bbef325f8ae993f4c724f3d508"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/typed_validation_7997.py",
+      "sha256": "sha256:cb2d0a082da476f223ebe7b69bd32c91f8ade0a980c2333f771ff37a4d9e15d1"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7997_v693_typed_development_decisions.py",
+      "sha256": "sha256:544326db7e28bee9c06454ce9ef16f24d3103be542556d0612e22ebf666188ef"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_typed_development_7997.py",
+      "sha256": "sha256:c9db009baa8261983847a9e35a5aed41ec2d3c5e7718bae6d150e188f57e8026"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_experiment_7997_v693_typed_development_decisions.py",
+      "sha256": "sha256:4a1c5299a543c0b6535eb61e84b312e2fd326b3aa5e01eedb392a0bfca23e9fb"
+    }
+  ],
+  "config": {
+    "arms": [
+      "spline",
+      "logistic",
+      "mlp",
+      "scalar",
+      "raw_q"
+    ],
+    "benefit_gates": {
+      "adjusted_p_below": 0.05,
+      "lower_95_bound_above": 0.0,
+      "maximum_brier_degradation_upper_bound": 0.01,
+      "maximum_extra_false_accepts": 0,
+      "minimum_automation": 0.5,
+      "minimum_cost_gain": 0.02
+    },
+    "coefficient_refit_steps": 0,
+    "costs": {
+      "accept": "5*y",
+      "escalate": 0.25,
+      "reject": "1-y"
+    },
+    "draws": 10000,
+    "minimum_groups": 192,
+    "objective": "calibration_primary_seed_brier",
+    "per_class": 20,
+    "primary_controls": [
+      "logistic",
+      "mlp"
+    ],
+    "primary_seed": 17,
+    "random_seed": 69397,
+    "temperatures": [
+      1.0,
+      0.5,
+      2.0
+    ],
+    "uncertainty_unit": "normalized_source_group"
+  }
+}

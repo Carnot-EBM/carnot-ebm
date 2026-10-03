@@ -1,0 +1,116 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.8725954529945739,
+  "exclusion_reason": null,
+  "family_id": "sha256:8514e952a1bc041baf844aeec6ea32e203016e7119b76825ab5fa1c7bd59ec49",
+  "input_tokens": 1337,
+  "invocation_finished_at": "2026-10-01T11:44:50.869799+00:00",
+  "invocation_started_at": "2026-10-01T11:44:48.997201+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1337,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1361
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:b1e7912881eea0e3415e906cd225705aa72868850baefd27e5b2a8d22b26b957",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855090,
+    "id": "chatcmpl-sXwPUaoKI63d4AgsIqX5ixokgmUXj2tR",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.132,
+      "predicted_n": 24,
+      "predicted_per_second": 42.46795438941699,
+      "predicted_per_token_ms": 23.547166666666666,
+      "prompt_ms": 1161.127,
+      "prompt_n": 1259,
+      "prompt_per_second": 1084.291382424145,
+      "prompt_per_token_ms": 0.9222613185067513
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1337,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1361
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"619 East Gutierrez St\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":false,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":5.0,\\\"categories\\\":\\\"Salad, Restaurants, Event Planning & Services, Food Delivery Services, Personal Chefs, Caterers, Food\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-18:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Thursday\\\":\\\"11:0-18:0\\\",\\\"Wednesday\\\":\\\"11:0-18:0\\\"},\\\"name\\\":\\\"Daily Greenz\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2020-11-04 16:42:00\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Daily Greenz is one of Santa Barbara's best organic, healthy food options. I have had the pleasure of having several, yummy meals-- all made creatively, with local, organic produce and meats. Love their cuisine! With a gourmet style, their culinary creations are over the top delicious.\\\"},{\\\"review_date\\\":\\\"2020-11-04 04:14:41\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"On October 30th, I attended Daily Greenz Pop-Up Open House. For some time I had heard wonderful things about this catering and meal delivery company, so I was looking forward to experiencing it for myself. I had the pleasure of meeting both Chef Cristina Gonzalez (\\\\\\\"back of the house\\\\\\\") and her life and business partner, Elsa Cisneros (\\\\\\\"front of the house\\\\\\\"). Together as one they run this sustainable, local and organic-focused business. \\\\n\\\\nTo begin, both women are extremely talented and experienced. Chef Cristina attended the School of Culinary Arts at SBCC and then later worked under Wolfgang Puck and for Bon Appetit. On the other hand, Elsa focused on catering at Philip's College in San Antonio, later to find herself at Bon Appetit elbow-to-elbow with Cristina. \\\\n\\\\nNext, viewing the exterior of where Daily Greenz shared kitchen is located is unassuming. However, after entering you quickly realize that this is home to one of Santa Barbara's cleanest kitchens. Everything from the ovens to the pans were sparkling clean and new.\\\\n\\\\nDaily Greenz Pop-Up allowed me the opportunity to taste a few items. To begin, there was a refreshing Jamaica \\\\\\\"Blood\\\\\\\" Tea (for Halloween) and a perfectly-balanced Margarita. They provided a fresh Caesar Salad as a starter, followed by a choice of two tacos. The tacos included Achiote Chicken (refried beans, caramelized onion, cheese, and avocado-tomatillo drizzle) and Pork Chile Colorado (Pork Palace Heritage Pasture pork, refried beans, and queso fresco). Both tacos were small and bite size, yet huge and full of delicious flavors. Each ingredient could be tasted individually and enjoyed immensely.\\\\n\\\\nI learned and appreciate that Daily Greenz gives you the option to reserve your chef-created meal service between 48 hours to 2 weeks in advance. Not only that, they allow you to choose a flexible meal plan for lunches/dinners (either or both) for one to every day of the week. Bottom line: If you are seeking a meal delivery service for your family, or a caterer for your business, please contact and give Daily Greenz a try.\\\"},{\\\"review_date\\\":\\\"2020-08-21 16:25:15\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Amazing experience!!! Perfect for this quarantine. The service is awesome and the food was incredible. Highly recommend!!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Here is an objective overview of Daily Greenz based on the provided structured data in JSON format:\\n\\nDaily Greenz is a local business in Santa Barbara, California that offers salads, restaurants, event planning and services, food delivery services, personal chefs, and catering. They are known for their organic, healthy food options and have received rave reviews from customers for their delicious cuisine and excellent service. The business has a rating of 5 stars and is open Monday, Wednesday, Thursday, and Friday from 11:00 AM to 6:00 PM. Daily Greenz also offers reservations, outdoor seating, and takeout, and accepts online orders for meal delivery.\\n\\nThe business has a gourmet style and uses local, organic produce and meats in their dishes. They offer a variety of options for lunch and dinner, including tacos, salads, and other seasonal specials. The menu changes regularly based on availability of ingredients, and customers can place orders in advance for flexibility.\\n\\nCustomers have praised Daily Greenz for their creative and over-the-top delicious dishes, as well as their commitment to using only sustainable and locally-sourced ingredients. The business has also received positive reviews for their customer service and attention to detail. One customer even described the business as \\\"one of Santa Barbara's best organic, healthy food options.\\\" Overall, Daily Greenz appears to be a high-quality and popular choice for those looking for healthy and delicious food in Santa Barbara.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_update",
+  "source_cluster_id": "sha256:1aa8bead143471d013adce829e52d810e4b5caa5bab5fe63e3583cdc336491e7",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22
+  ]
+}

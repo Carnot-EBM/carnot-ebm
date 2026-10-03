@@ -1,0 +1,113 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.3125715990317985,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:f177a6cc7e764130f93e1579ebe6b749f6a29a40740f2c94f9f0ae112a239a43",
+  "input_tokens": 628,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 628,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 652
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:38ee3f570640b491eb9497e39bcb0b86a0579dd279076639aa717b6827358d8e",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886175,
+    "id": "chatcmpl-5SfOhx0HFIM5Z0plPjjURlKwNtU7sjlC",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.025,
+      "predicted_n": 24,
+      "predicted_per_second": 42.47599663731694,
+      "predicted_per_token_ms": 23.542708333333334,
+      "prompt_ms": 587.12,
+      "prompt_n": 550,
+      "prompt_per_second": 936.7761275378117,
+      "prompt_per_token_ms": 1.067490909090909
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 628,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 652
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Step 1. Rinse the shirt with cold water from a sink or hose. You should have rinsed the tie-dye shirt after the initial dyeing, but if it was not, it needs to be rinsed with cold water to remove excess dye. Step 2. Fill a tub or basin with clean, warm water to set the remaining dye so that it will not bleed. Mix in a small amount of laundry detergent. Place the tie-dyed shirt into the tub or basin, and let it soak for 10 to 15 minutes undisturbed. Wash the shirt gently with your hands.\\\\n\\\\npassage 2:To Rinse Out Your Tie-Dyed Shirt. 1  Keep the dye in the shirt for 24 hours, or overnight. (In the plastic bag). 2  To rinse it out you need a basin or a bucket and a source of running water. (Outside with a bucket and a hose, or inside with a bucket and laundry sink are good places to rinse).\\\\n\\\\npassage 3:Washing Tie-Dyed Fabric Without Synthrapol Detergent. 1  1. Rinse the tie-dyed fabric in the sink. Place your tie-dyed material directly under a running stream of cold water. 2  2. Change the water temperature from cold to warm when most of the loose dye is removed from the fabric.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to wash tie dyed shirts\\\"}\", \"original_answer\": \"To wash a tie dyed shirt, first rinse it with cold water to remove any excess dye. This can be done using a sink or hose. If the shirt was not rinsed after the initial dyeing, it needs to be rinsed again. Next, fill a tub or basin with clean, warm water and mix in a small amount of laundry detergent. Place the shirt into the water and let it soak for 10 to 15 minutes undisturbed. Finally, wash the shirt gently with your hands. Before rinsing, the shirt should be left with the dye in it for 24 hours or overnight.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "5db2e67d8876f6809a9488b3b23dcc31e55752fc1874109b3b6ba71e5729838e",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+  ]
+}

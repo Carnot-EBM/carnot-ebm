@@ -1,0 +1,122 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.6057001770241186,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:7c7c04696a14a0b9f29b2d018f456bfb22baf87911f802ed46d52bc217531e07",
+  "input_tokens": 1066,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1066,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1089
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:12e5fb6b276fe1e45b3ab24846b88218dc1e7bd577c254b71e3097eda8bd0284",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885878,
+    "id": "chatcmpl-0qxR4nYfOm1AStvrautr5lCVbEQvsgH9",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 537.473,
+      "predicted_n": 23,
+      "predicted_per_second": 42.792847268606984,
+      "predicted_per_token_ms": 23.368391304347824,
+      "prompt_ms": 948.833,
+      "prompt_n": 988,
+      "prompt_per_second": 1041.2791292039801,
+      "prompt_per_token_ms": 0.9603572874493926
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1066,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1089
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"NBA player Thabo Sefolosha says police caused his season-ending leg injury when he was arrested last week after leaving a nightclub in New York. In a statement Tuesday, the guard/forward for the Atlanta Hawks described his injury as \\\"significant,\\\" and said it \\\"was caused by the police.\\\" Sefolosha suffered a fractured fibula and ligament damage when he and teammate Pero Antic were arrested near the scene of the stabbing of Indiana Pacers forward Chris Copeland and two other women early April 8. Police said Sefolosha and Antic were not involved in the stabbing incident, but they were charged with misdemeanors, including disorderly conduct and obstructing governmental administration. TMZ Sports released video last week that shows a group of police officers arresting the 6-foot-7 Sefolosha and taking him to the ground. It also shows an officer within that group getting out a baton and extending it near him, but what may have caused the injury is not clear in the video. Sefolosha appears to be limping as he is led away by officers. New York Police Department Sgt. Daniel Doody said Wednesday that the matter is being reviewed by the Internal Affairs Bureau and would not comment further. Internal Affairs had no comment. Sefolosha did not specify his injury in his statement Tuesday, but the Hawks said last week that he has a fractured fibula and ligament damage, will undergo surgery and will miss the rest of the season, including the playoffs, which begin this weekend. The Hawks enter as the top seed in the NBA's Eastern Conference. Sefolosha, who turns 31 in May, is in his ninth NBA season and his first with the Hawks. He averaged 5.3 points per game this season. \\\"I am extremely disappointed that I will not be able to join my teammates on the court during the playoffs and apologize to them for any distraction this incident has caused,\\\" Sefolosha said in his statement. \\\"I will be cheering for them every step of the way and will be diligent in my rehabilitation. \\\"On advice of counsel, I hope you can appreciate that I cannot discuss the facts of the case. Those questions will be answered by my attorney in a court of law. I will simply say that I am in great pain, have experienced a significant injury and that the injury was caused by the police.\\\" Hawks coach Mike Budenholzer said in a statement last week, \\\"This is a very difficult situation for Thabo and our thoughts and support will be with him during his recovery. We know that his approach and dedication will serve him well in his rehabilitation. Our team remains focused and will be prepared as we head into the postseason.\\\" Antic, a 31-year-old, 6-foot-11 center/forward, missed the April 8 game against the Brooklyn Nets, but has played since then. In a joint statement last week, Sefolosha and Antic said they will contest the charges. According to the Pacers, Copeland underwent surgery on his abdomen and left elbow for stab wounds. He was released from the hospital two days after the incident, according to Bleacher Report. The Pacers, with one regular-season game left, are trying to secure the last spot in the Eastern Conference playoffs. If they do, their first-round opponent would be Atlanta. CNN's Camille Cava contributed to this report.\\n\", \"original_answer\": \"NBA player, Thabo Sefolosha, who plays guard/forward for the Atlanta Hawks, has claimed that his season-ending leg injury was caused by police during his arrest after leaving a nightclub in New York. Sefolosha and teammate Pero Antic were arrested near the scene of a stabbing incident involving Indiana Pacers forward Chris Copeland; however, the two were not involved in the stabbing. They were charged with misdemeanors, including disorderly conduct and obstructing governmental administration. A video released by TMZ Sports shows police arresting Sefolosha and taking him to the ground. An officer can be seen extending a baton near him, but what may have caused the injury is unclear. The matter is currently under review by the Internal Affairs Bureau.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "calibration",
+  "source_cluster_id": "aadd95d40f2f9823bdb4979b24d4a8c7237b6a65236737ce915b72e381438590",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25
+  ]
+}

@@ -1,0 +1,116 @@
+{
+  "arm": "swap",
+  "capture_identity": "sha256:c690c1f517fbce73c5da6a2d1e99e3819c3de93e1045fe76d1c8215b54691541",
+  "censor_status": false,
+  "denominator": 1,
+  "donor_group_id": "sha256:3c31b99d1e59b77fbc8b11da07ccf33ad26e09ebb3f0941f0bb8abc60f761548",
+  "duration_s": 1.2727421849267557,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:cc44e5050dbd50a7bfedb4afaf7b448086857ab9a689302d6ca650ea7aee0e6a:swap",
+  "group_id": "sha256:cc44e5050dbd50a7bfedb4afaf7b448086857ab9a689302d6ca650ea7aee0e6a",
+  "input_byte_upper_bound": 3018,
+  "input_tokens": 690,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 1.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 690,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 713
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:89026991a2b6c70e0fbd3c159716526ce4a186bba92e4bd8b25b12037d326633",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 1.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790925801,
+    "id": "chatcmpl-Jd6X8Gf9fRyEXAhy7lxSPXsc9pHjtcBd",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 537.727,
+      "predicted_n": 23,
+      "predicted_per_second": 42.7726336970247,
+      "predicted_per_token_ms": 23.379434782608694,
+      "prompt_ms": 617.749,
+      "prompt_n": 612,
+      "prompt_per_second": 990.6936312321023,
+      "prompt_per_token_ms": 1.0093937908496733
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 690,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 713
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 32,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"420 S Fairview Ave\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":null},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Cajun/Creole, Restaurants\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":null,\\\"name\\\":\\\"Cajun Kitchen\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2016-02-26 01:16:25\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Cool retro ode diner! Love when I go to a restaurant and it's functional. I had he jambalaya. Very tasty although the shrimp was farmed not fresh but really good base. My friend had eggs over easy. Friendly efficient service. Corn bread was also good.\\\"},{\\\"review_date\\\":\\\"2015-10-15 16:47:44\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Great diner style restaurant. The jambalaya was great. They had soju too! Which was a pleasant surprise! Service was very prompt and pleasant.\\\"},{\\\"review_date\\\":\\\"2015-06-14 03:50:01\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"So yummy! I'm a UCSB alumni and try to visit this place each time I find myself in Santa Barbara. We stopped in for brunch during our last visit and it was still delicious! I love this place!!!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"The factory system affected both labor organization and social structures. The development of large machines required a new way of organizing labor, which resulted in many machines being installed together in factories and workers having long, regular hours from dawn to dusk, six days a week. The rise of factories also led to a shift from a more communal society with informal social structures to a more rationalized society with more formal structures. Work and home became separate, and informal social pressures could no longer maintain order among large groups of people who didn't know each other well.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69410,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "seed": 69410,
+  "source_cluster_id": "26d219a153d56c06aa2d68534d1eecc6143ba2b35532c4b3b552b61c65cde9b9",
+  "source_hash": "sha256:49bd290b58b0fcf5de43996d4817ab9fac0983d846bb4cfb97d5d3977446ba88",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ]
+}

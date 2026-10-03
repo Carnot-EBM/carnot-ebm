@@ -1,0 +1,108 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.338199922000058,
+  "exclusion_reason": null,
+  "family_id": "sha256:d1393f21ecdb3d1cbccd7ea4eaba503bc11d0b666c9d80e7b8ccc732703b644e",
+  "input_tokens": 771,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 771,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 794
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:2278b453f8a0b2115feeb127e89f71d8002371c3f1ed872524bb5366a714f396",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832530,
+    "id": "chatcmpl-gWX2gjJXnaX2QVxxBgdnX7maD3A9EL9y",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 536.827,
+      "predicted_n": 23,
+      "predicted_per_second": 42.84434277709579,
+      "predicted_per_token_ms": 23.340304347826088,
+      "prompt_ms": 680.012,
+      "prompt_n": 693,
+      "prompt_per_second": 1019.0996629471247,
+      "prompt_per_token_ms": 0.9812582972582972
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 771,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 794
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"California man sentenced; Defrauded feds of $3 million in pandemic relief money to buy gold overseas\\nA Glendale man, Arman Nikogosyan, was sentenced to 78 months in federal prison today for his involvement in a conspiracy to launder at least $3 million in fraudulently obtained unemployment insurance benefits, a scheme that unfolded during the COVID-19 pandemic, the U.S. Attorney's Office announced Monday.\\nUnited States District Judge John F. Walter handed down the sentence, along with a restitution order requiring Nikogosyan to pay back the full $3 million.\\nNikogosyan, 45, had previously pleaded guilty to one count of conspiracy to launder money on March 27, admitting his role in the operation.\\nThe conspiracy began in 2020 and continued until December of the same year. Nikogosyan played a pivotal role in the money laundering operation, which revolved around fraudulent unemployment claims, prosecutors said.\\nHis co-conspirators applied for UI benefits in the names of unsuspecting individuals and utilized debit cards issued by a major bank to withdraw the fraudulently obtained funds.\\nAs a result, Nikogosyan was designated to receive the cash proceeds generated from this fraudulent scheme.\\nWith the COVID-19 pandemic leading to Congress expanding the amounts, duration, and eligibility for UI benefits in 2020, the Employment Development Department in California administered the program.\\nNikogosyan was well aware that the funds he was handling constituted the proceeds of this fraudulent activity, and he took deliberate steps to obscure their source, ownership, and location, prosecutors said.\\nTo achieve this, Nikogosyan used assumed names, including those associated with shell companies, to have the illicitly obtained funds deposited.\\nSubsequently, he transferred these funds abroad and invested in gold, creating an added layer of complexity to conceal the origin of the funds.\\nThroughout the course of the conspiracy, Nikogosyan laundered a minimum of $3 million in fraudulently obtained proceeds, according to prosecutors.\\nMuch of this money was delivered to him in cash by his co-conspirators. In a pivotal development, law enforcement agents seized $194,497 in cash from Nikogosyan's residence in December 2020. This money was identified as proceeds from the fraudulent scheme, further substantiating his involvement.\", \"original_answer\": \"Here is a summary of the news in 87 words or less:\\n\\nArman Nikogosyan, a 45-year-old man from Glendale, California, has been sentenced to 78 months in prison for defrauding the government of $3 million in pandemic relief funds. He used the money to buy gold and invest in shell companies, concealing its origin. Nikogosyan admitted to conspiring to launder money and must pay back the full $3 million in restitution.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:0bb48219afc8e361d75fccb0186fbc8cfd84f0c52f06c4f8d5925f02b7eaae0e",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+  ]
+}

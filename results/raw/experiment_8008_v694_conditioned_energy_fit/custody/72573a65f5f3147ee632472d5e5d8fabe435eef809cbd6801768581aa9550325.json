@@ -1,0 +1,103 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.0460685109719634,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:82b0ab6e6e387d43d73a81db46cc47956d6e9a70b7332bd2f59f80d8e50bb875",
+  "input_tokens": 369,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 369,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 392
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:95285687c2e5d4a526245b756088b17786d55b9f4ca98bc1d20671bcbd6546a0",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886277,
+    "id": "chatcmpl-G6t9lpH84bOUXcj01AXFIkY5TSMQcuDX",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.588,
+      "predicted_n": 23,
+      "predicted_per_second": 42.546264437982344,
+      "predicted_per_token_ms": 23.50382608695652,
+      "prompt_ms": 391.057,
+      "prompt_n": 291,
+      "prompt_per_second": 744.1370439603434,
+      "prompt_per_token_ms": 1.3438384879725087
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 369,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 392
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:With qualification for the quarter-finals and semifinals, Canada will play in Toronto at 8 p.m. ET. Canada\u2019s National Junior Team will play three pre-competition games, in Toronto (Dec. 19), Ottawa, Ont.\\\\n\\\\npassage 2:Notes. 1  Upon qualifying Canada would play the late quarter final and semi-final games (match ups do not change, only game times if required). 2  Upon qualifying Canada will play their quarter final game \u2013 no matter what seed in Toronto.\\\\n\\\\npassage 3:Loading competition schedule... Quarter-Finals: Stockholm: (1S-4S) & (2S-3S); Helsinki: (1H-4H) & (2H-3H).If qualified for the Quarter-Finals, Finland will play the evening game in Helsinki.If qualified for the Quarter-Finals, Sweden will play the evening game in Stockholm.\\\\n\\\\n\\\",\\\"question\\\":\\\"nhl quarter final schedule\\\"}\", \"original_answer\": \"Unable to answer based on given passages.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "9b7dd9124e23a3d8ed43c12831c8cbe066583060c4797a279c704b0a91f6337f",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ]
+}

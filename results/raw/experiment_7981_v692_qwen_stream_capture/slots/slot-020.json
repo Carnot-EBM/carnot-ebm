@@ -1,0 +1,110 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.2595269779558294,
+  "exclusion_reason": null,
+  "family_id": "sha256:ec775c498b95dacb27ef4cba1d0c5ddb52e4c383e23a47bf2bb809a9ee21d1b0",
+  "input_tokens": 646,
+  "invocation_finished_at": "2026-10-01T11:41:43.490277+00:00",
+  "invocation_started_at": "2026-10-01T11:41:42.230748+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 646,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 670
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:1988a798d0563f75de372249e27f60bdb052d16a43a04c460316b50825e02b52",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790854903,
+    "id": "chatcmpl-SwrIjX20fVOVC3fbjpi4EwLGUpSZPWYq",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 557.484,
+      "predicted_n": 24,
+      "predicted_per_second": 43.05056288610973,
+      "predicted_per_token_ms": 23.2285,
+      "prompt_ms": 581.806,
+      "prompt_n": 568,
+      "prompt_per_second": 976.2704406623513,
+      "prompt_per_token_ms": 1.0243063380281692
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 646,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 670
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Seeking Justice for Kaysera: A MMIW Story\\nAugust 2021 would have marked Kaysera Stops Pretty Places' 20th birthday, but instead, her family observed the second anniversary of her tragic death near the Crow Reservation in Montana. Her family has been on an unwavering quest for answers and justice, yet their path has been fraught with frustration.\\nLeading the charge in the fight for justice is Kaysera's aunt, Dr. Grace Bulltail. She remembers Kaysera as a kind-hearted soul who faced immense challenges living on the reservation. However, the public report released in August 2021 on her death has been criticized by the family, who believe it focused more on Kaysera's character than conducting a thorough investigation.\\nThe report included witness statements describing an argument involving Kaysera and three others. An autopsy report couldn't pinpoint the exact cause of death but found ethanol in her blood. Equally troubling is the lack of a missing person report and minimal investigative effort in the days following her disappearance.\\nIn October 2019, the formation of a Missing and Murdered Persons Task Force rekindled substantial investigative efforts. In 2021, the U.S. Department of Interior's BIA Office of Justice Services became involved in the case.\\nKaysera's case casts a spotlight on the broader issue of Missing and Murdered Indigenous Women. It serves as a stark reminder of the hurdles Indigenous communities, especially women, encounter in their pursuit of justice. The fight for justice remains ongoing, and Kaysera's family urges support and awareness. This case underscores the urgent need for systemic changes to dismantle the obstacles to justice for Indigenous women. The fight continues, and the names of women like Kaysera must not fade into oblivion.\", \"original_answer\": \"Kaysera Stops Pretty Places, a young Native American woman, was found dead near the Crow Reservation in Montana in 2019. Her family has been fighting for justice ever since, but their efforts have been met with frustration due to a lack of investigation and a public report that focused on her character rather than the circumstances of her death. The case highlights the larger issue of missing and murdered Indigenous women and the struggles they face in seeking justice.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "calibration_replay",
+  "source_cluster_id": "sha256:14a0a06ad72bc063c74920419407dc0bbd0e9a547467eb693b3e3993665230a0",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+  ]
+}

@@ -1,0 +1,115 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.5362012429977767,
+  "exclusion_reason": null,
+  "family_id": "sha256:f38c59adf3f0d435bbe8f6205d8ad53936946c135319263a16bc7ba2bb53d047",
+  "input_tokens": 959,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 959,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 982
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:b73a1f5af20d5182b32496f28812f573792bb9275f3e37605f00572f8c48aea9",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832856,
+    "id": "chatcmpl-D8ODcGHitch7tPFdU0PfHEyz4ZaorqEo",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.78,
+      "predicted_n": 23,
+      "predicted_per_second": 42.45265605965521,
+      "predicted_per_token_ms": 23.555652173913042,
+      "prompt_ms": 880.755,
+      "prompt_n": 881,
+      "prompt_per_second": 1000.2781704333214,
+      "prompt_per_token_ms": 0.99972190692395
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 959,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 982
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"This week brought a dramatic turn of events in a small community outside of Detroit: A man bloodied during a traffic stop was cleared of all charges, the police officer who arrested the motorist is charged with beating him and the community's police chief has stepped down. On Monday, Wayne County Prosecutor Kym Worthy announced charges of assault and mistreatment of a prisoner against William Melendez. He's the 49-year-old former Inkster, Michigan, police officer who is seen in police car dashcam video grabbing the unarmed motorist, Floyd Dent, around the neck while he lay on the ground and punching him several times in the head. \\\"The alleged police brutality in this case cannot and will not be tolerated,\\\" Worthy said. On Wednesday, drug charges against Dent, 57, were formally dropped in Michigan Circuit Court, clearing the motorist of all wrongdoing. \\\"He busted out crying and was very emotional,\\\" said Angela Martin, the assistant to Dent's attorney. In the wake of the reversal of fates, Police Chief Vicki Yost announced Wednesday her resignation, according to Inkster City Manager Richard Marsh. Marsh would not cite a specific reason for Yost's investigation, though she had been the face of the Police Department during the investigation into her former officer. In a statement, Dent and his attorney Greg Rohl told CNN: \\\"We are all ecstatic, especially Mr. Dent. This is another step in the right direction. The system is still working, and we are very hopeful the prosecutor's net will catch even more fish in the near future.\\\" Yost did not respond to a request for comment. Dent, a veteran Ford automotive worker, was arrested after the January traffic stop on charges of drug possession, assaulting an officer and resisting arrest. With the court decision Wednesday, all charges from the arrest have been dropped. Melendez pleaded not guilty to the new charges brought against him in an arraignment Tuesday at Inkster District Court, according to his lawyer, David Lee. \\\"We intend to vigorously contest the charges,\\\" Lee said. \\\"I can understand how people might be disturbed by looking at [the video]; however; I hope everyone will withhold judgment until all the facts come out where they should in a court of law.\\\" Worthy's announcement came after the conclusion of two investigations into the incident by Michigan State Police and the Wayne County Prosecutor's Office. In the police report written after the January arrest, Melendez wrote that he hit Dent only after Dent had threatened him and bit him in the arm. Melendez wrote that as he approached the car, Dent kept his hands from view, looked at him \\\"with a blank stare as if on a form of narcotic,\\\" and said, \\\"I'll kill you.\\\" Dent told CNN at the time that he had never threatened nor bit the police officer. \\\"I didn't bite anyone. I didn't have time to bite anyone. He was too busy pounding me in my head,\\\" Dent said. Rohl also alleged that the cocaine found at the scene had been planted by Melendez. \\\"My client's fingerprints will not be on that bag,\\\" Rohl told WDIV.\\n\", \"original_answer\": \"A former Inkster, Michigan police officer, William Melendez, has been charged with assault and mistreatment of a prisoner after a traffic stop video showed him punching an unarmed motorist, Floyd Dent, multiple times in the head. All charges against Dent have been dropped, and the police chief, Vicki Yost, has resigned. Dent's attorney believes that the system is working in their favor, and they are hopeful for a positive outcome in court. Melendez has pleaded not guilty to the charges and his lawyer plans to vigorously contest them.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "tune",
+  "source_cluster_id": "sha256:9e6852fce21160afc8c66ca1e3bcbbb4c99de76b1e79a535c0bf1cf06274ee73",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23
+  ]
+}

@@ -1,0 +1,101 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.2012978959828615,
+  "exclusion_reason": null,
+  "family_id": "sha256:09b9b88f708e80d6f4e6120bc67dd44020367dea5a6876b3288b593fb390bd3f",
+  "input_tokens": 607,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 607,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 628
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:425874763c5932716ee8235539555ab4bc033df98e1caf521b74bd3be9783a06",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"unsupported_probability\": 0.0,\n\"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832611,
+    "id": "chatcmpl-jB7FbjQGGTrjVhyu2LTx3PcRXAwBm1fF",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 491.605,
+      "predicted_n": 21,
+      "predicted_per_second": 42.717222160067536,
+      "predicted_per_token_ms": 23.409761904761904,
+      "prompt_ms": 577.892,
+      "prompt_n": 529,
+      "prompt_per_second": 915.3959563378623,
+      "prompt_per_token_ms": 1.0924234404536863
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 607,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 628
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Plant the cilantro seeds. Sow the seeds about 1\u20444 inch (0.6 cm) deep, spaced 6 to 8 inches (15.2 to 20.3 cm) apart, in rows approximately 1 foot (0.3 m) apart. Cilantro seeds need plenty of moisture to germinate, so make sure to water them frequently. They need about an inch of water per week.\\\\n\\\\npassage 2:Prune the plant regularly. Prune your cilantro plant regularly, about every five to seven days. It takes about a week for new foliage to be produced and mature. You will have about three weeks of harvest before the cilantro will flower, which is a sign that the seeds are being produced.\\\\n\\\\npassage 3:Here is a general description of these herbal plants: Height: The average height of Culantro plants ranges from 25 cm to 30 cm. Leaves: The leaves grow as rosettes with each leaf growing between 25 and 30 cm. Flowers: These plants bear blue flowers. Aroma: Entire plants have a strong pungent fragrance.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to grow and prune cilantro\\\"}\", \"original_answer\": \"To grow and prune cilantro, you should follow these steps:\\n\\n1. Plant the cilantro seeds about 1/4 inch (0.6 cm) deep, spaced 6 to 8 inches (15.2 to 20.3 cm) apart, in rows approximately 1 foot (0.3 m) apart.\\n2. Water the seeds frequently to ensure they receive about an inch of water per week.\\n3. Prune the plant regularly, about every five to seven days, to encourage new foliage production and prevent it from flowering too soon.\\n4. Harvest the cilantro after about three weeks when the foliage has matured.\\n5. Monitor the plant's growth, which typically reaches heights of 25-30 cm, with each leaf measuring between 25 and 30 cm. The plant bears blue flowers and has a strong pungent fragrance.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:b6b622f787d99bb994a64d57df366181cfd80b90e6d2da389aa100f53f48f948",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ]
+}

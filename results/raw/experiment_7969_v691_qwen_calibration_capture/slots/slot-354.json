@@ -1,0 +1,106 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.5812639679643326,
+  "exclusion_reason": null,
+  "family_id": "sha256:ca848d6421da38a6e4c8984ea49c3033b7691c02174005df1838147506a0465b",
+  "input_tokens": 971,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.05,
+    "schema_valid": true,
+    "source_sentence_id": 12,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 971,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 995
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:ee80f0600655d1775506719187c7b863cddf6686ff4b6a6271aa6c91c83e0bff",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.05,\n \"source_sentence_id\": 12\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832966,
+    "id": "chatcmpl-gOa9GB8sOM8xgEzjRcptaYjkYkx8Cdje",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.698,
+      "predicted_n": 24,
+      "predicted_per_second": 42.42546376335076,
+      "predicted_per_token_ms": 23.57075,
+      "prompt_ms": 883.232,
+      "prompt_n": 893,
+      "prompt_per_second": 1011.0593819064527,
+      "prompt_per_token_ms": 0.9890615901455767
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 971,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 995
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"7 W Haley St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":null,\\\"divey\\\":null,\\\"hipster\\\":null,\\\"intimate\\\":true,\\\"romantic\\\":true,\\\"touristy\\\":false,\\\"trendy\\\":true,\\\"upscale\\\":true},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":true,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":false,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Nightlife, Bars, Tapas/Small Plates, Spanish, Restaurants, Coffee & Tea, Cafes, Food, Italian, Wine Bars, Tapas Bars, Burgers\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"17:0-23:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"17:0-23:0\\\",\\\"Thursday\\\":\\\"11:30-22:30\\\",\\\"Tuesday\\\":\\\"17:0-22:0\\\",\\\"Wednesday\\\":\\\"17:0-22:0\\\"},\\\"name\\\":\\\"Mosto\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2020-02-15 04:07:26\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Booked a table for Valentine's Day. Showed up on time and guess what? Restaurant is closed. Sign up saying they aren't open tonight, but they didn't update their reservation partners? A special night and we were looking forward to a special dinner, as were the other couples we bumped into also trying to get into a dark, empty Italian spot. \\\\n\\\\nPretty bummed about our night, pretty pissed about their lack of either planning or care for their customers. Not going back, that's for sure!!\\\"},{\\\"review_date\\\":\\\"2020-02-02 05:47:01\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"We made a dinner reservation here for a Saturday night at 5pm and received a confirmation email from OpenTable. We show up and there's a sign that said \\\\\\\"Closed, apologies!\\\\\\\" Not sure what happened, but it was pretty annoying.\\\"},{\\\"review_date\\\":\\\"2020-01-23 04:45:33\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Don't come hungry and don't come in a rush.  This is a great hole in the wall off State Street in Santa Barbara that renders art, good wine, and great tapas & pasta.  Very chill... not your typical 15-min meal. I really love this place and hope to keep coming when in Santa Barbara. They got the carbonara exactly like it's supposed to be.  \\\\n\\\\nBest of all, this is the best spot after work for a good glass of wine and some charcuterie. \\\\n\\\\nWell done Alejandra!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Mosto, located in Santa Barbara, CA, is a local business that offers a unique dining experience with its blend of art, good wine, and delicious tapas and pasta. Despite receiving positive reviews for its food and atmosphere, the establishment has faced criticism for poor communication and last-minute closures. Recent reviews mention inconveniences such as unexpected restaurant closures during peak hours and disappointment caused by lack of planning and care for customers. However, one reviewer praises the restaurant's charm and excellent service, highlighting its potential as a great spot for a relaxed evening out. With a rating of 4.0 stars and a loyal customer base, Mosto appears to have room for improvement in its operational procedures to enhance customer satisfaction.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:fd36457f2d81681b88b9d477787f7a649e33e91d17cf3e51e7ef1ba28a5ed59d",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ]
+}

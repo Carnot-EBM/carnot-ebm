@@ -1,0 +1,98 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.5242462949827313,
+  "exclusion_reason": null,
+  "family_id": "sha256:cf724647e1df0e80e119024349729c66a4de60b10b9f264129fb7bb82626a4ec",
+  "input_tokens": 855,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 855,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 879
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:fdc13b1f139d4d5fed68460fb6238506883f9c0be2483f5a82d7a56afe732c3a",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790833002,
+    "id": "chatcmpl-tP5PlbuQvYIpkAWg4WIFKaaFOu9sDuR7",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.563,
+      "predicted_n": 24,
+      "predicted_per_second": 42.435590729945204,
+      "predicted_per_token_ms": 23.565125,
+      "prompt_ms": 821.304,
+      "prompt_n": 777,
+      "prompt_per_second": 946.056515005406,
+      "prompt_per_token_ms": 1.057019305019305
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 855,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 879
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"5801 Calle Real, Ste C\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":null},\\\"business_stars\\\":2.5,\\\"categories\\\":\\\"Restaurants, Sandwiches, Fast Food\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"8:0-14:30\\\",\\\"Monday\\\":\\\"8:0-21:0\\\",\\\"Saturday\\\":\\\"10:0-14:0\\\",\\\"Sunday\\\":\\\"10:0-21:0\\\",\\\"Thursday\\\":\\\"8:0-21:0\\\",\\\"Tuesday\\\":\\\"8:0-21:0\\\",\\\"Wednesday\\\":\\\"8:0-21:0\\\"},\\\"name\\\":\\\"Subway\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-07-31 21:54:41\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Food tastes terrible every time. Don't waste your money at this particular location. Bread is always burnt and hard. They left my sandwich sitting out unwrapped while helping a large group so my sandwich was COLD and I ended up just throwing it away.\\\"},{\\\"review_date\\\":\\\"2021-05-27 20:37:12\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"They drop all my topping while making the sandwich and than drop it again out of the over . I paid for  my sandwich and threw it immediately in the trash . 9$ in the trash :(\\\"},{\\\"review_date\\\":\\\"2020-11-29 08:18:46\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"For a Subway this is the spot to visit. \\\\n\\\\nAvoid downtown and now that the Subway in Magnolia closed (due to poisoning multiple people) Calle Real is the best sub around unless you want to visit those thieves at Jersey Mike's out at Marketplace who will legit charge you $24 for a 10 Inch sub if you add all the toppings you want (like Avo).\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Subway is a fast food chain located in Goleta, CA. It serves sandwiches and other fast food options. Subway is open from Monday to Sunday with varying hours. Subway does not offer reservations, outdoor seating, or Wi-Fi. However, they do offer takeout and cater to groups. The ambiance of Subway is casual and offers a variety of musical styles. Customers have reviewed their experience with the restaurant. One customer has given a negative review stating that the food tastes terrible and the bread is always burnt and hard. Another customer has also given a negative review stating that their sandwich was dropped twice during the preparation process. Another customer has given a positive review mentioning that the restaurant is the best option for subs around and is better than Jersey Mike's due to its pricing and quality of food. Overall, Subway appears to be a fast food chain serving sandwiches and offering takeout services.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:ee50d8482a3683f218987aeb1b6279e19b8f6f74763732b6f31fcd714f26094c",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ]
+}

@@ -1,0 +1,98 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.143965310009662,
+  "exclusion_reason": null,
+  "family_id": "sha256:eea08f6198bcea2db5bb2c9f00dd7c61568b83dc637b1bd699fe43eedf6314d8",
+  "input_tokens": 446,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.85,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 446,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 470
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:d19ccde908e20c15195c904ffd141d5cfdacfaa3b97f6b017e3af2d53a532db5",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.85,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832907,
+    "id": "chatcmpl-8LcqprZI5MQ2iZjJVAYO3Fcno9e3WTpK",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.309,
+      "predicted_n": 24,
+      "predicted_per_second": 42.52989053869423,
+      "predicted_per_token_ms": 23.512874999999998,
+      "prompt_ms": 445.877,
+      "prompt_n": 368,
+      "prompt_per_second": 825.3397237354695,
+      "prompt_per_token_ms": 1.2116222826086958
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 446,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 470
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:This is not the only difference between it and Medicare, however. Medicaid covers low-income people who do not have the financial means to afford healthcare, while Medicare applies to everyone who has paid into the system and reached the point of eligibility.\\\\n\\\\npassage 2:Medicaid, on the other hand, is a health care program for low-income individuals who could not otherwise afford health insurance. Medicaid is funded in part by the government and the state in which the enrollee lives. The states establish their own eligibility standards and services for Medicaid, while the federal government establishes criteria for Medicare.\\\\n\\\\npassage 3:Medicare and Medicaid are two completely different programs. The main difference is that Medicare is generally for people who are older or disabled, and Medicaid is for people with limited income and resources. The table provides more information about each program and how they compare. Medicare.\\\\n\\\\n\\\",\\\"question\\\":\\\"what is difference of medicare and medicaid\\\"}\", \"original_answer\": \"Based on the given passages, the main difference between Medicare and Medicaid is that Medicare is a healthcare program for people who are older or disabled, regardless of their income level, while Medicaid is a healthcare program for low-income individuals who cannot afford health insurance. Medicare is funded by payroll taxes, while Medicaid is funded jointly by the federal government and the states. Additionally, the eligibility standards and services covered by Medicaid vary by state, while Medicare has standardized coverage across the country.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "policy_design",
+  "source_cluster_id": "sha256:0f4b5f4e78eb9e6ee7ec20405774efa51fb0cebe4f3ecf4ab07d1e377c1df69c",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ]
+}

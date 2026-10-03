@@ -1,0 +1,88 @@
+....F.                                                                   [100%]
+=================================== FAILURES ===================================
+____________________ test_owned_validation_and_normal_main _____________________
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261003T014632-1662409-ff06c471/test_owned_validation_and_norm0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f62a8967a40>
+
+    def test_owned_validation_and_normal_main(tmp_path, monkeypatch):
+        """SCENARIO-REPORT-8046-TERMINAL: reducers require exact owned checks and coverage."""
+        specs = e.commands(tmp_path / "venue")
+        assert all(e.venue.old.OWNED[0] not in s.argv for s in specs)
+        assert any(s.scope == "repository_health" for s in specs)
+        assert any("--strict" in s.argv for s in specs)
+        monkeypatch.setattr(
+            e, "commands", lambda p: [e.CommandSpec("private", (sys.executable, "-c", "pass"), "owned")]
+        )
+    
+        def child(root, commands, **kwargs):
+            raw = kwargs["log_dir"].parent
+            log = raw / "private.log"
+            log.write_text("Synthetic unit receipt; not production acceptance.\n")
+            cov = {p: dict(summary=dict(num_statements=1, missing_lines=0)) for p in [e.MODULE, e.CLI]}
+            atomic_json(tmp_path / "coverage.json", dict(files=cov))
+            ref = e.reference(log)
+            return [
+                dict(
+                    name="private",
+                    scope="owned",
+                    exit_code=0,
+                    passed=True,
+                    log_path=ref["path"],
+                    log_sha256=ref["sha256"],
+                )
+            ]
+    
+        monkeypatch.setattr(e, "run_commands", child)
+>       measured = e.validate(tmp_path, tmp_path / "raw")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_branch_protocols_8046.py:152: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/experiment_8046_v697_branch_protocols.py:529: in validate
+    receipts = run_commands(
+tests/python/test_branch_protocols_8046.py:136: in child
+    log.write_text("Synthetic unit receipt; not production acceptance.\n")
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1047: in write_text
+    with self.open(mode='w', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file = PosixPath('/tmp/pytest-carnot-ianblenke/20261003T014632-1662409-ff06c471/test_owned_validation_and_norm0/raw/private.log')
+mode = 'w', buffering = -1, encoding = 'locale', errors = None, newline = None
+closefd = True, opener = None
+
+    def _compat_io_open(
+        file: object,
+        mode: str = "r",
+        buffering: int = -1,
+        encoding: str | None = None,
+        errors: str | None = None,
+        newline: str | None = None,
+        closefd: bool = True,
+        opener: Any | None = None,
+    ) -> Any:
+        target = (
+            _redirect_legacy_write_path(file, "io.open", ensure_parent=True)
+            if _is_write_intent(mode, None)
+            else file
+        )
+>       return _ORIGINAL_IO_OPEN(
+            target,
+            mode,
+            buffering,
+            encoding,
+            errors,
+            newline,
+            closefd,
+            opener,
+        )
+E       FileNotFoundError: [Errno 2] No such file or directory: '/tmp/pytest-carnot-ianblenke/20261003T014632-1662409-ff06c471/test_owned_validation_and_norm0/raw/private.log'
+
+python/carnot/testing/tracked_results_guard.py:175: FileNotFoundError
+=========================== short test summary info ============================
+FAILED tests/python/test_branch_protocols_8046.py::test_owned_validation_and_normal_main
+1 failed, 5 passed in 37.28s

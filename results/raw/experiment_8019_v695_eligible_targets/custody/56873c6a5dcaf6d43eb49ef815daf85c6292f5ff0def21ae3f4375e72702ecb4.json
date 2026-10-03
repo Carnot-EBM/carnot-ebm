@@ -1,0 +1,109 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.5736326170153916,
+  "exclusion_reason": null,
+  "family_id": "sha256:bf22b33e1dae334f268b0d1d2a570c3a491874161334dde4877bf97038268580",
+  "input_tokens": 982,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 982,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1005
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:a5a1f346d4e07c1e65b25e4d48bb1dab4e97c088c5c3548cf79805b814861a33",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832813,
+    "id": "chatcmpl-V3DpSO00OxSq4yZv7LDvWent2dGsTZbo",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.31,
+      "predicted_n": 23,
+      "predicted_per_second": 42.4895161737267,
+      "predicted_per_token_ms": 23.535217391304347,
+      "prompt_ms": 922.495,
+      "prompt_n": 904,
+      "prompt_per_second": 979.9511108461293,
+      "prompt_per_token_ms": 1.0204590707964603
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 982,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1005
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"604 Santa Barbara St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":null},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Breakfast & Brunch, Restaurants, Bakeries, Food, Australian\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"7:30-13:0\\\",\\\"Saturday\\\":\\\"7:30-13:0\\\",\\\"Thursday\\\":\\\"7:30-13:0\\\",\\\"Tuesday\\\":\\\"7:30-13:0\\\",\\\"Wednesday\\\":\\\"7:30-13:0\\\"},\\\"name\\\":\\\"Recipes Bakery & Gifts: An Australian Coffee House\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-09-26 01:45:54\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Terrific!! Try the cinnamon roll French toast, STUPID GOOD! We ordered the quiche Lorraine and they were out of the ingredients so they made us a broccoli & cheddar quiche instead, WHOA!! AMAZING!! Don't miss this place when visiting Santa Barbara, we will be back!! WHAT A GEM!!\\\"},{\\\"review_date\\\":\\\"2021-09-02 21:48:08\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Oh man oh man. There's like 4 breakfast sandwiches that I've had over the years on my travels and I still think about them to this very day. Add Recipes to the list! The jalape\u00f1o cheddar biscuit breakfast sandwich is just ...*chef's kiss*. Located in a quaint Victorian home, this bakery offers the most tasty home baked goods. I also tried a cinnamon roll that deserves its props. I wish I could have bought one of everything. The owner was working hard all alone; you can tell he is a master at his craft. Already looking forward to my next trip back to SB.\\\"},{\\\"review_date\\\":\\\"2021-08-13 19:38:08\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"This place is so cute! The bacon cheddar scone with homemade preserve, butter and homemade whipped cream is to die for!!! And it's gluten free. The icing on the cinnamon roll was superb and I'm usually not a cinnamon roll fan. And the fresh squeezed organs juice was very likely the best I have ever had!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Recipes Bakery & Gifts: An Australian Coffee House is a business located at 604 Santa Barbara St in Santa Barbara, California. The business operates during weekdays from 7:30 AM to 1 PM and Saturdays from 7:30 AM to 1 PM. The business has a rating of 4.5 stars and has been reviewed by three customers. All three reviews gave the business a rating of five stars and expressed their satisfaction with the quality of the food and the friendliness of the staff. The menu features breakfast items such as quiche, breakfast sandwiches, and baked goods such as cinnamon rolls and scones. One customer particularly praised the jalape\u00f1o cheddar biscuit breakfast sandwich, while another customer enjoyed a gluten-free bacon cheddar scone with homemade preserves. Overall, Recipes Bakery & Gifts: An Australian Coffee House appears to be a popular destination for breakfast and brunch in Santa Barbara.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:6600b55aa621c07b55c411997f7245eebcbe88a2c80b7654dcb93740b31d04f3",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17
+  ]
+}

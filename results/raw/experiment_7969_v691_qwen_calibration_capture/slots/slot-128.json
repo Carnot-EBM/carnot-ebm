@@ -1,0 +1,95 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.2989018689841032,
+  "exclusion_reason": null,
+  "family_id": "sha256:cadbabae7c540954b69fad98ed07f03047df0201f5ebe3f0394f573f483fdd91",
+  "input_tokens": 707,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 707,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 730
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:5d188e505960c2230f8404a53db54ea6c0358bc922374fb71432630d7680eea7",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832649,
+    "id": "chatcmpl-eDFHEPMHsvhEH0WbdTEqmUxyUM87pXKc",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.124,
+      "predicted_n": 23,
+      "predicted_per_second": 42.58281431671246,
+      "predicted_per_token_ms": 23.483652173913043,
+      "prompt_ms": 638.853,
+      "prompt_n": 629,
+      "prompt_per_second": 984.5770466758395,
+      "prompt_per_token_ms": 1.0156645468998409
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 707,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 730
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"555 Storke Rd, 3301\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":false,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":2.5,\\\"categories\\\":\\\"Cafes, Restaurants\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"0:0-0:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"0:0-0:0\\\",\\\"Sunday\\\":\\\"0:0-0:0\\\",\\\"Thursday\\\":\\\"0:0-0:0\\\",\\\"Tuesday\\\":\\\"0:0-0:0\\\",\\\"Wednesday\\\":\\\"0:0-0:0\\\"},\\\"name\\\":\\\"Tori's Oatmeal Lounge\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2016-03-15 02:03:25\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Pretty sure this place doesn't exist. If you go to the address there's just student housing.\\\"},{\\\"review_date\\\":\\\"2016-03-14 19:15:42\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"WHERE IS THIS PLACE??? The address led me to university housing and I was sorely disappointed by the lack of a lounge...I'll reform my rating when I can actually locate this place.\\\"},{\\\"review_date\\\":\\\"2016-02-27 20:34:41\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"Seems that there's only one regular that goes to the lounge. People come during random hours of the night\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"\\\"Tori's Oatmeal Lounge\\\" located at 555 Storke Rd, 3301, Goleta, California, is categorized under Cafes and Restaurants. The lounge offers free WiFi and outdoor seating and accepts reservations. However, there's no information about it offering take-out services or if it's suitable for groups. The ambiance is not defined. The business has a low overall rating of 2.5 stars. Customer reviews indicate confusion about the location of the establishment, with several reviews suggesting the address leads to student housing, not a restaurant. One reviewer mentioned that visitors come at random hours and there seems to be only one regular customer.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:d72c62de493b3ad57c9527ab06fca5e425b9b9e9995216d61afd301c217a9a92",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3
+  ]
+}

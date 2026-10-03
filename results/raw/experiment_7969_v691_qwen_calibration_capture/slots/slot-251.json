@@ -1,0 +1,112 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.790892546006944,
+  "exclusion_reason": null,
+  "family_id": "sha256:3889a0743dde764dd384e0f6cf0b718af124d65133d321794ddfb19d9ceaa045",
+  "input_tokens": 1233,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1233,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1257
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:aa97cd4af000ec7bdf3dc2dfca976091610b0c92b4d0f83680311b78351c3756",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832824,
+    "id": "chatcmpl-JXuHXzGjm0MUXFFpCSW6Yq1eAsdO5l7b",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 566.289,
+      "predicted_n": 24,
+      "predicted_per_second": 42.38118699109465,
+      "predicted_per_token_ms": 23.595375,
+      "prompt_ms": 1084.878,
+      "prompt_n": 1155,
+      "prompt_per_second": 1064.635839237223,
+      "prompt_per_token_ms": 0.9392883116883116
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1233,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1257
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"3811 Santa Claus Ln\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":true,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Delis, Restaurants, Grocery, American (New), Cafes, Coffee & Tea, Beer, Wine & Spirits, Food\\\",\\\"city\\\":\\\"Carpinteria\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"8:0-16:0\\\",\\\"Monday\\\":\\\"8:0-16:0\\\",\\\"Saturday\\\":\\\"8:0-16:0\\\",\\\"Sunday\\\":\\\"8:0-16:0\\\",\\\"Thursday\\\":\\\"8:0-16:0\\\",\\\"Tuesday\\\":\\\"8:0-16:0\\\",\\\"Wednesday\\\":\\\"8:0-16:0\\\"},\\\"name\\\":\\\"The Garden Market\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-12-02 14:17:12\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I love the garden market because it's a lovely cafe and breakfast spot that's misleading from the front entrance. When I first came here I assumed it was just a small cafe with a few tables inside, instead what I found was a lovely boutique and cafe with a huge garden back patio! Simply fantastic.\\\\n\\\\nThe food is typical morning bakery items and some hot dishes. I like to stick with a bagel or avocado toast. They also have breakfast burritos and sandwiches. I thought those were just okay but otherwise any bakery food has been great. A huge assortment of teas and coffees. Easy to please any guest.\\\\n\\\\nFrom my experience the service has always been great and friendly. You order at the counter and any food items they'll bring to your table. I feel like the service is super quick here, I've never had to wait long for food and the outside is so spacious that even when they get busy they can fit many.\\\\n\\\\nMy other favorite thing about this spot is their small store/boutique on the inside. They always have the cutest little dishtowels! There the secret is out. Love all of the small home and garden goods. A great little treat to be able to shop while brunching.\\\"},{\\\"review_date\\\":\\\"2021-10-21 19:43:17\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"I don't understand the hype. Most of their sandwiches/food items are average. Their California ciabatta super disappoints. Something about they way they make the egg or the type of cheese they use. The bread is not a good choice for it either. Plus, they are never very friendly and I've been there probably 5-10 times now.\\\"},{\\\"review_date\\\":\\\"2021-09-20 22:43:48\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"The very best sandwiches we've ever had!!!!!\\\\nA beautiful garden to eat your lunch in also \\\\nJust can't say enough about this hidden gem. \\\\nFound it accidentally while looking for the old Santa Claus lane I remembered as a child which is no longer there. \\\\nYou won't be disappointed with these delicious freshly made foods\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Nestled in the heart of Carpinteria, California, The Garden Market is a charming local business that offers a unique blend of dining, shopping, and relaxation. With a rating of 3.5 stars, this establishment has received glowing reviews for its delicious food, inviting atmosphere, and excellent customer service.\\n\\nCustomers praise the Garden Market for its expansive outdoor seating area, which offers a peaceful oasis in the midst of bustling Carpinteria. Many reviewers appreciate the misleading facade, which belies a spacious interior with a well-stocked boutique and plenty of room for casual dining. The menu features a variety of tasty options, including mouthwatering breakfast burritos, sandwiches, and baked goods. Reviewers particularly rave about the freshly brewed coffee and tea selection, as well as the ample parking and quick service.\\n\\nWhile some reviewers have criticized the Garden Market's prices as being slightly higher than average, most agree that the quality of the food and ambiance justify the cost. One reviewer notes that the California ciabatta sandwich is a particular letdown, while another notes that the friendliness of the staff can vary. However, the overwhelming consensus is that The Garden Market is a must-visit destination for anyone looking for a delightful dining and shopping experience in Carpinteria.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "calibration_replay",
+  "source_cluster_id": "sha256:7f4d477e56097a43fdd7a0f9ddfbef3d7a64d6fedfa1afb5695cf8fb21c465aa",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20
+  ]
+}

@@ -1,0 +1,109 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.2904865980381146,
+  "exclusion_reason": null,
+  "family_id": "sha256:2660d08115566e3d791238ff4204574f0031e308bbbf7931173337fd81dfe7af",
+  "input_tokens": 673,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 673,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 696
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:c2163cf1bec338a5ece286bd2afe64356cd5134d3ff920c6a8dd77a2008c1f19",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832878,
+    "id": "chatcmpl-mNvnEaxKQVatezQQE4aVulBtmDHionGd",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.712,
+      "predicted_n": 23,
+      "predicted_per_second": 42.53650741984642,
+      "predicted_per_token_ms": 23.509217391304347,
+      "prompt_ms": 612.144,
+      "prompt_n": 595,
+      "prompt_per_second": 971.9935178650775,
+      "prompt_per_token_ms": 1.0288134453781512
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 673,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 696
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"'Big Brother 25' Spoilers: Felica Tells Jag That Matt Wants To Target Him In The Double Eviction\\nBig Brother 25 (BB25) spoilers tease that Felica Cannon works to bring Jag Bains into her corner with the double eviction just around the corner. Big Brother Network reports that Felica chats with Jag in the Head of Household room, revealing Matt Klotz could be planning to target him in the double eviction.\\nFelica wants to make it to the final three. She knows she must make some big moves and create chaos to get in that position. The only way she knows to accomplish this is to create a wedge between Jag and Matt.\\nBig Brother 25 spoilers say that Felica tells Jag that Matt had a conversation with Cirie Fields, stating he was considering targeting him during the double eviction. Matt supposedly said that he worries he cannot beat Jag in the competitions and final two.\\nJoker Updates reports that the bombshell shocked Jag. He couldn't believe his ride or die, Matt, would throw him under the bus. Jag isn't sure he can trust Cirie either, now that he knows she was on board for Matt targeting him in the double eviction.\\nJag is considering keeping Blue Kim to have someone in his corner. Blue's game is as good as dead, but Jag considers asking everyone to keep her over America Lopez, to use her to put Matt and Cirie on the block.\\nBig Brother 25 spoilers say Felica is putting her game on the line. Once Cirie and Matt learn that she exposed their plan to Jag, she will have a massive target on her back going into the double eviction.\\nBB25 fans, do you think Matt will target Jag in the double eviction? Keep watching Big Brother 25, airing on CBS and streaming on Paramount Plus. Please share your thoughts with me in the comments section below. Remember to follow me to read more of my content.\", \"original_answer\": \"On 'Big Brother 25,' Felica Cannon tells Jag Bains that Matt Klotz may target him in the double eviction. This information leaves Jag considering keeping Blue Kim in the game to counter Matt and Cirie Fields' plan. Felicia risks having a target on her back by exposing the plan to Jag. Fans are left wondering if Matt will follow through with targeting Jag in the double eviction.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:69ab8f8d6f725f14235cf4270c4e18a27094b69c494fda4e7ff93b1dcf1418e3",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17
+  ]
+}

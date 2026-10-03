@@ -1,0 +1,108 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.790249674988445,
+  "exclusion_reason": null,
+  "family_id": "sha256:56df6dfa9b88f000cb7297400ab65760aa4ba8c52058ab96c3b70d765989f80d",
+  "input_tokens": 1246,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1246,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1270
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:579702cebe292bff38932a7f6bf41cbdf040b2a76b62faf7dd9f183c031ddb73",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832644,
+    "id": "chatcmpl-GzLk4tcIp9vO7Cx5RI2vtRS5AVes2A6S",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.638,
+      "predicted_n": 24,
+      "predicted_per_second": 42.429964040605476,
+      "predicted_per_token_ms": 23.568250000000003,
+      "prompt_ms": 1107.92,
+      "prompt_n": 1168,
+      "prompt_per_second": 1054.22774207524,
+      "prompt_per_token_ms": 0.9485616438356165
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1246,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1270
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"5980 Hollister Avenue\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":false,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":2.5,\\\"categories\\\":\\\"Tex-Mex, Tacos, Mexican, Restaurants, Fast Food, Breakfast & Brunch\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"8:0-0:0\\\",\\\"Monday\\\":\\\"8:0-0:0\\\",\\\"Saturday\\\":\\\"8:0-0:0\\\",\\\"Sunday\\\":\\\"8:0-0:0\\\",\\\"Thursday\\\":\\\"8:0-0:0\\\",\\\"Tuesday\\\":\\\"8:0-0:0\\\",\\\"Wednesday\\\":\\\"8:0-0:0\\\"},\\\"name\\\":\\\"Taco Bell\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-10-11 18:19:35\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I frequent this taco bell almost every week, and I have to say this is the taco bell to go in Goleta. The other location nearby is updated and looks a lot fancier and nicer, but the staff here is always very friendly to me and gets my order right and timely. I've never had an issue. The staff is all very helpful and has definitely came in clutch for all my late night taco bell cravings. i love you guys.\\\"},{\\\"review_date\\\":\\\"2021-07-21 01:40:32\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"I'm not much of a fast food connoisseur so I'm not the expert on how Taco Bell compares to other chains. \\\\nThey succeeded at timeliness of the order, it was complete right away, but no one helped me when I walked in to pick it up. They looked at me and then ignored me, so customer service wasn't great. It's also in a dirtier area and being able to see into the kitchen makes what your eating unappetizing because you see the uncleanliness of where your food is made.\\\\nWhen I ate my Crunchwrap supreme there was no crunch and the insides were bland and it was minimally filled. Pretty pathetic compared to the picture. I added my own cheese and sour cream and guacamole since they put little in. Even then it was just a mush pocket of bleh flavors. Definitely my first and last time at Taco Bell.\\\\n\\\\nMy fianc\u00e9 loves the Baja blast though!\\\"},{\\\"review_date\\\":\\\"2020-12-05 05:49:35\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Really wish no stars option existed for this review. The manager was so rude I just wonder who pooped in his Kellogg's in the morning. His attitude sucked to me and my friends and I felt like everything I said was burdening him. I have no idea how this guy became manager or what he had to do to get the position (wink) but I'll never go back again. Thanks dude you suck. Salvador more like SalvaDORK.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Sure! Here's an objective overview of Taco Bell located at 5980 Hollister Avenue in Goleta, CA based on the provided structured data:\\n\\nTaco Bell is a popular Tex-Mex restaurant located in Goleta, CA that serves a variety of tacos, burritos, and other Mexican-inspired dishes. The restaurant has a 2.5-star rating based on three reviews, with one reviewer giving it a perfect 5-star rating and two others leaving negative reviews. The positive review praises the staff for being friendly and efficient, while the negative reviews mention issues with customer service and the quality of the food.\\n\\nOne reviewer expressed disappointment with their experience, stating that the staff ignored them when they entered the restaurant and that the food was bland and lacking in quantity. Another reviewer reported poor customer service from the manager, who they felt was rude and unhelpful. However, the third reviewer enjoyed their Crunchwrap Supreme and appreciated the convenience of the drive-thru.\\n\\nThe restaurant is open seven days a week from 8:00 AM to 10:00 PM and offers outdoor seating, takeout, and WiFi. According to the attributes section, the restaurant does not offer reservations, valet parking, or validated parking, but it does have a large parking lot. The ambiance is described as casual and informal, with no music or upscale atmosphere.\\n\\nOverall, this Taco Bell location appears to have mixed reviews, with some customers praising the staff and convenience, while others have had negative experiences with the quality of the food and customer service.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:29a1d9a28bd563c1b494f2274d198a4138fa75580c4b0fe26e6e2b5cb9d5bf94",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+  ]
+}

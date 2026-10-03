@@ -1,0 +1,100 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.3338916830252856,
+  "exclusion_reason": null,
+  "family_id": "sha256:8dc2e8fdd6f7afcefb1afabcbedd157313dfe2097a8ec56eda2f3091ae6ad800",
+  "input_tokens": 788,
+  "invocation_finished_at": "2026-10-01T11:46:20.733406+00:00",
+  "invocation_started_at": "2026-10-01T11:46:19.399512+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 788,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 809
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:f58ea208cbc80a3364b66c7996c3556dbc47e7ca7b25532f89988576120e5141",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855180,
+    "id": "chatcmpl-yhGdjoHgFNNrFIUfmlHwwVw0SU102GOm",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 491.983,
+      "predicted_n": 21,
+      "predicted_per_second": 42.684401696806596,
+      "predicted_per_token_ms": 23.427761904761905,
+      "prompt_ms": 705.698,
+      "prompt_n": 710,
+      "prompt_per_second": 1006.0960920960525,
+      "prompt_per_token_ms": 0.9939408450704225
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 788,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 809
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"125 Harbor Way, Ste 8\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":null,\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":null},\\\"business_stars\\\":2.0,\\\"categories\\\":\\\"Restaurants, Delis, Food, Grocery\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":null,\\\"name\\\":\\\"Harbor Market & Deli\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2020-12-29 01:25:39\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"This was always a great little market, especially for boaters at the marina but their disregard for safety during covid has us trying to avoid going in for anything despite wanting to buy hot coffee & donuts in the morning, or sandwiches and six-packs of craft beer. The workers rarely wear masks and regularly allow customers to enter without masks. The shield at the counter is great but not enough. Shocked this no mask behavior has been accepted by the city for so many months despite the state mandate and posted signage upon entering the harbor area that masks are required.\\\"},{\\\"review_date\\\":\\\"2020-07-15 20:28:45\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"They don't wear masks or enforce them. It's a simple act that can potentially save many. Shameful\\\"},{\\\"review_date\\\":\\\"2020-07-15 05:41:04\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"The employees are not wearing face masks when serving customers, which endangers the entire community. I have reported them to the county because they are endangering the community and using  the ADA to try to justify their selfish actions.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Harbor Market & Deli is a local business located at 125 Harbor Way, Ste 8 in Santa Barbara, CA. According to the provided structured data, the business falls under the categories of Restaurants, Delis, Food, and Grocery. Unfortunately, there is no information available regarding the business hours.\\n\\nThe business has a rating of 2.0 stars based on customer reviews. The reviews highlight concerns about the business's disregard for safety during the COVID-19 pandemic. Customers have expressed disappointment regarding the lack of mask-wearing by both the staff and customers. Despite wanting to support the business by purchasing items like hot coffee, donuts, sandwiches, and craft beer, customers are hesitant due to the perceived safety risks.\\n\\nThe review mentions that the workers rarely wear masks and allow customers to enter without masks, which goes against the state mandate and posted signage in the harbor area. The business has been reported to the county for not enforcing mask-wearing and allegedly using the ADA as a justification for their actions.\\n\\nOverall, the Harbor Market & Deli has received negative feedback regarding their handling of COVID-19 safety measures, which has led some customers to avoid visiting the establishment.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "calibration_replay",
+  "source_cluster_id": "sha256:671dd9ea542a453283f2b57413b7c8773714ac16c03c72d14320c21514a2aba5",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ]
+}

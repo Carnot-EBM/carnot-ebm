@@ -1,0 +1,102 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.5132416560081765,
+  "exclusion_reason": null,
+  "family_id": "sha256:eb71035f01ad627c7d71c950f132f6f72856c9cf5fd6ee94457bef0d6d43ee3c",
+  "input_tokens": 879,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 879,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 903
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:2d911cee720750ee2b665401c5b6272cad0f620cdd2fae468d5510aef8ddae72",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832566,
+    "id": "chatcmpl-0wyybNWpgNtl4KFSGStPpLKZ4LFDmVsf",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 562.958,
+      "predicted_n": 24,
+      "predicted_per_second": 42.631954781706625,
+      "predicted_per_token_ms": 23.45658333333333,
+      "prompt_ms": 819.889,
+      "prompt_n": 801,
+      "prompt_per_second": 976.9615155222232,
+      "prompt_per_token_ms": 1.02358177278402
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 879,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 903
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"811 State St, unit E\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":true,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Delis, Gluten-Free, Fast Food, Salad, Sandwiches, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-16:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"11:0-18:0\\\",\\\"Sunday\\\":\\\"11:0-18:0\\\",\\\"Thursday\\\":\\\"11:0-17:0\\\",\\\"Tuesday\\\":\\\"11:0-17:0\\\",\\\"Wednesday\\\":\\\"11:0-17:0\\\"},\\\"name\\\":\\\"Pickles & Swiss\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-18 03:35:34\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"5/5 with the food and customer service. I've only had one time where my order was wrong but honestly didn't even mind because it was good regarles and their customer service is always so nice. I recommend their Chipotle Turkey Club it's always my go to. Having one of theirs sandwich always makes my day. :)\\\"},{\\\"review_date\\\":\\\"2022-01-16 23:32:45\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"It took more than an hour to get my half sandwich which they didn't tell me when I ordered it.\\\"},{\\\"review_date\\\":\\\"2022-01-14 00:47:39\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"I've tried this place a couple times and have always left disappointed. The place is too small a crowded for the workers. The food prep stations are ALWAYS messy and gross and there's a lot of cross contaminating. Food takes forevor even when there's no one there. The workers are so unwelcoming and often distracted when taking your order. The food taste like nothing which is crazy cause so many reviews are hyping up the flavor but I literally can't taste much other than the sauce they drench their sandwiches with. South Coast Deli is the way to go.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Sure! Here's an objective overview of Pickles & Swiss based on the provided structured data:\\n\\nPickles & Swiss is a deli located in Santa Barbara, California that offers a variety of delicious sandwiches, salads, and soups. They have a 4.5-star rating and are known for their excellent customer service and tasty food. Some reviewers have praised the Chipotle Turkey Club as their go-to item, while others have been disappointed with long wait times and messy food preparation areas. Despite some negative experiences, the majority of reviewers have enjoyed their visit and appreciated the friendly staff. Overall, Pickles & Swiss appears to be a solid choice for a quick bite or takeout meal in the area.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:40c49841e59ddd374cac9611b24b2132213b683dfa0c4df49773122f1be124c5",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ]
+}

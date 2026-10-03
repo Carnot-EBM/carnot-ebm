@@ -1,0 +1,119 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.7902788320207037,
+  "exclusion_reason": null,
+  "family_id": "sha256:670f8bbd2a2af61fd9d9b1ccccb0b1e20b8f10d2f2ed7b9026bc74946e9f76a7",
+  "input_tokens": 1336,
+  "invocation_finished_at": "2026-10-01T11:44:22.368589+00:00",
+  "invocation_started_at": "2026-10-01T11:44:20.578309+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 1336,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1358
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:a0806b1abde7b9c88f6555703ea1ff4cdb98d85c7c289afb6d1c8106f969cc35",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.95,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855062,
+    "id": "chatcmpl-i5x3vbDaYiecr0e8Vsx7cPZA42fICGrF",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 516.696,
+      "predicted_n": 22,
+      "predicted_per_second": 42.57822781674331,
+      "predicted_per_token_ms": 23.48618181818182,
+      "prompt_ms": 1162.078,
+      "prompt_n": 1258,
+      "prompt_per_second": 1082.5435125697243,
+      "prompt_per_token_ms": 0.9237503974562797
+    },
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 1336,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1358
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"28 Anacapa St, Ste E\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Wineries, Food, Breweries, Nightlife, Bars, Arts & Entertainment, Champagne Bars, Pubs, American (New), Brewpubs, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"12:0-23:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"12:0-23:0\\\",\\\"Sunday\\\":\\\"12:0-21:0\\\",\\\"Thursday\\\":\\\"12:0-21:0\\\",\\\"Tuesday\\\":\\\"12:0-21:0\\\",\\\"Wednesday\\\":\\\"12:0-21:0\\\"},\\\"name\\\":\\\"Brass Bear Brewing & Bistro\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-17 04:05:58\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"My wife and I were on a Sunday trip to Santa Barbara and I got their IPA, very good. The bartenders were nice enough, but I asked for 2 stickers, and on my bill, they were $3 a piece. Whenever I go to a brewery, they are usually free or $1. I was thinking, the bartender should have said, they are $3 a piece, which one do you want, or \\\\\\\"Here are are free ones, and here are the $3 ones.\\\\\\\" I realize I am a rube from Minneapolis, but please don't play me like a rube. I mean, for free, if I put this sticker up or post it on my social media page, isn't that worth $3? As I say to my wife, \\\\\\\"Just sayin'!\\\\\\\"\\\\n\\\\nAnyways, good little patio and pretty good beer. Looks like people liked their food too.\\\"},{\\\"review_date\\\":\\\"2021-11-18 19:22:34\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Super cute, super friendly place!  We are planning an event there, so we went to check it out.  The person we were supposed to meet with wasn't available, but a young lady named Oli jumped right it and handled our visit.  Oli is delightful and a great ambassador for the business!  She gave us a tour, let us know what areas could be reserved for us, gave us various options for food/drinks and more.  We had lunch there to try out the food and it was awesome.  (Watch out for the chipotle sauce on the shrimp.  It is definitely spicy, but so flavorful you can't stop eating it.)  The \\\\\\\"backyard\\\\\\\" sitting area is very nice and cozy. Great place to enjoy some sun while you eat and drink.  They also have relaxing shady spots and firepits for nighttime pleasure.  The area is pet and child friendly.  As we were eating someone came to us with the person we were to meet with on the phone.  She said they had forgot that was her one Saturday off, but she had a wonderful attitude and took all the time we needed to answer our questions.  \\\\n\\\\nWe are not local to this venue, so I had to do most of the planning for this event via phone and email.  Seth has been my primary contact and he has been great to work with.  He is very responsive (which I love!) and detailed the various options they offer.  All-in-all I can say they have been very accommodating and we are looking forward to our event there May 2022!\\\"},{\\\"review_date\\\":\\\"2021-11-06 23:36:48\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Good beer. Could do without the self referential photo story around the place. Happy you found yourselves on a trip - really. \\\\n\\\\nI wouldn't plaster those obnoxious smiles in my own living room.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Brass Bear Brewing & Bistro is a local brewery and restaurant located in Santa Barbara, CA. According to their online reviews, the establishment offers a cozy atmosphere with both indoor and outdoor seating, including a patio with fire pits and a \\\"backyard\\\" area. The menu features American cuisine, including burgers and salads, and they offer a variety of beers, including IPAs and seasonal brews. Customers have praised the friendly service, delicious food, and welcoming atmosphere, with one reviewer mentioning that the staff was accommodating and helpful during a recent event planning process. However, another reviewer noted that the pricing for stickers seemed high at $3 each. Overall, Brass Bear Brewing & Bistro seems to be a popular spot for locals and visitors alike, offering good food, drinks, and a comfortable environment.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_update",
+  "source_cluster_id": "sha256:3b30d899b82820cab1cfa0669114a68600b2fb3c20716a81181af0ca0564a135",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25
+  ]
+}

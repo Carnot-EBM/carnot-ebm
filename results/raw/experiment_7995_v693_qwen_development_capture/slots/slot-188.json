@@ -1,0 +1,116 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.7015748640988022,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:359a33f44f59fc15b25207ed3781119500e538ddaae160b63bbeccc3f1ba87c0",
+  "input_tokens": 1160,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1160,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1183
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:89af8509905eaf9c6e9ab9f23c20847a8763261a3d72c10fa936e41fbf70db18",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886105,
+    "id": "chatcmpl-IcAAVZJz0G4hWKGk8eFglfcNXZZPGdwO",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 542.338,
+      "predicted_n": 23,
+      "predicted_per_second": 42.408977427360796,
+      "predicted_per_token_ms": 23.57991304347826,
+      "prompt_ms": 1038.866,
+      "prompt_n": 1082,
+      "prompt_per_second": 1041.5202730669787,
+      "prompt_per_token_ms": 0.9601349353049907
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1160,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1183
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"Camino Real Marketplace, 6920 Market Pl Dr\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":3.0,\\\"categories\\\":\\\"Italian, Restaurants, Pizza\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:30-21:0\\\",\\\"Monday\\\":\\\"11:30-21:0\\\",\\\"Saturday\\\":\\\"11:30-21:0\\\",\\\"Sunday\\\":\\\"11:30-21:0\\\",\\\"Thursday\\\":\\\"11:30-21:0\\\",\\\"Tuesday\\\":\\\"11:30-21:0\\\",\\\"Wednesday\\\":\\\"11:30-21:0\\\"},\\\"name\\\":\\\"Pastavino\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2013-08-15 04:18:37\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"I took my family here after reading some of the reviews from my fellow yelpers but we were unimpressed. We ordered garlic bread, a focaccia urger, kids mac and cheese, and spaghetti with meatballs. The garlic bread was okay but didn't really taste like garlic. The mac and cheese was gritty and extremely hot when they served it (which I would prefer to cold but my 3 year old wasn't too happy about having to wait to eat it). We can usually tell if we are going to like an italian restaurant based on their red sauce and I would have to say it was just okay. The focaccia burger was also just okay. I don't think we'll try it again.\\\"},{\\\"review_date\\\":\\\"2013-07-29 05:17:04\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"It's amazing this restaurant is still open.  They have a really good beet salad, but the restaurant is almost always empty.  They recently took down an overhead portion above the bar and it's really lightened the place up.  I like the booths which give you the ability to have a private conversation and they're comfortable.  The bread is okay.  They often have coupons in the paper for buy one, get one free and that's what makes it worth coming back for (and I really like the beet salad).\\\"},{\\\"review_date\\\":\\\"2013-07-25 04:04:52\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I love this restaurant! From beginning to end we had an excellent experience.  Casey our waiter was attentive and friendly.  We had italian sodas and we were so happy to get a huge carafe of refills, then we had delicious garlic bread and salad.  The portions are big and we shared a salad and it was plenty for two.  We had the ahi and it was tasy, followed by the penne pasta which we also shared and they kindly split our entrees into two plates for us.  The finale was the s'mores dessert which is fun and delicious.  We were visiting from out of town or I would frequent this restaurant.  Casey made us want for nothing and I so appreciate good service AND good food, that makes for a great dining experience!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Pastavino is an Italian restaurant located in Goleta, California, at the Camino Real Marketplace. They offer a selection of pizza and other Italian dishes. The restaurant is open from 11:30 am to 9:00 pm every day of the week. Pastavino offers amenities like free WiFi, outdoor seating, takeout, and is good for group dining. However, the ambiance is casual with no live music. The restaurant has a 3-star average rating, with varying customer reviews. Some customers enjoyed the large portions, service, and certain dishes like the beet salad and ahi. However, others found the food to be just okay, mentioning dishes like the garlic bread, mac and cheese, and focaccia burger. Despite some negative reviews, the restaurant continues to attract customers with features like booth seating for private conversations and regular discounts advertised in local papers.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "d672340c2127237d01b919b0baa2b79b92b5cfa82e63870db7b2db66ef3902e8",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ]
+}

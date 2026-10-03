@@ -1,0 +1,122 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.5905155319487676,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:9cf91f7d5a44594fcdefe829898a2a0fe4816aa9103155a79166eaa91eb17aa3",
+  "input_tokens": 1003,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1003,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1026
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:71a6a27e474ae617699daae2e99cbe05057fc3d21893e0c545b83128fe1a06aa",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886116,
+    "id": "chatcmpl-4kfzF6m9BlBB8Q3Y2uHYG8uWfd3Degts",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 545.828,
+      "predicted_n": 23,
+      "predicted_per_second": 42.13781630843416,
+      "predicted_per_token_ms": 23.73165217391304,
+      "prompt_ms": 927.673,
+      "prompt_n": 925,
+      "prompt_per_second": 997.118596746914,
+      "prompt_per_token_ms": 1.0028897297297297
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1003,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1026
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"An American teenager who helped her boyfriend stuff her mother's lifeless body into a suitcase at an upmarket hotel in Bali has been sentenced to 10 years in prison. Heather Mack, 19, who gave birth to her own daughter just weeks ago, was found guilty with her 21-year-old boyfriend, Tommy Schaefer, of killing Sheila von Wiese-Mack on the Indonesian island last August. Schaefer was sentenced to 18 years in prison for battering von Wiese-Mack to death in room 317 of the St. Regis Bali Resort. Schaefer had claimed he killed his girlfriend's mother in self-defense after a violent argument erupted over the young couple's relationship. The beaten body of von Wiese-Mack was found in a large silver suitcase that the couple had loaded in a waiting taxi outside the resort.  They told the driver they'd be back soon, but after a lengthy wait he alerted hotel staff who inspected the bag, noticed blood and called police. The lovers were arrested after being found the following morning at another hotel about 15 kilometers (nine miles) away. Inside the bag, von Wiese-Mack's body had been wrapped in hotel bedding. A forensic examination determined that she had died from a blunt force to the face that fractured her facial bones and caused her to suffocate. Described as a Chicago socialite, von Wiese-Mack was reported to have a troubled relationship with her teenage daughter. Schaefer denied that the murder was premeditated. He told the court that he acted in self-defense when his girlfriend's mother started strangling him during an argument in the Bali hotel room. \\\"She squeezed my neck for about 20 to 30 seconds. I couldn't breathe. I had blood going to my head and my eyes were so watery,\\\" Schaefer told the court. He said he reached for a nearby bowl \\\"before she could.\\\"  \\\"I couldn't see for a moment because my eyes were so watery and I was distraught, I was in a state of mind, I had no idea what was happening. I was almost about to black out. And I grabbed it and I started swinging,\\\" he told the court. Mack told the court her mother had threatened to kill the couple's unborn baby, according to local media. The prosecutor alleged that the two planned the murder, because Mack's mother disapproved of their relationship. After being detained by police, the couple initially claimed they'd been taken captive at the resort by an armed gang, whose members killed Heather's mother, and from whom they managed to escape. The two were tried separately, though both trials were heard by the same court, with the same prosecutors. Prosecutors had sought a prison sentence of 18 years for Schaefer and 15 years for Mack. Under Indonesian law, Mack will be allowed to keep her baby with her in prison for two years, after which she can nominate who should take custody. Journalists Fairuz Husaini and Ragil Lestari and CNN's Kathy Quiano contributed to this report.\\n\", \"original_answer\": \"Heather Mack, a 19 year old American teenager, has been sentenced to 10 years in prison, while her 21 year old boyfriend, Tommy Schaefer, has been sentenced to 18 years. The pair were found guilty of killing Mack's mother, Sheila von Wiese-Mack, at the St. Regis Bali Resort in Indonesia last August. The couple stuffed her body into a suitcase which was later discovered by hotel staff. Schaefer claims that he acted in self-defense during an argument with von Wiese-Mack, who disapproved of their relationship. Mack, who recently had a baby, will be allowed to keep her child with her in prison for two years.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "f13bf2c57d3ae2545a8b1d65311adb4f775f8736fd6ba0cee9a66bd6322d009f",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25
+  ]
+}

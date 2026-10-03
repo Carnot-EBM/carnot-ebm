@@ -1,0 +1,107 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.3009126060060225,
+  "exclusion_reason": null,
+  "family_id": "sha256:767f7303d58f4ee63b3e30132f08c973581b62c70e0a790dd57a974e9939c270",
+  "input_tokens": 710,
+  "invocation_finished_at": "2026-10-01T11:41:24.309515+00:00",
+  "invocation_started_at": "2026-10-01T11:41:23.008601+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 1,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 710,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 734
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:050eaac559d78ca3e975af2e55c06996a0803c470593de0ee1e90b581ef5bebe",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 1\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790854884,
+    "id": "chatcmpl-qwGMMZR9Ch2mxAs4arGqmjFpTwxBu7iy",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 555.21,
+      "predicted_n": 24,
+      "predicted_per_second": 43.226887123790995,
+      "predicted_per_token_ms": 23.133750000000003,
+      "prompt_ms": 617.232,
+      "prompt_n": 632,
+      "prompt_per_second": 1023.9261736267724,
+      "prompt_per_token_ms": 0.976632911392405
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 710,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 734
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:1 In the next decade upwards of 100 billion objects from smartphones to street lamps and our cars will be connected together via a vast \u2018internet of everything\u2019. 2  This will impact every aspect of our lives-for example it could transform the criminal justice system. Advances in AI will gather pace in the next decade. 2  For example, by 2025, the interfaces to all our devices from phones to computers, cars and home appliances will be highly intelligent and adaptive-learning from our behaviours and choices and anticipating our needs. 3  Internet of Life.\\\\n\\\\npassage 2:1 Internet of Life. 2  In the next decade upwards of 100 billion objects from smartphones to street lamps and our cars will be connected together via a vast \u2018internet of everything\u2019.3  This will impact every aspect of our lives-for example it could transform the criminal justice system. Advances in AI will gather pace in the next decade. 2  For example, by 2025, the interfaces to all our devices from phones to computers, cars and home appliances will be highly intelligent and adaptive-learning from our behaviours and choices and anticipating our needs. 3  Internet of Life.\\\\n\\\\npassage 3:We're just at the beginning of the beginning of all these kind of changes. There's a sense that all the big things have happened, but relatively speaking, nothing big has happened yet. In 20 years from now we'll look back and say, 'Well, nothing really happened in the last 20 years.'.The Edge Kevin Kelly. The world is hitting its stride in technological advances, and futurists have been making wild-sounding bets on what we'll accomplish in the not-so-distant future.e're just at the beginning of the beginning of all these kind of changes. There's a sense that all the big things have happened, but relatively speaking, nothing big has happened yet. In 20 years from now we'll look back and say, 'Well, nothing really happened in the last 20 years.'.\\\\n\\\\n\\\",\\\"question\\\":\\\"the world in ten years from now\\\"}\", \"original_answer\": \"Based on the given passages, in ten years from now, the world will be heavily influenced by the internet of everything, where billions of objects will be connected together. This will impact various aspects of our lives, including the potential transformation of the criminal justice system. Advances in artificial intelligence will also gather pace, with highly intelligent and adaptive interfaces for our devices. However, the passages do not provide specific details about other potential changes in the world.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_update",
+  "source_cluster_id": "sha256:ed9f74c472f7462c7f1d777be966d474580743bc1434dd2bbc158c1f5bf774f3",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ]
+}

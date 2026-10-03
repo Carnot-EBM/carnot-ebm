@@ -380,3 +380,11 @@ As of September 27, Tufa Labs leads the provisional public leaderboard with **27
 
 **September 3 — New benchmark results and reporting policy:** ARC Prize reported GPT-6 Astra scoring **62.7%** with its Standard harness and **99.9%** with its Provider Adapter harness on ARC-AGI-3 Semi-Private. It also announced that its benchmark leaderboard will report both harnesses’ results with explicit evaluation-condition labels. [Official announcement](https://arcprize.org/blog/astra)
 
+## 2026-10-01 13:11 UTC -- NEW
+
+**September 29 — New benchmark results:** ARC Prize verified GPT-6.1 Sol scoring **52.7%** on ARC-AGI-3 Semi-Private with the Standard harness (max reasoning) and **96.4%** with the Provider Adapter harness (xhigh reasoning). [Official results](https://arcprize.org/results/openai-gpt-6-1-sol)
+
+## 2026-10-02 13:12 UTC -- NEW
+
+**September 3 — New benchmark results:** ARC Prize announced GPT-6 Astra scored **62.7%** on ARC-AGI-3 Semi-Private with the Standard harness (max reasoning) and **99.9%** with the Provider Adapter harness (high reasoning), establishing new state-of-the-art scores. ARC Prize also announced it would publish both harness configurations on its leaderboard. [Official announcement](https://arcprize.org/blog/astra)
+

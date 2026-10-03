@@ -1,0 +1,267 @@
+{
+  "code_config_hashes": [
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8023_v695_likelihood_calibration.py",
+      "sha256": "sha256:10ea5d6a9bf8d7fc1bedd32f8ca5ea3498f9e003905a9fb239efcae512d42569"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/likelihood_calibration_8023.py",
+      "sha256": "sha256:6b5f119b4a476b3dba84e13c395c3fbbd6b80a5749d8948d6366e0bc1ade6a3c"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/likelihood_capture_8023.py",
+      "sha256": "sha256:0878d90a54ddbef66a32a34bb4ebd5e57bb4c14669f70ec5ff86ececdd0ee261"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8023_v695_likelihood_calibration.py",
+      "sha256": "sha256:601263e7dd24c0dc9cb8317c36d390745e3ba7abd445fd60814e3b39317ff205"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_likelihood_calibration_8023.py",
+      "sha256": "sha256:9429d2fea17234190abc0634bf97a177af7cdc8ed3a9a9c09c3c925ba0ff77d7"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/fixed_answer_likelihood_8022.py",
+      "sha256": "sha256:4902581c5675957c0c251905ff077e38b5dcfc6600c8b505be5cdff64ad12afe"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/likelihood_runtime_8022.py",
+      "sha256": "sha256:fff3f68b06c3ce867007f4e18c1a81142f04f486e4ccd65dff1b5e8ac4942aca"
+    }
+  ],
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "run",
+        "--rcfile=/tmp/carnot-8023-q_v60l8m/coverage.ini",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_likelihood_calibration_8023.py"
+      ],
+      "name": "focused",
+      "scope": "owned",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "combine",
+        "--rcfile=/tmp/carnot-8023-q_v60l8m/coverage.ini",
+        "/tmp/carnot-8023-q_v60l8m"
+      ],
+      "name": "combine",
+      "scope": "owned",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "json",
+        "--rcfile=/tmp/carnot-8023-q_v60l8m/coverage.ini",
+        "--fail-under=100",
+        "-o",
+        "/tmp/carnot-8023-q_v60l8m/coverage.json"
+      ],
+      "name": "coverage",
+      "scope": "owned",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_source_boundary_7852.py",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_current_work_receipt.py",
+        "tests/python/test_qwen_development_capture_7995.py",
+        "tests/python/test_experiment_7995_v693_qwen_development_capture.py",
+        "tests/python/test_llama_cpp_process.py"
+      ],
+      "name": "consumers_E2E015_7995",
+      "scope": "owned",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_7868_v683_intervention_protocol.py",
+        "--date",
+        "20260929",
+        "--fixture-e2e",
+        "/tmp/carnot-8023-q_v60l8m/e2e016.json"
+      ],
+      "name": "E2E016_fixture",
+      "scope": "owned",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_7868_v683_intervention_protocol.py",
+        "--date",
+        "20260929",
+        "--cold-replay",
+        "/tmp/carnot-8023-q_v60l8m/e2e016.json"
+      ],
+      "name": "E2E016_replay",
+      "scope": "owned",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "ruff",
+        "check",
+        "python/carnot/experiment_8023_v695_likelihood_calibration.py",
+        "python/carnot/verify/likelihood_calibration_8023.py",
+        "python/carnot/inference/likelihood_capture_8023.py",
+        "scripts/experiments/experiment_8023_v695_likelihood_calibration.py",
+        "tests/python/test_likelihood_calibration_8023.py"
+      ],
+      "name": "ruff",
+      "scope": "owned",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_8023_v695_likelihood_calibration.py",
+        "python/carnot/verify/likelihood_calibration_8023.py",
+        "python/carnot/inference/likelihood_capture_8023.py",
+        "scripts/experiments/experiment_8023_v695_likelihood_calibration.py",
+        "tests/python/test_likelihood_calibration_8023.py"
+      ],
+      "name": "format",
+      "scope": "owned",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "mypy",
+        "--strict",
+        "python/carnot/experiment_8023_v695_likelihood_calibration.py",
+        "python/carnot/verify/likelihood_calibration_8023.py",
+        "python/carnot/inference/likelihood_capture_8023.py",
+        "scripts/experiments/experiment_8023_v695_likelihood_calibration.py"
+      ],
+      "name": "mypy",
+      "scope": "owned",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "python/carnot/experiment_8023_v695_likelihood_calibration.py",
+        "python/carnot/verify/likelihood_calibration_8023.py",
+        "python/carnot/inference/likelihood_capture_8023.py",
+        "scripts/experiments/experiment_8023_v695_likelihood_calibration.py",
+        "tests/python/test_likelihood_calibration_8023.py"
+      ],
+      "name": "spec",
+      "scope": "owned",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_likelihood_protocol_8022.py"
+      ],
+      "name": "Exp8022_fixtures",
+      "scope": "owned",
+      "timeout_s": 180
+    }
+  ],
+  "methods": {
+    "authenticity_floor_seconds": 2,
+    "call_seconds": 120,
+    "comparator_selection": "lowest_tune_BCE_then_registered_control_order",
+    "costs": {
+      "accept_unsupported": 5,
+      "correct": 0,
+      "escalate": 0.5,
+      "reject_supported": 1
+    },
+    "cpu_training_seconds": 120,
+    "duplicate_tolerance": 1e-06,
+    "eval_label_access_count": 0,
+    "exposure": "all roles retain historical development exposure",
+    "feature_names": [
+      "full_mean_nll",
+      "no_source_minus_full",
+      "removal_minus_full",
+      "q"
+    ],
+    "feature_signs": "unconstrained_fit_only",
+    "forward_budget": 384,
+    "max_iterations": 1000,
+    "model_work_seconds": 2400,
+    "ridge_grid": [
+      0.001,
+      0.01,
+      0.1,
+      1
+    ],
+    "seed": 69523,
+    "source_roles": {
+      "fit": 64,
+      "tune": 32
+    },
+    "support_floors": {
+      "fit": [
+        48,
+        8
+      ],
+      "tune": [
+        24,
+        4
+      ]
+    },
+    "thresholds": {
+      "accept_below": 0.1,
+      "reject_above": 0.5
+    },
+    "tune_selection": "lowest_tune_BCE_then_grid_order",
+    "views": [
+      "full",
+      "duplicate",
+      "no_source",
+      "removed_chunk"
+    ]
+  }
+}

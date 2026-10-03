@@ -1,0 +1,105 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.2801856529549696,
+  "exclusion_reason": null,
+  "family_id": "sha256:7dd817ab23b81364b6fd440b915570c43f3029953e6c24be0f6498042eb336c5",
+  "input_tokens": 622,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 4,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 622,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 646
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:7629b4a1c6c878abb9768ece4f24623128c562f5b3b5f3b98e1d2c9edd90039f",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 4\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832688,
+    "id": "chatcmpl-lo36l5doEesKLc9DyvOnuBFvX3HwaCLK",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.708,
+      "predicted_n": 24,
+      "predicted_per_second": 42.499840625597656,
+      "predicted_per_token_ms": 23.5295,
+      "prompt_ms": 583.857,
+      "prompt_n": 544,
+      "prompt_per_second": 931.7349967543423,
+      "prompt_per_token_ms": 1.073266544117647
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 622,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 646
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Knowing how to grow your own cat grass is beneficial for both you and your kitty. Let's take a look at some of those benefits. Adds roughage to your cat's diet providing health benefits such as adding fiber and vitamins to your cat's diet. Fiber and vitamins are vital to the overall health of your pet.\\\\n\\\\npassage 2:The grass will last anywhere from 1 to 3 weeks. The grass can be kept indoors or out for your pet to graze on. \u201cFresh is Best\u201d for full nutritional benefits. Like all living plants, the grass needs water and natural light to grow. To extend the life of the cat grass it can be transplanted into a larger pot with more soil, and/or refrigerated when not in use. The best way to water is to run the water through the container once a day, or more if necessary. If kept refrigerated, water the grass less often. DO NOT let the grass sit in standing water as this can cause mold. Get your Grow Your Own Pet Treat seed Pack with three times the seed and start again! Tags: care for cat grass, grass for pets, grow your own grass, pet grass.\\\\n\\\\npassage 3:Here's How To Grow Cat Grass For Your Kitty. 1) Fill a container with drainage holes nearly to the top with moist potting soil (we use organic potting soil) Adds roughage to your cat's diet providing health benefits such as adding fiber and vitamins to your cat's diet.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to care for cat grass\\\"}\", \"original_answer\": \"To care for cat grass, ensure that it has access to natural light and water. It is recommended to water it once a day, or more if necessary, by running water through the container. However, avoid letting the grass sit in standing water as this can cause mold. The grass can be kept either indoors or outdoors. If you want to extend its life, which is typically 1 to 3 weeks, you can transplant it into a larger pot with more soil or keep it refrigerated when not in use. If kept refrigerated, you should water the grass less often.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:7c925e19f7a659a6181ff0050eb0d26ecaf06925716743c8dd20f0747fc6df3c",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ]
+}

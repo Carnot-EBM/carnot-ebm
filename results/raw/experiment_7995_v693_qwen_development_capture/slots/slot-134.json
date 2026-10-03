@@ -1,0 +1,106 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.5285764830186963,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:023d913e4ad30b5d0d7174643e6b7291a6cb54a78381385e552d50816ea32b4a",
+  "input_tokens": 916,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 916,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 939
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:443c0916f30fbe666c6881ad28dcc353864dc7317ff450a37c7ab118a27f997b",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886026,
+    "id": "chatcmpl-TaYaK372tcUsZjYeqE2mBfEwfELDde8C",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.656,
+      "predicted_n": 23,
+      "predicted_per_second": 42.462374643685294,
+      "predicted_per_token_ms": 23.550260869565214,
+      "prompt_ms": 853.04,
+      "prompt_n": 838,
+      "prompt_per_second": 982.3689393228923,
+      "prompt_per_token_ms": 1.0179474940334128
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 916,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 939
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"1812 Cliff Dr\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":null,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":true,\\\"intimate\\\":null,\\\"romantic\\\":null,\\\"touristy\\\":false,\\\"trendy\\\":null,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":false,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Tapas Bars, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"17:0-21:45\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"17:0-21:45\\\",\\\"Thursday\\\":\\\"17:0-21:45\\\",\\\"Tuesday\\\":\\\"17:0-21:15\\\",\\\"Wednesday\\\":\\\"17:0-21:15\\\"},\\\"name\\\":\\\"Alcazar Tapas Bar\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-19 03:29:02\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Awesome service, nice ambiance and good service! Will come back in next trip to Santa Barbara.  Recommended local place hidden treasure!\\\"},{\\\"review_date\\\":\\\"2021-11-01 21:41:41\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"I don't mind spending $13 on an interesting cocktail--particularly one that tastes good.  However, when it arrives quite low in the class, it is not only a disappointment, but also a rip off.  Drink arrived less than half full.  Waitress was a bit haughty, so I didn't want to deal with bringing it to her attention.\\\"},{\\\"review_date\\\":\\\"2021-09-30 07:37:08\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"As a local I have loved Al's Alcazar and Milk & Honey since the beginning of time. Lamborghini Sliders are a must, Pork and Shrimp Tacos always. Menu has changed slightly over the years however, \\\\\\\"Date with a Pig\\\\\\\", salty sweetness is yum yum deliciousness always and forever. Shrimp and Grits and The Heat of Passion are all must have go too's. Sit in Nicole's section, she is heaven sent and her lighthearted sweet personality will make your week right!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Located at 1812 Cliff Dr in Santa Barbara, CA, Alcazar Tapas Bar is a trendy tapas bar and restaurant with a 4-star rating. The establishment is open Tuesday to Saturday from early evening to late night. Street and lot parking are available, and the restaurant is ideal for group dining. However, they do not take reservations or offer takeout. The ambiance is hipster, and outdoor seating is available, but the establishment does not provide Wi-Fi.\\n\\nCustomer reviews highlight the excellent service, pleasant ambiance, and good food. One reviewer described it as a \\\"hidden treasure\\\" and plans to return on their next trip to Santa Barbara. The Lamborghini Sliders, Pork and Shrimp Tacos, and \\\"Date with a Pig\\\" dish have been specifically recommended. Some customers have had issues with the portion size of drinks and the attitude of some staff. Despite this, Alcazar Tapas Bar is admired by locals and visitors alike.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "62c80cba891b34c90d7b7bd6951ef31d06c966eef77a3549e08150e304f117c2",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ]
+}

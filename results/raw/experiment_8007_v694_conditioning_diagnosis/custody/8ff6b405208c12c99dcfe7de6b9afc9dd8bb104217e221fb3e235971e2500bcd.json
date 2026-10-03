@@ -1,0 +1,112 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.3052229289896786,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:e44ea7a533a66f03d48b29f569d5b180dfabb243007a6508ae8b9cf3dde4ad30",
+  "input_tokens": 720,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 720,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 743
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:dac909887cecded0565dd28c725a35217fd24e18bae1e18d84c4c98122bf95ab",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886060,
+    "id": "chatcmpl-n5tyXh9mjuh2ny05RTeDk5Sm9NUU8iYt",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.102,
+      "predicted_n": 23,
+      "predicted_per_second": 42.50584917446249,
+      "predicted_per_token_ms": 23.526173913043475,
+      "prompt_ms": 644.541,
+      "prompt_n": 642,
+      "prompt_per_second": 996.0576596368578,
+      "prompt_per_token_ms": 1.0039579439252337
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 720,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 743
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Place meat on grill rack over heat. Cover the grill.) Remove steaks from grill; cover and let stand for 5 minutes. For more tenderloin steak recipes, see: Grilled Steak and Peppers Grilled Beef Fillet with Portobello Relish Beef Tenderloins with Wine Sauce Try filet mignon! Our best filet mignon cooking tips.tep 2: Roast or grill the tenderloin. Roast: Browning the tenderloin first is optional, but it does caramelize the outside and lock in the juices. In a large skillet heat olive oil over medium-high heat.\\\\n\\\\npassage 2:Start with beef tenderloin steaks cut 3/4 inch to 1 inch thick (1 inch for grilling). Trim fat from steaks. Season as desired. Timings below are based on meat removed directly from the refrigerator.tep 2: Roast or grill the tenderloin. Roast: Browning the tenderloin first is optional, but it does caramelize the outside and lock in the juices. In a large skillet heat olive oil over medium-high heat.\\\\n\\\\npassage 3:1 Let the steak sear for 1 minute. 2  Place the entire pan in the oven for about 5 minutes. 3  Poke the fleshy lump at the base of your palm, where it intersects with your thumb. Remove the steaks from the pan and place to the side, in a warm location, on a plate. 2  They will continue to (carryover) cook, on their own. 3  This should bring them up to a nice medium-rare, while also allowing the muscle to relax, again, and the juices to settle within the meat.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to cook a tenderloin steak in the oven\\\"}\", \"original_answer\": \"Begin by trimming fat from your beef tenderloin steaks, which should be cut 3/4 inch to 1 inch thick. Season as desired. Optionally, you can brown the tenderloin first in a large skillet with olive oil over medium-high heat to caramelize the outside and lock in the juices. After, place the steak in a pan and sear for 1 minute. Then, place the entire pan in the oven for about 5 minutes. Remove the steaks from the oven and place them to the side in a warm location on a plate. They will continue to cook on their own, bringing them to a nice medium-rare while allowing the muscle to relax and the juices to settle within the meat.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "23fc389af092ceee76582f8c85e5323f9e84f6b158c53ea78881f46102e8224e",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ]
+}

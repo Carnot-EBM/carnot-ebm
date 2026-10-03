@@ -1,0 +1,98 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.413140463992022,
+  "exclusion_reason": null,
+  "family_id": "sha256:714dfd8ccf8cd9d9852cf90f655ac936733bcff8f01996d70deeaebdf440a86c",
+  "input_tokens": 866,
+  "invocation_finished_at": "2026-10-01T11:41:27.102968+00:00",
+  "invocation_started_at": "2026-10-01T11:41:25.689829+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 866,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 887
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:0d136fae7d1a45c4e23c84619412e8e974d7218ac2da148545b05bae6939a382",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790854887,
+    "id": "chatcmpl-jewEb2KOXpAUZC0s3FFNA8KOv2twvtlM",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 484.615,
+      "predicted_n": 21,
+      "predicted_per_second": 43.33336772489502,
+      "predicted_per_token_ms": 23.076904761904764,
+      "prompt_ms": 792.439,
+      "prompt_n": 788,
+      "prompt_per_second": 994.3983069990246,
+      "prompt_per_token_ms": 1.0056332487309645
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 866,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 887
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"163 S Turnpike Rd\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":null,\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":false,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":1.5,\\\"categories\\\":\\\"Food, Specialty Food, Grocery, Delis, Bakeries, Restaurants, Health Markets\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":null,\\\"name\\\":\\\"Haggen Food & Pharmacy\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2015-09-29 21:56:52\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"We all know these guys are the worst, but STALE ICE CREAM, really?\\\\nMy Thrifty brand Chocolate Malted Krunch ice cream had stale, gummy malt balls :(\\\"},{\\\"review_date\\\":\\\"2015-08-24 04:35:45\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"@$!# you, Haggen!\\\\n\\\\nI was happy with my old vons who was just a block away.  Now I have to drive an exit away to the cheaper ralphs. Let's not forget that you laid off all the employees who have been there for years.\\\\n\\\\nBack to hell, demons! Back to hell!\\\"},{\\\"review_date\\\":\\\"2015-08-04 17:42:35\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Worst grocery store in the world get outta Santa Barbara you SUUUUUUCK!!!!! Prices are too high for non organic food acting like it's organic n healthier just cause they don't package their produce so it's fresher even tho it's the same shit just trying to take our money, still going to Von's in other locations and by the way your stores are like ghost towns you ain't gonna survive hahahahah\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Haggen Food & Pharmacy, located at 163 S Turnpike Rd in Goleta, CA, is a local business that offers a variety of food and grocery products. The business has several categories including Food, Specialty Food, Grocery, Delis, Bakeries, Restaurants, and Health Markets. The business does not provide information about their hours of operation.\\n\\nAccording to customer reviews, Haggen Food & Pharmacy has received a low average rating of 1.5 stars. Customers have expressed dissatisfaction with various aspects of the business. One customer complained about the quality of their ice cream, specifically mentioning stale and gummy malt balls. Another customer expressed frustration with the business's recent changes, stating that they were happier with the previous grocery store option and now have to travel further for cheaper prices. The customer also mentioned layoffs of long-term employees as a point of contention. A third customer criticized the business for high prices on non-organic food and accused them of misleading customers by not packaging their produce. The customer also doubted the business's ability to survive in the market.\\n\\nBased on the provided structured data and customer reviews, it seems that Haggen Food & Pharmacy has faced criticism for the quality of their products, pricing, and recent changes.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_admission",
+  "source_cluster_id": "sha256:1f0a0c3cf94957df2c76d92c8504ac8367661183bcff4591b02451c3b732807f",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ]
+}

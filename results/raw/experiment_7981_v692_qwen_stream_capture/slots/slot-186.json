@@ -1,0 +1,110 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.630048008984886,
+  "exclusion_reason": null,
+  "family_id": "sha256:c34069c586334455810cd0e0fcc71e2186e609e645e37d88784b99d225b16037",
+  "input_tokens": 1018,
+  "invocation_finished_at": "2026-10-01T11:45:37.414937+00:00",
+  "invocation_started_at": "2026-10-01T11:45:35.784887+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1018,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1042
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:d2cf95d2b13ca73449cb0dee1b39af82cdfb610c002ffe2c17a534b4785ea1aa",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855137,
+    "id": "chatcmpl-xh783R4rsVzac8WO35LjmVN32OGpk9Vl",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 571.72,
+      "predicted_n": 24,
+      "predicted_per_second": 41.9785909186315,
+      "predicted_per_token_ms": 23.82166666666667,
+      "prompt_ms": 927.641,
+      "prompt_n": 940,
+      "prompt_per_second": 1013.3230419957721,
+      "prompt_per_token_ms": 0.9868521276595744
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1018,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1042
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"6831 Hollister Ave, Ste L\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":3.0,\\\"categories\\\":\\\"Vietnamese, Restaurants, Noodles\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"10:0-22:0\\\",\\\"Monday\\\":\\\"10:0-21:0\\\",\\\"Saturday\\\":\\\"10:0-22:0\\\",\\\"Sunday\\\":\\\"10:0-21:0\\\",\\\"Thursday\\\":\\\"10:0-21:0\\\",\\\"Tuesday\\\":\\\"10:0-20:0\\\",\\\"Wednesday\\\":\\\"10:0-21:0\\\"},\\\"name\\\":\\\"Saigon Noodle House\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-12 01:28:49\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Always go here when I need a bowl of feel good food. Hits the spot every time with fresh veggies and jalape\u00f1os, I usually dine in and enjoy the fresh bowl of noodles and tofu. Highly recommend!! Have to stop in every few months to get my fixins.\\\"},{\\\"review_date\\\":\\\"2021-12-10 05:24:21\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Staff including owners were super rude. We felt very unwelcomed. They don't care whether they have customers. Never coming back due to their horrible service. If you're in the mood for noodles go to Noodle city on Hollister Ave. Their noodles and services are way better.\\\"},{\\\"review_date\\\":\\\"2021-12-10 04:02:48\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"I placed an order for this place on an app. I walked in and the girl at the register was so rude and made me believe that I had placed my order on a scam website and they completely disregarded me, even the older vietnamese man told me they didn't partner with outside services and they ignored me. \\\\n\\\\nI went to grab my phone to show them the app, and the young girl grabbed my  phone and went through my order and continued to tell me there was nothing she could do.  She was very rude to me and made me feel like my concern didn't matter.\\\\n\\\\nI called the app customer service and they confirmed the order I had placed.. I walked back inside and my order was magically there.. they continued to argue that I had called in my order and didn't use an app. RELUCTANT TO APOLOGIZE FOR IGNORING ME AND NOT DOING HER JOB \\\\n\\\\nMAYBE IF THEY WOULD HAVE JUST PUT MY NAME IN TO THEIR SYSTEM THEY WOULD HAVE KNOWN, no matter how it was placed!! The food was handed to me and now I can't even try to enjoy it because it's cold and the experience sucked. Worst customer service I've received.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Saigon Noodle House is a Vietnamese restaurant located at 6831 Hollister Ave, Ste L in Goleta, California. The restaurant serves noodles and offers outdoor seating. According to reviews, the restaurant has a mix of positive and negative feedback. Some customers praised the quality of the food and the restaurant's friendly atmosphere. However, others reported poor customer service, with staff being rude and dismissive. Despite the mixed reviews, the restaurant remains popular among locals and tourists alike.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_update",
+  "source_cluster_id": "sha256:2a135de00b38a7c412cff0a034e888afbd7e872e2975fd282efef6a3c81d286d",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+  ]
+}

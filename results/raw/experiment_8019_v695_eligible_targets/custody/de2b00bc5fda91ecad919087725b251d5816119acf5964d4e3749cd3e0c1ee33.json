@@ -1,0 +1,102 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.1875996409798972,
+  "exclusion_reason": null,
+  "family_id": "sha256:120cb6a76e7c592ef274f8c4493b496659984039e7355171ff2e316dca6f6f73",
+  "input_tokens": 478,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 478,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 502
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:bd4fff505e9356b379bee47a7dd45374f55444af47d70ace1c7b6d00a70e2dfa",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832870,
+    "id": "chatcmpl-hufKAvadXmMJTTtn0sakpdjprLvZQeqI",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.757,
+      "predicted_n": 24,
+      "predicted_per_second": 42.49615321279772,
+      "predicted_per_token_ms": 23.531541666666666,
+      "prompt_ms": 488.796,
+      "prompt_n": 400,
+      "prompt_per_second": 818.3373022692492,
+      "prompt_per_token_ms": 1.22199
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 478,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 502
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:A company can improve its return on equity in a number of ways, but here are the five most common. 1. Use more financial leverage. Companies can finance themselves with debt and equity capital. By increasing the amount of debt capital relative to its equity capital, a company can increase its return on equity. We'll use a (fictional) lemonade stand as an example for how the use of debt can increase a company's return on equity.\\\\n\\\\npassage 2:Owning equity in a company means that you own all or part of it. The owner\u2019s equity account is listed on the balance sheet for accounting purposes. There are a few reasons for a decrease in owner\u2019s equity.\\\\n\\\\npassage 3:2. Return on equity may also be calculated by dividing net income by average shareholders' equity. Average shareholders' equity is calculated by adding the shareholders' equity at the beginning of a period to the shareholders' equity at period's end and dividing the result by two. 3.\\\\n\\\\n\\\",\\\"question\\\":\\\"how do you increase return on equity\\\"}\", \"original_answer\": \"According to the provided passages, a company can increase its return on equity by using more financial leverage. This can be done by increasing the amount of debt capital relative to its equity capital. The return on equity can also be calculated by dividing net income by average shareholders' equity, which is calculated by adding the shareholders' equity at the beginning of a period to the shareholders' equity at period's end and dividing the result by two.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:35c6b4e03814848459c5c2c37a9b11e75eb13c88114bcbe0936b3b73fd902c96",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ]
+}

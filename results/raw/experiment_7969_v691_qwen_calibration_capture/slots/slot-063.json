@@ -1,0 +1,105 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.3899038580129854,
+  "exclusion_reason": null,
+  "family_id": "sha256:8e524d5cb639baf42b645797f0f831159a252608ccd38a366495f336da4a6ef2",
+  "input_tokens": 830,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 830,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 852
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:292cc01564aeb417af222cba604161b8f4e70e93f815b553ff84ff2b624b8e8d",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.95,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832558,
+    "id": "chatcmpl-0LlRVoT1LY8iK5QgEC6xWDrkBoko9uqq",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 513.35,
+      "predicted_n": 22,
+      "predicted_per_second": 42.85575143664166,
+      "predicted_per_token_ms": 23.33409090909091,
+      "prompt_ms": 722.706,
+      "prompt_n": 752,
+      "prompt_per_second": 1040.5337716858585,
+      "prompt_per_token_ms": 0.9610452127659574
+    },
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 830,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 852
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"5599 Hollister Ave\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Diners, Gluten-Free, Restaurants, Cafes, Breakfast & Brunch, Food, Coffee & Tea\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":null,\\\"name\\\":\\\"The Worker Bee Cafe II\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2018-06-08 21:34:06\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"They are gone....completely different restaurant going in. Asian food it appears. This is too sad! Went by early this morning and peeked in. Construction gear all over the place.\\\"},{\\\"review_date\\\":\\\"2018-05-23 05:06:05\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"I really wanted to love this place! Especially since I really enjoyed visiting the one in carpinteria. However, the food is mediocre. I got an order of the French toast and it tasted bland and a little cold. The tables were really sticky, the waitress acknowledged the tables were sticky but did not offer to wipe it down, instead we just got \\\\\\\"oh wow the table is sticky\\\\\\\" remark. The cashier in the front was very nice though. I did however, love the art work and interior of this place. The coffee was also really good! And the prices are affordable.\\\"},{\\\"review_date\\\":\\\"2018-05-22 16:58:40\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"Not a good place to stop for morning beverage, out of chai for at least two weeks, out of both coconut and almond milk! Seems to be a change in morning staff?\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"The Worker Bee Cafe II is a cafe located at 5599 Hollister Ave in Goleta, California. It offers diners, gluten-free options, breakfast & brunch, coffee & tea, food, and outdoor seating. The cafe does not have reservations, valet services, or parking validations. Wi-Fi is available for free, and takeout and catering options are available. The ambiance is casual with a modern style. Customers can enjoy music while dining.\\n\\nThe cafe has received mixed reviews from customers. Some customers appreciate the casual atmosphere and good coffee, while others were disappointed with the quality of the food, the sticky tables, and the limited menu options. Additionally, some customers have commented on changes made to the restaurant, including the addition of Asian cuisine, which led them to feel that the restaurant is no longer the same.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "tune",
+  "source_cluster_id": "sha256:a941e0adc838225bc623b25f23932fd7446bb80a854a8c76ef4b6dfd773fe9e8",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ]
+}

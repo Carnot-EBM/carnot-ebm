@@ -1,0 +1,106 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.5577898389892653,
+  "exclusion_reason": null,
+  "family_id": "sha256:3dae0af394586eea56384511d2fa594106df7705af84da64826784e220902711",
+  "input_tokens": 943,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 943,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 967
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:48123ea696fb78d8082ef7c7499e77d01968a2903167d027a59c9dff09762566",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832622,
+    "id": "chatcmpl-XH67784L9BnMQghBlEYHpRQ22wz4Fasx",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.202,
+      "predicted_n": 24,
+      "predicted_per_second": 42.462694753380205,
+      "predicted_per_token_ms": 23.550083333333333,
+      "prompt_ms": 874.97,
+      "prompt_n": 865,
+      "prompt_per_second": 988.6053236110952,
+      "prompt_per_token_ms": 1.0115260115606937
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 943,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 967
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"149 S Turnpike Rd\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":null,\\\"hipster\\\":null,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":null,\\\"trendy\\\":true,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Restaurants, Hot Dogs\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-0:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"11:0-0:0\\\",\\\"Thursday\\\":\\\"11:0-0:0\\\",\\\"Tuesday\\\":\\\"11:0-23:0\\\",\\\"Wednesday\\\":\\\"11:0-23:0\\\"},\\\"name\\\":\\\"Dave's Dogs Grill\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-07 20:49:54\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I was looking forward to eating at Dave's Dog for some time and it did not disappoint.\\\\n\\\\nFor Starter's, you may find this place in the corner of the shopping center with seating options along the wall/windows. They also had a great amount of outdoor seating. \\\\n\\\\nThe staff was great and really helpful. \\\\n\\\\nThe options for Hot Dogs was great! I wanted everything on the menu, but I do not have the stomach to do that. However, I do recommend the Taco Dog. Yes, it's everything a taco has on top of the hot dog (except for the tortillas of course). In theory, this does not sound all that appetizing, but believe me, it was/is perfectly executed. It does have spicy salsa, but not too crazy (I would say if you can't handle bare minimum spice, this is your warning, but if you can, please try it).\\\\n\\\\nI added a few more photos of the other Hot Dogs I ordered (which were good as well).\\\"},{\\\"review_date\\\":\\\"2022-01-05 06:17:54\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"I gotta say I've been to a lot of gourmet hot dog joints and this made for the perfect Friday night in! I had the hot Cheetos and cream cheese dog and it was delicious. Their loaded fries looked good too and so want to get that next time!\\\"},{\\\"review_date\\\":\\\"2021-12-31 06:04:16\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Best hot dogs in Santa Barbara by far! Favorites are the Chicago, Hawaiian, & Santa Barbara dogs. The deep fried Oreos are divine. Always get great service & consistently fantastic food. Check out Dave's - you'll be back for more!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Dave's Dogs Grill is a restaurant located in Santa Barbara, California. The business operates from Monday to Saturday and offers hot dogs and other fast food items. The restaurant has outdoor seating and parking is available. Dave's Dogs Grill has received positive reviews from customers who appreciate the quality of their hot dogs and the helpfulness of the staff. The restaurant offers a variety of hot dogs including the Taco Dog, which is a popular choice among customers. The restaurant also serves loaded fries and has a great selection of sides and drinks.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "tune",
+  "source_cluster_id": "sha256:4d9f0903b228013aa25d8358c7279260a637069c4bb335461516e3f0b5a994ad",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ]
+}

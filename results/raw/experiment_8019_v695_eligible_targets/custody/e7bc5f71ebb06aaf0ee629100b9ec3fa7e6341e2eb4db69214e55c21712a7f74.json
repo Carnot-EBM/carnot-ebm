@@ -1,0 +1,110 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.274846775981132,
+  "exclusion_reason": null,
+  "family_id": "sha256:3344aa7e303b2ed463c2dcd0c9123b41e956cb70b64dc1d3c5c9b18f9243c98b",
+  "input_tokens": 646,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 1,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 646,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 670
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:71a2bfbdc6015ab4955d2326911b2493cf23905b4db2b5667c393712d395a005",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 1\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832682,
+    "id": "chatcmpl-iBFonDBfC8BSzfADRZ3GpMDDYiG48UZG",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.582,
+      "predicted_n": 24,
+      "predicted_per_second": 42.5093254832779,
+      "predicted_per_token_ms": 23.52425,
+      "prompt_ms": 599.648,
+      "prompt_n": 568,
+      "prompt_per_second": 947.2223704573349,
+      "prompt_per_token_ms": 1.055718309859155
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 646,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 670
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:On gas grills, set the heat to medium. On charcoal grills, set the asparagus away from the center. You'll want to grill for about five minutes. If you'd like to grill asparagus in your oven, toss it with olive oil, put it on a lightly sprayed cookie sheet, and set it under the broiler for three to five minutes. Regardless of where you're grilling your asparagus, if it's not wrapped in foil (so you can't see) be sure to keep an eye on it.\\\\n\\\\npassage 2:Tear off a piece of foil about twice as long as it is wide. Toss the asparagus with oil and any spices you'd like to add, and then lay it on the foil in a single layer. Fold the foil over the top, and crimp the edges. Lay the packet on the grill (to the side, not over the very center) and cook for about five minutes.\\\\n\\\\npassage 3:Preheat grill to a medium flame. While grill is preheating, clean asparagus, chop the ends off. 2. Take a large sheet of tinfoil, and place the asparagus in the middle of it. Gather the sides together and then bring the tops together. Don\u2019t seal just yet. Add your olive oil, garlic, and salt and pepper. Close the pouch and gently shake, so that everything is incorporated. Peak back in the pouch to make sure the asparagus is covered with a smidge of olive oil. If not add a little more (eyeball it). 3. Add the pouch to direct heat on a grill for about 20 minutes.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to barbecue asparagus in foil\\\"}\", \"original_answer\": \"To barbecue asparagus in foil, tear off a piece of foil about twice as long as it is wide. Toss the asparagus with oil and any desired spices, then lay it on the foil in a single layer. Fold the foil over the top and crimp the edges. Place the packet on a preheated grill (to the side, not over the very center) and cook for about five minutes.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:51ee23bbe2e9d255efcee07b6b02aec2518256b13631cd1e0b86ebdcc3cd825c",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18
+  ]
+}

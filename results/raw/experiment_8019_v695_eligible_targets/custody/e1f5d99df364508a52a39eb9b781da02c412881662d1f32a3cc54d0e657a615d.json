@@ -1,0 +1,100 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.532331186986994,
+  "exclusion_reason": null,
+  "family_id": "sha256:af9015c62e96b64b9be98780b824a8a5de2693a97779f5e276911dbdc0a022bf",
+  "input_tokens": 970,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 970,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 993
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:6b28f67946641b8dbe55e3d5d7942444232bbf84f294b8db3e6ffa13971c1c20",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832673,
+    "id": "chatcmpl-YTEASfwvnAX3HRfYUs7zurtI66yjnvMJ",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.01,
+      "predicted_n": 23,
+      "predicted_per_second": 42.5130773922848,
+      "predicted_per_token_ms": 23.522173913043478,
+      "prompt_ms": 881.544,
+      "prompt_n": 892,
+      "prompt_per_second": 1011.861007505014,
+      "prompt_per_token_ms": 0.9882780269058296
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 970,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 993
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"618 Anacapa St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":true,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":true,\\\"lot\\\":false,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":true,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":5.0,\\\"categories\\\":\\\"Bars, Restaurants, Nightlife, Sandwiches, American (New), Tapas Bars, Wine Bars\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"16:0-21:0\\\",\\\"Saturday\\\":\\\"16:0-21:0\\\",\\\"Thursday\\\":\\\"16:0-20:0\\\",\\\"Wednesday\\\":\\\"16:0-20:0\\\"},\\\"name\\\":\\\"Villa Craft Beer, Wine & Kitchen\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-12-09 20:28:28\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Beautiful place! I came for an art show the other weekend and it was such a great atmosphere. Great wine and beer selection and customer service was excellent. Really looking forward to frequenting here more often!\\\"},{\\\"review_date\\\":\\\"2021-05-27 05:43:37\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"i hardly review places but honestly this place was literally SO amazing, the service was great, the food was great & the wine was great. This is my new favorite place & i hope to come back everytime i visit, the ambiance & experience is just so perfect on a sunny sb happy hour (4-6pm) ! so in love with this lowkey spot\\\"},{\\\"review_date\\\":\\\"2021-02-19 04:21:30\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"This was the perfect place for a happy hour with friends. I was really impressed with this small quaint little restaurant- they had an amazing happy hour you can't beat! We all ordered the small paninis which was a great portion because it also came with a side salad. The owner/server was very kind and I will absolutely be coming back here.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Villa Craft Beer, Wine & Kitchen is a local business located at 618 Anacapa St in Santa Barbara, CA. It offers a variety of services and amenities, including a bar, restaurant, and nightlife experience. The establishment specializes in sandwiches, American (New) cuisine, tapas bars, and wine bars.\\n\\nThe business operates from Wednesday to Saturday, with varying hours. On Wednesdays and Thursdays, they are open from 4:00 PM to 8:00 PM, while on Fridays and Saturdays, they extend their hours until 9:00 PM.\\n\\nCustomers have left positive reviews about Villa Craft Beer, Wine & Kitchen, giving it a 5-star rating. Reviewers have praised the beautiful atmosphere, excellent customer service, and great wine and beer selection. The establishment is known for hosting art shows and providing a pleasant and intimate ambiance. \\n\\nThe business offers free WiFi and outdoor seating, making it an ideal spot for gatherings and socializing. They also accept restaurant reservations and provide takeout services. Additionally, Villa Craft Beer, Wine & Kitchen is described as a good place for groups and offers live music.\\n\\nOverall, this local business in Santa Barbara provides a charming and classy dining experience, with a focus on craft beer, wine, and delicious food. It is highly recommended by customers and is likely to attract both locals and visitors to the area.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:7bacc69ec32e71c0ddc52973d8990082b44b063610e87d2d1f8ee8e0d8a45d0d",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ]
+}

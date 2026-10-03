@@ -1,0 +1,100 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.1231995139969513,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:8974e65bad886e9b51c15f3b4a01091e1f79192474076330311fd3bf4d95e7f4",
+  "input_tokens": 448,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 1,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 448,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 472
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:12753b795dd8a24c488fc5686781135616f894cfabd0ef10aae19dd7fa4c8e83",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 1\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886244,
+    "id": "chatcmpl-yC3Gy8DSlAtdpPUzRHpoazu0B6LlihIs",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.196,
+      "predicted_n": 24,
+      "predicted_per_second": 42.46314552827691,
+      "predicted_per_token_ms": 23.549833333333336,
+      "prompt_ms": 446.251,
+      "prompt_n": 370,
+      "prompt_per_second": 829.1297946671268,
+      "prompt_per_token_ms": 1.2060837837837837
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 448,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 472
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:This course provides study material for the CDL Air Brakes test. If you want to drive a truck or bus with air brakes, or pull a trailer with air brakes, you need to pass the Air Brakes test.\\\\n\\\\npassage 2:Relevance. Rating Newest Oldest. Best Answer: Air Brakes are included as part of a CDL-A so a seperate endorsement is not required, but for a CDL-B or lower, If the vehicle you will be driving is equipped with air brakes, then you need an air brake endorsement.\\\\n\\\\npassage 3:There is no air brake endorsement-if a CDL driver does not complete the air brakes portion of the written test, and test in a vehicle equipped with air brakes, then they get an L restriction on their CDL, prohibiting them from driving commercial vehicles with air brakes.\\\\n\\\\n\\\",\\\"question\\\":\\\"if the truck im driving has airbrakes do i need an endorsement in pa\\\"}\", \"original_answer\": \"If you want to drive a truck with air brakes in PA, you would need to pass the Air Brakes test. If you are driving with a CDL-B or lower, an air brake endorsement is required. However, if you have a CDL-A, a separate endorsement is not necessary as air brakes are included. If you do not complete the air brakes portion of the written test, an L restriction would be placed on your CDL, prohibiting you from driving commercial vehicles with air brakes.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "875b7511d1ed386689c564107b59b75bfb68cabdcc46dc642c95b728b57b1664",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3
+  ]
+}

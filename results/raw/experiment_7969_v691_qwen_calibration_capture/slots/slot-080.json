@@ -1,0 +1,100 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.2079370990395546,
+  "exclusion_reason": null,
+  "family_id": "sha256:a3f427b9e5c0acd2fdbc6f00a4ccbc12d1f1ee725ac60ca84030e7b03babeb32",
+  "input_tokens": 575,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 575,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 598
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:365aae9e7adcf02fc8b75c2102b6bbdb8011e90597c67cc8ca025cd1671f5c25",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832583,
+    "id": "chatcmpl-6cCJRs39gCsA3hGGe4hEC1CsjH5WCcxQ",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 539.51,
+      "predicted_n": 23,
+      "predicted_per_second": 42.631276528701974,
+      "predicted_per_token_ms": 23.45695652173913,
+      "prompt_ms": 531.373,
+      "prompt_n": 497,
+      "prompt_per_second": 935.3128593285695,
+      "prompt_per_token_ms": 1.0691609657947687
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 575,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 598
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Desperate migrants from Africa and the Middle East keep heading to Europe, with 978 rescued Friday in the Mediterranean Sea, the Italian Coast Guard said Saturday via Twitter. The migrants were picked up 30 miles off the coast of Libya, said European Parliament member Matteo Salvini, the leader of Italy's far-right Northern League. In the first three months of 2015, Italy registered more than 10,000 migrants arriving, the International Organization for Migration said, and about 2,000 were rescued at sea during the first weekend of April in the Channel of Sicily. Most migrants recorded this year come from countries in West Africa as well as Somalia and Syria, the IMO said. They use Libya as a country of transit. At least 480 migrants have died while crossing the Mediterranean since the beginning of the year, often because of bad weather and overcrowded vessels used by smugglers, the IMO said. Sometimes the captains and crews abandon the ships, leaving passengers to fend for themselves. At this time last year, there were fewer than 50 deaths reported, the IMO said. Most of the migrants are asylum seekers, victims of trafficking or violence, unaccompanied children and pregnant women.\\n\", \"original_answer\": \"Desperate migrants, mostly from Africa and the Middle East, continue to make the dangerous journey to Europe. Over 978 migrants were rescued in the Mediterranean Sea off the coast of Libya. Italy has seen over 10,000 migrants arrive in the first three months of 2015, with at least 2,000 rescued in the first weekend of April. The majority of migrants come from West Africa, Somalia, and Syria, using Libya as a transit country. Tragically, at least 480 migrants have died crossing the Mediterranean this year, often due to bad weather and overcrowded vessels. Last year at this time, there were fewer than 50 reported deaths. The migrants include asylum seekers, victims of trafficking or violence, unaccompanied children, and pregnant women.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:dd9ea17e5a500de87435047fb0d5d010be4ab19c27c7e975731c803385374fe2",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ]
+}

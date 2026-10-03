@@ -1,0 +1,103 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.3332858440699056,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:7e99f0017e2d7907f69b9dbd06ee7eaa49f0ffca6e7cba37c178bdbac5b892ea",
+  "input_tokens": 824,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 824,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 845
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:8a928e668dc7aaf1c85c1763d4951b705470b55eb0e40bdf02525d77fffb7cbd",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886058,
+    "id": "chatcmpl-Gxp1MVQRipwzmOiMPo1V0vuH3JyXvzYi",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 493.012,
+      "predicted_n": 21,
+      "predicted_per_second": 42.595312081653184,
+      "predicted_per_token_ms": 23.476761904761904,
+      "prompt_ms": 729.332,
+      "prompt_n": 746,
+      "prompt_per_second": 1022.8537894950448,
+      "prompt_per_token_ms": 0.977656836461126
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 824,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 845
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"1202 Chapala St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Chinese, Food, Dim Sum, Desserts, Coffee & Tea, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"17:0-22:0\\\",\\\"Monday\\\":\\\"17:0-22:0\\\",\\\"Saturday\\\":\\\"17:0-22:0\\\",\\\"Sunday\\\":\\\"17:0-22:0\\\",\\\"Thursday\\\":\\\"17:0-22:0\\\",\\\"Tuesday\\\":\\\"17:0-22:0\\\",\\\"Wednesday\\\":\\\"17:0-22:0\\\"},\\\"name\\\":\\\"China Pavilion\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-12-23 17:45:38\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Amazing chicken and chow main!  \\\\nService was top tier and I love the fact that the restaurant was in downtown\\\"},{\\\"review_date\\\":\\\"2021-12-13 19:56:18\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I love this place and have been going here since my time at UCSB. Every time our friends from college come into to town we go here. The scallion pancakes are to die for and I also love the General's chicken. It's family style so it's a great place to go with a group and order a bunch of different items. The servers are all super nice too.\\\"},{\\\"review_date\\\":\\\"2021-12-09 17:03:20\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Always a nice place to get Chinese food. Have tried couple of dishes it never disappoints.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"China Pavilion is a popular Chinese restaurant located at 1202 Chapala St, Santa Barbara, CA. The establishment, known for its Dim Sum, desserts, coffee, and tea, operates from 5:00 PM to 10:00 PM daily. The restaurant offers a casual and classy ambiance, making it an ideal place for group outings. It also provides outdoor seating and take-out options. Although it does not have WiFi or live music, it offers street and lot parking. \\n\\nCustomers have praised China Pavilion for its excellent service and high-quality food, particularly its chicken, chow mein, and scallion pancakes. Despite being located downtown, it maintains a 3.5-star rating. It's particularly popular among college students and groups looking to sample a variety of dishes. However, even though it is well-loved, it has no validated parking or valet services.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "7cc0a8af36acb16703c91dcbda0c1885a3e6eee1816b24a09fa12c5c19d61be8",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ]
+}

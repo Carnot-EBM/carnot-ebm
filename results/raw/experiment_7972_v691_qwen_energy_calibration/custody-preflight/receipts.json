@@ -1,0 +1,50 @@
+[
+  {
+    "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage run --data-file=/tmp/carnot-7972-custody-_lk86v_q/.coverage --include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7972_v691_qwen_energy_calibration.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/qwen_energy_calibration_7972.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7972_v691_qwen_energy_calibration.py -m pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-7972-custody-_lk86v_q/pytest tests/python/test_qwen_energy_calibration_7972.py tests/python/test_experiment_7972_v691_qwen_energy_calibration.py -q",
+    "command_argv": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+      "run",
+      "--data-file=/tmp/carnot-7972-custody-_lk86v_q/.coverage",
+      "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7972_v691_qwen_energy_calibration.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/qwen_energy_calibration_7972.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7972_v691_qwen_energy_calibration.py",
+      "-m",
+      "pytest",
+      "-n",
+      "0",
+      "-o",
+      "addopts=",
+      "--no-cov",
+      "--basetemp=/tmp/carnot-7972-custody-_lk86v_q/pytest",
+      "tests/python/test_qwen_energy_calibration_7972.py",
+      "tests/python/test_experiment_7972_v691_qwen_energy_calibration.py",
+      "-q"
+    ],
+    "duration_s": 16.079358024988323,
+    "exit_code": 1,
+    "log_path": "results/raw/experiment_7972_v691_qwen_energy_calibration/custody-preflight/logs/00_owned_custody.log",
+    "log_sha256": "sha256:d30a7cfdae57670430fbc8590731d1d94a4fc584bc0fe1133017707853908574",
+    "name": "owned_custody",
+    "output_tail": "sarial]     }\n[exp7303-validation:adversarial]   ],\n[exp7303-validation:adversarial]   \"flagged_count\": 1\n[exp7303-validation:adversarial] }\n[exp7303-validation] after_subprocess adversarial elapsed_s=0.523 exit=1 unit=1/2\n[exp7303-validation] before_subprocess strict_rows elapsed_s=0.000 unit=2/2\n[exp7303-validation:strict_rows] \n[exp7303-validation:strict_rows] verdict-row-consistency: checked 0, skipped 1 (no per-unit rows), unreadable 0.\n[exp7303-validation:strict_rows]   NOTE: most artifacts carry no per-unit row container, so their headline claims are not falsifiable from the artifact alone. That is a reporting-shape gap in those experiments, not a clean bill of health from this tool.\n[exp7303-validation] after_subprocess strict_rows elapsed_s=0.022 exit=0 unit=2/2\n[exp7303-validation] before_subprocess adversarial elapsed_s=0.000 unit=1/2\n[exp7303-validation:adversarial] {\n[exp7303-validation:adversarial]   \"reports\": [\n[exp7303-validation:adversarial]     {\n[exp7303-validation:adversarial]       \"artifact\": \"/tmp/carnot-7972-custody-_lk86v_q/pytest/test_frozen_commands_real_expe0/parent/raw/experiment_7972_v691_qwen_energy_calibration/terminal_candidate.json\",\n[exp7303-validation:adversarial]       \"loaded\": true,\n[exp7303-validation:adversarial]       \"exp_id\": 7972,\n[exp7303-validation:adversarial]       \"title\": \"\",\n[exp7303-validation:adversarial]       \"honest_verdict\": \"complete_disqualified_terminal_validation\",\n[exp7303-validation:adversarial]       \"flag_count\": 2,\n[exp7303-validation:adversarial]       \"max_severity\": 2,\n[exp7303-validation:adversarial]       \"flags\": [\n[exp7303-validation:adversarial]         {\n[exp7303-validation:adversarial]           \"kind\": \"SUBSTRATE_HAS_NO_DURATION_FLOOR\",\n[exp7303-validation:adversarial]           \"severity\": \"warn\",\n[exp7303-validation:adversarial]           \"detail\": \"inference_substrate='blocked_no_run' matches no duration-floor recognizer, so duration_s=0.014270883984863758 was NOT checked against any floor. A declaration is an affirmative claim about what ran; an unrecognized one is unverified, not verified. Add a recognizer plus floor for this substrate, or correct the declaration to an existing one.\"\n[exp7303-validation:adversarial]         },\n[exp7303-validation:adversarial]         {\n[exp7303-validation:adversarial]           \"kind\": \"SUBSTRATE_CLASS_MISMATCH\",\n[exp7303-validation:adversarial]           \"severity\": \"critical\",\n[exp7303-validation:adversarial]           \"detail\": \"inference_substrate_class=blocked_no_run says nothing ran, but honest_verdict='complete_disqualified_terminal_validation' is not a blocked_* verdict. A blocked class must pair with a blocked verdict.\"\n[exp7303-validation:adversarial]         }\n[exp7303-validation:adversarial]       ],\n[exp7303-validation:adversarial]       \"gate_version\": \"197e0a5eacacb09ce6607ae8bdfd507498082857f0d02ec2003a62c251b69a24\"\n[exp7303-validation:adversarial]     }\n[exp7303-validation:adversarial]   ],\n[exp7303-validation:adversarial]   \"flagged_count\": 1\n[exp7303-validation:adversarial] }\n[exp7303-validation] after_subprocess adversarial elapsed_s=0.559 exit=1 unit=1/2\n[exp7303-validation] before_subprocess strict_rows elapsed_s=0.000 unit=2/2\n[exp7303-validation:strict_rows] \n[exp7303-validation:strict_rows] verdict-row-consistency: checked 0, skipped 1 (no per-unit rows), unreadable 0.\n[exp7303-validation:strict_rows]   NOTE: most artifacts carry no per-unit row container, so their headline claims are not falsifiable from the artifact alone. That is a reporting-shape gap in those experiments, not a clean bill of health from this tool.\n[exp7303-validation] after_subprocess strict_rows elapsed_s=0.027 exit=0 unit=2/2\n[exp7972] rejected=ValueError:candidate_rejected\n=========================== short test summary info ============================\nFAILED tests/python/test_experiment_7972_v691_qwen_energy_calibration.py::test_frozen_commands_real_expected_exit_and_parent_failure\n1 failed, 16 passed in 12.14s\n",
+    "passed": false,
+    "scope": "owned",
+    "timed_out": false
+  },
+  {
+    "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage json --data-file=/tmp/carnot-7972-custody-_lk86v_q/.coverage -o /tmp/carnot-7972-custody-_lk86v_q/coverage.json",
+    "command_argv": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+      "json",
+      "--data-file=/tmp/carnot-7972-custody-_lk86v_q/.coverage",
+      "-o",
+      "/tmp/carnot-7972-custody-_lk86v_q/coverage.json"
+    ],
+    "duration_s": 0.08578766696155071,
+    "exit_code": 0,
+    "log_path": "results/raw/experiment_7972_v691_qwen_energy_calibration/custody-preflight/logs/01_coverage_json.log",
+    "log_sha256": "sha256:3450ef0e94c1cd2406f07d149ea69def5c66a8fb04c981b2e084e7fac163d073",
+    "name": "coverage_json",
+    "output_tail": "Wrote JSON report to /tmp/carnot-7972-custody-_lk86v_q/coverage.json\n",
+    "passed": true,
+    "scope": "owned",
+    "timed_out": false
+  }
+]

@@ -1,0 +1,116 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.368065179034602,
+  "exclusion_reason": null,
+  "family_id": "sha256:c291e3c35494dcac6fe804baf736236d7adf62c424da9dc23fb9a98ccae807ec",
+  "input_tokens": 810,
+  "invocation_finished_at": "2026-10-01T11:44:07.104380+00:00",
+  "invocation_started_at": "2026-10-01T11:44:05.736313+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 810,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 833
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:99fd59dd8a9d0c41aebd46a4666ad8f567d843ad7759a3d4923f84e63844fac3",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855047,
+    "id": "chatcmpl-BKfojUz5chntmMIFqys4wOATQeH4Qij2",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.769,
+      "predicted_n": 23,
+      "predicted_per_second": 42.53202384012397,
+      "predicted_per_token_ms": 23.511695652173913,
+      "prompt_ms": 712.633,
+      "prompt_n": 732,
+      "prompt_per_second": 1027.1766814054358,
+      "prompt_per_token_ms": 0.973542349726776
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 810,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 833
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:eflash an original rom of android to the gear. Using odin and looking up the last version of Android for the gear. UK is btu I used BTU-V700XXUBNC1 (android). Then ignore the tizen link on here and download the one that in BTU-V700XXUCNE9 NOT THE ONE ENDING NF1 (tizen). I then put the gear into download mode.Hold power, wait till the flash screen and then click the button a few times.Press till download and hold on download for about 5 secs.Then load up odin.flash an original rom of android to the gear. Using odin and looking up the last version of Android for the gear. UK is btu I used BTU-V700XXUBNC1 (android). Then ignore the tizen link on here and download the one that in BTU-V700XXUCNE9 NOT THE ONE ENDING NF1 (tizen). I then put the gear into download mode.\\\\n\\\\npassage 2:6. Put the gear into bootloader mode. To do this, turn off the device. Then turn on and keep the power button held in until it says Gear Rebooting.... Once it says this keep pressing the power button until the bootloader menu is displayed.t this point, press the power button once to highlight Download then press and hold the power button one last time to select it. This should enter downloading mode, where it warns to not turn off the target. 7. Put the gear into the charging device and plug into your PC.\\\\n\\\\npassage 3:Having a battery charge issue so I turned my phone off. When I turned it back on I got the Downloading. Do not turn off target!! message and it stayed that way for what seemed like forever. When I tried to restart it, same message. Took battery out, popped it back in. Same message.Then, I tried this: Took out the SIM card.riginally Posted by omsuae [ Login above or register to see download links. ] Using Kies, my Gear device is stuck on stuck on Downloading-Do not turn off target!\\\\n\\\\n\\\",\\\"question\\\":\\\"do not turn off target tizen\\\"}\", \"original_answer\": \"Based on the given passages, the answer to the question \\\"Do not turn off target tizen\\\" is:\\n\\nThe instructions in passage 1 advise against turning off the target during the process of flashing an Android ROM onto a Samsung Gear device using Odin. The instructions in passage 2 also warn against turning off the target during the process of entering download mode. Similarly, passage 3 suggests that turning off the target may cause issues with the device, as it can get stuck on the \\\"Downloading... Do not turn off target!\\\" message.\\n\\nTherefore, the answer to the question is: Do not turn off target tizen.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_admission",
+  "source_cluster_id": "sha256:81a348088de69f700c59377948ea7fb352ef531a1e22fa8ccb498699029c6c1e",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22
+  ]
+}

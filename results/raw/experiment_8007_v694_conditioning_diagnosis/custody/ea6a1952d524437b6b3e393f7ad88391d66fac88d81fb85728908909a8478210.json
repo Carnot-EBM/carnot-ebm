@@ -1,0 +1,111 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.5154271789360791,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:36f622c7e5f8229cf96f48176633217266d6cf04eb5477588754c1c42b5c2623",
+  "input_tokens": 922,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 922,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 945
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:357cde9f2ac302df9e35920e3f63fe1b0744b7d0d3bedc4738fbbe0d0a7ed9bb",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886029,
+    "id": "chatcmpl-tD13JhbUverw2g91LV3spgFPA6EwPSDJ",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 542.06,
+      "predicted_n": 23,
+      "predicted_per_second": 42.43072722576837,
+      "predicted_per_token_ms": 23.56782608695652,
+      "prompt_ms": 853.897,
+      "prompt_n": 844,
+      "prompt_per_second": 988.4096091214748,
+      "prompt_per_token_ms": 1.0117263033175357
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 922,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 945
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"8 E Cota St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":null,\\\"touristy\\\":null,\\\"trendy\\\":null,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":true,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Seafood, Cajun/Creole, American (New), Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"17:0-21:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"17:0-21:0\\\",\\\"Sunday\\\":\\\"17:0-21:0\\\",\\\"Thursday\\\":\\\"17:0-21:0\\\",\\\"Tuesday\\\":\\\"17:0-21:0\\\",\\\"Wednesday\\\":\\\"17:0-21:0\\\"},\\\"name\\\":\\\"The Palace Grill\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-17 02:38:27\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"This is my new favorite restaurant. Their food is insanely good (my favorites so far are the crawfish pasta and the chocolate souffl\u00e9). The customer service is super nice. On my boyfriends birthday we came here because we couldn't find any restaurant that was open late at night, and the server Mondo saw us and helped us out. They were closing the kitchen but they reopened it for us and made us dinner. I love this place and I love Mondo. Thank you!\\\"},{\\\"review_date\\\":\\\"2021-12-31 03:05:33\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"The food was delicious and the service was great! I had the crawfish ettouffee and my husband had the shrimp and crawfish pasta. We are half and switched plates so that we could enjoy both meals. They were rich and filling and satisfied the palette. Our kid had butter pasta and he ate it all. We ended with the Louisiana Bread Pudding. It was a delightful Creole experience in California.\\\"},{\\\"review_date\\\":\\\"2021-12-08 00:13:47\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"Cajun is not my favorite but, all the same the food is good. Fun place for an occasion. If you lucky, a magician will stop by your table.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"The Palace Grill is a popular restaurant located at 8 E Cota St, Santa Barbara, CA, known for its Seafood, Cajun/Creole, and American (New) cuisines. It has an overall rating of 4.5 stars, with recent reviews praising the food quality, particularly the crawfish pasta and chocolate souffl\u00e9. The restaurant is open from Tuesday to Sunday, 5 PM to 9 PM. It offers various amenities including free Wi-Fi, outdoor seating, and is good for groups. Although it does not provide valet parking or parking validation, The Palace Grill does have available garage and street parking. Customers can also make reservations and order takeout. Its ambiance is described as both classy and casual. One unique feature mentioned in the reviews is that a magician might occasionally visit your table.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "899e8db45427340dc41a9096e79ff733db2c9a282c752ed70b49ff0740d4d223",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "env",
+        "PYO3_PYTHON=/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "CARGO_TARGET_DIR=/tmp/carnot-8027-vyaid8u0/native-target",
+        "LLVM_PROFILE_FILE=/tmp/carnot-8027-vyaid8u0/native-%p-%m.profraw",
+        "LD_LIBRARY_PATH=/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib",
+        "RUSTFLAGS=-C instrument-coverage -C link-arg=-L/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib -C link-arg=-lpython3.12",
+        "cargo",
+        "test",
+        "-p",
+        "carnot-core",
+        "-p",
+        "carnot-python",
+        "numerical_update_8027"
+      ],
+      "name": "rust_coverage_tests",
+      "scope": "owned",
+      "timeout_s": 180
+    }
+  ]
+}

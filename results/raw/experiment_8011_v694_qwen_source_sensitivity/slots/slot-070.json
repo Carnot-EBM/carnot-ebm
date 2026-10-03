@@ -1,0 +1,123 @@
+{
+  "arm": "duplicate",
+  "capture_identity": "sha256:c690c1f517fbce73c5da6a2d1e99e3819c3de93e1045fe76d1c8215b54691541",
+  "censor_status": false,
+  "denominator": 1,
+  "donor_group_id": "sha256:7678beec833fbf8072b29232eb6f265e0d6419dc8d66b7213360ea13edc61f93",
+  "duration_s": 1.1855821239296347,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:7678beec833fbf8072b29232eb6f265e0d6419dc8d66b7213360ea13edc61f93:duplicate",
+  "group_id": "sha256:7678beec833fbf8072b29232eb6f265e0d6419dc8d66b7213360ea13edc61f93",
+  "input_byte_upper_bound": 3396,
+  "input_tokens": 766,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 766,
+      "prompt_tokens_details": {
+        "cached_tokens": 385
+      },
+      "total_tokens": 789
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:d181fc634501c42fb2d1508fc17105e8e07460e579cadf4aa1ef46273f92a38c",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790925765,
+    "id": "chatcmpl-x0FZXhWDgAfHaUreCJ1Xb50rxKeaxpC8",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 385,
+      "predicted_ms": 542.724,
+      "predicted_n": 23,
+      "predicted_per_second": 42.3788150146299,
+      "predicted_per_token_ms": 23.596695652173914,
+      "prompt_ms": 444.276,
+      "prompt_n": 381,
+      "prompt_per_second": 857.5750209329336,
+      "prompt_per_token_ms": 1.1660787401574804
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 766,
+      "prompt_tokens_details": {
+        "cached_tokens": 385
+      },
+      "total_tokens": 789
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 32,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Rome (CNN)Muslims who were among migrants trying to get from Libya to Italy in a boat this week threw 12 fellow passengers overboard -- killing them -- because the 12 were Christians, Italian police said Thursday. Italian authorities have arrested 15 people on suspicion of murdering the Christians at sea, police in Palermo, Sicily, said. Why migrants are dying to get to Italy. The original group of 105 people left Libya on Tuesday in a rubber boat. Sometime during the trip north across the Mediterranean Sea, the alleged assailants -- Muslims from the Ivory Coast, Mali and Senegal -- threw the 12 overboard, police said. Other people on the voyage told police that they themselves were spared \\\"because they strongly opposed the drowning attempt and formed a human chain,\\\" Palermo police said. The boat was intercepted by an Italian navy vessel, which transferred the passengers to a Panamanian-flagged ship. That ship docked in Palermo on Wednesday, after which the arrests were made, police said. 'I enter Europe or I die': Desperate migrants rescued this week off Italy. The 12 who died were from Nigeria and Ghana, police said. Thousands of people each year make the dangerous sea journey from North Africa to Europe's Mediterranean coast, often aboard vessels poorly equipped for the trip. Many of them attempt the voyage to flee war and poverty in Africa and the Middle East. More than 10,000 people have arrived on Italian shores from Libya since last weekend alone, according to the Italian coast guard. Many die each year while attempting the voyage, often when boats capsized. Last year at least 3,200 died trying to make the trip. Since 2000, according to the International Organization for Migration, almost 22,000 people have died fleeing across the Mediterranean. The IOM reported Thursday the latest boat to sink in trying to make the journey. Only four people survived from the original 45 on board, bringing the estimated death toll so far this year close to a thousand. CNN's Hada Messia reported from Rome, and CNN's Livia Borghese reported from Augusta, Sicily. CNN's Jason Hanna wrote in Atlanta. CNN's Ben Wedeman contributed to this report.\\n\", \"original_answer\": \"Fifteen Muslims have been arrested by Italian authorities for allegedly throwing twelve Christian migrants overboard, causing their deaths, during a voyage from Libya to Italy. The accused, from Ivory Coast, Mali and Senegal, were part of a group of 105 migrants traveling on a rubber boat. The victims, from Nigeria and Ghana, were thrown overboard in the Mediterranean Sea. Other passengers were spared because they opposed the act and formed a human chain to prevent it.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69410,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "seed": 69410,
+  "source_cluster_id": "1d666d49913c0ff8480fa8a071aae32d098d4b1956e2506db0b18ca4f77d2e2e",
+  "source_hash": "sha256:f57c25443fefa16baa5109b4cb564e3cacc5930e33af02999557f5114859c3a8",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20
+  ]
+}

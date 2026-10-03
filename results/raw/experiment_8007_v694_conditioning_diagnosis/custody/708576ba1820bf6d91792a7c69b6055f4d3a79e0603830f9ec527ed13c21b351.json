@@ -1,0 +1,107 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.3403957699192688,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:162dfb6396f73dff770e178acdea7af500f4a0cd84b497239ab61b77d5e2f22b",
+  "input_tokens": 832,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 832,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 853
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:e992f54a55304cd19caeddc22f4f5063363abf81a0d7541df15ab786d5ff1174",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886338,
+    "id": "chatcmpl-2DqYfHUO7S7CREnHq4sJzFYVRGR7ubEa",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 493.066,
+      "predicted_n": 21,
+      "predicted_per_second": 42.590647093898184,
+      "predicted_per_token_ms": 23.479333333333333,
+      "prompt_ms": 730.821,
+      "prompt_n": 754,
+      "prompt_per_second": 1031.7163847234822,
+      "prompt_per_token_ms": 0.9692586206896552
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 832,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 853
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"320 S Kellogg Ave\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":null},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Dive Bars, Nightlife, Bars\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":null,\\\"name\\\":\\\"The Bak Door\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2011-06-26 07:35:23\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"The ultimate dive bar.  Cheap stiff drinks, pool tables, and an awesome juke box.  Don't come here to be wowed, but to relax at the place where you know everyones name.\\\"},{\\\"review_date\\\":\\\"2010-09-19 16:07:47\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"The Bak Dor. I'm with Anne -- refreshing to hit a dive bar that isn't asses to elbows with ironic mustaches, cutoff jeans, and topsiders. \\\\n\\\\nThe staff is friendly, the peanuts and pretzels are free, they have Coors, and they have Hank Williams (Sr) on the juke box. If you are a pool player, the regulars here kept the table going and seemed pretty nice. \\\\n\\\\nGood spot to grab a drink if you find yourself with a half hour in Goleta.\\\"},{\\\"review_date\\\":\\\"2009-10-10 19:07:59\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"the two stars bac dor gets are simply because of the sweet, elderly dude behind the bar and the ok jukebox.  despite friends who love bac dor, im NOT enthusiastic about the altercations we get in every single time with angry and drunk-as-shit regulars. imo, there are plenty of other goleta bars that are more fun.  i say let the oldtimers be in peace at bac dor.  the drinks themselves arent cheap either.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"\\\"The Bak Door\\\" is a dive bar located at 320 S Kellogg Ave, Goleta, CA. It has a 3.5-star rating. The bar is not known for its ambiance or trendy atmosphere, but is appreciated by its patrons for its cheap, strong drinks, and an excellent jukebox. It also offers pool tables for entertainment. The bar does not offer parking facilities and does not have outdoor seating. The staff is known to be friendly and they also provide complimentary peanuts and pretzels. The bar is frequented by regulars who are into pool. However, there are mixed reviews about the clientele, with some finding them friendly, while others complain about regular altercations.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "53e6ffc4dba45274bd52542a665bf298174a39dd201ec15c8b71dcf48cad8084",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ]
+}

@@ -1,0 +1,57 @@
+....F                                                                    [100%]
+=================================== FAILURES ===================================
+______________________ test_prior_custody_and_development ______________________
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261002T060344-1150130-0f999635/test_prior_custody_and_develop0')
+
+    def test_prior_custody_and_development(tmp_path):
+        """SCENARIO-REPORT-8008-ISOLATION: checked roles survive durable relocation."""
+        bundle = fixture()
+        path = tmp_path / "source" / "bundle.json"
+        atomic_json(path, bundle)
+        primary = tmp_path / "results" / "experiment_8007_v694_conditioning_diagnosis.json"
+        value = e.prior.base([])
+        value.update(methods_ready_score=1, checkpoints=dict(bundle=e.reference(path)))
+        atomic_json(primary, value)
+        loaded, failures = e.load_bundle(tmp_path, tmp_path / "raw")
+        assert not failures and loaded["data"] == bundle["data"]
+        assert e.development(loaded, "calibration") == bundle["development"]["calibration"]
+        loaded["nested"] = dict(checked=e.reference(path), plain=["constant"])
+        atomic_json(path, loaded)
+        value["checkpoints"]["bundle"] = e.reference(path)
+        atomic_json(primary, value)
+>       loaded, failures = e.load_bundle(tmp_path, tmp_path / "raw")
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_conditioned_energy_8008.py:208: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/experiment_8008_v694_conditioned_energy_fit.py:415: in load_bundle
+    bundle = relocate(bundle)
+             ^^^^^^^^^^^^^^^^
+python/carnot/experiment_8008_v694_conditioned_energy_fit.py:410: in relocate
+    return {k: relocate(v) for k, v in node.items()}
+               ^^^^^^^^^^^
+python/carnot/experiment_8008_v694_conditioned_energy_fit.py:410: in relocate
+    return {k: relocate(v) for k, v in node.items()}
+               ^^^^^^^^^^^
+python/carnot/experiment_8008_v694_conditioned_energy_fit.py:409: in relocate
+    return dict(node, **prior.copy_evidence(node, raw))
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+python/carnot/experiment_8007_v694_conditioning_diagnosis.py:117: in copy_evidence
+    source = checked(ref)
+             ^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+item = {'path': '/tmp/pytest-carnot-ianblenke/20261002T060344-1150130-0f999635/test_prior_custody_and_develop0/source/bundle.json', 'sha256': 'sha256:c4fdc654439e39123607ab9e4f9b4ee32fd9f2ecbf7465a29946037f0c7becd3'}
+
+    def checked(item: Json) -> Path:
+        """Reject missing evidence distinctly from changed or zero-valued evidence."""
+        path = Path(item["path"])
+        if not path.is_file() or sha256_file(path) != item["sha256"]:
+>           raise ValueError(f"hash:{path}")
+E           ValueError: hash:/tmp/pytest-carnot-ianblenke/20261002T060344-1150130-0f999635/test_prior_custody_and_develop0/source/bundle.json
+
+python/carnot/reporting/evidence_features_custody_7980.py:67: ValueError
+=========================== short test summary info ============================
+FAILED tests/python/test_conditioned_energy_8008.py::test_prior_custody_and_development
+1 failed, 4 passed in 23.78s

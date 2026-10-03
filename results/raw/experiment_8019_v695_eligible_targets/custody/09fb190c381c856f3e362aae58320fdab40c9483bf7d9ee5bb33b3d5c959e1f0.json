@@ -1,0 +1,112 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.6342770690098405,
+  "exclusion_reason": null,
+  "family_id": "sha256:e38dd81bfbadde5e1a1e2cdc97fe910219aa93f76f6869349ceb85053ab4039b",
+  "input_tokens": 1098,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1098,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1121
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:de856a88b2d970c442c384fafda54526cbcc5393d0829d4617e35c7faca03920",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832934,
+    "id": "chatcmpl-WXJgFS9J7BKXZ80ypAp5M5BdwvoXxTDr",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.983,
+      "predicted_n": 23,
+      "predicted_per_second": 42.43675539638698,
+      "predicted_per_token_ms": 23.564478260869564,
+      "prompt_ms": 973.203,
+      "prompt_n": 1020,
+      "prompt_per_second": 1048.0855484415893,
+      "prompt_per_token_ms": 0.9541205882352941
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1098,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1121
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"7 E Anapamu St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":true,\\\"divey\\\":false,\\\"hipster\\\":null,\\\"intimate\\\":null,\\\"romantic\\\":true,\\\"touristy\\\":null,\\\"trendy\\\":true,\\\"upscale\\\":null},\\\"BusinessParking\\\":{\\\"garage\\\":true,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":false,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Mexican, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"16:30-22:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"17:0-22:0\\\",\\\"Sunday\\\":\\\"17:0-21:0\\\",\\\"Thursday\\\":\\\"16:30-21:0\\\",\\\"Tuesday\\\":\\\"11:30-14:0\\\",\\\"Wednesday\\\":\\\"16:30-21:0\\\"},\\\"name\\\":\\\"La Cocina Mexican Restaurant\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2020-02-19 22:25:55\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"This is a hidden gem, truly. The courtyard is beyond romantic, dining under hundred year old olive trees. Service is superb. Cocktails are beautiful and so good. Food is unbelievably yum, especially the yellowtail tostadas! Can't wait to go back for lunch! A perfect spot for a big party or a romantic date.\\\"},{\\\"review_date\\\":\\\"2020-01-31 03:02:23\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"La Cocina is all the things you look for in a Santa Barbara Mexican restaurant: harnessing the city's natural beauty, Latin elegance, gorgeous local produce behind each dish, outdoor dining in a twinkling light courtyard, unpretentious staff, stiff drinks and a nice wine list. From the minute the salsa comes to the table, you know this is a different experience.  The salsa is fresh, made just moments before, out of ingredients you can't quite pin down because it's nowhere in the ballpark of regular Mexican restaurant salsa. Then the guacamole makes you weep. We ordered the Padron chilies -- blistered and soft and petite which are sprinkled in a creamy poblano sauce. Honestly I can't say enough about the cuisine here.  I even had  a roasted romaine salad who he could have been just pedestrian but in the hands of La Cocina it was elevated with nuts, pepitas, corn and a creamy dressing, became a fantastic entree. I will come back just for that salad. And the peppers. My husband got the ducks de Leche and was blown away. This is my new favorite spot in downtown SB for a chic date night.\\\"},{\\\"review_date\\\":\\\"2020-01-28 04:42:51\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Met friends and had an exceptional experience. Great food, great service and a great time! \\\\nEnjoyed the Dip de Frijoles, Ranch Mussels, and the Pasilla Relleno (pictured). \\\\nEverything tasted so fresh - amazing food! Will be back for many times to come!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"La Cocina Mexican Restaurant is a hidden gem in the heart of Santa Barbara, offering an intimate and romantic dining experience. The restaurant boasts a cozy courtyard with hundred-year-old olive trees, creating a tranquil ambiance perfect for date nights or special occasions. The service is exceptional, with friendly and attentive staff who are knowledgeable about the menu and eager to provide recommendations. The food is the real star, with each dish showcasing the freshest ingredients and creative flavor combinations. Standout dishes include the yellowtail tostadas, Padron chilies, and roasted romaine salad. The restaurant also offers a great selection of cocktails and wine, making it a perfect spot for a night out with friends or a romantic evening. With its unique atmosphere and delicious cuisine, La Cocina Mexican Restaurant is a must-visit for anyone looking for a memorable dining experience in Santa Barbara.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:eda1ac436f3a82889310833fc5200e06407ddfda286cfb892aa2d8e3cac3eb0a",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20
+  ]
+}

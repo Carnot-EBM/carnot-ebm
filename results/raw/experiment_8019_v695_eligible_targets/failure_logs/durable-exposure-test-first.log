@@ -1,0 +1,60 @@
+.........F....                                                           [100%]
+=================================== FAILURES ===================================
+___________________________ test_real_custody_loader ___________________________
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261002T105054-1280019-97cc62cb/test_real_custody_loader0')
+
+    def test_real_custody_loader(tmp_path):
+        """REQ-REPORT-8019: recover sealed original bytes, capture IDs and exposure receipts."""
+        data = e.load_inputs(e.ROOT, tmp_path)
+        value = e.reduce(data)
+        assert value["support_by_role"]["calibration"]["eligible"] == 61
+        assert value["support_by_role"]["calibration"]["class_counts"] == {"0": 50, "1": 11}
+        assert all(r["passed"] for r in value["support_by_role"].values())
+        assert all(Path(r["path"]).is_relative_to(tmp_path) for r in data["references"])
+>       assert all(Path(r["path"]).is_relative_to(tmp_path) for r in data["exposure_rows"])
+E       assert False
+E        +  where False = all(<generator object test_real_custody_loader.<locals>.<genexpr> at 0x7f55846dc900>)
+
+tests/python/test_eligible_targets_8019.py:164: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8019] phase=recover_role_before_fit elapsed_s=10.490 completed=0 pending=704
+[exp8019] phase=recover_capture_fit elapsed_s=10.496 completed=1 pending=255
+[exp8019] phase=recover_capture_fit elapsed_s=10.498 completed=33 pending=223
+[exp8019] phase=recover_capture_fit elapsed_s=10.501 completed=65 pending=191
+[exp8019] phase=recover_capture_fit elapsed_s=10.503 completed=97 pending=159
+[exp8019] phase=recover_capture_fit elapsed_s=10.505 completed=129 pending=127
+[exp8019] phase=recover_capture_fit elapsed_s=10.507 completed=161 pending=95
+[exp8019] phase=recover_capture_fit elapsed_s=10.510 completed=193 pending=63
+[exp8019] phase=recover_capture_fit elapsed_s=10.512 completed=225 pending=31
+[exp8019] phase=recover_role_after_fit elapsed_s=10.515 completed=256 pending=448
+[exp8019] phase=recover_role_before_tune elapsed_s=10.515 completed=256 pending=448
+[exp8019] phase=recover_capture_tune elapsed_s=10.517 completed=1 pending=63
+[exp8019] phase=recover_capture_tune elapsed_s=10.519 completed=33 pending=31
+[exp8019] phase=recover_role_after_tune elapsed_s=10.522 completed=320 pending=384
+[exp8019] phase=recover_role_before_calibration elapsed_s=10.522 completed=320 pending=384
+[exp8019] phase=recover_capture_calibration elapsed_s=10.523 completed=1 pending=63
+[exp8019] phase=recover_capture_calibration elapsed_s=10.525 completed=33 pending=31
+[exp8019] phase=recover_role_after_calibration elapsed_s=10.527 completed=384 pending=320
+[exp8019] phase=recover_role_before_stream elapsed_s=10.527 completed=384 pending=320
+[exp8019] phase=recover_capture_stream elapsed_s=10.532 completed=1 pending=255
+[exp8019] phase=recover_capture_stream elapsed_s=10.534 completed=33 pending=223
+[exp8019] phase=recover_capture_stream elapsed_s=10.537 completed=65 pending=191
+[exp8019] phase=recover_capture_stream elapsed_s=10.539 completed=97 pending=159
+[exp8019] phase=recover_capture_stream elapsed_s=10.541 completed=129 pending=127
+[exp8019] phase=recover_capture_stream elapsed_s=10.544 completed=161 pending=95
+[exp8019] phase=recover_capture_stream elapsed_s=10.546 completed=193 pending=63
+[exp8019] phase=recover_capture_stream elapsed_s=10.549 completed=225 pending=31
+[exp8019] phase=recover_role_after_stream elapsed_s=10.556 completed=640 pending=64
+[exp8019] phase=recover_role_before_retention elapsed_s=10.556 completed=640 pending=64
+[exp8019] phase=recover_capture_retention elapsed_s=10.557 completed=1 pending=63
+[exp8019] phase=recover_capture_retention elapsed_s=10.560 completed=33 pending=31
+[exp8019] phase=recover_role_after_retention elapsed_s=10.563 completed=704 pending=0
+[exp8019] phase=mask_frozen_fit elapsed_s=10.778 completed=256 pending=448
+[exp8019] phase=mask_frozen_tune elapsed_s=10.782 completed=320 pending=384
+[exp8019] phase=mask_frozen_calibration elapsed_s=10.785 completed=384 pending=320
+[exp8019] phase=mask_frozen_stream elapsed_s=10.799 completed=640 pending=64
+[exp8019] phase=mask_frozen_retention elapsed_s=10.803 completed=704 pending=0
+=========================== short test summary info ============================
+FAILED tests/python/test_eligible_targets_8019.py::test_real_custody_loader
+1 failed, 13 passed in 16.84s

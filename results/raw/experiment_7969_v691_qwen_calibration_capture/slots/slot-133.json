@@ -1,0 +1,103 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.3900491789681837,
+  "exclusion_reason": null,
+  "family_id": "sha256:8b831b225966ead393a2ed47a5ed497560dd2d01d677e8cd5549df56b0bb4735",
+  "input_tokens": 841,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 841,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 864
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:6265c4a49f43be9016e4bc57328f0d2e865af71c355333bb2b52f142a7acef57",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832654,
+    "id": "chatcmpl-loZaURLGXrfueOsDJG24mxNMwbCXVtCQ",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.541,
+      "predicted_n": 23,
+      "predicted_per_second": 42.549963832530736,
+      "predicted_per_token_ms": 23.501782608695656,
+      "prompt_ms": 730.336,
+      "prompt_n": 763,
+      "prompt_per_second": 1044.7246199009771,
+      "prompt_per_token_ms": 0.9571900393184797
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 841,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 864
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"President Biden Places Blame On House Republicans For Last Minute Spending Bill\\nFollowing the last minute signing of a stopgap spending bill to keep the government operating, President Biden asserted that an unnecessary crisis has been averted. Indeed, President Biden stated that it was several months ago that he engaged in a long negotiation with the Republican Speaker of the House of Representatives in order to come to a budget agreement that would prevent exactly the crisis that almost happened. According to President Biden, it is in particular the efforts of \\\"extreme MAGA Republicans\\\" who tried to walk away from the deal to instead vote for \\\"...deep, drastic spending cuts from 30 to 80 percent that would've been devastating for millions of Americans.\\\"\\nThat being said, the stopgap spending bill has already been criticized, not only in the US for the role of hardline Republicans reneging on a previous agreement, but also internationally for its refusal to include additional funding for Ukraine for their war against Russia. Josep Borrell, the European Union foreign policy chief, said that the decision was \\\"deeply and thoroughly\\\" regretable, but that Europe would continue supporting, and increasing their support for Ukraine given the continued existential threat posed to Europe by Russia's invasion.\\nIndeed, such words continue to make it clear that there is significant amounts of support around the world for continuing to assist Ukraine against Russia. President Biden himself makes reference to this when he pointed out that the majority of Congress has \\\"...steadfastly supported Ukraine to defend itself against the aggression and brutality of the Russians' attack on women and children - in addition to the military in Ukraine...\\\" yet no funding for Ukraine was included in this agreement.\\nAlready some in the international community have speculated that the United States might not follow through in its support of Ukraine, with the result that Russia will be able to keep the territory it has already seized, and potentially go on to threaten the rest of Ukraine as well. Such would be incredibly worrying for Eastern Europe in particular, given that some in Russia have already been making noise about justifications for invading them next. Ukrainians themselves have already said that they will not be able to defeat Russia without help from the United States, though there is still hope that Washington will follow through with its promises.\\nAccording to the stopgap spending bill, the government will remain open until November 17, pending another spending bill. Given how the current almost crisis unfolded, however, we can likely expect the same level of contention and strife in the weeks leading up to this lastest spending bill deadline. That being said, we can still hope that even then a government shutdown will be avoided.\", \"original_answer\": \"Here is a summary of the news in 114 words:\\n\\nPresident Biden blamed House Republicans for the last-minute signing of a stopgap spending bill, stating that they had attempted to walk away from a previous agreement and instead push for deep spending cuts that could have harmed millions of Americans. The bill has faced criticism both domestically and internationally for not including funding for Ukraine in its efforts against Russia's invasion. The absence of support for Ukraine has raised concerns that Russia may be able to keep the territory it has seized and potentially threaten other parts of Ukraine. The government will remain open until November 17, but the lead-up to the next spending bill deadline is expected to be contentious.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:bac2f3849d94e30a2bb9459fa3a9f6f0882eba825bb26c779e1904ef9e1789fa",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]
+}

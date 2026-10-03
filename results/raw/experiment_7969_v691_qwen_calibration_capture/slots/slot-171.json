@@ -1,0 +1,110 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.3831985869910568,
+  "exclusion_reason": null,
+  "family_id": "sha256:0cbea8e4c0b69770decca59c682e86eba90bcd6a8128b21504f11bd31ae28491",
+  "input_tokens": 845,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 845,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 868
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:7f6b6cdac22987b664e228ad338b30b7699a067e72bcdd5185630a16a807e321",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832707,
+    "id": "chatcmpl-199XmQwAbuXVH6OvnUmmzJPLcWwjKSq8",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.219,
+      "predicted_n": 23,
+      "predicted_per_second": 42.496660316803364,
+      "predicted_per_token_ms": 23.53126086956522,
+      "prompt_ms": 730.324,
+      "prompt_n": 767,
+      "prompt_per_second": 1050.2188069952515,
+      "prompt_per_token_ms": 0.9521825293350716
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 845,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 868
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Just eight months ago, a young woman named Fatu Kekula was single-handedly trying to save her Ebola-stricken family, donning trash bags to protect herself against the deadly virus. Today, because of a CNN story and the generosity of donors from around the world, Kekula wears scrubs bearing the emblem of the Emory University Nell Hodgson Woodruff School of Nursing in Atlanta, where she's learning skills she can take back home to care for her fellow Liberians. \\\"It's a surprise -- a young child like me who came from a very poor background coming to the U.S.,\\\" she said. \\\"I'm thankful to CNN and I appreciate the people who made donations, and I'm thankful to Emory for accepting me to study.\\\" At Emory, Kekula has asked for special training on certain skills, such as caring for burns, a common type of injury because children in Liberia sometimes fall into the open fires used for cooking. One of her instructors, Kelly Fullwood, said Kekula's an excellent student who has taught her teachers a thing or two about how to do procedures without costly equipment, as she's been forced to do in Liberia. \\\"She fascinates me every day,\\\" Fullwood said. \\\"She gets nursing. She gets what it's about.\\\" Kekula, 23, was just a year away from finishing up her nursing degree in Liberia when Ebola struck and her mother, father, sister and cousin came down with the disease. Hospitals were full and no doctors would visit her home, so with just advice from a physician on the phone, Kekula took care of all four of her relatives at the same time. All but her cousin survived -- a high success rate considering that at the time, about 70% of Ebola patients were dying in Liberia. Kekula couldn't continue her nursing education in Liberia, because the schools had closed. A CNN story about Kekula in September prompted donations from around the world to IAM, an organization that raises money to help African natives pay for education. David Smith, an associate dean at Emory's nursing school, said they accepted Kekula because they were struck by how both she and Emory each treated four Ebola patients at around the same time last year -- and Emory had dozens of doctors and nurses and millions of dollars in technology while Kekula had nobody and nearly no supplies. Stop Ebola where it starts. \\\"It was obvious to us that this woman was intelligent and strong and fearless,\\\" he said. Kekula is scheduled to return to Liberia in August. \\\"These things that I have learned here I am going to take back to my fellow nurses,\\\" she said. \\\"I love to care for people. I love to save lives.\\\" Extraordinary people.\\n\", \"original_answer\": \"Sure! Here's the summary in 113 words:\\n\\nFatu Kekula, a young Liberian nurse, was featured in a CNN story and received donations to pursue nursing education at Emory University. She is now learning specialized skills to care for burn victims and will return to Liberia to treat Ebola patients. Despite facing challenges with limited resources, Kekula successfully cared for four Ebola-stricken family members and is determined to make a difference in her community.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:8674f9027abb3db03970776dab68bc1b82934a9b3d9fad950c7621e00f89a23e",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18
+  ]
+}

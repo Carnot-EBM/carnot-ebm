@@ -1,0 +1,103 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.3986514389980584,
+  "exclusion_reason": null,
+  "family_id": "sha256:b2b5cde43305408ec11f71d72c53ae1de81c8676b1de8335804cd4cba3bcfee0",
+  "input_tokens": 820,
+  "invocation_finished_at": "2026-10-01T11:42:40.376469+00:00",
+  "invocation_started_at": "2026-10-01T11:42:38.977816+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 1.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 820,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 843
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:4c9fa42ca6bd40a0b00f9cadaec85a3dd83be23ce443f8853216539ace20b9aa",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 1.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790854960,
+    "id": "chatcmpl-VosD9vaWvjrNWagjwyshIuo292xppDTa",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 537.009,
+      "predicted_n": 23,
+      "predicted_per_second": 42.829822218994465,
+      "predicted_per_token_ms": 23.34821739130435,
+      "prompt_ms": 717.029,
+      "prompt_n": 742,
+      "prompt_per_second": 1034.8256486139333,
+      "prompt_per_token_ms": 0.9663463611859838
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 820,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 843
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Oscar Mayer Bacon and Chicken Recipes OSCAR MAYER Bacon brings its singularly delicious flavor to a variety of chicken recipes in our collection that showcases this dynamic duo. The variety is an indication of just how well these two play with others: pastas, pizzas, nachos and salad.-/media/assets/recipe_images/cheddar-chicken-potatoes-114124-640x428.jpg. OSCAR MAYER Bacon brings its singularly delicious flavor to a variety of chicken recipes in our collection that showcases this dynamic duo.\\\\n\\\\npassage 2:When these recipes get you in the mood for others, check out our bacon and pasta recipes. /-/media/assets/recipe_images/cheddar-chicken-potatoes-114124-640x428.jpg. OSCAR MAYER Bacon brings its singularly delicious flavor to a variety of chicken recipes in our collection that showcases this dynamic duo.The variety is an indication of just how well these two play with others: pastas, pizzas, nachos and salad.-/media/assets/recipe_images/cheddar-chicken-potatoes-114124-640x428.jpg. OSCAR MAYER Bacon brings its singularly delicious flavor to a variety of chicken recipes in our collection that showcases this dynamic duo.\\\\n\\\\npassage 3:1. Bacon Guacamole Mash 2 avocados with 1/2 cup each chopped tomato and cilantro, 1/4 cup each chopped onion and crumbled cooked bacon, 1/2 minced jalapeno, some lime juice and salt.2. Cheesy Bacon Popcorn Drizzle 4 cups hot popcorn with 1 tablespoon bacon drippings.. Bacon Guacamole Mash 2 avocados with 1/2 cup each chopped tomato and cilantro, 1/4 cup each chopped onion and crumbled cooked bacon, 1/2 minced jalapeno, some lime juice and salt. 2.\\\\n\\\\n\\\",\\\"question\\\":\\\"what can i do with bacon for dinner\\\"}\", \"original_answer\": \"Based on the provided passages, here are some dinner ideas involving bacon:\\n\\n1. Grilled Chicken and Bacon Salad - A hearty salad featuring grilled chicken breast, crispy bacon, mixed greens, cherry tomatoes, and a tangy dressing. (Passage 1)\\n2. Bacon and Cheddar Mac and Cheese - A comforting macaroni and cheese dish loaded with crispy bacon bits and sharp cheddar cheese. (Passage 1)\\n3. Baked Bacon Wrapped Scallops - Succulent scallops wrapped in bacon and baked until golden brown, served with a side of garlic roasted vegetables. (Passage 2)\\n4. Bacon and Avocado Tacos - Crispy bacon, fresh avocado, sliced black beans, and shredded cheese stuffed into crispy taco shells. (Passage 3)\\n5. Bacon and Spinach Stuffed Chicken Breast - A moist and flavorful chicken breast stuffed with a mixture of crispy bacon, wilted spinach, and feta cheese. (Passage 1)\\n\\nUnable to answer based on given passages.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_admission",
+  "source_cluster_id": "sha256:eb33dede5b3e18ab02d171441ee2d991a542197f06510df87aa173aaf568ab94",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ]
+}

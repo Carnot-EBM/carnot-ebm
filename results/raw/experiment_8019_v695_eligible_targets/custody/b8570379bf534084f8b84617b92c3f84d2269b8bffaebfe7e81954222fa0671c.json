@@ -1,0 +1,106 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.3362443479709327,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:2d55538f40ed8551b05695f97ff21e400cbc895d97469f4bd619463b069b2a2b",
+  "input_tokens": 849,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 849,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 870
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:b6791833b9d3c60d42cdaad70cb3e9c07d4e0fd519eeeac93e946044fc6d7292",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885957,
+    "id": "chatcmpl-AfWj8RXN8zGGJ1REsMqeWozT0q1s9QBx",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 492.391,
+      "predicted_n": 21,
+      "predicted_per_second": 42.64903298394974,
+      "predicted_per_token_ms": 23.447190476190478,
+      "prompt_ms": 732.59,
+      "prompt_n": 771,
+      "prompt_per_second": 1052.4304181056252,
+      "prompt_per_token_ms": 0.9501815823605707
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 849,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 870
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"413 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Sandwiches, Wraps, Kebab, German, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-2:30\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"11:0-2:30\\\",\\\"Sunday\\\":\\\"11:0-21:0\\\",\\\"Thursday\\\":\\\"11:0-22:0\\\",\\\"Tuesday\\\":\\\"11:0-22:0\\\",\\\"Wednesday\\\":\\\"11:0-22:0\\\"},\\\"name\\\":\\\"Urkeb\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2018-12-12 01:34:32\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Open back up!!!! I miss this food soooo bad!!! Move the business up to the Mesa! I promise I will be your best customer\\\"},{\\\"review_date\\\":\\\"2018-10-14 15:35:41\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Personally I felt this place was around 3 stars. It's packed with everything but meat(weak portion of meat) and I didn't think it was all that flavorful. It was ok, but not that great. I'm giving it 4 stars because the 2 German guys that I know love this place and would give it 5 stars. One of my friends said it was as good as anything that he'd have back home. So maybe it's just me.\\\"},{\\\"review_date\\\":\\\"2018-09-11 22:45:49\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Sehr sch\u00f6nes Lokal und der D\u00f6ner war mehr als lecker! \\\\nFalls man in Santa Barbara ist, sollte man auf jeden Fall dort hin.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Urkeb is a casual restaurant located at 413 State St, Santa Barbara, CA and is well-known for its sandwiches, wraps, kebabs, and German cuisine. The business operates from 11:00 am to 10:00 pm from Tuesday to Thursday, extends to 2:30 am on Fridays and Saturdays, and closes at 9:00 pm on Sundays. The establishment doesn't offer outdoor seating, reservations, or any kind of parking but does provide free WiFi and is suitable for groups. Takeout service is also available. With an average rating of 4.5 stars, customers have expressed a strong liking for the food. However, some felt that the meat portions were small. The restaurant is particularly popular among German customers, with one comparing the quality of food to that found in their home country.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "1d6985ad5a0ae9632fa549dcadd15860933c72f7bb5b75b0c98b3e2db259fa82",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ]
+}

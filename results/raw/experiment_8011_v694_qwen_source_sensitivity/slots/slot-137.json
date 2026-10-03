@@ -1,0 +1,67 @@
+{
+  "arm": "swap",
+  "capture_identity": "sha256:c690c1f517fbce73c5da6a2d1e99e3819c3de93e1045fe76d1c8215b54691541",
+  "censor_status": false,
+  "denominator": 1,
+  "donor_group_id": "sha256:71ecefce7eba695d846aead9eeec7a2a4ba4073f978f2e8547e7fcdef2f3ed6a",
+  "duration_s": 0.0,
+  "eligibility": false,
+  "exclusion_reason": "paired_context_upper_bound_overrun",
+  "failure_status": false,
+  "family_id": "sha256:f11ddc31514650a348e96d498ed2a2bb3ba2cdc66aa370abb95379ab38703924:swap",
+  "group_id": "sha256:f11ddc31514650a348e96d498ed2a2bb3ba2cdc66aa370abb95379ab38703924",
+  "input_byte_upper_bound": 3495,
+  "input_tokens": null,
+  "numerator": 0,
+  "parsed": {
+    "citation_valid": false,
+    "completed": false,
+    "finish_reason": null,
+    "probability": null,
+    "schema_valid": false,
+    "source_sentence_id": null,
+    "status": "invalid_envelope",
+    "syntax_valid": false,
+    "usage": {}
+  },
+  "public_eligible": false,
+  "public_hash": "sha256:f72e8562fb768915a98d40098ad7e8d3ee71bfd2ebd8aada907cff5cbc41cb1c",
+  "raw_response": {},
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 32,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"503 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":false,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":3.0,\\\"categories\\\":\\\"Bubble Tea, Restaurants, Food, Asian Fusion, Vegan, Acai Bowls\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-2:0\\\",\\\"Monday\\\":\\\"11:0-21:0\\\",\\\"Saturday\\\":\\\"11:0-2:0\\\",\\\"Sunday\\\":\\\"11:0-21:0\\\",\\\"Thursday\\\":\\\"11:0-21:0\\\",\\\"Tuesday\\\":\\\"11:0-21:0\\\",\\\"Wednesday\\\":\\\"11:0-21:0\\\"},\\\"name\\\":\\\"Hana Kitchen\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-08 03:18:16\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Received an email with a promo code (YUMMY) to get 15% off and the website won't accept the discount. Bait & Switch! Ugh!\\\"},{\\\"review_date\\\":\\\"2021-12-28 17:35:11\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Food poisoning yesterday from eating there the night before. Not much else I can say about that except the obvious - not recommended.\\\"},{\\\"review_date\\\":\\\"2021-11-28 23:25:44\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"Their water tasted like plastic. I got the chicken bowl and their broccoli was moldy. I asked the lady about the mango tacos and she was rude about it. I do not recommend, I did not eat more than two bites.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"A 24-year-old man identified as Sid Ahmed Ghlam has been taken into custody by French authorities after he called for an ambulance. Ghlam had accidentally shot himself in the thigh, but when authorities arrived they found more than just a gunshot wound; evidence of his plans to target churches was discovered, along with weapons and ammunition. The man had been in contact with someone in Syria who had requested he carry out the attack. Paris prosecutor Francois Molins said that Ghlam was also suspected of killing a 32-year-old woman hours earlier and then planning to launch a larger-scale terror attack in the near future. A search of his home turned up more evidence including three more Kalashnikovs, three bulletproof vests, police armbands, a camera, some 2,000 euros in cash and \\\"documents in Arabic mentioning al Qaeda and ISIS,\\\" according to the prosecutor. \\\"A terrorist attack has been foiled,\\\" said French President Francois Hollande.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69410,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 0,
+  "role": "stream",
+  "seed": 69410,
+  "source_cluster_id": "2aaa5d71bf9dba70d57a41b134c04fceeead598c6f8aaccc9bd1d06590354d82",
+  "source_hash": "sha256:e9961dcfaecbb9c8b6fe588e25714e9a427f2e33af87ca74451e740c6152488c",
+  "started": false,
+  "status": "excluded",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ]
+}

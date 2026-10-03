@@ -1,0 +1,101 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.1669505570316687,
+  "exclusion_reason": null,
+  "family_id": "sha256:d0e99d267de0bf7829a83ba056b5efbbe1631c5f2e4517ca570a5f856d06512d",
+  "input_tokens": 469,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 469,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 492
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:7e0c8f9cfadb7f806ce6b079b65b10c4c78bb93c899ebec5ec035d8a37434d4f",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832704,
+    "id": "chatcmpl-4Mb9xezXt3fuSU3rnQZRx0Q7LRESBh89",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.491,
+      "predicted_n": 23,
+      "predicted_per_second": 42.553900064940954,
+      "predicted_per_token_ms": 23.499608695652174,
+      "prompt_ms": 487.846,
+      "prompt_n": 391,
+      "prompt_per_second": 801.4824350307268,
+      "prompt_per_token_ms": 1.247687979539642
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 469,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 492
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Advantages of dams are a lot as following. 1  agriculture-it stores and provides water for agriculture. 2  electricity generation-to rotate wings of turbine we are still using the water energy in terms of kinetic and static or water pressure energy.\\\\n\\\\npassage 2:ADVANTAGES: 1. Once a dam is constructed, electricity can be produced at a constant rate. 2. If electricity is not needed, the sluice gates can be shut, stopping electricity generation. The water can be saved for use another time when electricity demand is high.\\\\n\\\\npassage 3:Problems and Benefits of Building a Dam. Dams can offer huge benefits in terms of electrical power generation and irrigation. Many massive dams worldwide are a tribute to the achievements of civil engineering and electrical engineering. These great feats of civil engineering are not without problems, however, and there are potential disadvantages as well as benefits to take into account.\\\\n\\\\n\\\",\\\"question\\\":\\\"what advantages do dams provide\\\"}\", \"original_answer\": \"Based on the given passages, dams provide the following advantages:\\n\\n* Storing and providing water for agriculture\\n* Generating electricity through the use of water energy (kinetic and static or water pressure energy)\\n* Producing electricity at a constant rate once constructed\\n* Ability to shut off electricity generation when not needed and save water for later use\\n* Irrigation purposes\\n\\nTherefore, the advantages of dams include agricultural benefits, reliable electricity production, water storage, and irrigation capabilities.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "tune",
+  "source_cluster_id": "sha256:51ec107a810750defe519d7d243536f46011a379b3d7e8ffa78ada78883f96d2",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ]
+}

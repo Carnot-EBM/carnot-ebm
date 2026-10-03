@@ -1,0 +1,105 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.4111427589668892,
+  "exclusion_reason": null,
+  "family_id": "sha256:a04f3596b1c41c53eb0c74bfadf41baddc3a25f96307b0751bb2a502b2a2aa45",
+  "input_tokens": 870,
+  "invocation_finished_at": "2026-10-01T11:42:29.440437+00:00",
+  "invocation_started_at": "2026-10-01T11:42:28.029293+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 870,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 891
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:431f83a6f01ae96c758d74dd17a8241ba1c893ddc6389de351bf35c76cb11585",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790854949,
+    "id": "chatcmpl-3VDSdIKb3IUfZOmjQFlrRAFzztDJGTie",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 488.912,
+      "predicted_n": 21,
+      "predicted_per_second": 42.95251497201951,
+      "predicted_per_token_ms": 23.281523809523808,
+      "prompt_ms": 811.428,
+      "prompt_n": 792,
+      "prompt_per_second": 976.0570253922715,
+      "prompt_per_token_ms": 1.024530303030303
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 870,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 891
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"2315 Lillie Ave\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":null,\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":null},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Chicken Wings, Restaurants, Pizza, Sandwiches\\\",\\\"city\\\":\\\"Summerland\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-0:0\\\",\\\"Monday\\\":\\\"11:0-0:0\\\",\\\"Saturday\\\":\\\"11:0-0:0\\\",\\\"Sunday\\\":\\\"11:0-0:0\\\",\\\"Thursday\\\":\\\"11:0-0:0\\\",\\\"Tuesday\\\":\\\"11:0-0:0\\\",\\\"Wednesday\\\":\\\"11:0-0:0\\\"},\\\"name\\\":\\\"Rusty\u2019s Pizza Parlor\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-11-12 03:22:59\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Still waiting for my Pizzinat that I was told could be up to a hr it's now 1hr 20 minutes later & no Pizzinat I called spoke\\\\nTo a manager that was so rude I asked for a discount said they don't do that ( I have gotten discounts before ) then I said makes me not want to order from them again then he hung up on me wtf....  Horrible business\\\"},{\\\"review_date\\\":\\\"2021-09-18 01:58:56\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Under staffed, un organized my order took 45 mins. Only to find out they got it wrong. The other lady had waited an hour plus, granted it was Friday but still this place was the slowest rustys ever. Also they forgot my wings and I waited an extra 20 mins for those so total was 65 mins for my order. Only to get raw chicken wings snd and a cold pizza\\\"},{\\\"review_date\\\":\\\"2021-08-30 05:51:39\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Popped by late night on the way back to Los Angeles from Santa Barbara. Four of us were starving & didn't want drive through. We drove by & saw it was open & ran right in to order. We got the rustys special in a large & it was great. Fresh tasting ingredients, made in a reasonable amount of time & so tasty. Definitely appreciative they were open! Awesome pizza\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Sure! Here is an objective overview of Rusty's Pizza Parlor based on the provided structured data:\\n\\nRusty's Pizza Parlor is a restaurant located in Summerland, CA that serves Chicken Wings, Pizza, Sandwiches, and offers takeout and outdoor seating. According to their hours, they are open Monday through Sunday from 11am to 10pm. The restaurant has received mixed reviews, with some customers praising the food and service while others have experienced long wait times and poor customer service. One reviewer reported waiting over an hour for their order and receiving raw chicken wings, while another reviewer had a positive experience with fresh and tasty food. The overall rating for Rusty's Pizza Parlor is 3.5 stars based on three reviews.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "sha256:5fb37ec2ad042ea4dd38af9657e2e892d1655c862f48fb58b9f05696b0c68af2",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]
+}

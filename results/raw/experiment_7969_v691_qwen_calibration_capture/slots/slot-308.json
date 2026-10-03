@@ -1,0 +1,108 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.435912949964404,
+  "exclusion_reason": null,
+  "family_id": "sha256:9fb0ac233b6d556317380ef0e80d87c72e5bd4951c2a1ee0e23a6c1791cd8d2c",
+  "input_tokens": 823,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 823,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 846
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:cfded47e3927299b1ee3413cdd82558a96b8a30d7e86507247c20e8deec9d80b",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832903,
+    "id": "chatcmpl-QRn2PyBXtQaOFtSvROeXTqVlntg7xx6q",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.442,
+      "predicted_n": 23,
+      "predicted_per_second": 42.47915750902221,
+      "predicted_per_token_ms": 23.54095652173913,
+      "prompt_ms": 728.878,
+      "prompt_n": 745,
+      "prompt_per_second": 1022.1189279961804,
+      "prompt_per_token_ms": 0.9783597315436242
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 823,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 846
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"US deports 100+ Migrants to Venezuela\\nThe Biden administration conducted its first deportation flight to Venezuela in years, sending over 100 Venezuelans back to their home country. The Department of Homeland Security made the decision to resume direct repatriations in an effort to discourage illegal border crossings, following an agreement with Venezuelan authorities to accept the return of their nationals. Corey Price, an acting executive associate director for Immigration and Customs Enforcement, stated that there would be several more flights in the coming days and weeks.\\nThe migrants on the flight had illegally entered the US between ports of entry and were prioritized based on recent arrivals and criminal history. Since President Biden took office, nearly half a million Venezuelans have illegally crossed the southwest border, with a peak of over 34,000 arrests in April. To address this, Biden extended temporary protected status to around 472,000 Venezuelan migrants, allowing them to live and work legally in the US. However, those who have not applied for TPS and have deportation orders could still face removal. Immigration attorneys are advising eligible Venezuelans to apply for TPS promptly to avoid deportation.\\nThe Biden administration's decision to conduct its first deportation flight to Venezuela in years is aimed at discouraging illegal border crossings and addressing the influx of Venezuelan migrants entering the US. With an agreement in place with Venezuelan authorities to accept repatriations, the Department of Homeland Security made the move to resume direct deportations. Corey Price, acting executive associate director for Immigration and Customs Enforcement, revealed that several more flights would be scheduled in the coming days and weeks.\\nThe individuals on the deportation flight had entered the US illegally between ports of entry, and were chosen based on factors such as recent arrival and criminal history. The number of Venezuelans crossing the southwest border illegally has reached a staggering half a million since President Biden took office. Meanwhile, in an effort to provide relief to Venezuelan migrants, Biden extended temporary protected status to approximately 472,000 individuals, granting them legal rights to live and work in the US. However, those who haven't applied for TPS and have deportation orders may still face removal. Immigration attorneys are strongly advising eligible Venezuelans to promptly apply for TPS to avoid deportation and secure legal status in the country.\\nSource:\\nhttps://nypost.com/2023/10/18/over-100-migrants-deported-to-venezuela-as-repatriation-flights-resume/\", \"original_answer\": \"The Biden administration conducted its first deportation flight to Venezuela, sending over 100 Venezuelans back to their home country in an effort to discourage illegal border crossings. The Department of Homeland Security made the decision following an agreement with Venezuelan authorities. Corey Price, an acting executive associate director for Immigration and Customs Enforcement, stated that there would be several more flights in the coming days and weeks. Since President Biden took office, nearly half a million Venezuelans have illegally crossed the southwest border, prompting Biden to extend temporary protected status to around 472,000 Venezuelan migrants. Immigration attorneys are advising eligible Venezuelans to apply for TPS promptly to avoid deportation.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:d6991fbaa99c9c4c73104db75444bfb31717f9573469042c7b2f6ab52b93dc06",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+  ]
+}

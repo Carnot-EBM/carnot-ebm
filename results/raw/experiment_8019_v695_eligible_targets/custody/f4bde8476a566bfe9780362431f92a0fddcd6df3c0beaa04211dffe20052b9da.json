@@ -1,0 +1,128 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.8316924879909493,
+  "exclusion_reason": null,
+  "family_id": "sha256:594b0a3ac1a9b6c135e2f62134245f3b368bd53a565db49238f1db5caf21d8f1",
+  "input_tokens": 1322,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1322,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1346
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:a36d217dd34dbaca73178232021618ebe8b3126f2fd141a9cdba2aec8209db48",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832802,
+    "id": "chatcmpl-9Hk5TLPZP0TgmlDNFv7Nkw5v8xuG6aCG",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 566.639,
+      "predicted_n": 24,
+      "predicted_per_second": 42.35500909750299,
+      "predicted_per_token_ms": 23.609958333333335,
+      "prompt_ms": 1151.551,
+      "prompt_n": 1244,
+      "prompt_per_second": 1080.2821585843787,
+      "prompt_per_token_ms": 0.9256840836012861
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1322,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1346
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Robert Downey Jr. is making headlines for walking out of an interview with a British journalist who dared to veer away from the superhero movie Downey was there to promote. The journalist instead started asking personal questions about the actor's political beliefs and \\\"dark periods\\\" of addiction and jail time. Twitter, of course, is abuzz: Did journalist Krishnan Guru-Murthy go too far? Must every interview be a license for a journalist to ask anything he'd like? From the start of the 7-minute television interview, it seems evident that Downey is not particularly interested in being there, even if being there was, ultimately, a benefit to him -- after all, he's promoting his latest film, \\\"Avengers: Age of Ultron.\\\" He grows increasingly agitated, even as the line of questioning remains on-topic; his attitude, meanwhile, grew increasingly smug. His eyes glaze over as the reporter talks, he makes condescending comments and gestures that seem intended to intimidate and imply he's much smarter than Guru-Murthy, and he repeatedly looks toward his handler as if to say, \\\"Do I really have to sit here with this guy?\\\" At one point, he makes fun of Guru-Murthy for seeming nervous, saying, \\\"Your foot is starting to jump a little bit. You better get to your next question.\\\" But it's after Guru-Murthy asks Downey whether he thinks he is \\\"free from all of that,\\\" referring to Downey's history of \\\"taking drugs, drinking\\\" that the building tension comes to a head. \\\"I'm sorry,\\\" says Downey, \\\"What are we doing?\\\" To which Guru-Murthy replies, \\\"I'm just asking questions,\\\" which indeed was so. Downey has the right to refuse to answer the question, of course, but that's not what he does next. Instead, he throws the celebrity interview equivalent of a tantrum: He smiles arrogantly, says \\\"bye!\\\" and stands up to leave. He sure showed him! It's true that we live in a culture where we feel we have the right to know everything about celebrities -- who they're dating, what they're eating, where they vacation, what they meant when they made that comment 10 years ago. Journalists often go too far, even if it's their job. And certainly not every journalist is good at his job. But while Downey may be understandably tired of answering questions about his past, questions that have been asked before, his business is our business. The entertainment industry is about entertaining people. As such, we tend to like to watch actors who seem like they want to be watched. This is why most celebrities, especially those with a big budget movie to promote, agree to interviews and seek out recognition in general. But when the recognition no longer serves them? Then they want to bemoan it? What Downey seemed to misunderstand is that the interview format gives journalists the right to ask questions. That's what an interview is. He certainly can decline to answer questions he does not feel are appropriate, or even ones he simply doesn't feel like answering. But he does not have the right to be absolved for behavior that is rude, demeaning, and disrespectful -- even if he's a celebrity, and even if he felt uncomfortable or put-off. What the video shows is a movie star with a bullying streak. After he removes his microphone and his handlers begin hustling him out with kid gloves, the actor cannot resist a parting shot. He turns to the reporter, being sure to look directly at the camera on the way, and says, \\\"You seem okay. It's just getting a little Diane Sawyer in here,\\\" followed by what sounds like, \\\"and you're kind of a schmuck.\\\" Downey might not have been \\\"in the mood\\\" to be questioned... and those days, those moods, are understandable. We all have them. And yet in this case, that's, well, too bad. The actor has agreed to an interview as part of his job. He has agreed to engage in a conversation with another professional human being. Given the terms, he is not entitled to call all the shots. That he thinks he can is perhaps our own, celebrity-obsessed doing -- we revere the famous; is it any surprise when they reveal that they, too, regard themselves as better than everyone else? But it's still on him.\\n\", \"original_answer\": \"Here is a summary of the article in 177 words:\\n\\nRobert Downey Jr. walked out of an interview with a British journalist after the reporter asked personal questions about the actor's past struggles with addiction and legal issues. The journalist, Krishnan Guru-Murthy, was asking questions about Downey's new film \\\"Avengers: Age of Ultron\\\" but the actor became agitated and upset when the conversation shifted to his personal life. Downey accused Guru-Murthy of being \\\"disrespectful\\\" and \\\"rude\\\" before standing up and leaving the interview. The incident has sparked debate on social media about the boundaries of celebrity interviews and the level of personal information that journalists should be allowed to ask for.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "tune",
+  "source_cluster_id": "sha256:a2e41a280d555673f02b1e0d828d253de2f1afa48e14ed3b4bbda07a538f80c2",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36
+  ]
+}

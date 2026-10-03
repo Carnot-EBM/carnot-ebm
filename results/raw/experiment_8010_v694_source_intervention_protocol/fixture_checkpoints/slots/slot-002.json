@@ -1,0 +1,90 @@
+{
+  "arm": "duplicate",
+  "capture_identity": "sha256:c690c1f517fbce73c5da6a2d1e99e3819c3de93e1045fe76d1c8215b54691541",
+  "censor_status": false,
+  "denominator": 1,
+  "donor_group_id": "sha256:d6fb692d68caeba5c02d798ee0875e39173c6b7254b01fc4f5bfa1206bdf6d96",
+  "duration_s": 0.0023087679874151945,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:d6fb692d68caeba5c02d798ee0875e39173c6b7254b01fc4f5bfa1206bdf6d96:duplicate",
+  "group_id": "sha256:d6fb692d68caeba5c02d798ee0875e39173c6b7254b01fc4f5bfa1206bdf6d96",
+  "input_byte_upper_bound": 3682,
+  "input_tokens": 30,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.25,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 18,
+      "prompt_tokens": 30
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:72c4079790ef650894939b6ec28505471527f98c081eddd30ee6966743f3f170",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "message": {
+          "content": "{\"unsupported_probability\": 0.25, \"source_sentence_id\": null}"
+        }
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "usage": {
+      "completion_tokens": 18,
+      "prompt_tokens": 30
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 32,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"5764 Calle Real\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":null,\\\"divey\\\":false,\\\"hipster\\\":null,\\\"intimate\\\":false,\\\"romantic\\\":null,\\\"touristy\\\":null,\\\"trendy\\\":null,\\\"upscale\\\":null},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Restaurants, Mexican, Breakfast & Brunch\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-21:0\\\",\\\"Monday\\\":\\\"11:0-21:0\\\",\\\"Saturday\\\":\\\"10:0-21:0\\\",\\\"Sunday\\\":\\\"10:0-21:0\\\",\\\"Thursday\\\":\\\"11:0-21:0\\\",\\\"Tuesday\\\":\\\"11:0-21:0\\\",\\\"Wednesday\\\":\\\"11:0-21:0\\\"},\\\"name\\\":\\\"Los Arroyos Mexican Restaurant & Take Out\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-15 22:19:36\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"We had a great time here last night! The burritos were splendid and the generous side of chips did not go unnoticed. Adam was our bartender, he was skilled and fun to talk too. He's Italian, so naturally I had to ask him 'if he liked Sebastian Maniscalco?' He said, \\\\\\\"Yes!\\\\\\\" (And that is when I decided that Adam and Los Arroyos were getting a 5-star review). Adam made sure we received all of our take-out orders and remembered our drink modifications. Angel was equally up to par and made a great margarita recommendation. Take care guys, we'll see you soon!\\\"},{\\\"review_date\\\":\\\"2022-01-03 00:37:47\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"Doesn't have any flavor. Tastes gross half way thru eating it. Was a Take out delivery, wouldn't order again\\\"},{\\\"review_date\\\":\\\"2021-12-27 02:16:02\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"My favorite place to eat!!! The tacos are so good! And I can practically DRINK the green salsa!!!  So good. First place I go to when I'm back in SB\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Los Arroyos Mexican Restaurant & Take Out, located at 5764 Calle Real in Goleta, CA, is a casual dining establishment that offers Mexican cuisine and breakfast & brunch options. Open every day, with extended hours during the weekend, the restaurant provides both indoor and outdoor seating. It also offers take-out services but does not offer free Wi-Fi. The restaurant provides lot parking and accepts reservations. Customers have given mixed reviews, with some praising the quality of the burritos, the generous portion of chips, and the friendly staff. Notably, one customer highlighted the bartender named Adam for his service and another customer enjoyed the tacos and green salsa. However, there was a negative review regarding the taste of a take-out order.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69410,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "seed": 69410,
+  "source_cluster_id": "02626627ab4a9917f71c0b9bc0d42a5f054138e319f1a60d59a68948238469ea",
+  "source_hash": "sha256:a0477b40ed2b3af858bd54ce681d9ce354c3f70c7915517e1ea665b27b4ef250",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ]
+}

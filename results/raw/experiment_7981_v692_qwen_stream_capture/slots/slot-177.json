@@ -1,0 +1,118 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.391544034006074,
+  "exclusion_reason": null,
+  "family_id": "sha256:fc4b23325b12f2139b2ad38f8cab1fed67aeccb6af4625454a317de5871926ca",
+  "input_tokens": 767,
+  "invocation_finished_at": "2026-10-01T11:45:22.987628+00:00",
+  "invocation_started_at": "2026-10-01T11:45:21.596082+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 10,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 767,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 792
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:c6b8d7210e8b63cff82e76137135356cd26ed7f11945f8fe7bac79ebeacc2578",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 10\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790855122,
+    "id": "chatcmpl-s4CazdzJVzFbq6yWn8RlgNa2wjLe67Xq",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 591.38,
+      "predicted_n": 25,
+      "predicted_per_second": 42.274003179005035,
+      "predicted_per_token_ms": 23.6552,
+      "prompt_ms": 687.167,
+      "prompt_n": 689,
+      "prompt_per_second": 1002.6674738455134,
+      "prompt_per_token_ms": 0.9973396226415094
+    },
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 767,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 792
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"'Young and the Restless' Spoilers: Kyle Burns Audra, Plots Revenge Against The Abbotts?\\nThe Young and the Restless (Y&R) spoilers tease that Kyle Abbott (Michael Mealor) will betray Tucker McCall (Trevor St. John) and Audra Charles (Zuleyka Silver) in their quest to take over Jabot Cosmetics. She Knows Soaps reports that Kyle warned Audra that if his dad changes his mind about firing Billy Abbott (Jason Thompson, he will abandon their deal and accept the co-CEO position.\\nSoaps Spoilers reports that Audra has everything riding on the Jabot takeover. She is the COO of Newman Media, but her job is not very secure. Nikki Newman (Melody Thomas Scott) has threatened to fire Audra. Victor Newman's (Eric Braeden) wife is still determining if she can trust Audra. There is something about Audra that makes Nikki feel uneasy.\\nIf Jack Abbott (Peter Bergman) changes his mind about firing Billy and appointing Kyle as the co-CEO, it will put Audra in a tight spot. Tucker expects Kyle and Audra to be his foot soldiers to make this Jabot takeover happen. Audra vouched for Kyle to Tucker. McCall expects Kyle to follow through and help him obtain Jabot.\\nWhen Kyle refuses to help and takes the co-CEO job, Abbott will gain two enemies. The Young and the Restless spoilers say that Audra and Tucker will plot against Kyle, vowing to tell Jack about Kyle's plot to steal Jabot from his hands.\\nIt will be a crushing blow and could damage Kyle and Jack's relationship. Diane Jenkins (Susan Walters) will struggle to defend her son's actions. It could end in a massive Abbott family war with Kyle in the middle.\\nJack's concern about Tucker is warranted. He knows that Tucker wants Jabot. The Young and the Restless spoilers say that Tucker and Audra's revenge plot shifts their target from Jack to Kyle after he pulls out of their coup.\\nY&R fans, do you think Kyle will burn Audra and Tucker? Keep watching The Young and the Restless, airing weekdays on CBS and streaming on Paramount Plus. Please share your thoughts with me in the comments section below. Remember to follow me to read more of my content.\", \"original_answer\": \"Kyle Abbott betrays Tucker McCall and Audra Charles by accepting the co-CEO position at Jabot Cosmetics instead of helping them take over the company. Audra and Tucker plan to seek revenge against Kyle, who may lose his relationship with his father Jack Abbott as a result. The conflict could lead to a family war between the Abbotts.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "sha256:6a618a73e7c865b43b904c8a61c50af5f34f2c3b6a8c342da7e5c82b24a5a8be",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+  ]
+}

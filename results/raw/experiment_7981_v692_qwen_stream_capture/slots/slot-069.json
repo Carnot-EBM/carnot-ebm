@@ -1,0 +1,74 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 0.0,
+  "exclusion_reason": "answer_units_over_budget",
+  "family_id": "sha256:219e5b0d4c90ac7b4ccae6dab189c2203e16410e6331c3af433d0fcede00fbdc",
+  "input_tokens": null,
+  "invocation_finished_at": null,
+  "invocation_started_at": null,
+  "parsed": {
+    "citation_valid": false,
+    "completed": false,
+    "finish_reason": null,
+    "probability": null,
+    "schema_valid": false,
+    "source_sentence_id": null,
+    "status": "invalid_envelope",
+    "syntax_valid": false,
+    "usage": {}
+  },
+  "public_eligible": false,
+  "public_hash": "sha256:51f1e963432b2ea1da17023b7edc5c31afba10d305cd99fc4a72731004cfd77e",
+  "raw_response": {},
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:How to insert/remove the SIM card and micro SD card on the Samsung Galaxy S4. How To Remove Your SIM Card and MicroSD Card From Your Samsung Galaxy S3. Galaxy S4 SIM and micro SD card reader replacement.Samsung Galaxy S5 Insert / Install Micro SD / Sim Card. How to insert SIM Card.ow to insert/remove the SIM card and micro SD card on the Samsung Galaxy S4. How To Remove Your SIM Card and MicroSD Card From Your Samsung Galaxy S3. Galaxy S4 SIM and micro SD card reader replacement.\\\\n\\\\npassage 2:You can insert or remove the SIM card in the Samsung Galaxy S4 by removing the rear battery cover. Here\u2019s a step-by-step tutorial to prevent you from breaking anything. 1. Lay the phone face down on a flat surface.2.Find the notch in the rear cover located near the top-right side of the phone.. Use your finger or nail to peel the back cover off. 4. Remove the battery using the notch at the bottom of the compartment. 5. Locate the SIM card slot toward the top right portion of the device. 6. To remove the SIM card, gently push the card into the slot until it clicks and ejects.\\\\n\\\\npassage 3:To remove the SIM card. Simply push the SIM and it will pop out and pull the SIM card to remove it on your phone. In order to remove your SIM card you are going to need to simply perform the steps below and you can also refer to the video posted below: 1. Take off back cover of your device. 2. Take out your battery. 3.es, both devices use the same SIM card size which is the Micro SIM card. I previously owned a Samsung Galaxy S3 and when I received my S4 I simply placed my SIM card from my S3 into my new Samsung Galaxy S4 device without a problem in size or running capability.\\\\n\\\\n\\\",\\\"question\\\":\\\"removing the sim card from a galaxy s4\\\"}\", \"original_answer\": \"Sure, I can help you with that! Based on the given passages, here's a step-by-step guide on how to remove the SIM card from a Samsung Galaxy S4:\\n\\n1. Lay the phone face down on a flat surface.\\n2. Find the notch in the rear cover located near the top-right side of the phone.\\n3. Use your finger or nail to peel the back cover off.\\n4. Remove the battery using the notch at the bottom of the compartment.\\n5. Locate the SIM card slot toward the top right portion of the device.\\n6. Push the SIM card into the slot until it clicks and ejects.\\n7. Pull the SIM card to remove it from the device.\\n\\nAlternatively, you can also refer to the video posted in passage 3, which shows the same process.\\n\\nI hope this helps! If you have any further questions, feel free to ask.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 0,
+  "role": "calibration_replay",
+  "source_cluster_id": "sha256:ca6e8a40f3d4e460c7454edfc49dcc3367544f33173211df3e6835d18a25cb47",
+  "started": false,
+  "status": "excluded",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22
+  ]
+}

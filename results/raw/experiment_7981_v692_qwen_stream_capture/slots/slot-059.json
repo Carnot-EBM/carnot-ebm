@@ -1,0 +1,115 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.743418564030435,
+  "exclusion_reason": null,
+  "family_id": "sha256:a1900637be52c3f98b88ba7c13140908d63469b24f2b0fe267a084022474379b",
+  "input_tokens": 1234,
+  "invocation_finished_at": "2026-10-01T11:42:32.701677+00:00",
+  "invocation_started_at": "2026-10-01T11:42:30.958258+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1234,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1257
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:4695cf7c719227064c83fb10cdb3dd2a9596811cc5cf16bc62ae7d613914d22d",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790854952,
+    "id": "chatcmpl-9IT4TxCKIXqLnzoigk7F4KAL0ql2ho1z",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 537.345,
+      "predicted_n": 23,
+      "predicted_per_second": 42.803040876904035,
+      "predicted_per_token_ms": 23.362826086956524,
+      "prompt_ms": 1065.958,
+      "prompt_n": 1156,
+      "prompt_per_second": 1084.4704950851722,
+      "prompt_per_token_ms": 0.9221089965397925
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1234,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1257
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Moscow (CNN)Joy Womack is taking part in her first ballet class of the day at the Kremlin Ballet Theatre, kicking her legs up to her head, jumping and spinning across the room. After class, she eats boiled sweets, one after another -- they are a cheap form of energy. The dancer, raised in California and Texas, left her parents and eight brothers and sisters behind when she arrived in Russia six years ago, aged 15, speaking no Russian. She studied at the Bolshoi Ballet Academy and was one of the first Americans accepted from the school into the company. But in 2013 she left under a cloud -- media reports suggested she had claimed she was asked by an unnamed Boshoi official to pay $10,000 to dance in even small roles. The Bolshoi still stands by comments made at the time by its general director, Vladimir Urin. He asked the dancer to make an official complaint and defend her position legally, saying the theatre was ready to assist the law enforcement agencies to investigate the case and that \\\"if the facts are legally established, those responsible should be punished accordingly.\\\" The dancer did not pursue a case against the Bolshoi. When she left the Bolshoi in 2013, Womack joined the Kremlin Ballet Theatre where she still works, aged 20, as a principal ballerina; dancing close to the Russian president's office, next to the cathedrals inside the red walls of the Kremlin. The surroundings may be opulent but her pay packet is not: for her role as a principal dancer Womack says she is paid around $240 a month -- which works out at around $8 a day. The dancer says the amount of money she makes in dollars each month has fallen as the Russian ruble has weakened -- the currency has suffered, in part, from a low oil price and international sanctions imposed on Russia over its annexation of Crimea last year. Womack says a friend helps her with accommodation and she says she has to make the money stretch in order to buy food. \\\"For anyone paid a salary in rubles, especially since the crisis, it is extremely difficult. You have to decide what is worth more for you - experience or financial stability. I'm at a point in my life where experience is worth more.\\\" Sitting in the wings of the stage, chatting in Russian to the other dancers and stretching before her rehearsal for Swan Lake, she says she has to make the $185 in her bank account last for the next few weeks. To earn extra money she dances bigger roles or takes part in events abroad. The Kremlin Ballet Theatre says Womack's salary corresponds to her job title as a principal dancer and that, \\\"on average, the salary [principal] dancers are paid is significantly higher\\\" than $240 a month but that Womack could have been paid that equivalent in dollars \\\"depending on the exchange rate on the day and depending on how much she danced in productions the previous month.\\\" As an American, Womack says she is paid the same as her contemporaries and is treated just like the Russians. But she says that is not always the case offstage. \\\"It's extremely difficult to watch the deteriorating relationships between the United States and Russia. The great thing about working for a Russian company is that we are focused on creating art but...outside the ballet world it is difficult for foreigners; the general tendency tends to be more nationalistic and they unfortunately judge foreigners by their cover.\\\" Although relations between the U.S. and Russia have taken a nosedive since Russia's annexation of Crimea last March, Womack says she is \\\"very loyal\\\" to the Kremlin Ballet Theatre. \\\"I love the Russian system and I'm very patriotic in that sense,\\\" she says. And despite the political situation -- and the money -- she says, \\\"Russia has a lot to offer, it is a beautiful place that creates stars and that itself is worth investing one's career in.\\n\", \"original_answer\": \"Joy Womack, an American ballet dancer, is facing financial struggles in her career at the Kremlin Ballet Theatre in Moscow. Womack left her family in the US at the age of 15 to study at the Bolshoi Ballet Academy and later joined the Bolshoi Ballet company. However, in 2013, she left the Bolshoi under controversial circumstances, alleging that she was asked to pay $10,000 for small roles. Womack then joined the Kremlin Ballet Theatre, where she works as a principal ballerina. Despite the opulent surroundings, her salary is only around $240 a month, which has been affected by the weakened Russian ruble due to low oil prices and international sanctions. Womack relies on stretching her income and taking on extra roles or participating in events abroad to make ends meet. She expresses loyalty to the Kremlin Ballet Theatre and the Russian system, despite the difficulties she faces as a foreigner in Russia's current political climate.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_update",
+  "source_cluster_id": "sha256:f7db3674626d9df4eaed536c2b6a40d07ef04b1919ae3dc59267319f52fbae54",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21
+  ]
+}

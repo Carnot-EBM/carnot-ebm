@@ -1,0 +1,128 @@
+{
+  "experiment": 8047,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-10-03",
+  "started_at": "2026-10-03T01:57:40.934929+00:00",
+  "finished_at": "2026-10-03T01:57:40.934929+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Capture repeatable Qwen fit and tune source likelihoods",
+  "honest_verdict": "blocked_gate_check_failed",
+  "blocked_reason": "actual='circular_positive' in expected=['positive', 'null']",
+  "failed_upstream": "exp8045-scorer-workspace",
+  "failed_field": "verdict_class",
+  "failed_operator": "in",
+  "failed_expected": [
+    "positive",
+    "null"
+  ],
+  "failed_expected_type": "list",
+  "failed_observed": "circular_positive",
+  "failed_observed_type": "str",
+  "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8045_v697_scorer_workspace.json",
+  "failed_evidence_sha256": "sha256:a9ace38c2d7866631434f9e9ba9a22e1b94165b6b86b1037969487537d925766",
+  "blocked_diagnostic_contract": {
+    "version": "blocked_gate_diagnostic_v1",
+    "blocked_reason": "actual='circular_positive' in expected=['positive', 'null']",
+    "failed_upstream": "exp8045-scorer-workspace",
+    "failed_field": "verdict_class",
+    "failed_operator": "in",
+    "failed_expected": [
+      "positive",
+      "null"
+    ],
+    "failed_expected_type": "list",
+    "failed_observed": "circular_positive",
+    "failed_observed_type": "str",
+    "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8045_v697_scorer_workspace.json",
+    "failed_evidence_sha256": "sha256:a9ace38c2d7866631434f9e9ba9a22e1b94165b6b86b1037969487537d925766"
+  },
+  "gate_check_summary": "gate-unsat(final): 1 of 6 gate(s) failed; first failure: exp8045-scorer-workspace.verdict_class (actual='circular_positive' in expected=['positive', 'null'])",
+  "gates_evaluated": [
+    {
+      "upstream": "exp8045-scorer-workspace",
+      "artifact_field": "scorer_fixture_ready_score",
+      "op": "==",
+      "expected": 1,
+      "expected_type": "int",
+      "actual": 1,
+      "actual_type": "int",
+      "passed": true,
+      "reason": "actual=1 == expected=1",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8045_v697_scorer_workspace.json",
+      "artifact_sha256": "sha256:a9ace38c2d7866631434f9e9ba9a22e1b94165b6b86b1037969487537d925766"
+    },
+    {
+      "upstream": "exp8045-scorer-workspace",
+      "artifact_field": "verdict_class",
+      "op": "in",
+      "expected": [
+        "positive",
+        "null"
+      ],
+      "expected_type": "list",
+      "actual": "circular_positive",
+      "actual_type": "str",
+      "passed": false,
+      "reason": "actual='circular_positive' in expected=['positive', 'null']",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8045_v697_scorer_workspace.json",
+      "artifact_sha256": "sha256:a9ace38c2d7866631434f9e9ba9a22e1b94165b6b86b1037969487537d925766"
+    },
+    {
+      "upstream": "exp8045-scorer-workspace",
+      "artifact_field": "flagged_adversarial",
+      "op": "==",
+      "expected": false,
+      "expected_type": "bool",
+      "actual": false,
+      "actual_type": "bool",
+      "passed": true,
+      "reason": "actual=False == expected=False",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8045_v697_scorer_workspace.json",
+      "artifact_sha256": "sha256:a9ace38c2d7866631434f9e9ba9a22e1b94165b6b86b1037969487537d925766"
+    },
+    {
+      "upstream": "exp8046-branch-protocols",
+      "artifact_field": "source_protocol_ready_score",
+      "op": "==",
+      "expected": 1,
+      "expected_type": "int",
+      "actual": 1,
+      "actual_type": "int",
+      "passed": true,
+      "reason": "actual=1 == expected=1",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8046_v697_branch_protocols.json",
+      "artifact_sha256": "sha256:948372dc5860c4a41754bf3c7b0b9b13463a916e4aa2317a88fd19f197a28a42"
+    },
+    {
+      "upstream": "exp8046-branch-protocols",
+      "artifact_field": "verdict_class",
+      "op": "in",
+      "expected": [
+        "positive",
+        "null"
+      ],
+      "expected_type": "list",
+      "actual": "null",
+      "actual_type": "str",
+      "passed": true,
+      "reason": "actual='null' in expected=['positive', 'null']",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8046_v697_branch_protocols.json",
+      "artifact_sha256": "sha256:948372dc5860c4a41754bf3c7b0b9b13463a916e4aa2317a88fd19f197a28a42"
+    },
+    {
+      "upstream": "exp8046-branch-protocols",
+      "artifact_field": "flagged_adversarial",
+      "op": "==",
+      "expected": false,
+      "expected_type": "bool",
+      "actual": false,
+      "actual_type": "bool",
+      "passed": true,
+      "reason": "actual=False == expected=False",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8046_v697_branch_protocols.json",
+      "artifact_sha256": "sha256:948372dc5860c4a41754bf3c7b0b9b13463a916e4aa2317a88fd19f197a28a42"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}

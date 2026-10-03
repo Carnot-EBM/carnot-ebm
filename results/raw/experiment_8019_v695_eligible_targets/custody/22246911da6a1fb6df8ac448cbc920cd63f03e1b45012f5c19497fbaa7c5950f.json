@@ -1,0 +1,111 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.270497018005699,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:130e48a96a96c52bea540ab75238487c340dec84e41a613e8f809e9b84808f4f",
+  "input_tokens": 668,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 668,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 691
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:2d6b339c81b3c43266bcb3bcd5a2edf3fc73b984336f1a7d455e8aed6d0a700f",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885972,
+    "id": "chatcmpl-SnCHIXy8vcS0xleCYEozzaEaCxaLdhSO",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.666,
+      "predicted_n": 23,
+      "predicted_per_second": 42.54012643665405,
+      "predicted_per_token_ms": 23.50721739130435,
+      "prompt_ms": 612.167,
+      "prompt_n": 590,
+      "prompt_per_second": 963.7892927910193,
+      "prompt_per_token_ms": 1.037571186440678
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 668,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 691
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Lois Lilienstein, co-star of \\\"Sharon, Lois & Bram's Elephant Show\\\" \u2014 the Canadian preschool show that ran on Nickelodeon during the early 1990s \u2014 has died, aged 78. Her son, David Lilienstein, told CBC News that his mother died in Toronto on Wednesday night from a rare form of cancer first diagnosed last October. \\\"She knew it was happening, she was at peace with it, and she died very peacefully and not in pain,\\\" he told the Canadian broadcaster. Liz Smith at 92. Lilienstein was born in Chicago in 1936 and moved to Toronto in 1996 with her son and her husband, Ernest. She joined Sharon Hampson and Bram Morrison to launch their singing trio in 1978. The TV show \\\"Sharon, Lois & Bram's Elephant Show\\\" ran on CBC in Canada from 1984 to 1989, before continuing in reruns on Nickelodeon stateside until 1995. The 30 most popular film producers in Hollywood. Sally Catto, general manager, programming at CBC Television, paid tribute to Lilienstein for her contribution to Canadian kids TV. \\\"Sharon, Lois and Bram got their start at CBC back in the '80s with the Elephant Show, and they went on to become icons to children all across North America through various programs and specials. Lois will be fondly remembered by her many friends at CBC,\\\" Catto told The Hollywood Reporter. 'Ghostbusters' budget cut. The Canadian variety show was best known for songs like \\\"Skinnamarink\\\" and \\\"Peanut Butter.\\\" Lilienstein left the Sharon, Lois & Bram performance trio in 2000. \u00a92015 The Hollywood Reporter. All rights reserved.\\n\", \"original_answer\": \"Lois Lilienstein, co-star of \\\"Sharon, Lois & Bram's Elephant Show\\\" has died aged 78. The Canadian preschool show ran on Nickelodeon during the early 1990s. Lilienstein's son reported her passing due to a rare form of cancer. Born in Chicago in 1936, Lilienstein launched her singing trio in 1978 and moved to Toronto in 1996. She left the performance trio in 2000.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "6613253e73b9c94bb49070652ee503a8a71de76efebb8144ca27517982d7fb95",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ]
+}

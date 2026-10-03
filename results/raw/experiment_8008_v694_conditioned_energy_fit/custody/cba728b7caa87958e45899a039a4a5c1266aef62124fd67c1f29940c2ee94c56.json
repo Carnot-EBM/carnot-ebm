@@ -1,0 +1,131 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.7254555450053886,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:3a7343eb8a608acb0b3089bd24a6a3b6bf0fc86a9329f7e7e2c6e3d78890b31b",
+  "input_tokens": 1189,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1189,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1212
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:49aa40c95f18298b079678e2931b22ebb46c3df4b0a0e89c1ce160821b7d217b",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886347,
+    "id": "chatcmpl-kUo2XcbSHpTm2N0QhX6MeOIZ1ad0QAKJ",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 542.644,
+      "predicted_n": 23,
+      "predicted_per_second": 42.38506276674947,
+      "predicted_per_token_ms": 23.593217391304346,
+      "prompt_ms": 1060.568,
+      "prompt_n": 1111,
+      "prompt_per_second": 1047.551877861674,
+      "prompt_per_token_ms": 0.9546066606660666
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1189,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1212
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Sao Paulo, Brazil (CNN)Hundreds of thousands of Brazilians are taking to the streets in protests across the country, lashing out against President Dilma Rousseff as she struggles with an economic downturn and a massive bribery scandal. The demonstrators have called for the President to be impeached. On the other side Rousseff's base is holding rallies in her support. There are a number of issues at play. One of the biggest: an investigation into a multimillion-dollar kickback scheme at the state-run oil company Petrobras. Petrobras was long considered the corporate jewel in Brazil's crown, one of the biggest companies in the world by market capitalization. But last year, investigators launched a sweeping investigation. According to suspects-turned-witnesses, construction companies paid bribes to executives at Petrobras as well as politicians to secure lucrative contracts. Most of the politicians accused in the investigation belong to the President's Workers Party and its allies. During many of the years that the alleged corruption took place, Rousseff was the chairwoman of Petrobras. There hasn't been any evidence she was involved with the scheme, and her supporters say the position is merely a figurehead. Rousseff has defended Brazilians' right to protest and acknowledged the need to clean up corruption at Petrobras -- but denied any prior knowledge of it. But Brazilians are still outraged. Rousseff won re-election with just over 50% of valid votes in October, but her approval rating plummeted to 13% after the protests last month. Compounding the frustration is the economy, which is expected to contract this year. Inflation is stubbornly high, and the currency has lost more than 20% of its value against the dollar this year alone. Both sides are. The country was already sharply divided during presidential elections in October. Roughly half of the voting population didn't vote for Rousseff, and many of those same people joined protests immediately after elections. Rousseff's supporters like to characterize the protesters as Brazilian elite and right-wingers, and some small groups do carry signs calling for a military intervention to oust the President. But with the Petrobras scandal growing and the economy sinking, the protests have gotten bigger and broader, with many demonstrators saying they initially voted for Rousseff. Protesters say Rousseff should be impeached for failing to halt the corruption at Petrobras. On the other hand, labor unions, social activists and groups such as the Landless Workers Movement who support the government have organized their own marches. The demonstrations are meant as a show of force for democracy, with participants saying the President was democratically elected and cannot be impeached. But participation has not been consistently strong. The President has said Petrobras should be cleaned up. Has she done anything about it? She says she's given prosecutors and the Federal Police free rein to investigate the Petrobas scandal. Some of her allies who have been implicated in the investigation think Rousseff should do more to protect them. This scandal has been known publicly for at least a year, and during Rousseff's election campaign, she said she would root out corruption. The Brazilian economy was booming for the good part of a decade, bolstered by voracious demand for its commodities from China. But with China's economy cooling, Brazil has failed to find a successful alternative to promote growth and shore up investor confidence. Now, with the President's approval rating abysmally low, it will be difficult to implement the savings needed to get the economy back on track. Rousseff has appointed a market-friendly economy minister, Joaquim Levy, to try and fix the country's fiscal problems. But in the current political crisis, he hasn't been able to make much progress.\\n\", \"original_answer\": \"Hundreds of thousands of Brazilians are protesting across the country against President Dilma Rousseff, who is struggling with an economic downturn and a massive bribery scandal. The protests have been triggered by an investigation into a multimillion-dollar kickback scheme at the state-run oil company Petrobras. The state oil company was long considered one of Brazil's largest companies, until last year when an investigation was launched into allegations that construction companies paid bribes to executives at Petrobras and politicians in order to secure lucrative contracts. Most of the politicians accused in the investigation belong to the President's Workers Party and its allies. During the years in which the alleged corruption took place, Rousseff was the chairwoman of Petrobras. However, there has not been any evidence to suggest that she was involved with the scheme. In addition to the corruption scandal, the Brazilian economy is expected to contract this year, with inflation increasing and the currency losing value.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "50853a92e57f9433df14a130f81151d6dc663bcc2217a7d31dfa79b445f5c14c",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34
+  ]
+}

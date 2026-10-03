@@ -1,0 +1,111 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.5346550960093737,
+  "exclusion_reason": null,
+  "family_id": "sha256:b959a3d5cfc42b70fad26f29e1b9c3c317f9ca8feefdf47096d4162d553b547a",
+  "input_tokens": 917,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 917,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 940
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:ab3aafeb30bc953eb87e1162164ee08b279c2c0f088dc7998e24d7149b47002e",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832825,
+    "id": "chatcmpl-IEJtfG03tKonW0WDnBGyL8xcyVJYJrJJ",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.287,
+      "predicted_n": 23,
+      "predicted_per_second": 42.49132160942346,
+      "predicted_per_token_ms": 23.53421739130435,
+      "prompt_ms": 852.527,
+      "prompt_n": 839,
+      "prompt_per_second": 984.1330538504938,
+      "prompt_per_token_ms": 1.0161227651966627
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 917,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 940
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:If you are using Windows Vista or Windows 7, select Control Panel \u2192 Uninstall a Program. Search for any suspicious program or toolbar in the list. Select the program and click Remove button. If you are using Windows Vista/7, click Uninstall up near the top of that window.Important Note: If you are uncertain about a program, please search and check the detail information before uninstalling.earch for any suspicious program or toolbar in the list. Select the program and click Remove button. If you are using Windows Vista/7, click Uninstall up near the top of that window. Important Note: If you are uncertain about a program, please search and check the detail information before uninstalling.\\\\n\\\\npassage 2:If you're seeing popup ads that won't go away, or the homepage you set is gone, you may have unwanted software or malware installed on your computer. Here are some steps you can take to get rid of this program and block similar ones from getting installed in the future.ou can also remove malware and other programs on your computer that you don't remember installing. 1  In the bottom right corner of your screen, open Finder. 2  On the left side of the box that appears, click Applications. 3  Look for any programs you don't recognize. 4  Then do one of these:\\\\n\\\\npassage 3:Check if you have malware. If you have one or more of these symptoms, it's likely that your device is infected with malware. 1  Your browser doesn't block pop-up ads from showing. 2  Your homepage, startup page, or search engine has changed to a site you don't recognize.ac users. 1  Open Finder. 2  On the left side, click Applications. 3  Look for any programs you don't recognize. 4  Double click Uninstall or Uninstaller and follow the steps for uninstalling the program. 5  Empty your trash when you're done.\\\\n\\\\n\\\",\\\"question\\\":\\\"how do you get rid of the pop up bar for malware\\\"}\", \"original_answer\": \"Based on the given passages, here are the steps to get rid of the pop-up bar for malware:\\n\\n1. Check for suspicious programs in the Control Panel (Passage 1):\\n\\t* On Windows Vista or 7, go to Control Panel > Uninstall a Program.\\n\\t* Search for any suspicious program or toolbar in the list.\\n\\t* Select the program and click Remove button.\\n2. Use the Finder to locate and remove unknown applications (Passage 2):\\n\\t* In the bottom right corner of your screen, open Finder.\\n\\t* On the left side of the box that appears, click Applications.\\n\\t* Look for any programs you don't recognize.\\n\\t* Double-click the program to open its context menu, then select Uninstall or Uninstaller and follow the steps to remove the program.\\n3. Check for malware (Passage 3):\\n\\t* If you have symptoms such as pop-up ads that won't go away or an unexpected change in your homepage, startup page, or search engine, it's possible that your device is infected with malware.\\n\\t* Open Finder and look for any programs you don't recognize.\\n\\t* Double-click Uninstall or Uninstaller and follow the steps to remove the program.\\n\\nThese steps should help you identify and remove the pop-up bar for malware from your computer.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:dd41f399fcdb1861bd27f4fd66ee208a71f2e620a14f3b45c5ac4e9b6ee2aad2",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ]
+}

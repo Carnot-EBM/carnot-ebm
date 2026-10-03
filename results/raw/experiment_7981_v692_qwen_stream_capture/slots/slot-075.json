@@ -1,0 +1,116 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.6018086840049364,
+  "exclusion_reason": null,
+  "family_id": "sha256:93ae5dfbeebdc24ea4a230e24ff25ac4d6ca94773547abd05bf4fda3fc9ae304",
+  "input_tokens": 1060,
+  "invocation_finished_at": "2026-10-01T11:42:54.876540+00:00",
+  "invocation_started_at": "2026-10-01T11:42:53.274731+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.05,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 1060,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1082
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:5ae04a2f8f34789493f7bf27de5cd8d6c3270bd85c56caa034eb50ec5052fa4d",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.05,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790854974,
+    "id": "chatcmpl-rVqNhbqCAcwZ5uMv52WJUo9yng3w6OvX",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 514.284,
+      "predicted_n": 22,
+      "predicted_per_second": 42.77792037084568,
+      "predicted_per_token_ms": 23.376545454545454,
+      "prompt_ms": 953.829,
+      "prompt_n": 982,
+      "prompt_per_second": 1029.5346440504536,
+      "prompt_per_token_ms": 0.9713126272912423
+    },
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 1060,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1082
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"634 State St, M. Special Brewing Company\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":null,\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":null},\\\"business_stars\\\":3.0,\\\"categories\\\":\\\"Restaurants, American (Traditional)\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"16:0-22:0\\\",\\\"Monday\\\":\\\"16:0-21:0\\\",\\\"Saturday\\\":\\\"12:0-22:0\\\",\\\"Sunday\\\":\\\"12:0-21:0\\\",\\\"Thursday\\\":\\\"16:0-21:0\\\",\\\"Tuesday\\\":\\\"16:0-21:0\\\",\\\"Wednesday\\\":\\\"16:0-21:0\\\"},\\\"name\\\":\\\"M Kitchen\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-02 23:14:03\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"Horrible food but good beer lots of improvement needed. Don't waste your money on the food .\\\"},{\\\"review_date\\\":\\\"2021-11-12 16:24:09\\\",\\\"review_stars\\\":4.0,\\\"review_text\\\":\\\"Decent spot for bar food. \\\\n\\\\nSimilar to how The Nook is to Lama Dog, M Kitchen operates separately from M Special. If you have an open beverage tab at the bar (where they hold onto your card), be prepared to pay for your food using a different payment method, or close your bar check and then come over and order. A little awkward. \\\\n\\\\nWhen I was here last night, I noticed that menu prices all went up $2 from last year. The food is decent but nothing cutting edge. I ordered their Loaded Fries with pulled pork. It was flavorful but pretty soggy at the bottom. The fries were seasoned well and the chunks of pork were delicious. My friend ordered their Wings and was satisfied. \\\\n\\\\nI felt that the woman behind the counter did a great job. She was friendly and upbeat. One thing I noticed was that the credit card machine doesn't appear to inform you when to remove the card from the slot. The customer in front of me had walked away with their card still inserted - oops!\\\\n\\\\nI'd come back and give this spot another try.\\\"},{\\\"review_date\\\":\\\"2021-09-06 23:42:09\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"The order of Brussels Sprouts was not good. It said it was a balsamic reduction and they just put straight balsamic over the top it seems like. They definitely didn't try it before sending it out because I can't imagine the taste they are going for to be straight vinegar. These were $12 dollars, steep as is for Brussels sprouts, no bacon or anything else. Super disappointed, but not worth sending back. Ate with ranch which made it tolerable to get down, but not good. \\\\n\\\\nAlso their selection is pretty limited. The seltzer is 5/10\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"M Kitchen is a traditional American restaurant located at 634 State St, M. Special Brewing Company, Santa Barbara, CA. The establishment is open every day of the week, with extended hours on the weekends. According to customer reviews, the restaurant has a mixed reputation. Though some customers appreciate the good beer and friendly service, others have criticized the food quality and price. One reviewer mentioned that the loaded fries with pulled pork were flavorful, but the fries were soggy. Another reviewer was disappointed with the Brussels sprouts, which were overly doused in balsamic vinegar. Despite this, the diner offers outdoor seating, making it a potentially good spot for groups. With an overall rating of 3.0 stars, M Kitchen is a decent spot for bar food, but there seems to be room for improvement in terms of its culinary offerings.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_update",
+  "source_cluster_id": "sha256:7e677dc89424e4a92936d51750ee14a8312b6ba50b5ef24153d9c73327dfa477",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22
+  ]
+}

@@ -1,0 +1,97 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.2288079439895228,
+  "exclusion_reason": null,
+  "family_id": "sha256:1ad7799fad01764dc10f42bd8ca44aa6d4078a07af418d6167470a88e8594ecf",
+  "input_tokens": 608,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 608,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 630
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:88e71ff2004c5c8903f40ad6cffd18f6f8034d8b741bbbcdcee51ecfc4a73f8c",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832729,
+    "id": "chatcmpl-hyWAXRh5Rnr5MfVAvJnst9HAOoI0G9MZ",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 516.645,
+      "predicted_n": 22,
+      "predicted_per_second": 42.582430876133515,
+      "predicted_per_token_ms": 23.483863636363637,
+      "prompt_ms": 577.184,
+      "prompt_n": 530,
+      "prompt_per_second": 918.251372179409,
+      "prompt_per_token_ms": 1.0890264150943396
+    },
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 608,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 630
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:The Rainbow (or Gay Pride) Flag was created by artist and vexillographer Gilbert Baker, a friend of the late Harvey Milk, in 1978. The flag debuted at the San Francisco Gay and Lesbian Freedom Day Parade.he original flag had eight stripes from top to bottom: pink (sexuality), red (life), orange (healing), yellow (sunlight), green (nature), turquoise (magic), indigo/blue (serenity), and violet (spirit). Within a year, the flag had shed two of its stripes\u2014pink and violet.\\\\n\\\\npassage 2:LGBT communities in other countries have also adopted the rainbow flag. A South African gay pride flag which is a hybrid of the rainbow flag and the national flag of South Africa was launched in Cape Town in 2010.Flag designer Eugene Brockman said I truly believe we (the LGBT community) put the dazzle into our rainbow nation and this flag is a symbol of just that.GBT communities in other countries have also adopted the rainbow flag. A South African gay pride flag which is a hybrid of the rainbow flag and the national flag of South Africa was launched in Cape Town in 2010.\\\\n\\\\npassage 3:The rainbow flag is a symbol of lesbian, gay, bisexual, and transgender (LGBT) pride and LGBT social movements in use since the 1970s.The rainbow flag, commonly the gay pride flag and LGBT pride flag, is a symbol of lesbian, gay, bisexual, and transgender (LGBT) pride and LGBT social movements.GBT communities in other countries have also adopted the rainbow flag. A South African gay pride flag which is a hybrid of the rainbow flag and the national flag of South Africa was launched in Cape Town in 2010.\\\\n\\\\n\\\",\\\"question\\\":\\\"what does the gay flag represent\\\"}\", \"original_answer\": \"The gay flag, also known as the rainbow flag, represents lesbian, gay, bisexual, and transgender (LGBT) pride and LGBT social movements. It was created by artist Gilbert Baker in 1978 and initially had eight stripes representing various aspects of the LGBT community. Over time, the flag has been adopted by LGBT communities in other countries as well.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "tune",
+  "source_cluster_id": "sha256:c98239a4f014ec3a7c04572f461ad04d35bede1f4f40df17f3aa89f1db31529e",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ]
+}

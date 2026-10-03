@@ -1,0 +1,109 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.6097165030078031,
+  "exclusion_reason": null,
+  "family_id": "sha256:036fe762d68a00216e63832d43ac9b234a10709bfb34a13dacd84122d6c28ac0",
+  "input_tokens": 1048,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 1048,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1070
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:321f25312d769fdc6b8407b6cfaf564cf09de3b44dfe7a0c9034b71363be84ab",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.95,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832577,
+    "id": "chatcmpl-kWDaq8RO82I5Gmtr7p16PudGGVe26YTw",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 515.524,
+      "predicted_n": 22,
+      "predicted_per_second": 42.67502579899287,
+      "predicted_per_token_ms": 23.432909090909092,
+      "prompt_ms": 956.322,
+      "prompt_n": 970,
+      "prompt_per_second": 1014.3027139394471,
+      "prompt_per_token_ms": 0.9858989690721649
+    },
+    "usage": {
+      "completion_tokens": 22,
+      "prompt_tokens": 1048,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1070
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"1905 Cliff Dr\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Pizza, Restaurants, Sandwiches, Italian\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-22:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"11:0-16:0\\\",\\\"Sunday\\\":\\\"11:0-21:0\\\",\\\"Thursday\\\":\\\"11:0-21:0\\\",\\\"Tuesday\\\":\\\"11:0-21:0\\\",\\\"Wednesday\\\":\\\"11:0-21:0\\\"},\\\"name\\\":\\\"Giovanni's Pizza\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2019-04-04 05:09:02\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I always walk by Giovanni's and make a mental note to try their pizza. My contractor was stuck working late and I wanted to surprise him with an assortment of food, Giovanni's was the first to come to mind, plus, it was an excuse to finally try their pizza. Wow, just wow, the crust tasted like an award winning Chicago pizza joint - only better. We ordered a meat lovers and Hawaiian. I'm not a pizza fan but this pizza is really good. They deliver and next time I walk by Giovanni's, I will actually go in.\\\"},{\\\"review_date\\\":\\\"2019-03-01 21:46:42\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Great pizza. Would definitely recommend for big parties. N the sandwiches are all delicious. \\\\nGreat lunch time specials and affordable. \\\\nNice cold.Tall mug of beers are always nice. Great selection of brews. \\\\nGreat location. N awesome customer service. \\\\nThank you. Always hits the stop.\\\"},{\\\"review_date\\\":\\\"2019-02-13 17:11:03\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Normally a pizza doesn't stand out that often to be worthy of writing a review.\\\\nHowever, Giovanni's on the Mesa, is worthy of compliments.\\\\nThe crew is always friendly and willing to try and get the order correct. Sometimes over the phone ordering causes stuff to get lost in the sauce. Not at Giovanni's on the Mesa.\\\\nThe pizza they made last night was fantastic. So much better than normal commercial pizza.\\\\nIf you want some really good pie, check these folks out.\\\\nPeace and pizzaout,\\\\nAdam\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Giovanni's Pizza is a restaurant located at 1905 Cliff Dr, Santa Barbara, CA. It offers pizza, sandwiches, Italian cuisine, and outdoor seating. The restaurant serves food from Monday through Sunday, 11 am to 10 pm (Fridays and Saturdays until 11 pm). Customers can park either on the street or in a lot, as there is no valet parking available. The restaurant does not offer reservations, and there is no WiFi available. Giovanni's Pizza has a rating of 3.5 stars on Google.\\n\\nAccording to customer reviews, Giovanni's Pizza has excellent pizza, with one reviewer describing the crust as \\\"award-winning\\\" and better than a Chicago pizza joint. Another customer praised the restaurant's ability to handle large parties and great customer service. The sandwiches were also noted as being delicious, and the restaurant had great lunchtime deals and affordable prices. Overall, customers were impressed with the quality of the food, the friendly staff, and the great location.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:f44b0ef24935fa7fcacd1dc60cc18780710b548c2616b4c2293c04ac6c47a326",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17
+  ]
+}

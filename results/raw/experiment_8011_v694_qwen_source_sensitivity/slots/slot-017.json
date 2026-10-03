@@ -1,0 +1,118 @@
+{
+  "arm": "swap",
+  "capture_identity": "sha256:c690c1f517fbce73c5da6a2d1e99e3819c3de93e1045fe76d1c8215b54691541",
+  "censor_status": false,
+  "denominator": 1,
+  "donor_group_id": "sha256:33e62a53ed3af22d5cddf7e80004bde2f59c1e11e731076bb9b999490bebebb5",
+  "duration_s": 1.4656039800029248,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:eb73d16fdd5d460bd1e28d99b8083aea7d8799462c6d1cfdc8f518b136ebfb0d:swap",
+  "group_id": "sha256:eb73d16fdd5d460bd1e28d99b8083aea7d8799462c6d1cfdc8f518b136ebfb0d",
+  "input_byte_upper_bound": 3994,
+  "input_tokens": 874,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 1.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 874,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 897
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:be6f0fb0b1768eac997a6fb064e07268b6a6c74abe7b59b077a03606b4f974e9",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 1.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790925710,
+    "id": "chatcmpl-I3horiucQmQ0dXlYPdCTHQM6aEaF7FwT",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 532.531,
+      "predicted_n": 23,
+      "predicted_per_second": 43.18997391701141,
+      "predicted_per_token_ms": 23.153521739130433,
+      "prompt_ms": 797.463,
+      "prompt_n": 796,
+      "prompt_per_second": 998.1654321266316,
+      "prompt_per_token_ms": 1.0018379396984924
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 874,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 897
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 32,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"FBI Top 10 Most Wanted fugitive wanted on serious charges in Texas, reward offered for information\\nOne of the fugitives on the FBI's Top 10 Most Wanted is wanted on multiple charges in Texas, per officials from the department.\\nAccording to the FBI, on May 11, 2012, a couple from Texas exchanged marriage vows and celebrated with a reception shortly after. Less than 48 hours later, per officials, the 26-year-old bride, Estrella Carrera, was tragically discovered in her apartment's bathtub, still in her wedding attire, having succumbed to fatal stab wounds.\\nThe FBI has formally accused her newlywed, now 41-year-old Arnaldo Jiminez, of being responsible for this terrible crime. According to investigators, Jiminez allegedly stabbed Estrella while they were in his black four-door Maserati, and then he moved her lifeless body to the bathtub in her Burbank, Illinois apartment.\\nThe FBI's pursuit of evidence in this case began with their focus on Jiminez's movements. Officials stated that they discovered that on May 12, his cellphone signal was traced to various locations, spanning from Chicago to Southern Illinois, Memphis, Tennessee, and finally culminating in Arkansas, all within a single day. The following day, his cell phone was registered in Houston, Texas, and eventually traced to Hidalgo, Mexico, according to investigators.\\nDuring the same year, law enforcement arrested Jiminez's brother on drug-related charges, which led to the discovery of Arnaldo's Maserati stored in the garage, according to a statement from the FBI. Traces of blood were found inside the vehicle, further supporting the theory that Jiminez may have committed the crime in the car before moving the body to the bathtub, per FBI officials.\\nInvestigators stated they suspect that Jiminez's brother might have driven him to Mexico in the same vehicle and left him there. Since the night of the wedding, Jiminez has managed to elude authorities and remains unaccounted for. FBI officials believe he is likely in hiding in Mexico, specifically in the Santiago Papasquiaro area or in Reynosa, Tamaulipas.\\nA $250,000 reward is being offered for information leading to Jimenez's arrest, per officials.\\nFBI officials also stated that Jimenez should be considered armed and dangerous. If you have any information concerning this person, please call 1-800-CALL-FBI or contact your nearest American Embassy or Consulate.\", \"original_answer\": \"To program a wireless controller for Xbox 360, start by turning on the console and keep the controller within 30 feet of the Xbox 360. Insert batteries in the controller if needed. Hold the controller's silver Guide button until it powers on, it will flash to indicate power. Push the Xbox 360's Connect button, located to the right of the memory unit slots. Subsequently, push the Connect button on the wireless controller. For software installation, go to the Software Downloads section of the Microsoft Hardware website. Select Gaming as the product type and Xbox 360 Wireless Controller for Windows as the product, which is the software for the wireless gaming receiver. Select the version of Microsoft Windows you\u2019re using on your computer, choose your operating system language, and then click Download. Run the downloaded software to install.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69410,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "seed": 69410,
+  "source_cluster_id": "053efb7a1cb4ed1a53822e64023c9d69502845b6436ed941fa46459dbc079dae",
+  "source_hash": "sha256:25d319ac5fd7cfe7687873fdd5acb1a3d522db186d89ddbb1b80559d1982cc65",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ]
+}

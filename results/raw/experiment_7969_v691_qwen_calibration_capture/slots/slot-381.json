@@ -1,0 +1,107 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.3335936960065737,
+  "exclusion_reason": null,
+  "family_id": "sha256:c6b44210a2981a50f8ae6fb341c25451a0c369aefd114c8b989083ab97756193",
+  "input_tokens": 651,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 1,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 651,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 675
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:ff3f4041155a3c7c0ab96499cc33d2c527bed0a56816deca2773f8a4c04453fd",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 1\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790833008,
+    "id": "chatcmpl-lFKubUv6KmT9pDrcLAcJDpluNJGlDLZg",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.407,
+      "predicted_n": 24,
+      "predicted_per_second": 42.44729902530389,
+      "predicted_per_token_ms": 23.558625000000003,
+      "prompt_ms": 598.727,
+      "prompt_n": 573,
+      "prompt_per_second": 957.0304997102185,
+      "prompt_per_token_ms": 1.0448987783595114
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 651,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 675
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:1 Four steps to a water balloon: 2  Fill the balloon and loop over the top. 3  While holding the neck of the balloon (make sure neck of balloon is under tool), proceed to spin tool counter-clockwise in a full circle. Works with standard sized water balloons. 2  Four steps to a water balloon: 3  Fill the balloon and loop over the top. 4  While holding the neck of the balloon (make sure neck of balloon is under tool), proceed to spin tool counter-clockwise in a full circle.\\\\n\\\\npassage 2:Tying a water balloon is infinitely less fun than throwing a water ballon. Turns out slippery wet latex doesn't make for good grip! Enter Tie Not. It's an impossibly crafty nozzle that practically does the tying for you. Watch.atch. It's been around for a while now but if you're getting serious about water fights, equipping your crew with Tie Nots is the easiest way to stack the chips on your side. You can attach it to the water hose for a quick twirl and tie or use it independently as a tying assistant.\\\\n\\\\npassage 3:Method 2 of 2: Tying a Water Balloon. 1. Stretch the opening of the balloon's lip around the faucet. Hold the lip in place around your water source, to ensure that it doesn\u2019t slip off as the balloon begins to take on water weight.If you have any trouble with slippage, use your other hand to support the expanding balloon from below.ou\u2019ll need the balloon\u2019s neck good and loose for the next step, so you\u2019ll want to gently, rapidly tug on the neck a few times with the hand you\u2019re not using to pinch the balloon shut. Three or four times should be sufficient. 1  Shoot for 3-6 inches of give when you stretch out the neck.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to tie water balloon\\\"}\", \"original_answer\": \"To tie a water balloon, follow these steps:\\n\\n1. Fill the balloon and loop over the top.\\n2. Hold the neck of the balloon while under a tool and proceed to spin the tool counterclockwise in a full circle. This works with standard-sized water balloons.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:5c282d69fe6d18ae72e795d30fd3c5142b21ce75f4cd199ef639147b91db943b",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ]
+}

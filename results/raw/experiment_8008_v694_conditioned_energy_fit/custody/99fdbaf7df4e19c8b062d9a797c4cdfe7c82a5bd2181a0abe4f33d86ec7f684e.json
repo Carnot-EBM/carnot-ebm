@@ -1,0 +1,105 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.606952073983848,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:09febe278995aa032deecc94cb698c97f78943d63b311c46e877c7d61a24e478",
+  "input_tokens": 1002,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1002,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1025
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:5f6d6acf3b12293f12307f61301099d08f5c8bca3cce3759ef7544ba0afc80ae",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886381,
+    "id": "chatcmpl-n0AxCs2KKaj6zj0DvHZoRTawFdz3WHPI",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.781,
+      "predicted_n": 23,
+      "predicted_per_second": 42.45257770206043,
+      "predicted_per_token_ms": 23.55569565217391,
+      "prompt_ms": 930.185,
+      "prompt_n": 924,
+      "prompt_per_second": 993.3507850588861,
+      "prompt_per_token_ms": 1.006693722943723
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1002,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1025
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"1046 Coast Village Rd, Ste F\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":null,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Juice Bars & Smoothies, Food, Restaurants, Vegetarian\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"7:0-18:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"8:0-22:0\\\",\\\"Sunday\\\":\\\"8:0-22:0\\\",\\\"Thursday\\\":\\\"7:0-22:0\\\",\\\"Tuesday\\\":\\\"7:0-22:0\\\",\\\"Wednesday\\\":\\\"7:0-22:0\\\"},\\\"name\\\":\\\"Blenders In the Grass\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-11-09 04:23:38\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"I went to blenders and ordered 2 drinks.  One was a blue pomegranate and it was made short even after using the spatula to pour any excess smoothie into the cup. I know the smoothie is supposed to reach the top of the cup because I used to be a supervisor there. This is not the first time this has happened, it seems to be a reoccurring problem.\\\"},{\\\"review_date\\\":\\\"2021-09-21 16:07:13\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"The blenders in montecito last night I go to the register the girl working it goes to it too and just blankly stares at me.\\\\n\\\\nNo hello what can I get you no acknowledgment or greeting. I have to initiate my order.\\\"},{\\\"review_date\\\":\\\"2021-05-17 20:01:12\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"If you like added sugar in their ice milk and sherbet and non organic gmo tasting fruit and soy milk then this is your place! The fruit juice they add tastes like corn syrup and sugar, maybe 10% real juice.\\\\nI dont even think their wheat grass is organic as nothing is labeled organic and non gmo. Hit or miss on customer service and sanitary procedures as it looks as the college kids working their are trying to make them as fast as they can and rarely even blend them long enough, I was loyal but the last straw was when I bought a peanut butter bar and it tasted like moldy peanuts as I looked at the expiration date, it was 3 months expired! The owners have lost touch and the managers are not into customer service. So long...\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Blenders In The Grass is a local business located at 1046 Coast Village Rd, Ste F, in Santa Barbara, CA. They specialize in Juice Bars, Smoothies, Food, Restaurants, and Vegetarian dishes. The business operates from 7:00 am to 10:00 pm on Tuesdays, Wednesdays, and Thursdays, from 7:00 am to 6:00 pm on Fridays, and from 8:00 am to 10:00 pm on Saturdays and Sundays. The store offers takeout and is suitable for groups. However, they do not offer WiFi, outdoor seating, or reservations. Their ambiance is casual, and they have a parking lot available. The business has an average review score of 3.5 stars. However, some customers have expressed dissatisfaction with the serving size, customer service, and quality of ingredients used.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "retention",
+  "source_cluster_id": "dbb72af299ffbe7332afeec4c40a1303fecd59b2b3fb587da741ac91349ee77f",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ]
+}

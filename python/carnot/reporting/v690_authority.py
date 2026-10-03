@@ -81,22 +81,30 @@ def reader_rows(raw: bytes, corpus_digest: str) -> list[dict[str, Any]]:
     return deepcopy(_reader_rows(raw, corpus_digest))
 
 
-def assess(design: Path, staged: Path, active: Path, snapshots: Path) -> dict[str, Any]:
+def assess(
+    design: Path,
+    staged: Path,
+    active: Path,
+    snapshots: Path,
+    *,
+    milestone: str = MILESTONE,
+    first_id: int = 7953,
+) -> dict[str, Any]:
     """Correct only the task-owned history and staging checks from the old reader."""
     try:
         value = lifecycle.assess_authorities(
-            design, staged, active, snapshots, milestone=MILESTONE, first_id=7953, count=13
+            design, staged, active, snapshots, milestone=milestone, first_id=first_id, count=13
         )
     except (OSError, ValueError, IndexError, KeyError, TypeError, yaml.YAMLError):
         value = shared.assess(
-            design, staged, active, snapshots, milestone=MILESTONE, first_id=7953, count=13
+            design, staged, active, snapshots, milestone=milestone, first_id=first_id, count=13
         )
     actual = active if active.is_file() else staged
     tasks = yaml.safe_load(actual.read_bytes()).get("tasks", []) if actual.is_file() else []
     rows = []
     if (
         lifecycle.tasks_digest(tasks) == value["canonical_tasks_sha256"]
-        and yaml.safe_load(actual.read_bytes()).get("milestone") == MILESTONE
+        and yaml.safe_load(actual.read_bytes()).get("milestone") == milestone
     ):
         corpus = list((ROOT / "results").glob("experiment_*.json")) + [
             ROOT / "scripts/failure_ledger.py",
@@ -134,7 +142,7 @@ def assess(design: Path, staged: Path, active: Path, snapshots: Path) -> dict[st
         raw = yaml.safe_load(path.read_bytes())
         matching = (
             isinstance(raw, dict)
-            and raw.get("milestone") == MILESTONE
+            and raw.get("milestone") == milestone
             and lifecycle.tasks_digest(raw.get("tasks")) == expected
             and sha256_file(path) == "sha256:" + path.stem.removeprefix("staged-")
         )
@@ -148,7 +156,7 @@ def assess(design: Path, staged: Path, active: Path, snapshots: Path) -> dict[st
         planned = yaml.safe_load(staged.read_bytes())
         stage_ok = (
             isinstance(planned, dict)
-            and planned.get("milestone") == MILESTONE
+            and planned.get("milestone") == milestone
             and lifecycle.tasks_digest(planned.get("tasks")) == expected
         )
         if not stage_ok:

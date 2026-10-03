@@ -1,0 +1,111 @@
+{
+  "capture_identity": "sha256:1a96993af844d40a6f85e2d739ef2544be7cd63b49e6cfe43c059832698824d2",
+  "duration_s": 1.268713277997449,
+  "exclusion_reason": null,
+  "family_id": "sha256:56364d74d156f54fef4e15f961c9c5add1c60d8e313fddbe802578a9fea21f9e",
+  "input_tokens": 624,
+  "invocation_finished_at": "2026-10-01T11:42:47.388356+00:00",
+  "invocation_started_at": "2026-10-01T11:42:46.119641+00:00",
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 16,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 624,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 649
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:535f2741a4f5bc53eb21ca1f233e54b4429260807cf0242f3781cf6d7b8bae8e",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 16\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790854967,
+    "id": "chatcmpl-FihyPl0tEWK1YjamaXnF1GIvXrPSxVmG",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 585.05,
+      "predicted_n": 25,
+      "predicted_per_second": 42.731390479446205,
+      "predicted_per_token_ms": 23.401999999999997,
+      "prompt_ms": 574.063,
+      "prompt_n": 546,
+      "prompt_per_second": 951.1151215110536,
+      "prompt_per_token_ms": 1.0513974358974358
+    },
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 624,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 649
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Michigan Rep Running for House Speaker\\nIt has been an interesting couple weeks if you follow politics.\\nA few weeks ago, Republicans made history when they voted out their own Speaker, Kevin McCarthy.\\nMcCarthy\u2019s own election and brief stint was in itself rather historical, taking 15 rounds of voting to secure speakership.\\nSteven Scalise and Jim Jordan became the two names floated to replace McCarthy.\\nJim Jordan brought it to a vote where he failed to secure a majority of votes for three consecutive rounds, losing votes each time.\\nNow things are back to square one.\\nA number of names have been thrown there out into the ring to become Speaker.\\nOne of those is Michigan Representative Jack Bergman.\\nThe Detroit Free reports that Bergman has decided to run after Jordan bowed out. Bergam voted for Jordan all three times.\\nBergman took to X, the former Twitter, to say \u201cMy hat is in the ring, and I feel confident I can win the votes where others could not. I have no special interests to serve; I\u2019m only in this to do what's best for our nation and to steady the ship for the 118th Congress.\u201d\\nBergman represents the Michigan 1st Congressional District. His district is made up of the entire Upper Peninsula as well as the northern part of the Lower Peninsula.\\nBefore joining Congress, Jack Bergmanretired from the Marines as a Lt. General and is a Vietnam veteran.\\nBergman states that the looming government shut down for why he wants to become Speaker, \u201cThe regular functioning of the federal government can\u2019t wait on useless infighting and arguments,\\\" Rep. Bergman said. \\\"What matters right now is choosing a Speaker in order to make sure that our government\u2014and particularly our military\u2014is funded, and that both our homeland and our critical allies are secure in this time of crisis.\\\"\", \"original_answer\": \"Michigan Representative Jack Bergman has announced his candidacy for Speaker of the House of Representatives. He is running after failed attempts by Jim Jordan and others. Bergman previously voted for Jordan and believes he is qualified to provide leadership and end the government shutdown.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "online_update",
+  "source_cluster_id": "sha256:e0807e948ffc00f41ce26edf3b422bb46804d6e0bb7fdb3ae1c0fc2573c9ad7c",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17
+  ]
+}

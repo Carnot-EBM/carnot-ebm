@@ -1,0 +1,113 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.397361031966284,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:dbdef92f37ae46a4a09f44b81cc419d42ea9ab726b172f9eb91a2832b9228377",
+  "input_tokens": 799,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 799,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 822
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:630eccddaadd8e9275ceabd813124b9ad494d6dba4a2bcb19cb07ce7764a01d4",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886298,
+    "id": "chatcmpl-lmiGwdOa41z4bqrHKEum4vHcBJYfCMPg",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.799,
+      "predicted_n": 23,
+      "predicted_per_second": 42.45116731481601,
+      "predicted_per_token_ms": 23.556478260869564,
+      "prompt_ms": 713.709,
+      "prompt_n": 721,
+      "prompt_per_second": 1010.2156481142875,
+      "prompt_per_token_ms": 0.989887656033287
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 799,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 822
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Over 7,000 Pro-Palestinian Protestors Demonstrated In Brooklyn Against War In Gaza\\nOn Saturday, New Yorkers demonstrated their support for Palestinians by marching through Brooklyn's streets.\\nAfter gathering at Grand Army Plaza and Barclays Center, protesters began their demonstrations in front of the Brooklyn Museum. Eventually, they crossed the Brooklyn Bridge on foot, blocking traffic.\\nThe protests, according to their organizers, were a reaction to reports that Israel had cut off connections to Gaza. According to the organizers, they invited protestors to \\\"flood\\\" Brooklyn in support of Gaza.\\nA Puerto Rican Man Residing IN NYC Talked To Reporters\\nReiterating Edward's sentiment, Jason B., a Puerto Rican residing in New York City, claimed that Israel was exploiting the hostages as a pretext to exterminate the Palestinian population in Gaza.\\nI stand in favor of the Palestinian people's unity due to the current genocide\u2014after all, there have been countless instances where I can push you before you push back, don't you think? Declared Jason, who was dressed in traditional Palestinian garb.\\nHe criticized Israel for taking civilians into account in its conflict with Hamas and declared that Israel is carrying out the humanitarian crimes it has charged the terrorist organization with committing.\\nWhere's the evidence, Jason asked, about the decapitation of Israeli infants and children? Yes, that is the storyline they use to harm the Palestinian people's reputation.\\nProtestors Call To Defund Israel And End US Assistance From The Middle Eastern Countries\\nTwo ladies, both 24 years old, from Crown Heights, participated in the march. They carried posters with images of Israeli flags inside of hearts and declared their support for the effort to defund Israel and end US assistance for the Middle Eastern nation.\\nAs the marching protesters made their way throughout the borough in the sweltering 80-degree heat, supporters gathered beside the road and gave them water.\\nCutting All The Communication Systems In The Gaza Strip\\nAccording to the Associated Press, Israel began a more extensive military assault on Saturday after intensifying artillery and shelling throughout the previous night, nearly cutting all connectivity in the Gaza Strip.\\nIn Gaza, which is run by Hamas, the Health Ministry reported that more than 7,700 Palestinians had died, the bulk of them being women and children. In the occupied West Bank, Israeli aggression and incursions have claimed the lives of over 110 Palestinians.\", \"original_answer\": \"Over 7,000 pro-Palestinian protestors marched through Brooklyn, New York, in response to reports of Israel cutting off connections to Gaza. The crowd gathered at major city landmarks and walked across the Brooklyn Bridge, blocking traffic. The protest aimed to show solidarity with Palestinians and called for defunding of Israel and ending US assistance to the Middle Eastern country. The demonstration was also a reaction to an aggressive Israeli military assault that has reportedly led to the death of over 7,700 Palestinians, mostly women and children, in the Gaza Strip and West Bank.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "96ec1cebc87655db635c5c422973bd4673d0c9cb274cd8c1dfb594f5a5b505a3",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+  ]
+}

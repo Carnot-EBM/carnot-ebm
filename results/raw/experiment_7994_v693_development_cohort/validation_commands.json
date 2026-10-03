@@ -1,0 +1,195 @@
+{
+  "artifact_guard_enabled": true,
+  "code_config_hashes": [
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7994_v693_development_cohort.py",
+      "sha256": "sha256:1cfca8a038c38574a515f01b8d0b71080b0cfc69efdd1dddf3c7f45230571526"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/development_cohort_7994.py",
+      "sha256": "sha256:07083f5f8346123fcfe29c55e9f3b501a6c2f49f61c4544fcfd182554bd4e92e"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7994_v693_development_cohort.py",
+      "sha256": "sha256:9ffe785a5f40693736cf348d67f3e4f1d846740be698035bf2f79b70dfbc96b2"
+    }
+  ],
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "run",
+        "--rcfile=/tmp/carnot-7994-zgkvsjrr/coverage.ini",
+        "-m",
+        "pytest",
+        "-n0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "--basetemp=/tmp/carnot-7994-zgkvsjrr/pytest",
+        "tests/python/test_development_cohort_7994.py",
+        "tests/python/test_experiment_7994_v693_development_cohort.py"
+      ],
+      "name": "changed_coverage",
+      "scope": "owned",
+      "timeout_s": 600
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "--basetemp=/tmp/carnot-7994-zgkvsjrr/pytest",
+        "tests/python/test_evidence_features_7980.py",
+        "tests/python/test_response_targets_7955.py",
+        "tests/python/test_primary_publication_7928.py"
+      ],
+      "name": "direct_consumers",
+      "scope": "owned",
+      "timeout_s": 300
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "--basetemp=/tmp/carnot-7994-zgkvsjrr/pytest",
+        "tests/python/test_source_boundary_7852.py",
+        "tests/python/test_experiment_7942_v689_sentence_labels.py"
+      ],
+      "name": "E2E_015_019",
+      "scope": "owned",
+      "timeout_s": 300
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "combine",
+        "--rcfile=/tmp/carnot-7994-zgkvsjrr/coverage.ini"
+      ],
+      "name": "coverage_combine",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "json",
+        "--rcfile=/tmp/carnot-7994-zgkvsjrr/coverage.ini",
+        "-o",
+        "/tmp/carnot-7994-zgkvsjrr/coverage.json"
+      ],
+      "name": "coverage_json",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "report",
+        "--rcfile=/tmp/carnot-7994-zgkvsjrr/coverage.ini",
+        "--fail-under=100",
+        "--show-missing"
+      ],
+      "name": "coverage_100",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_7994_v693_development_cohort.py",
+        "python/carnot/verify/development_cohort_7994.py",
+        "scripts/experiments/experiment_7994_v693_development_cohort.py",
+        "tests/python/test_development_cohort_7994.py",
+        "tests/python/test_experiment_7994_v693_development_cohort.py"
+      ],
+      "name": "ruff_check",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_7994_v693_development_cohort.py",
+        "python/carnot/verify/development_cohort_7994.py",
+        "scripts/experiments/experiment_7994_v693_development_cohort.py",
+        "tests/python/test_development_cohort_7994.py",
+        "tests/python/test_experiment_7994_v693_development_cohort.py"
+      ],
+      "name": "ruff_format",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "--follow-imports=silent",
+        "python/carnot/experiment_7994_v693_development_cohort.py",
+        "python/carnot/verify/development_cohort_7994.py"
+      ],
+      "name": "strict_mypy",
+      "scope": "owned",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_development_cohort_7994.py",
+        "tests/python/test_experiment_7994_v693_development_cohort.py"
+      ],
+      "name": "spec_coverage",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q"
+      ],
+      "name": "repository_health",
+      "scope": "repository_health",
+      "timeout_s": 600
+    }
+  ],
+  "coverage_config": "/tmp/carnot-7994-zgkvsjrr/coverage.ini",
+  "coverage_json": "/tmp/carnot-7994-zgkvsjrr/coverage.json",
+  "delay_slots": 20,
+  "frozen_before_measurement": true,
+  "random_seed": 69394,
+  "response_order": "numeric_decimal_ID_then_lexical_ID",
+  "roles": {
+    "calibration": 64,
+    "retention": 64,
+    "stream": 256
+  },
+  "salt": "V693-development",
+  "stream_slots": 256,
+  "terminal_commands": [
+    "adversarial_verify.py --json",
+    "verdict_row_consistency_lint.py --strict",
+    "cold-replay",
+    "both_conductor_readers"
+  ]
+}

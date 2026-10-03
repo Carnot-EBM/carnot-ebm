@@ -1,0 +1,113 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.8756527619552799,
+  "exclusion_reason": null,
+  "family_id": "sha256:eb9d4146dce5b5dd58299bc5369aafd38eb2d70b0ea81eca261e47f7eac80abc",
+  "input_tokens": 1353,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1353,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1377
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:9807c48fdb9cfee7bb709bd6294a2d338d19d2b9364cb56c2273fa8470ffe1ce",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832779,
+    "id": "chatcmpl-0RWOZnasXXjOTgk7bqF4Rx2rSzAZolfv",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 566.584,
+      "predicted_n": 24,
+      "predicted_per_second": 42.35912062465583,
+      "predicted_per_token_ms": 23.607666666666663,
+      "prompt_ms": 1169.983,
+      "prompt_n": 1275,
+      "prompt_per_second": 1089.7594238548766,
+      "prompt_per_token_ms": 0.9176337254901961
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1353,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1377
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"5392 Hollister Ave\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":null,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Restaurants, Bakeries, Cafes, Coffee & Tea, Food, Desserts\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"8:0-16:0\\\",\\\"Monday\\\":\\\"8:0-16:0\\\",\\\"Saturday\\\":\\\"8:0-16:0\\\",\\\"Sunday\\\":\\\"8:0-16:0\\\",\\\"Thursday\\\":\\\"8:0-16:0\\\",\\\"Tuesday\\\":\\\"8:0-16:0\\\",\\\"Wednesday\\\":\\\"8:0-16:0\\\"},\\\"name\\\":\\\"Crushcakes Cafe & Simply Pies\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-12-03 18:43:52\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"My first review of Crushcakes was for the vegan blueberry scone, which let me tell you is super duper. Now, I've been coming to this location almost weekly for several months to study, and I'm updating my review--but not my 5-star rating. With a cute back patio, a customer loyalty punch card, and lovely vegan baked goods (cinnamon and blueberry scones and a variety of cupcakes) as well as full meals and fresh, hot coffee (be sure to ask for it in a \\\\\\\"for here\\\\\\\" cup if you're staying!) I'm crushing on Crushcakes. \\\\n\\\\nThis morning, employees Dana, Niku, and Katey were especially helpful. My small coffee with a splash of oat milk ($3) hit the spot in the chilly weather. As a vegan, I love the fact that Crushcakes doesn't upcharge for plant-based milks. My only critique is that the wifi is touch-and-go, especially on the back patio, and there aren't any exterior outlets. But with a fully-charged computer and digital text to read, the back is a great spot to get some work done or gather for a Covid-safer breakfast or lunch. Big picnic-style tables provide ample room for studying too. Thanks Crushcakes!\\\"},{\\\"review_date\\\":\\\"2021-10-30 22:42:23\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"I have been buying cupcakes from Crushcakes for many years, mostly at the Santa Barbara location, and they have always been yummy...moist, flavorful, and my absolute favorite cupcakes ever. Today my husband brought home several of the \\\\\\\"mini\\\\\\\" cupcakes for me (from the Goleta location).  It had been a while since I had treated myself to a Crushcake, and I was so excited!  I had asked for the Red Velvet and Vanilla Bean flavors, but found when I opened the box that, although my husband had specifically ordered Red Velvet cupcakes, there were none to be found.  They were plain chocolate.  And they were *super* dry.  The Vanilla Bean cupcakes were also dry, and the frosting didn't even reach the level of the frosting you find in supermarket bakeries.  I am so sad and disappointed! Hoping I can still find the deliciousness I remember at the Santa Barbara location!\\\"},{\\\"review_date\\\":\\\"2021-10-22 23:39:56\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"The staff at Crushcakes were so helpful, I wanted to try everything (and one can, if one has 8 stomachs). Their cupcake of the day, the scrumptious mocha, was a party on my palate. Perfectly moist and flavorful. This confectionary gem is a fantastic choice for cupcakes and pies to boot! Crushcakes is a must and that's the sweet and honest tooth.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Crushcakes Cafe & Simply Pies is a popular eatery located in Goleta, CA, offering a variety of delicious treats and drinks. According to their menu, they serve breakfast, lunch, and dessert items, including vegan and gluten-free options. The cafe has a cozy atmosphere with a back patio and offers free Wi-Fi, making it a great spot for studying or meeting with friends. The staff is friendly and helpful, and the customer loyalty punch card is a nice touch.\\n\\nThe reviews for Crushcakes are generally positive, with many customers raving about the delicious baked goods, especially the vegan blueberry scone and the variety of cupcakes. One reviewer mentions that the wifi can be unreliable, but this minor issue doesn't detract from the overall experience. Another reviewer expresses disappointment with the dryness of the mini cupcakes, but this seems to be an isolated incident.\\n\\nOverall, Crushcakes Cafe & Simply Pies appears to be a charming and tasty destination for anyone looking for a quick bite or a relaxing spot to enjoy some delicious pastries and coffee. With its loyal customer base and positive reviews, it's no wonder this cafe has a 3.5-star rating.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:de081bfd5d009044185c8d743e896707e27d9562ed05a1ddd2fc8449684d2ec0",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21
+  ]
+}

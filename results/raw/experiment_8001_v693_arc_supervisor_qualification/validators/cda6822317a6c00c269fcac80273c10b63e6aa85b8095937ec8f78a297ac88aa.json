@@ -1,0 +1,111 @@
+{
+  "primary_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8001_v693_arc_supervisor_qualification.json",
+  "primary_sha256": "sha256:cda6822317a6c00c269fcac80273c10b63e6aa85b8095937ec8f78a297ac88aa",
+  "report": {
+    "passed": true,
+    "replay_errors": [],
+    "reports": [
+      {
+        "actual_exit": 0,
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "scripts/adversarial_verify.py",
+          "--json",
+          "/tmp/carnot-exp8001-wdmnoqai/terminal-candidate.json"
+        ],
+        "classification": "required",
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json /tmp/carnot-exp8001-wdmnoqai/terminal-candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "scripts/adversarial_verify.py",
+          "--json",
+          "/tmp/carnot-exp8001-wdmnoqai/terminal-candidate.json"
+        ],
+        "deadline_s": 60,
+        "duration_s": 0.636381954071112,
+        "exit_code": 0,
+        "expected_exit": 0,
+        "expected_text": null,
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8001_v693_arc_supervisor_qualification/logs/terminal_adversarial-ebe0ba733754c490416e7455aa12b7393f69455d4aa9f81ff58b37c94eb79256.log",
+        "log_sha256": "sha256:ebe0ba733754c490416e7455aa12b7393f69455d4aa9f81ff58b37c94eb79256",
+        "name": "terminal_adversarial",
+        "output_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/tmp/carnot-exp8001-wdmnoqai/terminal-candidate.json\",\n      \"loaded\": true,\n      \"exp_id\": 8001,\n      \"title\": \"New live ARC supervisor outcome inventory\",\n      \"honest_verdict\": \"complete_null_no_new_outcomes\",\n      \"flag_count\": 0,\n      \"max_severity\": -1,\n      \"flags\": [],\n      \"gate_version\": \"197e0a5eacacb09ce6607ae8bdfd507498082857f0d02ec2003a62c251b69a24\"\n    }\n  ],\n  \"flagged_count\": 0\n}\n",
+        "passed": true,
+        "scope": "required",
+        "timed_out": false
+      },
+      {
+        "actual_exit": 0,
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "scripts/verdict_row_consistency_lint.py",
+          "--strict",
+          "/tmp/carnot-exp8001-wdmnoqai/terminal-candidate.json"
+        ],
+        "classification": "required",
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/verdict_row_consistency_lint.py --strict /tmp/carnot-exp8001-wdmnoqai/terminal-candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "scripts/verdict_row_consistency_lint.py",
+          "--strict",
+          "/tmp/carnot-exp8001-wdmnoqai/terminal-candidate.json"
+        ],
+        "deadline_s": 60,
+        "duration_s": 0.02468524093274027,
+        "exit_code": 0,
+        "expected_exit": 0,
+        "expected_text": null,
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8001_v693_arc_supervisor_qualification/logs/terminal_rows-ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f.log",
+        "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+        "name": "terminal_rows",
+        "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+        "passed": true,
+        "scope": "required",
+        "timed_out": false
+      },
+      {
+        "actual_exit": 0,
+        "argv": [
+          "env",
+          "-u",
+          "PYTHONPATH",
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "-c",
+          "import os, runpy, sys; os.chdir(sys.argv[1]); sys.argv = sys.argv[2:]; runpy.run_path(sys.argv[0], run_name='__main__')",
+          "/tmp/carnot-exp8001-wdmnoqai",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8001_v693_arc_supervisor_qualification.py",
+          "--cold-replay",
+          "/tmp/carnot-exp8001-wdmnoqai/terminal-candidate.json"
+        ],
+        "classification": "required",
+        "command": "env -u PYTHONPATH /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import os, runpy, sys; os.chdir(sys.argv[1]); sys.argv = sys.argv[2:]; runpy.run_path(sys.argv[0], run_name='\"'\"'__main__'\"'\"')' /tmp/carnot-exp8001-wdmnoqai /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8001_v693_arc_supervisor_qualification.py --cold-replay /tmp/carnot-exp8001-wdmnoqai/terminal-candidate.json",
+        "command_argv": [
+          "env",
+          "-u",
+          "PYTHONPATH",
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "-c",
+          "import os, runpy, sys; os.chdir(sys.argv[1]); sys.argv = sys.argv[2:]; runpy.run_path(sys.argv[0], run_name='__main__')",
+          "/tmp/carnot-exp8001-wdmnoqai",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8001_v693_arc_supervisor_qualification.py",
+          "--cold-replay",
+          "/tmp/carnot-exp8001-wdmnoqai/terminal-candidate.json"
+        ],
+        "deadline_s": 60,
+        "duration_s": 0.486345472978428,
+        "exit_code": 0,
+        "expected_exit": 0,
+        "expected_text": null,
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8001_v693_arc_supervisor_qualification/logs/cold_primary_replay-2a9de744094f8204561f5d2bba9b8ccee7e396a9da0862e9f871db433205a98f.log",
+        "log_sha256": "sha256:2a9de744094f8204561f5d2bba9b8ccee7e396a9da0862e9f871db433205a98f",
+        "name": "cold_primary_replay",
+        "output_tail": "[exp8001] phase=start completed_units=0 elapsed_s=0\n{\"cold_replay_errors\": []}\n",
+        "passed": true,
+        "scope": "required",
+        "timed_out": false
+      }
+    ]
+  }
+}
