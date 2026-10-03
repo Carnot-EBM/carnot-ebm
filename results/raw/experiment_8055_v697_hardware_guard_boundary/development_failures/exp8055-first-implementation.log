@@ -1,0 +1,28 @@
+.F...                                                                    [100%]
+=================================== FAILURES ===================================
+__________________________________ test_costs __________________________________
+
+    def test_costs():
+        """SCENARIO-REPORT-8055-COSTS: serial work limits hypothetical arithmetic."""
+        row = dict(
+            arm="python",
+            condition="feedback_constrained",
+            natural=True,
+            excluded=False,
+            repetition=0,
+            transaction_class="accepted",
+            transaction_ns=1000,
+            components=dict(gradient_arithmetic_ns=100, guard_scans_ns=200, storage_fsync_ns=400),
+        )
+        bounds = h.costs([row], 0.5)
+>       assert bounds[0]["speedup_bound"] == pytest.approx(1000 / 901)
+E       assert 1.2468827930174564 == 1.1098779134295227 ± 1.1e-06
+E         
+E         comparison failed
+E         Obtained: 1.2468827930174564
+E         Expected: 1.1098779134295227 ± 1.1e-06
+
+tests/python/test_hardware_guard_8055.py:81: AssertionError
+=========================== short test summary info ============================
+FAILED tests/python/test_hardware_guard_8055.py::test_costs - assert 1.246882...
+1 failed, 4 passed in 30.67s

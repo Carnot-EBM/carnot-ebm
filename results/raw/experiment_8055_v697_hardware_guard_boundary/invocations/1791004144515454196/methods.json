@@ -1,0 +1,172 @@
+{
+  "artifact_guard_enabled": true,
+  "code": [
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8055_v697_hardware_guard_boundary.py",
+      "sha256": "sha256:3decccdec5297a4f96c37134b06f067a019dde48bb3cafadece2fef07ad6490a"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/hardware_guard_8055.py",
+      "sha256": "sha256:bdd06715cc547c21f8c171fb0b6c75569a945dcf0d3477109174c76d5695d5fe"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8055_v697_hardware_guard_boundary.py",
+      "sha256": "sha256:d7b70f7be9421fdb99ef9f499fb52b80dcbcaf255b44e6a259cc7aff9533a68e"
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_hardware_guard_8055.py",
+      "sha256": "sha256:4e04ac1b81dd9ac5f7ccf109b228b57a38545400625cc83f074c6aa289a5d9bc"
+    }
+  ],
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "run",
+        "--rcfile=/tmp/carnot-8055-d3ivzxh3/coverage.ini",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-8055-d3ivzxh3/pytest",
+        "tests/python/test_hardware_guard_8055.py",
+        "tests/python/test_primary_publication_7928.py",
+        "-q"
+      ],
+      "name": "owned_tests",
+      "scope": "owned",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "combine",
+        "--rcfile=/tmp/carnot-8055-d3ivzxh3/coverage.ini"
+      ],
+      "name": "coverage_combine",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "json",
+        "--rcfile=/tmp/carnot-8055-d3ivzxh3/coverage.ini",
+        "-o",
+        "/tmp/carnot-8055-d3ivzxh3/coverage.json"
+      ],
+      "name": "coverage_json",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "report",
+        "--rcfile=/tmp/carnot-8055-d3ivzxh3/coverage.ini",
+        "--fail-under=100"
+      ],
+      "name": "coverage100",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_8055_v697_hardware_guard_boundary.py",
+        "python/carnot/reporting/hardware_guard_8055.py",
+        "scripts/experiments/experiment_8055_v697_hardware_guard_boundary.py",
+        "tests/python/test_hardware_guard_8055.py"
+      ],
+      "name": "ruff_check",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_8055_v697_hardware_guard_boundary.py",
+        "python/carnot/reporting/hardware_guard_8055.py",
+        "scripts/experiments/experiment_8055_v697_hardware_guard_boundary.py",
+        "tests/python/test_hardware_guard_8055.py"
+      ],
+      "name": "ruff_format",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "--follow-imports=silent",
+        "python/carnot/experiment_8055_v697_hardware_guard_boundary.py",
+        "python/carnot/reporting/hardware_guard_8055.py",
+        "scripts/experiments/experiment_8055_v697_hardware_guard_boundary.py"
+      ],
+      "name": "strict_mypy",
+      "scope": "owned",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "python/carnot/experiment_8055_v697_hardware_guard_boundary.py",
+        "python/carnot/reporting/hardware_guard_8055.py",
+        "scripts/experiments/experiment_8055_v697_hardware_guard_boundary.py",
+        "tests/python/test_hardware_guard_8055.py"
+      ],
+      "name": "spec_coverage",
+      "scope": "owned",
+      "timeout_s": 60
+    }
+  ],
+  "config": {
+    "accumulator_bits": 32,
+    "alphas": [
+      1,
+      0.5,
+      0.25,
+      0.125,
+      0
+    ],
+    "fractional_bits": 12,
+    "host_allowance": 9.094947017729282e-13,
+    "interval_method": "analytical input cells and operation rounding; no fitted widths",
+    "numerical_budget_s": 600,
+    "rounding_radius": 0.0001220703125,
+    "seed": 8055,
+    "state_bits": 24,
+    "state_commit": "float64 authoritative shadow; staged integer witness",
+    "statistics": "descriptive exposed development; no independent benefit test"
+  },
+  "sources": {
+    "8042": [
+      "experiment_8042_v696_precision_fallback_boundary",
+      "hardware_custody_ready_score"
+    ],
+    "8051": [
+      "experiment_8051_v697_feedback_constrained_learning",
+      "learning_trajectory_ready_score"
+    ],
+    "8053": [
+      "experiment_8053_v697_guarded_transaction_cost",
+      "native_transaction_ready_score"
+    ]
+  },
+  "substrate": "no model load; no device invocation"
+}

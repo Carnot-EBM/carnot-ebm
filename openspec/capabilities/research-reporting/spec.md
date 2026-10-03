@@ -90924,3 +90924,41 @@ The thin script fixes task-local CPU thread settings before numerical imports.
 `tests/python/test_guarded_transaction_8053.py` covers natural replay, boundary,
 malformed binding, storage, missing operands and private terminal CLI paths.
 The task primary and terminal sidecar record final measured costs and validation.
+
+## REQ-REPORT-8055: Preserve board custody and bound guarded hardware decisions
+
+Freeze the current input, code, method and bounded validation identities before
+measurement. Authenticate each original KV260, PolarFire and GateMate receipt
+without contacting hardware. Keep the SSH Ising k_max<=5, Linux CPU-only and
+physical JTAG 0xffffffff limits separate. Missing qualified current trajectories
+or costs produce terminal blocked with exact operands. No pretrained model calls.
+
+### SCENARIO-REPORT-8055-GUARDS
+
+Replay every current candidate and alpha using Q12 signed24 state and signed32
+accumulators. Propagate analytical rounding cells through calibrated probability,
+Brier, typed cost and false-accept predicates. Any uncertain predicate, typed
+boundary or overflow uses float64 before state commit. Require containment, exact
+accept/reject/reset/alpha and typed decisions, and identical restart state.
+Include destructive, threshold-crossing, insufficient-guard and overflow controls;
+controls add no independent samples. Guard and prediction fallbacks are separate.
+Numerical parity supplies no certificate for future safety.
+
+### SCENARIO-REPORT-8055-COSTS
+
+Use qualified complete transaction rows for hypothetical compatible-arithmetic
+100x Amdahl bounds. Charge guard scans, CPU fallback, storage and orchestration.
+Declare device transfer and transformer prefill unknown. Existing Ising hardware
+does not execute arbitrary spline gradients. Keep FPGA, NPU and TSU capability
+claims separate. Recommend no purchase without a useful measured bottleneck.
+
+### SCENARIO-REPORT-8055-TERMINAL
+
+Write traced failing tests first. Require owned tests, consumers, scoped Ruff,
+strict mypy, spec coverage and100% added statement coverage including real CLI
+valid/null/blocked/tampered routes and normal exits. Preserve one bounded full
+Python suite health observation separately. Freeze the owned acceptance manifest.
+Cold-reduce durable primitive inputs in a fresh process. Validate candidate and
+published bytes with adversarial and strict row checks through primary publication.
+Keep hashes, argv, expected/actual exits and logs below task raw storage; shards
+remain below90MB. The conductor owns ops and traceability reconciliation.
