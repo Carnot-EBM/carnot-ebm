@@ -19426,3 +19426,4 @@ code |
 | 2026-10-03 17:32 UTC | Train calibrated source energies with explicit fea | OK | 90 passed, 1 warning in 60.88s (0:01:00) |
 | 2026-10-03 18:17 UTC | Independently test source interactions and typed d | OK | 92 passed, 1 warning in 112.48s (0:01:52) |
 | 2026-10-03 19:11 UTC | Qualify finite-memory half-space correction for sm | OK | 92 passed, 1 warning in 57.02s |
+| 2026-10-03 20:06 UTC | Learn persistent constraints before fresh update a | OK | 93 passed, 1 warning in 72.92s (0:01:12) |
