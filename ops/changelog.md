@@ -21304,3 +21304,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-10-03: Qualify scorer validation workspaces before new model calls (⚠️ Research Finding) — honest_verdict=complete_circular_positive_scorer_workspace; results/experiment_8045_v697_scorer_workspace.json
 - 2026-10-03: Seal source decisions and feedback acceptance before evaluator access (⚠️ Research Finding) — honest_verdict=complete_null_branch_protocols; results/experiment_8046_v697_branch_protocols.json
 - 2026-10-03: Learn persistent energy updates with released-feedback acceptance checks (⚠️ Research Finding) — honest_verdict=complete_null_feedback_constrained_learning; results/experiment_8051_v697_feedback_constrained_learning.json
+- 2026-10-03: Audit future learning benefit retention and crash recovery independently (⚠️ Research Finding) — honest_verdict=complete_null_learning_benefit; results/experiment_8052_v697_learning_benefit_audit.json
