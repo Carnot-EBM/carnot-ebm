@@ -21308,3 +21308,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-10-03: Measure accepted and rejected update costs through the native binding (⚠️ Research Finding) — honest_verdict=complete_null_guarded_transaction_cost; results/experiment_8053_v697_guarded_transaction_cost.json
 - 2026-10-03: Review new live ARC supervisor outcomes for transferable refinement (⚠️ Research Finding) — honest_verdict=complete_null_no_new_outcomes; results/experiment_8054_v697_arc_supervisor_delta.json
 - 2026-10-03: Preserve board custody and bound guarded-update hardware compatibility (⚠️ Research Finding) — honest_verdict=complete_null_guarded_hardware_boundary; results/experiment_8055_v697_hardware_guard_boundary.json
+- 2026-10-03: Decide source utility retained learning and deployability from primitive evidence (⚠️ Blocked) — honest_verdict=complete_blocked_v697_capstone; results/experiment_8056_v697_capstone.json
