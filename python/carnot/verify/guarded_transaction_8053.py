@@ -7,6 +7,7 @@ stay in Python, so its conversion and guard overhead remain charged to native wo
 from __future__ import annotations
 
 import copy
+from collections.abc import Callable
 import json
 import os
 from pathlib import Path
@@ -164,7 +165,15 @@ def guard(
     )
 
 
-def calculate(data: Json, w: Json, native: Any, path: str, *, reextract: bool = True) -> Json:
+def calculate(
+    data: Json,
+    w: Json,
+    native: Any,
+    path: str,
+    *,
+    reextract: bool = True,
+    feature_provider: Callable[[Json], Json] | None = None,
+) -> Json:
     """Replay each original gradient, all guard tests and a serialized restart."""
     components: Json = {}
     started = time.perf_counter_ns()
@@ -175,7 +184,7 @@ def calculate(data: Json, w: Json, native: Any, path: str, *, reextract: bool = 
     raw = []
     for r in rows:
         public = (
-            prior.old.features.extract(
+            (feature_provider or prior.old.features.extract)(
                 {k: r[k] for k in ("family_id", "source_bytes", "answer_bytes")}
             )["values"]
             if reextract
@@ -343,10 +352,18 @@ def parity(data: Json, native: Any, raw: Path) -> Json:
     return dict(parity_rows=rows, parity_passed=bool(rows) and all(r["passed"] for r in rows))
 
 
-def transaction(data: Json, w: Json, native: Any, arm: str, file: Path) -> Json:
+def transaction(
+    data: Json,
+    w: Json,
+    native: Any,
+    arm: str,
+    file: Path,
+    *,
+    feature_provider: Callable[[Json], Json] | None = None,
+) -> Json:
     """Charge rejected work and complete storage before a useful decision finishes."""
     began = time.perf_counter_ns()
-    outcome = calculate(data, w, native, arm)
+    outcome = calculate(data, w, native, arm, feature_provider=feature_provider)
     components = outcome["components"]
     started = time.perf_counter_ns()
     payload = dict(

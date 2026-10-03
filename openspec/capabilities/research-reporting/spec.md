@@ -87091,6 +87091,7 @@ A qualified empty audit may be ready but establishes no scientific benefit.
 An unchanged qualified null is retired as new evidence under retire_if_same_verdict.
 The conductor owns ops and traceability reconciliation.
 
+
 ### REQ-REPORT-8021: Independently reduce frozen typed decision policies
 
 Exp8021 SHALL evaluate all 256 original stream slots from Exp8020 sealed
@@ -91303,3 +91304,49 @@ and publishes through the shared primary reader. The thin CLI and
 `tests/python/test_fresh_learning_audit_8065.py` exercise these scenarios.
 Scientific credit depends on the resulting artifact's frozen support and safety
 gates; implementation alone supplies none.
+
+## REQ-REPORT-8066: Reuse public features in complete guarded transactions
+
+Cache only deterministic label-free public vectors. Bind complete source and
+answer bytes, extractor and dependency code, configuration, version and schema.
+Bound persistent entries and memory. Corrupt entries miss and recompute; changed
+inputs cannot return stale vectors. Preserve the Exp8027 atomic inode loader.
+
+### SCENARIO-REPORT-8066-CACHE
+
+Test source, answer, extractor, configuration and schema mutation, malformed
+entries, eviction and a private killed writer followed by CLI restart. Exact
+feature bytes must survive restart; labels and learned decisions never enter
+the cache. Temporary tests do not write to protected results paths.
+
+### SCENARIO-REPORT-8066-TRANSACTIONS
+
+Authenticate Exp8053 primary, terminal hash and raw source/head/case shards.
+Measure current uncached/cached Python and loaded native transactions on the
+same randomized pairs, five warmups and thirty repetitions per observed class.
+Separate cold, warm, all-miss, predetermined ten-percent changes, eviction and
+restart within 900 seconds. Preserve censored units and synthetic reset controls.
+Require exact features/actions/alpha/pending identities and recovered state,
+with probability and energy tolerance 1e-10. The optional qualified Exp8064
+trace grants no automatic replacement of Exp8053's different guard protocol.
+
+### SCENARIO-REPORT-8066-TERMINAL
+
+Freeze validation argv before timing. Require focused and consumer tests, Ruff,
+strict mypy, scoped spec coverage, all added statements covered, actual private
+outside-checkout CLI routes and E2E-003/004 loaded native round trips. Cold
+reduce primitive evidence, run adversarial and strict row checks, and publish
+only after measurement child exit. Missing external operands block; failed
+owned checks disqualify readiness. Cache readiness is distinct from speed:
+speed requires lower paired 95-percent ratio above 1.2 for changed workload and
+at most five-percent cold/all-miss regression. Report break-even and absent
+acquisition/feedback costs. Generalized learning benefit remains zero.
+The conductor owns ops and traceability reconciliation.
+
+Implementation for REQ-REPORT-8066: `verify/content_addressed_features_8066.py`
+stores bounded public vectors with exact-byte keys and checked SQLite payloads.
+The Exp8066 producer and thin CLI replay original Exp8053 operands, retain
+budget-censored rows and publish after child exit. Private traced tests cover
+mutations, loaded native serialization, committed and uncommitted crash recovery,
+and incomplete timing budgets. Terminal evidence determines readiness and speed;
+the implementation alone grants neither scientific nor service benefit.

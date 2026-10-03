@@ -1,0 +1,216 @@
+{
+  "config": {
+    "budget_s": 900,
+    "capacity": 256,
+    "draws": 10000,
+    "repetitions": 30,
+    "seed": 8066,
+    "tolerance": 1e-10,
+    "warmups": 5
+  },
+  "current_baseline": true,
+  "independent_unit": "original exposed source cluster",
+  "measurement_command": {
+    "argv": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "-u",
+      "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8066_v698_content_addressed_feature_service.py",
+      "--worker-input",
+      "/tmp/carnot8066-6mngd7cq/workloads.json",
+      "--raw",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8066_v698_content_addressed_feature_service/invocations/1791025137723330993",
+      "--output",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8066_v698_content_addressed_feature_service/invocations/1791025137723330993/measurement.json"
+    ],
+    "name": "current_transaction_measurement",
+    "scope": "measurement",
+    "timeout_s": 960
+  },
+  "modes": [
+    "cold",
+    "warm",
+    "all_miss",
+    "changed_10pct",
+    "eviction",
+    "restart"
+  ],
+  "mutation": "predetermined position+repetition modulo10; each requested-source position changes three times in30 repetitions; append complete whitespace preserving lexical features",
+  "optional_trace": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8064_v698_fresh_feedback_learning.json",
+    "qualified": true,
+    "reason": "Exp8064 batch-gradient and incumbent guard protocol differs; this experiment replays authenticated Exp8053 mechanism transactions only",
+    "sha256": "sha256:58b3ea4c49ea9afb5beb00ce4532df446eae516b9d377ac52f97be5c37c14352",
+    "used": false
+  },
+  "validation_commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot8066-6mngd7cq/.coverage",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8066_v698_content_addressed_feature_service.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/content_addressed_features_8066.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8066_v698_content_addressed_feature_service.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/guarded_transaction_8053.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot8066-6mngd7cq/pytest",
+        "tests/python/test_feature_service_8066.py",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_native_update_8027.py::test_req_pybind_8027_repeated_load_exits_normally",
+        "tests/python/test_native_update_8027.py::test_req_pybind_8027_atomic_copy_preserves_previous_binary",
+        "-q"
+      ],
+      "name": "focused_consumers_loaded_e2e003_004",
+      "scope": "owned",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "json",
+        "--data-file=/tmp/carnot8066-6mngd7cq/.coverage",
+        "-o",
+        "/tmp/carnot8066-6mngd7cq/coverage.json"
+      ],
+      "name": "coverage_json",
+      "scope": "owned",
+      "timeout_s": 30
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/carnot8066-6mngd7cq/.coverage",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8066_v698_content_addressed_feature_service.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/content_addressed_features_8066.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8066_v698_content_addressed_feature_service.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "name": "added_statement_coverage",
+      "scope": "owned",
+      "timeout_s": 30
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_8066_v698_content_addressed_feature_service.py",
+        "python/carnot/verify/content_addressed_features_8066.py",
+        "scripts/experiments/experiment_8066_v698_content_addressed_feature_service.py",
+        "python/carnot/verify/guarded_transaction_8053.py",
+        "tests/python/test_feature_service_8066.py"
+      ],
+      "name": "ruff_check",
+      "scope": "owned",
+      "timeout_s": 30
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_8066_v698_content_addressed_feature_service.py",
+        "python/carnot/verify/content_addressed_features_8066.py",
+        "scripts/experiments/experiment_8066_v698_content_addressed_feature_service.py",
+        "python/carnot/verify/guarded_transaction_8053.py",
+        "tests/python/test_feature_service_8066.py"
+      ],
+      "name": "ruff_format",
+      "scope": "owned",
+      "timeout_s": 30
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "python/carnot/experiment_8066_v698_content_addressed_feature_service.py",
+        "python/carnot/verify/content_addressed_features_8066.py",
+        "scripts/experiments/experiment_8066_v698_content_addressed_feature_service.py",
+        "python/carnot/verify/guarded_transaction_8053.py"
+      ],
+      "name": "strict_mypy",
+      "scope": "owned",
+      "timeout_s": 90
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_feature_service_8066.py"
+      ],
+      "name": "scoped_spec_coverage",
+      "scope": "owned",
+      "timeout_s": 30
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import os,runpy,sys;os.chdir(sys.argv[1]);sys.argv=sys.argv[2:];runpy.run_path(sys.argv[0],run_name='__main__')",
+        "/tmp/carnot8066-6mngd7cq",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8066_v698_content_addressed_feature_service.py",
+        "--cache-probe",
+        "populate",
+        "--cache",
+        "/tmp/carnot8066-6mngd7cq/cli-cache.sqlite"
+      ],
+      "name": "outside_cli_populate",
+      "scope": "owned",
+      "timeout_s": 30
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import os,runpy,sys;os.chdir(sys.argv[1]);sys.argv=sys.argv[2:];runpy.run_path(sys.argv[0],run_name='__main__')",
+        "/tmp/carnot8066-6mngd7cq",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8066_v698_content_addressed_feature_service.py",
+        "--cache-probe",
+        "restart",
+        "--cache",
+        "/tmp/carnot8066-6mngd7cq/cli-cache.sqlite"
+      ],
+      "name": "outside_cli_restart",
+      "scope": "owned",
+      "timeout_s": 30
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import os,runpy,sys;os.chdir(sys.argv[1]);sys.argv=sys.argv[2:];runpy.run_path(sys.argv[0],run_name='__main__')",
+        "/tmp/carnot8066-6mngd7cq",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8066_v698_content_addressed_feature_service.py",
+        "--cache-probe",
+        "mutate",
+        "--cache",
+        "/tmp/carnot8066-6mngd7cq/cli-cache.sqlite"
+      ],
+      "name": "outside_cli_mutate",
+      "scope": "owned",
+      "timeout_s": 30
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import os,runpy,sys;os.chdir(sys.argv[1]);sys.argv=sys.argv[2:];runpy.run_path(sys.argv[0],run_name='__main__')",
+        "/tmp/carnot8066-6mngd7cq",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8066_v698_content_addressed_feature_service.py",
+        "--root",
+        "/tmp/carnot8066-6mngd7cq/absent",
+        "--output",
+        "/tmp/carnot8066-6mngd7cq/experiment_8066_v698_content_addressed_feature_service.json"
+      ],
+      "name": "outside_cli_blocked",
+      "scope": "owned",
+      "timeout_s": 60
+    }
+  ]
+}
