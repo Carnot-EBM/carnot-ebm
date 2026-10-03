@@ -21343,3 +21343,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-10-03: Qualify finite-memory half-space correction for small energy updates (⚠️ Research Finding) — honest_verdict=complete_circular_positive_constraint_projection_kernel; results/experiment_8075_v699_constraint_projection_kernel.json
 - 2026-10-03: Learn persistent constraints before fresh update admission (⚠️ Research Finding) — honest_verdict=complete_null_projected_online_learning; results/experiment_8076_v699_projected_online_learning.json
 - 2026-10-03: Reconstruct later benefit retention and projection recovery independently (⚠️ Research Finding) — honest_verdict=complete_null_projected_learning_audit; results/experiment_8077_v699_projected_learning_audit.json
+- 2026-10-03: Measure complete cold warm and miss feature transactions (⚠️ Research Finding) — honest_verdict=complete_null_feature_service; results/experiment_8078_v699_feature_cache_core.json
