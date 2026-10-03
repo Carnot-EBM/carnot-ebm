@@ -19397,3 +19397,4 @@ code |
 | 2026-10-03 02:00 UTC | Independently test source information and calibrat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8049-evaluation-score-capture, exp8049-evaluation-score-capture, exp8049-evaluation-score-capture, exp8048-source-energy-fit, exp8048-source-energy-fit, exp8048-source-energy-fit) |
 | 2026-10-03 02:37 UTC | Learn persistent energy updates with released-feed | OK | 94 passed, 1 warning in 32.79s |
 | 2026-10-03 03:27 UTC | Audit future learning benefit retention and crash  | OK | 99 passed, 1 warning in 173.19s (0:02:53) |
+| 2026-10-03 04:28 UTC | Measure accepted and rejected update costs through | OK | 88 passed, 1 warning in 93.80s (0:01:33) |
