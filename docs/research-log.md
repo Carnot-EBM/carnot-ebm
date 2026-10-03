@@ -7197,4 +7197,12 @@ Operational evidence addendum: this entry supersedes earlier operational asserti
 - key result: honest operational negative — 9 compute-bound experiments completed in 34.2 wall-time minutes led by V696 design binding (6.36 min), loss retention testing (5.54 min), and duplicate likelihood drift testing (5.50 min), while available records lack intra-task stage breakdowns, continuous execution-window GPU telemetry, and multi-model dispatch opportunities
 - acceptance: no data available this milestone
 
+### Milestone 2026.10.697
+
+- exp_range: no data available this milestone
+- theme: Crash recovery auditing, native guarded update cost measurement, and task evidence preservation across an all-compute set lacking sub-phase telemetry
+- key result: honest operational negative — 9 compute-bound experiments completed in 37.7 wall-time minutes led by crash recovery auditing (9.43 min), native update cost measurement (8.11 min), and task evidence binding (6.25 min), while available records lack intra-task stage breakdowns, continuous execution-window GPU telemetry, and multi-model dispatch opportunities
+- acceptance: no data available this milestone
+
+
 

@@ -1,0 +1,59 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.10.697",
+  "generated_at": "2026-10-03T05:46:48Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 37.7,
+  "experiments_completed": 9,
+  "compute_bound_experiments_count": 9,
+  "slowest_experiments": [
+    {
+      "experiment": "Audit future learning benefit retention and crash recovery independently",
+      "duration_minutes": 9.43,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Measure accepted and rejected update costs through the native binding",
+      "duration_minutes": 8.11,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Bind thirteen tasks and preserve terminal V696 evidence",
+      "duration_minutes": 6.25,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Qualify scorer validation workspaces before new model calls",
+      "duration_minutes": 3.53,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Review new live ARC supervisor outcomes for transferable refinement",
+      "duration_minutes": 3.1,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.10.697 executed 9 experiments (all 9 marked compute-bound) across 37.7 total wall-time minutes (averaging 4 minutes per experiment) based on fallback disk timestamp reconstruction. The top wall-time consumers were 'Audit future learning benefit retention and crash recovery independently' (9.43 minutes), 'Measure accepted and rejected update costs through the native binding' (8.11 minutes), 'Bind thirteen tasks and preserve terminal V696 evidence' (6.25 minutes), 'Qualify scorer validation workspaces before new model calls' (3.53 minutes), and 'Review new live ARC supervisor outcomes for transferable refinement' (3.10 minutes). Point-in-time monitor telemetry reported both NVIDIA GeForce RTX 3090 GPUs at 0% utilization with 4MB memory allocated outside active runs; because active-window execution telemetry was absent, gpu_idle_on_compute_bound_tasks is recorded as false.",
+  "bottlenecks_identified": [
+    "Execution wall time was concentrated in the top compute-bound tasks: 'Audit future learning benefit retention and crash recovery independently' (9.43 minutes), 'Measure accepted and rejected update costs through the native binding' (8.11 minutes), and 'Bind thirteen tasks and preserve terminal V696 evidence' (6.25 minutes), which together accounted for 23.79 of 37.7 total wall-time minutes (63.1%), with the top five tasks accounting for 30.42 minutes (80.7%).",
+    "Milestone timing relied on disk-mtime fallback reconstruction following zero commits on the live git log path, leaving intra-task execution phases (environment initialization, dataset loading, model forward compute/training, and artifact validation) uninstrumented.",
+    "Absence of continuous in-flight accelerator telemetry across active execution windows leaves hardware utilization, memory bandwidth saturation, and kernel execution efficiency unmeasured during compute-bound runs."
+  ],
+  "improvements_suggested": [
+    "Embed granular monotonic phase timers in experiment runners to measure setup, compute, training loops, and artifact serialization separately.",
+    "Capture continuous active-window GPU utilization and VRAM timeseries during compute-bound experiment runs rather than relying solely on static point-in-time monitor snapshots.",
+    "Profile and optimize the crash recovery audit (9.43 minutes) and native binding update cost measurement (8.11 minutes) pipelines to identify opportunities for state caching and reduced evaluation overhead.",
+    "Restrict DualGPURunner harness deployment exclusively to concurrent multi-model workloads (such as parallel Qwen and Gemma execution) to prevent dispatch overhead or errors on single-model tasks.",
+    "Maintain failure_ledger pre-launch verification so doomed reruns continue to be blocked in sub-second time without expending compute budget."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Implement granular intra-task phase instrumentation across experiment harnesses to separate initialization, compute passes, and disk verification.",
+    "Add continuous, lightweight background GPU telemetry during task execution to measure true accelerator utilization and memory throughput.",
+    "Profile and streamline the crash recovery audit (9.43 minutes) and native binding transaction cost measurement (8.11 minutes) workflows."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Milestone 2026.10.697 completed 9 compute-bound experiments in 37.7 wall-time minutes, heavily weighted toward crash recovery auditing (9.43 minutes) and native binding cost measurement (8.11 minutes). While point-in-time telemetry showed both RTX 3090 GPUs idle with 4MB allocated outside execution, gpu_idle_on_compute_bound_tasks remains false due to the lack of continuous in-flight accelerator traces. Estimated time savings are set to 0% pending empirical measurement of intra-task phase durations and active-window GPU performance."
+}
