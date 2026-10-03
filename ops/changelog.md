@@ -21340,3 +21340,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-10-03: Ingest projection methods and seal independent research branches (⚠️ Research Finding) — honest_verdict=complete_null_sealed_methods; results/experiment_8072_v699_sealed_methods.json
 - 2026-10-03: Train calibrated source energies with explicit feature interactions (⚠️ Research Finding) — honest_verdict=complete_null_interaction_energy_fit; results/experiment_8073_v699_interaction_energy_fit.json
 - 2026-10-03: Independently test source interactions and typed decision benefit (⚠️ Research Finding) — honest_verdict=complete_null_interaction_decision_audit; results/experiment_8074_v699_interaction_decision_audit.json
+- 2026-10-03: Qualify finite-memory half-space correction for small energy updates (⚠️ Research Finding) — honest_verdict=complete_circular_positive_constraint_projection_kernel; results/experiment_8075_v699_constraint_projection_kernel.json
