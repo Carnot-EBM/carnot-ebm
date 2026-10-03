@@ -91350,6 +91350,50 @@ budget-censored rows and publish after child exit. Private traced tests cover
 mutations, loaded native serialization, committed and uncommitted crash recovery,
 and incomplete timing budgets. Terminal evidence determines readiness and speed;
 the implementation alone grants neither scientific nor service benefit.
+# REQ-REPORT-8068: Preserve custody and bound feature-reuse acceleration
+
+Exp8068 SHALL independently authenticate original KV260, PolarFire and GateMate
+receipts and preserve dates, hashes, k<=5 fabric scope, CPU dispatch scope and
+the unchanged 0xffffffff blocker. Current device executions and model calls
+SHALL be zero. GateMate requires a dated cable, port, power, board or onboard
+DirtyJTAG change and a valid GM1Ax IDCODE before a future attempt.
+
+## SCENARIO-REPORT-8068-CUSTODY
+
+Missing or unqualified Exp8066 SHALL block only new workload bounds. Each board
+remains independently reportable. Missing resources SHALL name exact failed
+operands in terminal complete_blocked results; forged receipts cannot qualify.
+Preserve Exp8055 overflow, threshold/guard uncertainty and float64 fallback
+obligations without a new quantization claim. Host extraction and cache integrity
+remain serial; spline/update logic has no automatic k<=5 fabric mapping.
+
+## SCENARIO-REPORT-8068-BOUNDS
+
+Only qualified byte-bound Exp8066 completed cached cold/warm/all-miss primitives
+may enter hypothetical 100x native-arithmetic ceilings. Charge full measured
+transactions, host/storage/guard costs and residual work. Unknown transfer and
+queue costs SHALL remain explicit symbols with conditional zero-overhead ceilings
+and strict break-even budgets. Missing costs block; estimates grant no measured
+device speed, purchase or generalized learning credit.
+
+## SCENARIO-REPORT-8068-TERMINAL
+
+Tests precede implementation. Freeze validation argv before reduction. Require
+focused tests, consumers, Ruff, strict mypy, scoped spec coverage, 100 percent
+added statements and E2E-016 fixture/replay with private missing-cost and forged
+board mutations through outside-checkout CLI routes. Hash all evidence and logs.
+Cold replay independently recomputes reductions before atomic primary publication
+after normal child exit. Owned failures disqualify readiness. Existing bounded
+full-suite failure remains separate repository health. The conductor owns ops
+and traceability reconciliation.
+
+Implementation: `reporting/hardware_feature_8068.py` authenticates original board
+receipts and reduces compatible current cost rows. The Exp8068 producer freezes
+checks, waits for the reduction child, cold-validates and publishes through the
+shared primary reader. Private traced tests cover missing costs, forged boards,
+outside-checkout CLI routes, owned validation failure and cold replay drift.
+Readiness depends on the terminal artifact; implementation grants no device gain.
+
 # REQ-REPORT-8067: Authenticate the V698 supervisor frontier
 
 Exp8067 SHALL bind the Exp8054 primary, inventory and terminal sidecar by exact

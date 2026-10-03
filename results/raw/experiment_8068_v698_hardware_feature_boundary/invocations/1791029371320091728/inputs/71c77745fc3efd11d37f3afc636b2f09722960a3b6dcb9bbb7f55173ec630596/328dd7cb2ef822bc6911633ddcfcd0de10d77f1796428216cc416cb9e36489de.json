@@ -1,0 +1,64 @@
+{
+  "primary_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8066_v698_content_addressed_feature_service.json",
+  "primary_sha256": "sha256:328dd7cb2ef822bc6911633ddcfcd0de10d77f1796428216cc416cb9e36489de",
+  "report": {
+    "passed": true,
+    "receipts": [
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8066_v698_content_addressed_feature_service.py --cold-replay /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8066_v698_content_addressed_feature_service/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8066_v698_content_addressed_feature_service.py",
+          "--cold-replay",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8066_v698_content_addressed_feature_service/terminal_candidate.json"
+        ],
+        "duration_s": 4.624984824098647,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8066_v698_content_addressed_feature_service/invocations/1791026138385149970/terminal_logs/328dd7cb2ef822bc6911633ddcfcd0de10d77f1796428216cc416cb9e36489de/00_cold_replay.log",
+        "log_sha256": "sha256:a8db9cbf6b3451f9ef57aaabc66131dd6a348f505e95177c84901839e4d47203",
+        "name": "cold_replay",
+        "output_tail": "[exp8066] phase=start_preconditions elapsed_s=0.000 completed=0 pending=0\n{\"passed\": true}\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8066_v698_content_addressed_feature_service/terminal_candidate.json --json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8066_v698_content_addressed_feature_service/terminal_candidate.json",
+          "--json"
+        ],
+        "duration_s": 6.753888388979249,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8066_v698_content_addressed_feature_service/invocations/1791026138385149970/terminal_logs/328dd7cb2ef822bc6911633ddcfcd0de10d77f1796428216cc416cb9e36489de/01_adversarial.log",
+        "log_sha256": "sha256:10394b7f2c32721fcae45932faf8067e9cd89508273977cbe4b538c2bbdefb46",
+        "name": "adversarial",
+        "output_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8066_v698_content_addressed_feature_service/terminal_candidate.json\",\n      \"loaded\": true,\n      \"exp_id\": 8066,\n      \"title\": \"\",\n      \"honest_verdict\": \"complete_disqualified_feature_service\",\n      \"flag_count\": 0,\n      \"max_severity\": -1,\n      \"flags\": [],\n      \"gate_version\": \"07ddacadae8c3b8d3250ad0977bda6f747d5bcb02bb7af3119b80db2547b62c7\"\n    }\n  ],\n  \"flagged_count\": 0\n}\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8066_v698_content_addressed_feature_service/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py",
+          "--strict",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8066_v698_content_addressed_feature_service/terminal_candidate.json"
+        ],
+        "duration_s": 0.28448036301415414,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8066_v698_content_addressed_feature_service/invocations/1791026138385149970/terminal_logs/328dd7cb2ef822bc6911633ddcfcd0de10d77f1796428216cc416cb9e36489de/02_strict_rows.log",
+        "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+        "name": "strict_rows",
+        "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      }
+    ]
+  }
+}
