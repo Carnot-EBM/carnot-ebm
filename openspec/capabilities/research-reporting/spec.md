@@ -91823,3 +91823,42 @@ with explicit field references in the primary. Preserve failed publication bytes
 Implementation: `python/carnot/experiment_8077_v699_projected_learning_audit.py`,
 `python/carnot/verify/projected_learning_audit_8077.py` and thin CLI.
 Tests: `tests/python/test_projected_learning_audit_8077.py`.
+
+## REQ-REPORT-8078 — Complete feature cache core transactions
+
+The core partition SHALL consume the authenticated Exp8072 service matrix and
+qualified Exp8053 original transactions. Preserve three condition/class groups,
+four loaded Python/native cached/uncached arms, five warmups and thirty paired
+repetitions. Execute exactly cold, warm and all_miss within 1800 seconds.
+
+### SCENARIO-REPORT-8078-COST
+
+Follow the frozen interleaved order. Persist complete quartets atomically before
+advancing. Retain all censored slots. Cold transactions include cache creation,
+population and cleanup. Warm population remains a separate amortization cost.
+All-miss records preserve complete original bytes and use identities fixed before
+timing. Charge hashing, extraction, guards, FFI, durable writes and reload.
+
+### SCENARIO-REPORT-8078-PARITY
+
+Use the repaired atomic library copy and actual loaded native calls. Public
+features and discrete decisions/state SHALL match exactly. Numerical tolerance
+is 1e-10. Verify persistent cache and transaction state in a fresh process.
+Report thirty paired ratios per cell and 10000 paired resamples. A speed claim
+requires warm lower95>1.2 and cold/all_miss lower95>=1/1.05 in every cell.
+
+### SCENARIO-REPORT-8078-TERMINAL
+
+Freeze commands and code before timing. Require focused consumer tests, loaded
+E2E-003/004, private E2E-015/016 and outside-checkout CLI success, blocked,
+mutation and cold replay. Require scoped lint, strict types, spec coverage and
+100 percent added statement coverage. Run the full Python suite once as separate
+health evidence. Publish through primary_publication after normal child exit,
+independent reduction, adversarial verification and strict row lint. Owned
+failures disqualify readiness. Missing external inputs block. A complete slow
+service is null with cache_core_ready_score=1. Model acquisition, original Qwen
+inference and external feedback stay unmeasured. Generalized learning credit is
+zero. The conductor handles ops and traceability reconciliation.
+
+Implementation: `python/carnot/experiment_8078_v699_feature_cache_core.py` and thin CLI.
+Tests: `tests/python/test_feature_cache_core_8078.py`.
