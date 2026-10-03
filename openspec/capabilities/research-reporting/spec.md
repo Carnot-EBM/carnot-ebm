@@ -91730,3 +91730,48 @@ Retain immutable inputs, code, configuration, checkpoint, logs and hashes.
 Implementation: `python/carnot/verify/constraint_projection_8075.py`,
 `python/carnot/experiment_8075_v699_constraint_projection_kernel.py` and thin CLI.
 Tests: `tests/python/test_constraint_projection_8075.py`.
+
+## REQ-REPORT-8076: Learn released constraints before fresh admission
+
+The learner SHALL authenticate the historical head and V699 methods independently
+of the interaction fit. Preserve stream256, delay20, retention64, seeds101–120,
+hash-mod4 admission roles, separate four-arm states and shared decision clocks.
+At slots64/128/192 use newest32 released update rows, minimum16 and2/class,
+four calibrated gradients, step.01 and ridge.001. Both guarded arms SHALL add
+the same newest64 released update constraints. Only projected_fresh SHALL run
+the qualified256-step correction. Charge its additional operations explicitly.
+
+### SCENARIO-REPORT-8076-CAUSAL
+
+Issue before own release; commit endpoint, incumbent, memory and release frontier
+before selecting the next12 admission rows by release order. Consume each once.
+Incomplete blocks expire before the next opportunity or stream end. Admission
+labels never enter gradients or memory. Future-label mutation SHALL preserve
+every earlier issued prediction, gradient and candidate commitment.
+
+### SCENARIO-REPORT-8076-GUARD
+
+Use unchanged empirical false-accept/Brier/typed-cost checks and descending
+alphas1/.5/.25/.125/0 with2/class. Projected points SHALL also satisfy all current
+half-spaces within1e-8. Record keep-incumbent or restore-w0 fallback before later
+scoring. Harmful updates, no-ops, all-rejected decisions and resets receive
+explicit counts and no automatic benefit. Seal all final heads before retention.
+
+### SCENARIO-REPORT-8076-DURABLE
+
+Persist primitive issue/release/gradient/memory/projection/admission/commit events.
+Cold replay SHALL reject any changed operand. Private real subprocess death at
+memory append, candidate commit, admission consumption and coefficient publication
+SHALL recover identical issued decisions and exactly-once admission use.
+
+### SCENARIO-REPORT-8076-TERMINAL
+
+Freeze bounded validation argv before measurement; cap numerical execution1200s.
+Run private real CLI success, blocked, mutation and cold replay, E2E-015/016,
+scoped Ruff/mypy/spec checks and100 percent added-statement coverage. Run the
+full Python suite once as a separate repository-health diagnostic. Publish only
+after normal worker exit and terminal validators. External missing operands SHALL
+produce complete_blocked_<resource>; failed owned checks SHALL disqualify with
+readiness0. An auditable null trajectory may have readiness1 without learning
+benefit or a future safety theorem. Ops/traceability reconciliation is delegated
+to the conductor by the current operator instruction.
