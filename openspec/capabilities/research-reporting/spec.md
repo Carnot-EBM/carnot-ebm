@@ -90520,6 +90520,44 @@ measurements and terminal byte validation live in the Exp8040 primary and raw
 invocation directory. Readiness and NFR-01 remain separate fields.
 
 
+## REQ-REPORT-8054: Preserve the qualified Exp8041 supervisor frontier
+
+Exp8054 SHALL bind its 20261003 invocation at milestone 2026.10.697 to the
+immutable Exp8041 primary, inventory and terminal sidecar. Authenticate the
+latest qualified scanner, Exp8001, and its scanner and validation code hashes.
+Reuse the shipped scanner, bounded child runner and primary publication helper.
+Freeze identity, configuration, methods, validation argv and budgets before
+scanning. Permit at most 120 seconds of scanning and zero games/model calls.
+
+### SCENARIO-REPORT-8054-FRONTIER
+
+New content-addressed authentic outcomes alone SHALL enter the delta. Preserve
+the prior frontier across dates and retries. Missing bytes or contract fields,
+tampered receipts and failed authentication SHALL produce a terminal blocked
+verdict with exact upstream ID, path, hash, field, expected, observed, check_name
+and passed operands. An empty delta SHALL publish complete_null_no_new_outcomes,
+no refinement, zero solve credit and generalized_learning_benefit_score=0.
+
+### SCENARIO-REPORT-8054-SUPPORT
+
+Carry censoring and per-game/curated-arm exposure and uncertainty. Each arm needs
+ten closed firings across three games before a future selection test is proposed.
+Association SHALL NOT claim causal gain. Refinement targets E3AgentPolicy and
+make_carnot_agent through existing curated arms. Preserve production defaults.
+
+### SCENARIO-REPORT-8054-SEAL
+
+Traced tests SHALL precede implementation. Task-owned and consumer tests, Ruff,
+strict mypy, spec coverage and 100 percent added statement coverage SHALL pass.
+Include actual CLI routes, normal process exits, E2E-017 and terminal replay.
+Use guarded private scratch outside results and freeze the acceptance manifest.
+Keep one bounded full Python suite diagnostic separate from owned acceptance.
+Cold reduce durable rows in a fresh child. Validate candidate and published
+bytes with adversarial_verify and strict verdict row consistency. Keep durable
+logs, source snapshots, coverage and checkpoints below this task's raw directory.
+Readiness requires all owned checks and qualified measurement, including nulls.
+The conductor owns ops/status/changelog/traceability reconciliation for this task.
+
 ## REQ-REPORT-8041: Bind the V696 supervisor delta to Exp8028
 
 Exp8041 SHALL use Exp8028's immutable primary and durable content frontier on

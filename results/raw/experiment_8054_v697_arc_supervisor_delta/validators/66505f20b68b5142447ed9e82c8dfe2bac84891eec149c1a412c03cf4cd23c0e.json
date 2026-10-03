@@ -1,0 +1,111 @@
+{
+  "primary_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8054_v697_arc_supervisor_delta.json",
+  "primary_sha256": "sha256:66505f20b68b5142447ed9e82c8dfe2bac84891eec149c1a412c03cf4cd23c0e",
+  "report": {
+    "passed": true,
+    "replay_errors": [],
+    "reports": [
+      {
+        "actual_exit": 0,
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "scripts/adversarial_verify.py",
+          "--json",
+          "/tmp/carnot-exp8054-sfc1g9z8/terminal-candidate.json"
+        ],
+        "classification": "required",
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json /tmp/carnot-exp8054-sfc1g9z8/terminal-candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "scripts/adversarial_verify.py",
+          "--json",
+          "/tmp/carnot-exp8054-sfc1g9z8/terminal-candidate.json"
+        ],
+        "deadline_s": 60,
+        "duration_s": 0.8248621430248022,
+        "exit_code": 0,
+        "expected_exit": 0,
+        "expected_text": null,
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8054_v697_arc_supervisor_delta/logs/terminal_adversarial-662507375319f9417e7107da0537604bab2a53a5ce73aeda4beaf4cf6ccc30f3.log",
+        "log_sha256": "sha256:662507375319f9417e7107da0537604bab2a53a5ce73aeda4beaf4cf6ccc30f3",
+        "name": "terminal_adversarial",
+        "output_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/tmp/carnot-exp8054-sfc1g9z8/terminal-candidate.json\",\n      \"loaded\": true,\n      \"exp_id\": 8054,\n      \"title\": \"New live ARC supervisor outcome inventory\",\n      \"honest_verdict\": \"complete_null_no_new_outcomes\",\n      \"flag_count\": 0,\n      \"max_severity\": -1,\n      \"flags\": [],\n      \"gate_version\": \"07ddacadae8c3b8d3250ad0977bda6f747d5bcb02bb7af3119b80db2547b62c7\"\n    }\n  ],\n  \"flagged_count\": 0\n}\n",
+        "passed": true,
+        "scope": "required",
+        "timed_out": false
+      },
+      {
+        "actual_exit": 0,
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "scripts/verdict_row_consistency_lint.py",
+          "--strict",
+          "/tmp/carnot-exp8054-sfc1g9z8/terminal-candidate.json"
+        ],
+        "classification": "required",
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/verdict_row_consistency_lint.py --strict /tmp/carnot-exp8054-sfc1g9z8/terminal-candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "scripts/verdict_row_consistency_lint.py",
+          "--strict",
+          "/tmp/carnot-exp8054-sfc1g9z8/terminal-candidate.json"
+        ],
+        "deadline_s": 60,
+        "duration_s": 0.022461637970991433,
+        "exit_code": 0,
+        "expected_exit": 0,
+        "expected_text": null,
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8054_v697_arc_supervisor_delta/logs/terminal_rows-2a5acc7f6565e1cba7cebf220383f1fb8b6afbbc1ef9c87af7959b982029deda.log",
+        "log_sha256": "sha256:2a5acc7f6565e1cba7cebf220383f1fb8b6afbbc1ef9c87af7959b982029deda",
+        "name": "terminal_rows",
+        "output_tail": "\nverdict-row-consistency: checked 0, skipped 1 (no per-unit rows), unreadable 0.\n  NOTE: most artifacts carry no per-unit row container, so their headline claims are not falsifiable from the artifact alone. That is a reporting-shape gap in those experiments, not a clean bill of health from this tool.\n",
+        "passed": true,
+        "scope": "required",
+        "timed_out": false
+      },
+      {
+        "actual_exit": 0,
+        "argv": [
+          "env",
+          "-u",
+          "PYTHONPATH",
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "-c",
+          "import os, runpy, sys; os.chdir(sys.argv[1]); sys.argv = sys.argv[2:]; runpy.run_path(sys.argv[0], run_name='__main__')",
+          "/tmp/carnot-exp8054-sfc1g9z8",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8054_v697_arc_supervisor_delta.py",
+          "--cold-replay",
+          "/tmp/carnot-exp8054-sfc1g9z8/terminal-candidate.json"
+        ],
+        "classification": "required",
+        "command": "env -u PYTHONPATH /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import os, runpy, sys; os.chdir(sys.argv[1]); sys.argv = sys.argv[2:]; runpy.run_path(sys.argv[0], run_name='\"'\"'__main__'\"'\"')' /tmp/carnot-exp8054-sfc1g9z8 /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8054_v697_arc_supervisor_delta.py --cold-replay /tmp/carnot-exp8054-sfc1g9z8/terminal-candidate.json",
+        "command_argv": [
+          "env",
+          "-u",
+          "PYTHONPATH",
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "-c",
+          "import os, runpy, sys; os.chdir(sys.argv[1]); sys.argv = sys.argv[2:]; runpy.run_path(sys.argv[0], run_name='__main__')",
+          "/tmp/carnot-exp8054-sfc1g9z8",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8054_v697_arc_supervisor_delta.py",
+          "--cold-replay",
+          "/tmp/carnot-exp8054-sfc1g9z8/terminal-candidate.json"
+        ],
+        "deadline_s": 60,
+        "duration_s": 0.48983004805631936,
+        "exit_code": 0,
+        "expected_exit": 0,
+        "expected_text": null,
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8054_v697_arc_supervisor_delta/logs/cold_primary_replay-2c11548282fe83b359f2a693b90fc8b4e274750696969752927832cb435bbbbc.log",
+        "log_sha256": "sha256:2c11548282fe83b359f2a693b90fc8b4e274750696969752927832cb435bbbbc",
+        "name": "cold_primary_replay",
+        "output_tail": "[exp8054] phase=start completed_units=0 elapsed_s=0\n{\"cold_replay_errors\": []}\n",
+        "passed": true,
+        "scope": "required",
+        "timed_out": false
+      }
+    ]
+  }
+}
