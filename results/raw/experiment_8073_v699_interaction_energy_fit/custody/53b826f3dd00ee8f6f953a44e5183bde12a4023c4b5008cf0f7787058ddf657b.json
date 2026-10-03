@@ -1,0 +1,94 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.1861056849593297,
+  "exclusion_reason": null,
+  "family_id": "sha256:ae96001a5031e11ee98bb5bfba7d4cc9e543de6b1cb4cffb87e7daa229c9c218",
+  "input_tokens": 493,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 493,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 517
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:a8dd17b7ae94c51d00816b1afdc1216f981f592f86d1cc67c797a7d3326c2a5b",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832817,
+    "id": "chatcmpl-Fbb3RkQ2BjrESciHIiQDUYAn5iCkblox",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 571.663,
+      "predicted_n": 24,
+      "predicted_per_second": 41.98277656591384,
+      "predicted_per_token_ms": 23.81929166666667,
+      "prompt_ms": 493.345,
+      "prompt_n": 415,
+      "prompt_per_second": 841.1963230599275,
+      "prompt_per_token_ms": 1.1887831325301206
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 493,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 517
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Relation of body mass index and waist-to-height ratio to cardiovascular disease risk factors in children and adolescents: the Bogalusa Heart Study.\\\\n\\\\npassage 2:The BMI was first introduced by Quetlet in order to eliminate the confounding effects of height on weight. In normal adults, the ratio of the weight to the square of height is roughly constant, and a person with a low BMI is underweight for their height 16.\\\\n\\\\npassage 3:Relation of body mass index and waist-to-height ratio to cardiovascular disease risk factors in children and adolescents: the Bogalusa Heart Study. Freedman DS, Kahn HS, Mei Z, Grummer-Strawn LM, Dietz WH, Srinivasan SR, Berenson GS.\\\\n\\\\n\\\",\\\"question\\\":\\\"what are potential sources of error for bmi and w/h ratio\\\"}\", \"original_answer\": \"Based on the provided passages, here are some potential sources of error for BMI and W/H ratio:\\n\\n1. Confounding effects of height: As mentioned in Passage 2, the BMI was introduced to eliminate the confounding effects of height on weight. However, if the height measurement is not accurate or consistent, it can lead to errors in BMI calculation.\\n2. Variability in body composition: BMI does not distinguish between lean body mass and body fat, so it may not accurately reflect an individual's body composition. This can lead to errors in assessing cardiovascular disease risk (Passage 1).\\n3. Methodological issues: The accuracy of BMI and W/H ratio measurements may be affected by issues such as inconsistent or incomplete data collection, or improper measurement techniques (Passage 3).\\n\\nUnable to answer based on given passages.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:dd9a7f2908d43afb9225a130dc6f9821ab2655d6e64015f3daceaeecd208fda9",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2
+  ]
+}

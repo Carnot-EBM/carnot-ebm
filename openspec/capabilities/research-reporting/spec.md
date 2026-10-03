@@ -91597,3 +91597,45 @@ through primary_publication; terminal sidecars bind exact primary hash and path.
 Implementation: `python/carnot/experiment_8072_v699_sealed_methods.py` and its thin
 `scripts/experiments/experiment_8072_v699_sealed_methods.py` CLI.
 Tests: `tests/python/test_sealed_methods_8072.py`.
+
+## REQ-REPORT-8073: Fit fixed source interactions without reserved targets
+
+Exp8073 SHALL authenticate the qualified historical input and V699 methods
+primaries, terminal sidecars and immutable role bytes. Join original complete
+response targets only for fit64 and tune32; evaluation96 labels remain unopened.
+Use the original Qwen scalar and eight public features. Missing inputs or fewer
+than48 complete fit groups with8/class or24 tune groups with4/class SHALL block.
+
+### SCENARIO-REPORT-8073-BASIS
+
+Fit geometry only on training rows within each source-grouped fold and on full
+fit for final heads. Preserve conditioned additive clamped cubic splines; append
+exactly three centered products: Qwen logit with overlap_maximum, Qwen logit with
+uncovered_fraction_maximum, numeric_mismatch_maximum with negation_mismatch_maximum.
+Fit intercept, scalar-affine, linear, additive and interaction heads. Select ridge
+from [.0001,.001,.01,.1,1] using identical four-fold fit-only log loss; ties choose
+largest ridge. Tune rows fit only affine calibration. E0=0, E1=-f and sigmoid(f)
+SHALL agree on the identical interaction basis, with no independent method credit.
+
+### SCENARIO-REPORT-8073-SEAL
+
+Bound fitting at600 seconds; require finite convergence, gradient checks and
+held-out role exclusion. Seal heads, geometry, ridge, capacity, calibration,
+source role hashes and primitive rows before evaluation. Save/load predictions
+SHALL match; swapped feature columns SHALL be detected. Numerical validity can
+earn interaction_fit_ready_score=1 without decision improvement or learning credit.
+
+### SCENARIO-REPORT-8073-TERMINAL
+
+Freeze bounded validation commands before fitting. Run requirement-linked private
+unit/consumer tests, E2E-015/016, real CLI success, blocked, mutation and cold replay
+outside the checkout, Ruff, strict mypy, scoped spec coverage and100% new statement
+coverage. Record real child exits, durations and log hashes. Separate global health
+diagnostics from owned checks. Publish only independently reduced checked bytes
+through primary_publication after the fitting child exits normally. Owned failure
+disqualifies readiness; missing external prerequisites remain terminal blocked.
+No current model load, generation, generator update or ARC change is permitted.
+
+Implementation: `python/carnot/experiment_8073_v699_interaction_energy_fit.py` and
+`scripts/experiments/experiment_8073_v699_interaction_energy_fit.py`.
+Tests: `tests/python/test_interaction_energy_8073.py`.

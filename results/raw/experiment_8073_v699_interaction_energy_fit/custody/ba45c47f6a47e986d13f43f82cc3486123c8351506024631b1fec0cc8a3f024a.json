@@ -1,0 +1,110 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.5042268660035916,
+  "exclusion_reason": null,
+  "family_id": "sha256:7fd00c13cbf466a59d00b5ee1a3cdbd72fb6925fef33ca95b02096f7e2fb6293",
+  "input_tokens": 860,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 860,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 884
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:b92e9be614ec383627ccc0c6832aa0786311e971e359f942a95c8dd5da1c27a7",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832864,
+    "id": "chatcmpl-AL8FAtaUY8zehvwlfzAlwWGKVHt3EJ0F",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.557,
+      "predicted_n": 24,
+      "predicted_per_second": 42.43604092956147,
+      "predicted_per_token_ms": 23.564875,
+      "prompt_ms": 821.219,
+      "prompt_n": 782,
+      "prompt_per_second": 952.2429461568715,
+      "prompt_per_token_ms": 1.0501521739130435
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 860,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 884
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"3754 San Remo Dr\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":null,\\\"Music\\\":null,\\\"OutdoorSeating\\\":null,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":null},\\\"business_stars\\\":4.5,\\\"categories\\\":\\\"Food Trucks, Event Planning & Services, Mexican, Street Vendors, Caterers, Restaurants, Food\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":null,\\\"name\\\":\\\"Big Joe's Tacos\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-11-16 01:27:54\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Just had Joe cater our wedding in Santa Barbara. It was a semi destination wedding so I couldn't meet in person to taste the food and arrange the details. I booked based on yelp reviews alone and I was NOT disappointed. Joe worked with me via email to arrange everything and accepted payment via Venmo. He responded quickly to my questions and was very reasonably priced. They showed up on time, cooked the food on site, and set up their own canopies and tables. The food was served right on schedule and perfectly made. Joe was so nice when I met him at the venue and I literally am still getting compliments from guests on the tacos. The chips and guac they served at the cocktail hour was perfect! I am so happy with my choice and highly recommend them to anyone looking to have some delicious food from a low stress vendor at any special event! Big Joe's has some of the best tacos around!!\\\"},{\\\"review_date\\\":\\\"2021-10-14 14:17:34\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"We hired Big Joes for my son's wedding rehearsal dinner and they were difficult to communicate with with delayed responses . They forgot the churro bar , big disappointment! ! and the guacamole was watery and inedible !  When I contacted them to discuss the issues they never responded or apologized. Bad business !  I recommend Alvaro with La Colmena Catering !\\\"},{\\\"review_date\\\":\\\"2021-05-19 01:00:32\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Big Joe was awesome, and delivered the taco bar set-up right to our campground. It was a big hit, and we'd definitely order again. Thanks!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Based on the provided structured data, here is an objective overview of Big Joe's Tacos:\\n\\nBig Joe's Tacos is a popular food truck and catering service based in Santa Barbara, California. With a rating of 4.5 stars, the business offers a wide range of Mexican cuisine, including tacos, burritos, and quesadillas, as well as event planning and catering services. Customers have praised Big Joe's for their delicious food, professionalism, and reasonable prices. However, one customer experienced communication issues and poor quality with their churro bar and guacamole. Despite this, most customers have recommended Big Joe's for their events, highlighting their ability to deliver a successful taco bar setup.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:83539d34f77f5a5f2749b1492acc519f09f67cdd2430a0c85f3dcf2bd5161c7d",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18
+  ]
+}

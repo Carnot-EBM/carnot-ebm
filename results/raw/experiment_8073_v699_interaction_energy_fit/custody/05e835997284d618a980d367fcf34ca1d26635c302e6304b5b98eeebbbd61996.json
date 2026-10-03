@@ -1,0 +1,96 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.1668363750213757,
+  "exclusion_reason": null,
+  "family_id": "sha256:e77ea4df5477a4ce432b8b3044b1296894fc56064d5772134e6cbee64f89f938",
+  "input_tokens": 471,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 2,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 471,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 495
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:6fda2b49b2cd9ee6ee2012509378011607f83fa69d82976fd9ff6222a4d6b968",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 2\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832681,
+    "id": "chatcmpl-0FIySGYlpoX1X2Xk06mPi3iMR4nTrmhd",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.078,
+      "predicted_n": 24,
+      "predicted_per_second": 42.54730728729006,
+      "predicted_per_token_ms": 23.503249999999998,
+      "prompt_ms": 488.873,
+      "prompt_n": 393,
+      "prompt_per_second": 803.8897627809267,
+      "prompt_per_token_ms": 1.2439516539440203
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 471,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 495
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Change Appearance also allows the player to do anything that can be done in the Makeup, Facial Hair & Glasses area of CAS. Unlike the CAS controls, Change Appearance allows the player to change the color of a Sim's eyebrows, stubble, and facial hair independently of the Sim's hair color.\\\\n\\\\npassage 2:The Change Appearance dialog can also be accessed through vanities and the Ug-No-More Makeover Station. In The Sims 3, this interaction opens a limited Create A Sim room, which allows the player to edit the Sim's hair and makeup.\\\\n\\\\npassage 3:For this, you can use any mirror in the game (Maxis or custom). With the sim you want to change selected, click on the mirror and choose Change Appearance. Your sim will walk to the mirror, and you'll get a window that will allow you to change their makeup, accessories, facial hair, and eyebrows.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to change appearance ins sims 4\\\"}\", \"original_answer\": \"To change a Sim's appearance in Sims 4, you can use any mirror in the game. Select the Sim you want to change, click on the mirror, and choose Change Appearance. Your Sim will walk to the mirror, and a window will open allowing you to change their makeup, accessories, facial hair, and eyebrows. You can also change the color of a Sim's eyebrows, stubble, and facial hair independently of the Sim's hair color. Alternatively, you can access the Change Appearance dialog through vanities and the Ug-No-More Makeover Station.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:c2e1b4dea66f5774025e8465538da0b9eeb3840e540bf5e1da415e4dc5c53c8c",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ]
+}

@@ -1,0 +1,105 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.2052293360466138,
+  "exclusion_reason": null,
+  "family_id": "sha256:96a518dbbed2982a16c39880733eae82abca9b7a67ac3f034737280c35eba01e",
+  "input_tokens": 563,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 563,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 586
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:95f9f416f75e0ea9f4fbf3e35049df2158956aa05935087b552ae8286b9307c9",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832774,
+    "id": "chatcmpl-JP1Uc2Tftqa2jq3UB9F46SFu9XRoxGce",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.977,
+      "predicted_n": 23,
+      "predicted_per_second": 42.51567072167578,
+      "predicted_per_token_ms": 23.52073913043478,
+      "prompt_ms": 530.75,
+      "prompt_n": 485,
+      "prompt_per_second": 913.8012246820537,
+      "prompt_per_token_ms": 1.0943298969072166
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 563,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 586
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Lady Antebellum singer Hillary Scott's tour bus caught fire on a Texas freeway Thursday morning, but everyone on board was safely evacuated. Michael Barnett captured dramatic video of the fire, on Interstate 30 just northeast of Dallas, and uploaded it to CNN iReport. Smoke and flames poured from the rear of the bus as traffic slowed to a crawl and Barnett slowly approached in his vehicle. As he drew closer to the bus, Barnett decided to stop filming because he didn't know what to expect. \\\"It was shocking,\\\" he said. \\\"I didn't know what I was about to see. I didn't know if anyone was hurt.\\\" Barnett said he didn't realize at the time that the bus belonged to the country band. Hillary Scott, co-lead singer for the band, posted a photo of the charred bus on Instagram and noted that she, her husband, the tour manager and the driver were all evacuated safely. \\\"Thanking God for our safety and the safety of all of those who helped put this fire out and keep us safe,\\\" she wrote. The tour manager told CNN affiliate KTVT that the bus stopped after a rear tire blew out. It burst into flames after everyone had gotten off. Scott also posted an Instagram photo and message saying that the fire destroyed everything in the bus's back lounge except her Bible. The band's two other members, Charles Kelley and Dave Haywood, were not traveling on the bus, KTVT reported. Lady Antebellum is set to perform at the 50th Academy of Country Music Awards on Sunday in Arlington, Texas.\\n\", \"original_answer\": \"Sure! Here's the summary within 65 words:\\n\\nLady Antebellum's tour bus caught fire on a Texas highway, but all passengers were safely evacuated. The bus was destroyed, but Hillary Scott's Bible was the only item left unscathed. The band will still perform at the ACM Awards on Sunday.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:0f932942ace77246144bfc9924345eec2016fc74f9861e23e8d612233032d1c4",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ]
+}

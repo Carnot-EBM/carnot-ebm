@@ -1,0 +1,99 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.433797848992981,
+  "exclusion_reason": null,
+  "family_id": "sha256:f11d204b9e04960fa64f8ba9041a8a2d20eaf3e854e2316b67b48e9ec778ce37",
+  "input_tokens": 841,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 841,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 865
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:4e29d4a7e82aaf51e6ba1d66dc4bca08c68c26713377f1dc588c5fbaea41c8fc",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832631,
+    "id": "chatcmpl-1V8JChF519uJLVL2zcpWLdNBTO2jGo3X",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.42,
+      "predicted_n": 24,
+      "predicted_per_second": 42.52152652280217,
+      "predicted_per_token_ms": 23.5175,
+      "prompt_ms": 730.449,
+      "prompt_n": 763,
+      "prompt_per_second": 1044.5630016606224,
+      "prompt_per_token_ms": 0.9573381389252948
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 841,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 865
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"134 E Canon Perdido St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Food, Japanese, Sushi Bars, Do-It-Yourself Food, Restaurants\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"10:30-21:0\\\",\\\"Monday\\\":\\\"10:30-21:0\\\",\\\"Saturday\\\":\\\"10:30-21:0\\\",\\\"Sunday\\\":\\\"10:30-21:0\\\",\\\"Thursday\\\":\\\"10:30-21:0\\\",\\\"Tuesday\\\":\\\"10:30-21:0\\\",\\\"Wednesday\\\":\\\"10:30-21:0\\\"},\\\"name\\\":\\\"Miso Hungry\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2018-08-29 04:51:05\\\",\\\"review_stars\\\":3.0,\\\"review_text\\\":\\\"Miso closed...sign on the door for six weeks stating that they're closed for building maintenance. Didn't work out for them here.\\\"},{\\\"review_date\\\":\\\"2018-07-12 20:00:32\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"It was my first time and they were really nice and friendly but the quality of food was not there. I paid over $11 for a shrimp salad. The cucumbers werent even fresh. They looked spoiled.\\\"},{\\\"review_date\\\":\\\"2018-07-07 22:54:19\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Tried to order delivery, they let us know it'd be about an hour wait and then never showed up. When we called back they said it would be another 20 minutes and never showed up. If you can't pay enough employees to deliver food don't offer it on your website. Can't comment on the food because we never got any.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Miso Hungry is a local restaurant located in Santa Barbara, California, serving Japanese cuisine with a focus on sushi. According to their online presence, the business has received mixed reviews from customers. While some patrons have praised the friendly service and casual atmosphere, others have been disappointed with the quality of food and delivery issues. The business has a rating of 4.0 stars and three reviews, with an average rating of 2.3 stars. One customer noted that the restaurant was closed for building maintenance, while another complained about the quality of their shrimp salad and the freshness of the cucumbers. A third reviewer had a negative experience with delivery, reporting that their order was never delivered despite long waits and multiple calls. Overall, Miso Hungry appears to have some room for improvement in terms of food quality and delivery services.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "tune",
+  "source_cluster_id": "sha256:019a668cbbcfc3d6d857417a041d719331b57c076f49256961f850e6bd04f868",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ]
+}

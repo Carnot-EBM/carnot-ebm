@@ -1,0 +1,97 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.2290880210348405,
+  "exclusion_reason": null,
+  "family_id": "sha256:abfcf7855708918b7c55f3556abd542831c75f6034c6de66a6eb6a602cbe442e",
+  "input_tokens": 585,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 585,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 608
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:840e2737c5646b6a6a8cb5d4bbd71d13daf23bfe56f943cac81602aa570d1cc3",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832717,
+    "id": "chatcmpl-aonPhIHPAJrr62TSqkn758qVanlQTBf5",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.699,
+      "predicted_n": 23,
+      "predicted_per_second": 42.537530123044434,
+      "predicted_per_token_ms": 23.508652173913042,
+      "prompt_ms": 535.974,
+      "prompt_n": 507,
+      "prompt_per_second": 945.9414076055928,
+      "prompt_per_token_ms": 1.0571479289940828
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 585,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 608
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:LEGO\u00ae Star Wars\u2122: The Complete Saga is available on iOS for the first time! ***Episode I Story Mode is FREE for a limited time.***. **Episodes II \u2013 VI and other content available via in-app purchases.**.\\\\n\\\\npassage 2:Lego Star Wars: The Complete Saga for iOS includes one episode, you must pay for the rest. Episode 1: The Phantom Menace is included with free download, but you have to pay for the other five episodes.\\\\n\\\\npassage 3:LEGO\u00ae Star Wars\u2122 The New Yoda Chronicles. Choose your side and join the battle in LEGO\u00ae Star Wars\u2122 The New Yoda Chronicles! Collect the Holocrons to defeat your enemy and take control of the galaxy in a series of fast-paced, action packed mini games.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to get the update for lego star wars the complete saga\\\"}\", \"original_answer\": \"Unfortunately, the provided passages do not contain information on how to get updates for Lego Star Wars: The Complete Saga. Therefore, I cannot provide an answer to the question based on the given passages.\\n\\nHowever, I can suggest some general steps that may help you find updates for the game:\\n\\n1. Check the App Store or Google Play Store for updates: You can check the App Store or Google Play Store on your mobile device to see if there are any updates available for Lego Star Wars: The Complete Saga.\\n2. Follow the game's social media accounts: You can follow the official social media accounts of Lego Star Wars: The Complete Saga on platforms like Twitter, Facebook, or Instagram to stay up-to-date with the latest news and updates about the game.\\n3. Visit the game's website: You can visit the official website of Lego Star Wars: The Complete Saga to check for any updates or patch notes.\\n4. Join a community forum: You can join a community forum or discussion board dedicated to Lego Star Wars: The Complete Saga to ask other players about updates and share tips and strategies.\\n\\nI hope these suggestions help you find the updates you are looking for.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:ca2d90510e449445ed8d47c9dd6ae29e61211bc29aec8f05d0897d1e105c1f0d",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ]
+}

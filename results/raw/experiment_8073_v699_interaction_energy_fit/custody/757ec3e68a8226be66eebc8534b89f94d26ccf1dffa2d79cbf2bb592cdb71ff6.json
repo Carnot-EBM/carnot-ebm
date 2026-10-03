@@ -1,0 +1,105 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.7609923100098968,
+  "exclusion_reason": null,
+  "family_id": "sha256:aedce56f2e2adfec68bf99bf30939714c2606773fb09dab9ee0ff094fbc83da5",
+  "input_tokens": 1202,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1202,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1226
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:ab442d33ef1a5635beaeb6498190248d7d77a8b4904b7b612f76570ab13e3930",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832827,
+    "id": "chatcmpl-ndahZzBtMXpV5ky6eaOMI3XCLQFvQeQE",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 566.107,
+      "predicted_n": 24,
+      "predicted_per_second": 42.39481228813634,
+      "predicted_per_token_ms": 23.587791666666664,
+      "prompt_ms": 1062.788,
+      "prompt_n": 1124,
+      "prompt_per_second": 1057.5956822997625,
+      "prompt_per_token_ms": 0.9455409252669039
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1202,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1226
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"1134 Chapala St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":false,\\\"RestaurantsReservations\\\":true,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Wine Bars, Restaurants, American (New), Nightlife, Seafood, Cocktail Bars, Bars\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"12:0-23:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"11:0-23:0\\\",\\\"Sunday\\\":\\\"11:0-22:0\\\",\\\"Thursday\\\":\\\"12:0-22:0\\\",\\\"Tuesday\\\":\\\"12:0-22:0\\\",\\\"Wednesday\\\":\\\"12:0-22:0\\\"},\\\"name\\\":\\\"The Hungry Cat\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2016-11-29 07:26:22\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"Dropped in here after the good reviews, but was disappointed by a bad oyster shucker (took way too long and contained many shell chunks) and mediocre to good food. Octopus was over-salted, but green salad was great. Lobster was good. \\\\n\\\\nIn their defense, perhaps, the waitress did apologize for how long our oysters took. She explained that the shucker was new and politely implied he didn't know what he was doing, which left me wondering why he was shucking oysters at a seafood restaurant. \\\\n\\\\nSome good things: the space is great, modern without being too formal or drab. Our waitress was obviously good, though challenged by a difficult kitchen and bar (one glass of wine was forgotten). \\\\n\\\\nOverall, this felt like a place with a lot of potential in need of better leadership in the kitchen.\\\"},{\\\"review_date\\\":\\\"2016-11-16 00:03:40\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Knowing it was late for dinner, we checked ahead and made a reservation for 8 at 9:00 pm.  When we arrived, we were told the restaurant was closing but they would check with the chef and see if he wanted to stay.  We said we'd made a reservation and then we started hearing about what a busy weekend they'd had but they'd check on the reservation -- as we watched the chef leave through the front door.  Then we were told they were out of many items due to earlier business.\\\\n\\\\nSince we didn't get to eat, I can't comment on the food.  I later heard that the restaurant is under new management -- if this is true, I'd suggest some intensive staff training.\\\"},{\\\"review_date\\\":\\\"2016-11-11 01:42:10\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"Really not pleased with the visit tonight. I've had so much better from this place in the past. We had a hair in out fries.Nuff said.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"The Hungry Cat is a restaurant located in Santa Barbara, California. It belongs to several categories including Wine Bars, Restaurants, American (New), Nightlife, Seafood, Cocktail Bars, and Bars. The business is open Monday through Sunday from 11:00 AM to 11:00 PM. Customers can park on the street, but there is no validated parking available. The restaurant accepts reservations and offers takeout services.\\n\\nAccording to customer reviews, the food at The Hungry Cat varies in quality. Some dishes are described as excellent, while others are considered mediocre or over-salted. The oyster shucker received particular criticism for taking too long to prepare the dish and containing shell chunks. However, the waitstaff is described as friendly and attentive, despite being challenged by a difficult kitchen and bar.\\n\\nOne customer reported difficulty making a reservation for dinner, with the restaurant closing early and running out of several menu items. This led to the customer being unable to try the food during their visit. Another customer complained about a hair in their fries, which negatively impacted their overall experience.\\n\\nDespite these issues, some customers have praised the atmosphere and decor of the restaurant, describing it as modern and upscale. Overall, The Hungry Cat appears to have room for improvement in terms of its food quality and management, but may still offer a decent dining experience for those looking for a casual meal in a modern setting.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:45e7c535d40f6d3ab38ab02f218b6c1fe0c7c7557916f35c7b3abbaa6f7c3f29",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ]
+}

@@ -1,0 +1,106 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.343431577028241,
+  "exclusion_reason": null,
+  "family_id": "sha256:7ae5503b549a80a702d50470a429cf729ac630546c7390e23c754e86f697869c",
+  "input_tokens": 735,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 735,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 758
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:460cd221e4e98fd5b656c5e231977dedbc47dc2d5f2c7bafbc45fb29bb313055",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832620,
+    "id": "chatcmpl-xoXFb4XpdyWckKxc2xgcx48yVny4gCWt",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.302,
+      "predicted_n": 23,
+      "predicted_per_second": 42.56878560508753,
+      "predicted_per_token_ms": 23.491391304347825,
+      "prompt_ms": 668.195,
+      "prompt_n": 657,
+      "prompt_per_second": 983.2459087541808,
+      "prompt_per_token_ms": 1.017039573820396
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 735,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 758
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Discovery of the body of a young girl who may have been dead for weeks has led to the arrest of her teen sister -- herself a mother -- and a search for the girls' parents, who may be in California with five other children, police in North Las Vegas, Nevada, said. The investigation began Wednesday when the 4-month-old infant of the 17-year-old was taken to Sunrise Hospital and Medical Center in suburban Las Vegas, authorities said. Police arrested the teen mother on one count of child abuse with substantial bodily harm. She was taken to a juvenile facility. Police department spokesman Aaron Patty told CNN affiliate KVVU that the \\\"infant did not receive the proper care and nourishment that she needed at the time, which is what led to the arrest of the 17-year-old.\\\" A day later, a search warrant was served at the family's home. That's when police found the body of the 3-year-old girl, who had apparently been dead \\\"for at least a few weeks,\\\" according to police. The teen mother was then arrested on one count of child abuse with death in connection with her younger sister's death, according to a police statement. The parents left the home several months ago with the other five children, ranging in age from 1 to 9 years old, but, according to Patty, \\\"they left the 3-year-old child and the 17-year-old sister at the residence alone.\\\" Authorities are seeking the parents, 39-year-old Jondrew Lachaux and 38-year-old Kellie Phillips. Police say the five children with them may be in danger. \\\"We believe that they went to California at some time and may have gone back and forth during this multiple month process when they left,\\\" Patty said. No Amber Alert was issued, according to police, because the 4-month-old did not die. Lachaux and Phillips, who are the child's grandparents, are being sought for questioning. \\\"We are asking for the assistance of the public in locating these two individuals,\\\" said Patty. \\\"We believe they can answer many questions on what led up to the death of this child.\\\" The 4-month-old infant was last reported to be hospitalized in critical condition. Her mother's name was not disclosed.\\n\", \"original_answer\": \"Sure! Here's the summary within 91 words:\\n\\nA 17-year-old mother was arrested after her 3-year-old sister was found dead in their Las Vegas home, possibly after weeks of neglect. The teenager was charged with child abuse, and police are searching for the girls' parents, who may be in California with five other children. The investigation began when the 4-month-old infant was taken to the hospital with severe injuries.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "tune",
+  "source_cluster_id": "sha256:44ac0597d76b0fb4d11f8ae300faf31470247aa059ecad5d7418a63252e7bd67",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ]
+}

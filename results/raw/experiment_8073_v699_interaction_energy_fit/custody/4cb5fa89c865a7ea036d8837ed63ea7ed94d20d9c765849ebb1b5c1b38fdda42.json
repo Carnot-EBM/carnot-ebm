@@ -1,0 +1,94 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.1915251379832625,
+  "exclusion_reason": null,
+  "family_id": "sha256:34d9dba33a05ea25a26b51c270596d9d1ab86857c14a6b659a6c7d5d2373f8c5",
+  "input_tokens": 511,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 511,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 535
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:562eaa3f2b0cc71b6fe3b58dc0c29dc1c3c692957d5e86f50c0554ade1047784",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832639,
+    "id": "chatcmpl-g2jld6gvImp4glGHiGt896bSY0sFHBj5",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 566.727,
+      "predicted_n": 24,
+      "predicted_per_second": 42.34843231397127,
+      "predicted_per_token_ms": 23.613625,
+      "prompt_ms": 495.959,
+      "prompt_n": 433,
+      "prompt_per_second": 873.0560389064418,
+      "prompt_per_token_ms": 1.1454018475750578
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 511,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 535
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:To use this angle measurement to cut the piece of wood, you must divide the actual measurement by two. For example, if you have an inside angle of 90 degrees then you divide this number by two and you get 45 degrees.\\\\n\\\\npassage 2:In addition to the 90-degree and 45-degree angles so simple to scribe from an angle, you can also use a speed square to set any other angle between zero degrees and 80 degrees. A home remodeling expert demonstrates in this free video of professional home help tips.\\\\n\\\\npassage 3:$$ That is, you need to cut an acute angle $\\\\\\\\alpha=90^\\\\\\\\circ-\\\\\\\\beta$ on each piece of wood, to get a total angle of $2\\\\\\\\alpha$ at the top of the roof.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to measure an angle cut\\\"}\", \"original_answer\": \"Based on the provided passages, there are two ways to measure an angle cut:\\n\\n1. Dividing the actual measurement by 2: According to passage 1, if you have an inside angle of 90 degrees, you can divide it by 2 to get 45 degrees. This means that for any angle measurement, dividing it by 2 will give you the corresponding angle cut.\\n2. Using a speed square: Passage 2 mentions that a speed square can be used to set any other angle between 0 degrees and 80 degrees. This suggests that using a speed square can help you measure and cut an angle that is not equal to 90 degrees or 45 degrees.\\n\\nTherefore, the answer to the question is: Both dividing the actual measurement by 2 and using a speed square can be used to measure an angle cut.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "tune",
+  "source_cluster_id": "sha256:d8a707b99ecb03373b62319d2cd3ef3a35bf50a7c36f2bfbb43b13de2d23075f",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2
+  ]
+}

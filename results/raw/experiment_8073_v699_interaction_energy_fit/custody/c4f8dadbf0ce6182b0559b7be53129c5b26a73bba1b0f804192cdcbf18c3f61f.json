@@ -1,0 +1,132 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 2.0073272429872304,
+  "exclusion_reason": null,
+  "family_id": "sha256:88ab553e9cf004e5d5da7b7607aced142c61174775299bd3dbe412f21cf03e50",
+  "input_tokens": 1597,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1597,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1620
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:a4b1caa8ed78fa423ed81b1d9a308987932347782a2f2c7d1019bb700b3f3d12",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832810,
+    "id": "chatcmpl-VD5A3dyC8j0oNvw20iFsrJkuE7EFV5Ci",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.801,
+      "predicted_n": 23,
+      "predicted_per_second": 42.52950715697641,
+      "predicted_per_token_ms": 23.51308695652174,
+      "prompt_ms": 1351.865,
+      "prompt_n": 1519,
+      "prompt_per_second": 1123.6329071319992,
+      "prompt_per_token_ms": 0.889970375246873
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1597,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1620
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"2908 De La Vina St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":null,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":false,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Restaurants, Burgers\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-20:0\\\",\\\"Monday\\\":\\\"11:0-20:0\\\",\\\"Saturday\\\":\\\"11:0-20:0\\\",\\\"Sunday\\\":\\\"11:0-20:0\\\",\\\"Thursday\\\":\\\"11:0-20:0\\\",\\\"Tuesday\\\":\\\"11:0-20:0\\\",\\\"Wednesday\\\":\\\"11:0-20:0\\\"},\\\"name\\\":\\\"Chubbies Hamburgers\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-07 01:46:14\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I remember when Chubbies first opened(!) A Santa Barbara mainstay for many, many years, it's a small, old-school no-nonsense burger joint with great quality food and a small dine-in area.\\\\n\\\\nMenu options are simple and straight forward, single and double cheeseburgers, fries, shakes and sodas. Ordering online is fast and easy. Food is made to order and has always been hot and fresh at pickup. I'll take our local Habit or Chubbies any day over the absurd lines at In-N-Out. I also think both have more flavor than In-N-Out. Chubbies is a fried patty vs. Habit's char-broil, but I find they are comparable in terms of overall enjoyment and freshness. Chubbies fries are skinny but taste much fresher and crispier than McDonalds. Shakes are certified \\\\\\\"best since Fosters Freeze\\\\\\\" by my son. Prices are great too - you can't lose with Chubbies!\\\"},{\\\"review_date\\\":\\\"2021-12-04 22:02:34\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Found this place by accident, but I'm so glad that I did. This place feels like total local spot. It's not a chain restaurant and the employees were all friendly and helpful. They have dine in or take out. You can also call in your to-go orders. Good food and good prices. Totally will come back when I'm in the area again.\\\"},{\\\"review_date\\\":\\\"2021-10-31 21:22:17\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"This is frustrating for me to send in an updated review because the food is good but the customer service is so awful that it might not be worth coming much anymore. I've had 2 back to back terrible experiences with ordering ahead of time. I placed my order 30 minutes in advance online. I got there, not a single person in the place and no food cooking and my order wasn't ready, not even started. Then a rush of people came in and I watched people who ordered 45min after me get their food before me. I waited another 20min at the restaurant before my food was ready. 65min to get a single combo meal. \\\\n\\\\nThen 2 weeks later I ordered 30min ahead again. I showed up when my order was supposed to be ready and no orders were on the counter ready so I sat and waited for 15min. Once I saw multiple people come in, order, and get their food before me (even though I had ordered 45min prior). I walked to the counter and asked if they had my online order. The staff didn't respond to me, walked to an area and picked up a bag with my burger in it that's been sitting for almost 20min. Fries not cooked. Drink not ready. They continue to process 3 more ordered ahead of mine that came in and ordered after me. 25min after my order was supposed to be ready (so essentially waited 55min for a single combo order) they had it packed on the counter ready to go and still said nothing to me! I walked up to get it and asked \\\\\\\"am I supposed to be telling you when I arrive when I place an online order?\\\\\\\" and the staff was extremely rude in response. As if I was supposed to know this already. Which makes no sense because they call out your order number when it's ready and when you order online it gives you a number! \\\\n\\\\nI've sent so many people here to eat over the years and I'm done doing that. Sad and frustrating to be treated like that. There was NO ONE in line when I showed up on time for my order. I stood right in front. They could have easily asked me if I was waiting for an order to avoid having someone who planned ahead of time wait 5min shy of an hour to get a burger. They looked at me many times but said nothing. Not even bare minimum customer service here.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Chubbies Hamburgers is a local burger restaurant located at 2908 De La Vina St, Santa Barbara, CA. Open seven days a week from 11 am to 8 pm, this casual eatery is celebrated for its simple and straightforward menu featuring single and double cheeseburgers, fries, shakes, and sodas. Despite the lack of Wi-Fi and the absence of business parking facilities, Chubbies Hamburgers offers outdoor seating and is suitable for group dining. The restaurant does not accept reservations but offers a take-out service. The business has received a general rating of 4 stars. Customers have lauded the restaurant for its quality food, great prices, and friendly staff. However, some customers have expressed dissatisfaction with the restaurant's online ordering system and customer service.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "tune",
+  "source_cluster_id": "sha256:e6c81802b7e4321796519fb2eccf41a11a0fb66a3f505fd4975c77c5c6492be5",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40
+  ]
+}

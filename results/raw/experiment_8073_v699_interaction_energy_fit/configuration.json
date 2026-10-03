@@ -1,0 +1,298 @@
+{
+  "calibration_ridge": 0.0001,
+  "code_config_hashes": {
+    "python/carnot/experiment_8008_v694_conditioned_energy_fit.py": "sha256:f174acad1c50077d2163c3692da91de40bc6dd8640312cf09ae8a823f8c08ce6",
+    "python/carnot/experiment_8020_v695_qualified_energy_fit.py": "sha256:ceec4b67eb2df64fe705a83840202672cdb4972a400b5fba4e09bbcdf5809c9c",
+    "python/carnot/experiment_8073_v699_interaction_energy_fit.py": "sha256:342e018f3f7afda4746bf7bf92c327112280cf24cc193bd3a58157a45aa80e04",
+    "python/carnot/verify/evidence_features_7980.py": "sha256:611e2ef1efe25bb43e2adc79a23c2081cd6cb07185ba82dafde557a9070501e3",
+    "python/carnot/verify/sparse_energy_7996.py": "sha256:08ee68340cb74c2635abf8a256d5a0dc60a3d447832e26ed361bae926eb68488",
+    "scripts/experiments/experiment_8073_v699_interaction_energy_fit.py": "sha256:e5f8c59214673a650f3a5a8560ea1daed44ff419d635c5482df6552a98fe15de",
+    "tests/python/test_interaction_energy_8073.py": "sha256:06fe44e8ec406f98c17b1d8c058d1ecab8a8eed0ea5156b554d3842d8fbbefad"
+  },
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8073_v699_interaction_energy_fit.py",
+        "--root",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "--fit-child",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8073_v699_interaction_energy_fit"
+      ],
+      "classification": "required",
+      "deadline_s": 660,
+      "expected_exit": 0,
+      "name": "fitting_child_normal_exit"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import sys, pytest, coverage, ruff, mypy; print(sys.version, flush=True); assert sys.version_info >= (3,11)"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "python_environment"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--rcfile=/tmp/carnot-8073-h1j33ama/coverage.ini",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "-s",
+        "--basetemp=/tmp/carnot-8073-h1j33ama/pytest",
+        "tests/python/test_interaction_energy_8073.py"
+      ],
+      "classification": "required",
+      "deadline_s": 180,
+      "expected_exit": 0,
+      "name": "focused_unit_and_cli"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "-s",
+        "--basetemp=/tmp/carnot-8073-h1j33ama/consumers",
+        "tests/python/test_roadmap_schema.py",
+        "tests/python/test_audit_roadmap_gates.py",
+        "tests/python/test_exclusion_manifest_lint.py",
+        "tests/python/test_conductor_gates.py",
+        "tests/python/test_primary_publication_7928.py"
+      ],
+      "classification": "required",
+      "deadline_s": 180,
+      "expected_exit": 0,
+      "name": "consumer_tests"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "-s",
+        "--basetemp=/tmp/carnot-8073-h1j33ama/e2e015",
+        "tests/python/test_source_boundary_7852.py"
+      ],
+      "classification": "required",
+      "deadline_s": 120,
+      "expected_exit": 0,
+      "name": "E2E-015"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7868_v683_intervention_protocol.py",
+        "--date",
+        "20260929",
+        "--fixture-e2e",
+        "/tmp/carnot-8073-h1j33ama/e2e016.json"
+      ],
+      "classification": "required",
+      "deadline_s": 120,
+      "expected_exit": 0,
+      "name": "E2E-016_fixture"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7868_v683_intervention_protocol.py",
+        "--date",
+        "20260929",
+        "--cold-replay",
+        "/tmp/carnot-8073-h1j33ama/e2e016.json"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "name": "E2E-016_cold_replay"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--rcfile=/tmp/carnot-8073-h1j33ama/coverage.ini"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "coverage_combine"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--rcfile=/tmp/carnot-8073-h1j33ama/coverage.ini",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8073_v699_interaction_energy_fit.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8073_v699_interaction_energy_fit.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "coverage_report"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "json",
+        "--rcfile=/tmp/carnot-8073-h1j33ama/coverage.ini",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8073_v699_interaction_energy_fit.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8073_v699_interaction_energy_fit.py",
+        "-o",
+        "/tmp/carnot-8073-h1j33ama/coverage.json"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "coverage_json"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_8073_v699_interaction_energy_fit.py",
+        "scripts/experiments/experiment_8073_v699_interaction_energy_fit.py",
+        "tests/python/test_interaction_energy_8073.py"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "ruff_check"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_8073_v699_interaction_energy_fit.py",
+        "scripts/experiments/experiment_8073_v699_interaction_energy_fit.py",
+        "tests/python/test_interaction_energy_8073.py"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "ruff_format"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "--follow-imports=silent",
+        "python/carnot/experiment_8073_v699_interaction_energy_fit.py",
+        "scripts/experiments/experiment_8073_v699_interaction_energy_fit.py"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "name": "strict_mypy"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_interaction_energy_8073.py"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "scoped_spec_coverage"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q"
+      ],
+      "classification": "diagnostic",
+      "deadline_s": 900,
+      "expected_exit": 0,
+      "name": "repository_full_suite"
+    }
+  ],
+  "config": {
+    "ablation": "zero each interaction coefficient separately; diagnostics only",
+    "arms": [
+      "intercept",
+      "scalar_affine",
+      "linear",
+      "additive",
+      "interaction"
+    ],
+    "basis": "conditioned additive clamped cubic B-splines; fit-only logit centering/scaling and feature bounds; original knots; clipping counts retained",
+    "budget_s": 600,
+    "calibration": "tune-only affine calibration; evaluator labels unavailable to optimizer",
+    "convergence": "finite objective and parameters, gradient infinity norm<=1e-7; preserve numerical convergence receipts",
+    "equivalent_logistic": "same coefficients and basis; E0=0,E1=-f; p(unsupported)=sigmoid(f); parity tolerance1e-10",
+    "features": [
+      "qualified_cached_qwen_logit",
+      "overlap_mean",
+      "overlap_maximum",
+      "negation_mismatch_mean",
+      "negation_mismatch_maximum",
+      "numeric_mismatch_mean",
+      "numeric_mismatch_maximum",
+      "uncovered_fraction_mean",
+      "uncovered_fraction_maximum"
+    ],
+    "floors": {
+      "evaluation": [
+        72,
+        8
+      ],
+      "fit": [
+        48,
+        8
+      ],
+      "tune": [
+        24,
+        4
+      ]
+    },
+    "fold_assignment": "SHA256 source ID sorted, round robin; source groups never split",
+    "folds": 4,
+    "geometry": "fit only; four-fold geometry fit within each training fold; final geometry on full fit",
+    "inputs": 9,
+    "interactions": [
+      "qwen_logit * overlap_maximum",
+      "qwen_logit * uncovered_fraction_maximum",
+      "numeric_mismatch_maximum * negation_mismatch_maximum"
+    ],
+    "likelihoods": "qualified historical cached scalar only; no Exp8059 likelihoods",
+    "permutation": "fixed seed6998072; sort original evaluation source IDs; permute all eight public features together, keep q fixed",
+    "prediction_seal": "public-only process seals full evaluation predictions and input/code/head hashes before evaluator opens original targets",
+    "ridge_grid": [
+      0.0001,
+      0.001,
+      0.01,
+      0.1,
+      1
+    ],
+    "ridge_selection": "mean held-out fit log loss; ties choose largest ridge",
+    "roles": {
+      "evaluation": 96,
+      "fit": 64,
+      "tune": 32
+    }
+  },
+  "random_seed": 6998073
+}

@@ -1,0 +1,113 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.655361298006028,
+  "exclusion_reason": null,
+  "family_id": "sha256:334cddf3315f476468d70fb7963d30114e90ab1fb80c181149d5dce6909b494f",
+  "input_tokens": 1129,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1129,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1152
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:2302d81f1f0881ffe881d4229b8966a66b044593bb9d160df4c0cb567b30f43c",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832531,
+    "id": "chatcmpl-fBwUjJIWtpupFQ3hGMoCnAOPsxyOyCiy",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 537.727,
+      "predicted_n": 23,
+      "predicted_per_second": 42.7726336970247,
+      "predicted_per_token_ms": 23.379434782608694,
+      "prompt_ms": 999.499,
+      "prompt_n": 1051,
+      "prompt_per_second": 1051.5268149342821,
+      "prompt_per_token_ms": 0.9509980970504281
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1129,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1152
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"When 65 cases of 20-year-old Pappy Van Winkle -- one of the rarest and most expensive bourbons in the world -- were reported missing from a Kentucky distillery in October 2013, it was the crime heard round the whiskey-drinking world. Franklin County Sheriff Pat Melton, the man leading the investigation into the estimated $26,000 in missing Pappy, said at the time that  the high-end heist was \\\"indicative of an inside job.\\\" But ever since, the trail went largely cold. Until now. On Tuesday, a Franklin County grand jury indicted \\\"nine members of a criminal syndicate that collaborated to promote or engage in the theft ... and illegal trafficking\\\" of liquor from two different Kentucky distilleries: Frankfort's Buffalo Trace -- makers of Pappy -- and the nearby Wild Turkey Distillery, makers of the eponymous bourbon, according to the indictment. Just like making good bourbon -- a specific type of whiskey synonymous with the Bluegrass State --  Melton's case required time to develop and old-fashioned Kentucky ingenuity. The sheriff's hunch was reflected in the indictment: Of the nine named, two worked at Buffalo Trace and one worked at Wild Turkey. The alleged ringleader, according to Assistant Commonwealth Attorney Zach Becker, is Gilbert \\\"Toby\\\" Curtsinger, a 45-year-old loading dock worker at the Buffalo Trace Distillery. Curtsinger and his wife, Julie, each face eight charges for allegedly engaging in organized crime. Curtsinger -- who has worked at Buffalo Trace for more than 20 years -- was arrested in March after authorities, acting on a tip, found five barrels of bourbon behind a shed on his property, according to CNN affiliate WKYT. Those barrels, weighing more than 500 pounds each and worth up to $6,000 apiece, had recently been stolen from Wild Turkey, Melton told BourbonBlog.com's Tom Fischer. While an additional search warrant allegedly turned up illegal steroids from Curtsinger's home, there was no sign of any Pappy. \\\"He doesn't know anything about (stolen Pappy Van Winkle),\\\" his mother, Teresa Curtsinger, told CNN last month. In fact, she said, once he bonded out of jail, Curtsinger returned to his job at Buffalo Trace. However, according to Melton, \\\"Curtsinger was involved in numerous thefts of Pappy Van Winkle, as well as Eagle Rare bourbon, both in bottles and barrels.\\\" Melton said Curtsinger distributed the highly coveted bourbon through a network of connections in his softball league. Teresa Curtsinger did not immediately return a message Tuesday.  But Gilbert Curtsinger's attorney, Whitney Lawson, told the Courier-Journal of Louisville, \\\"we've been waiting patiently for this to happen. We're glad that if they're going to indict that they've indicted so we can get to work.\\\" At a press conference announcing the indictments, Melton got emotional as he described the tremendous amount of effort put into the investigation. \\\"(Franklin County detectives) have done an absolute incredible job,\\\" he said as he choked back tears. \\\"And I'm thrilled to have been a part of it.\\\" Fischer, the whiskey blogger, got a different kind of emotional tug from what flanked the sheriff: several hundred thousand dollars' worth of recovered booze -- including 20 cases of Pappy. Whether those 20 were among the 65 that vanished is not immediately known, but that didn't matter to Fischer. \\\"On behalf of bourbon lovers everywhere, we are thrilled that the Pappy is back!\\\"\\n\", \"original_answer\": \"A Franklin County grand jury has indicted nine people in connection with the theft of rare and expensive bourbon from two Kentucky distilleries. The group, which included two workers from Buffalo Trace Distillery and one from Wild Turkey Distillery, is accused of stealing and illegally trafficking liquor, including 20 cases of 20-year-old Pappy Van Winkle, worth an estimated $26,000. The alleged ringleader, Gilbert \\\"Toby\\\" Curtsinger, a loading dock worker at Buffalo Trace, faces eight charges, along with his wife, Julie. The investigation began in 2013 and was led by Franklin County Sheriff Pat Melton, who called it an \\\"inside job.\\\" Recovered booze, including 20 cases of Pappy, was displayed at a press conference announcing the indictments.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:9745d9f07d71bf02258d769ea4d7d4958d4d565a62dd71c85c652bd04905e930",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21
+  ]
+}

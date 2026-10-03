@@ -1,0 +1,121 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.8092778529971838,
+  "exclusion_reason": null,
+  "family_id": "sha256:d63671bead344e94a18e179f91c3b395636d34c411b8be4c0372e956fc00fe55",
+  "input_tokens": 1304,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1304,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1327
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:86f3fc309deb8c238e05d9455b8ea1ff081ccc3d34a0c97b401871243ac43610",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832726,
+    "id": "chatcmpl-GsuC9PuEztdbMUYdyxUh9cSHHNGnSdMx",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 542.251,
+      "predicted_n": 23,
+      "predicted_per_second": 42.41578162142624,
+      "predicted_per_token_ms": 23.57613043478261,
+      "prompt_ms": 1147.105,
+      "prompt_n": 1226,
+      "prompt_per_second": 1068.777487675496,
+      "prompt_per_token_ms": 0.9356484502446982
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1304,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1327
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"A year after its Cannes debut and finally seeing a theatrical release, \\\"Lost River\\\" is still causing quite a stir. Booed at its premiere and mocked by reviewers, Ryan Gosling's first feature as director has been divisive, to put it mildly. But there has been one shining light cutting through the fog of critical hyperbole: its setting, a besmirched and decaying Detroit. Wavering on the brink of annihilation, yet providing kindling for its own rebirth, the city is captured in all its waning splendor, the perfect backdrop for Gosling's post-industrial gothic. Speaking about the film in London, Gosling made clear that the city was at the heart of the project -- in fact, without Detroit's crumbling edifices there would be no film at all. Gosling said that \\\"Lost River\\\" began as a collection of speculative shots of the Brewster-Douglass Projects, the first black social housing development in America and a place Motown legends The Supremes and boxer Joe Louis once called home. \\\"I heard [the authorities] were going to tear them down,\\\" Gosling said. \\\"I had to shoot them before they did.\\\" Taking time out between acting jobs, he ventured into the projects. \\\"I started shooting more and more,\\\" he explained, \\\"and then I realized that I was making a film. Then I started writing [the script] during the process of filming.\\\" Gosling's affection for the Motor City is longstanding, the actor growing up \\\"not too far away\\\" in Cornwall, Ontario. \\\"It seemed like everything cool came from Detroit... the whole American Dream,\\\" he reminisces. \\\"The Model-T, Motown, the refrigerator...\\\" Now though he references \\\"40 miles of dead neighborhoods,\\\" the city declaring bankruptcy. \\\"Houses are burning and things are being torn down,\\\" he says, \\\"and within that there are families trying to hold on to their homes. For them it has become a nightmare and I wanted to make a film about that.\\\" The title itself alludes to a once thriving community now displaced, its homes at the bottom of a reservoir built with little concern for the residents -- man-made interference with untold social repercussions. Speaking in broader terms, Gosling argues \\\"there are Lost Rivers everywhere and we wanted to share the experience these people were having.\\\" On screen he paints a nihilistic image of wanton destruction; torched properties and bulldozers jostling for our attention amid acts of extreme human violence -- sometimes self-inflicted. The director plainly states that as a location it \\\"was pretty dangerous.\\\" He describes \\\"an energy there that was threatening... We had a very charmed experience [filming]. It worked its way into the fabric of the movie --- a tone of impending threat that was just there.\\\" However there are signs of humanity and regeneration amongst the chaos, on camera and off. For the film's young protagonist, every raid on an unoccupied house offers copper piping waiting to be recast and ultimately reclaimed. Similarly, Gosling references the Heidelberg Project during the discussion, a community organization in the city's McDougall-Hunt neighborhood, reimagining derelict buildings as giant canvases for budding artists. He recalls seeing \\\"one house covered with teddy bears, another covered in clocks... people taking spaces and personalizing them.\\\" The city's scope for urban renewal was clearly a draw. \\\"Something really interesting is happening in Detroit at the moment -- a rebirth. People redefining what they are,\\\" according to Gosling. \\\"There's a resilience there and an energy, and it's exciting.\\\" As much as the visual content of \\\"Lost River\\\" revolves around a maudlin preoccupation with dereliction -- and perhaps plays on the outside world's perception of Detroit -- aspects of the narrative suggest hope and the possibility of reincarnation for the city. Gosling claims this paradox should exist when discussing Detroit, and is precisely what the film is trying to convey. \\\"We want people to know that dereliction is happening there, but that it's not only what is happening there,\\\" he argues. \\\"It doesn't define Detroit, it's just part of what it's dealing with right now.\\\" \\\"Lost River\\\" receives a limited theatrical release in the U.S. and UK on April 10.\\n\", \"original_answer\": \"Here is a summary of the article in 168 words:\\n\\nRyan Gosling's directorial debut, \\\"Lost River,\\\" has caused a stir since its premiere at Cannes last year. The film is set in decaying Detroit, which Gosling captures in all its waning splendor. He became inspired to make the film after discovering the Brewster-Douglass Projects, the first black social housing development in America, were going to be torn down. Gosling wants to highlight the city's rebirth and resilience despite the decay and human violence portrayed in the film. He references the Heidelberg Project, a community organization that transforms derelict buildings into works of art. Gosling hopes the film conveys hope and the possibility of reincarnation for the city, while also acknowledging the reality of dereliction. \\\"Lost River\\\" will have a limited theatrical release on April 10 in the US and UK.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:130f36779930ca74f31a1577dbdda1229cba7156686e7aad2c59e1efa4b979b7",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29
+  ]
+}

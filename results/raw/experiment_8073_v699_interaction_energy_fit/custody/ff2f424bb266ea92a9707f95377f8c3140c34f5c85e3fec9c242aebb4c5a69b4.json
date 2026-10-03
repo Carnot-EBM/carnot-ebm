@@ -1,0 +1,104 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.3457051750156097,
+  "exclusion_reason": null,
+  "family_id": "sha256:5697f9518b7755c24f087331183e1aa7d82ea4cde524540c34811a1cddce1a27",
+  "input_tokens": 659,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.15,
+    "schema_valid": true,
+    "source_sentence_id": 2,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 659,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 684
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:d9be0e3ca8e969cf425967175956f31ae9d3a462a1d69486cb1b6d16d40c1851",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.15,\n  \"source_sentence_id\": 2\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832928,
+    "id": "chatcmpl-0cKmaRVybHfueWHFTUbaWckxbU5v0Nd2",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 589.399,
+      "predicted_n": 25,
+      "predicted_per_second": 42.41608825260986,
+      "predicted_per_token_ms": 23.57596,
+      "prompt_ms": 610.541,
+      "prompt_n": 581,
+      "prompt_per_second": 951.6150430519817,
+      "prompt_per_token_ms": 1.050845094664372
+    },
+    "usage": {
+      "completion_tokens": 25,
+      "prompt_tokens": 659,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 684
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Answer: The internal, LAN-IP address is normally set to a default, private number. Linksys routers, for example, use 192.168.1.1 for their internal IP address. D-Link and Netgear routers typically use 192.168.0.1.Some US Robotics routers use 192.168.123.254, and some Belkin and SMC routers use 192.168.2.1.nother way to identify the public IP addresses of routers, involves executing a ping or traceroute command. From inside a home network, the (DOS) command ping-r 1 will send a message through the home router that will cause its IP address to be displayed.\\\\n\\\\npassage 2:Home Guides. Each router has 2 IP addresses: an internal IP address and an external IP address. 1  Your router's internal IP address is what you use to talk to your router. 2  Use this IP address to login to your router and configure it for things like port forwarding.ome Guides. Each router has 2 IP addresses: an internal IP address and an external IP address. 1  Your router's internal IP address is what you use to talk to your router. 2  Use this IP address to login to your router and configure it for things like port forwarding.\\\\n\\\\npassage 3:1 You can also manually find your router's internal IP address by openning a Windows command prompt and then using the command line tool ipconfig. 2  The following steps will walk you through this process.e will cover a couple of easy methods here. 1  You can use our free Router Detector software to find your router's internal IP address. 2  You can also manually find your router's internal IP address by openning a Windows command prompt and then using the command line tool ipconfig.\\\\n\\\\n\\\",\\\"question\\\":\\\"how do i find my router's ip address\\\"}\", \"original_answer\": \"To find your router's internal IP address, you can follow these steps:\\n\\n1. Open a Windows command prompt.\\n2. Type the command \\\"ipconfig\\\".\\n3. Look for the \\\"Private IPv4 Address\\\" field. This field will display your router's internal IP address.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "tune",
+  "source_cluster_id": "sha256:5ee98487611297d4375f245eb6b3a2710bb0f6801e2b4b35527c421d61851c8b",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ]
+}

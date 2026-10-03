@@ -1,0 +1,102 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.3382858280092478,
+  "exclusion_reason": null,
+  "family_id": "sha256:d566606e2af76dad085988d410c3b87cd0aad73902b030bbccc3ee26e2c3dd2d",
+  "input_tokens": 711,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.95,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 711,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 735
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:d3f23224bc2bb9c17e03b918229e3a7224e606ba89a7a657b9483b8566b354b7",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.95,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832916,
+    "id": "chatcmpl-7cKxkFUTdDz41a4w1VN9iTL9sKfvJzUS",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.981,
+      "predicted_n": 24,
+      "predicted_per_second": 42.47930461378347,
+      "predicted_per_token_ms": 23.540875,
+      "prompt_ms": 642.717,
+      "prompt_n": 633,
+      "prompt_per_second": 984.8813708055023,
+      "prompt_per_token_ms": 1.015350710900474
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 711,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 735
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:A lot of college grads opt to delay their entry into the workforce however, and instead enroll in graduate school. Grad school isn't the right choice for everybody, but for many it's a good option to consider when deciding whether to further your education or enter the workforce.n the other hand, the graduates who are able to find work end up making a lot more than their undergraduate counterparts; the median annual salary plus bonus for a person fresh out of grad school with an MBA is $105,000. Time. Graduate school takes a lot of time, time that many people might not have.\\\\n\\\\npassage 2:Some ambitious students will choose to work and pursue grad school at the same time. This may sound like a lot to handle, but students who take this approach often reap double the rewards. Rather than taking on a paid position, some students elect to volunteer part-time, working around their study schedule.y jcuadmissions November 20, 2014 American college in Rome American university in Rome study abroad in Italy. Undergraduate students hear a lot of conflicting advice when it comes to plotting their course following graduation.\\\\n\\\\npassage 3:There are pros and cons to each decision. Graduate school is expensive and time consuming, yet it allows you to further your education in a specific field. It is a tough decision that I will have to make next December, and some students will have to make as soon as this summer.urthermore, it will give you an opportunity to expand your education, and it will give you more knowledge about your field of study. When you come out of graduate school you will be more educated than a student who went straight into the career world. I also recommend holding a part time job while in graduate school.\\\\n\\\\n\\\",\\\"question\\\":\\\"pros and cons entering workforce or going to graduate school\\\"}\", \"original_answer\": \"Based on the given passages, the pros of entering the workforce include the potential for higher salary and the ability to start gaining work experience immediately. The cons include the possibility of not finding a job and potentially earning less than those with graduate degrees.\\n\\nThe pros of going to graduate school include furthering education in a specific field, expanding knowledge, and potentially increasing job prospects. The cons include the high cost of graduate school and the time commitment required.\\n\\nIn summary, the pros of entering the workforce are higher salary potential and immediate work experience, while the pros of going to graduate school are further education and potential job prospects. The cons of entering the workforce are the possibility of not finding a job and potentially earning less, while the cons of going to graduate school are the high cost and time commitment.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "fit",
+  "source_cluster_id": "sha256:a81022611e8987f9afaf1350f69330114f197aae99c77a2e70d44c47b79249f2",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ]
+}

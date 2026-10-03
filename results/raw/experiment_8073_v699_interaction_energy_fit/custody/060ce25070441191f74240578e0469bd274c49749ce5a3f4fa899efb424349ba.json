@@ -1,0 +1,118 @@
+{
+  "capture_identity": "sha256:c535e06e6f46eab0313e9edded07eef2c45e13e6a8c7c15f0d3413f54a1a1046",
+  "duration_s": 1.5099249940249138,
+  "exclusion_reason": null,
+  "family_id": "sha256:df8a8bfdf128cc64a7288c7d37eeb479896cbb97968a25d91089e9b24a167920",
+  "input_tokens": 922,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 922,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 945
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:df681fbab1d8c393272f3f8979cbdf6c511647b4e592a85b26e078306a58d815",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790832936,
+    "id": "chatcmpl-Uqt37tP52IEaA7pzmnAHq5ohxvhwsXG7",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.631,
+      "predicted_n": 23,
+      "predicted_per_second": 42.46433457464584,
+      "predicted_per_token_ms": 23.54917391304348,
+      "prompt_ms": 852.435,
+      "prompt_n": 844,
+      "prompt_per_second": 990.104817376105,
+      "prompt_per_token_ms": 1.0099940758293837
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 922,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 945
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"General Hospital spoilers: Concerns for Charlotte grow and Sasha is in danger\\nGeneral Hospital spoilers tease that this week is all about the trouble that surrounds the people of Port Charles.\\nThere\u2019s been plenty of trouble lately, and it\u2019s only worsening.\\nAnna (Finola Hughes) believes she has someone dangerous after her. Still, viewers know Charlotte (Scarlett Fernandez) is behind the trashing of her hotel room and the message on the mirror \u2014 at the very least.\\nSasha (Sofia Mattsson) is back at Ferncliff, and after all of the drama surrounding her escape, Dr. Montague (Darin Toonder) is ready to get rid of her for good.\\nIt\u2019s also a short week, as the MLB will preempt a few days this week.\\nHere\u2019s what to expect this week from General Hospital.\\nValentin\u2019s concern grows\\nThings have continued to escalate with Charlotte over the last few weeks, and Valentin had no idea any of it was happening.\\nWhen she pulled out the tarot deck \u2014 that\u2019s when he knew he had to act and do something more.\\nInterestingly, Charlotte has been spending time with Jake (Hudson West). He was once mind-controlled by the Cassadines, which adds another level of mystery to the situation.\\nValentin calls Laura (Genies Francis) to inform her, which will likely bring her back to Port Charles. He has been trying to protect his daughter and his love, Anna.\\nVictor (Charles Shaughnessy) is behind all of it, and beyond the grave, he continues to cause trouble for those he believes wronged him.\\nSasha needs saving\\nWhen Sasha and Cody (Josh Kelly) thought they were safe, Gladys (Bonnie Burroughs) stabbed her daughter-in-law in the back again.\\nThe police returned her to Ferncliff, where she is now subjected to whatever Dr. Montague has in store. She knows the truth, and she is now a liability for her.\\nThe General Hospital preview showed someone barging into Sasha\u2019s room as the doctor tried to restrain her. Speculation is he will try and get rid of her, as he has already planted her addiction relapse back into the minds of the nurses. It\u2019s a dangerous game, and Sasha could be collateral damage.\\nSonny (Maurice Benard) now knows about Gladys\u2019 gambling issue and what she did to Sasha. Nina (Cynthia Watros) finally told him, so perhaps he can help get her out of Ferncliff.\\nWith sweeps just a month away, expect the drama to be heightened.\\nBe sure to tune in daily so that not a moment of the drama is missed.\\nGeneral Hospital airs weekdays on ABC.\", \"original_answer\": \"This week on General Hospital, there are growing concerns for Charlotte and Sasha's life is in danger. Anna believes someone dangerous is after her, but viewers know that Charlotte is responsible for the recent trouble. Valentin is worried about Charlotte and reaches out to Laura for help. Meanwhile, Sasha is back at Ferncliff and Dr. Montague wants to get rid of her. Sasha knows the truth and is a liability for him. The preview shows someone barging into Sasha's room as the doctor tries to restrain her. Sonny now knows about Gladys' gambling issue and what she did to Sasha. Viewers can expect heightened drama as sweeps approaches.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "tune",
+  "source_cluster_id": "sha256:7ed0ee19e60955c5565ffb0979974f6380520563c808d644ac46e4d69a06b822",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26
+  ]
+}
