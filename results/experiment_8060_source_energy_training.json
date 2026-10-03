@@ -1,0 +1,122 @@
+{
+  "experiment": 8060,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-10-03",
+  "started_at": "2026-10-03T08:37:16.481898+00:00",
+  "finished_at": "2026-10-03T08:37:16.481898+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Train calibrated source energies against matched feature controls",
+  "honest_verdict": "blocked_gate_check_failed",
+  "blocked_reason": "actual=0 == expected=1",
+  "failed_upstream": "exp8059-fit-source-scoring",
+  "failed_field": "fit_capture_ready_score",
+  "failed_operator": "==",
+  "failed_expected": 1,
+  "failed_expected_type": "int",
+  "failed_observed": 0,
+  "failed_observed_type": "int",
+  "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8059_v698_fit_source_scoring.json",
+  "failed_evidence_sha256": "sha256:da5a361939a52ba7faf2a0a94122e7aad991618f46579e3ea90b46372ac91748",
+  "blocked_diagnostic_contract": {
+    "version": "blocked_gate_diagnostic_v1",
+    "blocked_reason": "actual=0 == expected=1",
+    "failed_upstream": "exp8059-fit-source-scoring",
+    "failed_field": "fit_capture_ready_score",
+    "failed_operator": "==",
+    "failed_expected": 1,
+    "failed_expected_type": "int",
+    "failed_observed": 0,
+    "failed_observed_type": "int",
+    "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8059_v698_fit_source_scoring.json",
+    "failed_evidence_sha256": "sha256:da5a361939a52ba7faf2a0a94122e7aad991618f46579e3ea90b46372ac91748"
+  },
+  "gate_check_summary": "gate-unsat(final): 2 of 6 gate(s) failed; first failure: exp8059-fit-source-scoring.fit_capture_ready_score (actual=0 == expected=1)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp8059-fit-source-scoring",
+      "artifact_field": "fit_capture_ready_score",
+      "op": "==",
+      "expected": 1,
+      "expected_type": "int",
+      "actual": 0,
+      "actual_type": "int",
+      "passed": false,
+      "reason": "actual=0 == expected=1",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8059_v698_fit_source_scoring.json",
+      "artifact_sha256": "sha256:da5a361939a52ba7faf2a0a94122e7aad991618f46579e3ea90b46372ac91748"
+    },
+    {
+      "upstream": "exp8059-fit-source-scoring",
+      "artifact_field": "verdict_class",
+      "op": "in",
+      "expected": [
+        "positive",
+        "null"
+      ],
+      "expected_type": "list",
+      "actual": "disqualified",
+      "actual_type": "str",
+      "passed": false,
+      "reason": "actual='disqualified' in expected=['positive', 'null']",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8059_v698_fit_source_scoring.json",
+      "artifact_sha256": "sha256:da5a361939a52ba7faf2a0a94122e7aad991618f46579e3ea90b46372ac91748"
+    },
+    {
+      "upstream": "exp8059-fit-source-scoring",
+      "artifact_field": "flagged_adversarial",
+      "op": "==",
+      "expected": false,
+      "expected_type": "bool",
+      "actual": false,
+      "actual_type": "bool",
+      "passed": true,
+      "reason": "actual=False == expected=False",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8059_v698_fit_source_scoring.json",
+      "artifact_sha256": "sha256:da5a361939a52ba7faf2a0a94122e7aad991618f46579e3ea90b46372ac91748"
+    },
+    {
+      "upstream": "exp8058-sealed-evidence-methods",
+      "artifact_field": "source_protocol_ready_score",
+      "op": "==",
+      "expected": 1,
+      "expected_type": "int",
+      "actual": 1,
+      "actual_type": "int",
+      "passed": true,
+      "reason": "actual=1 == expected=1",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8058_v698_sealed_evidence_methods.json",
+      "artifact_sha256": "sha256:cc737701b78445d1629e63d68dea59b7407906a7f99f41305337a9699775e3b8"
+    },
+    {
+      "upstream": "exp8058-sealed-evidence-methods",
+      "artifact_field": "verdict_class",
+      "op": "in",
+      "expected": [
+        "positive",
+        "null"
+      ],
+      "expected_type": "list",
+      "actual": "null",
+      "actual_type": "str",
+      "passed": true,
+      "reason": "actual='null' in expected=['positive', 'null']",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8058_v698_sealed_evidence_methods.json",
+      "artifact_sha256": "sha256:cc737701b78445d1629e63d68dea59b7407906a7f99f41305337a9699775e3b8"
+    },
+    {
+      "upstream": "exp8058-sealed-evidence-methods",
+      "artifact_field": "flagged_adversarial",
+      "op": "==",
+      "expected": false,
+      "expected_type": "bool",
+      "actual": false,
+      "actual_type": "bool",
+      "passed": true,
+      "reason": "actual=False == expected=False",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8058_v698_sealed_evidence_methods.json",
+      "artifact_sha256": "sha256:cc737701b78445d1629e63d68dea59b7407906a7f99f41305337a9699775e3b8"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
