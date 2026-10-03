@@ -19395,3 +19395,4 @@ code |
 | 2026-10-03 02:00 UTC | Fit calibrated source energies with identical-info | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8047-fit-score-capture, exp8047-fit-score-capture, exp8047-fit-score-capture) |
 | 2026-10-03 02:00 UTC | Capture reserved Qwen evaluation scores with froze | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8048-source-energy-fit, exp8048-source-energy-fit, exp8048-source-energy-fit) |
 | 2026-10-03 02:00 UTC | Independently test source information and calibrat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8049-evaluation-score-capture, exp8049-evaluation-score-capture, exp8049-evaluation-score-capture, exp8048-source-energy-fit, exp8048-source-energy-fit, exp8048-source-energy-fit) |
+| 2026-10-03 02:37 UTC | Learn persistent energy updates with released-feed | OK | 94 passed, 1 warning in 32.79s |
