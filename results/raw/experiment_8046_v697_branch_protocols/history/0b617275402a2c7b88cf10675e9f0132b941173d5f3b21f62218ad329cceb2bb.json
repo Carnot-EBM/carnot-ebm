@@ -1,0 +1,452 @@
+{
+  "code": [
+    {
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8020_v695_qualified_energy_fit.py",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8020_v695_qualified_energy_fit/custody/ceec4b67eb2df64fe705a83840202672cdb4972a400b5fba4e09bbcdf5809c9c.py",
+      "sha256": "sha256:ceec4b67eb2df64fe705a83840202672cdb4972a400b5fba4e09bbcdf5809c9c"
+    },
+    {
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8020_v695_qualified_energy_fit.py",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8020_v695_qualified_energy_fit/custody/654e31ff907b81986ed793316c8c9f83bab777785e29d62366bb85c36180d36d.py",
+      "sha256": "sha256:654e31ff907b81986ed793316c8c9f83bab777785e29d62366bb85c36180d36d"
+    },
+    {
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_qualified_energy_8020.py",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8020_v695_qualified_energy_fit/custody/024c40d2d444765bb0c1992ec7c61a144a5be68028a815510cad280fd91bdaa3.py",
+      "sha256": "sha256:024c40d2d444765bb0c1992ec7c61a144a5be68028a815510cad280fd91bdaa3"
+    },
+    {
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8008_v694_conditioned_energy_fit.py",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8020_v695_qualified_energy_fit/custody/f174acad1c50077d2163c3692da91de40bc6dd8640312cf09ae8a823f8c08ce6.py",
+      "sha256": "sha256:f174acad1c50077d2163c3692da91de40bc6dd8640312cf09ae8a823f8c08ce6"
+    },
+    {
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/sparse_energy_7996.py",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8020_v695_qualified_energy_fit/custody/08ee68340cb74c2635abf8a256d5a0dc60a3d447832e26ed361bae926eb68488.py",
+      "sha256": "sha256:08ee68340cb74c2635abf8a256d5a0dc60a3d447832e26ed361bae926eb68488"
+    },
+    {
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/qwen_energy_calibration_7972.py",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8020_v695_qualified_energy_fit/custody/20e5ed219de3b361176b4c5a81c9032d7802eec00b8cc58867de5216a1db7b92.py",
+      "sha256": "sha256:20e5ed219de3b361176b4c5a81c9032d7802eec00b8cc58867de5216a1db7b92"
+    }
+  ],
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "run",
+        "--data-file=/tmp/carnot-8020-fnh08xqv/.coverage",
+        "--rcfile=/tmp/carnot-8020-fnh08xqv/coverage.ini",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-8020-fnh08xqv/pytest",
+        "tests/python/test_qualified_energy_8020.py",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_response_targets_7955.py",
+        "tests/python/test_source_boundary_7852.py",
+        "tests/python/test_experiment_7942_v689_sentence_labels.py",
+        "-q"
+      ],
+      "name": "unit_consumers_e2e015_019",
+      "scope": "owned",
+      "timeout_s": 300
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--data-file=/tmp/carnot-8020-fnh08xqv/.coverage",
+        "/tmp/carnot-8020-fnh08xqv"
+      ],
+      "name": "coverage_combine",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/carnot-8020-fnh08xqv/.coverage",
+        "--fail-under=100",
+        "--show-missing"
+      ],
+      "name": "coverage_report",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "json",
+        "--data-file=/tmp/carnot-8020-fnh08xqv/.coverage",
+        "-o",
+        "/tmp/carnot-8020-fnh08xqv/coverage.json"
+      ],
+      "name": "coverage_json",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_8020_v695_qualified_energy_fit.py",
+        "scripts/experiments/experiment_8020_v695_qualified_energy_fit.py",
+        "tests/python/test_qualified_energy_8020.py"
+      ],
+      "name": "ruff_check",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_8020_v695_qualified_energy_fit.py",
+        "scripts/experiments/experiment_8020_v695_qualified_energy_fit.py",
+        "tests/python/test_qualified_energy_8020.py"
+      ],
+      "name": "ruff_format",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "--follow-imports=silent",
+        "python/carnot/experiment_8020_v695_qualified_energy_fit.py",
+        "scripts/experiments/experiment_8020_v695_qualified_energy_fit.py"
+      ],
+      "name": "strict_mypy",
+      "scope": "owned",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_qualified_energy_8020.py"
+      ],
+      "name": "spec_coverage",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q"
+      ],
+      "name": "repository_health",
+      "scope": "repository_health",
+      "timeout_s": 180
+    }
+  ],
+  "config": {
+    "acceptance": "all converged owned heads, numerical audits, CLI replay and owned checks",
+    "arms": [
+      "conditioned_energy",
+      "sigmoid_identity",
+      "linear",
+      "scalar_affine",
+      "intercept_only",
+      "isotonic",
+      "fixed_200_residual"
+    ],
+    "calibration_bounds": [
+      [
+        -8.0,
+        8.0
+      ],
+      [
+        0.25,
+        4.0
+      ]
+    ],
+    "calibration_groups": "Exp8019 sealed complete-label mask",
+    "calibration_groups_minimum": 48,
+    "calibration_l2": 0.0001,
+    "calibration_per_class": 8,
+    "clip_q": [
+      0.0001,
+      0.9999
+    ],
+    "compute_matching": "same maximum budget and paired full-batch steps; record Hessian overhead",
+    "decision_benefit": "unassessed",
+    "fit_budget_s": 600,
+    "fixed_control_steps": 200,
+    "gradient_tolerance": 1e-08,
+    "identity_independent": false,
+    "initialization": "fit_prevalence_intercept_then_converged_two_coefficient_linear_then_local_residuals",
+    "intercept_novelty": false,
+    "knots": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.1111111111111111,
+      0.2222222222222222,
+      0.3333333333333333,
+      0.4444444444444444,
+      0.5555555555555556,
+      0.6666666666666666,
+      0.7777777777777778,
+      0.8888888888888888,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "learning_rate": 0.01,
+    "max_steps": 2000,
+    "optimizer": "damped_Newton_backtracking",
+    "penalties": [
+      0.0001,
+      0.001,
+      0.01
+    ],
+    "public_features": 9,
+    "scalar_controls_use_only_q": true,
+    "seeds": [
+      17,
+      29,
+      43,
+      71,
+      101
+    ],
+    "selection": "tune_binary_log_loss"
+  },
+  "original_config": {
+    "acceptance": "all converged owned heads, numerical audits, CLI replay and owned checks",
+    "arms": [
+      "conditioned_energy",
+      "linear",
+      "intercept_only",
+      "equal_information_spline",
+      "fixed_step",
+      "frozen_v693",
+      "isotonic"
+    ],
+    "calibration_bounds": [
+      [
+        -8.0,
+        8.0
+      ],
+      [
+        0.25,
+        4.0
+      ]
+    ],
+    "calibration_groups": 62,
+    "calibration_l2": 0.0001,
+    "clip_q": [
+      0.0001,
+      0.9999
+    ],
+    "compute_matching": "same maximum budget and paired full-batch steps; record Hessian overhead",
+    "decision_benefit": "unassessed",
+    "fit_budget_s": 600,
+    "gradient_tolerance": 1e-08,
+    "initialization": "fit_prevalence_intercept_then_converged_two_coefficient_linear_then_local_residuals",
+    "intercept_novelty": false,
+    "knots": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.1111111111111111,
+      0.2222222222222222,
+      0.3333333333333333,
+      0.4444444444444444,
+      0.5555555555555556,
+      0.6666666666666666,
+      0.7777777777777778,
+      0.8888888888888888,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "learning_rate": 0.01,
+    "max_steps": 2000,
+    "optimizer": "damped_Newton_backtracking",
+    "penalties": [
+      0.0001,
+      0.001,
+      0.01
+    ],
+    "seeds": [
+      17,
+      29,
+      43,
+      71,
+      101
+    ],
+    "selection": "tune_binary_log_loss"
+  },
+  "sources": {
+    "evaluator_manifests": {
+      "calibration": {
+        "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8019_v695_eligible_targets/evaluator/7d9b90584f42f30589d491fb555968fba45e9a8816681aa422e90309b8974995.json",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8020_v695_qualified_energy_fit/custody/7d9b90584f42f30589d491fb555968fba45e9a8816681aa422e90309b8974995.json",
+        "sha256": "sha256:7d9b90584f42f30589d491fb555968fba45e9a8816681aa422e90309b8974995"
+      },
+      "fit": {
+        "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8019_v695_eligible_targets/evaluator/f17e7aa94f4bad5b15bc75d910337238a8a3727d658e66d7c8e448a7ee222eee.json",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8020_v695_qualified_energy_fit/custody/f17e7aa94f4bad5b15bc75d910337238a8a3727d658e66d7c8e448a7ee222eee.json",
+        "sha256": "sha256:f17e7aa94f4bad5b15bc75d910337238a8a3727d658e66d7c8e448a7ee222eee"
+      },
+      "tune": {
+        "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8019_v695_eligible_targets/evaluator/4e4d3de42a542f30c7f3e9a142fbe13beaf265a177e0742f4faa8586c706f741.json",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8020_v695_qualified_energy_fit/custody/4e4d3de42a542f30c7f3e9a142fbe13beaf265a177e0742f4faa8586c706f741.json",
+        "sha256": "sha256:4e4d3de42a542f30c7f3e9a142fbe13beaf265a177e0742f4faa8586c706f741"
+      }
+    },
+    "exclusion_manifest": {
+      "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8019_v695_eligible_targets/exclusions/1665eec51a0bac4829d75511d84f886f2fceaf9f115ba5e0a2e30f1155441e56.json",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8020_v695_qualified_energy_fit/custody/1665eec51a0bac4829d75511d84f886f2fceaf9f115ba5e0a2e30f1155441e56.json",
+      "sha256": "sha256:1665eec51a0bac4829d75511d84f886f2fceaf9f115ba5e0a2e30f1155441e56"
+    },
+    "gate_checks": [
+      {
+        "artifact_field": "fit_targets_ready_score",
+        "expected": 1,
+        "hash": "sha256:310fbb2c5d0b254ceb2e00cd742c1d83c856ff4082075b7cd61e592c940ea518",
+        "observed": 1,
+        "passed": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8019_v695_eligible_targets.json",
+        "upstream_id": "exp8019"
+      },
+      {
+        "artifact_field": "calibration_targets_ready_score",
+        "expected": 1,
+        "hash": "sha256:310fbb2c5d0b254ceb2e00cd742c1d83c856ff4082075b7cd61e592c940ea518",
+        "observed": 1,
+        "passed": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8019_v695_eligible_targets.json",
+        "upstream_id": "exp8019"
+      }
+    ],
+    "public_manifests": {
+      "calibration": {
+        "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8019_v695_eligible_targets/public/4b810e577e641a3e9fa9e1261e2fe998e91bdbd5466ba1cf7bbec58783ee32b0.json",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8020_v695_qualified_energy_fit/custody/4b810e577e641a3e9fa9e1261e2fe998e91bdbd5466ba1cf7bbec58783ee32b0.json",
+        "sha256": "sha256:4b810e577e641a3e9fa9e1261e2fe998e91bdbd5466ba1cf7bbec58783ee32b0"
+      },
+      "fit": {
+        "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8019_v695_eligible_targets/public/d7b93bcf00434d80a14bc88ea400dfcb77882bdad9df67d3bedee828435da624.json",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8020_v695_qualified_energy_fit/custody/d7b93bcf00434d80a14bc88ea400dfcb77882bdad9df67d3bedee828435da624.json",
+        "sha256": "sha256:d7b93bcf00434d80a14bc88ea400dfcb77882bdad9df67d3bedee828435da624"
+      },
+      "retention": {
+        "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8019_v695_eligible_targets/public/c495c313024d14a3b770edd2e6a79d72164b553c223fb31af7bd33c7a6469214.json",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8020_v695_qualified_energy_fit/custody/c495c313024d14a3b770edd2e6a79d72164b553c223fb31af7bd33c7a6469214.json",
+        "sha256": "sha256:c495c313024d14a3b770edd2e6a79d72164b553c223fb31af7bd33c7a6469214"
+      },
+      "stream": {
+        "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8019_v695_eligible_targets/public/543f3435b76890308279f715cca49cc94301f01b8cf88aeaf212cef7c567fe89.json",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8020_v695_qualified_energy_fit/custody/543f3435b76890308279f715cca49cc94301f01b8cf88aeaf212cef7c567fe89.json",
+        "sha256": "sha256:543f3435b76890308279f715cca49cc94301f01b8cf88aeaf212cef7c567fe89"
+      },
+      "tune": {
+        "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8019_v695_eligible_targets/public/5bba178226437be577f0c79ec65973f0c72911e642795ec21fc02411536ceb4a.json",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8020_v695_qualified_energy_fit/custody/5bba178226437be577f0c79ec65973f0c72911e642795ec21fc02411536ceb4a.json",
+        "sha256": "sha256:5bba178226437be577f0c79ec65973f0c72911e642795ec21fc02411536ceb4a"
+      }
+    },
+    "references": [
+      {
+        "original_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8019_v695_eligible_targets.json",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8020_v695_qualified_energy_fit/custody/310fbb2c5d0b254ceb2e00cd742c1d83c856ff4082075b7cd61e592c940ea518.json",
+        "sha256": "sha256:310fbb2c5d0b254ceb2e00cd742c1d83c856ff4082075b7cd61e592c940ea518"
+      }
+    ],
+    "support_by_role": {
+      "calibration": {
+        "class_counts": {
+          "0": 50,
+          "1": 11
+        },
+        "eligible": 61,
+        "excluded": 2,
+        "independent": 61,
+        "intended": 64,
+        "minimum": 48,
+        "passed": true,
+        "per_class": 8,
+        "public_eligible": 62,
+        "unknown_target": 1
+      },
+      "fit": {
+        "class_counts": {
+          "0": 131,
+          "1": 107
+        },
+        "eligible": 238,
+        "excluded": 18,
+        "independent": 238,
+        "intended": 256,
+        "minimum": 128,
+        "passed": true,
+        "per_class": 16,
+        "public_eligible": 238,
+        "unknown_target": 0
+      },
+      "retention": {
+        "class_counts": {
+          "0": 52,
+          "1": 11
+        },
+        "eligible": 63,
+        "excluded": 1,
+        "independent": 63,
+        "intended": 64,
+        "minimum": 48,
+        "passed": true,
+        "per_class": 8,
+        "public_eligible": 63,
+        "unknown_target": 0
+      },
+      "stream": {
+        "class_counts": {
+          "0": 219,
+          "1": 35
+        },
+        "eligible": 254,
+        "excluded": 2,
+        "independent": 254,
+        "intended": 256,
+        "minimum": 192,
+        "passed": true,
+        "per_class": 20,
+        "public_eligible": 254,
+        "unknown_target": 0
+      },
+      "tune": {
+        "class_counts": {
+          "0": 34,
+          "1": 28
+        },
+        "eligible": 62,
+        "excluded": 2,
+        "independent": 62,
+        "intended": 64,
+        "minimum": 32,
+        "passed": true,
+        "per_class": 4,
+        "public_eligible": 62,
+        "unknown_target": 0
+      }
+    }
+  }
+}
