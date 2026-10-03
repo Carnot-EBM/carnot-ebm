@@ -1,0 +1,254 @@
+[exp8053] phase=start_preconditions elapsed_s=0.000 completed=0 pending=0
+[exp8053] phase=qualified_small_head_load_before elapsed_s=1.066 completed=0 pending=0
+[exp8053] phase=qualified_small_head_load_after elapsed_s=2.594 completed=3960 pending=0
+[exp8053] phase=freeze_after elapsed_s=2.705 completed=0 pending=0
+[exp7303-validation] before_subprocess mapped_inode_regression elapsed_s=0.000 unit=1/1
+[exp7303-validation:mapped_inode_regression] ..                                                                       [100%]
+[exp7303-validation:mapped_inode_regression] 2 passed in 3.61s
+[exp7303-validation] after_subprocess mapped_inode_regression elapsed_s=8.125 exit=0 unit=1/1
+[exp8040] phase=native_library_load_before elapsed_s=11.056 completed=0 pending=0
+[exp8040] phase=native_library_load_after elapsed_s=11.063 completed=0 pending=0
+[exp7303-validation] before_subprocess unit_consumers_e2e015_019 elapsed_s=0.000 unit=1/8
+[exp7303-validation] subprocess_outstanding unit_consumers_e2e015_019 elapsed_s=10.001
+[exp7303-validation] subprocess_outstanding unit_consumers_e2e015_019 elapsed_s=20.001
+[exp7303-validation] subprocess_outstanding unit_consumers_e2e015_019 elapsed_s=30.001
+[exp7303-validation] subprocess_outstanding unit_consumers_e2e015_019 elapsed_s=40.002
+[exp7303-validation] subprocess_outstanding unit_consumers_e2e015_019 elapsed_s=50.002
+[exp7303-validation] subprocess_outstanding unit_consumers_e2e015_019 elapsed_s=60.002
+[exp7303-validation] subprocess_outstanding unit_consumers_e2e015_019 elapsed_s=70.003
+[exp7303-validation] subprocess_outstanding unit_consumers_e2e015_019 elapsed_s=80.003
+[exp7303-validation:unit_consumers_e2e015_019] ....F..............                                                      [100%]
+[exp7303-validation:unit_consumers_e2e015_019] =================================== FAILURES ===================================
+[exp7303-validation:unit_consumers_e2e015_019] ____________________ test_validation_and_acceptance_routes _____________________
+[exp7303-validation:unit_consumers_e2e015_019] 
+[exp7303-validation:unit_consumers_e2e015_019] tmp_path = PosixPath('/tmp/carnot-8053-nzkw5_8f/pytest/test_validation_and_acceptance0')
+[exp7303-validation:unit_consumers_e2e015_019] data = {'cases': [{'arm': 'unconstrained', 'before': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, ...], 'class': 'accepted', 'delta': [0.0,...on-312-x86_64-linux-gnu.so', 'sha256': 'sha256:ee1e82d2891e735fa7824228a3e98f474ca43cf5cc114b89c3c6e4d460e89170'}, ...}
+[exp7303-validation:unit_consumers_e2e015_019] monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f4a487b1430>
+[exp7303-validation:unit_consumers_e2e015_019] 
+[exp7303-validation:unit_consumers_e2e015_019]     def test_validation_and_acceptance_routes(tmp_path, data, monkeypatch):
+[exp7303-validation:unit_consumers_e2e015_019]         """SCENARIO-REPORT-8053-TERMINAL: owned failures cannot grant numerical readiness."""
+[exp7303-validation:unit_consumers_e2e015_019]         plan = e.validation_plan(tmp_path)
+[exp7303-validation:unit_consumers_e2e015_019]         assert any(c.name == "repository_health" and c.timeout_s <= 120 for c in plan)
+[exp7303-validation:unit_consumers_e2e015_019]         assert all(c.timeout_s <= 300 for c in plan)
+[exp7303-validation:unit_consumers_e2e015_019]         coverage = {p: dict(summary=dict(num_statements=1, missing_lines=0)) for p in e.OWNED}
+[exp7303-validation:unit_consumers_e2e015_019]         e.atomic_json(tmp_path / "coverage.json", dict(files=coverage))
+[exp7303-validation:unit_consumers_e2e015_019]         real_commands = e.run_commands
+[exp7303-validation:unit_consumers_e2e015_019]         monkeypatch.setattr(
+[exp7303-validation:unit_consumers_e2e015_019]             e,
+[exp7303-validation:unit_consumers_e2e015_019]             "run_commands",
+[exp7303-validation:unit_consumers_e2e015_019]             lambda *a, **k: [
+[exp7303-validation:unit_consumers_e2e015_019]                 dict(scope="owned", passed=True),
+[exp7303-validation:unit_consumers_e2e015_019]                 dict(scope="repository_health", passed=False),
+[exp7303-validation:unit_consumers_e2e015_019]             ],
+[exp7303-validation:unit_consumers_e2e015_019]         )
+[exp7303-validation:unit_consumers_e2e015_019]         receipts, counts, health = e.validate(tmp_path / "logs", tmp_path)
+[exp7303-validation:unit_consumers_e2e015_019]         assert receipts[0]["passed"] and counts and not health[0]["passed"]
+[exp7303-validation:unit_consumers_e2e015_019]         e.atomic_json(tmp_path / "prior" / "repository_health_receipt.json", dict(rows=health))
+[exp7303-validation:unit_consumers_e2e015_019] >       assert e.validate(tmp_path / "again", tmp_path)[2] == health
+[exp7303-validation:unit_consumers_e2e015_019] E       AssertionError: assert [{'passed': F...tory_health'}] == [{'passed': F...tory_health'}]
+[exp7303-validation:unit_consumers_e2e015_019] E
+[exp7303-validation:unit_consumers_e2e015_019] E         Left contains one more item: {'passed': False, 'scope': 'repository_health'}
+[exp7303-validation:unit_consumers_e2e015_019] E         Use -v to get more diff
+[exp7303-validation:unit_consumers_e2e015_019] 
+[exp7303-validation:unit_consumers_e2e015_019] tests/python/test_guarded_transaction_8053.py:165: AssertionError
+[exp7303-validation:unit_consumers_e2e015_019] =========================== short test summary info ============================
+[exp7303-validation:unit_consumers_e2e015_019] FAILED tests/python/test_guarded_transaction_8053.py::test_validation_and_acceptance_routes
+[exp7303-validation:unit_consumers_e2e015_019] 1 failed, 18 passed in 84.74s (0:01:24)
+[exp7303-validation] after_subprocess unit_consumers_e2e015_019 elapsed_s=89.757 exit=1 unit=1/8
+[exp7303-validation] before_subprocess coverage_combine elapsed_s=0.000 unit=2/8
+[exp7303-validation:coverage_combine] Combined 1 file
+[exp7303-validation] after_subprocess coverage_combine elapsed_s=0.052 exit=0 unit=2/8
+[exp7303-validation] before_subprocess coverage_report elapsed_s=0.000 unit=3/8
+[exp7303-validation:coverage_report] Name                                                                   Stmts   Miss  Cover   Missing
+[exp7303-validation:coverage_report] ----------------------------------------------------------------------------------------------------
+[exp7303-validation:coverage_report] python/carnot/experiment_8053_v697_guarded_transaction_cost.py           247      7    97%   304, 323, 333, 335, 534-535, 568
+[exp7303-validation:coverage_report] python/carnot/verify/guarded_transaction_8053.py                         269      0   100%
+[exp7303-validation:coverage_report] scripts/experiments/experiment_8053_v697_guarded_transaction_cost.py      10      0   100%
+[exp7303-validation:coverage_report] ----------------------------------------------------------------------------------------------------
+[exp7303-validation:coverage_report] TOTAL                                                                    526      7    99%
+[exp7303-validation:coverage_report] Coverage failure: total of 99 is less than fail-under=100
+[exp7303-validation] after_subprocess coverage_report elapsed_s=0.081 exit=2 unit=3/8
+[exp7303-validation] before_subprocess coverage_json elapsed_s=0.000 unit=4/8
+[exp7303-validation:coverage_json] Wrote JSON report to /tmp/carnot-8053-nzkw5_8f/coverage.json
+[exp7303-validation] after_subprocess coverage_json elapsed_s=0.091 exit=0 unit=4/8
+[exp7303-validation] before_subprocess ruff_check elapsed_s=0.000 unit=5/8
+[exp7303-validation:ruff_check] All checks passed!
+[exp7303-validation] after_subprocess ruff_check elapsed_s=0.013 exit=0 unit=5/8
+[exp7303-validation] before_subprocess ruff_format elapsed_s=0.000 unit=6/8
+[exp7303-validation:ruff_format] 4 files already formatted
+[exp7303-validation] after_subprocess ruff_format elapsed_s=0.011 exit=0 unit=6/8
+[exp7303-validation] before_subprocess strict_mypy elapsed_s=0.000 unit=7/8
+[exp7303-validation:strict_mypy] pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.inference.*', 'carnot.pipeline.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.pipeline.verify_repair', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl']
+[exp7303-validation:strict_mypy] Success: no issues found in 3 source files
+[exp7303-validation] after_subprocess strict_mypy elapsed_s=0.099 exit=0 unit=7/8
+[exp7303-validation] before_subprocess spec_coverage elapsed_s=0.000 unit=8/8
+[exp7303-validation:spec_coverage] OK: All tests reference specification requirements.
+[exp7303-validation] after_subprocess spec_coverage elapsed_s=0.017 exit=0 unit=8/8
+[exp8053] phase=measurement_before elapsed_s=104.715 completed=0 pending=0
+[exp8053] phase=parity_before elapsed_s=104.715 completed=0 pending=3960
+[exp8053] phase=parity_batch elapsed_s=116.448 completed=100 pending=3860
+[exp8053] phase=parity_batch elapsed_s=116.614 completed=200 pending=3760
+[exp8053] phase=parity_batch elapsed_s=116.780 completed=300 pending=3660
+[exp8053] phase=parity_batch elapsed_s=117.150 completed=400 pending=3560
+[exp8053] phase=parity_batch elapsed_s=117.317 completed=500 pending=3460
+[exp8053] phase=parity_batch elapsed_s=117.484 completed=600 pending=3360
+[exp8053] phase=parity_batch elapsed_s=117.651 completed=700 pending=3260
+[exp8053] phase=parity_batch elapsed_s=117.819 completed=800 pending=3160
+[exp8053] phase=parity_batch elapsed_s=117.987 completed=900 pending=3060
+[exp8053] phase=parity_batch elapsed_s=118.155 completed=1000 pending=2960
+[exp8053] phase=parity_batch elapsed_s=118.323 completed=1100 pending=2860
+[exp8053] phase=parity_batch elapsed_s=118.491 completed=1200 pending=2760
+[exp8053] phase=parity_batch elapsed_s=118.660 completed=1300 pending=2660
+[exp8053] phase=parity_batch elapsed_s=118.827 completed=1400 pending=2560
+[exp8053] phase=parity_batch elapsed_s=118.996 completed=1500 pending=2460
+[exp8053] phase=parity_batch elapsed_s=119.164 completed=1600 pending=2360
+[exp8053] phase=parity_batch elapsed_s=119.333 completed=1700 pending=2260
+[exp8053] phase=parity_batch elapsed_s=119.501 completed=1800 pending=2160
+[exp8053] phase=parity_batch elapsed_s=119.671 completed=1900 pending=2060
+[exp8053] phase=parity_batch elapsed_s=119.839 completed=2000 pending=1960
+[exp8053] phase=parity_batch elapsed_s=120.007 completed=2100 pending=1860
+[exp8053] phase=parity_batch elapsed_s=120.176 completed=2200 pending=1760
+[exp8053] phase=parity_batch elapsed_s=120.344 completed=2300 pending=1660
+[exp8053] phase=parity_batch elapsed_s=120.514 completed=2400 pending=1560
+[exp8053] phase=parity_batch elapsed_s=120.684 completed=2500 pending=1460
+[exp8053] phase=parity_batch elapsed_s=120.853 completed=2600 pending=1360
+[exp8053] phase=parity_batch elapsed_s=121.022 completed=2700 pending=1260
+[exp8053] phase=parity_batch elapsed_s=121.193 completed=2800 pending=1160
+[exp8053] phase=parity_batch elapsed_s=121.362 completed=2900 pending=1060
+[exp8053] phase=parity_batch elapsed_s=121.532 completed=3000 pending=960
+[exp8053] phase=parity_batch elapsed_s=121.702 completed=3100 pending=860
+[exp8053] phase=parity_batch elapsed_s=121.871 completed=3200 pending=760
+[exp8053] phase=parity_batch elapsed_s=122.041 completed=3300 pending=660
+[exp8053] phase=parity_batch elapsed_s=122.211 completed=3400 pending=560
+[exp8053] phase=parity_batch elapsed_s=122.382 completed=3500 pending=460
+[exp8053] phase=parity_batch elapsed_s=122.552 completed=3600 pending=360
+[exp8053] phase=parity_batch elapsed_s=122.722 completed=3700 pending=260
+[exp8053] phase=parity_batch elapsed_s=122.893 completed=3800 pending=160
+[exp8053] phase=parity_batch elapsed_s=123.063 completed=3900 pending=60
+[exp8053] phase=parity_after elapsed_s=123.249 completed=3960 pending=0
+[exp8027] phase=parity_before elapsed_s=123.468 completed=0 pending=256
+[exp8027] phase=parity_after elapsed_s=123.495 completed=256 pending=0
+[exp8053] phase=benchmark_before elapsed_s=123.280 completed=0 pending=280
+[exp8053] phase=benchmark_pair_after elapsed_s=126.834 completed=2 pending=278
+[exp8053] phase=benchmark_pair_after elapsed_s=130.382 completed=4 pending=276
+[exp8053] phase=benchmark_pair_after elapsed_s=132.918 completed=6 pending=274
+[exp8053] phase=benchmark_pair_after elapsed_s=136.413 completed=8 pending=272
+[exp8053] phase=benchmark_pair_after elapsed_s=141.857 completed=10 pending=270
+[exp8053] phase=benchmark_pair_after elapsed_s=144.862 completed=12 pending=268
+[exp8053] phase=benchmark_pair_after elapsed_s=150.047 completed=14 pending=266
+[exp8053] phase=benchmark_pair_after elapsed_s=153.734 completed=16 pending=264
+[exp8053] phase=benchmark_pair_after elapsed_s=156.702 completed=18 pending=262
+[exp8053] phase=benchmark_pair_after elapsed_s=160.296 completed=20 pending=260
+[exp8053] phase=benchmark_pair_after elapsed_s=163.132 completed=22 pending=258
+[exp8053] phase=benchmark_pair_after elapsed_s=166.746 completed=24 pending=256
+[exp8053] phase=benchmark_pair_after elapsed_s=171.084 completed=26 pending=254
+[exp8053] phase=benchmark_pair_after elapsed_s=176.504 completed=28 pending=252
+[exp8053] phase=benchmark_pair_after elapsed_s=180.071 completed=30 pending=250
+[exp8053] phase=benchmark_pair_after elapsed_s=184.876 completed=32 pending=248
+[exp8053] phase=benchmark_pair_after elapsed_s=190.322 completed=34 pending=246
+[exp8053] phase=benchmark_pair_after elapsed_s=195.519 completed=36 pending=244
+[exp8053] phase=benchmark_pair_after elapsed_s=198.794 completed=38 pending=242
+[exp8053] phase=benchmark_pair_after elapsed_s=203.795 completed=40 pending=240
+[exp8053] phase=benchmark_pair_after elapsed_s=207.570 completed=42 pending=238
+[exp8053] phase=benchmark_pair_after elapsed_s=212.006 completed=44 pending=236
+[exp8053] phase=benchmark_pair_after elapsed_s=216.671 completed=46 pending=234
+[exp8053] phase=benchmark_pair_after elapsed_s=219.598 completed=48 pending=232
+[exp8053] phase=benchmark_pair_after elapsed_s=224.248 completed=50 pending=230
+[exp8053] phase=benchmark_pair_after elapsed_s=228.606 completed=52 pending=228
+[exp8053] phase=benchmark_pair_after elapsed_s=232.008 completed=54 pending=226
+[exp8053] phase=benchmark_pair_after elapsed_s=236.559 completed=56 pending=224
+[exp8053] phase=benchmark_pair_after elapsed_s=240.150 completed=58 pending=222
+[exp8053] phase=benchmark_pair_after elapsed_s=244.837 completed=60 pending=220
+[exp8053] phase=benchmark_pair_after elapsed_s=247.742 completed=62 pending=218
+[exp8053] phase=benchmark_pair_after elapsed_s=252.317 completed=64 pending=216
+[exp8053] phase=benchmark_pair_after elapsed_s=255.900 completed=66 pending=214
+[exp8053] phase=benchmark_pair_after elapsed_s=259.435 completed=68 pending=212
+[exp8053] phase=benchmark_pair_after elapsed_s=263.297 completed=70 pending=210
+[exp8053] phase=benchmark_pair_after elapsed_s=264.165 completed=72 pending=208
+[exp8053] phase=benchmark_pair_after elapsed_s=266.606 completed=74 pending=206
+[exp8053] phase=benchmark_pair_after elapsed_s=267.266 completed=76 pending=204
+[exp8053] phase=benchmark_pair_after elapsed_s=272.279 completed=78 pending=202
+[exp8053] phase=benchmark_pair_after elapsed_s=273.506 completed=80 pending=200
+[exp8053] phase=benchmark_pair_after elapsed_s=274.892 completed=82 pending=198
+[exp8053] phase=benchmark_pair_after elapsed_s=277.277 completed=84 pending=196
+[exp8053] phase=benchmark_pair_after elapsed_s=277.723 completed=86 pending=194
+[exp8053] phase=benchmark_pair_after elapsed_s=278.605 completed=88 pending=192
+[exp8053] phase=benchmark_pair_after elapsed_s=281.070 completed=90 pending=190
+[exp8053] phase=benchmark_pair_after elapsed_s=281.746 completed=92 pending=188
+[exp8053] phase=benchmark_pair_after elapsed_s=286.994 completed=94 pending=186
+[exp8053] phase=benchmark_pair_after elapsed_s=289.472 completed=96 pending=184
+[exp8053] phase=benchmark_pair_after elapsed_s=289.911 completed=98 pending=182
+[exp8053] phase=benchmark_pair_after elapsed_s=291.315 completed=100 pending=180
+[exp8053] phase=benchmark_pair_after elapsed_s=296.078 completed=102 pending=178
+[exp8053] phase=benchmark_pair_after elapsed_s=297.552 completed=104 pending=176
+[exp8053] phase=benchmark_pair_after elapsed_s=299.511 completed=106 pending=174
+[exp8053] phase=benchmark_pair_after elapsed_s=301.834 completed=108 pending=172
+[exp8053] phase=benchmark_pair_after elapsed_s=303.685 completed=110 pending=170
+[exp8053] phase=benchmark_pair_after elapsed_s=308.911 completed=112 pending=168
+[exp8053] phase=benchmark_pair_after elapsed_s=310.247 completed=114 pending=166
+[exp8053] phase=benchmark_pair_after elapsed_s=310.966 completed=116 pending=164
+[exp8053] phase=benchmark_pair_after elapsed_s=313.148 completed=118 pending=162
+[exp8053] phase=benchmark_pair_after elapsed_s=314.022 completed=120 pending=160
+[exp8053] phase=benchmark_pair_after elapsed_s=316.425 completed=122 pending=158
+[exp8053] phase=benchmark_pair_after elapsed_s=318.919 completed=124 pending=156
+[exp8053] phase=benchmark_pair_after elapsed_s=320.108 completed=126 pending=154
+[exp8053] phase=benchmark_pair_after elapsed_s=321.343 completed=128 pending=152
+[exp8053] phase=benchmark_pair_after elapsed_s=323.701 completed=130 pending=150
+[exp8053] phase=benchmark_pair_after elapsed_s=323.771 completed=132 pending=148
+[exp8053] phase=benchmark_pair_after elapsed_s=325.326 completed=134 pending=146
+[exp8053] phase=benchmark_pair_after elapsed_s=326.152 completed=136 pending=144
+[exp8053] phase=benchmark_pair_after elapsed_s=328.582 completed=138 pending=142
+[exp8053] phase=benchmark_pair_after elapsed_s=333.707 completed=140 pending=140
+[exp8053] phase=benchmark_pair_after elapsed_s=334.210 completed=142 pending=138
+[exp8053] phase=benchmark_pair_after elapsed_s=334.814 completed=144 pending=136
+[exp8053] phase=benchmark_pair_after elapsed_s=335.468 completed=146 pending=134
+[exp8053] phase=benchmark_pair_after elapsed_s=335.974 completed=148 pending=132
+[exp8053] phase=benchmark_pair_after elapsed_s=336.476 completed=150 pending=130
+[exp8053] phase=benchmark_pair_after elapsed_s=336.982 completed=152 pending=128
+[exp8053] phase=benchmark_pair_after elapsed_s=337.680 completed=154 pending=126
+[exp8053] phase=benchmark_pair_after elapsed_s=338.685 completed=156 pending=124
+[exp8053] phase=benchmark_pair_after elapsed_s=339.691 completed=158 pending=122
+[exp8053] phase=benchmark_pair_after elapsed_s=340.345 completed=160 pending=120
+[exp8053] phase=benchmark_pair_after elapsed_s=340.997 completed=162 pending=118
+[exp8053] phase=benchmark_pair_after elapsed_s=341.540 completed=164 pending=116
+[exp8053] phase=benchmark_pair_after elapsed_s=342.043 completed=166 pending=114
+[exp8053] phase=benchmark_pair_after elapsed_s=342.550 completed=168 pending=112
+[exp8053] phase=benchmark_pair_after elapsed_s=343.058 completed=170 pending=110
+[exp8053] phase=benchmark_pair_after elapsed_s=343.762 completed=172 pending=108
+[exp8053] phase=benchmark_pair_after elapsed_s=344.467 completed=174 pending=106
+[exp8053] phase=benchmark_pair_after elapsed_s=344.975 completed=176 pending=104
+[exp8053] phase=benchmark_pair_after elapsed_s=345.621 completed=178 pending=102
+[exp8053] phase=benchmark_pair_after elapsed_s=346.426 completed=180 pending=100
+[exp8053] phase=benchmark_pair_after elapsed_s=347.129 completed=182 pending=98
+[exp8053] phase=benchmark_pair_after elapsed_s=347.627 completed=184 pending=96
+[exp8053] phase=benchmark_pair_after elapsed_s=348.133 completed=186 pending=94
+[exp8053] phase=benchmark_pair_after elapsed_s=348.939 completed=188 pending=92
+[exp8053] phase=benchmark_pair_after elapsed_s=349.596 completed=190 pending=90
+[exp8053] phase=benchmark_pair_after elapsed_s=350.099 completed=192 pending=88
+[exp8053] phase=benchmark_pair_after elapsed_s=350.602 completed=194 pending=86
+[exp8053] phase=benchmark_pair_after elapsed_s=351.111 completed=196 pending=84
+[exp8053] phase=benchmark_pair_after elapsed_s=351.807 completed=198 pending=82
+[exp8053] phase=benchmark_pair_after elapsed_s=352.308 completed=200 pending=80
+[exp8053] phase=benchmark_pair_after elapsed_s=352.809 completed=202 pending=78
+[exp8053] phase=benchmark_pair_after elapsed_s=353.310 completed=204 pending=76
+[exp8053] phase=benchmark_pair_after elapsed_s=353.813 completed=206 pending=74
+[exp8053] phase=benchmark_pair_after elapsed_s=354.318 completed=208 pending=72
+[exp8053] phase=benchmark_pair_after elapsed_s=354.826 completed=210 pending=70
+[exp8053] phase=benchmark_pair_after elapsed_s=356.755 completed=212 pending=68
+[exp8053] phase=benchmark_pair_after elapsed_s=360.270 completed=214 pending=66
+[exp8053] phase=benchmark_pair_after elapsed_s=365.097 completed=216 pending=64
+[exp8053] phase=benchmark_pair_after elapsed_s=369.939 completed=218 pending=62
+[exp8053] phase=benchmark_pair_after elapsed_s=371.562 completed=220 pending=60
+[exp8053] phase=benchmark_pair_after elapsed_s=372.456 completed=222 pending=58
+[exp8053] phase=benchmark_pair_after elapsed_s=377.123 completed=224 pending=56
+[exp8053] phase=benchmark_pair_after elapsed_s=382.292 completed=226 pending=54
+[exp8053] phase=benchmark_pair_after elapsed_s=383.261 completed=228 pending=52
+[exp8053] phase=benchmark_pair_after elapsed_s=388.074 completed=230 pending=50
+[exp8053] phase=benchmark_pair_after elapsed_s=389.297 completed=232 pending=48
+[exp8053] phase=benchmark_pair_after elapsed_s=390.253 completed=234 pending=46
+[exp8053] phase=benchmark_pair_after elapsed_s=395.649 completed=236 pending=44
+[exp8053] phase=benchmark_pair_after elapsed_s=400.099 completed=238 pending=42
+[exp8053] phase=benchmark_pair_after elapsed_s=402.600 completed=240 pending=40
+[exp8053] phase=benchmark_pair_after elapsed_s=403.997 completed=242 pending=38
+[exp8053] phase=benchmark_pair_after elapsed_s=407.498 completed=244 pending=36
+[exp8053] phase=benchmark_pair_after elapsed_s=410.944 completed=246 pending=34

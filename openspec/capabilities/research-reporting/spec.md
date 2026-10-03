@@ -90925,6 +90925,57 @@ The thin script fixes task-local CPU thread settings before numerical imports.
 malformed binding, storage, missing operands and private terminal CLI paths.
 The task primary and terminal sidecar record final measured costs and validation.
 
+## REQ-REPORT-8056: Reduce V697 without transferring administrative credit
+
+Bind the exact Exp8044–Exp8056 thirteen-task invocation, full task digest and
+immutable YAML before reducing evidence. Read actual primaries, byte-bound terminal
+sidecars and actual conductor skip receipts. Absent cascade artifacts stay absent.
+Freeze methods, code, inputs, exclusions and bounded validation commands. Preserve
+original failures and primitive rows in task raw storage with shards below90MB.
+
+### SCENARIO-REPORT-8056-CUSTODY
+
+Check named files, Python and tooling first with flushed progress. Missing operands
+produce complete_blocked_<resource> and exact gates. Reject changed authority,
+producer code, seals, targets, raw hashes or failed owned validation. Authenticate
+prior failures; repeated substantive failures retire their mechanism even when the
+verdict spelling changes. Record concrete changed prerequisites for reopening.
+
+### SCENARIO-REPORT-8056-SCIENCE
+
+Reconstruct available H1/H2 from token shards, frozen heads and human targets, and
+H3 from public inputs, releases, independent gradients, guards and committed heads.
+Absent or unqualified source artifacts give no invented estimate. H3 compares
+constrained against unconstrained on later update-role slots; keep chronological
+masks and average seeds inside sources. Use margins.01/.02/.02,10000 source-group
+or moving-block32 draws, sensitivity16/64 and one-sided Holm.05. Unqualified,
+absent or unsafe hypotheses receive family p=1. Carry all retention and false-accept
+operands. Decide FR-06/12, FR-11 and FR-05/08/09/10/NFR-01 independently. Exposed
+development, ARC nulls and board custody grant no generalized science credit.
+
+### SCENARIO-REPORT-8056-TERMINAL
+
+Write traced failing tests first. Require owned unit/consumer/E2E-018 checks,
+scoped Ruff, strict mypy, actual-path spec coverage and100% new statement coverage
+including real CLI valid/null/blocked/missing/tampered normal exits. Run one bounded
+full Python health diagnostic separately and preserve unrelated failures. Independently
+cold-reduce durable inputs in a fresh process; validate candidate and published bytes
+with both artifact linters and existing primary publication consumers. Retain argv,
+exits, hashes, durable logs and a terminal sidecar. A qualified reader can score1
+while external absent/disqualified science remains terminal blocked. A qualified
+scientific negative is null. Run historical publication_gate separately. Use no model
+load and zero pretrained calls. Preserve production defaults and external publication
+policy. The conductor owns ops/status, ops/changelog and traceability reconciliation.
+
+REQ-REPORT-8056 implementation: `reporting/v697_capstone.py` binds the immutable
+invocation, preserves actual absent/skip dispositions and publishes checked bytes.
+`reporting/v697_capstone_reduction.py` rebuilds learning and paired transaction
+operands with shipped independent audit equations. The thin Exp8056 script and
+`tests/python/test_experiment_8056_v697_capstone.py` cover custody, shard integrity,
+margin/safety decisions, scoped retirements and private CLI terminal routes.
+`docs/research-notes/v697-outcomes.md` records all thirteen dispositions, exact
+safety failures, missing costs and the changed prerequisites for reopening.
+
 ## REQ-REPORT-8055: Preserve board custody and bound guarded hardware decisions
 
 Freeze the current input, code, method and bounded validation identities before

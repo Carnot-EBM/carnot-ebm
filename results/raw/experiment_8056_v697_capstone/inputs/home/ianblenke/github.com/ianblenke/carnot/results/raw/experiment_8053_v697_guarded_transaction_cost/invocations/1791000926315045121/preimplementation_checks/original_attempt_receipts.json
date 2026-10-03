@@ -1,0 +1,44 @@
+{
+  "task_id": "exp8053-guarded-transaction-cost",
+  "attempts": [
+    {
+      "log_path": "/tmp/carnot-8053-first/tests-first.log",
+      "expected_exit_code": 2,
+      "actual_exit_code": 2
+    },
+    {
+      "log_path": "/tmp/carnot-8053-first/implementation-tests.log",
+      "expected_exit_code": 0,
+      "actual_exit_code": 1
+    },
+    {
+      "log_path": "/tmp/carnot-8053-first/coverage-tests.log",
+      "expected_exit_code": 0,
+      "actual_exit_code": 134
+    },
+    {
+      "log_path": "/tmp/carnot-8053-first/coverage-tests-include.log",
+      "expected_exit_code": 0,
+      "actual_exit_code": 143
+    },
+    {
+      "log_path": "/tmp/carnot-8053-first/coverage-tests-final.log",
+      "expected_exit_code": 0,
+      "actual_exit_code": 1
+    },
+    {
+      "log_path": "/tmp/carnot-8053-first/coverage-tests-fixed.log",
+      "expected_exit_code": 0,
+      "actual_exit_code": 0
+    },
+    {
+      "log_path": "/tmp/carnot-8053-first/coverage-tests-acceptance.log",
+      "expected_exit_code": 0,
+      "actual_exit_code": 0
+    }
+  ],
+  "metadata_probe_failure": {
+    "actual_exit_code": 1,
+    "error": "SyntaxError in throwaway metadata import; no artifact was written"
+  }
+}

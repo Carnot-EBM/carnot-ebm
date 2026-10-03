@@ -1,0 +1,164 @@
+...FF                                                                    [100%]
+=================================== FAILURES ===================================
+___________________ test_natural_parity_and_boundary_guards ____________________
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261003T034414-1706342-3213041d/test_natural_parity_and_bounda0')
+native = <module 'carnot._rust' from '/tmp/pytest-carnot-ianblenke/20261003T034414-1706342-3213041d/test_natural_parity_and_bounda0/extension/_rust.cpython-312-x86_64-linux-gnu.so'>
+data = {'cases': [{'arm': 'unconstrained', 'before': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, ...], 'class': 'accepted', 'delta': [0.0,...on-312-x86_64-linux-gnu.so', 'sha256': 'sha256:ee1e82d2891e735fa7824228a3e98f474ca43cf5cc114b89c3c6e4d460e89170'}, ...}
+
+    def test_natural_parity_and_boundary_guards(tmp_path, native, data):
+        """SCENARIO-REPORT-8053-PARITY: every original candidate and action threshold agree."""
+        current, failures = e.load_inputs(e.ROOT, tmp_path / "custody")
+        assert not failures
+>       assert m.parity(current, native, tmp_path / "parity")["parity_passed"]
+E       assert False
+
+tests/python/test_guarded_transaction_8053.py:90: AssertionError
+---------------------------- Captured stdout setup -----------------------------
+[exp8040] phase=native_library_load_before elapsed_s=19.091 completed=0 pending=0
+[exp8040] phase=native_library_load_after elapsed_s=19.095 completed=0 pending=0
+----------------------------- Captured stdout call -----------------------------
+[exp8053] phase=qualified_small_head_load_before elapsed_s=19.375 completed=0 pending=0
+[exp8053] phase=qualified_small_head_load_after elapsed_s=20.929 completed=3960 pending=0
+[exp8053] phase=parity_before elapsed_s=20.940 completed=0 pending=3960
+[exp8053] phase=parity_batch elapsed_s=39.391 completed=100 pending=3860
+[exp8053] phase=parity_batch elapsed_s=39.583 completed=200 pending=3760
+[exp8053] phase=parity_batch elapsed_s=39.775 completed=300 pending=3660
+[exp8053] phase=parity_batch elapsed_s=39.967 completed=400 pending=3560
+[exp8053] phase=parity_batch elapsed_s=40.159 completed=500 pending=3460
+[exp8053] phase=parity_batch elapsed_s=40.352 completed=600 pending=3360
+[exp8053] phase=parity_batch elapsed_s=40.545 completed=700 pending=3260
+[exp8053] phase=parity_batch elapsed_s=40.738 completed=800 pending=3160
+[exp8053] phase=parity_batch elapsed_s=40.931 completed=900 pending=3060
+[exp8053] phase=parity_batch elapsed_s=41.125 completed=1000 pending=2960
+[exp8053] phase=parity_batch elapsed_s=41.319 completed=1100 pending=2860
+[exp8053] phase=parity_batch elapsed_s=41.513 completed=1200 pending=2760
+[exp8053] phase=parity_batch elapsed_s=41.707 completed=1300 pending=2660
+[exp8053] phase=parity_batch elapsed_s=41.902 completed=1400 pending=2560
+[exp8053] phase=parity_batch elapsed_s=42.097 completed=1500 pending=2460
+[exp8053] phase=parity_batch elapsed_s=42.293 completed=1600 pending=2360
+[exp8053] phase=parity_batch elapsed_s=42.490 completed=1700 pending=2260
+[exp8053] phase=parity_batch elapsed_s=42.685 completed=1800 pending=2160
+[exp8053] phase=parity_batch elapsed_s=42.883 completed=1900 pending=2060
+[exp8053] phase=parity_batch elapsed_s=43.078 completed=2000 pending=1960
+[exp8053] phase=parity_batch elapsed_s=43.273 completed=2100 pending=1860
+[exp8053] phase=parity_batch elapsed_s=43.468 completed=2200 pending=1760
+[exp8053] phase=parity_batch elapsed_s=43.665 completed=2300 pending=1660
+[exp8053] phase=parity_batch elapsed_s=43.862 completed=2400 pending=1560
+[exp8053] phase=parity_batch elapsed_s=44.058 completed=2500 pending=1460
+[exp8053] phase=parity_batch elapsed_s=44.255 completed=2600 pending=1360
+[exp8053] phase=parity_batch elapsed_s=44.453 completed=2700 pending=1260
+[exp8053] phase=parity_batch elapsed_s=44.650 completed=2800 pending=1160
+[exp8053] phase=parity_batch elapsed_s=44.849 completed=2900 pending=1060
+[exp8053] phase=parity_batch elapsed_s=45.048 completed=3000 pending=960
+[exp8053] phase=parity_batch elapsed_s=45.247 completed=3100 pending=860
+[exp8053] phase=parity_batch elapsed_s=45.444 completed=3200 pending=760
+[exp8053] phase=parity_batch elapsed_s=45.643 completed=3300 pending=660
+[exp8053] phase=parity_batch elapsed_s=45.842 completed=3400 pending=560
+[exp8053] phase=parity_batch elapsed_s=46.040 completed=3500 pending=460
+[exp8053] phase=parity_batch elapsed_s=46.238 completed=3600 pending=360
+[exp8053] phase=parity_batch elapsed_s=46.437 completed=3700 pending=260
+[exp8053] phase=parity_batch elapsed_s=46.637 completed=3800 pending=160
+[exp8053] phase=parity_batch elapsed_s=46.836 completed=3900 pending=60
+[exp8053] phase=parity_after elapsed_s=47.362 completed=3960 pending=0
+____________________ test_validation_and_acceptance_routes _____________________
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261003T034414-1706342-3213041d/test_validation_and_acceptance0')
+data = {'cases': [{'arm': 'unconstrained', 'before': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, ...], 'class': 'accepted', 'delta': [0.0,...on-312-x86_64-linux-gnu.so', 'sha256': 'sha256:ee1e82d2891e735fa7824228a3e98f474ca43cf5cc114b89c3c6e4d460e89170'}, ...}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f6a44683950>
+
+    def test_validation_and_acceptance_routes(tmp_path, data, monkeypatch):
+        """SCENARIO-REPORT-8053-TERMINAL: owned failures cannot grant numerical readiness."""
+        plan = e.validation_plan(tmp_path)
+        assert any(c.name == "repository_health" and c.timeout_s <= 120 for c in plan)
+        assert all(c.timeout_s <= 300 for c in plan)
+        coverage = {p: dict(summary=dict(num_statements=1, missing_lines=0)) for p in e.OWNED}
+        e.atomic_json(tmp_path / "coverage.json", dict(files=coverage))
+        monkeypatch.setattr(
+            e,
+            "run_commands",
+            lambda *a, **k: [
+                dict(scope="owned", passed=True),
+                dict(scope="repository_health", passed=False),
+            ],
+        )
+        receipts, counts, health = e.validate(tmp_path / "logs", tmp_path)
+        assert receipts[0]["passed"] and counts and not health[0]["passed"]
+        monkeypatch.setattr(e, "load_inputs", lambda *a: (data, []))
+        monkeypatch.setattr(e, "validate", lambda *a: (receipts, counts, health))
+        monkeypatch.setitem(m.CONFIG, "warmups", 0)
+        monkeypatch.setitem(m.CONFIG, "repetitions", 1)
+        output = tmp_path / "qualified" / (e.NAME + ".json")
+>       assert e.main(["--output", str(output)]) == 0
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_guarded_transaction_8053.py:148: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/experiment_8053_v697_guarded_transaction_cost.py:586: in main
+    publication = publish_primary(output, v, terminal)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+output = PosixPath('/tmp/pytest-carnot-ianblenke/20261003T034414-1706342-3213041d/test_validation_and_acceptance0/qualified/experiment_8053_v697_guarded_transaction_cost.json')
+value = {'MODEL_SPECS': [], 'acceptance_gate_results': {'measurement': True, 'owned_checks': True, 'parity': True, 'regression...ch/effective/state_json; policy arithmetic and serialization remain Python and are charged.', 'censored_count': 0, ...}
+validator = <function terminal at 0x7f6a446fc720>
+
+    def publish_primary(
+        output: Path, value: Mapping[str, Any], validator: Callable[[Path], dict[str, Any]]
+    ) -> dict[str, Any]:
+        """Validate a locked candidate and replace only its checked bytes atomically.
+    
+        Validator reports use hash-specific paths so an older reader can detect a
+        replaced primary. Historical siblings cause rejection and remain untouched.
+        """
+        output = output.absolute()
+        validate_primary(value, output)
+        raw = output.parent / "raw" / output.stem
+        raw.mkdir(parents=True, exist_ok=True)
+        with (raw / "publication.lock").open("a") as lock:
+            fcntl.flock(lock, fcntl.LOCK_EX)
+            siblings = list(output.parent.glob(f"experiment_{value['experiment_id']}_*.json"))
+            if any(path != output for path in siblings):
+                raise ValueError("conflicting_primary")
+            if output.exists():
+                old = json.loads(output.read_text())
+                if (old.get("experiment_id"), old.get("task_id")) != (
+                    value["experiment_id"],
+                    value["task_id"],
+                ):
+                    raise ValueError("conflicting_identity")
+            candidate = raw / "terminal_candidate.json"
+            atomic_json(candidate, value)
+            digest = sha256_file(candidate)
+            report = validator(candidate)
+            if report.get("passed") is not True:
+>               raise ValueError("candidate_rejected")
+E               ValueError: candidate_rejected
+
+python/carnot/reporting/primary_publication.py:73: ValueError
+----------------------------- Captured stdout call -----------------------------
+[exp8053] phase=start_preconditions elapsed_s=47.476 completed=0 pending=0
+[exp8053] phase=freeze_after elapsed_s=47.488 completed=0 pending=0
+[exp7303-validation] before_subprocess mapped_inode_regression elapsed_s=0.000 unit=1/1
+[exp7303-validation:mapped_inode_regression] ..                                                                       [100%]
+[exp7303-validation:mapped_inode_regression] 2 passed in 2.89s
+[exp7303-validation] after_subprocess mapped_inode_regression elapsed_s=6.357 exit=0 unit=1/1
+[exp8040] phase=native_library_load_before elapsed_s=54.096 completed=0 pending=0
+[exp8040] phase=native_library_load_after elapsed_s=54.101 completed=0 pending=0
+[exp8053] phase=measurement_before elapsed_s=53.908 completed=0 pending=0
+[exp8053] phase=parity_before elapsed_s=53.908 completed=0 pending=4
+[exp8053] phase=parity_after elapsed_s=53.918 completed=4 pending=0
+[exp8027] phase=parity_before elapsed_s=54.165 completed=0 pending=256
+[exp8027] phase=parity_after elapsed_s=54.237 completed=256 pending=0
+[exp8053] phase=benchmark_before elapsed_s=53.992 completed=0 pending=8
+[exp8053] phase=benchmark_pair_after elapsed_s=54.000 completed=2 pending=6
+[exp8053] phase=benchmark_pair_after elapsed_s=54.008 completed=4 pending=4
+[exp8053] phase=benchmark_pair_after elapsed_s=54.015 completed=6 pending=2
+[exp8053] phase=benchmark_pair_after elapsed_s=54.023 completed=8 pending=0
+[exp8053] phase=benchmark_after elapsed_s=54.032 completed=8 pending=0
+[exp8053] phase=measurement_after elapsed_s=54.032 completed=8 pending=0
+[exp8053] phase=publication_before elapsed_s=54.040 completed=0 pending=0
+=========================== short test summary info ============================
+FAILED tests/python/test_guarded_transaction_8053.py::test_natural_parity_and_boundary_guards
+FAILED tests/python/test_guarded_transaction_8053.py::test_validation_and_acceptance_routes
+2 failed, 3 passed in 58.39s

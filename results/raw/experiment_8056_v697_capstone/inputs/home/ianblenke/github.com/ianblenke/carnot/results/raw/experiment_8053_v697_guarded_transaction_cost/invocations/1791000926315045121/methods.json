@@ -1,0 +1,214 @@
+{
+  "acquisition": "Optional named Qwen phase receipts absent; no cost imported",
+  "artifact_guard_enabled": true,
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "run",
+        "--data-file=/tmp/carnot-8053-xiewwb4q/.coverage",
+        "--rcfile=/tmp/carnot-8053-xiewwb4q/coverage.ini",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-8053-xiewwb4q/pytest",
+        "tests/python/test_guarded_transaction_8053.py",
+        "tests/python/test_primary_publication_7928.py",
+        "-q"
+      ],
+      "name": "unit_consumers_e2e015_019",
+      "scope": "owned",
+      "timeout_s": 300
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--data-file=/tmp/carnot-8053-xiewwb4q/.coverage",
+        "/tmp/carnot-8053-xiewwb4q"
+      ],
+      "name": "coverage_combine",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/carnot-8053-xiewwb4q/.coverage",
+        "--fail-under=100",
+        "--show-missing"
+      ],
+      "name": "coverage_report",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "json",
+        "--data-file=/tmp/carnot-8053-xiewwb4q/.coverage",
+        "-o",
+        "/tmp/carnot-8053-xiewwb4q/coverage.json"
+      ],
+      "name": "coverage_json",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_8053_v697_guarded_transaction_cost.py",
+        "scripts/experiments/experiment_8053_v697_guarded_transaction_cost.py",
+        "tests/python/test_guarded_transaction_8053.py",
+        "python/carnot/verify/guarded_transaction_8053.py"
+      ],
+      "name": "ruff_check",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_8053_v697_guarded_transaction_cost.py",
+        "scripts/experiments/experiment_8053_v697_guarded_transaction_cost.py",
+        "tests/python/test_guarded_transaction_8053.py",
+        "python/carnot/verify/guarded_transaction_8053.py"
+      ],
+      "name": "ruff_format",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "--follow-imports=silent",
+        "python/carnot/experiment_8053_v697_guarded_transaction_cost.py",
+        "scripts/experiments/experiment_8053_v697_guarded_transaction_cost.py",
+        "python/carnot/verify/guarded_transaction_8053.py"
+      ],
+      "name": "strict_mypy",
+      "scope": "owned",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_guarded_transaction_8053.py"
+      ],
+      "name": "spec_coverage",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q"
+      ],
+      "name": "repository_health",
+      "scope": "repository_health",
+      "timeout_s": 120
+    }
+  ],
+  "config": {
+    "budget_s": 600,
+    "disk": "SQLite synchronous FULL; fsynced atomic JSON checkpoint; directory fsync",
+    "draws": 10000,
+    "interval": "paired percentile bootstrap; repeats and seeds are not independent n",
+    "memory": "same complete released update and guard pools",
+    "repetitions": 30,
+    "scaling_sizes": [
+      1,
+      4,
+      16
+    ],
+    "seed": 8053,
+    "statistic": "ratio of summed paired elapsed times",
+    "thread_limit": 1,
+    "tolerance": 1e-10,
+    "warmups": 5
+  },
+  "fixture": false,
+  "guard": {
+    "alphas": [
+      1,
+      0.5,
+      0.25,
+      0.125,
+      0
+    ],
+    "baseline": "frozen initial calibrated head",
+    "constrained": "largest admissible alpha; none restores frozen head",
+    "guarantee": "empirical guard only",
+    "predicates": [
+      "mean Brier nonincrease",
+      "mean typed cost nonincrease",
+      "no new row false accept"
+    ],
+    "rows": "ALL released guard rows",
+    "tolerance": 1e-12,
+    "unconstrained": "compute identical diagnostics; commit alpha1"
+  },
+  "identity": "exp8053-guarded-transaction-cost",
+  "measured_boundary": "Cached public features and released feedback through all guard decisions, synchronous journal/checkpoint and restart. No LLM or external feedback-provider request is measured.",
+  "model_loads": 0,
+  "optimizer": {
+    "benefit_gate": "descriptive only; no retention or generalization qualification",
+    "block": 16,
+    "costs": {
+      "escalate": 0.5,
+      "supported_reject": 1,
+      "unsupported_accept": 5
+    },
+    "delay": 20,
+    "l2": 0.001,
+    "learning_rate": 0.01,
+    "maximum_updates": 64,
+    "periodic": [
+      0,
+      4,
+      8,
+      12
+    ],
+    "primary_seed": 17,
+    "priority": "issued loss; seeded hash ties",
+    "retention_labels_opened": false,
+    "seeds": [
+      101,
+      102,
+      103,
+      104,
+      105,
+      106,
+      107,
+      108,
+      109,
+      110,
+      111,
+      112,
+      113,
+      114,
+      115,
+      116,
+      117,
+      118,
+      119,
+      120
+    ],
+    "slots": 256,
+    "terminal_flush": false,
+    "updates_per_block": 4
+  }
+}

@@ -1,0 +1,105 @@
+......F...                                                               [100%]
+=================================== FAILURES ===================================
+_______________________ test_resource_and_code_failures ________________________
+
+tmp_path = PosixPath('/tmp/exp8056-owned-2t_4l8m4/tests/test_resource_and_code_failure0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7faa2e90b9b0>
+
+    def test_resource_and_code_failures(tmp_path, monkeypatch):
+        """SCENARIO-REPORT-8056-CUSTODY: unknown authority and stale code fail closed."""
+        missing = cap.build(tmp_path, "20261003", tmp_path / "missing_raw")
+        assert missing["honest_verdict"] == "complete_blocked_immutable_authority"
+        assert missing["gate_check_summary"]
+        fixture(tmp_path)
+        v = cap.build(tmp_path, "20261003", tmp_path / "raw")
+        toy = tmp_path / "toy.py"
+        toy.write_text("x=1\n")
+        ref = cap.save(dict(path=str(toy), role="current_code"), tmp_path / "raw")
+        v["code_config_hashes"].append(ref)
+        cap.seal(v, tmp_path / "raw")
+        toy.write_text("x=2\n")
+        assert cap.cold_replay(v) == ["code_configuration_changed"]
+        huge = tmp_path / "huge"
+        with huge.open("wb") as stream:
+            stream.truncate(90_000_000)
+        sharded = cap.save(dict(path=str(huge)), tmp_path / "raw")
+        manifest = json.loads(Path(sharded["path"]).read_text())
+        assert manifest["original_sha256"] == sha256_file(huge)
+        assert sum(Path(r["path"]).stat().st_size for r in manifest["shards"]) == 90_000_000
+        assert all(Path(r["path"]).stat().st_size < 90_000_000 for r in manifest["shards"])
+        v["source_artifact_hashes"].append(sharded)
+        v["code_config_hashes"].pop()
+        cap.seal(v, tmp_path / "raw")
+>       assert cap.cold_replay(v) == []
+E       AssertionError: assert ['source_bytes_changed'] == []
+E         
+E         Left contains one more item: 'source_bytes_changed'
+E         Use -v to get more diff
+
+tests/python/test_experiment_8056_v697_capstone.py:206: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8056] phase=preconditions_before elapsed_s=10.192 completed_units=0 pending=named inputs and Python tools
+[exp8056] phase=preconditions_after elapsed_s=10.192 completed_units=23 pending=immutable authority
+[exp8056] phase=freeze_before elapsed_s=10.192 completed_units=0 pending=methods, identities and code
+[exp8056] phase=freeze_after elapsed_s=11.633 completed_units=0 pending=primitive reduction
+[exp8056] phase=preconditions_before elapsed_s=11.717 completed_units=0 pending=named inputs and Python tools
+[exp8056] phase=preconditions_after elapsed_s=11.718 completed_units=23 pending=immutable authority
+[exp8056] phase=freeze_before elapsed_s=11.802 completed_units=0 pending=methods, identities and code
+[exp8056] phase=freeze_after elapsed_s=13.272 completed_units=13 pending=primitive reduction
+[exp8017] phase=task_reduced elapsed_s=13.329 completed_units=1 pending=11
+[exp8017] phase=task_reduced elapsed_s=13.329 completed_units=2 pending=10
+[exp8017] phase=task_reduced elapsed_s=13.329 completed_units=3 pending=9
+[exp8017] phase=task_reduced elapsed_s=13.330 completed_units=4 pending=8
+[exp8017] phase=task_reduced elapsed_s=13.330 completed_units=5 pending=7
+[exp8017] phase=task_reduced elapsed_s=13.330 completed_units=6 pending=6
+[exp8017] phase=task_reduced elapsed_s=13.330 completed_units=7 pending=5
+[exp8017] phase=task_reduced elapsed_s=13.330 completed_units=8 pending=4
+[exp8017] phase=task_reduced elapsed_s=13.330 completed_units=9 pending=3
+[exp8017] phase=task_reduced elapsed_s=13.330 completed_units=10 pending=2
+[exp8017] phase=task_reduced elapsed_s=13.330 completed_units=11 pending=1
+[exp8017] phase=task_reduced elapsed_s=13.330 completed_units=12 pending=0
+[exp8030] phase=independent_task_reduced elapsed_s=13.312 completed_units=1 pending=11
+[exp8030] phase=independent_task_reduced elapsed_s=13.312 completed_units=2 pending=10
+[exp8030] phase=independent_task_reduced elapsed_s=13.312 completed_units=3 pending=9
+[exp8030] phase=independent_task_reduced elapsed_s=13.312 completed_units=4 pending=8
+[exp8030] phase=independent_task_reduced elapsed_s=13.312 completed_units=5 pending=7
+[exp8030] phase=independent_task_reduced elapsed_s=13.312 completed_units=6 pending=6
+[exp8030] phase=independent_task_reduced elapsed_s=13.312 completed_units=7 pending=5
+[exp8030] phase=independent_task_reduced elapsed_s=13.312 completed_units=8 pending=4
+[exp8030] phase=independent_task_reduced elapsed_s=13.312 completed_units=9 pending=3
+[exp8030] phase=independent_task_reduced elapsed_s=13.312 completed_units=10 pending=2
+[exp8030] phase=independent_task_reduced elapsed_s=13.312 completed_units=11 pending=1
+[exp8030] phase=independent_task_reduced elapsed_s=13.312 completed_units=12 pending=0
+[exp8043] phase=independent_task_reduced elapsed_s=13.285 completed_units=1 pending=11
+[exp8043] phase=independent_task_reduced elapsed_s=13.285 completed_units=2 pending=10
+[exp8043] phase=independent_task_reduced elapsed_s=13.285 completed_units=3 pending=9
+[exp8043] phase=independent_task_reduced elapsed_s=13.285 completed_units=4 pending=8
+[exp8043] phase=independent_task_reduced elapsed_s=13.285 completed_units=5 pending=7
+[exp8043] phase=independent_task_reduced elapsed_s=13.285 completed_units=6 pending=6
+[exp8043] phase=independent_task_reduced elapsed_s=13.285 completed_units=7 pending=5
+[exp8043] phase=independent_task_reduced elapsed_s=13.285 completed_units=8 pending=4
+[exp8043] phase=independent_task_reduced elapsed_s=13.285 completed_units=9 pending=3
+[exp8043] phase=independent_task_reduced elapsed_s=13.285 completed_units=10 pending=2
+[exp8043] phase=independent_task_reduced elapsed_s=13.285 completed_units=11 pending=1
+[exp8043] phase=independent_task_reduced elapsed_s=13.285 completed_units=12 pending=0
+[exp8056] phase=independent_task_after elapsed_s=13.274 completed_units=1 pending=11
+[exp8056] phase=independent_task_after elapsed_s=13.274 completed_units=2 pending=10
+[exp8056] phase=independent_task_after elapsed_s=13.274 completed_units=3 pending=9
+[exp8056] phase=independent_task_after elapsed_s=13.274 completed_units=4 pending=8
+[exp8056] phase=independent_task_after elapsed_s=13.274 completed_units=5 pending=7
+[exp8056] phase=independent_task_after elapsed_s=13.274 completed_units=6 pending=6
+[exp8056] phase=independent_task_after elapsed_s=13.274 completed_units=7 pending=5
+[exp8056] phase=independent_task_after elapsed_s=13.274 completed_units=8 pending=4
+[exp8056] phase=independent_task_after elapsed_s=13.274 completed_units=9 pending=3
+[exp8056] phase=independent_task_after elapsed_s=13.274 completed_units=10 pending=2
+[exp8056] phase=independent_task_after elapsed_s=13.274 completed_units=11 pending=1
+[exp8056] phase=independent_task_after elapsed_s=13.274 completed_units=12 pending=0
+[exp8056] phase=durable_inputs elapsed_s=13.276 completed_units=0 pending=36
+[exp8056] phase=cold_replay_before elapsed_s=13.314 completed_units=0 pending=durable inputs and primitive equations
+[exp8056] phase=large_input_sharding_before elapsed_s=13.315 completed_units=0 pending=/tmp/exp8056-owned-2t_4l8m4/tests/test_resource_and_code_failure0/huge
+[exp8056] phase=large_input_shard_after elapsed_s=13.375 completed_units=1 pending=/tmp/exp8056-owned-2t_4l8m4/tests/test_resource_and_code_failure0/huge
+[exp8056] phase=large_input_shard_after elapsed_s=13.383 completed_units=2 pending=/tmp/exp8056-owned-2t_4l8m4/tests/test_resource_and_code_failure0/huge
+[exp8056] phase=cold_replay_before elapsed_s=13.492 completed_units=0 pending=durable inputs and primitive equations
+=========================== short test summary info ============================
+FAILED tests/python/test_experiment_8056_v697_capstone.py::test_resource_and_code_failures
+1 failed, 9 passed in 29.63s

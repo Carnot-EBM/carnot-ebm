@@ -1,0 +1,105 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_______________________ test_resource_and_code_failures ________________________
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261003T053138-1745204-e5b3cd03/test_resource_and_code_failure0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7efd02d0e540>
+
+    def test_resource_and_code_failures(tmp_path, monkeypatch):
+        """SCENARIO-REPORT-8056-CUSTODY: unknown authority and stale code fail closed."""
+        missing = cap.build(tmp_path, "20261003", tmp_path / "missing_raw")
+        assert missing["honest_verdict"] == "complete_blocked_immutable_authority"
+        assert missing["gate_check_summary"]
+        fixture(tmp_path)
+        v = cap.build(tmp_path, "20261003", tmp_path / "raw")
+        toy = tmp_path / "toy.py"
+        toy.write_text("x=1\n")
+        ref = cap.save(dict(path=str(toy), role="current_code"), tmp_path / "raw")
+        v["code_config_hashes"].append(ref)
+        cap.seal(v, tmp_path / "raw")
+        toy.write_text("x=2\n")
+        assert cap.cold_replay(v) == ["code_configuration_changed"]
+        huge = tmp_path / "huge"
+        with huge.open("wb") as stream:
+            stream.truncate(90_000_000)
+>       sharded = cap.save(dict(path=str(huge)), tmp_path / "raw")
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_experiment_8056_v697_capstone.py:198: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+ref = {'path': '/tmp/pytest-carnot-ianblenke/20261003T053138-1745204-e5b3cd03/test_resource_and_code_failure0/huge'}
+durable = PosixPath('/tmp/pytest-carnot-ianblenke/20261003T053138-1745204-e5b3cd03/test_resource_and_code_failure0/raw')
+
+    def save(ref: Json, durable: Path) -> Json:
+        """Preserve original directory structure so cold equations read durable copies."""
+        source = Path(ref["path"]).resolve()
+        target = durable / "inputs" / source.relative_to("/")
+        if source.is_file():
+            if source.stat().st_size >= 90_000_000:
+>               raise ValueError("raw_shard_exceeds_90MB:" + str(source))
+E               ValueError: raw_shard_exceeds_90MB:/tmp/pytest-carnot-ianblenke/20261003T053138-1745204-e5b3cd03/test_resource_and_code_failure0/huge
+
+python/carnot/reporting/v697_capstone.py:119: ValueError
+----------------------------- Captured stdout call -----------------------------
+[exp8056] phase=preconditions_before elapsed_s=0.002 completed_units=0 pending=named inputs and Python tools
+[exp8056] phase=preconditions_after elapsed_s=0.002 completed_units=23 pending=immutable authority
+[exp8056] phase=freeze_before elapsed_s=0.002 completed_units=0 pending=methods, identities and code
+[exp8056] phase=freeze_after elapsed_s=0.788 completed_units=0 pending=primitive reduction
+[exp8056] phase=preconditions_before elapsed_s=0.820 completed_units=0 pending=named inputs and Python tools
+[exp8056] phase=preconditions_after elapsed_s=0.820 completed_units=23 pending=immutable authority
+[exp8056] phase=freeze_before elapsed_s=0.852 completed_units=0 pending=methods, identities and code
+[exp8056] phase=freeze_after elapsed_s=1.617 completed_units=13 pending=primitive reduction
+[exp8017] phase=task_reduced elapsed_s=1.654 completed_units=1 pending=11
+[exp8017] phase=task_reduced elapsed_s=1.654 completed_units=2 pending=10
+[exp8017] phase=task_reduced elapsed_s=1.655 completed_units=3 pending=9
+[exp8017] phase=task_reduced elapsed_s=1.655 completed_units=4 pending=8
+[exp8017] phase=task_reduced elapsed_s=1.655 completed_units=5 pending=7
+[exp8017] phase=task_reduced elapsed_s=1.655 completed_units=6 pending=6
+[exp8017] phase=task_reduced elapsed_s=1.655 completed_units=7 pending=5
+[exp8017] phase=task_reduced elapsed_s=1.655 completed_units=8 pending=4
+[exp8017] phase=task_reduced elapsed_s=1.655 completed_units=9 pending=3
+[exp8017] phase=task_reduced elapsed_s=1.655 completed_units=10 pending=2
+[exp8017] phase=task_reduced elapsed_s=1.655 completed_units=11 pending=1
+[exp8017] phase=task_reduced elapsed_s=1.655 completed_units=12 pending=0
+[exp8030] phase=independent_task_reduced elapsed_s=1.642 completed_units=1 pending=11
+[exp8030] phase=independent_task_reduced elapsed_s=1.642 completed_units=2 pending=10
+[exp8030] phase=independent_task_reduced elapsed_s=1.642 completed_units=3 pending=9
+[exp8030] phase=independent_task_reduced elapsed_s=1.642 completed_units=4 pending=8
+[exp8030] phase=independent_task_reduced elapsed_s=1.642 completed_units=5 pending=7
+[exp8030] phase=independent_task_reduced elapsed_s=1.642 completed_units=6 pending=6
+[exp8030] phase=independent_task_reduced elapsed_s=1.642 completed_units=7 pending=5
+[exp8030] phase=independent_task_reduced elapsed_s=1.642 completed_units=8 pending=4
+[exp8030] phase=independent_task_reduced elapsed_s=1.642 completed_units=9 pending=3
+[exp8030] phase=independent_task_reduced elapsed_s=1.642 completed_units=10 pending=2
+[exp8030] phase=independent_task_reduced elapsed_s=1.642 completed_units=11 pending=1
+[exp8030] phase=independent_task_reduced elapsed_s=1.642 completed_units=12 pending=0
+[exp8043] phase=independent_task_reduced elapsed_s=1.625 completed_units=1 pending=11
+[exp8043] phase=independent_task_reduced elapsed_s=1.625 completed_units=2 pending=10
+[exp8043] phase=independent_task_reduced elapsed_s=1.625 completed_units=3 pending=9
+[exp8043] phase=independent_task_reduced elapsed_s=1.625 completed_units=4 pending=8
+[exp8043] phase=independent_task_reduced elapsed_s=1.625 completed_units=5 pending=7
+[exp8043] phase=independent_task_reduced elapsed_s=1.625 completed_units=6 pending=6
+[exp8043] phase=independent_task_reduced elapsed_s=1.625 completed_units=7 pending=5
+[exp8043] phase=independent_task_reduced elapsed_s=1.625 completed_units=8 pending=4
+[exp8043] phase=independent_task_reduced elapsed_s=1.625 completed_units=9 pending=3
+[exp8043] phase=independent_task_reduced elapsed_s=1.625 completed_units=10 pending=2
+[exp8043] phase=independent_task_reduced elapsed_s=1.625 completed_units=11 pending=1
+[exp8043] phase=independent_task_reduced elapsed_s=1.625 completed_units=12 pending=0
+[exp8056] phase=independent_task_after elapsed_s=1.618 completed_units=1 pending=11
+[exp8056] phase=independent_task_after elapsed_s=1.618 completed_units=2 pending=10
+[exp8056] phase=independent_task_after elapsed_s=1.618 completed_units=3 pending=9
+[exp8056] phase=independent_task_after elapsed_s=1.618 completed_units=4 pending=8
+[exp8056] phase=independent_task_after elapsed_s=1.618 completed_units=5 pending=7
+[exp8056] phase=independent_task_after elapsed_s=1.618 completed_units=6 pending=6
+[exp8056] phase=independent_task_after elapsed_s=1.618 completed_units=7 pending=5
+[exp8056] phase=independent_task_after elapsed_s=1.618 completed_units=8 pending=4
+[exp8056] phase=independent_task_after elapsed_s=1.618 completed_units=9 pending=3
+[exp8056] phase=independent_task_after elapsed_s=1.618 completed_units=10 pending=2
+[exp8056] phase=independent_task_after elapsed_s=1.618 completed_units=11 pending=1
+[exp8056] phase=independent_task_after elapsed_s=1.618 completed_units=12 pending=0
+[exp8056] phase=durable_inputs elapsed_s=1.619 completed_units=0 pending=36
+[exp8056] phase=cold_replay_before elapsed_s=1.625 completed_units=0 pending=durable inputs and primitive equations
+=========================== short test summary info ============================
+FAILED tests/python/test_experiment_8056_v697_capstone.py::test_resource_and_code_failures
+1 failed in 3.53s

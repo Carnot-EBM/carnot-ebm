@@ -1,0 +1,54 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+______________ test_external_custody_block_and_current_code_drift ______________
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261003T005211-1635878-3506559c/test_external_custody_block_an0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fe8bef3a750>
+
+    def test_external_custody_block_and_current_code_drift(tmp_path, monkeypatch):
+        """REQ-REPORT-8044: external absence names a resource and code changes invalidate replay."""
+        args = inputs(tmp_path)
+        value = methods.execute(args, tmp_path / "work")
+        original = tmp_path / "producer.py"
+        original.write_text("original")
+        saved = tmp_path / "producer.bin"
+        saved.write_bytes(original.read_bytes())
+        value["checkpoint_references"].append(
+            dict(
+                path=str(saved),
+                original_path=str(original),
+                sha256=sha256_file(saved),
+                role="current_code",
+            )
+        )
+        atomic_json(args.output, value)
+        atomic_json(args.raw, methods.primitive_rows(value))
+        assert methods.cold_replay(args.output, args.raw)
+        original.write_text("changed")
+>       assert not methods.cold_replay(args.output, args.raw)
+E       AssertionError: assert not True
+E        +  where True = <function cold_replay at 0x7fe873fcccc0>(PosixPath('/tmp/pytest-carnot-ianblenke/20261003T005211-1635878-3506559c/test_external_custody_block_an0/experiment_8044_fixture.json'), PosixPath('/tmp/pytest-carnot-ianblenke/20261003T005211-1635878-3506559c/test_external_custody_block_an0/raw/rows.json'))
+E        +    where <function cold_replay at 0x7fe873fcccc0> = methods.cold_replay
+E        +    and   PosixPath('/tmp/pytest-carnot-ianblenke/20261003T005211-1635878-3506559c/test_external_custody_block_an0/experiment_8044_fixture.json') = namespace(design=PosixPath('/tmp/pytest-carnot-ianblenke/20261003T005211-1635878-3506559c/test_external_custody_block_...est-carnot-ianblenke/20261003T005211-1635878-3506559c/test_external_custody_block_an0/raw/rows.json'), date='20261003').output
+E        +    and   PosixPath('/tmp/pytest-carnot-ianblenke/20261003T005211-1635878-3506559c/test_external_custody_block_an0/raw/rows.json') = namespace(design=PosixPath('/tmp/pytest-carnot-ianblenke/20261003T005211-1635878-3506559c/test_external_custody_block_...est-carnot-ianblenke/20261003T005211-1635878-3506559c/test_external_custody_block_an0/raw/rows.json'), date='20261003').raw
+
+tests/python/test_experiment_8044_v697_contract_methods.py:320: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8044] phase=preconditions elapsed_s=0.009 completed_units=0 pending=local resources, terminal sidecars and invocation authority
+[exp8044] phase=inputs_frozen elapsed_s=4.956 completed_units=13 pending=twelve private mutations and exact validation manifest
+[exp7953] phase=mutations completed_units=1/12 elapsed_s=0.343
+[exp7953] phase=mutations completed_units=2/12 elapsed_s=0.587
+[exp7953] phase=mutations completed_units=3/12 elapsed_s=0.829
+[exp7953] phase=mutations completed_units=4/12 elapsed_s=1.072
+[exp7953] phase=mutations completed_units=5/12 elapsed_s=1.313
+[exp7953] phase=mutations completed_units=6/12 elapsed_s=1.547
+[exp7953] phase=mutations completed_units=7/12 elapsed_s=1.787
+[exp7953] phase=mutations completed_units=8/12 elapsed_s=2.028
+[exp7953] phase=mutations completed_units=9/12 elapsed_s=2.269
+[exp7953] phase=mutations completed_units=10/12 elapsed_s=2.512
+[exp7953] phase=mutations completed_units=11/12 elapsed_s=2.753
+[exp7953] phase=mutations completed_units=12/12 elapsed_s=3.042
+[exp8044] phase=published elapsed_s=8.148 completed_units=13 pending=none
+=========================== short test summary info ============================
+FAILED tests/python/test_experiment_8044_v697_contract_methods.py::test_external_custody_block_and_current_code_drift
+1 failed in 13.32s

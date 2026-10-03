@@ -1,0 +1,40 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_____________________________ test_journal_shards ______________________________
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261003T022507-1676984-c1835705/test_journal_shards0')
+
+    def test_journal_shards(tmp_path):
+        """REQ-REPORT-8051: bounded per-seed journals retain the original scheduled sample."""
+        value=data(48);value['seeds']=[101,102]
+        m.measure(value,tmp_path)
+        shards=list(tmp_path.glob('seed-*/ledger.sqlite'))
+>       assert len(shards)==2 and all(p.stat().st_size<90_000_000 for p in shards)
+E       assert (0 == 2)
+E        +  where 0 = len([])
+
+tests/python/test_feedback_constrained_8051.py:315: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8051] phase=benchmark_before elapsed_s=0.019 completed=0 pending=288
+[exp8051] phase=small_head_load_before elapsed_s=0.019 completed=0 pending=288
+[exp8051] phase=small_head_load_after elapsed_s=0.019 completed=0 pending=288
+[exp8051] phase=arm_complete elapsed_s=0.025 completed=48 pending=240
+[exp8051] phase=small_head_load_before elapsed_s=0.025 completed=48 pending=240
+[exp8051] phase=small_head_load_after elapsed_s=0.025 completed=48 pending=240
+[exp8051] phase=arm_complete elapsed_s=0.031 completed=96 pending=192
+[exp8051] phase=small_head_load_before elapsed_s=0.031 completed=96 pending=192
+[exp8051] phase=small_head_load_after elapsed_s=0.031 completed=96 pending=192
+[exp8051] phase=arm_complete elapsed_s=0.034 completed=144 pending=144
+[exp8051] phase=small_head_load_before elapsed_s=0.034 completed=144 pending=144
+[exp8051] phase=small_head_load_after elapsed_s=0.034 completed=144 pending=144
+[exp8051] phase=arm_complete elapsed_s=0.040 completed=192 pending=96
+[exp8051] phase=small_head_load_before elapsed_s=0.040 completed=192 pending=96
+[exp8051] phase=small_head_load_after elapsed_s=0.040 completed=192 pending=96
+[exp8051] phase=arm_complete elapsed_s=0.046 completed=240 pending=48
+[exp8051] phase=small_head_load_before elapsed_s=0.046 completed=240 pending=48
+[exp8051] phase=small_head_load_after elapsed_s=0.046 completed=240 pending=48
+[exp8051] phase=arm_complete elapsed_s=0.049 completed=288 pending=0
+[exp8051] phase=benchmark_after elapsed_s=0.049 completed=288 pending=0
+=========================== short test summary info ============================
+FAILED tests/python/test_feedback_constrained_8051.py::test_journal_shards - ...
+1 failed in 3.20s

@@ -1,0 +1,48 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+___________________ test_cost_primitives_and_hardware_limits ___________________
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261003T053411-1747305-f5fd4a6c/test_cost_primitives_and_hardw0')
+
+    def test_cost_primitives_and_hardware_limits(tmp_path):
+        """SCENARIO-REPORT-8056-SCIENCE: paired cost sums cannot establish full deployment."""
+        rows = []
+        components = {
+            k: 10
+            for k in ("gradient_arithmetic_ns", "gradient_construction_ns", "guard_scans_ns", "ffi_ns")
+        }
+        for arm, ns in (("python", 1000), ("native", 1100)):
+            for repetition in range(2):
+                rows.append(
+                    dict(
+                        arm=arm,
+                        transaction_ns=ns,
+                        repetition=repetition,
+                        condition="feedback_constrained",
+                        transaction_class="accepted",
+                        natural=True,
+                        excluded=False,
+                        reset=False,
+                        components=components,
+                        guard_count=8,
+                        stored_bytes=100,
+                    )
+                )
+        config = dict(seed=123, draws=10000)
+        raw = tmp_path / "cost"
+        atomic_json(raw / "transaction_rows.json", dict(rows=rows))
+        v = dict(
+            red.transaction.summarize(rows, config),
+            config=config,
+            raw_directory=str(raw),
+            missing_service_components=["likelihood acquisition"],
+        )
+        r = red.independent(v, 8053)
+>       assert r["costs"]["complete_numerical_transaction_speedup"][0]["numerator"] == 2000
+               ^^^^^^^^^^
+E       KeyError: 'costs'
+
+tests/python/test_experiment_8056_v697_capstone.py:311: KeyError
+=========================== short test summary info ============================
+FAILED tests/python/test_experiment_8056_v697_capstone.py::test_cost_primitives_and_hardware_limits
+1 failed in 3.13s
