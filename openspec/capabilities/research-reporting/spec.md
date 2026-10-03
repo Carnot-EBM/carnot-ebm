@@ -91775,3 +91775,51 @@ produce complete_blocked_<resource>; failed owned checks SHALL disqualify with
 readiness0. An auditable null trajectory may have readiness1 without learning
 benefit or a future safety theorem. Ops/traceability reconciliation is delegated
 to the conductor by the current operator instruction.
+
+## REQ-REPORT-8077: Independently audit projected learning
+
+Exp8077 SHALL cold-read original public features and chronological journals,
+without producer aggregate reductions. Rebuild gradients, released constraints,
+projection corrections, fresh admission and issued decisions before own labels.
+Authenticate V699 methods, trajectory, terminal bindings and immutable operands.
+
+### SCENARIO-REPORT-8077-H2
+
+H2 SHALL compare ray_fresh cost minus projected_fresh cost on common update-role
+sources after first shared completed admission. Require80 sources and10/class,
+five beneficial changes, no per-seed extra false accepts versus all three controls,
+and cost noninferiority within.02 versus frozen/unconditional. Keep original256
+slots in10000 moving-block draws of32, with16/64 sensitivity. Average seeds within
+sources. Send raw margin.02 p and safety/support to exactly H1/H2 Holm in capstone.
+
+### SCENARIO-REPORT-8077-RETENTION
+
+Seal all final heads and retention predictions before opening retention64 targets.
+Require48 complete source groups and8/class. BOTH guarded arms SHALL stay within
+.01 Brier and.02 cost of frozen. Retention failure prevents positive benefit.
+All-rejected, reset and unchanged trajectories remain valid terminal null results.
+
+### SCENARIO-REPORT-8077-RECOVERY
+
+Kill private real children before/after constraint append, projection fallback,
+candidate commitment, admission consumption and durable coefficient replacement.
+Recovered issued decisions and exactly-once labels SHALL equal uninterrupted
+execution. Bound reduction/recovery at900 seconds; save primitive evidence.
+
+### SCENARIO-REPORT-8077-TERMINAL
+
+Freeze validation commands before measurement. Exercise private real CLI success,
+blocked, mutation and cold replay outside checkout, E2E-015/016, focused consumer
+tests, Ruff, strict mypy, scoped spec coverage and100 percent added-statement
+coverage. Run all Python tests once and retain global failures as diagnostics.
+Owned failure disqualifies readiness; missing external operands block. Publish
+only after normal measurement exit and independent terminal checks. Cached exposed
+development evidence grants generalized_learning_benefit_score=0, zero model calls
+and no unseen-environment claims. Conductor handles ops and traceability updates.
+The primary SHALL retain comparison rows and complete projection residual summaries.
+Bulky ordered event and coefficient traces SHALL remain in authenticated raw shards,
+with explicit field references in the primary. Preserve failed publication bytes.
+
+Implementation: `python/carnot/experiment_8077_v699_projected_learning_audit.py`,
+`python/carnot/verify/projected_learning_audit_8077.py` and thin CLI.
+Tests: `tests/python/test_projected_learning_audit_8077.py`.

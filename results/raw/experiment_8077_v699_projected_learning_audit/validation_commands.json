@@ -1,0 +1,272 @@
+{
+  "code_hashes": {
+    "python/carnot/experiment_8077_v699_projected_learning_audit.py": "sha256:870b1c9b72140e768ed620c985658de5cb2601627dc4f9eed173c8575086d231",
+    "python/carnot/verify/projected_learning_audit_8077.py": "sha256:42f1203f060ff1a9722f2d640a84aa04d56490c63a77ef539c0eec99253140dd",
+    "scripts/experiments/experiment_8077_v699_projected_learning_audit.py": "sha256:70e46e315ff686614ba8068378fadde400e39108791481d3256e14002e333370"
+  },
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8077_v699_projected_learning_audit.py",
+        "--root",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "--worker-output",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8077_v699_projected_learning_audit/work.json"
+      ],
+      "classification": "required",
+      "deadline_s": 1200,
+      "expected_exit": 0,
+      "name": "measurement_normal_exit"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-c",
+        "import sys,numpy,scipy,pytest,coverage,ruff,mypy; assert sys.version_info >= (3,11); print(sys.version,numpy.__version__,scipy.__version__,flush=True)"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "name": "python_environment"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--rcfile=/tmp/carnot-8077-publication-mpf9aier/coverage.ini",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_projected_learning_audit_8077.py",
+        "--basetemp=/tmp/carnot-8077-publication-mpf9aier/focused"
+      ],
+      "classification": "required",
+      "deadline_s": 300,
+      "expected_exit": 0,
+      "name": "focused_unit_and_cli"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_source_boundary_7852.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_primary_publication_7928.py",
+        "--basetemp=/tmp/carnot-8077-publication-mpf9aier/consumers"
+      ],
+      "classification": "required",
+      "deadline_s": 180,
+      "expected_exit": 0,
+      "name": "consumer_and_e2e_015"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--rcfile=/tmp/carnot-8077-publication-mpf9aier/coverage.ini",
+        "--data-file=/tmp/carnot-8077-publication-mpf9aier/.coverage"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "name": "coverage_combine"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--rcfile=/tmp/carnot-8077-publication-mpf9aier/coverage.ini",
+        "--data-file=/tmp/carnot-8077-publication-mpf9aier/.coverage",
+        "--fail-under=100",
+        "--show-missing"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "name": "coverage_report"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "json",
+        "--rcfile=/tmp/carnot-8077-publication-mpf9aier/coverage.ini",
+        "--data-file=/tmp/carnot-8077-publication-mpf9aier/.coverage",
+        "-o",
+        "/tmp/carnot-8077-publication-mpf9aier/coverage.json"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "name": "coverage_json"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8077_v699_projected_learning_audit.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/projected_learning_audit_8077.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8077_v699_projected_learning_audit.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_projected_learning_audit_8077.py"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "name": "ruff_check"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8077_v699_projected_learning_audit.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/projected_learning_audit_8077.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8077_v699_projected_learning_audit.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_projected_learning_audit_8077.py"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "name": "ruff_format"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--config-file=/dev/null",
+        "--strict",
+        "--follow-imports=silent",
+        "--ignore-missing-imports",
+        "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8077_v699_projected_learning_audit.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/projected_learning_audit_8077.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8077_v699_projected_learning_audit.py"
+      ],
+      "classification": "required",
+      "deadline_s": 180,
+      "expected_exit": 0,
+      "name": "mypy_strict"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/check_spec_coverage.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_projected_learning_audit_8077.py"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "name": "scoped_spec_coverage"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7868_v683_intervention_protocol.py",
+        "--date",
+        "20260929",
+        "--fixture-e2e",
+        "/tmp/carnot-8077-publication-mpf9aier/e2e016.json"
+      ],
+      "classification": "required",
+      "deadline_s": 120,
+      "expected_exit": 0,
+      "name": "e2e_016_fixture"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7868_v683_intervention_protocol.py",
+        "--date",
+        "20260929",
+        "--cold-replay",
+        "/tmp/carnot-8077-publication-mpf9aier/e2e016.json"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "name": "e2e_016_replay"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q",
+        "--basetemp=/tmp/carnot-8077-publication-mpf9aier/full"
+      ],
+      "classification": "diagnostic",
+      "deadline_s": 900,
+      "expected_exit": 0,
+      "name": "repository_full_suite"
+    }
+  ],
+  "config": {
+    "blocks": [
+      32,
+      16,
+      64
+    ],
+    "draws": 10000,
+    "margin": 0.02,
+    "seed": 6998077,
+    "timeline": 256
+  },
+  "measurement_code_hashes": {
+    "python/carnot/experiment_8065_v698_fresh_learning_audit.py": "sha256:9da011496e6cfdb0c7b114c49297662635780f04e4951f13d7b750bb28c08e7f",
+    "python/carnot/experiment_8076_v699_projected_online_learning.py": "sha256:f77319fef01c38ab371b2df1dce2910e8a12c10fcd84030f8d9ac09b9660fc00",
+    "python/carnot/experiment_8077_v699_projected_learning_audit.py": "sha256:bca60b8a848f63959a0899e6ade707d79993da34f0edb84246043c9bbe53f423",
+    "python/carnot/reporting/current_work_receipt.py": "sha256:428d1696eef0820ce9df519532743aeccb8ec1156eb8c1b52fa0c8f72bf16a10",
+    "python/carnot/reporting/experiment_7303_validation_scope.py": "sha256:e6291ced5d52a50544cc6dcc46870886cdb2149796fc5eb7781e16c9ce42d229",
+    "python/carnot/reporting/primary_publication.py": "sha256:7fe8c6caa2725d68eeae612d2f4a17146b08afc29ff5a8003a4f1ad5f21d1310",
+    "python/carnot/reporting/v686_contract_validation.py": "sha256:a426b1d1e47e12deb84842f5e9ce5540701972f30c23f6e8fdab8b256c2b8df3",
+    "python/carnot/verify/constraint_projection_8075.py": "sha256:5d1b1c806b5a6e5ba1b5eecc90b492f7915316d4a9ac3956a608b8e9338ea602",
+    "python/carnot/verify/evidence_features_7980.py": "sha256:611e2ef1efe25bb43e2adc79a23c2081cd6cb07185ba82dafde557a9070501e3",
+    "python/carnot/verify/fresh_learning_audit_8065.py": "sha256:0c71ab44b1fa92ecb88caee4130b5a5f7a7510331a9a04015ae01cb932be0135",
+    "python/carnot/verify/learning_retention_audit_8026.py": "sha256:f855e109ce302739d7d23eb3077c06de07138d78f76b6863df72830fda8a0ea4",
+    "python/carnot/verify/projected_learning_audit_8077.py": "sha256:42f1203f060ff1a9722f2d640a84aa04d56490c63a77ef539c0eec99253140dd",
+    "python/carnot/verify/projected_online_8076.py": "sha256:0532a1dea973825847fcdec6ebd71a238cfed1ec347445358cd7b36678ca9b48",
+    "scripts/experiments/experiment_8077_v699_projected_learning_audit.py": "sha256:70e46e315ff686614ba8068378fadde400e39108791481d3256e14002e333370",
+    "tests/python/test_projected_learning_audit_8077.py": "sha256:ead7773aac9f955b98fb34213bbe2f845f8849f9717f77e4c85d2566f6c87b84"
+  },
+  "measurement_receipt_reused": true,
+  "terminal_checks": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8077_v699_projected_learning_audit.py",
+        "--cold-replay",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8077_v699_projected_learning_audit/terminal_candidate.json"
+      ],
+      "deadline_s": 120,
+      "name": "cold_replay"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+        "--json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8077_v699_projected_learning_audit/terminal_candidate.json"
+      ],
+      "deadline_s": 120,
+      "name": "adversarial"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8077_v699_projected_learning_audit/terminal_candidate.json"
+      ],
+      "deadline_s": 120,
+      "name": "strict_rows"
+    }
+  ]
+}
