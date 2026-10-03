@@ -90749,3 +90749,42 @@ controls, valid/null/blocked/tampered CLI exits, missing operands, corrupted
 shards and terminal publication. Acceptance requires 100% added statement
 coverage including the CLI and repaired runner boundary, consumer checks and
 all frozen task-owned commands. Live model invocation count remains zero.
+
+## REQ-REPORT-8051: Persistent feedback-constrained small-head learning
+
+Exp8051 SHALL authenticate the original qualified head, public256 slots and
+Exp8046 terminal protocol bytes before numerical work. Freeze code, partition,
+optimizer, seeds101–120 and budget900s. Missing external operands yield terminal
+complete_blocked_<resource> with exact expected and observed values.
+
+### SCENARIO-REPORT-8051-CAUSAL
+
+Issue probability, action and head hash durably before original slot+20 release.
+Unknown targets and pending tail slots remain explicit. Hash source identity
+modulo4; bucket0 is guard-only. No retention annotation enters this process.
+Both adaptive arms select identical cumulative update-role IDs. Each attempts
+four gradients per16 eligible update-role releases, step.01/ridge.001, cap64.
+Candidates start from each arm's current state. Rejected gradients count as work.
+Future-label mutation cannot change decisions through that label's release slot.
+Duplicate release identities SHALL fail. Checkpoint heads and partition per block.
+
+### SCENARIO-REPORT-8051-GUARD
+
+After8 released guard rows and2/class, evaluate all alphas1,.5,.25,.125,0
+against the frozen initial calibrated head on ALL guard rows. Mean Brier and
+cost cannot rise by more than1e-12. No guard source becomes a new false accept.
+Constrained commits the largest passing alpha; no passing alpha restores the
+initial head. Recheck on guard expansion. Unconstrained computes identical
+checks and commits alpha1. Frozen stays unchanged. Preserve operands, candidate
+and accepted coefficients, rejection reasons and reset records. Before guard
+support qualifies, constrained holds state; all attempts remain counted.
+
+### SCENARIO-REPORT-8051-PUBLICATION
+
+Test destructive, beneficial, no-op, insufficient guard, duplicate and future
+mutation cases. Require100% new statement coverage including actual private CLI
+valid, null, blocked and tampered exits. Cold-reduce durable primitive rows in a
+fresh process. Validate candidate and published bytes with both artifact linters
+and primary publication consumers. Keep logs, hashes and terminal sidecar. Null
+frozen learning is valid; empirical guard checks establish no future safety or
+independent benefit. No pretrained model call or production default changes.
