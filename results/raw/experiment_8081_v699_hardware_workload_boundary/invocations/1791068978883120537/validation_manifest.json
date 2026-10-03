@@ -1,0 +1,203 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-c",
+        "import sys,pytest,coverage,ruff,mypy; print(sys.version)"
+      ],
+      "name": "environment",
+      "scope": "owned",
+      "timeout_s": 30
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "run",
+        "--rcfile=/tmp/carnot8081-q8s6vtf6/coverage.ini",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot8081-q8s6vtf6/pytest",
+        "tests/python/test_hardware_workload_8081.py",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_current_work_receipt.py",
+        "-q"
+      ],
+      "name": "owned_tests",
+      "scope": "owned",
+      "timeout_s": 120
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "combine",
+        "--rcfile=/tmp/carnot8081-q8s6vtf6/coverage.ini"
+      ],
+      "name": "coverage_combine",
+      "scope": "owned",
+      "timeout_s": 30
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "json",
+        "--rcfile=/tmp/carnot8081-q8s6vtf6/coverage.ini",
+        "-o",
+        "/tmp/carnot8081-q8s6vtf6/coverage.json"
+      ],
+      "name": "coverage_json",
+      "scope": "owned",
+      "timeout_s": 30
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "coverage",
+        "report",
+        "--rcfile=/tmp/carnot8081-q8s6vtf6/coverage.ini",
+        "--fail-under=100"
+      ],
+      "name": "coverage100",
+      "scope": "owned",
+      "timeout_s": 30
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_8081_v699_hardware_workload_boundary.py",
+        "python/carnot/reporting/hardware_workload_8081.py",
+        "scripts/experiments/experiment_8081_v699_hardware_workload_boundary.py",
+        "tests/python/test_hardware_workload_8081.py"
+      ],
+      "name": "ruff_check",
+      "scope": "owned",
+      "timeout_s": 30
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_8081_v699_hardware_workload_boundary.py",
+        "python/carnot/reporting/hardware_workload_8081.py",
+        "scripts/experiments/experiment_8081_v699_hardware_workload_boundary.py",
+        "tests/python/test_hardware_workload_8081.py"
+      ],
+      "name": "ruff_format",
+      "scope": "owned",
+      "timeout_s": 30
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "--follow-imports=silent",
+        "python/carnot/experiment_8081_v699_hardware_workload_boundary.py",
+        "python/carnot/reporting/hardware_workload_8081.py",
+        "scripts/experiments/experiment_8081_v699_hardware_workload_boundary.py"
+      ],
+      "name": "strict_mypy",
+      "scope": "owned",
+      "timeout_s": 90
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "python/carnot/experiment_8081_v699_hardware_workload_boundary.py",
+        "python/carnot/reporting/hardware_workload_8081.py",
+        "scripts/experiments/experiment_8081_v699_hardware_workload_boundary.py",
+        "tests/python/test_hardware_workload_8081.py"
+      ],
+      "name": "spec_coverage",
+      "scope": "owned",
+      "timeout_s": 30
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/experiments/experiment_7868_v683_intervention_protocol.py",
+        "--date",
+        "20260929",
+        "--fixture-e2e",
+        "/tmp/carnot8081-q8s6vtf6/e2e016.json"
+      ],
+      "name": "e2e016_fixture",
+      "scope": "owned",
+      "timeout_s": 90
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/experiments/experiment_7868_v683_intervention_protocol.py",
+        "--date",
+        "20260929",
+        "--cold-replay",
+        "/tmp/carnot8081-q8s6vtf6/e2e016.json"
+      ],
+      "name": "e2e016_cold_replay",
+      "scope": "owned",
+      "timeout_s": 90
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q"
+      ],
+      "name": "full_pytest",
+      "scope": "repository_health",
+      "timeout_s": 120
+    }
+  ],
+  "scope": "frozen before any reduction; no new model or device measurement",
+  "terminal_commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8081_v699_hardware_workload_boundary.py",
+        "--cold-replay",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8081_v699_hardware_workload_boundary/terminal_candidate.json"
+      ],
+      "name": "cold_reduce",
+      "scope": "terminal",
+      "timeout_s": 90
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/adversarial_verify.py",
+        "--json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8081_v699_hardware_workload_boundary/terminal_candidate.json"
+      ],
+      "name": "adversarial",
+      "scope": "terminal",
+      "timeout_s": 90
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8081_v699_hardware_workload_boundary/terminal_candidate.json"
+      ],
+      "name": "strict_rows",
+      "scope": "terminal",
+      "timeout_s": 60
+    }
+  ]
+}

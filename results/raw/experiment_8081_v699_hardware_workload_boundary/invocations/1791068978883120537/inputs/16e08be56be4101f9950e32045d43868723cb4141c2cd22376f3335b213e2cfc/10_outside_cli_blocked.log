@@ -1,0 +1,31 @@
+[exp8078] phase=start_preconditions elapsed_s=0.000 completed=0 pending=0
+[exp8078] phase=manifest_frozen elapsed_s=0.002 completed=0 pending=0
+[exp8078] phase=publication_before elapsed_s=0.002 completed=0 pending=0
+[exp7303-validation] before_subprocess cold_replay elapsed_s=0.000 unit=1/3
+[exp7303-validation:cold_replay] [exp8078] phase=start_preconditions elapsed_s=0.000 completed=0 pending=0
+[exp7303-validation:cold_replay] {"passed": true}
+[exp7303-validation] after_subprocess cold_replay elapsed_s=1.404 exit=0 unit=1/3
+[exp7303-validation] before_subprocess adversarial elapsed_s=0.000 unit=2/3
+[exp7303-validation:adversarial] {
+[exp7303-validation:adversarial]   "reports": [
+[exp7303-validation:adversarial]     {
+[exp7303-validation:adversarial]       "artifact": "/tmp/carnot8066-3bmjc0xh/raw/experiment_8078_v699_feature_cache_core/terminal_candidate.json",
+[exp7303-validation:adversarial]       "loaded": true,
+[exp7303-validation:adversarial]       "exp_id": 8078,
+[exp7303-validation:adversarial]       "title": "",
+[exp7303-validation:adversarial]       "honest_verdict": "complete_blocked_feature_service_inputs",
+[exp7303-validation:adversarial]       "flag_count": 0,
+[exp7303-validation:adversarial]       "max_severity": -1,
+[exp7303-validation:adversarial]       "flags": [],
+[exp7303-validation:adversarial]       "gate_version": "07ddacadae8c3b8d3250ad0977bda6f747d5bcb02bb7af3119b80db2547b62c7"
+[exp7303-validation:adversarial]     }
+[exp7303-validation:adversarial]   ],
+[exp7303-validation:adversarial]   "flagged_count": 0
+[exp7303-validation:adversarial] }
+[exp7303-validation] after_subprocess adversarial elapsed_s=0.528 exit=0 unit=2/3
+[exp7303-validation] before_subprocess strict_rows elapsed_s=0.000 unit=3/3
+[exp7303-validation:strict_rows] 
+[exp7303-validation:strict_rows] verdict-row-consistency: checked 0, skipped 1 (no per-unit rows), unreadable 0.
+[exp7303-validation:strict_rows]   NOTE: most artifacts carry no per-unit row container, so their headline claims are not falsifiable from the artifact alone. That is a reporting-shape gap in those experiments, not a clean bill of health from this tool.
+[exp7303-validation] after_subprocess strict_rows elapsed_s=0.031 exit=0 unit=3/3
+[exp8078] phase=publication_after elapsed_s=1.969 completed=1 pending=0

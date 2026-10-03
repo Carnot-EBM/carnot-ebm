@@ -1,0 +1,101 @@
+{
+  "invocation_process_exit_receipt": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8055_v697_hardware_guard_boundary/invocation_exit_receipt_sharded.json",
+    "sha256": "sha256:f2927a8d92ee79d1174d06c1e2c2ae7018d4f066784ecc87087d7a42e085ed29"
+  },
+  "publication": {
+    "primary_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8055_v697_hardware_guard_boundary.json",
+    "primary_sha256": "sha256:fca3709a4d51eb006f1a666163666663bd3e6af7fb0cb330858b74cdaadc3e67",
+    "sidecar_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8055_v697_hardware_guard_boundary/validators/fca3709a4d51eb006f1a666163666663bd3e6af7fb0cb330858b74cdaadc3e67.json"
+  },
+  "published": {
+    "passed": true,
+    "receipts": [
+      {
+        "actual_exit_code": 0,
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8055_v697_hardware_guard_boundary.py --cold-replay /home/ianblenke/github.com/ianblenke/carnot/results/experiment_8055_v697_hardware_guard_boundary.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8055_v697_hardware_guard_boundary.py",
+          "--cold-replay",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8055_v697_hardware_guard_boundary.json"
+        ],
+        "duration_s": 6.319992542965338,
+        "exit_code": 0,
+        "expected_exit_code": 0,
+        "log_path": "results/raw/experiment_8055_v697_hardware_guard_boundary/invocations/1791004107629123859/terminal_logs/fca3709a4d51eb006f1a666163666663bd3e6af7fb0cb330858b74cdaadc3e67/00_cold_reduce.log",
+        "log_sha256": "sha256:fa5c8d69f9afc6594bcac441c3ed0a3a4ef9e02f08fd89849c7ab7f0e2e1277c",
+        "name": "cold_reduce",
+        "output_tail": "[exp8055] phase=start_preconditions elapsed_s=0.000 completed=1 pending=start_preconditions model_loads=0 generations=0 device_calls=0\n[exp8055] replay elapsed_s=0.042 completed=1 pending=3959\n[exp8055] replay elapsed_s=0.121 completed=101 pending=3859\n[exp8055] replay elapsed_s=0.201 completed=201 pending=3759\n[exp8055] replay elapsed_s=0.279 completed=301 pending=3659\n[exp8055] replay elapsed_s=0.357 completed=401 pending=3559\n[exp8055] replay elapsed_s=0.435 completed=501 pending=3459\n[exp8055] replay elapsed_s=0.513 completed=601 pending=3359\n[exp8055] replay elapsed_s=0.592 completed=701 pending=3259\n[exp8055] replay elapsed_s=0.670 completed=801 pending=3159\n[exp8055] replay elapsed_s=0.748 completed=901 pending=3059\n[exp8055] replay elapsed_s=0.827 completed=1001 pending=2959\n[exp8055] replay elapsed_s=0.905 completed=1101 pending=2859\n[exp8055] replay elapsed_s=0.983 completed=1201 pending=2759\n[exp8055] replay elapsed_s=1.061 completed=1301 pending=2659\n[exp8055] replay elapsed_s=1.384 completed=1401 pending=2559\n[exp8055] replay elapsed_s=1.463 completed=1501 pending=2459\n[exp8055] replay elapsed_s=1.542 completed=1601 pending=2359\n[exp8055] replay elapsed_s=1.621 completed=1701 pending=2259\n[exp8055] replay elapsed_s=1.700 completed=1801 pending=2159\n[exp8055] replay elapsed_s=1.779 completed=1901 pending=2059\n[exp8055] replay elapsed_s=1.858 completed=2001 pending=1959\n[exp8055] replay elapsed_s=1.937 completed=2101 pending=1859\n[exp8055] replay elapsed_s=2.016 completed=2201 pending=1759\n[exp8055] replay elapsed_s=2.095 completed=2301 pending=1659\n[exp8055] replay elapsed_s=2.174 completed=2401 pending=1559\n[exp8055] replay elapsed_s=2.253 completed=2501 pending=1459\n[exp8055] replay elapsed_s=2.332 completed=2601 pending=1359\n[exp8055] replay elapsed_s=2.411 completed=2701 pending=1259\n[exp8055] replay elapsed_s=2.489 completed=2801 pending=1159\n[exp8055] replay elapsed_s=2.568 completed=2901 pending=1059\n[exp8055] replay elapsed_s=2.647 completed=3001 pending=959\n[exp8055] replay elapsed_s=2.726 completed=3101 pending=859\n[exp8055] replay elapsed_s=2.805 completed=3201 pending=759\n[exp8055] replay elapsed_s=2.884 completed=3301 pending=659\n[exp8055] replay elapsed_s=2.963 completed=3401 pending=559\n[exp8055] replay elapsed_s=3.042 completed=3501 pending=459\n[exp8055] replay elapsed_s=3.122 completed=3601 pending=359\n[exp8055] replay elapsed_s=3.202 completed=3701 pending=259\n[exp8055] replay elapsed_s=3.282 completed=3801 pending=159\n[exp8055] replay elapsed_s=3.361 completed=3901 pending=59\n[exp8055] replay elapsed_s=0.001 completed=1 pending=5\n{\"passed\": true, \"rows_checksum\": \"sha256:d429b9a308d302226a9ec02c69055d9be29309f443a88e64389038597877f0c8\"}\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      },
+      {
+        "actual_exit_code": 0,
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/experiment_8055_v697_hardware_guard_boundary.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "scripts/adversarial_verify.py",
+          "--json",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8055_v697_hardware_guard_boundary.json"
+        ],
+        "duration_s": 13.268603884032927,
+        "exit_code": 0,
+        "expected_exit_code": 0,
+        "log_path": "results/raw/experiment_8055_v697_hardware_guard_boundary/invocations/1791004107629123859/terminal_logs/fca3709a4d51eb006f1a666163666663bd3e6af7fb0cb330858b74cdaadc3e67/01_adversarial.log",
+        "log_sha256": "sha256:007e51b5614980b65e026b042c23bf6d7616963dae7e7981e3e47fd54f01b743",
+        "name": "adversarial",
+        "output_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8055_v697_hardware_guard_boundary.json\",\n      \"loaded\": true,\n      \"exp_id\": 8055,\n      \"title\": \"\",\n      \"honest_verdict\": \"complete_null_guarded_hardware_boundary\",\n      \"flag_count\": 0,\n      \"max_severity\": -1,\n      \"flags\": [],\n      \"gate_version\": \"07ddacadae8c3b8d3250ad0977bda6f747d5bcb02bb7af3119b80db2547b62c7\"\n    }\n  ],\n  \"flagged_count\": 0\n}\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      },
+      {
+        "actual_exit_code": 0,
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/experiment_8055_v697_hardware_guard_boundary.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "scripts/verdict_row_consistency_lint.py",
+          "--strict",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8055_v697_hardware_guard_boundary.json"
+        ],
+        "duration_s": 0.17656076001003385,
+        "exit_code": 0,
+        "expected_exit_code": 0,
+        "log_path": "results/raw/experiment_8055_v697_hardware_guard_boundary/invocations/1791004107629123859/terminal_logs/fca3709a4d51eb006f1a666163666663bd3e6af7fb0cb330858b74cdaadc3e67/02_strict_rows.log",
+        "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+        "name": "strict_rows",
+        "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      }
+    ]
+  },
+  "reader": {
+    "document_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8055_v697_hardware_guard_boundary.json",
+    "document_sha256": "sha256:fca3709a4d51eb006f1a666163666663bd3e6af7fb0cb330858b74cdaadc3e67",
+    "document_status": "\u26a0\ufe0f Research Finding",
+    "gate_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8055_v697_hardware_guard_boundary.json",
+    "gate_sha256": "sha256:fca3709a4d51eb006f1a666163666663bd3e6af7fb0cb330858b74cdaadc3e67",
+    "gates": [
+      {
+        "actual": 1,
+        "artifact_field": "guard_fallback_ready_score",
+        "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8055_v697_hardware_guard_boundary.json",
+        "artifact_sha256": "sha256:fca3709a4d51eb006f1a666163666663bd3e6af7fb0cb330858b74cdaadc3e67",
+        "expected": 1,
+        "op": "==",
+        "passed": true,
+        "reason": "actual=1 == expected=1",
+        "upstream": "exp8055-hardware-guard-boundary",
+        "upstream_final": true
+      }
+    ],
+    "passed": true,
+    "summary": "1 gate(s) satisfied",
+    "task_id": "exp8055-hardware-guard-boundary"
+  }
+}

@@ -1,0 +1,241 @@
+{
+  "config": {
+    "budget_s": 1800,
+    "capacity": 256,
+    "draws": 10000,
+    "repetitions": 30,
+    "seed": 6998072,
+    "tolerance": 1e-10,
+    "warmups": 5
+  },
+  "current_baseline": true,
+  "dependency_hashes": {
+    "python/carnot/experiment_8066_v698_content_addressed_feature_service.py": "sha256:e0e7902704b96ddb53dea0b6e858cc2253ec2a628e744e7f81a443b6feb45e2e",
+    "python/carnot/experiment_8072_v699_sealed_methods.py": "sha256:feadc866153c88471af3341ce827ca746e42d371a250db04e33f2440608d1a24",
+    "python/carnot/experiment_8078_v699_feature_cache_core.py": "sha256:bfa59d8fe36a99dab4dd8e7a1a76d810bac0a6165888259ab8a9cb250c01ed56",
+    "python/carnot/experiment_8079_v699_feature_cache_lifecycle.py": "sha256:7f973b20e5eb87b62660c3715e5785f583d4439edf698e0daee9d381796e5820",
+    "python/carnot/verify/content_addressed_features_8066.py": "sha256:ed315ab4244a11b71b4f613ac38be074be65ddc1aed26da9bd7cbfb20edc23ed",
+    "python/carnot/verify/evidence_features_7980.py": "sha256:611e2ef1efe25bb43e2adc79a23c2081cd6cb07185ba82dafde557a9070501e3",
+    "python/carnot/verify/guarded_transaction_8053.py": "sha256:10f838c2183204475325fabfeeaf710533dd52e1b6e75c8473e60f8089815bf9",
+    "python/carnot/verify/source_alignment.py": "sha256:10d5329444d47dc2421d8cceca615c8d5c76df5267c1a70eb669340f05ea475b",
+    "scripts/experiments/experiment_8079_v699_feature_cache_lifecycle.py": "sha256:9652be05735ea95dbfdf1709144e7adf6dbef720e343920b1c42eb76f41fca2d",
+    "tests/python/test_feature_cache_lifecycle_8079.py": "sha256:4afef11effbbf15d14a84f3ab6280d3d276d18e8fd480c95b33794633b4f65c9"
+  },
+  "independent_unit": "original exposed source cluster",
+  "measurement_command": {
+    "argv": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "-u",
+      "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8079_v699_feature_cache_lifecycle.py",
+      "--worker-input",
+      "/tmp/carnot8066-_0otdb6g/workloads.json",
+      "--raw",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8079_v699_feature_cache_lifecycle/invocations/1791065353908977910",
+      "--output",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8079_v699_feature_cache_lifecycle/invocations/1791065353908977910/measurement.json"
+    ],
+    "name": "current_transaction_measurement",
+    "scope": "measurement",
+    "timeout_s": 1860
+  },
+  "modes": [
+    "changed_10pct",
+    "eviction",
+    "restart"
+  ],
+  "mutation": "predetermined position+repetition modulo10; each requested-source position changes three times in30 repetitions; append complete whitespace preserving lexical features",
+  "optional_trace": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8064_v698_fresh_feedback_learning.json",
+    "qualified": true,
+    "reason": "Exp8064 batch-gradient and incumbent guard protocol differs; this experiment replays authenticated Exp8053 mechanism transactions only",
+    "sha256": "sha256:58b3ea4c49ea9afb5beb00ce4532df446eae516b9d377ac52f97be5c37c14352",
+    "used": false
+  },
+  "validation_commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot8066-_0otdb6g/.coverage",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8079_v699_feature_cache_lifecycle.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8079_v699_feature_cache_lifecycle.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/guarded_transaction_8053.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot8066-_0otdb6g/pytest",
+        "tests/python/test_feature_cache_lifecycle_8079.py",
+        "tests/python/test_primary_publication_7928.py",
+        "tests/python/test_native_update_8027.py::test_req_pybind_8027_repeated_load_exits_normally",
+        "tests/python/test_native_update_8027.py::test_req_pybind_8027_atomic_copy_preserves_previous_binary",
+        "-q"
+      ],
+      "name": "focused_consumers_loaded_e2e003_004",
+      "scope": "owned",
+      "timeout_s": 180
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "json",
+        "--data-file=/tmp/carnot8066-_0otdb6g/.coverage",
+        "-o",
+        "/tmp/carnot8066-_0otdb6g/coverage.json"
+      ],
+      "name": "coverage_json",
+      "scope": "owned",
+      "timeout_s": 30
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/carnot8066-_0otdb6g/.coverage",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8079_v699_feature_cache_lifecycle.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8079_v699_feature_cache_lifecycle.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "name": "added_statement_coverage",
+      "scope": "owned",
+      "timeout_s": 30
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_8079_v699_feature_cache_lifecycle.py",
+        "scripts/experiments/experiment_8079_v699_feature_cache_lifecycle.py",
+        "python/carnot/verify/guarded_transaction_8053.py",
+        "tests/python/test_feature_cache_lifecycle_8079.py"
+      ],
+      "name": "ruff_check",
+      "scope": "owned",
+      "timeout_s": 30
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_8079_v699_feature_cache_lifecycle.py",
+        "scripts/experiments/experiment_8079_v699_feature_cache_lifecycle.py",
+        "python/carnot/verify/guarded_transaction_8053.py",
+        "tests/python/test_feature_cache_lifecycle_8079.py"
+      ],
+      "name": "ruff_format",
+      "scope": "owned",
+      "timeout_s": 30
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "python/carnot/experiment_8079_v699_feature_cache_lifecycle.py",
+        "scripts/experiments/experiment_8079_v699_feature_cache_lifecycle.py",
+        "python/carnot/verify/guarded_transaction_8053.py"
+      ],
+      "name": "strict_mypy",
+      "scope": "owned",
+      "timeout_s": 90
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_feature_cache_lifecycle_8079.py"
+      ],
+      "name": "scoped_spec_coverage",
+      "scope": "owned",
+      "timeout_s": 30
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import os,runpy,sys;os.chdir(sys.argv[1]);sys.argv=sys.argv[2:];runpy.run_path(sys.argv[0],run_name='__main__')",
+        "/tmp/carnot8066-_0otdb6g",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8079_v699_feature_cache_lifecycle.py",
+        "--cache-probe",
+        "populate",
+        "--cache",
+        "/tmp/carnot8066-_0otdb6g/cli-cache.sqlite"
+      ],
+      "name": "outside_cli_populate",
+      "scope": "owned",
+      "timeout_s": 30
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import os,runpy,sys;os.chdir(sys.argv[1]);sys.argv=sys.argv[2:];runpy.run_path(sys.argv[0],run_name='__main__')",
+        "/tmp/carnot8066-_0otdb6g",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8079_v699_feature_cache_lifecycle.py",
+        "--cache-probe",
+        "restart",
+        "--cache",
+        "/tmp/carnot8066-_0otdb6g/cli-cache.sqlite"
+      ],
+      "name": "outside_cli_restart",
+      "scope": "owned",
+      "timeout_s": 30
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import os,runpy,sys;os.chdir(sys.argv[1]);sys.argv=sys.argv[2:];runpy.run_path(sys.argv[0],run_name='__main__')",
+        "/tmp/carnot8066-_0otdb6g",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8079_v699_feature_cache_lifecycle.py",
+        "--cache-probe",
+        "mutate",
+        "--cache",
+        "/tmp/carnot8066-_0otdb6g/cli-cache.sqlite"
+      ],
+      "name": "outside_cli_mutate",
+      "scope": "owned",
+      "timeout_s": 30
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import os,runpy,sys;os.chdir(sys.argv[1]);sys.argv=sys.argv[2:];runpy.run_path(sys.argv[0],run_name='__main__')",
+        "/tmp/carnot8066-_0otdb6g",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8079_v699_feature_cache_lifecycle.py",
+        "--root",
+        "/tmp/carnot8066-_0otdb6g/absent",
+        "--output",
+        "/tmp/carnot8066-_0otdb6g/experiment_8079_v699_feature_cache_lifecycle.json"
+      ],
+      "name": "outside_cli_blocked",
+      "scope": "owned",
+      "timeout_s": 60
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot8066-_0otdb6g/e2e",
+        "tests/python/test_source_boundary_7852.py",
+        "tests/python/test_experiment_7868_v683_intervention_protocol.py",
+        "-q"
+      ],
+      "name": "private_e2e015_016",
+      "scope": "owned",
+      "timeout_s": 180
+    }
+  ]
+}
