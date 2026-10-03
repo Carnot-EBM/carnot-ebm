@@ -1,0 +1,184 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--rcfile=/tmp/carnot-8070-jweh_xx9/coverage.ini",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_contract_custody_8070.py",
+        "tests/python/test_experiment_7891_v685_authority_lifecycle.py"
+      ],
+      "classification": "required",
+      "coverage_config": "/tmp/carnot-8070-jweh_xx9/coverage.ini",
+      "deadline_s": 180,
+      "expected_exit": 0,
+      "name": "focused_E2E018"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "tests/python/test_roadmap_schema.py",
+        "tests/python/test_audit_roadmap_gates.py",
+        "tests/python/test_exclusion_manifest_lint.py",
+        "tests/python/test_conductor_gates.py"
+      ],
+      "classification": "required",
+      "coverage_config": "/tmp/carnot-8070-jweh_xx9/coverage.ini",
+      "deadline_s": 120,
+      "expected_exit": 0,
+      "name": "consumers"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--rcfile=/tmp/carnot-8070-jweh_xx9/coverage.ini"
+      ],
+      "classification": "required",
+      "coverage_config": "/tmp/carnot-8070-jweh_xx9/coverage.ini",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "coverage_combine"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--rcfile=/tmp/carnot-8070-jweh_xx9/coverage.ini",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v699_contract_custody.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v699_custody_execution.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8070_v699_contract_custody.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "classification": "required",
+      "coverage_config": "/tmp/carnot-8070-jweh_xx9/coverage.ini",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "coverage_report"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "json",
+        "--rcfile=/tmp/carnot-8070-jweh_xx9/coverage.ini",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v699_contract_custody.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/v699_custody_execution.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8070_v699_contract_custody.py",
+        "-o",
+        "/tmp/carnot-8070-jweh_xx9/coverage.json"
+      ],
+      "classification": "required",
+      "coverage_config": "/tmp/carnot-8070-jweh_xx9/coverage.ini",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "coverage_json"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/reporting/v699_contract_custody.py",
+        "python/carnot/reporting/v699_custody_execution.py",
+        "scripts/experiments/experiment_8070_v699_contract_custody.py",
+        "python/carnot/reporting/v685_authority_lifecycle.py",
+        "tests/python/test_contract_custody_8070.py"
+      ],
+      "classification": "required",
+      "coverage_config": "/tmp/carnot-8070-jweh_xx9/coverage.ini",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "ruff_check"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/reporting/v699_contract_custody.py",
+        "python/carnot/reporting/v699_custody_execution.py",
+        "scripts/experiments/experiment_8070_v699_contract_custody.py",
+        "python/carnot/reporting/v685_authority_lifecycle.py",
+        "tests/python/test_contract_custody_8070.py"
+      ],
+      "classification": "required",
+      "coverage_config": "/tmp/carnot-8070-jweh_xx9/coverage.ini",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "ruff_format"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "--follow-imports=silent",
+        "python/carnot/reporting/v699_contract_custody.py",
+        "python/carnot/reporting/v699_custody_execution.py",
+        "scripts/experiments/experiment_8070_v699_contract_custody.py",
+        "python/carnot/reporting/v685_authority_lifecycle.py"
+      ],
+      "classification": "required",
+      "coverage_config": "/tmp/carnot-8070-jweh_xx9/coverage.ini",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "name": "strict_mypy"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_contract_custody_8070.py"
+      ],
+      "classification": "required",
+      "coverage_config": "/tmp/carnot-8070-jweh_xx9/coverage.ini",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "scoped_spec"
+    }
+  ],
+  "terminal_commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8070_v699_contract_custody.py",
+        "--cold-replay",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8070_v699_contract_custody/terminal_candidate.json"
+      ],
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "name": "cold_replay"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+        "--json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8070_v699_contract_custody/terminal_candidate.json"
+      ],
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "name": "adversarial"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8070_v699_contract_custody/terminal_candidate.json"
+      ],
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "name": "strict_rows"
+    }
+  ]
+}

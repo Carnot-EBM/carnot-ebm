@@ -91463,3 +91463,45 @@ shared primary publisher. Thirteen traced tests exercise private external CLI
 routes, scientific denominators and tampered custody. Added statement coverage
 is 100 percent. Current readiness and scientific outcomes remain artifact fields;
 implementation alone grants no benefit. The outcome note preserves all gaps.
+
+### REQ-REPORT-8070: V699 authority and independent historical input custody
+
+Exp8070 SHALL bind thirteen complete ordered V699 task objects, their visible
+contract table and canonical digest through the parameterized authority reader.
+The reader SHALL accept the V699 `Canonical complete-task SHA256` heading.
+Consumed staging SHALL remain explicitly absent. No runner SHALL activate or
+rewrite the live roadmap. V698 authority snapshots SHALL retain original bytes.
+
+Exp8070 SHALL authenticate Exp8058 role manifests, its qualified initial head,
+public feature manifests and original Qwen scalar and raw-call receipts.
+Source and historical learning readiness SHALL qualify independently. Exp8059
+likelihoods SHALL remain disqualified and SHALL never become qualified features.
+Every V698 disposition SHALL resolve by declared primary and authenticated ID,
+or the exact conductor skip path; ambiguous filename fallback SHALL fail.
+Missing primaries and censored cache observations SHALL remain absent/censored.
+
+Owned validation SHALL freeze argv and deadlines before measurement, record real
+normal exits, durations and log hashes, require complete statement coverage for
+added code, and run scoped consumers plus private E2E-018. Publication SHALL use
+primary_publication with cold reconstruction, adversarial and strict-row checks.
+External missing or invalid prerequisites SHALL be terminal blocked. Failed owned
+checks SHALL be terminal disqualified with readiness zero. No current model load
+or generation, independent science, or general learning benefit SHALL be claimed.
+
+#### SCENARIO-REPORT-8070-AUTHORITY
+
+Matching complete V699 authority passes after staging is consumed. Changed prompt,
+metadata, visible table or digest fails. Historical authority stays hash-bound.
+
+#### SCENARIO-REPORT-8070-BRANCHES
+
+A corrupted source role does not erase valid learning inputs, and conversely.
+Changed role, head, public feature or scalar bytes fail exact authentication.
+All six verdict classes and zero, missing, tampered, quarantined and oracle controls
+pass through real conductor gates with separate fixture and science admission.
+
+#### SCENARIO-REPORT-8070-CLI
+
+Private outside-checkout CLI routes publish success, external blocked and owned
+mutation outcomes. Cold replay rejects changed claims, input hashes and logs.
+No private test changes historical primary or terminal bytes.
