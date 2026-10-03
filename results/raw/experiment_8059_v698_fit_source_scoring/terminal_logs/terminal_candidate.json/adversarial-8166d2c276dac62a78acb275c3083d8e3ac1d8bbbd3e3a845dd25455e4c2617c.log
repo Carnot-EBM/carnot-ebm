@@ -1,0 +1,32 @@
+{
+  "reports": [
+    {
+      "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8059_v698_fit_source_scoring/terminal_candidate.json",
+      "loaded": true,
+      "exp_id": 8059,
+      "title": "",
+      "honest_verdict": "complete_disqualified_fit_source_scoring",
+      "flag_count": 3,
+      "max_severity": 2,
+      "flags": [
+        {
+          "kind": "INFERENCE_PROVENANCE_CONTRADICTION",
+          "severity": "critical",
+          "detail": "Current-task inference provenance is contradictory: live_claim_with_no_invocation_evidence; substrate='live_llm_embedding_extraction', live_evidence_count=5, negative_evidence_count=4. The duration check fails closed until the invocation scope agrees."
+        },
+        {
+          "kind": "SUBSTRATE_CLASS_MISMATCH",
+          "severity": "critical",
+          "detail": "inference_substrate_class=model_load_no_generation claims a model ran, but typed invocation evidence says it did not (['generation_calls_attempted', 'generation_calls_completed']). Contradictory."
+        },
+        {
+          "kind": "PRECONDITIONS_UNDECLARED",
+          "severity": "warn",
+          "detail": "substrate 'live_llm_embedding_extraction' declares real compute but the artifact has no preconditions_checked field. The Pre-Launch Preconditions Discipline requires recording WHICH resources were verified before launch \u2014 its absence is the shape every confirmed fabrication shared (exp1851, exp1680)."
+        }
+      ],
+      "gate_version": "07ddacadae8c3b8d3250ad0977bda6f747d5bcb02bb7af3119b80db2547b62c7"
+    }
+  ],
+  "flagged_count": 1
+}

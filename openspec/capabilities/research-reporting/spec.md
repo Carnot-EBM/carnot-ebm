@@ -91123,3 +91123,44 @@ normal process exits. Missing external operands produce terminal blocked;
 failed owned checks disqualify readiness. Preserve historical full-suite failure
 as repository health only. Each field has an inference-error principle. Keep
 generalized benefit zero; the conductor owns ops and traceability reconciliation.
+
+## REQ-REPORT-8059: Collect current repeatable fit and tune source scores
+
+Authenticate Exp8057 fixture readiness and Exp8058 source protocol readiness,
+their exact primary bytes and terminal validators before new scoring. Preserve
+Exp8033 as disqualified historical evidence. Resolve only cached current Qwen,
+lease an idle RTX3090 with existing ownership rules and preserve other processes.
+Missing external operands produce complete_blocked_* with exact gate operands.
+
+### SCENARIO-REPORT-8059-CAPTURE
+
+Preserve all original fit64/tune32 groups and four call slots per group. Use only
+fresh_full native contexts and separated full_A/full_B/no_source_A/no_source_B.
+Never truncate complete source or answer; exclude combined contexts over4096 or
+answers over384 tokens. Pilot the original first8 fit groups within the budget;
+require exact preceding-token alignment, float64 normalization and absolute
+duplicate mean-NLL drift <=1e-6 in both conditions before proceeding. A drifting
+group is never retried. Cap384 forwards,147456 answer tokens and1800 seconds
+including loading. Persist each call before execution and after completion.
+Preserve exclusions, failures and budget-censored slots without replacing groups.
+
+### SCENARIO-REPORT-8059-REDUCTION
+
+Cold-reduce scalar token rows independently to full mean NLL and no-source minus
+full mean NLL. Seal source/answer bytes, token views and public features before a
+separate eligibility process reads complete original human targets. Readiness
+needs48/24 qualified fit/tune groups with8/4 examples per class and all owned
+checks passing. Repeated calls qualify measurement and do not add independent
+sources or detection benefit. Generalized learning benefit remains zero.
+
+### SCENARIO-REPORT-8059-TERMINAL
+
+Freeze bounded validation argv before measurement; run traced unit/consumer
+tests, Ruff check/format, strict mypy, scoped spec coverage,100 percent new
+statement coverage, private E2E-015/016 and actual external-CWD CLI success,
+blocked and mutation routes. Retain exits, durations and exact log hashes. Run
+the full Python suite once as separate repository health without claiming a
+global pass when it fails. Cold replay, adversarial verification and strict row
+consistency precede atomic primary publication after normal child exit. Failed
+required checks disqualify readiness. The conductor owns ops and traceability
+reconciliation for this task.
