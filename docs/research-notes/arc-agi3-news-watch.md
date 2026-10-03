@@ -388,3 +388,9 @@ As of September 27, Tufa Labs leads the provisional public leaderboard with **27
 
 **September 3 — New benchmark results:** ARC Prize announced GPT-6 Astra scored **62.7%** on ARC-AGI-3 Semi-Private with the Standard harness (max reasoning) and **99.9%** with the Provider Adapter harness (high reasoning), establishing new state-of-the-art scores. ARC Prize also announced it would publish both harness configurations on its leaderboard. [Official announcement](https://arcprize.org/blog/astra)
 
+## 2026-10-03 13:17 UTC -- NEW
+
+- **October 3 — Kaggle leaderboard:** Tufa Labs leads with **52.51%**, followed by **Yi-Chia Chen (48.07%)** and **Andrew Reed (36.14%)** on the public competition leaderboard. [Official leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard)
+
+- **July 17 — Official submission diagnostics:** Organizers analyzed 500 failed submissions. Roughly one-third had no traceable notebook error; almost 20% required a GPU without enabling it. [Organizer announcement](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/727119)
+

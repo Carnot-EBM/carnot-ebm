@@ -9,16 +9,10 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 3 |
-| CANNOT_DETERMINE | 5 |
+| CHECKABLE | 4 |
+| CANNOT_DETERMINE | 4 |
 
-## experiment_8046_v697_branch_protocols.json
-
-**CANNOT_DETERMINE**
-
-reviewer call failed
-
-## experiment_8047_fit_score_capture.json
+## experiment_8060_source_energy_training.json
 
 **CHECKABLE**
 
@@ -26,7 +20,7 @@ reviewer call failed
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment was blocked prior to execution because upstream dependency exp8045-scorer-workspace failed the verdict_class gate with an observed value of "circular_positive" instead of "positive" or "null".
+The experiment was blocked prior to execution because two upstream gate checks on exp8059-fit-source-scoring failed.
 
 ## WHAT IS MISSING
 nothing
@@ -34,25 +28,19 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_8051_v697_feedback_constrained_learning.json
+## experiment_8063_v698_admission_opportunity_audit.json
 
 **CANNOT_DETERMINE**
 
 reviewer call failed
 
-## experiment_8052_v697_learning_benefit_audit.json
+## experiment_8064_v698_fresh_feedback_learning.json
 
 **CANNOT_DETERMINE**
 
 reviewer call failed
 
-## experiment_8053_v697_guarded_transaction_cost.json
-
-**CANNOT_DETERMINE**
-
-reviewer call failed
-
-## experiment_8054_v697_arc_supervisor_delta.json
+## experiment_8065_v698_fresh_learning_audit.json
 
 **CHECKABLE**
 
@@ -68,13 +56,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_8055_v697_hardware_guard_boundary.json
-
-**CANNOT_DETERMINE**
-
-reviewer call failed
-
-## experiment_8056_v697_capstone.json
+## experiment_8066_v698_content_addressed_feature_service.json
 
 **CHECKABLE**
 
@@ -82,10 +64,38 @@ reviewer call failed
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The artifact claims that the V697 capstone execution is blocked (`honest_verdict`: "complete_blocked_v697_capstone") due to unmet upstream acceptance gates and prerequisite contract failures.
+no claim
 
 ## WHAT IS MISSING
 nothing
 
 ## THE CHECK A READER CANNOT DO
 none
+
+## experiment_8067_v698_arc_supervisor_frontier.json
+
+**CANNOT_DETERMINE**
+
+reviewer call failed
+
+## experiment_8068_v698_hardware_feature_boundary.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The experiment is blocked from establishing new hardware workload bounds due to failed upstream feature service prerequisites, making no comparative performance or purchase claims.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_8069_v698_capstone.json
+
+**CANNOT_DETERMINE**
+
+reviewer call failed

@@ -11,43 +11,10 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CLAIM_SUPPORTED | 3 |
-| NO_CLAIM | 1 |
-| CANNOT_DETERMINE | 4 |
+| CLAIM_SUPPORTED | 5 |
+| CANNOT_DETERMINE | 3 |
 
-## experiment_8046_v697_branch_protocols.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-No comparative or empirical claim is asserted to refute. If construed as an assertion of protocol readiness or custody validity, any corrupted hash, missing upstream asset, or failed gate check among the sealed preconditions would refute it.
-
-## WAS THAT CHECKED
-Yes, custody and precondition gate checks were verified across the listed upstream inputs and code configs (`acceptance_gate_results` and `preconditions_checked`), but hypothesis testing was not checked because the invocation explicitly did not execute comparative evaluation or model inference.
-
-## EVIDENCE
-- `claim_scope`: `This invocation seals original historically exposed public source roles and feedback acceptance. It measures custody and owned validation only; no live scoring, new training trajectory, unseen evaluation or deployment benefit.`
-- `honest_verdict`: `complete_null_branch_protocols`
-- `inference_substrate`: `aggregation_from_upstream_artifacts`
-- `inference_substrate_class`: `no_model_load`
-- `disposition`: `unavailable in protocol-only invocation`
-- `measured`: `false`
-- `scope`: `protocol only`
-- `arm`: `protocol`
-- `condition`: `public_custody`
-- `learning_protocol_ready_score`: `1`
-- `field_principles`: `Require qualified protocol custody and all owned checks; readiness needs no scientific win and certifies no deployment correctness.`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_8047_fit_score_capture.json
+## experiment_8060_source_energy_training.json
 
 **CANNOT_DETERMINE**
 
@@ -59,7 +26,7 @@ provider: openai
 approval: never
 sandbox: workspace-write
 
-## experiment_8051_v697_feedback_constrained_learning.json
+## experiment_8063_v698_admission_opportunity_audit.json
 
 **CLAIM_SUPPORTED**
 
@@ -67,33 +34,133 @@ sandbox: workspace-write
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-Empirical guard checks on persistent small-head updates establish no future safety, retention, or independent learning benefit over unconstrained updates.
+The retrospective admission opportunity audit establishes a complete null result with zero generalized learning benefit, unfeasible statistical safety certificates, and substantial missed opportunity and harmful admission rates.
 
 ## WHAT WOULD REFUTE IT
-The claim would be refuted by observing a measurable, statistically meaningful performance advantage for the feedback-constrained arm over the unconstrained or frozen baselines—such as a lower Brier score, lower typed cost, superior retention accuracy, or a positive generalized learning benefit score on evaluated streams.
+The null claim would be refuted by observing in the artifact's own data:
+1. A positive generalized learning benefit score (`generalized_learning_benefit_score` > 0).
+2. Statistically significant positive performance gain passing evaluation gates against comparator arms in closed-loop hypothesis testing (`local_passed` true, `gain_margin` true, and `raw_p` below nominal alpha).
+3. Any valid, feasible certificate bounds on Brier score or cost margins (`iid_certificate_valid` true, `brier_margin_feasible` true, `cost_margin_feasible` true, or `paired_margin_feasible` true).
+4. Efficient selection of useful candidates resulting in a low or zero missed opportunity rate along with zero harmful admissions under the audit contract.
 
 ## WAS THAT CHECKED
-Yes. In `rows`, `attempted_gradient_counts`, and `committed_update_counts`, both `unconstrained` and `feedback_constrained` arms were evaluated across multiple seeds on identical released candidates, measuring Brier scores, typed costs, false accepts, and guard rejections, while `positive_control_results` confirmed the guard mechanism could detect beneficial versus destructive updates.
+Yes. Refutation was given a genuine opportunity to occur across multiple independent evaluators and slices:
+1. Feasibility certification was evaluated across 3,960 candidate pool attempts (`certificate_feasibility_rows`), where all checks for Brier margin, cost margin, and paired margin feasibility failed.
+2. Closed-loop causal performance was tested via 10,000 moving-block bootstrap draws across hypotheses `H3` and `secondary_frozen` against `unconstrained` and `frozen_no_write` baselines (`historical_closed_loop`), where both hypotheses failed all gain margin and retention gates (`raw_p` of 1.0 and 0.89).
+3. Candidate pools were evaluated against empirical audit contract thresholds (`pool_category_rows` and `candidate_pool_rows`), discovering 30 missed opportunities out of 37 useful gradient pools (an 81.1% missed opportunity rate) and over 1,470 harmful admissions.
 
 ## EVIDENCE
-- `"honest_verdict": "complete_null_feedback_constrained_learning"`
-- `"verdict_class": "null"`
-- `"claim_scope": "This invocation measures persistent CPU small-head updates on one historically exposed development stream. Empirical guard checks establish no future safety, retention or independent learning benefit."`
-- `"generalized_learning_benefit_score": 0`
-- `"arm": "unconstrained"`
-- `"arm": "feedback_constrained"`
-- `"arm": "frozen_no_write"`
-- `"brier": 0.11997091123721107`
-- `"brier": 0.1217728610957661`
-- `"typed_cost": 0.5170940170940171`
-- `"typed_cost": 0.5341880341880342`
-- `"positive_control_results"`
-- `"passed": true`
+- `"honest_verdict"`
+- `"complete_null_admission_opportunity_audit"`
+- `"verdict_class"`
+- `"null"`
+- `"generalized_learning_benefit_score"`
+- `0`
+- `"claim_scope"`
+- `"Finite retrospective common-candidate diagnosis on historically exposed text. Closed-loop causality, iid safety and generalized benefit are unsupported. No Exp8064 tuning."`
+- `"iid_assumptions_satisfied"`
+- `false`
+- `"missed_opportunity_rate"`
+- `0.8108108108108109`
+- `"missed_opportunity_numerator"`
+- `30`
+- `"missed_opportunity_denominator"`
+- `37`
+- `"local_passed"`
+- `"raw_p"`
+- `1.0`
+- `"brier_margin_feasible"`
+- `"cost_margin_feasible"`
+- `"paired_margin_feasible"`
+- `"iid_certificate_valid"`
+- `"retention_passed"`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_8052_v697_learning_benefit_audit.json
+## experiment_8064_v698_fresh_feedback_learning.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+Fresh feedback learning yields a complete null result with zero generalized learning benefit over comparator arms on the historically exposed stream, certifying causal completeness of the trajectory only.
+
+## WHAT WOULD REFUTE IT
+Statistically significant outperformance of the `fresh_admission` arm over the comparator arms (`frozen`, `unconditional`, `reused_guard`) by the prespecified hypothesis margin (0.02 in typed cost on `later_prediction_rows`), or a non-zero `generalized_learning_benefit_score`.
+
+## WAS THAT CHECKED
+Yes. The multi-arm trajectory was executed across 20 seeds and 256 stream slots, comparing `fresh_admission` against `frozen`, `unconditional`, and `reused_guard` across `candidate_commit_rows`, `alpha_check_rows`, `durable_commit_rows`, `later_prediction_rows`, `retention_rows`, and `per_seed_false_accept_rows`.
+
+## EVIDENCE
+- `honest_verdict`
+- `complete_null_fresh_feedback_learning`
+- `verdict_class`
+- `null`
+- `claim_scope`
+- `Finite historically exposed development stream. Trajectory readiness certifies causal completeness only. No scientific gain, independent environment, future safety or deployment credit.`
+- `generalized_learning_benefit_score`
+- `0`
+- `learning_trajectory_ready_score`
+- `1`
+- `verifier_is_oracle`
+- `false`
+- `genuine_headroom`
+- `benefit_unassessed`
+- `true`
+- `measured`
+- `false`
+- `arms`
+- `frozen`
+- `unconditional`
+- `reused_guard`
+- `fresh_admission`
+- `later_prediction_rows`
+- `per_seed_false_accept_rows`
+- `update_budget_rows`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_8065_v698_fresh_learning_audit.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+Fresh admission demonstrates no qualified learning benefit or safety advantage over the reused guard baseline on the audited stream, resulting in a complete null audit outcome.
+
+## WHAT WOULD REFUTE IT
+Fresh admission demonstrating a statistically significant cost gain exceeding the margin threshold (`gain >= 0.02` with `margin_p < 0.05`), satisfying safety criteria (`safety_passed == true`), maintaining guarded retention (`retention.reused_guard.cost <= 0.02`), and beneficially changing source predictions (`beneficial_changed_sources >= 5`), which would yield `qualified_benefit == true`.
+
+## WAS THAT CHECKED
+Yes; evaluated in `primary_hypothesis_results` across block bootstrap lengths (16, 32, 64) and tested in `gate_check_summary` against predefined scientific thresholds, where all checks observed failure to beat the baseline or satisfy the margin.
+
+## EVIDENCE
+`"honest_verdict"`: `"complete_null_fresh_learning_audit"`
+`"learning_benefit_score"`: `0`
+`"generalized_learning_benefit_score"`: `0`
+`"comparison"`: `"fresh_admission versus reused_guard"`
+`"hypothesis"`: `"H3"`
+`"qualified_benefit"`: `false`
+`"safety_passed"`: `false`
+`"beneficial_changed_sources"`: `0`
+`"gain"`: `-0.011363636363636364`
+`"raw_p"`: `0.998999599839936`
+`"check"`: `"H3.safety_passed"`, `"observed"`: `false`
+`"check"`: `"H3.beneficial_changed_sources"`, `"observed"`: `0`
+`"check"`: `"H3.cost_gain"`, `"observed"`: `-0.011363636363636364`
+`"check"`: `"H3.margin_p"`, `"observed"`: `0.998999599839936`
+`"check"`: `"H3.retention.reused_guard.cost"`, `"observed"`: `0.07142857142857142`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_8066_v698_content_addressed_feature_service.json
 
 **CANNOT_DETERMINE**
 
@@ -105,47 +172,7 @@ provider: openai
 approval: never
 sandbox: workspace-write
 
-## experiment_8053_v697_guarded_transaction_cost.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-Native execution of guarded numerical transactions achieves numerical parity and readiness with Python but yields a complete null speedup.
-
-## WHAT WOULD REFUTE IT
-Observation of a statistically significant performance advantage where the lower bound of the 95% bootstrap confidence interval strictly exceeds 1.0 (refuting the null speedup claim), or observation of numerical discrepancies where `parity_passed` is false or restart actions and probabilities diverge beyond numerical tolerance (refuting parity and readiness).
-
-## WAS THAT CHECKED
-Yes. Paired timing measurements against Python across 30 non-warmup repetitions were conducted for all transaction classes (`accepted`, `rejected`, `reset`) under both `feedback_constrained` and `unconstrained` conditions in `complete_numerical_transaction_speedup`, and numerical equivalence was evaluated across transactions in `parity_rows` and `acceptance_gate_results`.
-
-## EVIDENCE
-- `"honest_verdict": "complete_null_guarded_transaction_cost"`
-- `"claim_scope": "This invocation measures exposed-development guarded numerical transactions only. No full verification-service, generalized learning, deployment safety or hardware speed claim."`
-- `"parity_passed": true`
-- `"native_transaction_ready_score": 1`
-- `"nfr01_met": false`
-- `"default_enabled": false`
-- `"speedup": 0.9968559812593174`
-- `"lower_95": 0.9929087490172696`
-- `"upper_95": 0.9998244589543033`
-- `"speedup": 0.9937533980426855`
-- `"lower_95": 0.9848318546893519`
-- `"upper_95": 1.0000066418105247`
-- `"speedup": 0.9875195597377358`
-- `"lower_95": 0.9580954974124196`
-- `"upper_95": 1.0042421273635151`
-- `"speedup": 0.9949596995660783`
-- `"lower_95": 0.9856279911470285`
-- `"upper_95": 1.0011461633110714`
-- `"completed_count": 240`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_8054_v697_arc_supervisor_delta.json
+## experiment_8067_v698_arc_supervisor_frontier.json
 
 **CANNOT_DETERMINE**
 
@@ -157,7 +184,7 @@ provider: openai
 approval: never
 sandbox: workspace-write
 
-## experiment_8055_v697_hardware_guard_boundary.json
+## experiment_8068_v698_hardware_feature_boundary.json
 
 **CLAIM_SUPPORTED**
 
@@ -165,36 +192,57 @@ sandbox: workspace-write
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-Hardware acceleration provides no measurable whole-service benefit or genuine headroom over CPU execution for the guarded boundary, supporting a complete null verdict and deferring device acquisition.
+Hardware acceleration for new feature workloads is blocked and board acquisition is deferred due to disqualified upstream feature service inputs and lack of measured whole-service benefit, while historical board custody is maintained.
 
 ## WHAT WOULD REFUTE IT
-An observation of substantial speedup bounds (significantly greater than 1.0x) showing that compatible arithmetic accounts for a dominant share of total transaction latency, an authenticated device execution demonstrating whole-service speedup, or active FPGA fabric kernels compatible with the guarded workload.
+The claim would be refuted if `gate_check_summary` showed upstream feature service prerequisites passing (`passed: true`, `feature_service_ready_score` observed as 1, or non-zero qualified cached rows), if `rows` admitted the new workload candidate under `conditional_reduction` as completed rather than excluded, if any entry in `board_rows` reported active device execution (`current_hardware_execution: true`) with positive whole-service acceleration (`measured_current_latency_ms` measured), or if historical board custody verification failed (`custody_valid: false`).
 
 ## WAS THAT CHECKED
-Yes; checked in `acceleration_bounds` (evaluating hypothetical 100x arithmetic acceleration against measured CPU transaction profiles across `native` and `python` arms), `board_rows` (evaluating device custody, execution status, and kernel compatibility across KV260, PolarFire, and GateMate targets), and `acceptance_gate_results`.
+Yes. Upstream prerequisites were evaluated in `gate_check_summary` across five explicit checks (all five failed with `passed: false`), the `exp8066` workload was evaluated and marked `status: "excluded"` in `rows` under `conditional_reduction`, zero device executions were confirmed (`current_device_execution_count: 0`), whole-service benefit was evaluated and deferred across all boards in `board_rows`, and cryptographic custody hashes were authenticated (`custody_valid: true`).
 
 ## EVIDENCE
-- `honest_verdict`: `"complete_null_guarded_hardware_boundary"`
-- `claim_scope`: `"This invocation authenticates historical custody and CPU guard emulation on exposed development. No device performance, future safety or service acceleration."`
-- `measured_device_benefit`: `false`
-- `genuine_headroom`: `false`
-- `speedup_bound`: `1.0000684639280863`
-- `purchase_recommendation`: `"defer: no useful measured device bottleneck"`
-- `acquisition_relevance`: `"defer: no measured board whole-service benefit"`
+- `honest_verdict`: `complete_blocked_new_workload_bound`
+- `verdict_class`: `blocked`
+- `workload_bound_status`: `blocked`
+- `claim_scope`: `Read-only historical custody and conditional bounds only. No current device execution, speed or purchase claim.`
+- `purchase_recommendation`: `none; read-only custody and estimates grant no device benefit`
+- `gate_check_summary`: `passed`: `false`, `observed`: `0`, `observed`: `disqualified`
+- `rows`: `arm`: `conditional_reduction`, `source`: `exp8066`, `status`: `excluded`, `exclusion_reason`: `missing_or_unqualified_current_costs`, `numerator`: `0`
+- `board_rows`: `acquisition_relevance`: `defer: no measured board whole-service benefit`, `current_hardware_execution`: `false`, `custody_valid`: `true`, `measured_current_latency_ms`: `null`
 - `current_device_execution_count`: `0`
-- `generalized_learning_benefit_score`: `0`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_8056_v697_capstone.json
+## experiment_8069_v698_capstone.json
 
-**CANNOT_DETERMINE**
+**CLAIM_SUPPORTED**
 
-reviewer call failed: OpenAI Codex v0.156.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-6.1-sol
-provider: openai
-approval: never
-sandbox: workspace-write
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+The V698 capstone milestone is blocked and establishes zero qualified generalized learning benefit with unresolved upstream verification gates.
+
+## WHAT WOULD REFUTE IT
+The claim of a blocked capstone with null learning benefit would be refuted if the artifact's data showed passing upstream verification gates (e.g. `duplicate_mean_nll_drift` meeting tolerance and `fit_capture_ready_score` equal to 1), primary hypotheses H1 or H2 achieving qualified status, or hypothesis H3 demonstrating a statistically significant cost gain exceeding the 0.02 margin with passed retention safety checks, resulting in `science_ready: true` and `generalized_learning_benefit_score` greater than 0.
+
+## WAS THAT CHECKED
+Yes. Upstream gate verification checks were evaluated and recorded failures (e.g. `duplicate_mean_nll_drift` and `fit_capture_ready_score` in `gate_check_summary`), hypotheses H1 and H2 were evaluated and marked missing/unqualified with $p = 1.0$, and hypothesis H3 was subjected to 10,000 bootstrap draws across block lengths 16, 32, and 64 in `primary_hypothesis_results`, showing negative gain, failed retention safety, and zero beneficial changed sources.
+
+## EVIDENCE
+- `"honest_verdict"`: `"complete_blocked_v698_capstone"`
+- `"science_ready"`: `false`
+- `"generalized_learning_benefit_score"`: `0`
+- `"claim_scope"`: `"Exact task custody and exposed development reductions only; no generalized learning, live solve or board speed credit."`
+- `"hypothesis"`: `"H1"`, `"missing_reason"`: `"absent frozen source heads and evaluation tokens"`, `"raw_p"`: `1.0`, `"qualified"`: `false`
+- `"hypothesis"`: `"H2"`, `"raw_p"`: `1.0`, `"qualified"`: `false`
+- `"hypothesis"`: `"H3"`, `"comparison"`: `"fresh_admission versus reused_guard"`, `"gain"`: `-0.011363636363636364`, `"raw_p"`: `0.998999599839936`, `"beneficial_changed_sources"`: `0`, `"safety_passed"`: `false`, `"qualified_benefit"`: `false`
+- `"check"`: `"duplicate_mean_nll_drift"`, `"observed"`: `0.0003044915178467278`, `"expected"`: `1e-06`, `"passed"`: `false`
+- `"check"`: `"fit_capture_ready_score"`, `"observed"`: `0`, `"expected"`: `1`, `"passed"`: `false`
+- `"independent"`: `0`
+- `"failed"`: `2`
+- `"excluded"`: `6`
+
+## RECOMMENDATION
+KEEP

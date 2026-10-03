@@ -49792,3 +49792,99 @@ primitive receipts show feature gathering dominates guarded transactions; test
 content-addressed reuse with charged misses before optimizing another arithmetic
 kernel. Keep KV260 fabric, PolarFire Linux CPU and GateMate physical-block
 custody separate. No purchase, FPGA redesign or TSU execution follows this scan.
+
+## 2026-10-03 — V699 planning scan: feasible updates and measured execution limits
+
+This scan precedes the V699 design. It covers the requested 2025–2026 topics.
+Primary papers support method descriptions. Carnot adaptations below remain hypotheses.
+
+### Methods to ingest
+
+- **T-SKM-Net: Trainable Neural Network Framework for Linear Constraint Satisfaction
+  via Sampling Kaczmarz-Motzkin Method**, December 2025, AAAI 2026:
+  [paper and method](https://arxiv.org/html/2512.10461v1),
+  [author code](https://github.com/IDO-Lab/T-SKM-Net).
+  The method uses sampled violated half-spaces to restore linear feasibility.
+  A fixed spline basis makes the small head's logits linear in its coefficients.
+  Carnot can therefore add constraints from released feedback and correct a proposed
+  update before admission. Compare this candidate construction with existing ray
+  backtracking. Check every stored inequality after the finite iteration budget.
+  This is an adaptation of the projection idea, not a reproduction of its trained
+  network or a guarantee about unseen labels. CPU sparse dot products give a Rust
+  and batched GPU path; current Ising fabric cannot execute it unchanged.
+- **Constrained Nonconvex Stochastic Optimization with One Projection**,
+  September 28, 2026: [paper](https://arxiv.org/abs/2609.34099),
+  [full text](https://arxiv.org/html/2609.34099v1).
+  The paper separates gradient oracle complexity from terminal projection cost.
+  Charge constraint construction, projection, validation, storage and fallback
+  separately. Its regularity assumptions do not certify Carnot's empirical guard.
+  Do not implement its full nonconvex optimizer in this milestone.
+- **When Validation Stops Learning**, September 2026:
+  [paper](https://arxiv.org/abs/2609.10873).
+  Retain commitment before fresh admission evidence. V698's opportunity audit
+  found only 37 useful pools among 800 constrained gradient pools. Changing
+  candidate geometry tests a different cause from simply increasing guard labels.
+- **Catastrophic Forgetting in Kolmogorov-Arnold Networks**, November 2025:
+  [paper](https://arxiv.org/abs/2511.12828).
+  Keep independent retention tests. Local spline support is not a safety theorem.
+  [KAC](https://arxiv.org/abs/2503.21076) remains a classifier-design comparison,
+  not evidence that Carnot's present head will retain prior decisions.
+- **GASP**, July 2026: [paper](https://arxiv.org/abs/2607.04223).
+  Supplied-answer likelihood under source removal remains a useful research lead.
+  V698's no-source duplicate drift was 0.0003044915 against a 0.000001 limit.
+  First isolate complete process lifetime from context lifetime. Preserve this
+  tolerance. Do not spend another full capture chain before that diagnostic passes.
+- **Capacity-Constrained Online Learning with Delays**, March 2025:
+  [paper](https://arxiv.org/abs/2503.19856).
+  Pending feedback consumes finite tracking capacity. Record pending candidates,
+  release order and memory occupancy. Its oblivious-loss and delay assumptions
+  are not established for the exposed Carnot development stream.
+
+### Coverage of the other primary topics
+
+| Topic | Primary source | Disposition |
+|---|---|---|
+| EBM reasoning and verification | [EBT](https://arxiv.org/abs/2507.02092), [ARM–EBM v4](https://arxiv.org/abs/2512.15605) | Keep equal-information classifier controls and exact sigmoid equivalence. Energy parameterization alone is not new information. |
+| New reasoning lead | [MERITED](https://arxiv.org/abs/2610.00399), submitted September 30, 2026 | Log experience-based compute allocation for later review. Do not add a new 191M model before useful decisions are measured. |
+| Neural constraint satisfaction | [LagONN](https://arxiv.org/abs/2505.07179), [PAL](https://arxiv.org/abs/2503.19466) | Constraint validity must come from a declared model. Defer new general solvers while testing small-head linear constraints. |
+| Ising and FPGA | [Dense-to-sparse connectivity](https://arxiv.org/abs/2503.01177), [p-dits](https://arxiv.org/abs/2506.00269) | Connectivity, encoding and convergence costs matter. Neither gives local board evidence for the present feature service. |
+| Guided generation | [ETS](https://arxiv.org/abs/2601.21484), revised May 2026 | Energy-guided sampling remains downstream of useful verifier evidence. No decoding change or generator fine-tuning is proposed. |
+| Hallucination detection | [GASP](https://arxiv.org/abs/2607.04223) | Separate source information, numerical repeatability and correctness. Test small source-feature interactions while likelihood repair remains independent. |
+
+### Secondary channels and source limits
+
+- **OpenReview:** searched ICLR/ICML 2026 and NeurIPS 2025 EBM work.
+  Indexed results include [EBT](https://openreview.net/pdf?id=ZBj3Qp1bYg) and
+  [Energy Matching](https://openreview.net/pdf?id=WYSCCw7mCe). Direct PDFs returned
+  browser challenges. Use arXiv for EBT methods; no new method claim comes from
+  the inaccessible Energy Matching PDF.
+- **Semantic Scholar:** attempted citation lists for
+  [EBT](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,url&limit=20)
+  and [ARM–EBM](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,url&limit=20),
+  plus title-specific domain searches. The endpoints were inaccessible. This is
+  incomplete citation coverage, not evidence that no citing work exists.
+- **Hugging Face:** searched recent verification papers and checked
+  [HalluGuard](https://huggingface.co/papers/2601.18753) and
+  [automatic layer selection](https://huggingface.co/papers/2605.26366).
+  Keep these as internal-representation leads. Feed summaries alone do not
+  establish compatibility with the mandated GGUF or justify another model load.
+- **GitHub:** checked monthly [Python](https://github.com/trending/python?since=monthly)
+  and [Rust](https://github.com/trending/rust?since=monthly) Trending pages.
+  Both returned cached pages from three weeks earlier. Targeted searches found
+  the T-SKM-Net author implementation above. No current trend rank is claimed.
+  Upstream [llama.cpp numerical discussion](https://github.com/ggml-org/llama.cpp/discussions/28042)
+  and [determinism proposal](https://github.com/ggml-org/llama.cpp/pull/16016/files)
+  motivate explicit execution-shape records. They do not diagnose Carnot's drift
+  or establish a merged fix. Do not change the shared runtime from these reports.
+- **Extropic:** checked [Writing](https://extropic.ai/writing) and
+  [Z1T](https://extropic.ai/writing/z1t/). Keep sparse sampling as a future path.
+  Vendor efficiency figures do not measure Carnot's complete verification service.
+- **Logical Intelligence:** checked [Kona](https://logicalintelligence.com/kona)
+  and the [current site](https://logicalintelligence.com/). Constraint reasoning
+  remains an architectural reference. No open, locally reproducible training
+  recipe was established by this scan.
+
+Hardware implication: retain the existing CPU, CUDA RTX 3090 resources and native
+binding. Partition expensive cache cases into separate tasks with complete pairs.
+Preserve independent KV260 fabric, PolarFire CPU and GateMate physical evidence.
+No purchase, new FPGA design, NPU installation or TSU run follows from this scan.

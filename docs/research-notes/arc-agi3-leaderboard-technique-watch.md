@@ -430,3 +430,9 @@ For these three published inference paths, I found no game-source reading or per
 - **Cihan Atak — newly discovered animation presentation:** The same notebook automatically supplies a **chronological image contact sheet**, bounded to eight panels including the final board. Subsampling preserves original frame labels; stale sheets are stripped from outgoing requests while stored history remains intact. **Classification: (b), general-purpose processing of observed frames.** Current-score linkage remains unproven. [Implementation](https://www.kaggle.com/code/cihanatak/arc3-b32-reap-v030-kv14-c12-ctx48-r1?scriptVersionId=353864256)  
   **POSSIBLE CARNOT LEVER:** Test bounded chronological sheets when transition verification fails, supplying temporal evidence without accumulating image-heavy prompt history.
 
+## 2026-10-03 13:37 UTC -- NEW
+
+**New top-five entrants, October 3:** **lalalia (`lalalia9`) is #4 at 35.79**, and **Kamal Kadakara is #5 at 35.44**. [Live leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard)
+
+I found no attributable public ARC implementation or technique writeup for either. **Classification remains unknown:** source-reading/per-game hardcoding versus general-purpose methods cannot yet be determined. [lalalia’s code profile](https://www.kaggle.com/lalalia9/code), [Kamal’s code profile](https://www.kaggle.com/kamalkadakara/code)
+

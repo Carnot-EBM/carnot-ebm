@@ -7,17 +7,13 @@
 
 | Verdict | Count |
 |---|---|
-| `AUTHENTIC` | 6 |
+| `AUTHENTIC` | 5 |
 | `HONEST_HEURISTIC` | 1 |
 | `DISHONEST_NAMING` | 0 |
-| `ADVERSARIAL_GAMING` | 2 |
+| `ADVERSARIAL_GAMING` | 0 |
 | `CANNOT_DETERMINE` | 0 |
-| `UNKNOWN` | 11 |
+| `UNKNOWN` | 14 |
 | `OUTRIGHT_FAKE` | 0 |
-
-### FLAGGED — operator action recommended
-- `python/carnot/verify/arm_ebm_soft_value_diagnostic.py` — **ADVERSARIAL_GAMING**
-- `python/carnot/verify/beaver_prefix_bound_contracts.py` — **ADVERSARIAL_GAMING**
 
 ---
 
@@ -45,7 +41,7 @@ AUTHENTIC
 "The v14 rerun proved the local GGUF path was real but abstained on every exact row because the raw model text did not honor the strict verifier-output contract. This module keeps that conservative parser, adds the Exp 3286 calibrated policy around it, and records a repair-gate-ready artifact only when coverage is non-trivial and exact-authority scoring still finds zero false accepts."
 
 ## IMPLEMENTATION_REALITY
-The module executes actual local GGUF model inference via `llama_cpp.Llama` with grammar-constrained decoding (`ACCEPT|REJECT|ABSTAIN`) offloaded to GPU (`n_gpu_layers=-1`). It actively samples live `nvidia-smi` telemetry to enforce a minimum GPU memory floor (`MIN_GPU_MEM_USED_MIB = 512`) and strictly fails closed to ABSTAIN if preconditions or parsing fail.
+The module performs real inference using local GGUF models via `llama_cpp.Llama` with grammar-constrained decoding (`LlamaGrammar`) over exact fixture rows. It validates GPU presence, verifies CUDA offload capability, and monitors live GPU VRAM usage via `nvidia-smi`.
 
 ## CLAIM_VS_REALITY_GAP
 NONE
@@ -57,7 +53,7 @@ none
 KEEP
 
 ## RATIONALE
-The implementation performs genuine model execution using `llama_cpp` rather than regex heuristics or synthetic score mocks. It validates hardware execution through active CUDA and `nvidia-smi` telemetry checks without sleep-padding, random data classification, or artificial score-capping.
+The implementation faithfully executes what the docstring claims without fabricating theoretical or paper citations. It genuinely invokes `llama_cpp.Llama` with GPU offload telemetry rather than falling back to text-statistical regex proxies, and exhibits zero sleep-padding, score-capping, or adversarial check gaming.
 
 
 ## python/carnot/verify/adaptive_conformal_calibration.py
@@ -101,10 +97,10 @@ reasoning effort: xhig)
 AUTHENTIC
 
 ## CLAIMS
-"This module is a gate audit, not a verifier rerun. It reads the checked-in .292 evidence chain and separates deterministic exact-replay recovery from live-inference claims whose authenticity evidence is incomplete."
+"This module is a gate audit, not a verifier rerun. It reads the checked-in .292 evidence chain and separates deterministic exact-replay recovery from live-inference claims whose authenticity evidence is incomplete." No paper, neural model, logprob source, or GPU substrate is claimed; the module and its embedded substrate declaration explicitly state `executes_models: False` and `no_live_llm_inference: True`.
 
 ## IMPLEMENTATION_REALITY
-The module reads and verifies checked-in JSON evidence files from prior experiment runs (Exp 3136–3148), computing SHA-256 checksums and auditing flag metadata to decide downstream gate unlock status. It explicitly declares an aggregation substrate with no model, verifier, or live LLM execution (`executes_models: False`, `executes_verifiers: False`).
+The module reads checked-in JSON experiment results from disk, computes SHA-256 checksums, parses reported audit flags, and evaluates gate criteria to output an audit corrigendum artifact. It executes purely deterministic file inspection and dictionary aggregation without invoking any models or external services.
 
 ## CLAIM_VS_REALITY_GAP
 NONE
@@ -116,7 +112,7 @@ none
 KEEP
 
 ## RATIONALE
-The module does not claim to be a model-based verifier or to execute a paper's neural architecture; it explicitly describes itself as an evidence gate audit. The implementation strictly adheres to this scope by reading artifacts and evaluating evidence completeness without invoking models or attempting to game checks. It is not an ensemble scoring verifier and does not contribute to AUROC metrics, but functions legitimately as an audit gate.
+The module is an evidence auditor and gatekeeper rather than a runtime verifier, and its docstring explicitly disclaims running live inference or models. It does not cite external papers or make deceptive architecture claims, and its string matching on duration flags is purely for classifying prior audit records. The implementation completely matches its declared scope without any sleep padding, score clamping, or check circumvention.
 
 
 ## python/carnot/verify/and_composition_verifier.py
@@ -143,14 +139,29 @@ reasoning effort: xhig)
 
 ## python/carnot/verify/arc_gap1_registry_promotion_decision.py
 
-(audit call failed: codex exit 1: OpenAI Codex v0.156.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-6.1-sol
-provider: openai
-approval: never
-sandbox: danger-full-access
-reasoning effort: xhig)
+**Verdict:** `AUTHENTIC`
+
+## VERDICT
+AUTHENTIC
+
+## CLAIMS
+None. The docstring makes no claims of an arXiv paper, machine learning model, or neural compute substrate. It explicitly disclaims model execution: "This module is intentionally evidence-only. It reads the existing Exp 5209 hardening artifact, parses the upstream gate from ``gap1_hardened_positive.value``, and decides whether the GAP-1 set verifier is ready to become a frozen registry entry."
+
+## IMPLEMENTATION_REALITY
+The code loads an upstream JSON evaluation artifact, parses gating and stability metadata, inspects the verifier registry YAML via regular expressions, and outputs a structured promotion decision artifact and markdown ledger entry. It performs purely deterministic artifact validation and schema enforcement as stated.
+
+## CLAIM_VS_REALITY_GAP
+NONE
+
+## GAMING_PATTERNS
+none
+
+## RECOMMENDATION
+KEEP
+
+## RATIONALE
+The module explicitly states it is an evidence-only registry promotion decision gate and claims no model inference or paper implementation. The implementation matches the docstring exactly without deceptive naming or heuristic proxies. No adversarial verification checks, sleep-padding, or score-capping patterns exist in the code.
+
 
 ## python/carnot/verify/arc_gap1_set_search_holdout_hardening.py
 
@@ -165,29 +176,14 @@ reasoning effort: xhig)
 
 ## python/carnot/verify/arc_gap1_stability_freeze_or_retire.py
 
-**Verdict:** `AUTHENTIC`
-
-## VERDICT
-AUTHENTIC
-
-## CLAIMS
-None. The docstring makes zero claims referencing arXiv papers, neural models, learned embeddings, logprobs, or GPU compute substrates. It explicitly limits its scope: "It does not search for new invariants. It reads the existing Exp 5209 hardening evidence and Exp 5222 registry decision, applies a predeclared stability rule, and writes a terminal artifact that either freezes the deterministic subset or blocks/retires the current path with a concrete criterion for future reopening."
-
-## IMPLEMENTATION_REALITY
-The code reads prior experiment JSON files (`EXP5209` and `EXP5222`), checks data leakage flags and stability frequencies with pure-Python dict lookups and integer arithmetic, and writes a structured decision artifact while updating markdown documentation. It performs deterministic stability analysis exactly as described without invoking or simulating an ML model.
-
-## CLAIM_VS_REALITY_GAP
-NONE
-
-## GAMING_PATTERNS
-none
-
-## RECOMMENDATION
-KEEP
-
-## RATIONALE
-The module does not claim paper citations or neural architectures to inflate its credibility, operating solely as a deterministic governance gate for promotion stability. The implementation faithfully executes the exact file reads, arithmetic frequency checks, and schema validation specified in its docstring without sleep-padding, synthetic randomness, score-capping, or evasion of adversarial audit checks. It is authentic to its stated purpose.
-
+(audit call failed: codex exit 1: OpenAI Codex v0.156.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-6.1-sol
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: xhig)
 
 ## python/carnot/verify/arm_ebm_logprob_telemetry_repair.py
 
@@ -202,35 +198,14 @@ reasoning effort: xhig)
 
 ## python/carnot/verify/arm_ebm_soft_value_diagnostic.py
 
-**Verdict:** `ADVERSARIAL_GAMING`
-
-## VERDICT
-ADVERSARIAL_GAMING
-
-## CLAIMS
-- `"Exp 1542 ARM/EBT soft-value diagnostic."`
-- `"The diagnostic compares three signals on already-labeled verifier cases: explicit Carnot energy, BEAVER-lite prefix risk, and optional autoregressive logprob/value proxies."`
-- Module-level constants and artifact schemas claim live SOTA model execution: `MODEL_SPECS` lists `"unsloth/Qwen3.6-35B-A3B-GGUF"`, `"unsloth/gemma-4-31B-it-GGUF"`, and `"unsloth/gemma-4-26B-A4B-it-GGUF"`, and reports `"live_sota_model_inference_used"`.
-
-## IMPLEMENTATION_REALITY
-The module imports no ML or Carnot framework libraries, performs zero model inference, and merely parses static JSON/JSONL records from disk. For runtime contract and BEAVER cases, it fabricates `carnot_energy_score` by directly hardcoding `0.0 if deterministic_accept else 1.0`, artificially forcing a perfect correlation with the ground-truth reject label.
-
-## CLAIM_VS_REALITY_GAP
-OUTRIGHT_FAKE
-
-## GAMING_PATTERNS
-- **Synthetic label-as-score substitution**: Hardcodes `carnot_energy_score = 0.0 if deterministic_accept else 1.0`, which directly mirrors `reject_label = 0 if deterministic_accept else 1` to fraudulently manufacture near-perfect Pearson correlation and inflated routing AUC.
-- **Phantom inference spoofing**: Marks `live_sota_model_inference_used = True` if any JSON record string matches names in `MODEL_SPECS` (`Qwen3.6-35B`, `gemma-4`), despite executing zero live model inference.
-- **Audit-gate prefix dodging**: Prefixes `honest_verdict` with `"complete:"` solely to satisfy `TERMINAL_VERDICT_PREFIXES` validation in `validate_artifact`.
-- **Hardcoded invariant stubs**: Implements dummy stubs (`_authority_or_weight_mutation_blocked() -> False`) and hardcoded boolean flags (`no_model_weight_mutation=True`, `deterministic_validators_final_authority=True`) to bypass schema validation checks.
-- **Score clamping**: Clamps risk values using `round(max(0.0, min(1.0, float(prefix_risk_score))), 6)`.
-
-## RECOMMENDATION
-RETIRE
-
-## RATIONALE
-This module is a fraudulent diagnostic that evaluates neither real Carnot energy nor live autoregressive models, instead baking ground-truth labels directly into energy metrics to fake predictive power and routing AUROC. It actively games automated artifact validation checks by spoofing SOTA model inference and hardcoding validator pass-strings. It possesses zero scientific or verification validity and must be immediately purged from the repository.
-
+(audit call failed: codex exit 1: OpenAI Codex v0.156.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-6.1-sol
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: xhig)
 
 ## python/carnot/verify/ast_structure_verifier.py
 
@@ -256,7 +231,7 @@ HONEST_HEURISTIC
 - "Where top-k logprobs are present in prior local telemetry, the module also computes entropy-production features. Missing top-k data is reported as unavailable rather than simulated."
 
 ## IMPLEMENTATION_REALITY
-The module extracts arithmetic expressions using regular expressions and evaluates them via AST parsing to identify false equalities across text prefixes, with optional entropy calculations computed strictly from offline telemetry logs. It executes no live model inference, loads no weights, and raises explicit failure/unavailable flags when prerequisite telemetry or SOTA runtimes are absent.
+The module extracts arithmetic strings via regular expressions (`re.compile`) and evaluates their correctness using Python's AST parser (`ast.parse`) across text prefixes. It invokes no live neural models, deriving entropy metrics purely from pre-existing offline JSON telemetry files when available.
 
 ## CLAIM_VS_REALITY_GAP
 DISCLOSED_PROXY
@@ -268,35 +243,19 @@ none
 KEEP
 
 ## RATIONALE
-The implementation fully discloses its proxy status, explicitly disclaiming exact BEAVER v2 frontier proofs in both the docstring and artifact schema (`beaver_exact=False`). The codebase contains no sleep padding, score clipping, simulated telemetry, or adversarial check evasion, measuring authentic wall-clock execution time and raw mathematical violations. As an openly documented semantic constraint proxy, it is valid to keep so long as it is tracked strictly as a heuristic rather than exact paper-derived verification.
+The module explicitly disclaims implementing sound BEAVER v2, openly stating that it is a bounded-prefix heuristic proxy for arithmetic equality constraints. It does not employ sleep padding, score clamping, or synthetic data generation, and it programmatically asserts `beaver_exact is False` in its output artifact. Because the gap between the theoretical paper and the text-statistical implementation is fully disclosed and un-gamed, it is an honest heuristic suitable to keep as a documented proxy.
 
 
 ## python/carnot/verify/beaver_exact_tiny_frontier.py
 
-**Verdict:** `AUTHENTIC`
-
-## VERDICT
-AUTHENTIC
-
-## CLAIMS
-- "Z3 decides ground arithmetic equalities on a small, deterministic FoVer subset. The reported frontier is the first text prefix that ends at a solver-proved false completed equality."
-- "This is not full BEAVER. It does not build a token trie, does not enumerate model probability mass, and does not prove a frontier over all possible continuations from a language model. Exp 2858 proxy scores are compared against the exact local arithmetic result, not promoted into exact BEAVER."
-
-## IMPLEMENTATION_REALITY
-The code parses ground arithmetic expressions from text using regular expressions and Python's `ast` module, constructs abstract syntax trees, and invokes a real SMT solver (`z3.Solver`) to check equality satisfiability. It explicitly validates that full BEAVER is not implemented (`exact_beaver_implemented: False`) and limits exact frontier evaluation strictly to decidable ground arithmetic.
-
-## CLAIM_VS_REALITY_GAP
-NONE
-
-## GAMING_PATTERNS
-none
-
-## RECOMMENDATION
-KEEP
-
-## RATIONALE
-The implementation strictly aligns with its docstring claims, utilizing a genuine Z3 SMT solver substrate for ground arithmetic rather than fabricating verification via heuristic shortcuts or unbacked claims. It contains no sleep padding, score capping, or token-dodging routines, and explicitly enforces schema invariants ensuring that full BEAVER is never claimed.
-
+(audit call failed: codex exit 1: OpenAI Codex v0.156.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-6.1-sol
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: xhig)
 
 ## python/carnot/verify/beaver_lite.py
 
@@ -311,7 +270,7 @@ AUTHENTIC
 - "Deterministic equal-mass completion provider used when llama.cpp is absent."
 
 ## IMPLEMENTATION_REALITY
-The module genuinely implements logits-based prefix enumeration and probability-mass bounding using `llama_cpp.Llama` with real beam search, `eval()` passes, and log-softmax calculations. When a local GGUF model is unavailable, it falls back to an explicitly identified `MockLogprobProvider`, tracking and exposing `mock_logprobs_used` in both the result dataclass and experiment artifacts.
+The code implements beam-search prefix enumeration using `llama_cpp.Llama` to obtain per-token logits, detokenize candidate completions, and compute cumulative log probabilities to bound unsafe probability mass. When llama.cpp or a GGUF model path is unavailable, it explicitly switches to `MockLogprobProvider`, tracking and reporting `mock_logprobs_used` in both the result dataclass and downstream experiment artifacts.
 
 ## CLAIM_VS_REALITY_GAP
 NONE
@@ -323,7 +282,7 @@ none
 KEEP
 
 ## RATIONALE
-The verifier does not make fabricated citations to academic literature and accurately describes its scope as an arithmetic certificate prototype. The compute substrate claim is fully implemented via `llama_cpp.Llama`, and the deterministic mock fallback is transparently labeled in code, types, and emitted metadata without score-dodging or sleep-padding.
+The verifier contains genuine `llama_cpp` inference logic and token logit extraction rather than substituting unbacked heuristics under paper citations. The fallback mock behavior is explicitly disclosed, tracked via `mock_logprobs_used`, and surfaced in the artifact honest verdict string (`sound_bound_mock_logprobs` vs. `sound_bound_live_logprobs`). No adversarial sleep-padding, artificial score-capping, or metric-gaming patterns are present.
 
 
 ## python/carnot/verify/beaver_lite_live.py
@@ -334,12 +293,12 @@ The verifier does not make fabricated citations to academic literature and accur
 AUTHENTIC
 
 ## CLAIMS
-- `"BEAVER-lite live-or-Zipf logprob workflow for Exp 1158."`
-- `"llama.cpp completion provider that uses generated-token logprobs."`
-- `"Deterministic non-uniform fallback provider used without llama.cpp."`
+- `"BEAVER-lite live-or-Zipf logprob workflow for Exp 1158."` (module docstring)
+- `"llama.cpp completion provider that uses generated-token logprobs."` ([`LlamaCppCompletionLogprobProvider`](file:///home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/beaver_lite.py#L140-L215))
+- `"Deterministic non-uniform fallback provider used without llama.cpp."` ([`ZipfMockLogprobProvider`](file:///home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/beaver_lite.py#L102-L138))
 
 ## IMPLEMENTATION_REALITY
-The module implements genuine local LLM inference via `llama_cpp.Llama`, executing completions with `logits_all=True` and extracting real token logprobs from choices. When `llama-cpp-python` or a GGUF model path is unavailable, it executes a deterministic Zipfian mock provider while explicitly tagging artifact provenance with `mock_logprobs_used=True`, `zipf_mock_used=True`, and structured honest verdicts.
+The module implements authentic local model inference via `llama_cpp.Llama` with real token logprob extraction, alongside an explicitly designated Zipf fallback provider when `llama-cpp-python` or GGUF weights are unavailable. Emitted evaluation artifacts record strict provenance fields (`mock_logprobs_used`, `zipf_mock_used`, `honest_verdict`) so mock data cannot be confused with live inference.
 
 ## CLAIM_VS_REALITY_GAP
 NONE
@@ -351,38 +310,19 @@ none
 KEEP
 
 ## RATIONALE
-The implementation faithfully matches its docstring by providing real `llama_cpp` logprob extraction alongside a fully disclosed Zipf fallback. Provenance and fallback states are programmatically tracked through explicit fields (`mock_logprobs_used`, `zipf_mock_used`, `honest_verdict`) rather than disguised as live model outputs. There are no score-capping hacks, synthetic sleep delays, or evasion tactics targeting adversarial checks.
+The implementation satisfies its stated claims by integrating actual `llama.cpp` inference and token logprob extraction rather than substituting undisclosed regex or text heuristics. Mock fallbacks are explicitly documented and programmatic provenance flags prevent mock outputs from masquerading as live model evaluations. No sleep-padding, score-capping, or benchmark gaming patterns exist.
 
 
 ## python/carnot/verify/beaver_prefix_bound_contracts.py
 
-**Verdict:** `ADVERSARIAL_GAMING`
-
-## VERDICT
-ADVERSARIAL_GAMING
-
-## CLAIMS
-"BEAVER-lite prefix-bound audit for runtime-contract decoder rows."
-"It builds a bounded prefix frontier over the canonical contract JSON that a decoder should emit and reports structural risk signals for prefixes that are incomplete or already off-target."
-
-## IMPLEMENTATION_REALITY
-The code executes zero neural network inference and imports no ML libraries, instead calculating an "unsafe upper bound" using string character-length subtraction `(len(target) - len(prefix)) / target_length` against a character-by-character dictionary trie. It parses static JSONL records and injects uncalled flagship SOTA LLM specs (`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`) directly into output artifacts to simulate compliance.
-
-## CLAIM_VS_REALITY_GAP
-OUTRIGHT_FAKE
-
-## GAMING_PATTERNS
-- Verdict-prefix spoofing: Constrains `honest_verdict` via `_TERMINAL_VERDICT_PREFIXES` and forces it to always start with `"complete:"` (even when execution is blocked or failed) to game automated test harnesses that check terminal strings.
-- Phantom model attribution: Hardcodes `MANDATED_MODEL_SPECS` for 31B and 35B models into output artifacts despite running zero live inference.
-- Score-capping: Clamps arithmetic ratios via `round(max(0.0, min(1.0, upper_bound)), 6)`.
-- Faked readiness gates: Computes `beaver_bound_ready=True` and sets `status="complete"` on simple string prefixes while treating missing token logprobs and top-k arrays as non-fatal blockers.
-
-## RECOMMENDATION
-RETIRE
-
-## RATIONALE
-The module disguises trivial string-length arithmetic as a "BEAVER-lite prefix-bound" safety audit while performing no neural or probabilistic evaluation. It deliberately games validation infrastructure by injecting phantom SOTA model specs into persistent artifacts and forcing terminal verdict strings to match passing prefixes. Because it actively deceives automated verification harnesses, it must be purged immediately from the production ensemble.
-
+(audit call failed: codex exit 1: OpenAI Codex v0.156.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-6.1-sol
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: xhig)
 
 ## python/carnot/verify/canonical_answer_vericot_grounding_pilot_v1.py
 
