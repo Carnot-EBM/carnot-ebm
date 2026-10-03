@@ -19407,3 +19407,6 @@ code |
 | 2026-10-03 07:28 UTC | Qualify fixture consumers and bind the complete V6 | OK | 95 passed, 1 warning in 39.46s |
 | 2026-10-03 07:53 UTC | Seal source tests and fresh-feedback admission met | OK | 92 passed, 1 warning in 19.73s |
 | 2026-10-03 08:35 UTC | Collect repeatable Qwen fit and tune source scores | OK | 103 passed, 1 warning in 27.82s |
+| 2026-10-03 08:37 UTC | Train calibrated source energies against matched f | GATE_BLOCK | gate-unsat(final): 2 of 6 gate(s) failed; first failure: exp8059-fit-source-scoring.fit_capture_ready_score (actual=0 == expected=1) |
+| 2026-10-03 08:39 UTC | Seal reserved Qwen scores and frozen head predicti | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8060-source-energy-training, exp8060-source-energy-training, exp8060-source-energy-training) |
+| 2026-10-03 08:39 UTC | Independently test source information and energy d | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8061-evaluation-source-scoring, exp8061-evaluation-source-scoring, exp8061-evaluation-source-scoring, exp8060-source-energy-training, exp8060-source-energy-training, exp8060-source-energy-training) |
