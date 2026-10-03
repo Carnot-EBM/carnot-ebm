@@ -49701,3 +49701,94 @@ Hardware decision: use the existing CPU and an available RTX 3090 for Qwen3.8
 fixed-answer scoring. Keep KV260 fabric, PolarFire CPU and GateMate physical
 block evidence distinct. Measure the cost of rejected updates and fallback;
 the scan supplies no basis for a purchase or a claimed 100x local speedup.
+
+## 2026-10-03 — V698 planning scan: admission evidence and source utility
+
+Recorded before the V698 experiment design. Searches covered 2025–2026 papers
+and the requested secondary channels. Findings below are external evidence;
+proposed Carnot adaptations are hypotheses, not reproduced results.
+
+### Findings selected for the next design
+
+- **When Validation Stops Learning: Auditing Update Admission for Continual
+  Embodied Agents**, September 9, 2026:
+  [paper](https://arxiv.org/abs/2609.10873),
+  [method and limitations](https://arxiv.org/html/2609.10873v1).
+  The paper separates candidate development, fresh admission observations and
+  inaccessible audit outcomes. It measures missed opportunities per candidate
+  pool, rather than treating every unselected candidate as a loss. Paired binary
+  disagreement bounds can need less evidence than range bounds, but its own
+  closed-loop diagnostic still favors unconditional replay. Adopt the separation
+  and opportunity accounting; do not transplant its independent-sample guarantee
+  to Carnot's dependent, previously exposed text stream. First calculate whether
+  the available labels can support a certificate at all. A small empirical guard
+  remains an empirical guard. This directly informs the V697 learning null.
+- **Optimal Recalibration of an Online Predictor**, July 22, 2026:
+  [primary paper](https://arxiv.org/abs/2607.19689).
+  Calibration and excess proper loss are separate objectives. Retain both Brier
+  loss and typed decision cost when evaluating adaptation. Defer its full
+  approachability algorithm until feedback support and the present small-head
+  mechanism are measured. Do not claim its asymptotic guarantee for delayed,
+  selectively released Carnot labels.
+- **A Reduction from Delayed to Immediate Feedback for Online Convex Optimization
+  with Improved Guarantees**, February 2, 2026:
+  [primary paper](https://arxiv.org/abs/2602.02634).
+  Outstanding feedback and delay-induced drift belong in the accounting. Record
+  candidate commitment, prediction issue, label release and admission times.
+  Its convex regret bounds do not prove safety for typed, discontinuous actions.
+- **Catastrophic Forgetting in Kolmogorov-Arnold Networks**, November 16, 2025,
+  AAAI 2026 per the primary page:
+  [paper](https://arxiv.org/abs/2511.12828).
+  Local spline support does not by itself prevent forgetting. Include retention
+  and changed-decision rows for the small energy head; do not reopen generator
+  fine-tuning or the retired importance-anchor method.
+- **GASP**, July 2026:
+  [paper](https://arxiv.org/abs/2607.04223).
+  Keep the already planned source/no-source fixed-answer measurement, exact
+  duplicates and independent complete-response human targets. V697 never ran
+  this study because a fixture verdict was rejected by its consumer. Correcting
+  that typed prerequisite is a reason to collect new evidence, not to relabel
+  the old fixture as non-oracle science.
+
+### Coverage and disposition of the other requested topics
+
+| Topic | Primary source checked | Consequence |
+|---|---|---|
+| EBM verification/reasoning | [EBT](https://openreview.net/pdf?id=ZBj3Qp1bYg), ICLR 2026; [ARM–EBM](https://arxiv.org/abs/2512.15605), 2025/2026 | Compare small energy heads with identical-information logistic controls; learned compatibility is not an exact truth oracle. |
+| Neural constraint satisfaction | [Lagrange Oscillatory Neural Networks](https://arxiv.org/abs/2505.07179), May 2025 | Supplied constraint validity remains an assumption; defer another solver until extraction utility is established. |
+| Ising ML and accelerated sampling | [Scaling Up Thermodynamic AI Models](https://arxiv.org/abs/2607.00170), June 30, 2026 | Sampling schedules and autocorrelation affect useful work; this does not map arbitrary source-feature extraction onto current FPGA fabric. |
+| Energy-guided decoding | [ETS](https://arxiv.org/abs/2601.21484), January 2026 | Defer decoding changes until the verifier signal earns a decision benefit. Fixed-answer scoring is non-generative model work. |
+| KAN | [KAC](https://arxiv.org/abs/2503.21076), March 2025; forgetting study above | Keep bounded spline computation and explicit retention tests. |
+| Hallucination detection | [SIRIN](https://arxiv.org/abs/2608.00033), [SURE-RAG](https://arxiv.org/abs/2605.03534) | New comparison leads; sufficiency verification and natural hallucination detection need separate claims. Do not adopt another detector in this milestone. |
+
+### Secondary channels and access limits
+
+- **OpenReview:** searched ICLR/ICML 2026 and NeurIPS 2025 EBM work;
+  opened indexed EBT and the [intrinsic optimizer submission](https://openreview.net/pdf?id=UGB6JCl9lz).
+  The latter is labeled a submission in the returned source. No additional
+  acceptance or reproducible verifier benefit is inferred.
+- **Semantic Scholar:** attempted the [EBT citation endpoint](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,url&limit=20)
+  and [ARM–EBM citation endpoint](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,url&limit=20),
+  then domain searches. Both endpoints returned tool access errors. Citation
+  coverage remains incomplete; no citing-paper census or novelty guarantee.
+- **Hugging Face:** checked [SIRIN](https://huggingface.co/papers/2608.00033),
+  [SURE-RAG](https://huggingface.co/papers/2605.03534) and
+  [RT4CHART](https://huggingface.co/papers/2603.27752). These are discovery leads;
+  feed summaries and apparent dates do not replace primary-method verification.
+- **GitHub:** checked [monthly Python Trending](https://github.com/trending/python?since=monthly)
+  and targeted EBM/constraint/KAN searches. The returned trend page was cached
+  three weeks earlier. [SIRIN author code](https://github.com/sb-ai-lab/SIRIN)
+  is a promising interface comparison; no current relevant trending rank claimed.
+- **Extropic:** checked [Writing](https://extropic.ai/writing) and
+  [Z1T](https://extropic.ai/writing/z1t/). Treat vendor efficiency estimates as
+  workload-specific projections, not Carnot measurements or local TSU access.
+- **Logical Intelligence:** checked [Kona](https://logicalintelligence.com/kona)
+  and the [current site](https://logicalintelligence.com/). The architecture is
+  inspiration for constraint reasoning; this scan established no open recipe
+  that Carnot can independently reproduce.
+
+Hardware implication: existing CPU and CUDA RTX 3090 resources suffice. Exp8053's
+primitive receipts show feature gathering dominates guarded transactions; test
+content-addressed reuse with charged misses before optimizing another arithmetic
+kernel. Keep KV260 fabric, PolarFire Linux CPU and GateMate physical-block
+custody separate. No purchase, FPGA redesign or TSU execution follows this scan.

@@ -3598,3 +3598,13 @@ No active-roadmap or conductor modification is part of this planning change.
 | FR-05, FR-08, NFR-01 | Exp8015 real binding parity and current update timing | Opt-in research prototype planned |
 | FR-09, FR-10 | Exp8005–Exp8006 authority and independent replay; all task checks | Existing contract/schema checks used for this planning change |
 | ARC generalization and hardware continuity | Exp8014 and Exp8016 | New supervisor outcomes only; all three board obligations retained |
+
+## 2026-10-03 — V698 research plan (execution pending)
+
+| Requirement | Planned work | Status |
+|---|---|---|
+| REQ-REPORT-PLAN698; FR-09/10 | Complete V698 design, YAML, task digest and fixture-only consumer contract; Exp8057/8069 | Plan authored; activation and experiment execution pending |
+| FR-06/12 | New Qwen source scores, calibrated small energy and independent target audit; Exp8058–8062 | Planned; V697 source branch was gate-skipped |
+| FR-11 | Admission opportunity audit, one-use delayed feedback and independent future/retention audit; Exp8063–8065 | Planned; V697 learning benefit remains null |
+| FR-05/08; NFR-01 | Content-addressed public features and loaded native complete transactions; Exp8066 | Planned; no speed claim |
+| ARC generalization floor; hardware continuity | New supervisor frontier and distinct board custody; Exp8067/8068 | Planned; no current solve or device execution |

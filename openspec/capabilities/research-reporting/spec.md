@@ -91013,3 +91013,25 @@ Cold-reduce durable primitive inputs in a fresh process. Validate candidate and
 published bytes with adversarial and strict row checks through primary publication.
 Keep hashes, argv, expected/actual exits and logs below task raw storage; shards
 remain below90MB. The conductor owns ops and traceability reconciliation.
+
+## REQ-REPORT-PLAN698: Complete staged V698 research authority
+
+The V698 planning deliverable shall declare milestone 2026.10.698 with exactly
+thirteen ordered tasks, Exp8057 through Exp8069, in both the design's visible
+table and its complete executable JSON, matching research-roadmap-next.yaml.
+The canonical task digest shall include all prompts and metadata. Only the
+fixture-consumer prerequisite may admit circular-positive readiness; scientific
+benefit gates must retain their non-oracle scope. Planning shall not modify the
+active roadmap or scripts/research_conductor.py.
+
+### SCENARIO-REPORT-PLAN698-A: Staged authority agrees before activation
+
+Given the V698 staged YAML and design, when the schema, complete-object digest,
+visible table and gate references are checked, all thirteen ordered objects agree.
+A synthetic gate matrix admits qualified circular fixtures only for fixture
+consumers and rejects readiness zero, missing fields or disqualified science.
+
+Implementation status: planning documents only, 2026-10-03. Experimental
+implementation and scientific findings remain pending. Existing contract and
+authority-lifecycle readers validate the staged documents; activation is not
+claimed. This requirement does not alter earlier immutable milestone authority.

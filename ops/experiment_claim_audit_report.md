@@ -11,11 +11,43 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CLAIM_SUPPORTED | 1 |
-| NO_CLAIM | 2 |
-| CANNOT_DETERMINE | 5 |
+| CLAIM_SUPPORTED | 3 |
+| NO_CLAIM | 1 |
+| CANNOT_DETERMINE | 4 |
 
-## experiment_8033_v696_scoring_isolation.json
+## experiment_8046_v697_branch_protocols.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+No comparative or empirical claim is asserted to refute. If construed as an assertion of protocol readiness or custody validity, any corrupted hash, missing upstream asset, or failed gate check among the sealed preconditions would refute it.
+
+## WAS THAT CHECKED
+Yes, custody and precondition gate checks were verified across the listed upstream inputs and code configs (`acceptance_gate_results` and `preconditions_checked`), but hypothesis testing was not checked because the invocation explicitly did not execute comparative evaluation or model inference.
+
+## EVIDENCE
+- `claim_scope`: `This invocation seals original historically exposed public source roles and feedback acceptance. It measures custody and owned validation only; no live scoring, new training trajectory, unseen evaluation or deployment benefit.`
+- `honest_verdict`: `complete_null_branch_protocols`
+- `inference_substrate`: `aggregation_from_upstream_artifacts`
+- `inference_substrate_class`: `no_model_load`
+- `disposition`: `unavailable in protocol-only invocation`
+- `measured`: `false`
+- `scope`: `protocol only`
+- `arm`: `protocol`
+- `condition`: `public_custody`
+- `learning_protocol_ready_score`: `1`
+- `field_principles`: `Require qualified protocol custody and all owned checks; readiness needs no scientific win and certifies no deployment correctness.`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_8047_fit_score_capture.json
 
 **CANNOT_DETERMINE**
 
@@ -27,38 +59,7 @@ provider: openai
 approval: never
 sandbox: workspace-write
 
-## experiment_8034_fit_likelihood_capture.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-An empirical or comparative refutation is not applicable because the artifact contains no scientific or comparative claim; it is a gate-check receipt recording that the experiment was blocked prior to execution due to failed upstream prerequisites.
-
-## WAS THAT CHECKED
-No; the experiment did not run.
-
-## EVIDENCE
-`schema`
-`blocked_gate_check_v1`
-`status`
-`blocked`
-`duration_s`
-`0.0`
-`honest_verdict`
-`blocked_gate_check_failed`
-`blocked_at_layer`
-`conductor_pre_gate`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_8038_v696_windowed_online_learning.json
+## experiment_8051_v697_feedback_constrained_learning.json
 
 **CLAIM_SUPPORTED**
 
@@ -66,35 +67,33 @@ KEEP
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-Windowed online learning updates across replay window arms yield no generalized learning benefit under equal adaptive budgets (`complete_null_windowed_trajectories`).
+Empirical guard checks on persistent small-head updates establish no future safety, retention, or independent learning benefit over unconstrained updates.
 
 ## WHAT WOULD REFUTE IT
-An observation in the artifact's evaluation rows showing a statistically meaningful reduction in loss or Brier score (a positive generalized learning benefit) for any of the adaptive replay arms (`recent64`, `cumulative`, or `newest16`) over the baseline (`frozen_no_write`).
+The claim would be refuted by observing a measurable, statistically meaningful performance advantage for the feedback-constrained arm over the unconstrained or frozen baselines—such as a lower Brier score, lower typed cost, superior retention accuracy, or a positive generalized learning benefit score on evaluated streams.
 
 ## WAS THAT CHECKED
-Yes; checked across 20 algorithm seeds and four comparator arms with 56 updates per seed, logged in `update_budget_rows`, `rows`, and `feedback_release_rows`, confirming no advantage over baseline and resulting in a `generalized_learning_benefit_score` of `0`.
+Yes. In `rows`, `attempted_gradient_counts`, and `committed_update_counts`, both `unconstrained` and `feedback_constrained` arms were evaluated across multiple seeds on identical released candidates, measuring Brier scores, typed costs, false accepts, and guard rejections, while `positive_control_results` confirmed the guard mechanism could detect beneficial versus destructive updates.
 
 ## EVIDENCE
-`honest_verdict`
-`complete_null_windowed_trajectories`
-`verdict_class`
-`null`
-`generalized_learning_benefit_score`
-`0`
-`claim_scope`
-`This invocation replays one exposed development stream under equal adaptive budgets. Temporal support changes; generator and importance weights stay fixed. No retention, independent learning benefit or deployment claim.`
-`arms`
-`recent64`
-`cumulative`
-`newest16`
-`frozen_no_write`
-`learning_trajectory_ready_score`
-`1`
+- `"honest_verdict": "complete_null_feedback_constrained_learning"`
+- `"verdict_class": "null"`
+- `"claim_scope": "This invocation measures persistent CPU small-head updates on one historically exposed development stream. Empirical guard checks establish no future safety, retention or independent learning benefit."`
+- `"generalized_learning_benefit_score": 0`
+- `"arm": "unconstrained"`
+- `"arm": "feedback_constrained"`
+- `"arm": "frozen_no_write"`
+- `"brier": 0.11997091123721107`
+- `"brier": 0.1217728610957661`
+- `"typed_cost": 0.5170940170940171`
+- `"typed_cost": 0.5341880341880342`
+- `"positive_control_results"`
+- `"passed": true`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_8039_v696_learning_benefit_audit.json
+## experiment_8052_v697_learning_benefit_audit.json
 
 **CANNOT_DETERMINE**
 
@@ -106,70 +105,96 @@ provider: openai
 approval: never
 sandbox: workspace-write
 
-## experiment_8040_v696_native_transaction_cost.json
+## experiment_8053_v697_guarded_transaction_cost.json
 
-**CANNOT_DETERMINE**
-
-reviewer call failed: OpenAI Codex v0.156.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-6.1-sol
-provider: openai
-approval: never
-sandbox: workspace-write
-
-## experiment_8041_v696_arc_supervisor_delta.json
-
-**CANNOT_DETERMINE**
-
-reviewer call failed: OpenAI Codex v0.156.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-6.1-sol
-provider: openai
-approval: never
-sandbox: workspace-write
-
-## experiment_8042_v696_precision_fallback_boundary.json
-
-**CANNOT_DETERMINE**
-
-reviewer call failed: OpenAI Codex v0.156.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-6.1-sol
-provider: openai
-approval: never
-sandbox: workspace-write
-
-## experiment_8043_v696_capstone.json
-
-**NO_CLAIM**
+**CLAIM_SUPPORTED**
 
 ## VERDICT
-NO_CLAIM
+CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-no claim
+Native execution of guarded numerical transactions achieves numerical parity and readiness with Python but yields a complete null speedup.
 
 ## WHAT WOULD REFUTE IT
-No comparative or substantive scientific claim is made to refute. If the capstone had asserted a positive capability or generalization claim over baselines, that claim would be refuted by observing zero or negative gain, confidence intervals spanning zero or failing required margins, or gate failures. The artifact lacks model evaluation, lacks rival comparison arms, and explicitly declares that zero independent scientific observations were made.
+Observation of a statistically significant performance advantage where the lower bound of the 95% bootstrap confidence interval strictly exceeds 1.0 (refuting the null speedup claim), or observation of numerical discrepancies where `parity_passed` is false or restart actions and probabilities diverge beyond numerical tolerance (refuting parity and readiness).
 
 ## WAS THAT CHECKED
-No. The artifact lacks any comparative testing against rival baselines or models. It is an administrative aggregation and custody receipt that records upstream gate results and validation command receipts rather than evaluating an empirical hypothesis.
+Yes. Paired timing measurements against Python across 30 non-warmup repetitions were conducted for all transaction classes (`accepted`, `rejected`, `reset`) under both `feedback_constrained` and `unconstrained` conditions in `complete_numerical_transaction_speedup`, and numerical equivalence was evaluated across transactions in `parity_rows` and `acceptance_gate_results`.
 
 ## EVIDENCE
-- `"honest_verdict": "complete_blocked_v696_capstone"`
-- `"verdict_class": "blocked"`
-- `"science_ready": false`
-- `"claim_scope": "This invocation binds thirteen administrative dispositions and exposed finite-trajectory reductions. Missing source evidence and complete deployment remain unavailable; historical publication is separate."`
-- `"positive_claim": false`
-- `"inference_substrate": "aggregation_from_upstream_artifacts"`
-- `"inference_substrate_class": "no_model_load"`
-- `"MODEL_SPECS": []`
-- `"sample_size_budget": "Thirteen administrative dispositions are zero new independent scientific observations."`
-- `"generalized_learning_benefit_score": 0`
-- `"validation_receipts"`
+- `"honest_verdict": "complete_null_guarded_transaction_cost"`
+- `"claim_scope": "This invocation measures exposed-development guarded numerical transactions only. No full verification-service, generalized learning, deployment safety or hardware speed claim."`
+- `"parity_passed": true`
+- `"native_transaction_ready_score": 1`
+- `"nfr01_met": false`
+- `"default_enabled": false`
+- `"speedup": 0.9968559812593174`
+- `"lower_95": 0.9929087490172696`
+- `"upper_95": 0.9998244589543033`
+- `"speedup": 0.9937533980426855`
+- `"lower_95": 0.9848318546893519`
+- `"upper_95": 1.0000066418105247`
+- `"speedup": 0.9875195597377358`
+- `"lower_95": 0.9580954974124196`
+- `"upper_95": 1.0042421273635151`
+- `"speedup": 0.9949596995660783`
+- `"lower_95": 0.9856279911470285`
+- `"upper_95": 1.0011461633110714`
+- `"completed_count": 240`
 
 ## RECOMMENDATION
 KEEP
+
+## experiment_8054_v697_arc_supervisor_delta.json
+
+**CANNOT_DETERMINE**
+
+reviewer call failed: OpenAI Codex v0.156.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-6.1-sol
+provider: openai
+approval: never
+sandbox: workspace-write
+
+## experiment_8055_v697_hardware_guard_boundary.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+Hardware acceleration provides no measurable whole-service benefit or genuine headroom over CPU execution for the guarded boundary, supporting a complete null verdict and deferring device acquisition.
+
+## WHAT WOULD REFUTE IT
+An observation of substantial speedup bounds (significantly greater than 1.0x) showing that compatible arithmetic accounts for a dominant share of total transaction latency, an authenticated device execution demonstrating whole-service speedup, or active FPGA fabric kernels compatible with the guarded workload.
+
+## WAS THAT CHECKED
+Yes; checked in `acceleration_bounds` (evaluating hypothetical 100x arithmetic acceleration against measured CPU transaction profiles across `native` and `python` arms), `board_rows` (evaluating device custody, execution status, and kernel compatibility across KV260, PolarFire, and GateMate targets), and `acceptance_gate_results`.
+
+## EVIDENCE
+- `honest_verdict`: `"complete_null_guarded_hardware_boundary"`
+- `claim_scope`: `"This invocation authenticates historical custody and CPU guard emulation on exposed development. No device performance, future safety or service acceleration."`
+- `measured_device_benefit`: `false`
+- `genuine_headroom`: `false`
+- `speedup_bound`: `1.0000684639280863`
+- `purchase_recommendation`: `"defer: no useful measured device bottleneck"`
+- `acquisition_relevance`: `"defer: no measured board whole-service benefit"`
+- `current_device_execution_count`: `0`
+- `generalized_learning_benefit_score`: `0`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_8056_v697_capstone.json
+
+**CANNOT_DETERMINE**
+
+reviewer call failed: OpenAI Codex v0.156.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-6.1-sol
+provider: openai
+approval: never
+sandbox: workspace-write

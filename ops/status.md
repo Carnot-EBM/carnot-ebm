@@ -17761,3 +17761,23 @@ equal-budget updates selected after label release, with matched classical
 controls and independent retention/restart checks. A bounded Qwen source panel,
 real Rust binding prototype and cumulative precision analysis have explicit
 claim limits. No new science or device speedup is claimed by this plan.
+
+## 2026-10-03 — V698 planning staged for review
+
+User request: plan the milestone after completed 2026.10.697. The staged plan is
+2026.10.698 with thirteen tasks, Exp8057–Exp8069, across four phases. The complete
+design and task YAML agree; the prior V697 design is preserved. No task has been
+activated or executed by this planning change.
+
+V697's source chain was skipped when a consumer rejected Exp8045's correctly
+circular-positive fixture. V698 separates fixture readiness from scientific
+benefit, then collects new Qwen3.8 fixed-answer scores. CPU learning tests fresh
+one-use admission feedback after candidate commitment, following the V697 future
+loss and retention failures. A separate cache experiment targets the measured
+public-feature extraction cost. ARC reads only new supervisor outcomes; hardware
+work preserves each board's original evidence and scopes new bounds to qualified
+costs. All generalized learning and deployment claims remain open.
+
+The literature update records primary methods and secondary-channel access
+limits. The active research-roadmap.yaml and scripts/research_conductor.py remain
+unchanged. Existing unrelated workspace audit changes are not part of this plan.
