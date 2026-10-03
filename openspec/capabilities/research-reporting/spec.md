@@ -91505,3 +91505,44 @@ pass through real conductor gates with separate fixture and science admission.
 Private outside-checkout CLI routes publish success, external blocked and owned
 mutation outcomes. Cold replay rejects changed claims, input hashes and logs.
 No private test changes historical primary or terminal bytes.
+# REQ-REPORT-8071: Diagnose process lifetime on the frozen Exp8059 pilot
+
+Exp8071 SHALL authenticate Exp8059 primary, terminal and frozen panel bytes,
+retain exactly its eight complete fit groups and full/no-source token views,
+and consult no labels. Missing external resources SHALL end complete_blocked_*
+with exact gate operands. Preserve historical evidence and shared model defaults.
+
+## SCENARIO-REPORT-8071-SCHEDULE
+
+Freeze 64 slots: eight groups, two views, two separated repeat sweeps and two
+lifetime arms. Interleave arms deterministically. Retain weights and fresh native
+contexts in the current process; start a fresh executable per fresh-process view.
+Both arms SHALL use identical tensor placement, model/build/tokenizer, tokens,
+n_ctx6384, batch/microbatch256, flash_attn=false and full evaluation shape.
+Charge all loads, forwards, contexts and cleanup to2400s, bound each child180s
+and each forward120s. Persist planned/started/terminal slots and flush real
+completed/pending heartbeat counts at least every60s. Do not retry failed slots.
+
+## SCENARIO-REPORT-8071-CUSTODY
+
+Copy target vocabulary logits before native context cleanup into immutable owned
+shards. Independently reconstruct every log probability with float64 arithmetic,
+exact preceding-token positions, normalization error<=1e-10 and duplicate mean
+NLL drift<=1e-6. Reject stale-buffer and shifted-token fixtures. Save per-token
+differences, first divergence and process/context/build identities. All32 fresh
+process forwards plus current required validation are necessary for readiness.
+A complete diagnostic may report both arms failing. If current drift does not
+recur, do not attribute the historical failure to process state. No full capture.
+
+## SCENARIO-REPORT-8071-TERMINAL
+
+Freeze validation argv before measurement. Require traced unit/consumer tests,
+100 percent added statement coverage, scoped Ruff/strict mypy/spec coverage,
+private E2E-015/016 and real external-CWD success/blocked/failure/mutation/replay
+routes. Keep one full Python suite run as separate repository health. Record
+normal-exit argv, duration and log hashes. Independently replay raw reductions,
+run adversarial and strict row checks, then use primary_publication. Failed owned
+checks disqualify readiness; unchanged external failures are blocked. Record
+measured load/view/cleanup cost and conservative192-group planning bounds.
+Generalized learning benefit and generated tokens SHALL remain zero. The
+conductor owns ops/status/changelog/traceability reconciliation for this task.

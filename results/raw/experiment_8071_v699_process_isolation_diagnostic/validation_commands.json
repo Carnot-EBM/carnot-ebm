@@ -1,0 +1,177 @@
+[
+  {
+    "argv": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+      "run",
+      "--data-file=/tmp/carnot-8071-xddcfr2q/.coverage",
+      "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8071_v699_process_isolation_diagnostic.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8071_v699_process_isolation_diagnostic.py",
+      "-m",
+      "pytest",
+      "-n",
+      "0",
+      "-o",
+      "addopts=",
+      "--no-cov",
+      "-q",
+      "--basetemp=/tmp/carnot-8071-xddcfr2q/unit",
+      "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_process_isolation_8071.py"
+    ],
+    "classification": "required",
+    "deadline_s": 300,
+    "expected_exit": 0,
+    "name": "unit_coverage"
+  },
+  {
+    "argv": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+      "report",
+      "--data-file=/tmp/carnot-8071-xddcfr2q/.coverage",
+      "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8071_v699_process_isolation_diagnostic.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8071_v699_process_isolation_diagnostic.py",
+      "--show-missing",
+      "--fail-under=100"
+    ],
+    "classification": "required",
+    "deadline_s": 60,
+    "expected_exit": 0,
+    "name": "coverage_report"
+  },
+  {
+    "argv": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+      "json",
+      "--data-file=/tmp/carnot-8071-xddcfr2q/.coverage",
+      "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8071_v699_process_isolation_diagnostic.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8071_v699_process_isolation_diagnostic.py",
+      "-o",
+      "/tmp/carnot-8071-xddcfr2q/coverage.json"
+    ],
+    "classification": "required",
+    "deadline_s": 60,
+    "expected_exit": 0,
+    "name": "coverage_json"
+  },
+  {
+    "argv": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+      "-n",
+      "0",
+      "-o",
+      "addopts=",
+      "--no-cov",
+      "-q",
+      "--basetemp=/tmp/carnot-8071-xddcfr2q/consumer",
+      "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_fit_source_scoring_8059.py",
+      "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_scoring_isolation_8033.py",
+      "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_scorer_workspace_8045.py"
+    ],
+    "classification": "required",
+    "deadline_s": 300,
+    "expected_exit": 0,
+    "name": "consumer_tests"
+  },
+  {
+    "argv": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+      "check",
+      "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8071_v699_process_isolation_diagnostic.py",
+      "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8071_v699_process_isolation_diagnostic.py",
+      "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_process_isolation_8071.py"
+    ],
+    "classification": "required",
+    "deadline_s": 60,
+    "expected_exit": 0,
+    "name": "ruff_check"
+  },
+  {
+    "argv": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+      "format",
+      "--check",
+      "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8071_v699_process_isolation_diagnostic.py",
+      "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8071_v699_process_isolation_diagnostic.py",
+      "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_process_isolation_8071.py"
+    ],
+    "classification": "required",
+    "deadline_s": 60,
+    "expected_exit": 0,
+    "name": "ruff_format"
+  },
+  {
+    "argv": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+      "--strict",
+      "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8071_v699_process_isolation_diagnostic.py",
+      "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8071_v699_process_isolation_diagnostic.py"
+    ],
+    "classification": "required",
+    "deadline_s": 180,
+    "expected_exit": 0,
+    "name": "mypy_strict"
+  },
+  {
+    "argv": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "/home/ianblenke/github.com/ianblenke/carnot/scripts/check_spec_coverage.py",
+      "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_process_isolation_8071.py"
+    ],
+    "classification": "required",
+    "deadline_s": 180,
+    "expected_exit": 0,
+    "name": "scoped_spec"
+  },
+  {
+    "argv": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+      "-n",
+      "0",
+      "-o",
+      "addopts=",
+      "--no-cov",
+      "-q",
+      "--basetemp=/tmp/carnot-8071-xddcfr2q/e2e015",
+      "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_source_boundary_7852.py"
+    ],
+    "classification": "required",
+    "deadline_s": 180,
+    "expected_exit": 0,
+    "name": "e2e_015"
+  },
+  {
+    "argv": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7868_v683_intervention_protocol.py",
+      "--date",
+      "20260929",
+      "--fixture-e2e",
+      "/tmp/carnot-8071-xddcfr2q/e2e016.json"
+    ],
+    "classification": "required",
+    "deadline_s": 120,
+    "expected_exit": 0,
+    "name": "e2e_016_fixture"
+  },
+  {
+    "argv": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7868_v683_intervention_protocol.py",
+      "--date",
+      "20260929",
+      "--cold-replay",
+      "/tmp/carnot-8071-xddcfr2q/e2e016.json"
+    ],
+    "classification": "required",
+    "deadline_s": 60,
+    "expected_exit": 0,
+    "name": "e2e_016_replay"
+  },
+  {
+    "argv": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+      "tests/python",
+      "-q"
+    ],
+    "classification": "diagnostic",
+    "deadline_s": 180,
+    "expected_exit": 0,
+    "name": "repository_full_suite"
+  }
+]

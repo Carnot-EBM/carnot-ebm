@@ -1,0 +1,37 @@
+{
+  "ended_monotonic_ns": 703482178463014,
+  "load_seconds": 7.683125042007305,
+  "model_build_hashes": {
+    "binding": "sha256:50ac68f072cf365b163e6d307b85d8429026c4287c4e081f823ad9e2aa13c5c2",
+    "native": "sha256:314a6ea6a8349938b2d3272f03278660bcbd61bc5082705d03b8720ba7278da3",
+    "version": "0.3.33"
+  },
+  "offload_evidence": {
+    "command_argv": [
+      "nvidia-smi",
+      "--query-gpu=index,uuid,memory.used,memory.free,utilization.gpu",
+      "--format=csv,noheader,nounits"
+    ],
+    "devices": [
+      {
+        "free_mb": 7817,
+        "index": 0,
+        "used_mb": 16361,
+        "utilization_pct": 0,
+        "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab"
+      },
+      {
+        "free_mb": 5985,
+        "index": 1,
+        "used_mb": 18193,
+        "utilization_pct": 100,
+        "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+      }
+    ],
+    "observed_monotonic_ns": 703482178450250,
+    "stdout": "0, GPU-b52387a2-c625-de87-8d34-e6f64e684bab, 16361, 7817, 0\n1, GPU-7971baff-9583-eaa6-2292-393f930a28f9, 18193, 5985, 100\n"
+  },
+  "process_id": 1944862,
+  "started_monotonic_ns": 703474495339615,
+  "status": "completed"
+}
