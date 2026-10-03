@@ -89990,6 +89990,9 @@ candidate and published bytes. Checkpoint references SHALL reside under this
 task's durable raw directory. arc_delta_ready_score is 1 only for a valid
 terminal measurement with passing owned checks, otherwise 0; it is not benefit.
 Ops/status/traceability reconciliation is conductor-owned for this invocation.
+An explicit owned-checks rerun SHALL retain the earlier bounded repository-health
+receipt under durable raw evidence. It SHALL rerun all owned checks, coverage and
+terminal consumers. It SHALL not repeat the unrelated full-suite diagnostic.
 
 ## REQ-REPORT-8029: Separate hardware custody and current workload evidence
 
@@ -90606,3 +90609,37 @@ failure lineage. Every prompt requires progress inside long work, chunked file
 writes, honest substrates and terminal external blocks. Validate the staged
 contract with existing schema, lineage, exclusion and private E2E-018 checks.
 This is a planning requirement; experiment implementation and results are pending.
+## REQ-REPORT-8044: Bind V697 authority and preserve terminal V696 evidence
+
+Exp8044 SHALL bind thirteen tasks, Exp8044 through Exp8056, for 2026.10.697.
+Use shipped parameterized readers for table, full JSON, digest and invocation YAML.
+Consumed staging is an observation. Never recreate unobserved activation bytes.
+Freeze code, exact validation commands, branch methods and budgets before checks.
+No scientific task SHALL depend on this administrative reader alone.
+
+### SCENARIO-REPORT-8044-AUTHORITY
+
+Reproduce all twelve authority mutations in guarded private scratch, including
+prompt, gate, model, date and digest. Check consumed staging and full JSON drift.
+Map GASP, LILAC+ and FedProTIP to exact future task steps. Record assumptions
+that do not transfer. Defer EBT, ETS and hardware claims pending measurement.
+
+### SCENARIO-REPORT-8044-HISTORY
+
+Snapshot original V696 design and invocation plus final primaries and sidecars.
+Keep Exp8032 and Exp8038 intermediate disqualifications separate from final nulls.
+Read Exp8034's real shorter skip path. Record absent Exp8035 through Exp8037
+without creating artifacts or assigning measured verdicts. Authenticate each
+roadmap prior failure against a primary or actual skip receipt; retain mismatch.
+Missing required evidence is terminal blocked with its exact failed operand.
+
+### SCENARIO-REPORT-8044-TERMINAL
+
+Write traced tests before implementation. Require full changed statement coverage
+including real CLI normal exits, private E2E-018, consumers, Ruff, strict mypy
+and scoped spec coverage. Keep bounded repository health separate from owned
+acceptance. Cold-reduce durable primitives in a fresh process. Validate candidate
+and published bytes with adversarial verification and strict row consistency.
+Use the primary publication helper and a hash-bound terminal sidecar. Make zero
+pretrained calls and report zero independent scientific observations.
+Ops/status/traceability reconciliation is conductor-owned for this invocation.
