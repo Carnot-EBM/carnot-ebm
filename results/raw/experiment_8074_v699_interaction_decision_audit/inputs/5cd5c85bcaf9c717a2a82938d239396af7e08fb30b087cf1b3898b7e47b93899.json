@@ -1,0 +1,147 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 2.1994409729959443,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:61bc3e1abd7847915604f79153aa49b5d73543fea15330ad6db91f443cd4820b",
+  "input_tokens": 1799,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 4,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1799,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1823
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:6e15e71fb5a59cdc5b1191433bd8c3c169fe471ff8ebb852391764af1e24cb83",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 4\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886002,
+    "id": "chatcmpl-qiXecgab15Xhua9JIYdAbyJ9vSOaz9I2",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 567.522,
+      "predicted_n": 24,
+      "predicted_per_second": 42.289109497076765,
+      "predicted_per_token_ms": 23.64675,
+      "prompt_ms": 1514.057,
+      "prompt_n": 1721,
+      "prompt_per_second": 1136.6811157043626,
+      "prompt_per_token_ms": 0.879754212667054
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 1799,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1823
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"The lawyer for Robert Bates, an Oklahoma reserve deputy who fatally shot a man he meant to subdue with a Taser, on Saturday released  documents that he says verify some of Bates' training as a law enforcement officer. The documents show Bates had one Taser training class over a six-and-a-half-year period, took three firearms training classes and qualified 10 times, from 2009 to 2014, to use a handgun. His evaluations say he got along with other officers and related well with the public. \\\"Robert Bates has met all the requisite training required by Oklahoma to be a reserve deputy,\\\" said the lawyer, Scott Wood, in an interview with CNN. Read the documents. CNN could not independently confirm the documents were authentic. Wood said he got them from Bates, who asked the Tulsa County Sheriff's Office to provide his training records. The sheriff's office has turned down CNN's requests for the training documents, saying they are part of the investigation. Authorities did not reply Saturday to a request for comment on Wood's statements. The documents are important because Bates' training has become a central issue in the case. The lawyer for the family of the man who was killed claims that Bates, 73, wasn't qualified to be on the force, but received preferential treatment because he'd made donations to the agency and was a friend of the sheriff. The Tulsa World newspaper reported some supervisors in the Tulsa County Sheriff's Office were told to forge Bates' records and were reassigned when they refused. The Tulsa County Sheriff's Office has denied these allegations. The documents provided to CNN cover the period from July 22, 2008, to December 12, 2014. Bates had one Taser training class, on March 4, 2009, according to a document with a heading from The Council on Law Enforcement Education and Training, which sets the standards for training peace officers in the state. Wood said the council requires only one hands-on class on use of a Taser. Bates had weapons training once in September 2008 and twice in 2009, according to sheriff's office records that Bates obtained, Wood said. He scored high enough at the pistol range 10 times from September 24, 2009, to April 9, 2014, that he was allowed to carry a handgun while on duty, Wood said. Bates is charged with second-degree manslaughter in the death of Eric Harris. Friends and family of Harris gathered in Tulsa on Saturday afternoon for a visitation and viewing. Bates is free on $25,000 bond. He says he meant to use his Taser on Harris during the April 2 arrest but accidentally fired his handgun instead. \\\"I shot him! I'm sorry!\\\" Bates is heard saying on video of the incident. Bates, an insurance company executive, has gone to his own defense. In an interview Friday with the \\\"Today\\\" show on NBC, Bates said he had the documentation to show he had completed the necessary training required of reserve deputies. \\\"That is absolutely the truth. I have it in writing,\\\" he told the show. Questions have already been raised about Bates' training and when his service with the Tulsa County Sheriff's Office started. In his statement to investigators, Bates said he \\\"became an advanced TCSO Reserve Deputy in 2007.\\\" Wood said Bates started working for the sheriff's office in late 2007 or 2008. But the sheriff's office has said Bates had been a reserve deputy since 2008. Bates, who worked as a police officer for one year in the 1960s, completed 300 hours of training and 1,100 hours of community policing experience since becoming a reserve deputy, according to the sheriff's office. The Tulsa World said 480 hours of field training are required to be an \\\"advanced\\\" reserve deputy, which Bates claimed to be. Questions have been raised about Bates' firearms qualifications scores. To be allowed to carry a pistol on duty, deputies need to score 72 while firing at a silhouette of a man at the firing range, Wood said. Documents with a heading \\\"Firearms Qualification Record\\\" show Bates scoring at least 72 on six different days. But firearms qualification records from four dates in 2012 and 2013 are missing for the entire sheriff's office, Wood said. The Tulsa County Sheriff's Office says it can't find the records. The department's summary of Bates' weapons training shows he scored 80-84 those four times. \\\"If you're going to forge somebody's score why not give them a 90 or a 95,\\\" Wood said. CNN provided the documents to the Tulsa World. Ziva Branstetter, an editor with the newspaper, said the new information doesn't undercut the World's reporting. \\\"These records back up the validity of our story and we stand by our story,\\\" she said Saturday. Another seeming oddity of the records is how many classes Bates took on two days. The Council on Law Enforcement Education and Training records show Bates took 14 training classes worth 20 credit hours on December 10, 2013, and 20 classes worth 31 credit hours on December 11, 2014. Wood said Bates may have been cramming in his required training before the end of the year by taking computer classes. \\\"It's possible you could take a half-hour class and if you know the material you could finish it in 15 minutes,\\\" he said. Evaluations show supervisors had a good opinion of Bates. One from March 14, 2009, says of his strengths: \\\"Works well with his fellow officers and relates to the public very well.\\\" His weakness: \\\"Radio usage/geography.\\\" Remedial training: \\\"Does not have a lot of radio usage time which will be worked on. Will have to work on his geography skills. Both will be remedied in time!\\\"\\n\", \"original_answer\": \"On Saturday the lawyer for Robert Bates, an Oklahoma reserve deputy, released documents that he claims prove his client had received all the necessary training to be a law enforcement officer. The documents show Bates had taken one Taser training class over a six-and-a-half-year period, three firearms training classes and qualified 10 times, between 2009 and 2014, to use a handgun. Bates's lawyer, Scott Wood, says the documents were provided by the Tulsa County Sheriff's Office at the request of Bates. The Sheriff's Office has not confirmed their authenticity. The documents are important because the lawyer for the family of the man who was shot claims that Bates, 73, was not qualified to be on the force, but received preferential treatment because he'd made donations to the agency and was a friend of the sheriff. The Tulsa World newspaper reported some supervisors in the Tulsa County Sheriff's Office were told to forge Bates' records and were reassigned when they refused. The Tulsa County Sheriff's Office has denied these allegations.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "b56017928722f28e833708f109fe1c9e519991c67791f61b7bb2ee662df92e9e",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50
+  ]
+}

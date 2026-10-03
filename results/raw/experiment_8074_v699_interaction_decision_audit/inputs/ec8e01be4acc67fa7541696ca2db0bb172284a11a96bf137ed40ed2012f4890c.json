@@ -1,0 +1,114 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.5190765979932621,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:e8d8cdd6c6561b1627fc8c0ffcc54a8527a58ffc4621ac7e95eb7e1b569c972b",
+  "input_tokens": 865,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 865,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 888
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:b0fdb24740bbdda0380b7df64cda19b2d7ad557474642162f43e65db521f0a8a",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886003,
+    "id": "chatcmpl-SOfMZxSJpwVTlb8YbBXiJZ6ZgNRjzSCW",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.672,
+      "predicted_n": 23,
+      "predicted_per_second": 42.46112038281469,
+      "predicted_per_token_ms": 23.55095652173913,
+      "prompt_ms": 822.879,
+      "prompt_n": 787,
+      "prompt_per_second": 956.3982067837434,
+      "prompt_per_token_ms": 1.04558958068615
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 865,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 888
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:8 Woodworking Joints. You can build a project with countless different joinery methods. The most basic involves two boards butted together and connected with a fastener like a screw. Or, as you advance your skills, you can test out the more complex, traditional methods like a dovetail or mortise and tenon. Woodworking Joints. You can build a project with countless different joinery methods. The most basic involves two boards butted together and connected with a fastener like a screw. Or, as you advance your skills, you can test out the more complex, traditional methods like a dovetail or mortise and tenon.\\\\n\\\\npassage 2:The tails and pins interlock to form a strong 90-degree joint. Dovetail joints are technically complex and are often used to create drawer boxes for furniture. Through mortise and tenon \u2013 To form this joint, a round or square hole (called a mortise) is cut through the side of one piece of wood.The end of the other piece of wood is cut to have a projection (the tenon) that matches the mortise.The tenon is placed into the mortise, projecting out from the other side of the wood. A wedge is hammered into a hole in the tenon. The wedge keeps the tenon from sliding out of the mortise.he end of the other piece of wood is cut to have a projection (the tenon) that matches the mortise. The tenon is placed into the mortise, projecting out from the other side of the wood. A wedge is hammered into a hole in the tenon. The wedge keeps the tenon from sliding out of the mortise.\\\\n\\\\npassage 3:1. HOW TO LAYOUT WOODWORKING JOINTS. Before you can accurately cut joints to fit your wood together, you need to learn to accurately measure and layout your work pieces.My below videos will help you understand the different marking, measuring, & layout tools.OW TO CUT DOVETAIL JOINTS (TAILS FIRST): This following video playlist shares the dovetailing techniques taught to me by Roy Underhill (Woodwright\u2019s Shop) and Bill Anderson during a 5 day traditional woodworking class. I have tried to teach every amazing detail that Roy and Bill taught me:\\\\n\\\\n\\\",\\\"question\\\":\\\"how to cut woodworking joints\\\"}\", \"original_answer\": \"To cut woodworking joints, you first need to accurately measure and layout your work pieces. The most basic woodworking joint involves two boards butted together and connected with a fastener like a screw. More complex methods include the dovetail and mortise and tenon joints. A dovetail joint involves interlocking tails and pins to form a strong 90-degree joint. These are often used to create drawer boxes for furniture. To form a mortise and tenon joint, a round or square hole (the mortise) is cut through the side of one piece of wood. The end of the other piece of wood is cut to have a projection (the tenon) that matches the mortise. The tenon is then placed into the mortise, projecting out from the other side of the wood. A wedge is hammered into a hole in the tenon to keep it from sliding out of the mortise.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "bc9b2d93cb6d8fa3298f99d67e7ef0819369832342a327725cbdf3fa0f302eb4",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17
+  ]
+}

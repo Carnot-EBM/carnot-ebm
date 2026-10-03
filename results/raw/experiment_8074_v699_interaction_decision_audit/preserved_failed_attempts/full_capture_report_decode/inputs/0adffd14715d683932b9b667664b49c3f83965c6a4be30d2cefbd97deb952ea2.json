@@ -1,0 +1,109 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.3507418709341437,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:1497d997494e3d01c41e9fac8bac32e73a5d2c273c9c13454683725e1e8d70d7",
+  "input_tokens": 776,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 776,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 799
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:e723b9892f1e6726fe4b6d59e91d311c790319d1852d31b6e7e218d7144a56ef",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885926,
+    "id": "chatcmpl-hGmPL8gzw257Yrk3xzPX5HJtU8vBoMEi",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.034,
+      "predicted_n": 23,
+      "predicted_per_second": 42.589911005603355,
+      "predicted_per_token_ms": 23.479739130434783,
+      "prompt_ms": 691.319,
+      "prompt_n": 698,
+      "prompt_per_second": 1009.6641347916085,
+      "prompt_per_token_ms": 0.9904283667621776
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 776,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 799
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Commands show your dog that you're in charge, help you keep your dog's behavior in line, and teach your dog how to be a well-rounded member of your pack. 1  You can start training puppies at 1 to 2 months old and even old dogs can learn new tricks.o do this, you should walk your dog with a standard, 6-foot, non-retractable leash. Hold the leash so that there's only enough room for your dog to stay by your side without being able to move in front of you. 1  As pack leader, you should always be the frontrunner in any walk.\\\\n\\\\npassage 2:It's your job as pack leader to make sure your dog stays active and healthy, allowing the pack to thrive. Take your dog one or two 20 to 30 minute walks a day. This can keep your dog mentally and physically healthy. 1  If your dog is inactive, he can become restless and bored.o do this, you should walk your dog with a standard, 6-foot, non-retractable leash. Hold the leash so that there's only enough room for your dog to stay by your side without being able to move in front of you. 1  As pack leader, you should always be the frontrunner in any walk.\\\\n\\\\npassage 3:1 The number one way to communicate to a dog that you are his pack leader is to take him for a walk. 2  Not the type of walk most humans take their dogs on but a pack walk, where the dog is made to heel beside or behind the human who is holding the lead. During the time you are establishing your higher pack position, no hugs should be given to the dog by you, as a dominant dog may consider this a challenge of power. 2  To a dog in a dominant frame of mind eye contact is a challenge. 3  Whoever averts his gaze first loses.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to show dog you are pack leader\\\"}\", \"original_answer\": \"To show your dog you are the pack leader, you should train it to follow your commands. This shows that you are in charge and helps to maintain your dog's behaviour. You should always be the frontrunner during walks, using a standard, 6-foot, non-retractable leash. Keep the leash length such that the dog can only stay by your side and cannot move in front of you. During these walks, the dog should be made to heel beside or behind you. While establishing your position as pack leader, you should not give the dog hugs as a dominant dog may consider this as a power challenge. Similarly, avoid direct eye contact as this may be seen as a challenge. Lastly, as the pack leader, it's your responsibility to keep the dog active and healthy by taking it on one or two 20 to 30 minute walks a day.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "7e8360afc559681353ef9e61e19fce9f0ef719d2c8eb7cc560385b02ac2309fe",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ]
+}

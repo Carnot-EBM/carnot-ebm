@@ -1,0 +1,115 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.3886632289504632,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:10cd9f7b4ea0f9cf394a0ed99751448d5b860b22ffdeb2f70b436071e38d4151",
+  "input_tokens": 791,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 791,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 814
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:b8647cfc76026cf3992a44b4a3922fb9342968ae0cb6cd379c0251e78de7e381",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885984,
+    "id": "chatcmpl-SYe8cO8lr2U1TOAP32jWGHXm6Czi8cg1",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.453,
+      "predicted_n": 23,
+      "predicted_per_second": 42.478294514944054,
+      "predicted_per_token_ms": 23.541434782608693,
+      "prompt_ms": 708.036,
+      "prompt_n": 713,
+      "prompt_per_second": 1007.0109429464039,
+      "prompt_per_token_ms": 0.9930378681626928
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 791,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 814
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"A Blackburg, Virginia toddler has already won 60 races\\nMany people who participate in long distance races are usually much older than . a toddler in Blackburg, Virginia who has already won 60 races before she turned three years old.\\nAbout Olivia Hawes\\nNeedless to say, Olivia Hawes started running much earlier than most people. Olivia loves to play and run around like most toddlers. However, few toddles are able to run and complete 5K races. In fact, the little girl has finished dozens of 5K\u2019s, 8K\u2019s and even a 9K race.\\nOlivia's mom reaction\\nOlivia\u2019s mom, Angel Hawes, explained that her daughter was walking at eight months and running before she turned a year old.\\nAngel added this about her toddler:\\n\u201cNothing about raising Olivia is like expected. She is out there smiling, excited to run, and you see pictures from race days and she is all smiles.\u201d\\nOlivia\u2019s parents entered Olivia into the Virginia Commonwealth Games when she was only 18 months old.\\nAngel continued to explain:\\n\u201cThey had never had someone under five compete in the Virginia Commonwealth Games, and so we took her to that and she loved it. The crowd ate it up, halfway through the 50 meters, the crowd went insane because I don\u2019t think they expected her to actually do it.\u201d\\nSince Olivia has won so many games, fans began calling her \\\"Olympic Olivia.\\\" The nickname has stuck. See Olympic Olivia in action and the piles of her medals in the video below.\\nOlympic Olivia gives her all in every competition, and she gets better with each race. According to her mother, her first 5K was an hour and 10 minutes, and then her last one was under 38 minutes. Olympic Olivia loves hearing the crowds cheering for her, and she loves getting those medals.\\nWhat's next for Olympic Olivia?\\nHer parents are prepared to make the commitment to get their daughter to the Olympics if that's what the child wants when she gets older. As of now, Olympic Olivia is working to qualify for next summer\u2019s junior Olympics in Charlotte. Until then, she will keep training at Virginia Tech\u2019s track and running in local races.\", \"original_answer\": \"A toddler from Blackburg, Virginia has won 60 races before her third birthday. Olivia Hawes, who began running before the age of one, has completed numerous 5K, 8K, and even a 9K race. Her mother, Angel Hawes, says Olivia began walking at eight months old and was running before she turned one. Olivia is known as \\\"Olympic Olivia\\\", a nickname given to her by her fans. Her parents are willing to support her if she decides to aim for the Olympics when she grows up. Currently, Olivia is training to qualify for next summer's Junior Olympics in Charlotte.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "51a27f0bf77b4e3bd18bc718ec2ac3ff25be9d05edccdfd3a95c75a851108a22",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18
+  ]
+}

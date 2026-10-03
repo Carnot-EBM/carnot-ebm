@@ -1,0 +1,107 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.2048356590094045,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:f3cecbe2c4ec77fad6608b582f7fbf5144d9a19f9c1cce383e23810e279bbfa4",
+  "input_tokens": 546,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 546,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 570
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:759ce99c36117cf00a620b0789e9273c1a2e633785b084295f02f7f2a2550dce",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885970,
+    "id": "chatcmpl-7GAiC7OJ845iIQ1l7vJ1x7LLvfjZkvOr",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 564.84,
+      "predicted_n": 24,
+      "predicted_per_second": 42.489908646696406,
+      "predicted_per_token_ms": 23.535,
+      "prompt_ms": 529.108,
+      "prompt_n": 468,
+      "prompt_per_second": 884.5075107539482,
+      "prompt_per_token_ms": 1.1305726495726494
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 546,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 570
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Hong Kong (CNN)Six people were hurt after an explosion at a controversial chemical plant in China's southeastern Fujian province sparked a huge fire, provincial authorities told state media. The plant, located in Zhangzhou city, produces paraxylene (PX), a reportedly carcinogenic chemical used in the production of polyester films and fabrics. The blast occurred at an oil storage facility Monday night after an oil leak, though local media has not reported any toxic chemical spill. Five out of six people were injured by broken glass and have been sent to the hospital for treatment, Xinhua news agency reported. More than 600 firefighters were sent to battle the blaze and the fire is now under control, the Zhangzhou fire department wrote on their official microblogging account Tuesday morning. Residents living close to the plant had heard the explosion and took to Weibo to post photos of the fire. One user wrote that he heard a loud blast and felt slight tremors. The plant was hit by another explosion in July 2013, although there were no reports of casualties or toxic leaks at the time. Though demonstrations are illegal in China, the construction of PX plants has sparked protests, which have occasionally turned violent, in several cities in recent years. The Zhangzhou plant was slated for Xiamen -- a densely populated city in the southeast of the country. However, it provoked an angry backlash in 2007 due to pollution concerns and prompted the local government to relocate the factory to its current, more remote location.\\n\", \"original_answer\": \"An explosion at a controversial chemical plant in Zhangzhou city, China, has injured six people and sparked a large fire. The plant produces paraxylene (PX), a reportedly carcinogenic chemical. The blast, which occurred at an oil storage facility, followed an oil leak. The fire is now under control, and five of the six injured people have been hospitalised for treatment.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "e19b5de6e0a8ee66aa4fac6aad1b16aee9595413b838642ca9440b787dbaad91",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ]
+}

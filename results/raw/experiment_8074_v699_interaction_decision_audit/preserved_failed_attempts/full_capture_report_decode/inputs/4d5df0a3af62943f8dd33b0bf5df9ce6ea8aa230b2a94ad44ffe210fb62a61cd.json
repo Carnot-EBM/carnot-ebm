@@ -1,0 +1,106 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.3890133620006964,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:966a6d117650d7dae443d80e083d9468232432e5294abed17bcec84a0890a9ff",
+  "input_tokens": 826,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 826,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 849
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:ec9f68cf85e33ef79f93a63acf8e283f6d6fb76bb92085aeb28a2ec4012970af",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886035,
+    "id": "chatcmpl-NnBEOjmZ28PZryr30zQALQ2wZcm9Yept",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.824,
+      "predicted_n": 23,
+      "predicted_per_second": 42.4492085991023,
+      "predicted_per_token_ms": 23.557565217391303,
+      "prompt_ms": 729.716,
+      "prompt_n": 748,
+      "prompt_per_second": 1025.0563232819343,
+      "prompt_per_token_ms": 0.9755561497326203
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 826,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 849
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"138 S Salinas St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":null,\\\"classy\\\":false,\\\"divey\\\":null,\\\"hipster\\\":false,\\\"intimate\\\":null,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":null},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":false,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Ethnic Food, Restaurants, Mexican, Specialty Food, Imported Food, Food\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":null,\\\"name\\\":\\\"El Sitio\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-08-24 19:43:52\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Can't go wrong here. Sounds boring but I actually think the chicken quesadilla with onion is pretty standout. The chicken is super peppery - would also recommend just chicken and onion tacos. Burritos are always a big hit too.\\\"},{\\\"review_date\\\":\\\"2021-07-29 02:20:20\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"This used to be one of our favorite little take-out places pre-COVID. It's just gone downhill on food plus higher prices.  Gave it a few tries to be fair but not going back.\\\"},{\\\"review_date\\\":\\\"2021-03-14 17:50:58\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"If you enjoy over paying for burritos and eating tastes tasteless starches..this will be your go to. I live around the corner as always try to give this family shop The benefit of the doubt. But the truth is this food fucking sucks. Sorry excuse for anyone trying to reach Mexican food and don't need their call themselves authentic. Horrible anyone who truly enjoys his spot a has never been south of the border and B must have the tongue amputated because I can't take the damn thing every time I've eaten here\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"'El Sitio' is a Mexican restaurant located at 138 S Salinas St, Santa Barbara, CA. It is categorized under Ethnic Food, Restaurants, Mexican, Specialty Food, Imported Food, and Food. It does not offer wifi or reservations, but it does have outdoor seating and takeout options. The restaurant is not particularly suitable for large groups. The ambiance is not identified as trendy, hipster, or touristy. The overall business rating is 4.0 stars. \\n\\nOne customer review highlighted the chicken quesadilla with onion as a standout dish, describing the chicken as \\\"super peppery\\\" and recommended the chicken and onion tacos and burritos. However, there were negative reviews citing a decline in food quality since the start of the COVID-19 pandemic, increased prices, and dissatisfaction with the taste of the burritos. Some customers have expressed they will not return due to these issues.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "6ec04eaf570979b696f2231a50df216caeae7124192bd96d1702b6589acb0666",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ]
+}

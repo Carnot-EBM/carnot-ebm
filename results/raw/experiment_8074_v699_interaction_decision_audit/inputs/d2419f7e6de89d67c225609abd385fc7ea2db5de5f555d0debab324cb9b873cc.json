@@ -1,0 +1,115 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.366298355977051,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:b6ba36d2b99cabe811caa5729155061e1c13299e3a110781131978b07e57ba01",
+  "input_tokens": 778,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 778,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 801
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:c08fd63d92ec8a104c1a8e2cb11b78c0ca7ee43114a97602a68faa7b56ac9aae",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886050,
+    "id": "chatcmpl-2tCpYsp8j61klQGngz8RUyYnGzFrBgz0",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.307,
+      "predicted_n": 23,
+      "predicted_per_second": 42.48975165663847,
+      "predicted_per_token_ms": 23.53508695652174,
+      "prompt_ms": 693.621,
+      "prompt_n": 700,
+      "prompt_per_second": 1009.1966650375349,
+      "prompt_per_token_ms": 0.9908871428571429
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 778,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 801
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Marseille, France (CNN)Investigators have collected all the main evidence from the site where Germanwings Flight 9525 crashed, a French national police official told CNN on Saturday. Investigators are not expected to return to the crash site, said Capt. Yves Naffrechoux of the High Mountain Gendarmerie. The plane crashed March 24 in rugged terrain of the Alps about 6 miles (10 kilometers) from the town of Seyne-les-Alpes. \\\"All the police investigators have left the (Germanwings) crash site,\\\" he said. \\\"There is only a private security company ensuring security around the crash site so that no one can go there.\\\" The security firm will guard the site until the remaining debris is collected and taken to secure locations for further analysis, if necessary, he said. The flight data recorder, or \\\"black box,\\\" was found Thursday by a member of the recovery team. The cockpit voice recorder was found days after the crash. In addition, out of more than 2,000 DNA samples collected from the crash site, lab workers have isolated 150 DNA profiles, said Brice Robin, Marseilles prosecutor. The crash killed all 150 people on board. Brice Robin, Marseilles prosecutor, said authorities have found 470 personnel effects at the site. That number includes 40 cell phones, though all those were badly damaged. Robin cast doubt that any useful information could be retrieved from those phones, given their condition. Authorities say the flight's co-pilot, Andreas Lubitz, locked the captain out of the cockpit and engineered the plane's demise. Initial tests on the flight data recorder show that Lubitz purposely used the controls to speed up the plane's descent, according to the French air accident investigation agency, the BEA. It also has emerged that Lubitz had battled depression years before he took the controls of Flight 9525 and that he had concealed from his employer recent medical leave notes saying he was unfit for work. Calls for crash avoidance technology. CNN's Margot Haddad reported from Marseille, and Greg Botelho wrote from Atlanta. CNN's Laura Smith-Spark contributed to this report.\\n\", \"original_answer\": \"French police have announced that they have collected all the main evidence from the site where Germanwings Flight 9525 crashed, with no plans to return to the site. The flight data recorder was found on Thursday, and over 2,000 DNA samples have been collected from the crash site, with 150 DNA profiles isolated so far. 470 personal effects have also been found at the site, including 40 mobile phones. The crash is believed to have been intentionally caused by the flight's co-pilot, Andreas Lubitz, who had previously battled depression and concealed medical leave notes from his employer.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "2689f84f509a7cbd19c07b963d38f6344e101b3ba8fa0820eb3cc48919043fe2",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18
+  ]
+}

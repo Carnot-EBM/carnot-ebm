@@ -1,0 +1,113 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.3855248129693791,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:f37857853f7df7bc09de403728cf0c2db2061171a661fe6072b92b22876761cc",
+  "input_tokens": 847,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 847,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 870
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:019c8e8fa6be3796e41b0558bc65fbb1fdd45ad494edf1c18f18f4fcce933d3a",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885939,
+    "id": "chatcmpl-Qdr9Z8nXqFyxeXBGuIFnrMoLLTlF0WWz",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 540.295,
+      "predicted_n": 23,
+      "predicted_per_second": 42.56933712138739,
+      "predicted_per_token_ms": 23.491086956521738,
+      "prompt_ms": 730.734,
+      "prompt_n": 769,
+      "prompt_per_second": 1052.3665246177131,
+      "prompt_per_token_ms": 0.9502392717815346
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 847,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 870
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Report says Federal Reserve rate hikes likely to cause more slowdowns in CA jobs over next 6 months\\nCALIFORNIA \u2013 The California Economic Forecast, published October 11, reported that due to the Federal Reserve\u2019s aggressive monetary policy \u2013 in the form of interest rate hikes, the labor market is very likely to show more pronounced slowdowns in job creation and job turnover over the next six months.\\nStrong labor market is bad news to the Fed\\nAccording to the report, the September employment report indicated that twice as many new jobs were created -- 336,000, than had been forecast by economists.\\nHowever, the report says this is bad news to the Fed.\\n\u201cThe news is that the labor market remains strong. Typically that is good news. But good news about the labor market in the current environment is bad news for the Federal Reserve as its main goal now is to bring down inflation,\u201d said the report.\\nFor September, overall inflation is 3.7 percent.\\nThe report says that unless there is clear progress of inflation approaching the Fed\u2019s 2.0 percent target, continued aggressive monetary policy in the form of interest rate hikes are probable.\\nCurbing spending to combat inflation\\nThe Federal Reserve believes that when they raise interest rates, it can help lower inflation by making it more expensive for people and businesses to borrow money, which can discourage them from spending.\\nThe report says that higher interest rates will ultimately take their toll on more than just the housing and new car sales markets.\\nConsumers are reeling in their spending;\\nUsing credit to consume is less attractive with high interest rates;\\nHigher rates also discourage business investment, which slowed in May, June and July;\\nFewer goods can be purchased with the same expenditure level, due to inflation;\\nFewer goods sold mean less sales, lower earnings of corporations, and lower stock prices.\\nRELATED: Report says $90,399 annually is needed for Californians to live comfortably in retirement\\nRecession likely avoided in 2024\\nThe UCLA Anderson School forecast has growth slowing to less than one percent by mid-2024.\\nThe report says that next year, a bona fide recession is avoided but the economy will grow slowly. There's a possibility that it could tip into a mild recession lasting for about two quarters.\\nIn addition, overall inflation will remain in the 3.0 to 3.3 percent range. Mortgage rates will stay high throughout 2024 and begin to contract in 2025.\\nTo read the full report visit https://californiaforecast.com/october-2023/\", \"original_answer\": \"The California Economic Forecast has predicted a slowdown in job creation and turnover in the state over the next six months, due to the Federal Reserve's aggressive monetary policy. The report suggests that the strong labor market, which saw twice as many new jobs created than expected in September, is actually bad news for the Fed, whose main aim is to reduce inflation currently at 3.7%. Unless progress is made towards the Fed's 2% inflation target, further interest rate hikes are likely. These higher rates are expected to impact beyond housing and new car sales, discouraging consumer spending and business investment.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "297cd39fd6c347d36d1c21677ec8016ba01ef29901da064dbb33cb160799cce8",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+  ]
+}

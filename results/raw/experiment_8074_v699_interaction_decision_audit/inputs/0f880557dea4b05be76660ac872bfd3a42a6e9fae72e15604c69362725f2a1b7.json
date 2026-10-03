@@ -1,0 +1,100 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.05736318603158,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:7c090988a7270b4e7160c7f2260a077d266c392353ab09b58caa2cc8fe127cbc",
+  "input_tokens": 418,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 418,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 439
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:03a4717c67e51dea2072b7c43ae1abd2cf4233cee49ca202aadb6092584447d5",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n\"unsupported_probability\": 0.0,\n\"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886057,
+    "id": "chatcmpl-o61mmUyR30YYSuWbxTa68nIWPHRp7Mgq",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 492.267,
+      "predicted_n": 21,
+      "predicted_per_second": 42.65977609711803,
+      "predicted_per_token_ms": 23.441285714285716,
+      "prompt_ms": 421.698,
+      "prompt_n": 340,
+      "prompt_per_second": 806.2641985496731,
+      "prompt_per_token_ms": 1.2402882352941176
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 418,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 439
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Other differences between accounts receivable and payable are as follows: 1  Receivables are classified as a current asset, while payables are classified as a current liability. 2  Receivables may be offset by an allowance for doubtful accounts, while payables have no such offset.\\\\n\\\\npassage 2:The difference between accounts receivable and accounts payable. Accounts receivable are the amounts owed to a company by its customers, while accounts payable are the amounts that a company owes to its suppliers.\\\\n\\\\npassage 3:1 Accounts Payable (A/P) is recorded as a liability, while Accounts Receivable (A/R) is considered an asset. 2  Accounts Payable (A/P) will decrease the company\u2019s cash while the opposite will happen with Accounts Receivable (A/R).\\\\n\\\\n\\\",\\\"question\\\":\\\"accounts receivable vs accounts payable\\\"}\", \"original_answer\": \"Accounts receivable and accounts payable differ in several ways. Accounts receivable are classified as a current asset and represent the amounts owed to a company by its customers, potentially offset by an allowance for doubtful accounts. On the other hand, accounts payable are classified as a current liability and represent the amounts that a company owes to its suppliers, with no such offset. Additionally, accounts payable decrease a company's cash, while accounts receivable increase it.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "e6c4137036baf3b721f540cb4e07c93c814b67a1654132f9fe9055619ea4e33c",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3
+  ]
+}

@@ -1,0 +1,103 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.323455604026094,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:71ecefce7eba695d846aead9eeec7a2a4ba4073f978f2e8547e7fcdef2f3ed6a",
+  "input_tokens": 765,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 765,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 786
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:63b4c2ec63eef801d8a3861d51adc998bf5e40cc4325a156ee78ade7b5045a97",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n \"unsupported_probability\": 0.0,\n \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790886030,
+    "id": "chatcmpl-hHjzBPHjSa7iZlTm83a9BBH6iR0H1xaQ",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 499.383,
+      "predicted_n": 21,
+      "predicted_per_second": 42.05189203477091,
+      "predicted_per_token_ms": 23.780142857142856,
+      "prompt_ms": 691.404,
+      "prompt_n": 687,
+      "prompt_per_second": 993.6303521530103,
+      "prompt_per_token_ms": 1.006410480349345
+    },
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 765,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 786
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"503 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":true,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":true,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":false,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"free\\\"},\\\"business_stars\\\":3.0,\\\"categories\\\":\\\"Bubble Tea, Restaurants, Food, Asian Fusion, Vegan, Acai Bowls\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"11:0-2:0\\\",\\\"Monday\\\":\\\"11:0-21:0\\\",\\\"Saturday\\\":\\\"11:0-2:0\\\",\\\"Sunday\\\":\\\"11:0-21:0\\\",\\\"Thursday\\\":\\\"11:0-21:0\\\",\\\"Tuesday\\\":\\\"11:0-21:0\\\",\\\"Wednesday\\\":\\\"11:0-21:0\\\"},\\\"name\\\":\\\"Hana Kitchen\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2022-01-08 03:18:16\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Received an email with a promo code (YUMMY) to get 15% off and the website won't accept the discount. Bait & Switch! Ugh!\\\"},{\\\"review_date\\\":\\\"2021-12-28 17:35:11\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Food poisoning yesterday from eating there the night before. Not much else I can say about that except the obvious - not recommended.\\\"},{\\\"review_date\\\":\\\"2021-11-28 23:25:44\\\",\\\"review_stars\\\":2.0,\\\"review_text\\\":\\\"Their water tasted like plastic. I got the chicken bowl and their broccoli was moldy. I asked the lady about the mango tacos and she was rude about it. I do not recommend, I did not eat more than two bites.\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Hana Kitchen is a restaurant located at 503 State St, Santa Barbara, CA, specializing in a fusion of Asian and Vegan cuisines, offering a range of food items including Bubble Tea and Acai Bowls. The establishment is open seven days a week, with extended hours on Fridays and Saturdays. They provide free WiFi, outdoor seating, and takeout options, but do not accommodate reservations or large groups. The ambience of the restaurant is casual and they offer both street and lot parking. However, customer reviews suggest a less-than-satisfactory experience, with complaints about promotional code issues, food quality, and customer service. The business has an overall rating of 3 out of 5 stars.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "0d92e1fd0abe65074dc7c56ad7989c70ae43ece4bcfb6ca00b926781ac9b8f65",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ]
+}

@@ -1,0 +1,121 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.8906663099769503,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:1d7d9f8dfeeef98e6e539117b170ba4cb1f3a8ddd03a210d93a078919eeabbee",
+  "input_tokens": 1405,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1405,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1428
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:cbe2dd4043a2bc5f5facc9e4a0ad528a0a22a59c966bbc11c934d1a0b3382109",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885989,
+    "id": "chatcmpl-B2JWEX5V2M9kw4VG3ZZgvcm5XqZqvKVV",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.896,
+      "predicted_n": 23,
+      "predicted_per_second": 42.44356850761032,
+      "predicted_per_token_ms": 23.560695652173912,
+      "prompt_ms": 1228.274,
+      "prompt_n": 1327,
+      "prompt_per_second": 1080.377831005134,
+      "prompt_per_token_ms": 0.9256021100226073
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1405,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1428
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"315 Meigs Rd, Ste J\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":true,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":{\\\"garage\\\":false,\\\"lot\\\":false,\\\"street\\\":true,\\\"valet\\\":false,\\\"validated\\\":false},\\\"Music\\\":null,\\\"OutdoorSeating\\\":true,\\\"RestaurantsGoodForGroups\\\":true,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":true,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":4.0,\\\"categories\\\":\\\"Juice Bars & Smoothies, Restaurants, Food\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":{\\\"Friday\\\":\\\"7:0-18:0\\\",\\\"Monday\\\":\\\"0:0-0:0\\\",\\\"Saturday\\\":\\\"8:0-22:0\\\",\\\"Sunday\\\":\\\"8:0-22:0\\\",\\\"Thursday\\\":\\\"7:0-22:0\\\",\\\"Tuesday\\\":\\\"7:0-22:0\\\",\\\"Wednesday\\\":\\\"7:0-22:0\\\"},\\\"name\\\":\\\"Blenders In the Grass\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2021-12-14 05:34:56\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Jogged from Shoreline Park to Blenders for a smoothie, wasn't disappointed. 12oz = $4.35, 24oz = $5.85. I got the 12oz peanut butter banana smoothie (+ carob, dates, chia seeds, non-dairy soy blend (for +0.75)). It's really great how they allow for a free supplement - I chose chia seeds. I also was able to customize by adding in dates. The smoothie was creamy and perfect, filled to the top lid. Quick and efficient, no complaints!\\\\n\\\\nThis location also has ample parking and is close by Shoreline, nice for enjoying your smoothie with a view of the beach!\\\"},{\\\"review_date\\\":\\\"2021-10-25 04:47:11\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Yum! Ordered online and loved that I could customize my drinks. Great options, quick service, and delicious!\\\"},{\\\"review_date\\\":\\\"2021-07-17 01:46:02\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I looooove ME Sum Blenders!!!\\\\n\\\\nI am headed there now so here's my update! \\\\n\\\\nAs far as options, they have added quite a few over the years plus have seasonal faves...\\\\n\\\\nDefinitely check their side poster board menu of new smoothie/drink options... \\\\n\\\\nSome cool healthy ones with coconut water mark a different blends called antioxidant recovery trim fit etc. also Acai bowls too! Take a look! Make sure to say GO SOY if you don't want dairy. They have a frozen soy blend...it's great! Wish they would do coconut though as I'm tech a non soy also person but I suffer it gladly to drink my mmmmmmm smoothies!!! \\\\n\\\\nNice options for those of us who have had it since Art and the gang opened it! I've been addicted since...I literally get 2-3 most visits...I like them when I don't have the right smoothie etc ingredients I need at home or the blending power on the road...\\\\n\\\\nDefinitely worth loading a card with $30 or more to get a benefit if you visit 10 or more times in a month or just to save 10% of the overall... \\\\nConvenient and it's a good idea for us fully or even semi frequent buyers!\\\\nMake sure you reload the card before you buy your smoothie. It can seem tedious, but clearly ask to transact that first then order the drinks, it's the only way it works well for the savings!!! :)\\\\nPlease recycle your card...save them when they're empty and fill them when you can..\\\\n\\\\nAnd..hooray, the cups are back to be reused after a long wait during covid to not use them!!! I've had mine clean and waiting so buy one and bring it each time for a savings and eco reasons! Cheers! \\\\n\\\\nOff to get my fave smoothies! \\\\nAsk to see the secret menu too...it's fun to change it up!\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Blenders In the Grass is a popular local business in Santa Barbara, CA, located at 315 Meigs Rd, Ste J. Specializing in Juice Bars & Smoothies, Food, and operating as a Restaurant, the business has garnered a 4-star rating. The shop offers a variety of customizable smoothies, with options for free supplements and additional ingredients to suit customers' preferences. Notable offerings include a peanut butter banana smoothie, acai bowls, and a range of health-focused drinks. Customers appreciate the quick and efficient service, and the ability to order online. The establishment provides outdoor seating and takeout options, making it suitable for groups. Although it doesn't offer WiFi or music, it boasts a divey ambiance. It operates from 7:00 am to 10:00 pm on weekdays, and from 8:00 am to 10:00 pm on weekends, with the exception of closing early at 6:00 pm on Fridays. It does not offer reservations and parking is available on the street.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "88361e79fa017c18aa3a9b4784218d6d9eb86701d6e1a2f64c44d7b9ad4f3f24",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+  ]
+}

@@ -91639,3 +91639,44 @@ No current model load, generation, generator update or ARC change is permitted.
 Implementation: `python/carnot/experiment_8073_v699_interaction_energy_fit.py` and
 `scripts/experiments/experiment_8073_v699_interaction_energy_fit.py`.
 Tests: `tests/python/test_interaction_energy_8073.py`.
+
+## REQ-REPORT-8074: Independently audit fixed source interactions
+
+Exp8074 SHALL authenticate the Exp8073 heads and Exp8072 protocol. A public-only
+child SHALL reconstruct evaluation96 features and original cached Qwen scalars,
+then seal all probabilities and typed decisions before a separate evaluator opens
+the original complete-response annotations. Producer aggregate metrics SHALL NOT
+enter the scientific reduction. Earlier primaries and failed V695 validation stay intact.
+
+### SCENARIO-REPORT-8074-PREDICTIONS
+
+Rebuild the frozen spline and interaction equations from checkpoint coefficients.
+Compare energy and equivalent logistic probabilities within1e-10. Reject future
+labels in public rows, missing heads, changed source bytes and changed checkpoints.
+Public-feature diagnostics use a fixed source-hash cyclic permutation with q fixed,
+and zero all three interaction coefficients, plus the individual sealed ablations.
+These fixed-model interventions SHALL NOT claim source removal or retraining.
+
+### SCENARIO-REPORT-8074-H1
+
+Use additive cost minus interaction cost, margin.02, at least72 complete source
+groups and8/class. Require5 beneficial changed sources, no additional false accepts
+and Brier increase<=.01. Save10000 paired source-group draws, descriptive95%
+intervals and p=(1+count(margin+draw_mean-observed_gain>=observed_gain))/10001.
+Unsupported or safety-failing H1 has family p=1. Holm.05 contains exactly H1/H2;
+the capstone receives the raw H1 p-value. Measured ties/losses are valid nulls.
+
+### SCENARIO-REPORT-8074-TERMINAL
+
+Freeze commands before measurement. Exercise real external-CWD private evaluator
+success, absent head, future-label mutation and cold replay, plus E2E-015/016/019.
+Require focused unit/consumer checks, Ruff, strict mypy, scoped spec coverage and
+100% new statement coverage. Preserve the single bounded full-suite health result
+separately. Publish authenticated checked bytes after normal child exits through
+primary_publication. Owned failures disqualify readiness; external absences block.
+All cohorts remain exposed development, with generalized_learning_benefit_score=0
+and no current model loads or generations. A qualified null earns audit readiness.
+
+Implementation: `python/carnot/experiment_8074_v699_interaction_decision_audit.py`
+and `scripts/experiments/experiment_8074_v699_interaction_decision_audit.py`.
+Tests: `tests/python/test_interaction_decision_8074.py`.

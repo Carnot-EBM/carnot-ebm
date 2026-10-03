@@ -1,0 +1,134 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.8320456990040839,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:547b0d3b02df21d9ebdac55972cef7ce283cddd66516d332843fbd633a2072d4",
+  "input_tokens": 1361,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1361,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1384
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:5a1eef80747b182e009dbc595a67e4204baef46288547fe21fbc70d4556ee4f0",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885940,
+    "id": "chatcmpl-AK1jt7mTF8Y06cwv9W7uuLx8ynjiEtnY",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 541.102,
+      "predicted_n": 23,
+      "predicted_per_second": 42.50584917446249,
+      "predicted_per_token_ms": 23.526173913043475,
+      "prompt_ms": 1168.642,
+      "prompt_n": 1283,
+      "prompt_per_second": 1097.8554595847145,
+      "prompt_per_token_ms": 0.9108667186282151
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 1361,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 1384
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Ol Pejeta Conservancy, Kenya (CNN)At first glance, Sudan looks like any other northern white rhino: stout and agile, with square lips. He grazes under the hot sun, his massive head lowered to the ground,  at  the Ol Pejeta Conservancy in central Kenya. When he's not wallowing in his enclosure, he waddles around the sprawling savannah, stopping briefly to drink water from a concrete hole. But Sudan is not just any rhino. He's the last known male northern white rhino left in the entire world. For an animal on the verge of extinction, the fate of the subspecies rests on his ability to conceive with the two female northern white rhinos at the conservancy. Sudan's female companions,  Fatu and Najin, live at the conservancy, where experts are scrambling to ensure the subspecies does not go extinct. The animals are under 24-hour protection by armed guards. Rhinos are targeted by poachers, fueled by the belief in Asia that their horns cure various ailments. Experts say the rhino horn is becoming more lucrative than drugs. In addition to round-the-clock security, the conservancy has put radio transmitters on the animals and dispatches incognito rangers into neighboring communities to gather intelligence on poaching. The conservancy is also raising funds to help equip and train rangers who guard the rhinos. At 42, Sudan is elderly in rhino years. Fatu, 15, is a spring chicken, while Najin is 25. Though the three northern white rhinos are physiologically healthy, age might be a factor, says George Paul, the deputy veterinarian at the conservancy. \\\"Sudan is currently old and may not be able to naturally mount and mate with a female,\\\" he says. In addition, he has a low sperm count, which complicates natural and scientific efforts, experts say. Najin could conceive, but her hind legs are so weak, she may be unable to support a mounted male. \\\"There has been recorded mating between different pairs over the last few years, but not conceptions,\\\" Paul says. \\\"Based on  a recent health examination conducted, both animals have a regular estrus cycle, but no conception has been recorded.\\\" And if one is not recorded soon, the beloved animal will go extinct. Rhinos on a plane: Life-saving mission across borders. In a race against time, international experts are resorting to science to try to sustain the subspecies. The northern white rhino cannot mate with a black rhino, but there is a chance it could mate with a southern white rhino, Paul says. While southern white rhinos are not endangered --  Ol Pejeta has 19 -- they are a different subspecies  from the northern white rhino genetically. Though the offspring would not be 100% northern white rhino, it would be better than nothing, experts say. A committee at the conservancy is also looking at various alternative reproduction techniques, including in vitro fertilization. \\\"In other countries, success has been achieved with embryo transfer in a different rhino species, thus that, as a technique, can be presupposed to be the most promising,\\\" Paul says. \\\"However, consultations are ongoing amongst different reproductive technique experts on the way forward.\\\" Bringing rhinos back to Uganda, one calf at a time. The need to preserve the northern white rhino is dire. \\\"Realistically, we are looking at these animals dying in the next decade or so. But hopefully, using artificial methods of reproduction, we might be able to bring them back in the future,\\\" Paul says. \\\"This might mean that it will happen when the current animals are already deceased, but it could happen.\\\" The conservancy acquired the northern white rhinos --  two males and two females -- in 2009 from a zoo in the Czech Republic. Suni, the other male northern white rhino at the conservancy, died last year. In another incident, another male, Angalifu, died at the San Diego Zoo last year, bringing the subspecies closer to extinction. There are no known northern white rhinos left in the wild. A total of five remain in captivity worldwide: three in Kenya,  and one each at zoos in San Diego and the Czech Republic. But Sudan, a male, is in a company of one. 11 wildlife experiences that could vanish in your lifetime.\\n\", \"original_answer\": \"There is just one male Northern White Rhino left in the world, and he's getting on in years. The fate of the subspecies now depends on Sudan's ability to conceive with the two female northern white rhinos left. The animals are protected 24/7 by armed guards, and are fitted with radio transmitters to protect them from poachers, who believe the horns of these animals can cure various ailments. At 42, Sudan, who resides at the Ol Pejeta Conservancy in Kenya, is elderly for a rhino and has a low sperm count, which is hampering both natural and scientific efforts to continue the line. There is a chance that the northern white rhino could mate with a southern white rhino, but the offspring would not be 100% northern white rhino. Experts are also looking at alternative reproduction techniques, including in vitro fertilisation.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "4a1093fce74db7dbbaf5d3467642fbb4142c65993e096f8ec762f40fa6325219",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37
+  ]
+}

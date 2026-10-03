@@ -1,0 +1,108 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.3123605359578505,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:7e88b33847e023f7fb2d0571686cf885dc620933f5c8f63b0bd031c01921e218",
+  "input_tokens": 655,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": 0,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 655,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 679
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:9e1808fabb2fb6eda6899b0eb31e41dafec797cce3ab4d66dc7858f9267f07d5",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": 0\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885965,
+    "id": "chatcmpl-mlrbUfmgU22NkZj0MKZ8ayGN47QdanjO",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 565.072,
+      "predicted_n": 24,
+      "predicted_per_second": 42.47246368604355,
+      "predicted_per_token_ms": 23.544666666666668,
+      "prompt_ms": 603.374,
+      "prompt_n": 577,
+      "prompt_per_second": 956.2891341025633,
+      "prompt_per_token_ms": 1.0457088388214906
+    },
+    "usage": {
+      "completion_tokens": 24,
+      "prompt_tokens": 655,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 679
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:To add videos, first you need a YouTube account. Then you need to link your YouTube account to your Steam profile. You can do this on your profile page. Then make a video, and upload it to YouTube.Then go to your profile, then the link for videos, and there will be a link to add a video.This will bring up a list of all your public YouTube videos.Pick the video you want to add to the hub, then pick the game from the drop down list. It will now be listed on the hub.hen go to your profile, then the link for videos, and there will be a link to add a video. This will bring up a list of all your public YouTube videos. Pick the video you want to add to the hub, then pick the game from the drop down list. It will now be listed on the hub.\\\\n\\\\npassage 2:These is a fast tutorial on how to upload videos from YouTube into your Steam hope it helps you all.hese is a fast tutorial on how to upload videos from YouTube into your Steam hope it helps you all.\\\\n\\\\npassage 3:To add the videos in steam, you need to create an account anonymously and then upload the same videos there. Later granting the permission on that account from steam and adding the videos in steam from that account that has been created anonymously.It will do the job for the time being.share | improve this answer.o add the videos in steam, you need to create an account anonymously and then upload the same videos there. Later granting the permission on that account from steam and adding the videos in steam from that account that has been created anonymously. It will do the job for the time being. share | improve this answer.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to upload a video to steam\\\"}\", \"original_answer\": \"To upload a video to Steam, you first need a YouTube account. Once you have that, you can link your YouTube account to your Steam profile on your profile page. After you've made a video and uploaded it to YouTube, you can go to the videos link on your Steam profile and there will be an option to add a video. This will show a list of all your public YouTube videos. You can then select the video you want to add to the hub and pick the game from the drop down list. The video will now be listed on the hub.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "71397206798a910a42e834e198e6f602d6d3ddb7c114c0a01e06f0588dcdf4cf",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ]
+}

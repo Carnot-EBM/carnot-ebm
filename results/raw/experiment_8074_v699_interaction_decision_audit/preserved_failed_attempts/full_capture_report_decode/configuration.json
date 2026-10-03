@@ -1,0 +1,313 @@
+{
+  "code_config_hashes": {
+    "python/carnot/experiment_8072_v699_sealed_methods.py": "sha256:feadc866153c88471af3341ce827ca746e42d371a250db04e33f2440608d1a24",
+    "python/carnot/experiment_8074_v699_interaction_decision_audit.py": "sha256:27208141c8c91cd3c7aa3a31b688ba268bd9e88a2e1c5c05fc0dd39293f7ab23",
+    "python/carnot/reporting/current_work_receipt.py": "sha256:428d1696eef0820ce9df519532743aeccb8ec1156eb8c1b52fa0c8f72bf16a10",
+    "python/carnot/reporting/primary_publication.py": "sha256:7fe8c6caa2725d68eeae612d2f4a17146b08afc29ff5a8003a4f1ad5f21d1310",
+    "python/carnot/reporting/v686_contract_validation.py": "sha256:a426b1d1e47e12deb84842f5e9ce5540701972f30c23f6e8fdab8b256c2b8df3",
+    "python/carnot/verify/evidence_features_7980.py": "sha256:611e2ef1efe25bb43e2adc79a23c2081cd6cb07185ba82dafde557a9070501e3",
+    "scripts/experiments/experiment_8074_v699_interaction_decision_audit.py": "sha256:10e04f64c878f7c081ee87599d908cb3828b1f9fd6c279507d8940ef247a3d29",
+    "tests/python/test_interaction_decision_8074.py": "sha256:da2cb7005db8fb394c0a48786d0fcdff463ac93c9bcc3e4c37bd39d2d95c5403"
+  },
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8074_v699_interaction_decision_audit.py",
+        "--root",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "--predict-child",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8074_v699_interaction_decision_audit"
+      ],
+      "classification": "required",
+      "deadline_s": 120,
+      "expected_exit": 0,
+      "name": "prediction_child_normal_exit"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8074_v699_interaction_decision_audit.py",
+        "--root",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "--evaluate-child",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8074_v699_interaction_decision_audit"
+      ],
+      "classification": "required",
+      "deadline_s": 120,
+      "expected_exit": 0,
+      "name": "evaluator_child_normal_exit"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import sys, pytest, coverage, ruff, mypy; print(sys.version, flush=True); assert sys.version_info >= (3,11)"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "python_environment"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--rcfile=/tmp/carnot-8074-49up4t5t/coverage.ini",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "-s",
+        "--basetemp=/tmp/carnot-8074-49up4t5t/pytest",
+        "tests/python/test_interaction_decision_8074.py"
+      ],
+      "classification": "required",
+      "deadline_s": 360,
+      "expected_exit": 0,
+      "name": "focused_unit_and_cli"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "-s",
+        "--basetemp=/tmp/carnot-8074-49up4t5t/consumers",
+        "tests/python/test_roadmap_schema.py",
+        "tests/python/test_audit_roadmap_gates.py",
+        "tests/python/test_exclusion_manifest_lint.py",
+        "tests/python/test_conductor_gates.py",
+        "tests/python/test_primary_publication_7928.py"
+      ],
+      "classification": "required",
+      "deadline_s": 180,
+      "expected_exit": 0,
+      "name": "consumer_tests"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "-s",
+        "--basetemp=/tmp/carnot-8074-49up4t5t/e2e015",
+        "tests/python/test_source_boundary_7852.py"
+      ],
+      "classification": "required",
+      "deadline_s": 120,
+      "expected_exit": 0,
+      "name": "E2E-015"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7868_v683_intervention_protocol.py",
+        "--date",
+        "20260929",
+        "--fixture-e2e",
+        "/tmp/carnot-8074-49up4t5t/e2e016.json"
+      ],
+      "classification": "required",
+      "deadline_s": 120,
+      "expected_exit": 0,
+      "name": "E2E-016_fixture"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7868_v683_intervention_protocol.py",
+        "--date",
+        "20260929",
+        "--cold-replay",
+        "/tmp/carnot-8074-49up4t5t/e2e016.json"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "name": "E2E-016_cold_replay"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "--basetemp=/tmp/carnot-8074-49up4t5t/e2e019",
+        "tests/python/test_experiment_7942_v689_sentence_labels.py"
+      ],
+      "classification": "required",
+      "deadline_s": 120,
+      "expected_exit": 0,
+      "name": "E2E-019"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--rcfile=/tmp/carnot-8074-49up4t5t/coverage.ini"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "coverage_combine"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--rcfile=/tmp/carnot-8074-49up4t5t/coverage.ini",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8074_v699_interaction_decision_audit.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8074_v699_interaction_decision_audit.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "coverage_report"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "json",
+        "--rcfile=/tmp/carnot-8074-49up4t5t/coverage.ini",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8074_v699_interaction_decision_audit.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8074_v699_interaction_decision_audit.py",
+        "-o",
+        "/tmp/carnot-8074-49up4t5t/coverage.json"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "coverage_json"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_8074_v699_interaction_decision_audit.py",
+        "scripts/experiments/experiment_8074_v699_interaction_decision_audit.py",
+        "tests/python/test_interaction_decision_8074.py"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "ruff_check"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_8074_v699_interaction_decision_audit.py",
+        "scripts/experiments/experiment_8074_v699_interaction_decision_audit.py",
+        "tests/python/test_interaction_decision_8074.py"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "ruff_format"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "--follow-imports=silent",
+        "python/carnot/experiment_8074_v699_interaction_decision_audit.py",
+        "scripts/experiments/experiment_8074_v699_interaction_decision_audit.py"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "name": "strict_mypy"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_interaction_decision_8074.py"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "scoped_spec_coverage"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q"
+      ],
+      "classification": "diagnostic",
+      "deadline_s": 180,
+      "expected_exit": 0,
+      "name": "repository_full_suite"
+    }
+  ],
+  "config": {
+    "ablations": "all three coefficients zero; each separately zero; no retraining",
+    "alpha": 0.05,
+    "beneficial": 5,
+    "brier_increase": 0.01,
+    "draws": 10000,
+    "groups": 72,
+    "margin": 0.02,
+    "per_class": 8,
+    "permutation": "source-hash sorted cyclic successor; all eight features; q fixed",
+    "seed": 6998074
+  },
+  "diagnostic_amendment": "V699 task fixes source-hash cyclic permutation and joint zero-three ablation; individual sealed ablations also retained",
+  "terminal_commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8074_v699_interaction_decision_audit.py",
+        "--cold-replay",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8074_v699_interaction_decision_audit/terminal_candidate.json"
+      ],
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "name": "cold_replay"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+        "--json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8074_v699_interaction_decision_audit/terminal_candidate.json"
+      ],
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "name": "adversarial"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8074_v699_interaction_decision_audit/terminal_candidate.json"
+      ],
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "name": "strict_rows"
+    }
+  ]
+}

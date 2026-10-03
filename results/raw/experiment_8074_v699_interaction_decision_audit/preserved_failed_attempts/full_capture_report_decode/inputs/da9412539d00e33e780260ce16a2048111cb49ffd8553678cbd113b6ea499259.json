@@ -1,0 +1,115 @@
+{
+  "capture_identity": "sha256:f21ab36d6b3e24ba54d424b3a45ebca38fcb9918916742500a91904c72bf115c",
+  "censor_status": false,
+  "denominator": 1,
+  "duration_s": 1.3513614980038255,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_status": false,
+  "family_id": "sha256:f6925bbc315f4c19af0f6d925380b3ef28da77ddb9d1ad0acee1b274249aaa01",
+  "input_tokens": 780,
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 780,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 803
+    }
+  },
+  "public_eligible": true,
+  "public_hash": "sha256:423782238eaa800eac518e1b875630c3401101a60d5e9b87aac6a1f93893986f",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1790885987,
+    "id": "chatcmpl-hFZnoaR7v15WyaIH5vQWWFYQj8qR84eq",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 78,
+      "predicted_ms": 542.568,
+      "predicted_n": 23,
+      "predicted_per_second": 42.39099983780835,
+      "predicted_per_token_ms": 23.58991304347826,
+      "prompt_ms": 692.935,
+      "prompt_n": 702,
+      "prompt_per_second": 1013.0820351115185,
+      "prompt_per_token_ms": 0.9870868945868945
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 780,
+      "prompt_tokens_details": {
+        "cached_tokens": 78
+      },
+      "total_tokens": 803
+    }
+  },
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Honor a Hero's Legacy - Join Us in Paying Respects to U.S. Army Corporal Mirl Duane Forrest\\nFollow me on Newsbreak for the latest developements on this story! https://original.newsbreak.com/@dr-michael-moates-1589310\\nIn a heartfelt call to the community, the Central Texas State Veterans Cemetery is extending an open invitation to all members of the public to partake in honoring the service and memory of U.S. Army Corporal Mirl Duane Forrest during his Unaccompanied Veteran Burial.\\nCorporal Forrest, born on April 3, 1937, dedicated nearly a decade of his life in service to our nation, actively serving in the U.S. Army from September 1954 to October 1963. His commitment and sacrifices for our country will be commemorated in a burial ceremony, ensuring his memory lives on with the respect and honor it deserves.\\nThe ceremony, scheduled for Thursday, Oct. 5 at 11 a.m., is anticipated to proceed without the presence of next-of-kin. The Texas General Land Office has expressed, \\\"Corporal Forrest is not expected to have any next-of-kin attend his burial. Please help us spread the word and ensure that this U.S. Army Veteran is not buried alone. Members of the Killeen community are encouraged to attend.\\\"\\nIn a solemn tribute to Corporal Forrest's military service, he will be accorded military honors. In the event that no family members are present, a representative from the Veterans Land Board will respectfully accept the United States flag on Corporal Forrest\u2019s behalf.\\nThe Central Texas State Veterans Cemetery and the wider community are coming together to ensure that no veteran is laid to rest alone. Your presence can stand as a testament to the enduring respect and gratitude our community holds for those who have served.\\nLet us come together to honor Corporal Forrest's memory and service, ensuring that his contributions to our nation are celebrated and remembered with the dignity they warrant.\\nFor those who wish to pay their respects, the burial will take place at the Central Texas State Veterans Cemetery. Community members are encouraged to share this message widely and stand united in honoring the memory of a veteran who served our country with honor and distinction.\", \"original_answer\": \"The Central Texas State Veterans Cemetery is inviting the public to attend the Unaccompanied Veteran Burial of U.S. Army Corporal Mirl Duane Forrest, who served from 1954 to 1963. The ceremony is scheduled for October 5, with no next-of-kin expected to attend. The cemetery aims to ensure no veteran is buried alone, and is calling on the community to pay their respects. If no family members are present, a representative from the Veterans Land Board will accept the U.S. flag on Forrest's behalf.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "role": "stream",
+  "source_cluster_id": "3bbbade62b0c6e574b6810e5959f905930b4d45fe0098fda09570201e8c3b9aa",
+  "started": true,
+  "status": "generated",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18
+  ]
+}
