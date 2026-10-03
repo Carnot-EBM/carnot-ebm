@@ -91862,3 +91862,43 @@ zero. The conductor handles ops and traceability reconciliation.
 
 Implementation: `python/carnot/experiment_8078_v699_feature_cache_core.py` and thin CLI.
 Tests: `tests/python/test_feature_cache_core_8078.py`.
+
+## REQ-REPORT-8079 — Complete feature cache lifecycle transactions
+
+The lifecycle partition SHALL authenticate the frozen V699 matrix and original
+guarded transactions. Execute exactly changed_10pct, eviction and restart.
+Preserve three condition/class groups, four arms, five warmups and thirty paired
+repetitions. Interleave modes within repetitions. The measurement budget is
+1800 seconds. Persist each complete quartet atomically. Retain censored slots.
+
+### SCENARIO-REPORT-8079-COST
+
+Predetermine changed source positions with (position+repetition) modulo ten.
+Preserve complete answer bytes. Use capacity one for eviction and 256 otherwise.
+Charge creation, population, hashing, extraction, invalidation, eviction, guards,
+FFI, durable writes, reload, cleanup and real restart at their actual boundaries.
+Report each lifecycle interval separately with thirty ratios and 10000 paired
+resamples. These repetitions describe one host and exposed workloads.
+
+### SCENARIO-REPORT-8079-PARITY
+
+Public features and discrete decisions/state SHALL be identical. Numerical
+tolerance is 1e-10. A new executable process SHALL reopen cache and transaction
+state and verify loaded native calls. Source/config/schema mutations and corrupt
+entries SHALL reject reuse. Retain immutable input, code and checkpoint hashes.
+
+### SCENARIO-REPORT-8079-TERMINAL
+
+Freeze validation commands before measurement. Require current focused tests,
+100 percent added statement coverage, Ruff, strict mypy, scoped spec coverage,
+loaded E2E-003/004 and private E2E-015/016 CLI/replay routes outside the checkout.
+Run the full Python suite once as separate repository health evidence. Publish
+through primary_publication after normal child exit and independent reductions,
+adversarial verification and strict row lint. Owned failures disqualify readiness.
+External missing inputs block. Complete slow service is null with
+cache_lifecycle_ready_score=1. Acquisition and upstream inference/feedback remain
+unmeasured. Generalized learning credit is zero. No production default changes.
+The conductor handles ops and traceability reconciliation.
+
+Implementation: `python/carnot/experiment_8079_v699_feature_cache_lifecycle.py` and thin CLI.
+Tests: `tests/python/test_feature_cache_lifecycle_8079.py`.
