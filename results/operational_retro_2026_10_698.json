@@ -1,0 +1,61 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.10.698",
+  "generated_at": "2026-10-03T12:57:43Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 47.8,
+  "experiments_completed": 10,
+  "compute_bound_experiments_count": 1,
+  "slowest_experiments": [
+    {
+      "experiment": "Test reusable public features in complete guarded transactions",
+      "duration_minutes": 15.98,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Collect repeatable Qwen fit and tune source scores",
+      "duration_minutes": 15.58,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Assess new live supervisor outcomes for transferable ARC refinement",
+      "duration_minutes": 3.11,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Preserve board custody and bound acceleration after feature reuse",
+      "duration_minutes": 2.75,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Independently test fresh-feedback benefit retention and recovery",
+      "duration_minutes": 2.27,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.10.698 executed 10 experiments (1 compute-bound, 9 synthesis-only) across 47.8 total wall-time minutes (averaging 5 minutes per experiment) based on fallback disk timestamp reconstruction. The longest-running tasks were synthesis experiment 'Test reusable public features in complete guarded transactions' (15.98 minutes) and compute-bound experiment 'Collect repeatable Qwen fit and tune source scores' (15.58 minutes), followed by 'Assess new live supervisor outcomes for transferable ARC refinement' (3.11 minutes), 'Preserve board custody and bound acceleration after feature reuse' (2.75 minutes), and 'Independently test fresh-feedback benefit retention and recovery' (2.27 minutes). Point-in-time monitor telemetry observed both NVIDIA GeForce RTX 3090 GPUs at 0% utilization with 4MB memory allocated outside active runs; because active-window execution telemetry was absent, gpu_idle_on_compute_bound_tasks is recorded as false.",
+  "bottlenecks_identified": [
+    "Execution wall time was heavily concentrated in two experiments: 'Test reusable public features in complete guarded transactions' (15.98 minutes, synthesis-only) and 'Collect repeatable Qwen fit and tune source scores' (15.58 minutes, compute-bound), which together consumed 31.56 of 47.8 total wall-time minutes (66.0%), with the top five experiments consuming 39.69 minutes (83.0%).",
+    "Synthesis-only tasks constituted 9 of the 10 completed experiments and accounted for the single slowest execution ('Test reusable public features in complete guarded transactions' at 15.98 minutes), representing a primary wall-time bottleneck.",
+    "Milestone timing relied on disk-mtime fallback reconstruction following zero commits on the live git-log path, leaving intra-task execution phases (environment initialization, dataset loading, model forward compute/scoring, and artifact validation) uninstrumented.",
+    "Absence of continuous in-flight accelerator telemetry across active execution windows leaves hardware utilization, memory bandwidth saturation, and kernel execution efficiency unmeasured during the compute-bound experiment."
+  ],
+  "improvements_suggested": [
+    "Profile and optimize the feature reuse guarded transaction synthesis task (15.98 minutes) to identify code-generation and transaction verification bottlenecks.",
+    "Instrument experiment runners with monotonic sub-phase timers to isolate latency across environment setup, data preparation, compute passes, and artifact validation.",
+    "Deploy continuous, lightweight GPU sampling throughout task execution rather than relying solely on discrete point-in-time monitor checkpoints.",
+    "Optimize the Qwen fit and tune source scoring pipeline (15.58 minutes) via cached tokenizations, batched evaluation, or reduced scoring overhead.",
+    "Restrict DualGPURunner orchestration strictly to parallel workloads involving two or more distinct models (e.g. concurrent Qwen and Gemma execution), avoiding misapplication to single-model tasks like Qwen scoring.",
+    "Maintain failure_ledger pre-launch verification so doomed reruns continue to be blocked in sub-second time without expending compute budget."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add granular sub-phase execution timing to experiment runners to measure setup, compute, scoring iterations, and artifact validation overhead.",
+    "Implement active-window GPU utilization and memory timeseries logging to assess hardware efficiency during compute-bound tasks.",
+    "Profile and optimize the two dominant long-running experiments: the feature reuse guarded transaction pipeline (15.98 minutes) and Qwen source scoring (15.58 minutes)."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Milestone 2026.10.698 completed 10 experiments (1 compute-bound, 9 synthesis-only) in 47.8 wall-time minutes, with execution dominated by guarded transaction testing (15.98 minutes) and Qwen source scoring (15.58 minutes) which together accounted for 66.0% of milestone duration. While point-in-time telemetry observed both RTX 3090 GPUs idle with 4MB allocated outside execution, gpu_idle_on_compute_bound_tasks remains false due to the lack of continuous in-flight accelerator traces and single-model scope. Estimated time savings are set to 0% pending empirical measurement of intra-task phase durations and verified hardware utilization traces."
+}
