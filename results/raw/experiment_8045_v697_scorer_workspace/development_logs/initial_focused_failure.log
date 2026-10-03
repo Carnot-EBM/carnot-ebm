@@ -1,0 +1,141 @@
+....F.............                                                       [100%]
+=================================== FAILURES ===================================
+_________________________ test_manifest_and_main_seal __________________________
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261003T012017-1647802-90eccdc6/test_manifest_and_main_seal0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f2e23201ac0>
+
+    def test_manifest_and_main_seal(tmp_path, monkeypatch):
+        """SCENARIO-REPORT-8045-TERMINAL: complete owned checks seal replayable bytes."""
+        specs = e.commands(tmp_path)
+        assert (tmp_path / "pytest").is_dir()
+        assert any("--strict" in s.argv for s in specs)
+        assert any(s.scope == "repository_health" for s in specs)
+        monkeypatch.setattr(
+            e,
+            "commands",
+            lambda scratch: [e.CommandSpec("private_check", (sys.executable, "-c", "pass"), "owned")],
+        )
+    
+        def private_validation(scratch, raw):
+            log = raw / "private_check.log"
+            log.write_text("private test-only validation receipt\n")
+            ref = e.reference(log)
+            return dict(
+                receipts=[
+                    dict(
+                        name="private_check",
+                        scope="owned",
+                        passed=True,
+                        exit_code=0,
+                        log_path=ref["path"],
+                        log_sha256=ref["sha256"],
+                    )
+                ],
+                coverage=dict(percent_covered=100, num_statements=1, covered_lines=1, missing_lines=0),
+            )
+    
+        monkeypatch.setattr(e, "validate", private_validation)
+        output = tmp_path / "results" / (e.NAME + ".json")
+>       assert e.main(["--output", str(output)]) == 0
+E       AssertionError: assert 1 == 0
+E        +  where 1 = <function main at 0x7f2e23510cc0>(['--output', '/tmp/pytest-carnot-ianblenke/20261003T012017-1647802-90eccdc6/test_manifest_and_main_seal0/results/experiment_8045_v697_scorer_workspace.json'])
+E        +    where <function main at 0x7f2e23510cc0> = e.main
+
+tests/python/test_scorer_workspace_8045.py:138: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8022] phase=8045_start_preconditions elapsed_s=0.000 completed=0 pending=0
+[exp8022] phase=8045_before_workspace_control elapsed_s=0.087 completed=0 pending=0
+[exp7303-validation] before_subprocess missing_parent elapsed_s=0.000 unit=1/1
+[exp7303-validation:missing_parent] E                                                                        [100%]
+[exp7303-validation:missing_parent] ==================================== ERRORS ====================================
+[exp7303-validation:missing_parent] _______________________ ERROR at setup of test_workspace _______________________
+[exp7303-validation:missing_parent] 
+[exp7303-validation:missing_parent] self = PosixPath('/tmp/carnot-8045-9k7tqh0g/reproduction/pytest/focused')
+[exp7303-validation:missing_parent] mode = 448, parents = False, exist_ok = False
+[exp7303-validation:missing_parent] 
+[exp7303-validation:missing_parent]     def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+[exp7303-validation:missing_parent]         """
+[exp7303-validation:missing_parent]         Create a new directory at this given path.
+[exp7303-validation:missing_parent]         """
+[exp7303-validation:missing_parent]         try:
+[exp7303-validation:missing_parent] >           os.mkdir(self, mode)
+[exp7303-validation:missing_parent] E           FileNotFoundError: [Errno 2] No such file or directory: '/tmp/carnot-8045-9k7tqh0g/reproduction/pytest/focused'
+[exp7303-validation:missing_parent] 
+[exp7303-validation:missing_parent] ../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1311: FileNotFoundError
+[exp7303-validation:missing_parent] =========================== short test summary info ============================
+[exp7303-validation:missing_parent] ERROR ../../../../../tmp/carnot-8045-9k7tqh0g/reproduction/test_private_workspace.py::test_workspace
+[exp7303-validation:missing_parent] 1 error in 0.08s
+[exp7303-validation] after_subprocess missing_parent elapsed_s=0.909 exit=1 unit=1/1
+[exp7303-validation] before_subprocess repaired_parent elapsed_s=0.000 unit=1/1
+[exp7303-validation:repaired_parent] .                                                                        [100%]
+[exp7303-validation:repaired_parent] 1 passed in 0.05s
+[exp7303-validation] after_subprocess repaired_parent elapsed_s=0.875 exit=0 unit=1/1
+[exp8022] phase=8045_after_workspace_control elapsed_s=1.873 completed=0 pending=0
+[exp7303-validation] before_subprocess cpu_fixture_cli elapsed_s=0.000 unit=1/1
+[exp7303-validation:cpu_fixture_cli] Exp8045 start: resolving local code; model invocations=0
+[exp7303-validation:cpu_fixture_cli] [exp8022] phase=8045_start_preconditions elapsed_s=0.000 completed=0 pending=0
+[exp7303-validation:cpu_fixture_cli] [exp8022] phase=8033_before_context_create elapsed_s=0.000 completed=0 pending=0
+[exp7303-validation:cpu_fixture_cli] [exp8022] phase=8033_after_context_create elapsed_s=0.001 completed=0 pending=0
+[exp7303-validation:cpu_fixture_cli] [exp8022] phase=8033_before_eval elapsed_s=0.001 completed=0 pending=4
+[exp7303-validation:cpu_fixture_cli] [exp8022] phase=8033_after_eval elapsed_s=0.001 completed=4 pending=0
+[exp7303-validation:cpu_fixture_cli] [exp8022] phase=8033_before_context_close elapsed_s=0.001 completed=0 pending=0
+[exp7303-validation:cpu_fixture_cli] [exp8022] phase=8033_after_context_close elapsed_s=0.001 completed=0 pending=0
+[exp7303-validation:cpu_fixture_cli] [exp8022] phase=8033_before_context_create elapsed_s=0.000 completed=0 pending=0
+[exp7303-validation:cpu_fixture_cli] [exp8022] phase=8033_after_context_create elapsed_s=0.000 completed=0 pending=0
+[exp7303-validation:cpu_fixture_cli] [exp8022] phase=8033_before_eval elapsed_s=0.000 completed=0 pending=4
+[exp7303-validation:cpu_fixture_cli] [exp8022] phase=8033_after_eval elapsed_s=0.000 completed=4 pending=0
+[exp7303-validation:cpu_fixture_cli] [exp8022] phase=8033_before_context_close elapsed_s=0.000 completed=0 pending=0
+[exp7303-validation:cpu_fixture_cli] [exp8022] phase=8033_after_context_close elapsed_s=0.000 completed=0 pending=0
+[exp7303-validation:cpu_fixture_cli] [exp8022] phase=8033_before_context_create elapsed_s=0.000 completed=0 pending=0
+[exp7303-validation:cpu_fixture_cli] [exp8022] phase=8033_after_context_create elapsed_s=0.000 completed=0 pending=0
+[exp7303-validation:cpu_fixture_cli] [exp8022] phase=8033_before_eval elapsed_s=0.000 completed=0 pending=4
+[exp7303-validation:cpu_fixture_cli] [exp8022] phase=8033_after_eval elapsed_s=0.000 completed=4 pending=0
+[exp7303-validation:cpu_fixture_cli] [exp8022] phase=8033_before_context_close elapsed_s=0.000 completed=0 pending=0
+[exp7303-validation:cpu_fixture_cli] [exp8022] phase=8033_after_context_close elapsed_s=0.000 completed=0 pending=0
+[exp7303-validation:cpu_fixture_cli] [exp8022] phase=8033_before_context_create elapsed_s=0.000 completed=0 pending=0
+[exp7303-validation:cpu_fixture_cli] [exp8022] phase=8033_after_context_create elapsed_s=0.000 completed=0 pending=0
+[exp7303-validation:cpu_fixture_cli] [exp8022] phase=8033_before_eval elapsed_s=0.000 completed=0 pending=4
+[exp7303-validation:cpu_fixture_cli] [exp8022] phase=8033_after_eval elapsed_s=0.000 completed=4 pending=0
+[exp7303-validation:cpu_fixture_cli] [exp8022] phase=8033_before_context_close elapsed_s=0.000 completed=0 pending=0
+[exp7303-validation:cpu_fixture_cli] [exp8022] phase=8033_after_context_close elapsed_s=0.000 completed=0 pending=0
+[exp7303-validation] after_subprocess cpu_fixture_cli elapsed_s=1.447 exit=0 unit=1/1
+[exp8022] phase=8045_before_validation elapsed_s=3.320 completed=0 pending=0
+[exp8022] phase=8045_after_validation elapsed_s=3.320 completed=0 pending=0
+[exp7303-validation] before_subprocess cold_reduction elapsed_s=0.000 unit=1/1
+[exp7303-validation:cold_reduction] Exp8045 start: resolving local code; model invocations=0
+[exp7303-validation:cold_reduction] [exp8022] phase=8045_start_preconditions elapsed_s=0.000 completed=0 pending=0
+[exp7303-validation] after_subprocess cold_reduction elapsed_s=1.393 exit=0 unit=1/1
+[exp7303-validation] before_subprocess adversarial elapsed_s=0.000 unit=1/2
+[exp7303-validation:adversarial] {
+[exp7303-validation:adversarial]   "reports": [
+[exp7303-validation:adversarial]     {
+[exp7303-validation:adversarial]       "artifact": "/tmp/pytest-carnot-ianblenke/20261003T012017-1647802-90eccdc6/test_manifest_and_main_seal0/results/raw/experiment_8045_v697_scorer_workspace/terminal_candidate.json",
+[exp7303-validation:adversarial]       "loaded": true,
+[exp7303-validation:adversarial]       "exp_id": 8045,
+[exp7303-validation:adversarial]       "title": "",
+[exp7303-validation:adversarial]       "honest_verdict": "complete_circular_positive_scorer_workspace",
+[exp7303-validation:adversarial]       "flag_count": 1,
+[exp7303-validation:adversarial]       "max_severity": 1,
+[exp7303-validation:adversarial]       "flags": [
+[exp7303-validation:adversarial]         {
+[exp7303-validation:adversarial]           "kind": "METHODOLOGY_MISSING",
+[exp7303-validation:adversarial]           "severity": "warn",
+[exp7303-validation:adversarial]           "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable."
+[exp7303-validation:adversarial]         }
+[exp7303-validation:adversarial]       ],
+[exp7303-validation:adversarial]       "gate_version": "07ddacadae8c3b8d3250ad0977bda6f747d5bcb02bb7af3119b80db2547b62c7"
+[exp7303-validation:adversarial]     }
+[exp7303-validation:adversarial]   ],
+[exp7303-validation:adversarial]   "flagged_count": 1
+[exp7303-validation:adversarial] }
+[exp7303-validation] after_subprocess adversarial elapsed_s=0.541 exit=1 unit=1/2
+[exp7303-validation] before_subprocess strict_rows elapsed_s=0.000 unit=2/2
+[exp7303-validation:strict_rows] 
+[exp7303-validation:strict_rows] verdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.
+[exp7303-validation:strict_rows]   No row/verdict contradictions among the artifacts that could be checked.
+[exp7303-validation] after_subprocess strict_rows elapsed_s=0.025 exit=0 unit=2/2
+[exp8045] rejected=ValueError:candidate_rejected
+=========================== short test summary info ============================
+FAILED tests/python/test_scorer_workspace_8045.py::test_manifest_and_main_seal
+1 failed, 17 passed in 42.70s
