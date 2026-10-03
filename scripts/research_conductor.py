@@ -625,6 +625,43 @@ def _unstage_oversized_files(threshold_bytes: int = OVERSIZED_FILE_THRESHOLD_BYT
         logger.debug("oversized-file gate skipped: %s", exc)
 
 
+def _drop_oversized_paths(
+    paths: list[str], threshold_bytes: int = OVERSIZED_FILE_THRESHOLD_BYTES
+) -> list[str]:
+    """Return `paths` without any file over `threshold_bytes`, for the interrupted-run checkpoint.
+
+    REQ-INFRA-7092. That checkpoint stages files one at a time with `git add -- <file>`, so it
+    never passes through `_stage_all_except_claimed` and the size gate above never saw it. On
+    2026-10-02 five files of 147-335MB went in through it, after the 50MB gate was live, and
+    GitHub then rejected every push (it was left 68 commits behind gitea).
+
+    A dropped file stays on disk, untracked or modified, exactly as before: nothing is lost,
+    it is just not committed. FAIL-OPEN, same as the sibling gate: any error returns every
+    path unchanged, because refusing to checkpoint is the failure that gate exists to avoid.
+    """
+    try:
+        sizes: dict[str, int] = {}
+        for path in paths:
+            try:
+                sizes[path] = (PROJECT_ROOT / path).stat().st_size
+            except OSError:
+                continue  # deleted, or vanished between listing and stat
+        oversized = set(oversized_staged_files(paths, sizes, threshold_bytes))
+        for path in sorted(oversized):
+            logger.warning(
+                "BLOCKED_OVERSIZED_FILE: %s is %d bytes (over the %d-byte cap) and was NOT "
+                "committed by the interrupted-run checkpoint. Model weights / caches / raw dumps "
+                "do not belong in git. It stays on disk; add it to .gitignore or move it.",
+                path,
+                sizes.get(path, 0),
+                threshold_bytes,
+            )
+        return [p for p in paths if p not in oversized]
+    except Exception as exc:  # noqa: BLE001 - fail-open per docstring
+        logger.debug("checkpoint oversized-path filter skipped: %s", exc)
+        return paths
+
+
 def _unstage_mutation_proof_target() -> None:
     """REQ-INFRA-6977: drop a file under an open mutation proof from the index.
 
@@ -7202,6 +7239,7 @@ def research_step(
         committable = [f for f in all_dirty if not any(f.startswith(s) for s in skip)]
 
         committable = checkpoint_after_mutation_freeze(committable)
+        committable = _drop_oversized_paths(committable)
 
         if committable:
             logger.info(
