@@ -1,0 +1,249 @@
+{
+  "code_config_hashes": {
+    "python/carnot/experiment_8063_v698_admission_opportunity_audit.py": "sha256:c4248e1823b12c297f8c4b5bca3b09a1e2f60c5584e29d5ae685fabddab08222",
+    "scripts/experiments/experiment_8063_v698_admission_opportunity_audit.py": "sha256:76fba722a8a6262b2abedd7c64216d76bfbce9e6368837152a05c13f23607dce",
+    "tests/python/test_admission_opportunity_8063.py": "sha256:2f94b3b9f9a9062485c846ef1d2854b843db4e132bcbe052598e27cca87370d8"
+  },
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import sys, pytest, coverage, ruff, mypy; print(sys.version, flush=True); assert sys.version_info >= (3,11)"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "python_environment"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--rcfile=/tmp/carnot-8063-8hwquz59/coverage.ini",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "-s",
+        "--basetemp=/tmp/carnot-8063-8hwquz59/pytest",
+        "tests/python/test_admission_opportunity_8063.py"
+      ],
+      "classification": "required",
+      "deadline_s": 180,
+      "expected_exit": 0,
+      "name": "focused_unit_and_cli"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "-s",
+        "--basetemp=/tmp/carnot-8063-8hwquz59/consumers",
+        "tests/python/test_roadmap_schema.py",
+        "tests/python/test_audit_roadmap_gates.py",
+        "tests/python/test_exclusion_manifest_lint.py",
+        "tests/python/test_conductor_gates.py",
+        "tests/python/test_primary_publication_7928.py"
+      ],
+      "classification": "required",
+      "deadline_s": 180,
+      "expected_exit": 0,
+      "name": "consumer_tests"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "-s",
+        "--basetemp=/tmp/carnot-8063-8hwquz59/e2e015",
+        "tests/python/test_source_boundary_7852.py"
+      ],
+      "classification": "required",
+      "deadline_s": 120,
+      "expected_exit": 0,
+      "name": "E2E-015"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7868_v683_intervention_protocol.py",
+        "--date",
+        "20260929",
+        "--fixture-e2e",
+        "/tmp/carnot-8063-8hwquz59/e2e016.json"
+      ],
+      "classification": "required",
+      "deadline_s": 120,
+      "expected_exit": 0,
+      "name": "E2E-016_fixture"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7868_v683_intervention_protocol.py",
+        "--date",
+        "20260929",
+        "--cold-replay",
+        "/tmp/carnot-8063-8hwquz59/e2e016.json"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "name": "E2E-016_cold_replay"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--rcfile=/tmp/carnot-8063-8hwquz59/coverage.ini"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "coverage_combine"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--rcfile=/tmp/carnot-8063-8hwquz59/coverage.ini",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8063_v698_admission_opportunity_audit.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8063_v698_admission_opportunity_audit.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "coverage_report"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "json",
+        "--rcfile=/tmp/carnot-8063-8hwquz59/coverage.ini",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8063_v698_admission_opportunity_audit.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8063_v698_admission_opportunity_audit.py",
+        "-o",
+        "/tmp/carnot-8063-8hwquz59/coverage.json"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "coverage_json"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_8063_v698_admission_opportunity_audit.py",
+        "scripts/experiments/experiment_8063_v698_admission_opportunity_audit.py",
+        "tests/python/test_admission_opportunity_8063.py"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "ruff_check"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_8063_v698_admission_opportunity_audit.py",
+        "scripts/experiments/experiment_8063_v698_admission_opportunity_audit.py",
+        "tests/python/test_admission_opportunity_8063.py"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "ruff_format"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "--follow-imports=silent",
+        "python/carnot/experiment_8063_v698_admission_opportunity_audit.py",
+        "scripts/experiments/experiment_8063_v698_admission_opportunity_audit.py"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "name": "strict_mypy"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_admission_opportunity_8063.py"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "scoped_spec_coverage"
+    }
+  ],
+  "evaluator": {
+    "argv": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "-u",
+      "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8063_v698_admission_opportunity_audit.py",
+      "--evaluate",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8063_v698_admission_opportunity_audit"
+    ],
+    "deadline_s": 180,
+    "expected_exit": 0,
+    "name": "isolated_evaluator"
+  },
+  "terminal_commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8063_v698_admission_opportunity_audit.py",
+        "--cold-replay",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8063_v698_admission_opportunity_audit/terminal_candidate.json"
+      ],
+      "deadline_s": 120,
+      "expected_exit": 0,
+      "name": "cold_replay"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+        "--json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8063_v698_admission_opportunity_audit/terminal_candidate.json"
+      ],
+      "deadline_s": 120,
+      "expected_exit": 0,
+      "name": "adversarial"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8063_v698_admission_opportunity_audit/terminal_candidate.json"
+      ],
+      "deadline_s": 120,
+      "expected_exit": 0,
+      "name": "strict_rows"
+    }
+  ]
+}

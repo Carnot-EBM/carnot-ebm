@@ -1,0 +1,241 @@
+{
+  "code": {
+    "python/carnot/experiment_8065_v698_fresh_learning_audit.py": "sha256:9da011496e6cfdb0c7b114c49297662635780f04e4951f13d7b750bb28c08e7f",
+    "python/carnot/verify/fresh_learning_audit_8065.py": "sha256:0c71ab44b1fa92ecb88caee4130b5a5f7a7510331a9a04015ae01cb932be0135",
+    "scripts/experiments/experiment_8065_v698_fresh_learning_audit.py": "sha256:d6cd4c03d451bcf05123096ff0e0758e0e01da7d6ef6b2295dd8bceaffd5df52",
+    "tests/python/test_fresh_learning_audit_8065.py": "sha256:7b90d50dbe524a28df88f610897f471917e654c5fdb015f81621e71583e94903"
+  },
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import sys, pytest, coverage, ruff, mypy; print(sys.version, flush=True); assert sys.version_info >= (3,11)"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "python_environment"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--rcfile=/tmp/carnot-8065-0wrurmsa/coverage.ini",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "-s",
+        "--basetemp=/tmp/carnot-8065-0wrurmsa/pytest",
+        "tests/python/test_fresh_learning_audit_8065.py"
+      ],
+      "classification": "required",
+      "deadline_s": 180,
+      "expected_exit": 0,
+      "name": "focused_unit_and_cli"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "-s",
+        "--basetemp=/tmp/carnot-8065-0wrurmsa/consumers",
+        "tests/python/test_roadmap_schema.py",
+        "tests/python/test_audit_roadmap_gates.py",
+        "tests/python/test_exclusion_manifest_lint.py",
+        "tests/python/test_conductor_gates.py",
+        "tests/python/test_primary_publication_7928.py"
+      ],
+      "classification": "required",
+      "deadline_s": 180,
+      "expected_exit": 0,
+      "name": "consumer_tests"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "-s",
+        "--basetemp=/tmp/carnot-8065-0wrurmsa/e2e015",
+        "tests/python/test_source_boundary_7852.py"
+      ],
+      "classification": "required",
+      "deadline_s": 120,
+      "expected_exit": 0,
+      "name": "E2E-015"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7868_v683_intervention_protocol.py",
+        "--date",
+        "20260929",
+        "--fixture-e2e",
+        "/tmp/carnot-8065-0wrurmsa/e2e016.json"
+      ],
+      "classification": "required",
+      "deadline_s": 120,
+      "expected_exit": 0,
+      "name": "E2E-016_fixture"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7868_v683_intervention_protocol.py",
+        "--date",
+        "20260929",
+        "--cold-replay",
+        "/tmp/carnot-8065-0wrurmsa/e2e016.json"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "name": "E2E-016_cold_replay"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--rcfile=/tmp/carnot-8065-0wrurmsa/coverage.ini"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "coverage_combine"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--rcfile=/tmp/carnot-8065-0wrurmsa/coverage.ini",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8065_v698_fresh_learning_audit.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8065_v698_fresh_learning_audit.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/fresh_learning_audit_8065.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "coverage_report"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "json",
+        "--rcfile=/tmp/carnot-8065-0wrurmsa/coverage.ini",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8065_v698_fresh_learning_audit.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8065_v698_fresh_learning_audit.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/fresh_learning_audit_8065.py",
+        "-o",
+        "/tmp/carnot-8065-0wrurmsa/coverage.json"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "coverage_json"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_8065_v698_fresh_learning_audit.py",
+        "scripts/experiments/experiment_8065_v698_fresh_learning_audit.py",
+        "tests/python/test_fresh_learning_audit_8065.py",
+        "python/carnot/verify/fresh_learning_audit_8065.py"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "ruff_check"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_8065_v698_fresh_learning_audit.py",
+        "scripts/experiments/experiment_8065_v698_fresh_learning_audit.py",
+        "tests/python/test_fresh_learning_audit_8065.py",
+        "python/carnot/verify/fresh_learning_audit_8065.py"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "ruff_format"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--strict",
+        "--follow-imports=silent",
+        "python/carnot/experiment_8065_v698_fresh_learning_audit.py",
+        "scripts/experiments/experiment_8065_v698_fresh_learning_audit.py",
+        "python/carnot/verify/fresh_learning_audit_8065.py"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "name": "strict_mypy"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_fresh_learning_audit_8065.py"
+      ],
+      "classification": "required",
+      "deadline_s": 30,
+      "expected_exit": 0,
+      "name": "scoped_spec_coverage"
+    }
+  ],
+  "terminal_commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8065_v698_fresh_learning_audit.py",
+        "--cold-replay",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8065_v698_fresh_learning_audit/terminal_candidate.json"
+      ],
+      "deadline_s": 120,
+      "expected_exit": 0,
+      "name": "cold_replay"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+        "--json",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8065_v698_fresh_learning_audit/terminal_candidate.json"
+      ],
+      "deadline_s": 120,
+      "expected_exit": 0,
+      "name": "adversarial"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8065_v698_fresh_learning_audit/terminal_candidate.json"
+      ],
+      "deadline_s": 120,
+      "expected_exit": 0,
+      "name": "strict_rows"
+    }
+  ]
+}

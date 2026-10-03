@@ -1,0 +1,64 @@
+{
+  "primary_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8068_v698_hardware_feature_boundary.json",
+  "primary_sha256": "sha256:0ea692bcd7399930f7bc1c967c3e5d7b88be37dabb61bdcbce4378bcf6b84dc5",
+  "report": {
+    "passed": true,
+    "receipts": [
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8068_v698_hardware_feature_boundary.py --cold-replay /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8068_v698_hardware_feature_boundary/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8068_v698_hardware_feature_boundary.py",
+          "--cold-replay",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8068_v698_hardware_feature_boundary/terminal_candidate.json"
+        ],
+        "duration_s": 1.3301339009776711,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8068_v698_hardware_feature_boundary/invocations/1791029371320091728/terminal_logs/0ea692bcd7399930f7bc1c967c3e5d7b88be37dabb61bdcbce4378bcf6b84dc5/00_cold_reduce.log",
+        "log_sha256": "sha256:53d2e6a64dc2c901822d29863d06a23508d838390164de60e3a59c2efbea44ee",
+        "name": "cold_reduce",
+        "output_tail": "[exp8068] phase=start_preconditions elapsed_s=0.000 completed=1 pending=start_preconditions model_loads=0 generations=0 device_calls=0\n{\"passed\": true, \"rows_checksum\": \"sha256:79ce114783d9e68bfb0f3287c96fdda975deb9b4e991576bd0858b71f42f7c14\"}\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8068_v698_hardware_feature_boundary/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "scripts/adversarial_verify.py",
+          "--json",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8068_v698_hardware_feature_boundary/terminal_candidate.json"
+        ],
+        "duration_s": 0.531325850985013,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8068_v698_hardware_feature_boundary/invocations/1791029371320091728/terminal_logs/0ea692bcd7399930f7bc1c967c3e5d7b88be37dabb61bdcbce4378bcf6b84dc5/01_adversarial.log",
+        "log_sha256": "sha256:57fe99fd7540bca1fa1dbc1d98f9e4d23c29be43c638184e563ac814f9ea715b",
+        "name": "adversarial",
+        "output_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8068_v698_hardware_feature_boundary/terminal_candidate.json\",\n      \"loaded\": true,\n      \"exp_id\": 8068,\n      \"title\": \"Historical board custody and feature-reuse workload boundary\",\n      \"honest_verdict\": \"complete_blocked_new_workload_bound\",\n      \"flag_count\": 0,\n      \"max_severity\": -1,\n      \"flags\": [],\n      \"gate_version\": \"07ddacadae8c3b8d3250ad0977bda6f747d5bcb02bb7af3119b80db2547b62c7\"\n    }\n  ],\n  \"flagged_count\": 0\n}\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8068_v698_hardware_feature_boundary/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "scripts/verdict_row_consistency_lint.py",
+          "--strict",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8068_v698_hardware_feature_boundary/terminal_candidate.json"
+        ],
+        "duration_s": 0.02660118800122291,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8068_v698_hardware_feature_boundary/invocations/1791029371320091728/terminal_logs/0ea692bcd7399930f7bc1c967c3e5d7b88be37dabb61bdcbce4378bcf6b84dc5/02_strict_rows.log",
+        "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+        "name": "strict_rows",
+        "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      }
+    ]
+  }
+}

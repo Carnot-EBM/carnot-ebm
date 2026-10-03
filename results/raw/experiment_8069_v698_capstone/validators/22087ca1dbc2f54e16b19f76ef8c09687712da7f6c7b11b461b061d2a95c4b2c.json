@@ -1,0 +1,92 @@
+{
+  "primary_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8069_v698_capstone.json",
+  "primary_sha256": "sha256:22087ca1dbc2f54e16b19f76ef8c09687712da7f6c7b11b461b061d2a95c4b2c",
+  "report": {
+    "passed": true,
+    "receipts": [
+      {
+        "actual_exit": 0,
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8069_v698_capstone.py",
+          "--cold-replay",
+          "/tmp/capstone8069-8cddfxnj/terminal/experiment_8069_v698_capstone.json"
+        ],
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8069_v698_capstone.py --cold-replay /tmp/capstone8069-8cddfxnj/terminal/experiment_8069_v698_capstone.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8069_v698_capstone.py",
+          "--cold-replay",
+          "/tmp/capstone8069-8cddfxnj/terminal/experiment_8069_v698_capstone.json"
+        ],
+        "deadline_s": 180,
+        "duration_s": 5.1373168480349705,
+        "exit_code": 0,
+        "expected_exit": 0,
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8069_v698_capstone/invocations/1791031462271956345/terminal_logs/cold_replay-7ba30ba6319acb58ae6aa275b7bb2c737c3f42b44cc516aa464ed8debeb23041.log",
+        "log_sha256": "sha256:7ba30ba6319acb58ae6aa275b7bb2c737c3f42b44cc516aa464ed8debeb23041",
+        "name": "cold_replay",
+        "output_tail": "[exp8069] phase=exp8069_start elapsed_s=0.000 completed_units=0 pending=preconditions\n[exp8069] phase=cold_replay_before elapsed_s=0.011 completed_units=0 pending=hashes and independent equations\n[exp8065] independent seed=101 events=1339\n[exp8065] independent seed=102 events=1339\n[exp8065] independent seed=103 events=1339\n[exp8065] independent seed=104 events=1339\n[exp8065] independent seed=105 events=1339\n[exp8065] independent seed=106 events=1339\n[exp8065] independent seed=107 events=1339\n[exp8065] independent seed=108 events=1339\n[exp8065] independent seed=109 events=1339\n[exp8065] independent seed=110 events=1339\n[exp8065] independent seed=111 events=1339\n[exp8065] independent seed=112 events=1339\n[exp8065] independent seed=113 events=1339\n[exp8065] independent seed=114 events=1339\n[exp8065] independent seed=115 events=1339\n[exp8065] independent seed=116 events=1339\n[exp8065] independent seed=117 events=1339\n[exp8065] independent seed=118 events=1339\n[exp8065] independent seed=119 events=1339\n[exp8065] independent seed=120 events=1339\n[exp8069] phase=cold_replay_after elapsed_s=3.703 completed_units=12 pending=none\n{\"errors\": []}\n",
+        "passed": true,
+        "scope": "required",
+        "timed_out": false
+      },
+      {
+        "actual_exit": 0,
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "scripts/adversarial_verify.py",
+          "--json",
+          "/tmp/capstone8069-8cddfxnj/terminal/experiment_8069_v698_capstone.json"
+        ],
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --json /tmp/capstone8069-8cddfxnj/terminal/experiment_8069_v698_capstone.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "scripts/adversarial_verify.py",
+          "--json",
+          "/tmp/capstone8069-8cddfxnj/terminal/experiment_8069_v698_capstone.json"
+        ],
+        "deadline_s": 180,
+        "duration_s": 1.2942491660360247,
+        "exit_code": 0,
+        "expected_exit": 0,
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8069_v698_capstone/invocations/1791031462271956345/terminal_logs/adversarial-81937155763a2180f92970c5bf7a82f252793db3bcbeaf6f36ac8f555b748bd6.log",
+        "log_sha256": "sha256:81937155763a2180f92970c5bf7a82f252793db3bcbeaf6f36ac8f555b748bd6",
+        "name": "adversarial",
+        "output_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/tmp/capstone8069-8cddfxnj/terminal/experiment_8069_v698_capstone.json\",\n      \"loaded\": true,\n      \"exp_id\": 8069,\n      \"title\": \"\",\n      \"honest_verdict\": \"complete_blocked_v698_capstone\",\n      \"flag_count\": 0,\n      \"max_severity\": -1,\n      \"flags\": [],\n      \"gate_version\": \"07ddacadae8c3b8d3250ad0977bda6f747d5bcb02bb7af3119b80db2547b62c7\"\n    }\n  ],\n  \"flagged_count\": 0\n}\n",
+        "passed": true,
+        "scope": "required",
+        "timed_out": false
+      },
+      {
+        "actual_exit": 0,
+        "argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "scripts/verdict_row_consistency_lint.py",
+          "--strict",
+          "/tmp/capstone8069-8cddfxnj/terminal/experiment_8069_v698_capstone.json"
+        ],
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/verdict_row_consistency_lint.py --strict /tmp/capstone8069-8cddfxnj/terminal/experiment_8069_v698_capstone.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "scripts/verdict_row_consistency_lint.py",
+          "--strict",
+          "/tmp/capstone8069-8cddfxnj/terminal/experiment_8069_v698_capstone.json"
+        ],
+        "deadline_s": 180,
+        "duration_s": 0.03795290202833712,
+        "exit_code": 0,
+        "expected_exit": 0,
+        "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8069_v698_capstone/invocations/1791031462271956345/terminal_logs/strict_rows-ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f.log",
+        "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+        "name": "strict_rows",
+        "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+        "passed": true,
+        "scope": "required",
+        "timed_out": false
+      }
+    ]
+  }
+}
