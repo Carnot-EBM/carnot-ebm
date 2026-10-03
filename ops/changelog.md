@@ -21306,3 +21306,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-10-03: Learn persistent energy updates with released-feedback acceptance checks (⚠️ Research Finding) — honest_verdict=complete_null_feedback_constrained_learning; results/experiment_8051_v697_feedback_constrained_learning.json
 - 2026-10-03: Audit future learning benefit retention and crash recovery independently (⚠️ Research Finding) — honest_verdict=complete_null_learning_benefit; results/experiment_8052_v697_learning_benefit_audit.json
 - 2026-10-03: Measure accepted and rejected update costs through the native binding (⚠️ Research Finding) — honest_verdict=complete_null_guarded_transaction_cost; results/experiment_8053_v697_guarded_transaction_cost.json
+- 2026-10-03: Review new live ARC supervisor outcomes for transferable refinement (⚠️ Research Finding) — honest_verdict=complete_null_no_new_outcomes; results/experiment_8054_v697_arc_supervisor_delta.json
