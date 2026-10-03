@@ -5204,3 +5204,41 @@ still returns true because the commit succeeded.
 **Then** it runs no fetch and no merge.
 
 **Spec traces:** REQ-INFRA-7091
+
+### REQ-INFRA-7092: The Interrupted-Run Checkpoint MUST Apply The File-Size Gate
+
+**Origin.** 2026-10-03. REQ-INFRA-7087's size gate runs inside `_stage_all_except_claimed`, which
+is the conductor's main staging path. The interrupted-run checkpoint in `research_step` stages
+files one at a time with `git add -- <file>` and never calls that helper, so the gate never saw
+it. On 2026-10-02 three such checkpoint commits carried five files of 147 to 335 MB. The gate had
+been lowered to 50 MB three days earlier. GitHub hard-rejects any file over 100 MB, so every push
+to github was refused from then on, and github fell 68 commits behind gitea while gitea kept
+accepting them. The conductor logged each push as a generic failure and nothing alarmed.
+
+Before it stages anything, the interrupted-run checkpoint MUST drop every path whose on-disk size
+exceeds `OVERSIZED_FILE_THRESHOLD_BYTES`, using the same pure rule (`oversized_staged_files`) as
+the main gate. For each dropped path it MUST log `BLOCKED_OVERSIZED_FILE` naming the path and its
+size. A dropped file MUST stay on disk unchanged, so nothing is lost; it is only not committed. The
+filter MUST fail open: any error leaves every path in the list, because refusing to checkpoint
+risks the work the checkpoint exists to preserve.
+
+### SCENARIO-INFRA-7092-DROP: An oversized path is kept out of the checkpoint
+
+**Given** the checkpoint's candidate list holds one file over the cap and one under it
+**When** the oversized-path filter runs
+**Then** only the file under the cap remains, and a `BLOCKED_OVERSIZED_FILE` warning names the other.
+
+### SCENARIO-INFRA-7092-FAILOPEN: A filter error never blocks the checkpoint
+
+**Given** the size lookup raises an unexpected error
+**When** the filter runs
+**Then** it returns every path unchanged.
+
+### SCENARIO-INFRA-7092-WIRED: The checkpoint path actually calls the filter
+
+**Given** the interrupted-run checkpoint code in `research_step`
+**When** the code is read
+**Then** the filter is applied to the committable list before the first `git add`, so the guard
+cannot be bypassed by this path again.
+
+**Spec traces:** REQ-INFRA-7092
