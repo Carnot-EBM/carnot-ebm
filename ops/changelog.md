@@ -21346,3 +21346,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-10-03: Measure complete cold warm and miss feature transactions (⚠️ Research Finding) — honest_verdict=complete_null_feature_service; results/experiment_8078_v699_feature_cache_core.json
 - 2026-10-03: Measure changed content eviction and restart feature transactions (⚠️ Research Finding) — honest_verdict=complete_null_feature_service; results/experiment_8079_v699_feature_cache_lifecycle.json
 - 2026-10-03: Assess new live supervisor outcomes for transferable refinement (⚠️ Blocked) — honest_verdict=complete_blocked_experiment_8067_v698_arc_supervisor_frontier; results/experiment_8080_v699_arc_supervisor_frontier.json
+- 2026-10-03: Preserve board custody and bound corrected service workloads (⚠️ Research Finding) — honest_verdict=complete_null_conditional_hardware_workload_boundary; results/experiment_8081_v699_hardware_workload_boundary.json
