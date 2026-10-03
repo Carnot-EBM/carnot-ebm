@@ -86,7 +86,7 @@ def assess_authorities(
     design_raw = design.read_bytes()
     design_text = design_raw.decode("utf-8")
     table, machine = parse_design(design_text, milestone=milestone)
-    match = re.search(r"Canonical full-task SHA-256: `([0-9a-f]{64})`", design_text)
+    match = re.search(r"Canonical (?:full-task|task) SHA-256: `([0-9a-f]{64})`", design_text)
     if match is None:
         raise ValueError(f"V{milestone.rsplit('.', 1)[-1]} design digest missing")
     expected_digest = match.group(1)

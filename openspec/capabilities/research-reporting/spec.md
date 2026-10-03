@@ -91035,3 +91035,42 @@ Implementation status: planning documents only, 2026-10-03. Experimental
 implementation and scientific findings remain pending. Existing contract and
 authority-lifecycle readers validate the staged documents; activation is not
 claimed. This requirement does not alter earlier immutable milestone authority.
+
+## REQ-REPORT-8057: Qualify fixture consumers and bind V698 authority
+
+Freeze all thirteen ordered V698 task objects, visible table cells, prompts and
+metadata with the existing parameterized authority reader. Preserve V697 bytes.
+Consumed staging remains absent evidence. Do not reconstruct or activate it.
+Administrative validity does not require scientific benefit. Authenticate future
+artifacts at their declared paths and exact task IDs. Reject ambiguous fallback.
+
+### SCENARIO-REPORT-8057-CONSUMERS
+
+Reproduce Exp8047's exact circular-positive class rejection against Exp8045.
+A fixture consumer accepts positive, null or circular_positive only with fixture
+readiness one, clean terminal hashes and no quarantine. Scientific consumers
+accept positive or null with verifier_is_oracle false. Evaluate all six classes,
+readiness zero, missing fields, changed hashes and quarantine with conductor_gates.
+Do not broaden shared conductor policy. Preserve the shorter Exp8047 skip receipt
+and log-only Exp8048–8050 dispositions without inventing absent primary files.
+
+### SCENARIO-REPORT-8057-SCORER
+
+Exercise the repaired private scorer workspace and fixed fresh_full fixture.
+Keep token alignment, normalization and duplicate drift tolerance 1e-6 unchanged.
+Freeze scorer dependencies. Fixture readiness permits new measurements only.
+It proves neither source usefulness nor current model repeatability. No model
+loads or generation occur. Independent scientific sample size remains zero.
+
+### SCENARIO-REPORT-8057-TERMINAL
+
+Freeze validation commands before measurement. Run traced unit and consumer
+tests, E2E-018 private authority CLI, actual scorer success and mutation CLIs,
+Ruff check/format, strict mypy, scoped spec coverage and 100% added statement
+coverage. Run actual success, missing and mutation CLI routes outside checkout.
+Bound children and retain argv, exit, duration and log hash. Preserve the existing
+bounded full-suite failure as repository health only. Cold-reduce immutable rows
+in a new process. Run adversarial verification and strict row consistency before
+primary publication after normal child exits. Missing external evidence is blocked;
+failed required checks disqualify readiness. Publish terminal complete_* verdicts,
+primitive counts, hashes and field principles. The conductor owns ops reconciliation.
