@@ -1,0 +1,525 @@
+....F.FFFFF                                                              [100%]
+=================================== FAILURES ===================================
+____________________________ test_cli_valid_control ____________________________
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261003T025202-1684485-353bd563/test_cli_valid_control0')
+
+    def test_cli_valid_control(tmp_path):
+        """SCENARIO-REPORT-8052-TERMINAL: actual valid/null/tampered CLI and normal exits."""
+        inputs, bundle, path = bundle_fixture(tmp_path)
+        result = cli(tmp_path / "published", "--fixture-bundle", path, "--validation-worker")
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: [exp8052] phase=start_preconditions_no_pretrained_calls elapsed_s=0.000 completed=0 pending=0
+E         [exp8052] phase=methods_inputs_code_budgets_frozen elapsed_s=0.002 completed=0 pending=0
+E         [exp8052] phase=independent_head_load_before elapsed_s=0.002 completed=0 pending=0
+E         [exp8052] phase=independent_head_load_after elapsed_s=0.041 completed=0 pending=0
+E         [exp8052] phase=replayed_arm elapsed_s=0.106 completed=1 pending=2
+E         [exp8052] phase=replayed_arm elapsed_s=0.167 completed=2 pending=1
+E         [exp8052] phase=replayed_arm elapsed_s=0.198 completed=3 pending=0
+E         [exp8052] phase=terminal_heads_and_retention_predictions_sealed elapsed_s=0.229 completed=192 pending=0
+E         [exp8052] phase=private_recovery_before elapsed_s=0.327 completed=0 pending=0
+E         [exp7303-validation] before_subprocess control elapsed_s=0.000 unit=1/1
+E         [exp7303-validation:control] [exp8052] phase=start_preconditions_no_pretrained_calls elapsed_s=0.000 completed=0 pending=0
+E         [exp7303-validation] after_subprocess control elapsed_s=1.361 exit=0 unit=1/1
+E         [exp8052] phase=kill_child_before elapsed_s=1.688 completed=0 pending=16
+E         [exp8052] phase=kill_child_pending elapsed_s=2.776 completed=0 pending=16
+E         [exp8052] phase=kill_child_pending elapsed_s=2.777 completed=0 pending=16
+E         [exp8052] phase=kill_child_after elapsed_s=2.792 completed=0 pending=16
+E         [exp7303-validation] before_subprocess restart elapsed_s=0.000 unit=1/1
+E         [exp7303-validation:restart] [exp8052] phase=start_preconditions_no_pretrained_calls elapsed_s=0.000 completed=0 pending=0
+E         [exp7303-validation] after_subprocess restart elapsed_s=1.389 exit=0 unit=1/1
+E         [exp8052] phase=kill_child_before elapsed_s=4.182 completed=1 pending=15
+E         [exp8052] phase=kill_child_pending elapsed_s=5.295 completed=1 pending=15
+E         [exp8052] phase=kill_child_pending elapsed_s=5.297 completed=1 pending=15
+E         [exp8052] phase=kill_child_after elapsed_s=5.312 completed=1 pending=15
+E         [exp7303-validation] before_subprocess restart elapsed_s=0.000 unit=1/1
+E         [exp7303-validation:restart] [exp8052] phase=start_preconditions_no_pretrained_calls elapsed_s=0.000 completed=0 pending=0
+E         [exp7303-validation] after_subprocess restart elapsed_s=1.396 exit=0 unit=1/1
+E         [exp8052] phase=kill_child_before elapsed_s=6.709 completed=2 pending=14
+E         [exp8052] phase=kill_child_pending elapsed_s=7.829 completed=2 pending=14
+E         [exp8052] phase=kill_child_pending elapsed_s=7.830 completed=2 pending=14
+E         [exp8052] phase=kill_child_after elapsed_s=7.846 completed=2 pending=14
+E         [exp7303-validation] before_subprocess restart elapsed_s=0.000 unit=1/1
+E         [exp7303-validation:restart] [exp8052] phase=start_preconditions_no_pretrained_calls elapsed_s=0.000 completed=0 pending=0
+E         [exp7303-validation] after_subprocess restart elapsed_s=1.387 exit=0 unit=1/1
+E         [exp8052] phase=kill_child_before elapsed_s=9.233 completed=3 pending=13
+E         [exp8052] phase=kill_child_pending elapsed_s=10.371 completed=3 pending=13
+E         [exp8052] phase=kill_child_pending elapsed_s=10.372 completed=3 pending=13
+E         [exp8052] phase=kill_child_after elapsed_s=10.388 completed=3 pending=13
+E         [exp7303-validation] before_subprocess restart elapsed_s=0.000 unit=1/1
+E         [exp7303-validation:restart] [exp8052] phase=start_preconditions_no_pretrained_calls elapsed_s=0.000 completed=0 pending=0
+E         [exp7303-validation] after_subprocess restart elapsed_s=1.385 exit=0 unit=1/1
+E         [exp8052] phase=kill_child_before elapsed_s=11.774 completed=4 pending=12
+E         [exp8052] phase=kill_child_pending elapsed_s=12.899 completed=4 pending=12
+E         [exp8052] phase=kill_child_pending elapsed_s=12.900 completed=4 pending=12
+E         [exp8052] phase=kill_child_after elapsed_s=12.915 completed=4 pending=12
+E         [exp7303-validation] before_subprocess restart elapsed_s=0.000 unit=1/1
+E         [exp7303-validation:restart] [exp8052] phase=start_preconditions_no_pretrained_calls elapsed_s=0.000 completed=0 pending=0
+E         [exp7303-validation] after_subprocess restart elapsed_s=1.408 exit=0 unit=1/1
+E         [exp8052] phase=kill_child_before elapsed_s=14.324 completed=5 pending=11
+E         [exp8052] phase=kill_child_pending elapsed_s=15.459 completed=5 pending=11
+E         [exp8052] phase=kill_child_pending elapsed_s=15.461 completed=5 pending=11
+E         [exp8052] phase=kill_child_after elapsed_s=15.476 completed=5 pending=11
+E         [exp7303-validation] before_subprocess restart elapsed_s=0.000 unit=1/1
+E         [exp7303-validation:restart] [exp8052] phase=start_preconditions_no_pretrained_calls elapsed_s=0.000 completed=0 pending=0
+E         [exp7303-validation] after_subprocess restart elapsed_s=1.415 exit=0 unit=1/1
+E         [exp8052] phase=kill_child_before elapsed_s=16.892 completed=6 pending=10
+E         [exp8052] phase=kill_child_pending elapsed_s=18.030 completed=6 pending=10
+E         [exp8052] phase=kill_child_pending elapsed_s=18.031 completed=6 pending=10
+E         [exp8052] phase=kill_child_after elapsed_s=18.047 completed=6 pending=10
+E         [exp7303-validation] before_subprocess restart elapsed_s=0.000 unit=1/1
+E         [exp7303-validation:restart] [exp8052] phase=start_preconditions_no_pretrained_calls elapsed_s=0.000 completed=0 pending=0
+E         [exp7303-validation] after_subprocess restart elapsed_s=1.406 exit=0 unit=1/1
+E         [exp8052] phase=kill_child_before elapsed_s=19.453 completed=7 pending=9
+E         [exp8052] phase=kill_child_pending elapsed_s=20.598 completed=7 pending=9
+E         [exp8052] phase=kill_child_pending elapsed_s=20.600 completed=7 pending=9
+E         [exp8052] phase=kill_child_after elapsed_s=20.615 completed=7 pending=9
+E         [exp7303-validation] before_subprocess restart elapsed_s=0.000 unit=1/1
+E         [exp7303-validation:restart] [exp8052] phase=start_preconditions_no_pretrained_calls elapsed_s=0.000 completed=0 pending=0
+E         [exp7303-validation] after_subprocess restart elapsed_s=1.414 exit=0 unit=1/1
+E         [exp7303-validation] before_subprocess control elapsed_s=0.000 unit=1/1
+E         [exp7303-validation:control] [exp8052] phase=start_preconditions_no_pretrained_calls elapsed_s=0.000 completed=0 pending=0
+E         [exp7303-validation] after_subprocess control elapsed_s=1.403 exit=0 unit=1/1
+E         [exp8052] phase=kill_child_before elapsed_s=23.433 completed=8 pending=8
+E         [exp8052] phase=kill_child_pending elapsed_s=24.575 completed=8 pending=8
+E         [exp8052] phase=kill_child_pending elapsed_s=24.577 completed=8 pending=8
+E         [exp8052] phase=kill_child_after elapsed_s=24.592 completed=8 pending=8
+E         [exp7303-validation] before_subprocess restart elapsed_s=0.000 unit=1/1
+E         [exp7303-validation:restart] [exp8052] phase=start_preconditions_no_pretrained_calls elapsed_s=0.000 completed=0 pending=0
+E         [exp7303-validation] after_subprocess restart elapsed_s=1.409 exit=0 unit=1/1
+E         [exp8052] phase=kill_child_before elapsed_s=26.002 completed=9 pending=7
+E         [exp8052] phase=kill_child_pending elapsed_s=27.179 completed=9 pending=7
+E         [exp8052] phase=kill_child_pending elapsed_s=27.181 completed=9 pending=7
+E         [exp8052] phase=kill_child_after elapsed_s=27.196 completed=9 pending=7
+E         [exp7303-validation] before_subprocess restart elapsed_s=0.000 unit=1/1
+E         [exp7303-validation:restart] [exp8052] phase=start_preconditions_no_pretrained_calls elapsed_s=0.001 completed=0 pending=0
+E         [exp7303-validation] after_subprocess restart elapsed_s=1.489 exit=0 unit=1/1
+E         [exp8052] phase=kill_child_before elapsed_s=28.686 completed=10 pending=6
+E         [exp8052] phase=kill_child_pending elapsed_s=29.825 completed=10 pending=6
+E         [exp8052] phase=kill_child_pending elapsed_s=29.826 completed=10 pending=6
+E         [exp8052] phase=kill_child_after elapsed_s=29.842 completed=10 pending=6
+E         [exp7303-validation] before_subprocess restart elapsed_s=0.000 unit=1/1
+E         [exp7303-validation:restart] [exp8052] phase=start_preconditions_no_pretrained_calls elapsed_s=0.001 completed=0 pending=0
+E         [exp7303-validation] after_subprocess restart elapsed_s=1.436 exit=0 unit=1/1
+E         [exp8052] phase=kill_child_before elapsed_s=31.279 completed=11 pending=5
+E         [exp8052] phase=kill_child_pending elapsed_s=32.417 completed=11 pending=5
+E         [exp8052] phase=kill_child_pending elapsed_s=32.418 completed=11 pending=5
+E         [exp8052] phase=kill_child_after elapsed_s=32.433 completed=11 pending=5
+E         [exp7303-validation] before_subprocess restart elapsed_s=0.000 unit=1/1
+E         [exp7303-validation:restart] [exp8052] phase=start_preconditions_no_pretrained_calls elapsed_s=0.000 completed=0 pending=0
+E         [exp7303-validation] after_subprocess restart elapsed_s=1.418 exit=0 unit=1/1
+E         [exp8052] phase=kill_child_before elapsed_s=33.852 completed=12 pending=4
+E         [exp8052] phase=kill_child_pending elapsed_s=35.018 completed=12 pending=4
+E         [exp8052] phase=kill_child_pending elapsed_s=35.019 completed=12 pending=4
+E         [exp8052] phase=kill_child_after elapsed_s=35.035 completed=12 pending=4
+E         [exp7303-validation] before_subprocess restart elapsed_s=0.000 unit=1/1
+E         [exp7303-validation:restart] [exp8052] phase=start_preconditions_no_pretrained_calls elapsed_s=0.001 completed=0 pending=0
+E         [exp7303-validation] after_subprocess restart elapsed_s=1.437 exit=0 unit=1/1
+E         [exp8052] phase=kill_child_before elapsed_s=36.473 completed=13 pending=3
+E         [exp8052] phase=kill_child_pending elapsed_s=37.632 completed=13 pending=3
+E         [exp8052] phase=kill_child_pending elapsed_s=37.634 completed=13 pending=3
+E         [exp8052] phase=kill_child_after elapsed_s=37.649 completed=13 pending=3
+E         [exp7303-validation] before_subprocess restart elapsed_s=0.000 unit=1/1
+E         [exp7303-validation:restart] [exp8052] phase=start_preconditions_no_pretrained_calls elapsed_s=0.000 completed=0 pending=0
+E         [exp7303-validation] after_subprocess restart elapsed_s=1.432 exit=0 unit=1/1
+E         [exp8052] phase=kill_child_before elapsed_s=39.082 completed=14 pending=2
+E         [exp8052] phase=kill_child_pending elapsed_s=40.241 completed=14 pending=2
+E         [exp8052] phase=kill_child_pending elapsed_s=40.243 completed=14 pending=2
+E         [exp8052] phase=kill_child_after elapsed_s=40.258 completed=14 pending=2
+E         [exp7303-validation] before_subprocess restart elapsed_s=0.000 unit=1/1
+E         [exp7303-validation:restart] [exp8052] phase=start_preconditions_no_pretrained_calls elapsed_s=0.001 completed=0 pending=0
+E         [exp7303-validation] after_subprocess restart elapsed_s=1.434 exit=0 unit=1/1
+E         [exp8052] phase=kill_child_before elapsed_s=41.693 completed=15 pending=1
+E         [exp8052] phase=kill_child_pending elapsed_s=42.865 completed=15 pending=1
+E         [exp8052] phase=kill_child_pending elapsed_s=42.866 completed=15 pending=1
+E         [exp8052] phase=kill_child_after elapsed_s=42.882 completed=15 pending=1
+E         [exp7303-validation] before_subprocess restart elapsed_s=0.000 unit=1/1
+E         [exp7303-validation:restart] [exp8052] phase=start_preconditions_no_pretrained_calls elapsed_s=0.001 completed=0 pending=0
+E         [exp7303-validation] after_subprocess restart elapsed_s=1.427 exit=0 unit=1/1
+E         [exp8052] phase=private_recovery_after elapsed_s=44.312 completed=16 pending=0
+E         [exp8052] phase=publication_before elapsed_s=44.329 completed=0 pending=0
+E         [exp7303-validation] before_subprocess cold_reduction elapsed_s=0.000 unit=1/3
+E         [exp7303-validation:cold_reduction] [exp8052] phase=start_preconditions_no_pretrained_calls elapsed_s=0.000 completed=0 pending=0
+E         [exp7303-validation:cold_reduction] {"passed": false, "error": "hash:/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8052_v697_learning_benefit_audit.py"}
+E         [exp7303-validation] after_subprocess cold_reduction elapsed_s=1.454 exit=1 unit=1/3
+E         [exp7303-validation] before_subprocess adversarial elapsed_s=0.000 unit=2/3
+E         [exp7303-validation:adversarial] {
+E         [exp7303-validation:adversarial]   "reports": [
+E         [exp7303-validation:adversarial]     {
+E         [exp7303-validation:adversarial]       "artifact": "/tmp/pytest-carnot-ianblenke/20261003T025202-1684485-353bd563/test_cli_valid_control0/published/raw/experiment_8052_v697_learning_benefit_audit/terminal_candidate.json",
+E         [exp7303-validation:adversarial]       "loaded": true,
+E         [exp7303-validation:adversarial]       "exp_id": 8052,
+E         [exp7303-validation:adversarial]       "title": "",
+E         [exp7303-validation:adversarial]       "honest_verdict": "complete_circular_positive_learning_audit_fixture",
+E         [exp7303-validation:adversarial]       "flag_count": 0,
+E         [exp7303-validation:adversarial]       "max_severity": -1,
+E         [exp7303-validation:adversarial]       "flags": [],
+E         [exp7303-validation:adversarial]       "gate_version": "07ddacadae8c3b8d3250ad0977bda6f747d5bcb02bb7af3119b80db2547b62c7"
+E         [exp7303-validation:adversarial]     }
+E         [exp7303-validation:adversarial]   ],
+E         [exp7303-validation:adversarial]   "flagged_count": 0
+E         [exp7303-validation:adversarial] }
+E         [exp7303-validation] after_subprocess adversarial elapsed_s=1.008 exit=0 unit=2/3
+E         [exp7303-validation] before_subprocess strict_rows elapsed_s=0.000 unit=3/3
+E         [exp7303-validation:strict_rows] 
+E         [exp7303-validation:strict_rows] verdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.
+E         [exp7303-validation:strict_rows]   No row/verdict contradictions among the artifacts that could be checked.
+E         [exp7303-validation] after_subprocess strict_rows elapsed_s=0.070 exit=0 unit=3/3
+E         {"passed": false, "error": "candidate_rejected"}
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c...subprocess strict_rows elapsed_s=0.070 exit=0 unit=3/3\n{"passed": false, "error": "candidate_rejected"}\n', stderr='').returncode
+
+tests/python/test_learning_benefit_8052.py:186: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8051] phase=benchmark_before elapsed_s=8.494 completed=0 pending=768
+[exp8051] phase=small_head_load_before elapsed_s=8.494 completed=0 pending=768
+[exp8051] phase=small_head_load_after elapsed_s=8.494 completed=0 pending=768
+[exp8051] phase=arm_complete elapsed_s=8.555 completed=256 pending=512
+[exp8051] phase=small_head_load_before elapsed_s=8.556 completed=256 pending=512
+[exp8051] phase=small_head_load_after elapsed_s=8.556 completed=256 pending=512
+[exp8051] phase=arm_complete elapsed_s=8.614 completed=512 pending=256
+[exp8051] phase=small_head_load_before elapsed_s=8.614 completed=512 pending=256
+[exp8051] phase=small_head_load_after elapsed_s=8.614 completed=512 pending=256
+[exp8051] phase=arm_complete elapsed_s=8.628 completed=768 pending=0
+[exp8051] phase=benchmark_after elapsed_s=8.628 completed=768 pending=0
+8052 subprocess before ['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8052_v697_learning_benefit_audit.py', '--fixture-bundle', '/tmp/pytest-carnot-ianblenke/20261003T025202-1684485-353bd563/test_cli_valid_control0/bundle.json', '--validation-worker']
+8052 subprocess after 1
+_______________________ test_validation_outcomes[passed] _______________________
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261003T025202-1684485-353bd563/test_validation_outcomes_passe0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fc1c45cf860>
+mode = 'passed'
+
+    @pytest.mark.parametrize("mode", ["passed", "failed", "absent", "blocked", "positive"])
+    def test_validation_outcomes(tmp_path, monkeypatch, mode):
+        """SCENARIO-REPORT-8052-TERMINAL: owned exits and coverage govern readiness."""
+        _, bundle, _ = bundle_fixture(tmp_path)
+        monkeypatch.setenv("CARNOT_EXPERIMENT_ARTIFACT_ROOT", str(tmp_path / "output"))
+        failures = [] if mode != "blocked" else [dict(passed=False)]
+        monkeypatch.setattr(e, "load_inputs", lambda root, raw: (bundle, failures))
+    
+        def recover(head, scratch, durable, root, script):
+            rows = [dict(passed=True)]
+            atomic_json(durable / "rows.json", dict(rows=rows))
+            return rows
+    
+        monkeypatch.setattr(e.recovery, "recover", recover)
+        monkeypatch.setattr(e, "terminal", lambda path: dict(passed=True))
+        if mode == "positive":
+            original = e.a.compare
+    
+            def positive(rows, retained):
+                return dict(original(rows, retained), benefit_ready_score=1)
+    
+            monkeypatch.setattr(e.a, "compare", positive)
+    
+        def commands(root, plan, **kwargs):
+            config = Path(kwargs["extra_env"]["CARNOT_8052_COVERAGE_CONFIG"])
+            if mode != "absent":
+                atomic_json(
+                    config.parent / "coverage.json",
+                    dict(
+                        files={
+                            p: dict(summary=dict(missing_lines=0, num_statements=1)) for p in e.OWNED
+                        }
+                    ),
+                )
+            return [
+                dict(scope="owned", passed=mode != "failed", exit_code=0 if mode != "failed" else 1),
+                dict(scope="repository_health", passed=False, exit_code=1),
+            ]
+    
+        monkeypatch.setattr(e, "run_commands", commands)
+>       assert e.main(["--root", str(tmp_path)]) == 0
+E       AssertionError: assert 1 == 0
+E        +  where 1 = <function main at 0x7fc1539c9580>(['--root', '/tmp/pytest-carnot-ianblenke/20261003T025202-1684485-353bd563/test_validation_outcomes_passe0'])
+E        +    where <function main at 0x7fc1539c9580> = e.main
+
+tests/python/test_learning_benefit_8052.py:344: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8051] phase=benchmark_before elapsed_s=147.545 completed=0 pending=768
+[exp8051] phase=small_head_load_before elapsed_s=147.546 completed=0 pending=768
+[exp8051] phase=small_head_load_after elapsed_s=147.546 completed=0 pending=768
+[exp8051] phase=arm_complete elapsed_s=147.612 completed=256 pending=512
+[exp8051] phase=small_head_load_before elapsed_s=147.612 completed=256 pending=512
+[exp8051] phase=small_head_load_after elapsed_s=147.612 completed=256 pending=512
+[exp8051] phase=arm_complete elapsed_s=147.675 completed=512 pending=256
+[exp8051] phase=small_head_load_before elapsed_s=147.675 completed=512 pending=256
+[exp8051] phase=small_head_load_after elapsed_s=147.675 completed=512 pending=256
+[exp8051] phase=arm_complete elapsed_s=147.690 completed=768 pending=0
+[exp8051] phase=benchmark_after elapsed_s=147.690 completed=768 pending=0
+[exp8052] phase=start_preconditions_no_pretrained_calls elapsed_s=147.847 completed=0 pending=0
+{"passed": false, "error": "CARNOT_EXPERIMENT_ARTIFACT_ROOT must exist and be a directory: /tmp/pytest-carnot-ianblenke/20261003T025202-1684485-353bd563/test_validation_outcomes_passe0/output"}
+_______________________ test_validation_outcomes[failed] _______________________
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261003T025202-1684485-353bd563/test_validation_outcomes_faile0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fc1c45cdfd0>
+mode = 'failed'
+
+    @pytest.mark.parametrize("mode", ["passed", "failed", "absent", "blocked", "positive"])
+    def test_validation_outcomes(tmp_path, monkeypatch, mode):
+        """SCENARIO-REPORT-8052-TERMINAL: owned exits and coverage govern readiness."""
+        _, bundle, _ = bundle_fixture(tmp_path)
+        monkeypatch.setenv("CARNOT_EXPERIMENT_ARTIFACT_ROOT", str(tmp_path / "output"))
+        failures = [] if mode != "blocked" else [dict(passed=False)]
+        monkeypatch.setattr(e, "load_inputs", lambda root, raw: (bundle, failures))
+    
+        def recover(head, scratch, durable, root, script):
+            rows = [dict(passed=True)]
+            atomic_json(durable / "rows.json", dict(rows=rows))
+            return rows
+    
+        monkeypatch.setattr(e.recovery, "recover", recover)
+        monkeypatch.setattr(e, "terminal", lambda path: dict(passed=True))
+        if mode == "positive":
+            original = e.a.compare
+    
+            def positive(rows, retained):
+                return dict(original(rows, retained), benefit_ready_score=1)
+    
+            monkeypatch.setattr(e.a, "compare", positive)
+    
+        def commands(root, plan, **kwargs):
+            config = Path(kwargs["extra_env"]["CARNOT_8052_COVERAGE_CONFIG"])
+            if mode != "absent":
+                atomic_json(
+                    config.parent / "coverage.json",
+                    dict(
+                        files={
+                            p: dict(summary=dict(missing_lines=0, num_statements=1)) for p in e.OWNED
+                        }
+                    ),
+                )
+            return [
+                dict(scope="owned", passed=mode != "failed", exit_code=0 if mode != "failed" else 1),
+                dict(scope="repository_health", passed=False, exit_code=1),
+            ]
+    
+        monkeypatch.setattr(e, "run_commands", commands)
+>       assert e.main(["--root", str(tmp_path)]) == 0
+E       AssertionError: assert 1 == 0
+E        +  where 1 = <function main at 0x7fc1539c9580>(['--root', '/tmp/pytest-carnot-ianblenke/20261003T025202-1684485-353bd563/test_validation_outcomes_faile0'])
+E        +    where <function main at 0x7fc1539c9580> = e.main
+
+tests/python/test_learning_benefit_8052.py:344: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8051] phase=benchmark_before elapsed_s=147.902 completed=0 pending=768
+[exp8051] phase=small_head_load_before elapsed_s=147.902 completed=0 pending=768
+[exp8051] phase=small_head_load_after elapsed_s=147.902 completed=0 pending=768
+[exp8051] phase=arm_complete elapsed_s=147.968 completed=256 pending=512
+[exp8051] phase=small_head_load_before elapsed_s=147.968 completed=256 pending=512
+[exp8051] phase=small_head_load_after elapsed_s=147.968 completed=256 pending=512
+[exp8051] phase=arm_complete elapsed_s=148.031 completed=512 pending=256
+[exp8051] phase=small_head_load_before elapsed_s=148.031 completed=512 pending=256
+[exp8051] phase=small_head_load_after elapsed_s=148.031 completed=512 pending=256
+[exp8051] phase=arm_complete elapsed_s=148.045 completed=768 pending=0
+[exp8051] phase=benchmark_after elapsed_s=148.045 completed=768 pending=0
+[exp8052] phase=start_preconditions_no_pretrained_calls elapsed_s=148.202 completed=0 pending=0
+{"passed": false, "error": "CARNOT_EXPERIMENT_ARTIFACT_ROOT must exist and be a directory: /tmp/pytest-carnot-ianblenke/20261003T025202-1684485-353bd563/test_validation_outcomes_faile0/output"}
+_______________________ test_validation_outcomes[absent] _______________________
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261003T025202-1684485-353bd563/test_validation_outcomes_absen0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fc1ac613ef0>
+mode = 'absent'
+
+    @pytest.mark.parametrize("mode", ["passed", "failed", "absent", "blocked", "positive"])
+    def test_validation_outcomes(tmp_path, monkeypatch, mode):
+        """SCENARIO-REPORT-8052-TERMINAL: owned exits and coverage govern readiness."""
+        _, bundle, _ = bundle_fixture(tmp_path)
+        monkeypatch.setenv("CARNOT_EXPERIMENT_ARTIFACT_ROOT", str(tmp_path / "output"))
+        failures = [] if mode != "blocked" else [dict(passed=False)]
+        monkeypatch.setattr(e, "load_inputs", lambda root, raw: (bundle, failures))
+    
+        def recover(head, scratch, durable, root, script):
+            rows = [dict(passed=True)]
+            atomic_json(durable / "rows.json", dict(rows=rows))
+            return rows
+    
+        monkeypatch.setattr(e.recovery, "recover", recover)
+        monkeypatch.setattr(e, "terminal", lambda path: dict(passed=True))
+        if mode == "positive":
+            original = e.a.compare
+    
+            def positive(rows, retained):
+                return dict(original(rows, retained), benefit_ready_score=1)
+    
+            monkeypatch.setattr(e.a, "compare", positive)
+    
+        def commands(root, plan, **kwargs):
+            config = Path(kwargs["extra_env"]["CARNOT_8052_COVERAGE_CONFIG"])
+            if mode != "absent":
+                atomic_json(
+                    config.parent / "coverage.json",
+                    dict(
+                        files={
+                            p: dict(summary=dict(missing_lines=0, num_statements=1)) for p in e.OWNED
+                        }
+                    ),
+                )
+            return [
+                dict(scope="owned", passed=mode != "failed", exit_code=0 if mode != "failed" else 1),
+                dict(scope="repository_health", passed=False, exit_code=1),
+            ]
+    
+        monkeypatch.setattr(e, "run_commands", commands)
+>       assert e.main(["--root", str(tmp_path)]) == 0
+E       AssertionError: assert 1 == 0
+E        +  where 1 = <function main at 0x7fc1539c9580>(['--root', '/tmp/pytest-carnot-ianblenke/20261003T025202-1684485-353bd563/test_validation_outcomes_absen0'])
+E        +    where <function main at 0x7fc1539c9580> = e.main
+
+tests/python/test_learning_benefit_8052.py:344: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8051] phase=benchmark_before elapsed_s=148.257 completed=0 pending=768
+[exp8051] phase=small_head_load_before elapsed_s=148.257 completed=0 pending=768
+[exp8051] phase=small_head_load_after elapsed_s=148.257 completed=0 pending=768
+[exp8051] phase=arm_complete elapsed_s=148.323 completed=256 pending=512
+[exp8051] phase=small_head_load_before elapsed_s=148.323 completed=256 pending=512
+[exp8051] phase=small_head_load_after elapsed_s=148.323 completed=256 pending=512
+[exp8051] phase=arm_complete elapsed_s=148.386 completed=512 pending=256
+[exp8051] phase=small_head_load_before elapsed_s=148.386 completed=512 pending=256
+[exp8051] phase=small_head_load_after elapsed_s=148.386 completed=512 pending=256
+[exp8051] phase=arm_complete elapsed_s=148.401 completed=768 pending=0
+[exp8051] phase=benchmark_after elapsed_s=148.401 completed=768 pending=0
+[exp8052] phase=start_preconditions_no_pretrained_calls elapsed_s=148.557 completed=0 pending=0
+{"passed": false, "error": "CARNOT_EXPERIMENT_ARTIFACT_ROOT must exist and be a directory: /tmp/pytest-carnot-ianblenke/20261003T025202-1684485-353bd563/test_validation_outcomes_absen0/output"}
+______________________ test_validation_outcomes[blocked] _______________________
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261003T025202-1684485-353bd563/test_validation_outcomes_block0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fc151aafb00>
+mode = 'blocked'
+
+    @pytest.mark.parametrize("mode", ["passed", "failed", "absent", "blocked", "positive"])
+    def test_validation_outcomes(tmp_path, monkeypatch, mode):
+        """SCENARIO-REPORT-8052-TERMINAL: owned exits and coverage govern readiness."""
+        _, bundle, _ = bundle_fixture(tmp_path)
+        monkeypatch.setenv("CARNOT_EXPERIMENT_ARTIFACT_ROOT", str(tmp_path / "output"))
+        failures = [] if mode != "blocked" else [dict(passed=False)]
+        monkeypatch.setattr(e, "load_inputs", lambda root, raw: (bundle, failures))
+    
+        def recover(head, scratch, durable, root, script):
+            rows = [dict(passed=True)]
+            atomic_json(durable / "rows.json", dict(rows=rows))
+            return rows
+    
+        monkeypatch.setattr(e.recovery, "recover", recover)
+        monkeypatch.setattr(e, "terminal", lambda path: dict(passed=True))
+        if mode == "positive":
+            original = e.a.compare
+    
+            def positive(rows, retained):
+                return dict(original(rows, retained), benefit_ready_score=1)
+    
+            monkeypatch.setattr(e.a, "compare", positive)
+    
+        def commands(root, plan, **kwargs):
+            config = Path(kwargs["extra_env"]["CARNOT_8052_COVERAGE_CONFIG"])
+            if mode != "absent":
+                atomic_json(
+                    config.parent / "coverage.json",
+                    dict(
+                        files={
+                            p: dict(summary=dict(missing_lines=0, num_statements=1)) for p in e.OWNED
+                        }
+                    ),
+                )
+            return [
+                dict(scope="owned", passed=mode != "failed", exit_code=0 if mode != "failed" else 1),
+                dict(scope="repository_health", passed=False, exit_code=1),
+            ]
+    
+        monkeypatch.setattr(e, "run_commands", commands)
+>       assert e.main(["--root", str(tmp_path)]) == 0
+E       AssertionError: assert 1 == 0
+E        +  where 1 = <function main at 0x7fc1539c9580>(['--root', '/tmp/pytest-carnot-ianblenke/20261003T025202-1684485-353bd563/test_validation_outcomes_block0'])
+E        +    where <function main at 0x7fc1539c9580> = e.main
+
+tests/python/test_learning_benefit_8052.py:344: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8051] phase=benchmark_before elapsed_s=148.612 completed=0 pending=768
+[exp8051] phase=small_head_load_before elapsed_s=148.612 completed=0 pending=768
+[exp8051] phase=small_head_load_after elapsed_s=148.612 completed=0 pending=768
+[exp8051] phase=arm_complete elapsed_s=148.678 completed=256 pending=512
+[exp8051] phase=small_head_load_before elapsed_s=148.678 completed=256 pending=512
+[exp8051] phase=small_head_load_after elapsed_s=148.678 completed=256 pending=512
+[exp8051] phase=arm_complete elapsed_s=148.741 completed=512 pending=256
+[exp8051] phase=small_head_load_before elapsed_s=148.741 completed=512 pending=256
+[exp8051] phase=small_head_load_after elapsed_s=148.742 completed=512 pending=256
+[exp8051] phase=arm_complete elapsed_s=148.756 completed=768 pending=0
+[exp8051] phase=benchmark_after elapsed_s=148.756 completed=768 pending=0
+[exp8052] phase=start_preconditions_no_pretrained_calls elapsed_s=148.913 completed=0 pending=0
+{"passed": false, "error": "CARNOT_EXPERIMENT_ARTIFACT_ROOT must exist and be a directory: /tmp/pytest-carnot-ianblenke/20261003T025202-1684485-353bd563/test_validation_outcomes_block0/output"}
+______________________ test_validation_outcomes[positive] ______________________
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261003T025202-1684485-353bd563/test_validation_outcomes_posit0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fc1514d6810>
+mode = 'positive'
+
+    @pytest.mark.parametrize("mode", ["passed", "failed", "absent", "blocked", "positive"])
+    def test_validation_outcomes(tmp_path, monkeypatch, mode):
+        """SCENARIO-REPORT-8052-TERMINAL: owned exits and coverage govern readiness."""
+        _, bundle, _ = bundle_fixture(tmp_path)
+        monkeypatch.setenv("CARNOT_EXPERIMENT_ARTIFACT_ROOT", str(tmp_path / "output"))
+        failures = [] if mode != "blocked" else [dict(passed=False)]
+        monkeypatch.setattr(e, "load_inputs", lambda root, raw: (bundle, failures))
+    
+        def recover(head, scratch, durable, root, script):
+            rows = [dict(passed=True)]
+            atomic_json(durable / "rows.json", dict(rows=rows))
+            return rows
+    
+        monkeypatch.setattr(e.recovery, "recover", recover)
+        monkeypatch.setattr(e, "terminal", lambda path: dict(passed=True))
+        if mode == "positive":
+            original = e.a.compare
+    
+            def positive(rows, retained):
+                return dict(original(rows, retained), benefit_ready_score=1)
+    
+            monkeypatch.setattr(e.a, "compare", positive)
+    
+        def commands(root, plan, **kwargs):
+            config = Path(kwargs["extra_env"]["CARNOT_8052_COVERAGE_CONFIG"])
+            if mode != "absent":
+                atomic_json(
+                    config.parent / "coverage.json",
+                    dict(
+                        files={
+                            p: dict(summary=dict(missing_lines=0, num_statements=1)) for p in e.OWNED
+                        }
+                    ),
+                )
+            return [
+                dict(scope="owned", passed=mode != "failed", exit_code=0 if mode != "failed" else 1),
+                dict(scope="repository_health", passed=False, exit_code=1),
+            ]
+    
+        monkeypatch.setattr(e, "run_commands", commands)
+>       assert e.main(["--root", str(tmp_path)]) == 0
+E       AssertionError: assert 1 == 0
+E        +  where 1 = <function main at 0x7fc1539c9580>(['--root', '/tmp/pytest-carnot-ianblenke/20261003T025202-1684485-353bd563/test_validation_outcomes_posit0'])
+E        +    where <function main at 0x7fc1539c9580> = e.main
+
+tests/python/test_learning_benefit_8052.py:344: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[exp8051] phase=benchmark_before elapsed_s=148.968 completed=0 pending=768
+[exp8051] phase=small_head_load_before elapsed_s=148.968 completed=0 pending=768
+[exp8051] phase=small_head_load_after elapsed_s=148.968 completed=0 pending=768
+[exp8051] phase=arm_complete elapsed_s=149.033 completed=256 pending=512
+[exp8051] phase=small_head_load_before elapsed_s=149.033 completed=256 pending=512
+[exp8051] phase=small_head_load_after elapsed_s=149.034 completed=256 pending=512
+[exp8051] phase=arm_complete elapsed_s=149.096 completed=512 pending=256
+[exp8051] phase=small_head_load_before elapsed_s=149.096 completed=512 pending=256
+[exp8051] phase=small_head_load_after elapsed_s=149.096 completed=512 pending=256
+[exp8051] phase=arm_complete elapsed_s=149.111 completed=768 pending=0
+[exp8051] phase=benchmark_after elapsed_s=149.111 completed=768 pending=0
+[exp8052] phase=start_preconditions_no_pretrained_calls elapsed_s=149.268 completed=0 pending=0
+{"passed": false, "error": "CARNOT_EXPERIMENT_ARTIFACT_ROOT must exist and be a directory: /tmp/pytest-carnot-ianblenke/20261003T025202-1684485-353bd563/test_validation_outcomes_posit0/output"}
+=========================== short test summary info ============================
+FAILED tests/python/test_learning_benefit_8052.py::test_cli_valid_control - A...
+FAILED tests/python/test_learning_benefit_8052.py::test_validation_outcomes[passed]
+FAILED tests/python/test_learning_benefit_8052.py::test_validation_outcomes[failed]
+FAILED tests/python/test_learning_benefit_8052.py::test_validation_outcomes[absent]
+FAILED tests/python/test_learning_benefit_8052.py::test_validation_outcomes[blocked]
+FAILED tests/python/test_learning_benefit_8052.py::test_validation_outcomes[positive]
+6 failed, 5 passed in 151.03s (0:02:31)

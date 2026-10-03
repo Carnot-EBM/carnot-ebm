@@ -1,0 +1,238 @@
+.....F.........                                                          [100%]
+=================================== FAILURES ===================================
+___________________________ test_inputs_and_null_cli ___________________________
+
+tmp_path = PosixPath('/tmp/8052-validation/pytest/test_inputs_and_null_cli0')
+
+    def test_inputs_and_null_cli(tmp_path):
+        """SCENARIO-REPORT-8052-REPLAY: authenticated contracts permit a valid null audit."""
+        root = tmp_path / "upstream"
+        upstream_audit_fixture(root)
+        bundle, failures = e.load_inputs(root, tmp_path / "custody")
+        assert not failures and bundle["learner_access_boundary"]["retained_labels_opened"] is False
+>       result = cli(tmp_path / "null", "--root", root, "--validation-worker")
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_learning_benefit_8052.py:295: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/python/test_learning_benefit_8052.py:132: in cli
+    r = subprocess.run(
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:550: in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:1209: in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:2116: in _communicate
+    self._check_timeout(endtime, orig_timeout, stdout, stderr)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <Popen: returncode: -9 args: ['/home/ianblenke/github.com/ianblenke/carnot/....>
+endtime = 657340.740469964, orig_timeout = 120
+stdout_seq = [b'[exp8052] phase=start_preconditions_no_pretrained_calls elapsed_s=0.002 completed=0 pending=0\n', b'[exp8051] phase... completed=0 pending=0\n', b'[exp8052] phase=independent_head_load_after elapsed_s=0.190 completed=0 pending=0\n', ...]
+stderr_seq = [], skip_check_and_raise = False
+
+    def _check_timeout(self, endtime, orig_timeout, stdout_seq, stderr_seq,
+                       skip_check_and_raise=False):
+        """Convenience for checking if a timeout has expired."""
+        if endtime is None:
+            return
+        if skip_check_and_raise or _time() > endtime:
+>           raise TimeoutExpired(
+                    self.args, orig_timeout,
+                    output=b''.join(stdout_seq) if stdout_seq else None,
+                    stderr=b''.join(stderr_seq) if stderr_seq else None)
+E           subprocess.TimeoutExpired: Command '['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-m', 'coverage', 'run', '--rcfile=/tmp/8052-validation/coverage.ini', '--data-file=/tmp/8052-validation/.coverage', '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8052_v697_learning_benefit_audit.py', '--root', '/tmp/8052-validation/pytest/test_inputs_and_null_cli0/upstream', '--validation-worker']' timed out after 120 seconds
+
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/subprocess.py:1253: TimeoutExpired
+----------------------------- Captured stdout call -----------------------------
+[exp8051] phase=qualified_small_head_load_before elapsed_s=104.586 completed=0 pending=0
+[exp8051] phase=qualified_small_head_load_after elapsed_s=104.589 completed=256 pending=0
+[exp8051] phase=benchmark_before elapsed_s=104.702 completed=0 pending=15360
+[exp8051] phase=small_head_load_before elapsed_s=104.702 completed=0 pending=15360
+[exp8051] phase=small_head_load_after elapsed_s=104.702 completed=0 pending=15360
+[exp8051] phase=arm_complete elapsed_s=104.797 completed=256 pending=15104
+[exp8051] phase=small_head_load_before elapsed_s=104.797 completed=256 pending=15104
+[exp8051] phase=small_head_load_after elapsed_s=104.797 completed=256 pending=15104
+[exp8051] phase=arm_complete elapsed_s=104.887 completed=512 pending=14848
+[exp8051] phase=small_head_load_before elapsed_s=104.887 completed=512 pending=14848
+[exp8051] phase=small_head_load_after elapsed_s=104.887 completed=512 pending=14848
+[exp8051] phase=arm_complete elapsed_s=104.908 completed=768 pending=14592
+[exp8051] phase=small_head_load_before elapsed_s=104.908 completed=768 pending=14592
+[exp8051] phase=small_head_load_after elapsed_s=104.908 completed=768 pending=14592
+[exp8051] phase=arm_complete elapsed_s=105.001 completed=1024 pending=14336
+[exp8051] phase=small_head_load_before elapsed_s=105.001 completed=1024 pending=14336
+[exp8051] phase=small_head_load_after elapsed_s=105.001 completed=1024 pending=14336
+[exp8051] phase=arm_complete elapsed_s=105.094 completed=1280 pending=14080
+[exp8051] phase=small_head_load_before elapsed_s=105.094 completed=1280 pending=14080
+[exp8051] phase=small_head_load_after elapsed_s=105.094 completed=1280 pending=14080
+[exp8051] phase=arm_complete elapsed_s=105.114 completed=1536 pending=13824
+[exp8051] phase=small_head_load_before elapsed_s=105.115 completed=1536 pending=13824
+[exp8051] phase=small_head_load_after elapsed_s=105.115 completed=1536 pending=13824
+[exp8051] phase=arm_complete elapsed_s=105.209 completed=1792 pending=13568
+[exp8051] phase=small_head_load_before elapsed_s=105.209 completed=1792 pending=13568
+[exp8051] phase=small_head_load_after elapsed_s=105.209 completed=1792 pending=13568
+[exp8051] phase=arm_complete elapsed_s=105.299 completed=2048 pending=13312
+[exp8051] phase=small_head_load_before elapsed_s=105.299 completed=2048 pending=13312
+[exp8051] phase=small_head_load_after elapsed_s=105.299 completed=2048 pending=13312
+[exp8051] phase=arm_complete elapsed_s=105.319 completed=2304 pending=13056
+[exp8051] phase=small_head_load_before elapsed_s=105.320 completed=2304 pending=13056
+[exp8051] phase=small_head_load_after elapsed_s=105.320 completed=2304 pending=13056
+[exp8051] phase=arm_complete elapsed_s=105.413 completed=2560 pending=12800
+[exp8051] phase=small_head_load_before elapsed_s=105.413 completed=2560 pending=12800
+[exp8051] phase=small_head_load_after elapsed_s=105.413 completed=2560 pending=12800
+[exp8051] phase=arm_complete elapsed_s=105.503 completed=2816 pending=12544
+[exp8051] phase=small_head_load_before elapsed_s=105.503 completed=2816 pending=12544
+[exp8051] phase=small_head_load_after elapsed_s=105.503 completed=2816 pending=12544
+[exp8051] phase=arm_complete elapsed_s=105.524 completed=3072 pending=12288
+[exp8051] phase=small_head_load_before elapsed_s=105.524 completed=3072 pending=12288
+[exp8051] phase=small_head_load_after elapsed_s=105.524 completed=3072 pending=12288
+[exp8051] phase=arm_complete elapsed_s=105.619 completed=3328 pending=12032
+[exp8051] phase=small_head_load_before elapsed_s=105.619 completed=3328 pending=12032
+[exp8051] phase=small_head_load_after elapsed_s=105.619 completed=3328 pending=12032
+[exp8051] phase=arm_complete elapsed_s=105.713 completed=3584 pending=11776
+[exp8051] phase=small_head_load_before elapsed_s=105.713 completed=3584 pending=11776
+[exp8051] phase=small_head_load_after elapsed_s=105.713 completed=3584 pending=11776
+[exp8051] phase=arm_complete elapsed_s=105.734 completed=3840 pending=11520
+[exp8051] phase=small_head_load_before elapsed_s=105.734 completed=3840 pending=11520
+[exp8051] phase=small_head_load_after elapsed_s=105.735 completed=3840 pending=11520
+[exp8051] phase=arm_complete elapsed_s=105.828 completed=4096 pending=11264
+[exp8051] phase=small_head_load_before elapsed_s=105.828 completed=4096 pending=11264
+[exp8051] phase=small_head_load_after elapsed_s=105.828 completed=4096 pending=11264
+[exp8051] phase=arm_complete elapsed_s=105.919 completed=4352 pending=11008
+[exp8051] phase=small_head_load_before elapsed_s=105.919 completed=4352 pending=11008
+[exp8051] phase=small_head_load_after elapsed_s=105.919 completed=4352 pending=11008
+[exp8051] phase=arm_complete elapsed_s=105.940 completed=4608 pending=10752
+[exp8051] phase=small_head_load_before elapsed_s=105.940 completed=4608 pending=10752
+[exp8051] phase=small_head_load_after elapsed_s=105.940 completed=4608 pending=10752
+[exp8051] phase=arm_complete elapsed_s=106.034 completed=4864 pending=10496
+[exp8051] phase=small_head_load_before elapsed_s=106.034 completed=4864 pending=10496
+[exp8051] phase=small_head_load_after elapsed_s=106.034 completed=4864 pending=10496
+[exp8051] phase=arm_complete elapsed_s=106.121 completed=5120 pending=10240
+[exp8051] phase=small_head_load_before elapsed_s=106.121 completed=5120 pending=10240
+[exp8051] phase=small_head_load_after elapsed_s=106.121 completed=5120 pending=10240
+[exp8051] phase=arm_complete elapsed_s=106.142 completed=5376 pending=9984
+[exp8051] phase=small_head_load_before elapsed_s=106.142 completed=5376 pending=9984
+[exp8051] phase=small_head_load_after elapsed_s=106.143 completed=5376 pending=9984
+[exp8051] phase=arm_complete elapsed_s=106.237 completed=5632 pending=9728
+[exp8051] phase=small_head_load_before elapsed_s=106.237 completed=5632 pending=9728
+[exp8051] phase=small_head_load_after elapsed_s=106.237 completed=5632 pending=9728
+[exp8051] phase=arm_complete elapsed_s=106.327 completed=5888 pending=9472
+[exp8051] phase=small_head_load_before elapsed_s=106.327 completed=5888 pending=9472
+[exp8051] phase=small_head_load_after elapsed_s=106.327 completed=5888 pending=9472
+[exp8051] phase=arm_complete elapsed_s=106.348 completed=6144 pending=9216
+[exp8051] phase=small_head_load_before elapsed_s=106.348 completed=6144 pending=9216
+[exp8051] phase=small_head_load_after elapsed_s=106.348 completed=6144 pending=9216
+[exp8051] phase=arm_complete elapsed_s=106.443 completed=6400 pending=8960
+[exp8051] phase=small_head_load_before elapsed_s=106.443 completed=6400 pending=8960
+[exp8051] phase=small_head_load_after elapsed_s=106.443 completed=6400 pending=8960
+[exp8051] phase=arm_complete elapsed_s=106.534 completed=6656 pending=8704
+[exp8051] phase=small_head_load_before elapsed_s=106.534 completed=6656 pending=8704
+[exp8051] phase=small_head_load_after elapsed_s=106.534 completed=6656 pending=8704
+[exp8051] phase=arm_complete elapsed_s=106.555 completed=6912 pending=8448
+[exp8051] phase=small_head_load_before elapsed_s=106.555 completed=6912 pending=8448
+[exp8051] phase=small_head_load_after elapsed_s=106.555 completed=6912 pending=8448
+[exp8051] phase=arm_complete elapsed_s=106.650 completed=7168 pending=8192
+[exp8051] phase=small_head_load_before elapsed_s=106.650 completed=7168 pending=8192
+[exp8051] phase=small_head_load_after elapsed_s=106.650 completed=7168 pending=8192
+[exp8051] phase=arm_complete elapsed_s=106.740 completed=7424 pending=7936
+[exp8051] phase=small_head_load_before elapsed_s=106.741 completed=7424 pending=7936
+[exp8051] phase=small_head_load_after elapsed_s=106.741 completed=7424 pending=7936
+[exp8051] phase=arm_complete elapsed_s=106.761 completed=7680 pending=7680
+[exp8051] phase=small_head_load_before elapsed_s=106.762 completed=7680 pending=7680
+[exp8051] phase=small_head_load_after elapsed_s=106.762 completed=7680 pending=7680
+[exp8051] phase=arm_complete elapsed_s=106.856 completed=7936 pending=7424
+[exp8051] phase=small_head_load_before elapsed_s=106.856 completed=7936 pending=7424
+[exp8051] phase=small_head_load_after elapsed_s=106.856 completed=7936 pending=7424
+[exp8051] phase=arm_complete elapsed_s=106.948 completed=8192 pending=7168
+[exp8051] phase=small_head_load_before elapsed_s=106.948 completed=8192 pending=7168
+[exp8051] phase=small_head_load_after elapsed_s=106.948 completed=8192 pending=7168
+[exp8051] phase=arm_complete elapsed_s=106.969 completed=8448 pending=6912
+[exp8051] phase=small_head_load_before elapsed_s=106.969 completed=8448 pending=6912
+[exp8051] phase=small_head_load_after elapsed_s=106.969 completed=8448 pending=6912
+[exp8051] phase=arm_complete elapsed_s=107.063 completed=8704 pending=6656
+[exp8051] phase=small_head_load_before elapsed_s=107.063 completed=8704 pending=6656
+[exp8051] phase=small_head_load_after elapsed_s=107.063 completed=8704 pending=6656
+[exp8051] phase=arm_complete elapsed_s=107.152 completed=8960 pending=6400
+[exp8051] phase=small_head_load_before elapsed_s=107.152 completed=8960 pending=6400
+[exp8051] phase=small_head_load_after elapsed_s=107.153 completed=8960 pending=6400
+[exp8051] phase=arm_complete elapsed_s=107.173 completed=9216 pending=6144
+[exp8051] phase=small_head_load_before elapsed_s=107.174 completed=9216 pending=6144
+[exp8051] phase=small_head_load_after elapsed_s=107.174 completed=9216 pending=6144
+[exp8051] phase=arm_complete elapsed_s=107.268 completed=9472 pending=5888
+[exp8051] phase=small_head_load_before elapsed_s=107.268 completed=9472 pending=5888
+[exp8051] phase=small_head_load_after elapsed_s=107.268 completed=9472 pending=5888
+[exp8051] phase=arm_complete elapsed_s=107.360 completed=9728 pending=5632
+[exp8051] phase=small_head_load_before elapsed_s=107.360 completed=9728 pending=5632
+[exp8051] phase=small_head_load_after elapsed_s=107.361 completed=9728 pending=5632
+[exp8051] phase=arm_complete elapsed_s=107.382 completed=9984 pending=5376
+[exp8051] phase=small_head_load_before elapsed_s=107.382 completed=9984 pending=5376
+[exp8051] phase=small_head_load_after elapsed_s=107.382 completed=9984 pending=5376
+[exp8051] phase=arm_complete elapsed_s=107.476 completed=10240 pending=5120
+[exp8051] phase=small_head_load_before elapsed_s=107.476 completed=10240 pending=5120
+[exp8051] phase=small_head_load_after elapsed_s=107.476 completed=10240 pending=5120
+[exp8051] phase=arm_complete elapsed_s=107.568 completed=10496 pending=4864
+[exp8051] phase=small_head_load_before elapsed_s=107.568 completed=10496 pending=4864
+[exp8051] phase=small_head_load_after elapsed_s=107.569 completed=10496 pending=4864
+[exp8051] phase=arm_complete elapsed_s=107.590 completed=10752 pending=4608
+[exp8051] phase=small_head_load_before elapsed_s=107.590 completed=10752 pending=4608
+[exp8051] phase=small_head_load_after elapsed_s=107.590 completed=10752 pending=4608
+[exp8051] phase=arm_complete elapsed_s=107.684 completed=11008 pending=4352
+[exp8051] phase=small_head_load_before elapsed_s=107.684 completed=11008 pending=4352
+[exp8051] phase=small_head_load_after elapsed_s=107.684 completed=11008 pending=4352
+[exp8051] phase=arm_complete elapsed_s=107.773 completed=11264 pending=4096
+[exp8051] phase=small_head_load_before elapsed_s=107.773 completed=11264 pending=4096
+[exp8051] phase=small_head_load_after elapsed_s=107.773 completed=11264 pending=4096
+[exp8051] phase=arm_complete elapsed_s=107.793 completed=11520 pending=3840
+[exp8051] phase=small_head_load_before elapsed_s=107.794 completed=11520 pending=3840
+[exp8051] phase=small_head_load_after elapsed_s=107.794 completed=11520 pending=3840
+[exp8051] phase=arm_complete elapsed_s=107.888 completed=11776 pending=3584
+[exp8051] phase=small_head_load_before elapsed_s=107.888 completed=11776 pending=3584
+[exp8051] phase=small_head_load_after elapsed_s=107.888 completed=11776 pending=3584
+[exp8051] phase=arm_complete elapsed_s=107.981 completed=12032 pending=3328
+[exp8051] phase=small_head_load_before elapsed_s=107.981 completed=12032 pending=3328
+[exp8051] phase=small_head_load_after elapsed_s=107.981 completed=12032 pending=3328
+[exp8051] phase=arm_complete elapsed_s=108.002 completed=12288 pending=3072
+[exp8051] phase=small_head_load_before elapsed_s=108.002 completed=12288 pending=3072
+[exp8051] phase=small_head_load_after elapsed_s=108.002 completed=12288 pending=3072
+[exp8051] phase=arm_complete elapsed_s=108.096 completed=12544 pending=2816
+[exp8051] phase=small_head_load_before elapsed_s=108.096 completed=12544 pending=2816
+[exp8051] phase=small_head_load_after elapsed_s=108.096 completed=12544 pending=2816
+[exp8051] phase=arm_complete elapsed_s=108.186 completed=12800 pending=2560
+[exp8051] phase=small_head_load_before elapsed_s=108.186 completed=12800 pending=2560
+[exp8051] phase=small_head_load_after elapsed_s=108.186 completed=12800 pending=2560
+[exp8051] phase=arm_complete elapsed_s=108.208 completed=13056 pending=2304
+[exp8051] phase=small_head_load_before elapsed_s=108.208 completed=13056 pending=2304
+[exp8051] phase=small_head_load_after elapsed_s=108.208 completed=13056 pending=2304
+[exp8051] phase=arm_complete elapsed_s=108.302 completed=13312 pending=2048
+[exp8051] phase=small_head_load_before elapsed_s=108.302 completed=13312 pending=2048
+[exp8051] phase=small_head_load_after elapsed_s=108.303 completed=13312 pending=2048
+[exp8051] phase=arm_complete elapsed_s=108.395 completed=13568 pending=1792
+[exp8051] phase=small_head_load_before elapsed_s=108.395 completed=13568 pending=1792
+[exp8051] phase=small_head_load_after elapsed_s=108.395 completed=13568 pending=1792
+[exp8051] phase=arm_complete elapsed_s=108.416 completed=13824 pending=1536
+[exp8051] phase=small_head_load_before elapsed_s=108.416 completed=13824 pending=1536
+[exp8051] phase=small_head_load_after elapsed_s=108.416 completed=13824 pending=1536
+[exp8051] phase=arm_complete elapsed_s=108.511 completed=14080 pending=1280
+[exp8051] phase=small_head_load_before elapsed_s=108.511 completed=14080 pending=1280
+[exp8051] phase=small_head_load_after elapsed_s=108.511 completed=14080 pending=1280
+[exp8051] phase=arm_complete elapsed_s=108.602 completed=14336 pending=1024
+[exp8051] phase=small_head_load_before elapsed_s=108.602 completed=14336 pending=1024
+[exp8051] phase=small_head_load_after elapsed_s=108.602 completed=14336 pending=1024
+[exp8051] phase=arm_complete elapsed_s=108.623 completed=14592 pending=768
+[exp8051] phase=small_head_load_before elapsed_s=108.623 completed=14592 pending=768
+[exp8051] phase=small_head_load_after elapsed_s=108.623 completed=14592 pending=768
+[exp8051] phase=arm_complete elapsed_s=108.717 completed=14848 pending=512
+[exp8051] phase=small_head_load_before elapsed_s=108.717 completed=14848 pending=512
+[exp8051] phase=small_head_load_after elapsed_s=108.717 completed=14848 pending=512
+[exp8051] phase=arm_complete elapsed_s=108.810 completed=15104 pending=256
+[exp8051] phase=small_head_load_before elapsed_s=108.810 completed=15104 pending=256
+[exp8051] phase=small_head_load_after elapsed_s=108.810 completed=15104 pending=256
+[exp8051] phase=arm_complete elapsed_s=108.831 completed=15360 pending=0
+[exp8051] phase=benchmark_after elapsed_s=108.833 completed=15360 pending=0
+[exp8051] phase=qualified_small_head_load_before elapsed_s=114.114 completed=0 pending=0
+[exp8051] phase=qualified_small_head_load_after elapsed_s=114.117 completed=256 pending=0
+8052 subprocess before ['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-m', 'coverage', 'run', '--rcfile=/tmp/8052-validation/coverage.ini', '--data-file=/tmp/8052-validation/.coverage', '/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8052_v697_learning_benefit_audit.py', '--root', '/tmp/8052-validation/pytest/test_inputs_and_null_cli0/upstream', '--validation-worker']
+=========================== short test summary info ============================
+FAILED tests/python/test_learning_benefit_8052.py::test_inputs_and_null_cli
+1 failed, 14 passed in 249.10s (0:04:09)

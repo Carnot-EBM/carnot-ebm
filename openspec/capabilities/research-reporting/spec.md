@@ -90788,3 +90788,55 @@ fresh process. Validate candidate and published bytes with both artifact linters
 and primary publication consumers. Keep logs, hashes and terminal sidecar. Null
 frozen learning is valid; empirical guard checks establish no future safety or
 independent benefit. No pretrained model call or production default changes.
+
+## REQ-REPORT-8052: Independently audit V697 learning, retention and recovery
+
+Authenticate Exp8046, Exp8051 and the preserved Exp8039 failure against terminal
+byte bindings. Freeze methods, code, inputs and bounded validation commands before
+measurement. Missing operands produce terminal blocked with exact gate operands.
+Use separate cubic, calibrated BCE and alpha equations, never producer reduction.
+Zero pretrained calls and generalized_learning_benefit_score=0 apply throughout.
+
+### SCENARIO-REPORT-8052-REPLAY
+
+Reconstruct every issue, release, candidate, alpha diagnostic, reset and checkpoint.
+Check public role hashing, common update draws, counts, probabilities and head
+hashes. No guard row supplies a gradient. The learner input boundary excludes the
+retention vault; retain the limits of this static and recorded access evidence.
+
+### SCENARIO-REPORT-8052-SCIENCE
+
+H3 scores common later update-role slots after the first permitted update and
+before each target release. Require120 groups and15/class; five beneficial changed
+decisions, gain at least.02 and no added false accepts in any seed against either
+comparator. Report guard future predictions separately. Seal terminal heads and
+label-free retention predictions before opening frozen64 targets. Require48 groups
+and8/class. Each adaptive arm needs Brier drift at most.01 and cost drift at most.02.
+Use10000 chronological moving-block draws on the original256 slots, block32 and
+16/64 sensitivity. Masks stay in place; seed effects average inside each source.
+Safety or support failure supplies capstone H3 family p=1. Valid nulls remain valid.
+
+### SCENARIO-REPORT-8052-RECOVERY
+
+Private guarded processes shall be killed before and after durable issue, release,
+candidate decision and atomic commit. Restart must preserve order, exactly-once
+release/commit, alpha choice and rollback. Fixtures supply no independent science.
+
+### SCENARIO-REPORT-8052-TERMINAL
+
+Write traced failing tests before code. Require scoped unit/consumer, Ruff, strict
+mypy, spec checks and100% added statement coverage including real CLI exits.
+Run one bounded full Python health diagnostic separately; retain unrelated failures.
+Cold-reduce primitive rows in a fresh process and validate candidate and published
+bytes with adversarial and strict row checks through primary publication. Keep
+hashes, argv, exits, logs and terminal sidecar durable below this task's raw path.
+Production defaults remain fixed. Conductor owns ops and traceability reconciliation.
+
+REQ-REPORT-8052 implementation: `verify/learning_benefit_8052.py` rebuilds
+primitive trajectories and separates later utility, guard predictions and retention.
+`reporting/learning_recovery_8052.py` runs private boundary kills and restarts.
+`experiment_8052_v697_learning_benefit_audit.py` and its thin script freeze inputs,
+retain exact operands and publish through the existing byte-bound reader checks.
+`tests/python/test_learning_benefit_8052.py` traces equations, source masks,
+private valid/null/blocked/tampered CLI paths and coverage to this requirement.
+The terminal artifact records actual validation, coverage and scientific outcomes.
