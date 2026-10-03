@@ -91252,3 +91252,54 @@ reductions and run adversarial/strict row readers before primary publication.
 Missing external evidence blocks; failed owned checks disqualify readiness.
 Keep generalized benefit zero and current receipts separate from historical
 evidence. The conductor owns ops and traceability reconciliation.
+## REQ-REPORT-8065: Independently audit fresh learning, retention and recovery
+
+Authenticate Exp8058 and Exp8064 primaries and terminal validators. Rebuild
+every issued prediction, role, released label, candidate, guard alpha, consumed
+admission and durable head with independent equations. Admission labels enter
+no gradient and are consumed once. Preserve original chronology and exposure.
+
+### SCENARIO-REPORT-8065-CAUSAL
+
+Reject altered issue states, candidate inputs, release order, guard operands,
+consumption or final seals. Independently seal retention predictions before
+opening evaluator targets. Unknown targets and the unreleased tail stay masked.
+
+### SCENARIO-REPORT-8065-SCIENCE
+
+H3 pairs common eligible update-role sources after the first shared completed
+admission opportunity, using their issued probabilities before own release.
+Require80 unique groups and10/class, cost gain>=.02, five beneficial changed
+sources, no per-seed false-accept increase versus reused/unconditional/frozen,
+and cost noninferiority within.02 versus unconditional/frozen. Both guarded
+arms require retention48 and8/class with frozen Brier/cost drift<=.01/.02.
+Use10000 moving-block32 draws on the original256 slots,16/64 sensitivity,
+averaging seeds within sources. Invert the one-sided.02 margin test. Support
+or safety failure supplies H3 p=1 to the three-member capstone Holm family.
+Valid no-benefit trajectories are terminal null; generalized benefit stays zero.
+
+### SCENARIO-REPORT-8065-RECOVERY
+
+Kill a private learner before and after candidate persistence, label consumption
+and durable head replacement. Resume and compare journal bytes, pending and
+consumed identities, issued predictions and the next update to uninterrupted
+execution. Private controls do not add independent scientific observations.
+
+### SCENARIO-REPORT-8065-TERMINAL
+
+Freeze bounded validation argv before measurement. Require traced tests, actual
+outside-checkout success/blocked/mutation CLI routes, consumers, scoped Ruff,
+strict mypy, spec coverage,100 percent added statement coverage and E2E-015/016.
+Keep the existing bounded full-suite failure as repository health evidence.
+Cold-reduce primitives in a new process; run adversarial and strict row readers
+before primary_publication after normal child exits. Missing external operands
+block; owned failures disqualify readiness. Persist exact failure operands,
+counts, hashes and field principles. The conductor owns ops and traceability.
+
+Implementation: `verify/fresh_learning_audit_8065.py` reconstructs chronological
+events and paired margin/retention operands. The Exp8065 module freezes current
+checks, runs six private SIGKILL/restart boundaries, cold-reduces journal state
+and publishes through the shared primary reader. The thin CLI and
+`tests/python/test_fresh_learning_audit_8065.py` exercise these scenarios.
+Scientific credit depends on the resulting artifact's frozen support and safety
+gates; implementation alone supplies none.
