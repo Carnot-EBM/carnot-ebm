@@ -91394,6 +91394,51 @@ shared primary reader. Private traced tests cover missing costs, forged boards,
 outside-checkout CLI routes, owned validation failure and cold replay drift.
 Readiness depends on the terminal artifact; implementation grants no device gain.
 
+# REQ-REPORT-8080: Authenticate the V699 supervisor frontier
+
+Exp8080 SHALL authenticate the Exp8067 primary, inventory, terminal sidecar,
+qualified reader code and solve registry before inspecting later receipts.
+Reuse the qualified frontier reader and unchanged private E2E-017 controls.
+Bound scanning below 180 seconds. Preserve original event identities, pending
+and chronology-unknown observations, outcome closure and level-up linkage.
+No current game execution, model load, new solve, arm or default change occurs.
+The V699 H1/H2 statistical contract grants this monitoring branch no causal
+or generalized learning credit. The conductor owns ops and traceability updates.
+
+## SCENARIO-REPORT-8080-FRONTIER
+
+An authenticated empty delta ends as complete_null_no_new_outcomes with
+readiness one and no refinement. A missing named input, including the requested
+python/carnot/experiment_8067_v698_arc_supervisor_frontier.py, SHALL be preserved
+as an exact failed operand and complete_blocked_<resource>, readiness zero.
+An available alternate implementation SHALL not fabricate the missing file.
+
+## SCENARIO-REPORT-8080-SELECTION
+
+Require at least ten new closed firings for an existing curated arm across
+three games before proposing a bounded future held-out selection test. Retain
+per-game/per-arm firing, help, action cost and stagnation rows. Compare earlier
+outcomes only descriptively. Preserve live provenance only for cited live runs.
+
+## SCENARIO-REPORT-8080-VALIDATION
+
+Write failing tests before code. Freeze the validation manifest before measuring.
+Run owned unit and consumer tests, unchanged E2E-017, private real CLI success,
+blocked, mutation and cold replay outside the checkout, Ruff, strict mypy,
+100 percent added statement coverage and scoped spec coverage. Run one bounded
+full Python suite diagnostic; preserve existing global failures separately.
+Archive argv, normal exit, elapsed time and log hashes. Independently reduce
+primitive rows; reject forged firings, repeated identities and missing outcomes.
+Publish only terminal bytes checked by the shared primary publisher and both
+adversarial verification and strict row consistency. Owned failures disqualify.
+The adversarial perfect-metric guard SHALL distinguish this binary readiness
+gate from a measured error: readiness zero with blocked/disqualified class,
+evidence readiness zero and explicit failed prerequisites is a structural
+disposition. A zero scientific metric or a zero gate without these operands
+SHALL still receive its existing flag. Replay SHALL retain terminal-failure
+reports and normalize their operand shape. Preserve failed attempts and reuse
+their whole-suite diagnostic when only publication handling changes.
+
 # REQ-REPORT-8067: Authenticate the V698 supervisor frontier
 
 Exp8067 SHALL bind the Exp8054 primary, inventory and terminal sidecar by exact

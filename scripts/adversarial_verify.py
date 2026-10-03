@@ -2132,6 +2132,15 @@ def check_implausible_perfect(d: dict[str, Any], flags: list[Flag]) -> None:
             continue
         kl = k.lower()
         vf = float(v)
+        # A failed prerequisite closes this binary gate; it measures no error.
+        if (
+            k == "arc_delta_ready_score"
+            and vf == 0
+            and d.get("verdict_class") in {"blocked", "disqualified"}
+            and d.get("arc_evidence_ready_score") == 0
+            and d.get("gate_check_summary")
+        ):
+            continue
         # Implausible 1.0 on a [0,1] score field
         if any(s in kl for s in perfect_score_fields) and vf == 1.0:
             n = d.get("n_samples") or d.get("n_adversarial_examples") or 0

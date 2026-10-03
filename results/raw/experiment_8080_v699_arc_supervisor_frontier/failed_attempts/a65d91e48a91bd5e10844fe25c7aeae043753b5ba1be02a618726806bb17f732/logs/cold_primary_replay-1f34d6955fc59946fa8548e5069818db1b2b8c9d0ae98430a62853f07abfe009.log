@@ -1,0 +1,28 @@
+[exp8080] phase=start completed_units=0 elapsed_s=0
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+  File "<frozen runpy>", line 287, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8080_v699_arc_supervisor_frontier.py", line 22, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8080_v699_arc_supervisor_frontier.py", line 18, in main
+    return run(argv, scope=scope)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7962_v690_arc_supervisor_delta.py", line 31, in main
+    errors = scope.replay(json.loads(replay.read_text()))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/arc_supervisor_v699_frontier.py", line 249, in replay
+    expected = artifact_fields(value, {})
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/arc_supervisor_v699_frontier.py", line 167, in artifact_fields
+    fields = baseline.artifact_fields(value, checked)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/arc_supervisor_v698_frontier.py", line 161, in artifact_fields
+    fields = baseline.artifact_fields(value, checked)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/arc_supervisor_v697_delta.py", line 136, in artifact_fields
+    row.update(check_name="validate_" + row["artifact_field"], passed=False)
+                                        ~~~^^^^^^^^^^^^^^^^^^
+KeyError: 'artifact_field'
