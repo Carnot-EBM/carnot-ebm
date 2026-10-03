@@ -19391,3 +19391,7 @@ code |
 | 2026-10-03 01:08 UTC | Bind thirteen tasks and preserve terminal V696 evi | OK | 91 passed, 1 warning in 165.83s (0:02:45) |
 | 2026-10-03 01:31 UTC | Qualify scorer validation workspaces before new mo | OK | 88 passed, 1 warning in 38.93s |
 | 2026-10-03 01:55 UTC | Seal source decisions and feedback acceptance befo | OK | 87 passed, 1 warning in 38.70s |
+| 2026-10-03 01:58 UTC | Capture repeatable Qwen fit and tune source likeli | GATE_BLOCK | gate-unsat(final): 1 of 6 gate(s) failed; first failure: exp8045-scorer-workspace.verdict_class (actual='circular_positive' in expected=['positive', 'null']) |
+| 2026-10-03 02:00 UTC | Fit calibrated source energies with identical-info | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8047-fit-score-capture, exp8047-fit-score-capture, exp8047-fit-score-capture) |
+| 2026-10-03 02:00 UTC | Capture reserved Qwen evaluation scores with froze | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8048-source-energy-fit, exp8048-source-energy-fit, exp8048-source-energy-fit) |
+| 2026-10-03 02:00 UTC | Independently test source information and calibrat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8049-evaluation-score-capture, exp8049-evaluation-score-capture, exp8049-evaluation-score-capture, exp8048-source-energy-fit, exp8048-source-energy-fit, exp8048-source-energy-fit) |
