@@ -90587,3 +90587,22 @@ E2E-018/consumer checks and one bounded repository-health diagnostic separately.
 `docs/research-notes/v696-outcomes.md` records the measured boundaries and next
 changed prerequisites. External science remains terminal blocked; a qualified
 reader can have execution score1. Production defaults remain fixed.
+
+## REQ-REPORT-V697-PLAN: Qualified scoring and feedback-constrained learning
+
+The staged 2026.10.697 plan shall contain exactly thirteen ordered tasks,
+Exp8044–Exp8056, with matching visible design, complete machine contract,
+canonical task digest and executable YAML. The active roadmap and conductor
+shall remain unchanged. Preserve the V696 design and failed measurements.
+
+### SCENARIO-REPORT-V697-PLAN
+
+Record the dated literature scan before design. Separate scorer-workspace
+qualification from new live token measurements. Include calibrated small-head
+training, a changed continuous-learning mechanism with independent future-loss
+and retention checks, complete cost accounting, ARC supervisor generalization
+and each attached board's custody. Use exact producer gate fields and explicit
+failure lineage. Every prompt requires progress inside long work, chunked file
+writes, honest substrates and terminal external blocks. Validate the staged
+contract with existing schema, lineage, exclusion and private E2E-018 checks.
+This is a planning requirement; experiment implementation and results are pending.

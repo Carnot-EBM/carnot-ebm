@@ -49620,3 +49620,84 @@ small-head and GGUF studies. Preserve KV260, PolarFire and GateMate evidence
 separately. A numerical action disagreement in Exp8029 calls for precision-aware
 fallback analysis before device work. The wishlist supplies future options;
 no purchase or device availability is inferred from vendor descriptions.
+
+## 2026-10-02 — V697 planning scan: qualified scoring and constrained updates
+
+Recorded before designing V697. Primary papers were checked against arXiv;
+method pages are linked where read. These are external findings and local
+hypotheses, not Carnot results. The scan covers 2025–2026, through October 2.
+
+### Promising additions and changed interpretation
+
+- **LILAC+**, May 13, 2026:
+  [paper and method §4](https://arxiv.org/html/2605.18842v1).
+  It separates adaptation from enforceable safety constraints under changing
+  conditions. Its driving experiments and conditional safety arguments do not
+  transfer to factual verification. Local adaptation to investigate: accept a
+  proposed small-head update only after explicit checks on previously released
+  feedback, then measure future decisions independently. This changes update
+  acceptance, rather than repeating the recent-window sampling experiment.
+- **FedProTIP**, September 25, 2025:
+  [paper and method](https://arxiv.org/html/2509.21606v1).
+  Projection of client updates protects prior representation subspaces in
+  federated continual learning. It motivates testing constrained parameter
+  motion in Carnot's small fixed-feature energy head. Carnot has neither its
+  federated setting nor its task-identity inference; do not claim reproduction
+  or import its results. Bounded backtracking with actual decision checks is a
+  cheaper first local hypothesis than adding another learned projector.
+- **GASP**, July 5, 2026:
+  [primary paper](https://arxiv.org/abs/2607.04223).
+  Rechecked the domain limit: fixed-answer source sensitivity transfers unevenly
+  across generation settings. Keep sentence-complete targets, duplicate controls,
+  source-removal features and independently annotated full-source correctness.
+  A stable likelihood score alone establishes no factual benefit. Exp8033 now
+  provides a concrete validation-workspace failure to fix before scaling capture.
+
+### Requested topic coverage
+
+| Topic | Primary sources checked | Decision for local research |
+|---|---|---|
+| EBM verification and reasoning | [EBT, 2025](https://arxiv.org/abs/2507.02092); [ARM–EBM v4, May 2026](https://arxiv.org/abs/2512.15605) | Fit a small conditional energy and compare identical-feature classical controls; preserve exact sigmoid/energy equivalence as a control. |
+| Neural constraint satisfaction | [Lagrange ONNs, May 2025](https://arxiv.org/abs/2505.07179) | Feasibility machinery assumes supplied constraints are correct; it does not solve natural-language extraction. Defer a new solver. |
+| Ising applications in ML | Lagrange ONNs; [FPGA–ASIC co-design, 2026](https://arxiv.org/abs/2602.15985) | Distinguish optimization from calibrated sampling and account for host overhead. Do not repeat retired small-graph sweeps. |
+| Hallucination detection and mitigation | GASP; [CiteTracer, May 2026](https://arxiv.org/abs/2605.08583); [HALO, July 2026](https://arxiv.org/abs/2607.17883) | Field-level evidence and abstention are useful design ideas. Neither a vendor architecture nor a citation detector proves arbitrary answer correctness. |
+| Kolmogorov–Arnold networks | [KAC, March 2025](https://arxiv.org/abs/2503.21076); [KAN-CL, May 2026](https://arxiv.org/abs/2605.12306) | Keep sparse spline support and explicit retention measurement. Do not reopen the retired importance-anchoring mechanism. |
+| Energy-guided decoding | [ETS v3, May 2026](https://arxiv.org/abs/2601.21484) | Its ICML acceptance is stated on arXiv. Defer decoder changes until a useful energy signal qualifies; do not treat scoring supplied tokens as generation. |
+| Accelerated sampling | FPGA–ASIC co-design; [Extropic Z1T, September 4, 2026](https://extropic.ai/writing/z1t/) | Map sparse operations and digital fallbacks separately. Device energy estimates do not establish local access or complete-service speed. |
+| Continual/online learning | LILAC+, FedProTIP; [When Does Continual Learning Require Learning, July 2026](https://arxiv.org/abs/2607.07847) | Separate later competence, retained decisions and storage efficiency. Test feedback-constrained updates with the generator frozen. |
+
+### Secondary channels and limits
+
+- **OpenReview:** searched ICLR/ICML 2026 and NeurIPS 2025; checked indexed
+  [EBT](https://openreview.net/pdf?id=ZBj3Qp1bYg),
+  [NRGPT's EBT comparison](https://openreview.net/pdf?id=B3Muyi2zgo), and
+  [Energy Matching](https://openreview.net/pdf/62ec030c254ffe361caf735408232b71dcc9075f.pdf).
+  These supply architectural comparisons, not an off-the-shelf factual verifier.
+  No additional relevant ICML method was established through OpenReview search.
+- **Semantic Scholar:** attempted both
+  [EBT citations](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,url&limit=20)
+  and [ARM–EBM citations](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,url&limit=20),
+  plus domain searches. The endpoints were inaccessible through the browser;
+  no reliable citing-paper census was obtained. Citation coverage is incomplete.
+- **Hugging Face:** searched verification papers and checked
+  [OpenHalDet](https://huggingface.co/papers/2606.06959). Its broader benchmark is
+  a future data lead. The GASP page returned a cache miss; arXiv was accessible.
+- **GitHub:** checked [monthly Python Trending](https://github.com/trending/python?since=monthly),
+  a cached snapshot, and searched EBM/constraint/KAN repositories. Checked
+  [author KAC code](https://github.com/Ethanhuhuhu/KAC); found
+  [KANLib](https://github.com/julianhoever/KANLib) as an implementation lead.
+  [KANA-base](https://github.com/Flowychie/KANA-base) is archived and concerns
+  physical Gibbs-energy identities. It is not an active factual-verifier route.
+  No current relevant trend ranking is claimed.
+- **Extropic:** checked [Writing](https://extropic.ai/writing) and Z1T above.
+  Sparse hardware/software co-design remains relevant; no TSU run is authorized
+  or assumed by this scan.
+- **Logical Intelligence:** checked [Kona 1.0](https://logicalintelligence.com/kona)
+  and the [current site](https://logicalintelligence.com/). These describe latent
+  constraint reasoning below a language interface; no newly reproducible local
+  training recipe was established.
+
+Hardware decision: use the existing CPU and an available RTX 3090 for Qwen3.8
+fixed-answer scoring. Keep KV260 fabric, PolarFire CPU and GateMate physical
+block evidence distinct. Measure the cost of rejected updates and fallback;
+the scan supplies no basis for a purchase or a claimed 100x local speedup.

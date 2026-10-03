@@ -11,22 +11,11 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CLAIM_SUPPORTED | 2 |
-| CANNOT_DETERMINE | 6 |
+| CLAIM_SUPPORTED | 1 |
+| NO_CLAIM | 2 |
+| CANNOT_DETERMINE | 5 |
 
-## experiment_8023_v695_likelihood_calibration.json
-
-**CANNOT_DETERMINE**
-
-reviewer call failed: OpenAI Codex v0.156.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-6.1-sol
-provider: openai
-approval: never
-sandbox: workspace-write
-
-## experiment_8024_likelihood_decision_test.json
+## experiment_8033_v696_scoring_isolation.json
 
 **CANNOT_DETERMINE**
 
@@ -38,31 +27,38 @@ provider: openai
 approval: never
 sandbox: workspace-write
 
-## experiment_8025_v695_causal_online_updates.json
+## experiment_8034_fit_likelihood_capture.json
 
-**CANNOT_DETERMINE**
+**NO_CLAIM**
 
-reviewer call failed: OpenAI Codex v0.156.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-6.1-sol
-provider: openai
-approval: never
-sandbox: workspace-write
+## VERDICT
+NO_CLAIM
 
-## experiment_8026_v695_learning_retention_audit.json
+## THE HEADLINE CLAIM
+no claim
 
-**CANNOT_DETERMINE**
+## WHAT WOULD REFUTE IT
+An empirical or comparative refutation is not applicable because the artifact contains no scientific or comparative claim; it is a gate-check receipt recording that the experiment was blocked prior to execution due to failed upstream prerequisites.
 
-reviewer call failed: OpenAI Codex v0.156.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-6.1-sol
-provider: openai
-approval: never
-sandbox: workspace-write
+## WAS THAT CHECKED
+No; the experiment did not run.
 
-## experiment_8027_v695_native_update_cost.json
+## EVIDENCE
+`schema`
+`blocked_gate_check_v1`
+`status`
+`blocked`
+`duration_s`
+`0.0`
+`honest_verdict`
+`blocked_gate_check_failed`
+`blocked_at_layer`
+`conductor_pre_gate`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_8038_v696_windowed_online_learning.json
 
 **CLAIM_SUPPORTED**
 
@@ -70,39 +66,35 @@ sandbox: workspace-write
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-The native update implementation achieves float64 numerical parity and matched CPU costs on exposed cached development, but is disqualified from deployment readiness (`complete_disqualified_native_update_cost`) because durable transaction throughput fails NFR-01 tenfold targets and owned validation checks fail.
+Windowed online learning updates across replay window arms yield no generalized learning benefit under equal adaptive budgets (`complete_null_windowed_trajectories`).
 
 ## WHAT WOULD REFUTE IT
-The headline claim would be refuted if:
-1. Numerical parity failed between Python and Rust implementations (e.g., probability or coefficient differences exceeding tolerance `1e-10`, or `action_equal` evaluating to false).
-2. End-to-end durable transaction speedup actually achieved the 10x target over Python (`transaction_speedup` >= 10.0, satisfying `nfr01_met: true`), contradicting the disqualification.
-3. Owned validation checks passed cleanly (`owned_checks: true` with zero exit codes and no crashes), which would contradict the disqualification and yield a readiness score of 1.
+An observation in the artifact's evaluation rows showing a statistically meaningful reduction in loss or Brier score (a positive generalized learning benefit) for any of the adaptive replay arms (`recent64`, `cumulative`, or `newest16`) over the baseline (`frozen_no_write`).
 
 ## WAS THAT CHECKED
-Yes.
-1. Numerical parity was checked across 4,480 completed updates and 256 stress cases in `parity_rows` and `serialized_restart_rows`, confirming errors below `1e-16` and setting `parity_passed` to `true`.
-2. Durable transaction latency was checked across batch sizes 1, 16, and 64 across 30 repetitions against the Python baseline arm in `timing_distributions` and `complete_service_estimates`, showing transaction speedups of only ~1.0006x to 1.005x because feature construction and persistence dominate runtime, properly recording `nfr01_met` as `false`.
-3. Owned validation was checked in `validation_receipts`, capturing a segmentation fault (`exit_code` `-11` on `unit_consumers_e2e015_019`), resulting in `owned_checks: false`, `native_update_ready_score: 0`, and the honest disqualified verdict.
+Yes; checked across 20 algorithm seeds and four comparator arms with 56 updates per seed, logged in `update_budget_rows`, `rows`, and `feedback_release_rows`, confirming no advantage over baseline and resulting in a `generalized_learning_benefit_score` of `0`.
 
 ## EVIDENCE
-- `honest_verdict`: `"complete_disqualified_native_update_cost"`
-- `verdict_class`: `"disqualified"`
-- `claim_scope`: `"Opt-in float64 numerical parity and matched CPU costs on exposed cached development; no deployment promotion or hardware speed claim."`
-- `native_update_ready_score`: `0`
-- `parity_passed`: `true`
-- `tier1_arithmetic_met`: `true`
-- `nfr01_met`: `false`
-- `acceptance_gate_results`: `{"measurement": true, "owned_checks": false, "parity": true}`
-- `transaction_speedup`: `{"1": 1.0053599322342952, "16": 1.0006318120280278, "64": 1.0048504343406452}`
-- `kernel_speedup`: `{"1": 23.200951248513675, "16": 28.00542028018679, "64": 27.55844913903419}`
-- `exit_code`: `-11`
-- `passed`: `false`
-- `verifier_is_oracle`: `false`
+`honest_verdict`
+`complete_null_windowed_trajectories`
+`verdict_class`
+`null`
+`generalized_learning_benefit_score`
+`0`
+`claim_scope`
+`This invocation replays one exposed development stream under equal adaptive budgets. Temporal support changes; generator and importance weights stay fixed. No retention, independent learning benefit or deployment claim.`
+`arms`
+`recent64`
+`cumulative`
+`newest16`
+`frozen_no_write`
+`learning_trajectory_ready_score`
+`1`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_8028_v695_arc_supervisor_delta.json
+## experiment_8039_v696_learning_benefit_audit.json
 
 **CANNOT_DETERMINE**
 
@@ -114,47 +106,70 @@ provider: openai
 approval: never
 sandbox: workspace-write
 
-## experiment_8029_v695_hardware_workload_boundary.json
+## experiment_8040_v696_native_transaction_cost.json
 
-**CLAIM_SUPPORTED**
+**CANNOT_DETERMINE**
+
+reviewer call failed: OpenAI Codex v0.156.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-6.1-sol
+provider: openai
+approval: never
+sandbox: workspace-write
+
+## experiment_8041_v696_arc_supervisor_delta.json
+
+**CANNOT_DETERMINE**
+
+reviewer call failed: OpenAI Codex v0.156.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-6.1-sol
+provider: openai
+approval: never
+sandbox: workspace-write
+
+## experiment_8042_v696_precision_fallback_boundary.json
+
+**CANNOT_DETERMINE**
+
+reviewer call failed: OpenAI Codex v0.156.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-6.1-sol
+provider: openai
+approval: never
+sandbox: workspace-write
+
+## experiment_8043_v696_capstone.json
+
+**NO_CLAIM**
 
 ## VERDICT
-CLAIM_SUPPORTED
+NO_CLAIM
 
 ## THE HEADLINE CLAIM
-Independent hardware custody is verified under read-only replay, with no current device execution, no compatible kernels, and no measured device acceleration benefit.
+no claim
 
 ## WHAT WOULD REFUTE IT
-Any board or operation recording active hardware execution (`current_device_execution_count` > 0 or `current_hardware_execution` as true), an executable device kernel (`executable_device_kernel` as true), positive device acceleration benefit (`device_benefit` as true), or failed custody verification (`custody` as false or `custody_valid` as false).
+No comparative or substantive scientific claim is made to refute. If the capstone had asserted a positive capability or generalization claim over baselines, that claim would be refuted by observing zero or negative gain, confidence intervals spanning zero or failing required margins, or gate failures. The artifact lacks model evaluation, lacks rival comparison arms, and explicitly declares that zero independent scientific observations were made.
 
 ## WAS THAT CHECKED
-Yes. Custody verification and device benefit were evaluated in `acceptance_gate_results` (`custody`, `device_benefit`, `numeric_pass`), `board_rows` across audited boards (`custody_valid`, `current_hardware_execution`, `terminal_criterion_met`, `compatible_sparse_kernel`, `compatible_update_kernel`), and `workload_placement_rows` across all pipeline operations (`device_execution_count`, `executable_device_kernel`).
+No. The artifact lacks any comparative testing against rival baselines or models. It is an administrative aggregation and custody receipt that records upstream gate results and validation command receipts rather than evaluating an empirical hypothesis.
 
 ## EVIDENCE
-- `honest_verdict`: `"complete_null_independent_hardware_custody"`
-- `verdict_class`: `"null"`
-- `claim_scope`: `"Current read-only custody and CPU quantized replay of exposed development. No current device execution, model load, natural deployment benefit or vendor speedup."`
-- `purchase_recommendation`: `"No purchase: no qualified useful measured compatible device bottleneck and executable kernel"`
-- `acceptance_gate_results`:
-  - `custody`: `true`
-  - `device_benefit`: `false`
-  - `numeric_pass`: `false`
-- `current_device_execution_count`: `0`
-- `hardware_custody_ready_score`: `1`
-- `quantized_update_ready_score`: `0`
-- `generalized_learning_benefit_score`: `0`
+- `"honest_verdict": "complete_blocked_v696_capstone"`
+- `"verdict_class": "blocked"`
+- `"science_ready": false`
+- `"claim_scope": "This invocation binds thirteen administrative dispositions and exposed finite-trajectory reductions. Missing source evidence and complete deployment remain unavailable; historical publication is separate."`
+- `"positive_claim": false`
+- `"inference_substrate": "aggregation_from_upstream_artifacts"`
+- `"inference_substrate_class": "no_model_load"`
+- `"MODEL_SPECS": []`
+- `"sample_size_budget": "Thirteen administrative dispositions are zero new independent scientific observations."`
+- `"generalized_learning_benefit_score": 0`
+- `"validation_receipts"`
 
 ## RECOMMENDATION
 KEEP
-
-## experiment_8030_v695_capstone.json
-
-**CANNOT_DETERMINE**
-
-reviewer call failed: OpenAI Codex v0.156.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-6.1-sol
-provider: openai
-approval: never
-sandbox: workspace-write

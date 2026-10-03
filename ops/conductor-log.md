@@ -19359,3 +19359,30 @@ code |
 | 2026-10-02 22:13 UTC | Assess only new live supervisor outcomes for trans | OK | 92 passed, 1 warning in 8.26s |
 | 2026-10-02 22:55 UTC | Bound quantized decision fallback and preserve eac | OK | 97 passed, 1 warning in 30.30s |
 | 2026-10-02 23:27 UTC | Independently decide source utility learning benef | OK | 96 passed, 1 warning in 18.47s |
+| 2026-10-03 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_7028_v616_active_contract_preflight.json age-week 4: OPEN 28 days: CL |
+| 2026-10-03 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_7029_v616_sota_scope_audit.json age-week 4: OPEN 28 days: CLAIM_OVERS |
+| 2026-10-03 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | eval_run_consumer_field_lint.py age-week 4: OPEN 28 days: SILENT_NON_FIRING on e |
+| 2026-10-03 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_substrate_declares_deterministic_non_live age-week 3: OP |
+| 2026-10-03 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_classify_current_task_inference_claim age-week 3: OPEN 2 |
+| 2026-10-03 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::duration_floor_for_artifact age-week 3: OPEN 21 days: SIL |
+| 2026-10-03 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_7403_v649_synthetic_memory.json age-week 2: OPEN 14 days: CLAIM_OVERS |
+| 2026-10-03 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_inference_substrate_text age-week 2: OPEN 14 days: REAL_ |
+| 2026-10-03 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_match_declared_substrate age-week 2: OPEN 14 days: SILEN |
+| 2026-10-03 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_claim_field_name age-week 2: OPEN 14 days: SILENT_NON_FI |
+| 2026-10-03 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_classify_current_task_inference_claim age-week 1: OPEN 1 |
+| 2026-10-03 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_7666_v668_arc_goal_confirmation.json age-week 1: OPEN 7 days: CLAIM_O |
+| 2026-10-03 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_draws_selection_conclusion age-week 1: OPEN 7 days: SILE |
+| 2026-10-03 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_engine_selection_candidate_diversity age-week 1: OP |
+| 2026-10-03 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_world_model_trust_degeneracy age-week 1: OPEN 7 day |
+| 2026-10-03 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_arc_outer_loop_calibration_solve age-week 1: OPEN 7 d |
+| 2026-10-03 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_arc_outer_loop_solve age-week 1: OPEN 7 days: SILEN |
+| 2026-10-03 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_7672_v669_bound_relations.json age-week 1: OPEN 7 days: CLAIM_OVERSTA |
+| 2026-10-03 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_7680_v669_arc_probe_protocol.json age-week 1: OPEN 7 days: CLAIM_OVER |
+| 2026-10-03 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_verify_artifact_impl age-week 1: OPEN 7 days: SILENT_NON |
+| 2026-10-03 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::verify_artifact age-week 1: OPEN 7 days: SILENT_NON_FIRIN |
+| 2026-10-03 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::sweep_milestone_range age-week 1: OPEN 7 days: SILENT_NON |
+| 2026-10-03 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_claims_live_model age-week 1: OPEN 7 days: SILENT_NON_FI |
+| 2026-10-03 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::backfill_stamps age-week 1: OPEN 7 days: SILENT_NON_FIRIN |
+| 2026-10-03 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::main age-week 1: OPEN 7 days: SILENT_NON_FIRING on advers |
+| 2026-10-03 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_positive_control_failed_or_unchecked age-week 1: OPEN 7  |
+| 2026-10-03 00:18 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_7708_v671_arc_generalization_runner.json age-week 1: OPEN 7 days: CLA |
