@@ -21330,3 +21330,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-10-03: Learn with committed candidates and one-use delayed admission labels (⚠️ Research Finding) — honest_verdict=complete_null_fresh_feedback_learning; results/experiment_8064_v698_fresh_feedback_learning.json
 - 2026-10-03: Independently test fresh-feedback benefit retention and recovery (⚠️ Research Finding) — honest_verdict=complete_null_fresh_learning_audit; results/experiment_8065_v698_fresh_learning_audit.json
 - 2026-10-03: Test reusable public features in complete guarded transactions (⚠️ Research Finding) — honest_verdict=complete_disqualified_feature_service; results/experiment_8066_v698_content_addressed_feature_service.json
+- 2026-10-03: Assess new live supervisor outcomes for transferable ARC refinement (⚠️ Research Finding) — honest_verdict=complete_null_no_new_outcomes; results/experiment_8067_v698_arc_supervisor_frontier.json
