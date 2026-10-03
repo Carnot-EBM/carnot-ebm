@@ -19411,3 +19411,4 @@ code |
 | 2026-10-03 08:39 UTC | Seal reserved Qwen scores and frozen head predicti | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8060-source-energy-training, exp8060-source-energy-training, exp8060-source-energy-training) |
 | 2026-10-03 08:39 UTC | Independently test source information and energy d | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8061-evaluation-source-scoring, exp8061-evaluation-source-scoring, exp8061-evaluation-source-scoring, exp8060-source-energy-training, exp8060-source-energy-training, exp8060-source-energy-training) |
 | 2026-10-03 09:02 UTC | Measure rejected learning opportunities and admiss | OK | 93 passed, 1 warning in 63.16s (0:01:03) |
+| 2026-10-03 09:52 UTC | Learn with committed candidates and one-use delaye | OK | 95 passed, 1 warning in 45.24s |
