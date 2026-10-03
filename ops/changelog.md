@@ -21332,3 +21332,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-10-03: Test reusable public features in complete guarded transactions (⚠️ Research Finding) — honest_verdict=complete_disqualified_feature_service; results/experiment_8066_v698_content_addressed_feature_service.json
 - 2026-10-03: Assess new live supervisor outcomes for transferable ARC refinement (⚠️ Research Finding) — honest_verdict=complete_null_no_new_outcomes; results/experiment_8067_v698_arc_supervisor_frontier.json
 - 2026-10-03: Preserve board custody and bound acceleration after feature reuse (⚠️ Blocked) — honest_verdict=complete_blocked_new_workload_bound; results/experiment_8068_v698_hardware_feature_boundary.json
+- 2026-10-03: Decide all thirteen outcomes and the three PRD gaps independently (⚠️ Blocked) — honest_verdict=complete_blocked_v698_capstone; results/experiment_8069_v698_capstone.json
