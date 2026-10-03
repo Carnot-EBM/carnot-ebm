@@ -21337,3 +21337,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 
 - 2026-10-03: Bind thirteen tasks and qualify reusable historical inputs (⚠️ Research Finding) — honest_verdict=complete_contract_custody; results/experiment_8070_v699_contract_custody.json
 - 2026-10-03: Isolate process lifetime in the failed Qwen duplicate measurement (⚠️ Research Finding) — honest_verdict=complete_disqualified_owned_validation; results/experiment_8071_v699_process_isolation_diagnostic.json
+- 2026-10-03: Ingest projection methods and seal independent research branches (⚠️ Research Finding) — honest_verdict=complete_null_sealed_methods; results/experiment_8072_v699_sealed_methods.json
