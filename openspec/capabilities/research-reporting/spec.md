@@ -91350,3 +91350,34 @@ budget-censored rows and publish after child exit. Private traced tests cover
 mutations, loaded native serialization, committed and uncommitted crash recovery,
 and incomplete timing budgets. Terminal evidence determines readiness and speed;
 the implementation alone grants neither scientific nor service benefit.
+# REQ-REPORT-8067: Authenticate the V698 supervisor frontier
+
+Exp8067 SHALL bind the Exp8054 primary, inventory and terminal sidecar by exact
+byte hashes before reading new supervisor outcomes. Reuse the qualified reader,
+receipt helpers and primary publisher. Freeze bounded validation commands first.
+Preserve run/event identity, policy version, outcome closure, level-up action
+costs, per-arm exposure and unredirected stagnations. Duplicate, open, forged
+and historical offline outcomes SHALL receive no new live credit.
+
+## SCENARIO-REPORT-8067-FRONTIER
+
+An authenticated empty delta SHALL end as complete_null_no_new_outcomes with
+unchanged current frontier, no proposal and zero current games/model calls.
+Missing external operands SHALL name path, hash, field, expected and observed
+in a terminal blocked result. Historical solve provenance SHALL remain separate.
+
+## SCENARIO-REPORT-8067-SELECTION
+
+Only an existing curated arm with ten new closed firings across three games may
+receive a proposed selection refinement. Include a bounded future held-out
+protocol. Observational evidence SHALL grant no causal gain or default change.
+
+## SCENARIO-REPORT-8067-VALIDATION
+
+Tests SHALL precede implementation. Owned tests, consumers, E2E-017, external
+private CLI routes, strict mypy, Ruff, scoped spec coverage and all added
+statement coverage SHALL pass. Cold replay SHALL reject forged firings,
+duplicate frontier identities and missing outcomes. Preserve actual argv,
+exit, duration and log hashes. Keep one bounded full-suite diagnostic separate
+from owned acceptance. Publish only checked terminal bytes. The conductor owns
+ops and traceability reconciliation for this task.
