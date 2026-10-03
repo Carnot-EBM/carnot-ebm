@@ -91208,3 +91208,47 @@ strict row consistency before primary publication after normal child exit.
 Missing external operands are terminal blocked. Failed owned checks disqualify
 readiness. Readiness qualifies diagnostic completeness, independent of a positive
 scientific result. The conductor owns ops and traceability reconciliation.
+## REQ-REPORT-8064: Learn from committed candidates and one-use delayed admission
+
+Authenticate the Exp8020 head, Exp8046 custody and Exp8058 frozen learning
+methods independently of the Qwen source branch. Preserve stream256 and
+retention64 identities, complete-label eligibility, original slot+20 releases,
+seeds101-120 and separate frozen/unconditional/reused_guard/fresh_admission states.
+Readiness requires complete valid development trajectories, independent of gain.
+
+### SCENARIO-REPORT-8064-CAUSAL
+
+Durably issue each prediction before its label. At slots64/128/192 propose four
+full-batch calibrated BCE gradients, step .01 and ridge .001, on newest32
+released update-only rows with minimum16 and2/class. Freeze candidate and
+incumbent before selecting next12 eligible admission-only releases. Consume
+fresh rows once, never in gradients. Snapshot reused guards at commitment.
+All arms decide at the same last release strictly before the next attempt or
+stream end; otherwise censor without extra labels or gradients. Inadequate
+guard classes defer both guarded arms without replacement. Cap12 gradients.
+
+### SCENARIO-REPORT-8064-GUARD
+
+Apply exactly Exp8058 alphas and identical initial/incumbent comparisons to
+both guarded arms. Preserve incumbent on all-alpha rejection and initial state
+when no update qualifies. Record every alpha scan, rejection, zero and deferral.
+An empirical guard supplies no confidence theorem or future safety credit.
+
+### SCENARIO-REPORT-8064-DURABLE
+
+Synchronous immutable journals persist issues, releases, pending candidates,
+consumption and state commits. Resume a verified prefix after process death.
+Reject duplicate or out-of-order releases and destructive mutations. Future
+target mutation cannot affect earlier issues or commitments. Seal all final
+heads before opening retention labels. Bound numerical work to1200 seconds.
+
+### SCENARIO-REPORT-8064-TERMINAL
+
+Freeze bounded validation commands before measurement. Run private unit and
+outside-checkout success/blocked/mutation CLIs, consumer tests, Ruff, strict
+mypy, scoped spec coverage,100 percent new statement coverage and E2E-015/016.
+Keep full-suite failures as repository health evidence. Cold-replay primitive
+reductions and run adversarial/strict row readers before primary publication.
+Missing external evidence blocks; failed owned checks disqualify readiness.
+Keep generalized benefit zero and current receipts separate from historical
+evidence. The conductor owns ops and traceability reconciliation.
