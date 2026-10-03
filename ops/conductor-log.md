@@ -19429,3 +19429,4 @@ code |
 | 2026-10-03 20:06 UTC | Learn persistent constraints before fresh update a | OK | 93 passed, 1 warning in 72.92s (0:01:12) |
 | 2026-10-03 21:19 UTC | Reconstruct later benefit retention and projection | OK | 95 passed, 1 warning in 118.25s (0:01:58) |
 | 2026-10-03 21:51 UTC | Measure complete cold warm and miss feature transa | OK | 87 passed, 1 warning in 28.11s |
+| 2026-10-03 22:32 UTC | Measure changed content eviction and restart featu | OK | 86 passed, 1 warning in 21.90s |
