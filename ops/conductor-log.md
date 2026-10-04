@@ -19462,3 +19462,5 @@ code |
 | 2026-10-04 04:54 UTC | Bind thirteen tasks and preserve the three actual  | OK | 86 passed, 1 warning in 36.08s |
 | 2026-10-04 05:35 UTC | Seal exposed development sources and local-memory  | OK | 97 passed, 1 warning in 23.52s |
 | 2026-10-04 06:03 UTC | Capture bounded Qwen fit scores and source-use con | FLAGGED | adversarial_verify CRITICAL: INFERENCE_PROVENANCE_CONTRADICTION, SUBSTRATE_CLASS_MISMATCH — result quarantined, not a clean success, excluded from headline / capstone. 99 passed, 1 warning in 22.00s |
+| 2026-10-04 06:06 UTC | Train calibrated radial energies with equal-inform | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp8099-fit-source-capture.fit_capture_ready_score (actual=0 == expected=1) |
+| 2026-10-04 06:08 UTC | Measure reserved development decisions with curren | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8100-radial-energy-fit) |
