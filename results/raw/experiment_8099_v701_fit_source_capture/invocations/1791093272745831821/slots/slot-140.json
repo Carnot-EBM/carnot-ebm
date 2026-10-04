@@ -1,0 +1,74 @@
+{
+  "answer_bytes": "5468652066756e6374696f6e206f662061206b6579626f61726420616e64206d6f75736520697320746f20736572766520617320746865207072696d61727920696e707574206465766963657320666f72206120636f6d70757465722e20546865206b6579626f617264206973207573656420666f7220766172696f75732066756e6374696f6e73207375636820617320696e70757474696e67206e756d65726963616c20646174612c206e617669676174696f6e20616e642065646974696e672c20616d6f6e67206f74686572732e20497420636f6e7369737473206f66206b657973206c696b6520746865206e756d65726963206b65797061642c20646972656374696f6e616c206b6579732c2066756e6374696f6e206b6579732c20616e642074686520657363617065206b65792028455343292c20696e636c7564696e6720746865204354524c2c20414c542c20616e642057696e646f7773206b6579732e20546865206d6f7573652c206f6e20746865206f746865722068616e642c20636f6e74726f6c7320746865206d6f74696f6e206f66206120706f696e74657220696e2074776f2064696d656e73696f6e7320696e20612067726170686963616c207573657220696e746572666163652028475549292e204974207475726e73206d6f76656d656e7473206f66207468652068616e64206261636b7761726420616e6420666f72776172642c206c65667420616e6420726967687420696e746f206571756976616c656e7420656c656374726f6e6963207369676e616c7320776869636820617265207573656420746f206d6f76652074686520706f696e7465722e",
+  "arm": "full_source",
+  "capture_identity": "sha256:6d004fddbc71a82a3b23b351dc01f9d360f2f39595728dba2e40af68f0fa4e89",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 0.0,
+  "eligibility": false,
+  "exclusion_reason": "owned_validation_failed",
+  "failure_kind": "invalid_envelope",
+  "failure_status": false,
+  "family_id": "sha256:0adde617806beeb0710b070374823068d316ffac778b9f96d8746ba97eab1208:full_source",
+  "human_target": null,
+  "input_tokens": null,
+  "issued_state": "sha256:6d004fddbc71a82a3b23b351dc01f9d360f2f39595728dba2e40af68f0fa4e89",
+  "metric": "bounded_probability_parse",
+  "numerator": 0,
+  "parsed": {
+    "citation_valid": false,
+    "completed": false,
+    "finish_reason": null,
+    "probability": null,
+    "schema_valid": false,
+    "source_sentence_id": null,
+    "status": "invalid_envelope",
+    "syntax_valid": false,
+    "usage": {}
+  },
+  "probability": null,
+  "public_eligible": false,
+  "public_hash": "sha256:07cc15cca3f3cfefbb6eaff59c1010d43d9138a71bc70d5969cd7d5b5beca380",
+  "raw_response": {},
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Lost all keyboard and Mouse functions. 1  Jun 12, 2010, 5:19 PM. Hey johnniedoo, I had this problem a while back and found that the issue was a setting in the BIOS. I know you've already had a look, but try looking for a Allow USB Keyboard option. If that's on, then everything should be working.\\\\n\\\\npassage 2:The computer keyboard is used in conjunction with the mouse as the primary input device. numeric keypad, navigation and editing keys, directional keys, function keys, and the escape key (ESC). (ALT), and the Windows key ( ). The CTRL, ALT, and Windows keys are usually found on each end of the space bar.\\\\n\\\\npassage 3:A mouse typically controls the motion of a pointer in two dimensions in a graphical user interface (GUI). The mouse turns movements of the hand backward and forward, left and right into equivalent electronic signals that in turn are used to move the pointer.\\\\n\\\\n\\\",\\\"question\\\":\\\"the function of a keyboard and mouse\\\"}\", \"original_answer\": \"The function of a keyboard and mouse is to serve as the primary input devices for a computer. The keyboard is used for various functions such as inputting numerical data, navigation and editing, among others. It consists of keys like the numeric keypad, directional keys, function keys, and the escape key (ESC), including the CTRL, ALT, and Windows keys. The mouse, on the other hand, controls the motion of a pointer in two dimensions in a graphical user interface (GUI). It turns movements of the hand backward and forward, left and right into equivalent electronic signals which are used to move the pointer.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 0,
+  "role": "tune",
+  "source_bytes": "7b227061737361676573223a227061737361676520313a4c6f737420616c6c206b6579626f61726420616e64204d6f7573652066756e6374696f6e732e203120204a756e2031322c20323031302c20353a313920504d2e20486579206a6f686e6e6965646f6f2c20492068616420746869732070726f626c656d2061207768696c65206261636b20616e6420666f756e642074686174207468652069737375652077617320612073657474696e6720696e207468652042494f532e2049206b6e6f7720796f7527766520616c7265616479206861642061206c6f6f6b2c2062757420747279206c6f6f6b696e6720666f72206120416c6c6f7720555342204b6579626f617264206f7074696f6e2e20496620746861742773206f6e2c207468656e2065766572797468696e672073686f756c6420626520776f726b696e672e5c6e5c6e7061737361676520323a54686520636f6d7075746572206b6579626f617264206973207573656420696e20636f6e6a756e6374696f6e207769746820746865206d6f75736520617320746865207072696d61727920696e707574206465766963652e206e756d65726963206b65797061642c206e617669676174696f6e20616e642065646974696e67206b6579732c20646972656374696f6e616c206b6579732c2066756e6374696f6e206b6579732c20616e642074686520657363617065206b65792028455343292e2028414c54292c20616e64207468652057696e646f7773206b6579202820292e20546865204354524c2c20414c542c20616e642057696e646f7773206b6579732061726520757375616c6c7920666f756e64206f6e206561636820656e64206f6620746865207370616365206261722e5c6e5c6e7061737361676520333a41206d6f757365207479706963616c6c7920636f6e74726f6c7320746865206d6f74696f6e206f66206120706f696e74657220696e2074776f2064696d656e73696f6e7320696e20612067726170686963616c207573657220696e746572666163652028475549292e20546865206d6f757365207475726e73206d6f76656d656e7473206f66207468652068616e64206261636b7761726420616e6420666f72776172642c206c65667420616e6420726967687420696e746f206571756976616c656e7420656c656374726f6e6963207369676e616c73207468617420696e207475726e20617265207573656420746f206d6f76652074686520706f696e7465722e5c6e5c6e222c227175657374696f6e223a227468652066756e6374696f6e206f662061206b6579626f61726420616e64206d6f757365227d",
+  "source_cluster_id": "sha256:15acc9c5fc82a4c84b7c5c80a024de92332f451df9fdc27f1bfebd187a0bbc37",
+  "source_id": "15449",
+  "started": false,
+  "status": "excluded",
+  "unit_id": "sha256:0adde617806beeb0710b070374823068d316ffac778b9f96d8746ba97eab1208",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ]
+}

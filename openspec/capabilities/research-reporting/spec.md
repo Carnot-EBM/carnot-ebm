@@ -92186,3 +92186,24 @@ Implemented by `python/carnot/experiment_8098_v701_development_methods.py` and
 its direct script CLI. The producer retains exact current validation logs,
 independent denominator checks and separate global health evidence. Ops and
 traceability reconciliation is delegated to the conductor by the task instruction.
+
+## REQ-REPORT-8099-PUBLICATION
+
+Publish bounded current Qwen fit capture through primary_publication after normal
+child exit and authenticated owned checks. Bind public inputs, GGUF, runtime,
+chat template, owned CUDA lease, raw prompts, completions and invocation ledger.
+Readiness requires96 fit and48 tune valid independent judgments, complete roles,
+current CUDA receipts and passing validation. Source effects need not be nonzero.
+Keep generalized learning and independent generalization credit zero. Missing
+external inputs are terminal blocked. Owned failures are terminal disqualified.
+Freeze required commands before measurement. Require focused and consumer tests,
+Ruff, strict mypy, scoped spec checks and100 percent new-code statement coverage.
+Record the single full-suite run separately as repository health evidence.
+
+### SCENARIO-REPORT-8099-CLI
+
+Run private real CLI success, blocked input, label mutation and cold replay from
+outside the checkout. Reject modified reductions, manifest, receipts and raw
+bytes. Preserve failed attempts and historical primaries. Both auditors must
+pass before publication. Ops and traceability reconciliation belongs to the
+conductor, as directed by this task's stop rule.

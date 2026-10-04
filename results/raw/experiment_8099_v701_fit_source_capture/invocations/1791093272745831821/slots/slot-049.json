@@ -1,0 +1,72 @@
+{
+  "answer_bytes": "4261736564206f6e207468652070726f76696465642070617373616765732c20686572652061726520736f6d652072656d656469657320666f72207472656174696e6720746f6e67756520736f7265733a0a0a312e204d61676963206d6f757468776173683a204120686f6d656d6164652076657273696f6e206f66207468697320707265736372697074696f6e206d6978747572652063616e2070726f76696465207061696e2072656c69656620666f7220746f6e67756520616e64206f74686572206d6f75746820756c636572732e2028506173736167652031290a322e2053616c742077617465722072696e73653a2052696e73696e6720746865206d6f757468207769746820612073616c7420776174657220736f6c7574696f6e207365766572616c2074696d65732061206461792063616e2068656c70206b65657020746865206172656120636c65616e20616e642070726f766964652074656d706f72617279207061696e2072656c6965662e2028506173736167652032290a332e2053747261776265727269657320616e64206f72616e6765733a20506c6163696e672061207765742074656120626167206f6e207468652073706f74206f662074686520746f6e67756520776865726520796f75206665656c207468652073636f726368656420616e64206275726e696e672073656e736174696f6e2063616e2068656c70206162736f726220746865207061696e20616e6420697320616e2065666665637469766520686f6d652072656d6564792e2028506173736167652033290a0a556e61626c6520746f20616e73776572206261736564206f6e2074686520676976656e2070617373616765732e",
+  "arm": "full_source",
+  "capture_identity": "sha256:6d004fddbc71a82a3b23b351dc01f9d360f2f39595728dba2e40af68f0fa4e89",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 0.0,
+  "eligibility": false,
+  "exclusion_reason": "owned_validation_failed",
+  "failure_kind": "invalid_envelope",
+  "failure_status": false,
+  "family_id": "sha256:438eae9a524c5c668afcd2e4da47651a3a6e3f582caf73b769a03d7d0b7e0d7d:full_source",
+  "human_target": null,
+  "input_tokens": null,
+  "issued_state": "sha256:6d004fddbc71a82a3b23b351dc01f9d360f2f39595728dba2e40af68f0fa4e89",
+  "metric": "bounded_probability_parse",
+  "numerator": 0,
+  "parsed": {
+    "citation_valid": false,
+    "completed": false,
+    "finish_reason": null,
+    "probability": null,
+    "schema_valid": false,
+    "source_sentence_id": null,
+    "status": "invalid_envelope",
+    "syntax_valid": false,
+    "usage": {}
+  },
+  "probability": null,
+  "public_eligible": false,
+  "public_hash": "sha256:770aa42c59c08ca87483a344cb8e7657ae7c49a9388636aa436b751ff2d28d12",
+  "raw_response": {},
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Magic mouthwash is a prescription mixture typically used to treat mouth sores caused by cancer treatment. However, a modified homemade version can provide pain relief for tongue and other mouth ulcers.\\\\n\\\\npassage 2:Salt Water Mouth Rinse. Rinsing your mouth several times daily with a simple salt water solution helps keep the area clean and might provide temporary pain relief caused by tongue ulcers. Mix one-half teaspoon of salt in a cup of warm water. If the solution stings too much, dilute it with more warm water.\\\\n\\\\npassage 3:Strawberries and oranges are also traditional forms of vitamin C that can be safely consumed. Try placing a wet tea bag on the spot of the tongue where you feel the scorched and burning sensation. The tea bag will help absorb the pain and is an effective home remedy.\\\\n\\\\n\\\",\\\"question\\\":\\\"tongue sores remedy\\\"}\", \"original_answer\": \"Based on the provided passages, here are some remedies for treating tongue sores:\\n\\n1. Magic mouthwash: A homemade version of this prescription mixture can provide pain relief for tongue and other mouth ulcers. (Passage 1)\\n2. Salt water rinse: Rinsing the mouth with a salt water solution several times a day can help keep the area clean and provide temporary pain relief. (Passage 2)\\n3. Strawberries and oranges: Placing a wet tea bag on the spot of the tongue where you feel the scorched and burning sensation can help absorb the pain and is an effective home remedy. (Passage 3)\\n\\nUnable to answer based on the given passages.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 0,
+  "role": "fit",
+  "source_bytes": "7b227061737361676573223a227061737361676520313a4d61676963206d6f75746877617368206973206120707265736372697074696f6e206d697874757265207479706963616c6c79207573656420746f207472656174206d6f75746820736f726573206361757365642062792063616e6365722074726561746d656e742e20486f77657665722c2061206d6f64696669656420686f6d656d6164652076657273696f6e2063616e2070726f76696465207061696e2072656c69656620666f7220746f6e67756520616e64206f74686572206d6f75746820756c636572732e5c6e5c6e7061737361676520323a53616c74205761746572204d6f7574682052696e73652e2052696e73696e6720796f7572206d6f757468207365766572616c2074696d6573206461696c79207769746820612073696d706c652073616c7420776174657220736f6c7574696f6e2068656c7073206b65657020746865206172656120636c65616e20616e64206d696768742070726f766964652074656d706f72617279207061696e2072656c6965662063617573656420627920746f6e67756520756c636572732e204d6978206f6e652d68616c662074656173706f6f6e206f662073616c7420696e206120637570206f66207761726d2077617465722e2049662074686520736f6c7574696f6e207374696e677320746f6f206d7563682c2064696c7574652069742077697468206d6f7265207761726d2077617465722e5c6e5c6e7061737361676520333a53747261776265727269657320616e64206f72616e6765732061726520616c736f20747261646974696f6e616c20666f726d73206f6620766974616d696e204320746861742063616e20626520736166656c7920636f6e73756d65642e2054727920706c6163696e672061207765742074656120626167206f6e207468652073706f74206f662074686520746f6e67756520776865726520796f75206665656c207468652073636f726368656420616e64206275726e696e672073656e736174696f6e2e2054686520746561206261672077696c6c2068656c70206162736f726220746865207061696e20616e6420697320616e2065666665637469766520686f6d652072656d6564792e5c6e5c6e222c227175657374696f6e223a22746f6e67756520736f7265732072656d656479227d",
+  "source_cluster_id": "sha256:f90d0d5fa29e02ac4e3688ec887cbea917efeb33ae4353eec8afffd1d3821608",
+  "source_id": "15436",
+  "started": false,
+  "status": "excluded",
+  "unit_id": "sha256:438eae9a524c5c668afcd2e4da47651a3a6e3f582caf73b769a03d7d0b7e0d7d",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ]
+}

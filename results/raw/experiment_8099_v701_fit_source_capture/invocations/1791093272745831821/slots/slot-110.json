@@ -1,0 +1,78 @@
+{
+  "answer_bytes": "4261736564206f6e2074686520676976656e2070617373616765732c20696620796f752068617665206120636f7567682c20796f752063616e2074727920686f6d652072656d65646965732073756368206173206472696e6b696e6720706c656e7479206f662077617465722c207573696e6720636f7567682064726f70732c20656c65766174696e6720796f7572206865616420776974682065787472612070696c6c6f77732c20616e64206472696e6b696e672068657262616c20746561206f72206c656d6f6e206a75696365207769746820686f6e65792e20486f77657665722c20696620796f757220636f756768207065727369737473206f7220776f7273656e732c206974206973207265636f6d6d656e64656420746f207365656b206d65646963616c2068656c702e",
+  "arm": "full_source",
+  "capture_identity": "sha256:6d004fddbc71a82a3b23b351dc01f9d360f2f39595728dba2e40af68f0fa4e89",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 0.0,
+  "eligibility": false,
+  "exclusion_reason": "owned_validation_failed",
+  "failure_kind": "invalid_envelope",
+  "failure_status": false,
+  "family_id": "sha256:03d197bc02313a1ae9f408cff2eb95574dee70416b4bc2bceb0813a5b9468c34:full_source",
+  "human_target": null,
+  "input_tokens": null,
+  "issued_state": "sha256:6d004fddbc71a82a3b23b351dc01f9d360f2f39595728dba2e40af68f0fa4e89",
+  "metric": "bounded_probability_parse",
+  "numerator": 0,
+  "parsed": {
+    "citation_valid": false,
+    "completed": false,
+    "finish_reason": null,
+    "probability": null,
+    "schema_valid": false,
+    "source_sentence_id": null,
+    "status": "invalid_envelope",
+    "syntax_valid": false,
+    "usage": {}
+  },
+  "probability": null,
+  "public_eligible": false,
+  "public_hash": "sha256:a8af2c112e328b883ff66fe071796ddaa0971e95e4a69e2c12f34d7f4ca0a6b2",
+  "raw_response": {},
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Often, though, you can relieve that persistent cough with simple home remedies that will soothe your throat and help you breathe easier. However, if your cough persists or worsens, you should seek medical help. Drink plenty of water. The fluid will help flush out harmful bacteria or viruses and keep your throat moist.\\\\n\\\\npassage 2:Home treatment can help you feel more comfortable when you have a cough. 1  Drink more fluids. Water helps loosen mucus and soothe an irritated throat. 2  Elevate your head with extra pillows at night to ease a dry cough. 3  Try a cough drop to soothe an irritated throat.\\\\n\\\\npassage 3:However, if your cough persists or worsens, you should seek medical help. 1  Drink plenty of water. 2  Suck on cough lozenges or hard candies. 3  Drink herbal tea, or lemon juice and hot water, with a spoonful of honey mixed in.  Chew on a piece of ginger with salt sprinkled on 1  it. Gargle with a mixture of water and salt.\\\\n\\\\n\\\",\\\"question\\\":\\\"what do you do with a cough\\\"}\", \"original_answer\": \"Based on the given passages, if you have a cough, you can try home remedies such as drinking plenty of water, using cough drops, elevating your head with extra pillows, and drinking herbal tea or lemon juice with honey. However, if your cough persists or worsens, it is recommended to seek medical help.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 0,
+  "role": "fit",
+  "source_bytes": "7b227061737361676573223a227061737361676520313a4f6674656e2c2074686f7567682c20796f752063616e2072656c6965766520746861742070657273697374656e7420636f75676820776974682073696d706c6520686f6d652072656d656469657320746861742077696c6c20736f6f74686520796f7572207468726f617420616e642068656c7020796f752062726561746865206561736965722e20486f77657665722c20696620796f757220636f756768207065727369737473206f7220776f7273656e732c20796f752073686f756c64207365656b206d65646963616c2068656c702e204472696e6b20706c656e7479206f662077617465722e2054686520666c7569642077696c6c2068656c7020666c757368206f7574206861726d66756c206261637465726961206f72207669727573657320616e64206b65657020796f7572207468726f6174206d6f6973742e5c6e5c6e7061737361676520323a486f6d652074726561746d656e742063616e2068656c7020796f75206665656c206d6f726520636f6d666f727461626c65207768656e20796f752068617665206120636f7567682e203120204472696e6b206d6f726520666c756964732e2057617465722068656c7073206c6f6f73656e206d7563757320616e6420736f6f74686520616e20697272697461746564207468726f61742e20322020456c657661746520796f7572206865616420776974682065787472612070696c6c6f7773206174206e6967687420746f206561736520612064727920636f7567682e20332020547279206120636f7567682064726f7020746f20736f6f74686520616e20697272697461746564207468726f61742e5c6e5c6e7061737361676520333a486f77657665722c20696620796f757220636f756768207065727369737473206f7220776f7273656e732c20796f752073686f756c64207365656b206d65646963616c2068656c702e203120204472696e6b20706c656e7479206f662077617465722e203220205375636b206f6e20636f756768206c6f7a656e676573206f7220686172642063616e646965732e203320204472696e6b2068657262616c207465612c206f72206c656d6f6e206a7569636520616e6420686f742077617465722c207769746820612073706f6f6e66756c206f6620686f6e6579206d6978656420696e2e202043686577206f6e2061207069656365206f662067696e67657220776974682073616c7420737072696e6b6c6564206f6e2031202069742e20476172676c6520776974682061206d697874757265206f6620776174657220616e642073616c742e5c6e5c6e222c227175657374696f6e223a227768617420646f20796f7520646f2077697468206120636f756768227d",
+  "source_cluster_id": "sha256:54e86c18764e7681d8afe1ba94c496a036465867c122f87829692fa783e86d65",
+  "source_id": "15207",
+  "started": false,
+  "status": "excluded",
+  "unit_id": "sha256:03d197bc02313a1ae9f408cff2eb95574dee70416b4bc2bceb0813a5b9468c34",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ]
+}

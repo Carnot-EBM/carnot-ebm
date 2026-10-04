@@ -1,0 +1,80 @@
+{
+  "answer_bytes": "4e6577204c696e652043696e656d6120697320706c616e6e696e672061204368726973746d6173206d6f76696520666561747572696e67204d61726961682043617265792e2054686520756e7469746c65642070726f6a6563742077696c6c2062652070726f6475636564206279204a6f6e617468616e20536865737461636b20616e6420636f2d70726f6475636564206279206469726563746f72204272657474205261746e65722e20546865206d6f7669652077696c6c2073686f776361736520686f77206d757369632063616e207472616e73706f727420796f75206261636b20696e2074696d6520616e64206974277320657870656374656420746f206265207468652070657266656374204368726973746d6173206d6f7669652066616e73206f66204d617269616820436172657920776f756c6420686f706520666f722e",
+  "arm": "full_source",
+  "capture_identity": "sha256:6d004fddbc71a82a3b23b351dc01f9d360f2f39595728dba2e40af68f0fa4e89",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 0.0,
+  "eligibility": false,
+  "exclusion_reason": "owned_validation_failed",
+  "failure_kind": "invalid_envelope",
+  "failure_status": false,
+  "family_id": "sha256:5b267903592f50826b12c1ae8c315c22c86952b04fd93c066c99da64d6f71b0f:full_source",
+  "human_target": null,
+  "input_tokens": null,
+  "issued_state": "sha256:6d004fddbc71a82a3b23b351dc01f9d360f2f39595728dba2e40af68f0fa4e89",
+  "metric": "bounded_probability_parse",
+  "numerator": 0,
+  "parsed": {
+    "citation_valid": false,
+    "completed": false,
+    "finish_reason": null,
+    "probability": null,
+    "schema_valid": false,
+    "source_sentence_id": null,
+    "status": "invalid_envelope",
+    "syntax_valid": false,
+    "usage": {}
+  },
+  "probability": null,
+  "public_eligible": false,
+  "public_hash": "sha256:1a75b6c67b5cb4768075b404eba3ca5ea58a6523feae25fdc5bf1e4795e298ff",
+  "raw_response": {},
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"All we want for Christmas is you, Mariah Carey! According to EW, New Line Cinema is planning a Mariah Carey Christmas movie. Producer Jonathan Shestack confirmed that he is working on the yet-untitled project with Carey's good friend director Brett Ratner co-producing. \\\"It's a little bit about how music can take you back in time,\\\" Shestack told EW. \\\"It will be everything you hope a Christmas movie with Mariah Carey would be.\\\" Here are five reasons this movie has to happen:. What is the Christmas season without a little Mariah? Duh! Her 1994 hit \\\"All I Want For Christmas is You\\\" is a classic, and admit it: You start listening to it well before the holiday season even begins. It's the jam! The '90s are so coming back. The Backstreet Boys have a documentary out, NBC is bringing the sitcom \\\"Coach\\\" back to television, JNCO jeans are being spotted, and there's talk of a new version of \\\"Full House.\\\" Mariah was the queen of the 1990s, so it's only right that she get in on the revival. You can't forget about her. She already told you: \\\"Don't Forget About Us.\\\" She's come a long way from \\\"Glitter\\\" Carey was ridiculed for the dismal 2001 film \\\"Glitter,\\\" but she has more than since redeemed herself with small roles in the critically acclaimed Lee Daniels films \\\"Precious\\\" and \\\"The Butler.\\\" The Diva still reigns. Lest we forget how much sparkle she can bring into our lives, check out this collection of Mariah Carey throwing shade. It really is everything.\\n\", \"original_answer\": \"New Line Cinema is planning a Christmas movie featuring Mariah Carey. The untitled project will be produced by Jonathan Shestack and co-produced by director Brett Ratner. The movie will showcase how music can transport you back in time and it's expected to be the perfect Christmas movie fans of Mariah Carey would hope for.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 0,
+  "role": "fit",
+  "source_bytes": "416c6c2077652077616e7420666f72204368726973746d617320697320796f752c204d617269616820436172657921204163636f7264696e6720746f2045572c204e6577204c696e652043696e656d6120697320706c616e6e696e672061204d6172696168204361726579204368726973746d6173206d6f7669652e2050726f6475636572204a6f6e617468616e20536865737461636b20636f6e6669726d6564207468617420686520697320776f726b696e67206f6e20746865207965742d756e7469746c65642070726f6a6563742077697468204361726579277320676f6f6420667269656e64206469726563746f72204272657474205261746e657220636f2d70726f647563696e672e2022497427732061206c6974746c65206269742061626f757420686f77206d757369632063616e2074616b6520796f75206261636b20696e2074696d652c2220536865737461636b20746f6c642045572e202249742077696c6c2062652065766572797468696e6720796f7520686f70652061204368726973746d6173206d6f7669652077697468204d617269616820436172657920776f756c642062652e22204865726520617265206669766520726561736f6e732074686973206d6f7669652068617320746f2068617070656e3a2e205768617420697320746865204368726973746d617320736561736f6e20776974686f75742061206c6974746c65204d61726961683f2044756821204865722031393934206869742022416c6c20492057616e7420466f72204368726973746d617320697320596f7522206973206120636c61737369632c20616e642061646d69742069743a20596f75207374617274206c697374656e696e6720746f2069742077656c6c206265666f72652074686520686f6c6964617920736561736f6e206576656e20626567696e732e204974277320746865206a616d212054686520273930732061726520736f20636f6d696e67206261636b2e20546865204261636b73747265657420426f79732068617665206120646f63756d656e74617279206f75742c204e4243206973206272696e67696e672074686520736974636f6d2022436f61636822206261636b20746f2074656c65766973696f6e2c204a4e434f206a65616e7320617265206265696e672073706f747465642c20616e6420746865726527732074616c6b206f662061206e65772076657273696f6e206f66202246756c6c20486f7573652e22204d6172696168207761732074686520717565656e206f66207468652031393930732c20736f2069742773206f6e6c792072696768742074686174207368652067657420696e206f6e20746865207265766976616c2e20596f752063616e277420666f726765742061626f7574206865722e2053686520616c726561647920746f6c6420796f753a2022446f6e277420466f726765742041626f75742055732e2220536865277320636f6d652061206c6f6e67207761792066726f6d2022476c69747465722220436172657920776173207269646963756c656420666f7220746865206469736d616c20323030312066696c6d2022476c69747465722c22206275742073686520686173206d6f7265207468616e2073696e63652072656465656d65642068657273656c66207769746820736d616c6c20726f6c657320696e2074686520637269746963616c6c79206163636c61696d6564204c65652044616e69656c732066696c6d73202250726563696f75732220616e642022546865204275746c65722e22205468652044697661207374696c6c20726569676e732e204c65737420776520666f7267657420686f77206d75636820737061726b6c65207368652063616e206272696e6720696e746f206f7572206c697665732c20636865636b206f7574207468697320636f6c6c656374696f6e206f66204d6172696168204361726579207468726f77696e672073686164652e204974207265616c6c792069732065766572797468696e672e0a",
+  "source_cluster_id": "sha256:d43f1aff163a6747805553177292e73dd44da5f2442ef5638f125301ea7c2244",
+  "source_id": "11397",
+  "started": false,
+  "status": "excluded",
+  "unit_id": "sha256:5b267903592f50826b12c1ae8c315c22c86952b04fd93c066c99da64d6f71b0f",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ]
+}

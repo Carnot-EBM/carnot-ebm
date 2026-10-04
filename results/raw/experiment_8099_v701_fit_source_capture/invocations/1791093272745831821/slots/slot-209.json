@@ -1,0 +1,77 @@
+{
+  "answer_bytes": "5468726565206d6574686f64732063616e206265207573656420746f20736f6f7468652061206d6f75746820736f72652066726f6d20626974696e672067756d732e2046697273742c20796f752063616e206170706c79206120736d616c6c20616d6f756e74206f662031303025207075726520686f6e657920746f2074686520736f726520617265612074687265652074696d657320612064617920666f7220666976652064617973207573696e67206120712d7469702e20486f6e65792068617320616e746962616374657269616c2070726f7065727469657320746861742063616e2068656c7020747265617420736f72652067756d7320616e6420756c636572732e205365636f6e642c20796f752063616e206472696e6b206368616d6f6d696c65207465612e204166746572207374656570696e67207468652074656120666f722066697665206d696e757465732c20636f6f6c20697420736c696768746c7920616e642073776973682069742061726f756e6420796f7572206d6f757468206265666f7265207377616c6c6f77696e672e2046696e616c6c792c20796f752063616e206170706c7920616c6f6520766572612067656c206469726563746c7920746f2074686520696e666c616d65642067756d206166746572206272757368696e6720796f75722074656574682e20416c6f6520766572612063616e2068656c70206375726520696e666c616d65642067756d20746973737565732c206f72616c206c6573696f6e732c20616e642067756d206162736365737365732e",
+  "arm": "source_mismatched",
+  "capture_identity": "sha256:6d004fddbc71a82a3b23b351dc01f9d360f2f39595728dba2e40af68f0fa4e89",
+  "censor_status": false,
+  "condition": "source_mismatched",
+  "denominator": 1,
+  "duration_s": 0.0,
+  "eligibility": false,
+  "exclusion_reason": "owned_validation_failed",
+  "failure_kind": "invalid_envelope",
+  "failure_status": false,
+  "family_id": "sha256:de933dc47053ac40f475a4abadf1993d3c03ba18bc8432b2d74f32fe1de15ea0:source_mismatched",
+  "human_target": null,
+  "input_tokens": null,
+  "intervention_source_id": "12187",
+  "issued_state": "sha256:6d004fddbc71a82a3b23b351dc01f9d360f2f39595728dba2e40af68f0fa4e89",
+  "metric": "bounded_probability_parse",
+  "numerator": 0,
+  "parsed": {
+    "citation_valid": false,
+    "completed": false,
+    "finish_reason": null,
+    "probability": null,
+    "schema_valid": false,
+    "source_sentence_id": null,
+    "status": "invalid_envelope",
+    "syntax_valid": false,
+    "usage": {}
+  },
+  "probability": null,
+  "public_eligible": false,
+  "public_hash": "sha256:44bbe4957efa2067e166cf83e47e48a9c1201d294f36537b2ef2acef9bea67bc",
+  "raw_response": {},
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Singulars [edit]. Every singular noun ends in-a, -o, or-e; with very few exceptions, the nouns that end in-o are masculine and the nouns that end in-a are feminine (-e is generally masculine but not always).\\\\n\\\\npassage 2:Hi! that's time to learn how to recognize feminine words from masculine one. An evidence of the gender is the article. We put: 1  il/lo /for the masculine words such as: il prezz o, il bar, lo zain o, lo zuccher o. 2  la for the feminine words such as: la piazz a, la stazion e, la casa.\\\\n\\\\npassage 3:Nouns, i.e. the words for people, things, places and ideas, are all either masculine (m.) or feminine (f.) in Italian. It is important to know whether a noun is masculine or feminine because there are m. and f. words for a and the, and m. and f.\\\\n\\\\n\\\",\\\"question\\\":\\\"is pasta masculine or feminine in italian\\\"}\", \"original_answer\": \"Three methods can be used to soothe a mouth sore from biting gums. First, you can apply a small amount of 100% pure honey to the sore area three times a day for five days using a q-tip. Honey has antibacterial properties that can help treat sore gums and ulcers. Second, you can drink chamomile tea. After steeping the tea for five minutes, cool it slightly and swish it around your mouth before swallowing. Finally, you can apply aloe vera gel directly to the inflamed gum after brushing your teeth. Aloe vera can help cure inflamed gum tissues, oral lesions, and gum abscesses.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 0,
+  "role": "fit",
+  "source_bytes": "7b227061737361676573223a227061737361676520313a3120486f6e65792063616e2070726f6475636520687964726f67656e207065726f7869646520616e64206b696c6c206261637465726961206279206465687964726174696e672069742e2049742063616e206265207573656420746f20747265617420736f72652067756d732c20756c6365727320616e64206f746865722070726f626c656d7320696e7369646520746865206d6f7574682e2020557365206120712d74697020746f206170706c79206120736d616c6c20616d6f756e74206f662031303025207075726520686f6e657920746f20736f726520617265617320696e7369646520796f7572206d6f7574682e20446f20746869732074687265652074696d657320612064617920666f72206669766520646179732e5c6e5c6e7061737361676520323a536f6f74686520736f72652067756d732077697468206368616d6f6d696c65207465612e20507574206f6e652074656120626167206f66206368616d6f6d696c6520696e206120637570206f6620626f696c696e672077617465722e20416c6c6f7720746f20746f20737465657020666f722066697665206d696e7574657320616e6420636f6f6c20736c696768746c79206265666f7265206472696e6b696e672e20537769736820746865207465612061726f756e6420796f7572206d6f75746820746f20736f6f746820796f75722067756d73206265666f7265207377616c6c6f77696e672e5c6e5c6e7061737361676520333a4170706c7920616c6f652076657261206f6e20736f72652067756d732e20416c6f6520766572612063616e206265206469726563746c79206170706c69656420746f2072656420616e6420696e666c616d65642067756d20746973737565732e2049742063616e20616c736f206265207573656420746f206375726520766972616c206f72616c206c6573696f6e732c20756c636572732c20616e642067756d206162736365737365732e204166746572206272757368696e6720796f75722074656574682c206170706c79206120736d616c6c20616d6f756e74206f66206e61747572616c20616c6f6520766572612067656c206469726563746c7920746f2074686520696e666c616d65642067756d732e5c6e5c6e222c227175657374696f6e223a22686f7720746f20736f6f746865206d6f75746820736f7265206361757365642066726f6d20626974696e672067756d73227d",
+  "source_cluster_id": "sha256:d6f02bb02b501aba2df7bf173cf2e30e11d3f0ffadc033a51f5c230e44f33004",
+  "source_id": "15161",
+  "started": false,
+  "status": "excluded",
+  "unit_id": "sha256:de933dc47053ac40f475a4abadf1993d3c03ba18bc8432b2d74f32fe1de15ea0",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ]
+}

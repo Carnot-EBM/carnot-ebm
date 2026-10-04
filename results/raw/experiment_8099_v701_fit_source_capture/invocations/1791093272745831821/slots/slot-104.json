@@ -1,0 +1,80 @@
+{
+  "answer_bytes": "4261736564206f6e2074686520676976656e2070617373616765732c2068657265277320686f7720746f20707265737375726520636f6f6b206265616e733a0a0a312e20536f616b20746865206265616e7320696e207761746572206f7665726e6967687420666f7220757020746f20313220686f7572732e0a322e20426f696c206472696564206265616e73206f6e206869676820666f7220323220746f203235206d696e757465732e0a332e204164642074686520736f616b6564206265616e7320616e6420776174657220746f2074686520707265737375726520636f6f6b65722c20616c6f6e67207769746820616e79206f74686572206465736972656420766567657461626c65732e0a342e204272696e6720746f206120626f696c206f766572206d656469756d20686561742c207468656e20636f7665722074686520707265737375726520636f6f6b6572207769746820746865206c696420616e64206c6f636b2069742e0a352e20436f6f6b20756e74696c2074686520707265737375726520696e64696361746f722072656163686573206869676820707265737375726520283135207073692920616e64206d61696e7461696e2070726573737572652c207265647563696e672068656174206173206e65656465642e0a362e20436f6f6b20666f72203230206d696e757465732e0a372e2052656d6f76652066726f6d206865617420616e64206c6574207374616e6420756e74696c2074686520707265737375726520696e64696361746f722073686f7773206e6f2070726573737572652e0a0a4e6f746520746861742074686520657861637420636f6f6b696e672074696d65206d6179207661727920646570656e64696e67206f6e207468652074797065206f66206265616e7320616e64207468656972206167652c20736f2069742773206265737420746f20636865636b207468656d20706572696f646963616c6c7920746f20656e7375726520746865792772652074656e64657220627574206e6f74206d757368792e",
+  "arm": "full_source",
+  "capture_identity": "sha256:6d004fddbc71a82a3b23b351dc01f9d360f2f39595728dba2e40af68f0fa4e89",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 0.0,
+  "eligibility": false,
+  "exclusion_reason": "owned_validation_failed",
+  "failure_kind": "invalid_envelope",
+  "failure_status": false,
+  "family_id": "sha256:8a453d4aebd37556f2fbe4bd043e5853ed8497c8bc6d46179341c343c820cfbe:full_source",
+  "human_target": null,
+  "input_tokens": null,
+  "issued_state": "sha256:6d004fddbc71a82a3b23b351dc01f9d360f2f39595728dba2e40af68f0fa4e89",
+  "metric": "bounded_probability_parse",
+  "numerator": 0,
+  "parsed": {
+    "citation_valid": false,
+    "completed": false,
+    "finish_reason": null,
+    "probability": null,
+    "schema_valid": false,
+    "source_sentence_id": null,
+    "status": "invalid_envelope",
+    "syntax_valid": false,
+    "usage": {}
+  },
+  "probability": null,
+  "public_eligible": false,
+  "public_hash": "sha256:515eb472f95308dbf00a8159e6e42754c5860754e018266ca13e1b507f943de3",
+  "raw_response": {},
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Instructions. Soak the beans covered in water overnight for up to 12 hours. Do not soak for more than 12 hours, or the beans will turn mushy. Or, boil dried beans on high for 22 to 25 minutes. Add the soaked beans and the water to the pot of the pressure cooker. Place the lid on top of the pressure cooker and place the pot on the stove. If you have a weight on top of the vent to regulate the pressure, remove it first.\\\\n\\\\npassage 2:1 Wash fresh vegetables. 2  Place veggies in the steamer basket. 3  Most vegetables are cooked with a 1/2 cup (125 ml) of water in the bottom of the pressure cooker when the vegetable only needs to cook for 5 minutes. 4  Use 1 cup (250 ml) of water if the cooking time is 5 to 10 minutes.\\\\n\\\\npassage 3:3. Bring to a boil over medium heat, stirring occasionally. Cover pressure cooker with lid, and lock. Cook until pressure indicator reaches HIGH pressure (15 psi). Maintain pressure, reducing heat as needed, and cook 20 minutes. Remove from heat, and let stand until indicator shows no pressure.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to pressure cook beans\\\"}\", \"original_answer\": \"Based on the given passages, here's how to pressure cook beans:\\n\\n1. Soak the beans in water overnight for up to 12 hours.\\n2. Boil dried beans on high for 22 to 25 minutes.\\n3. Add the soaked beans and water to the pressure cooker, along with any other desired vegetables.\\n4. Bring to a boil over medium heat, then cover the pressure cooker with the lid and lock it.\\n5. Cook until the pressure indicator reaches high pressure (15 psi) and maintain pressure, reducing heat as needed.\\n6. Cook for 20 minutes.\\n7. Remove from heat and let stand until the pressure indicator shows no pressure.\\n\\nNote that the exact cooking time may vary depending on the type of beans and their age, so it's best to check them periodically to ensure they're tender but not mushy.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 0,
+  "role": "fit",
+  "source_bytes": "7b227061737361676573223a227061737361676520313a496e737472756374696f6e732e20536f616b20746865206265616e7320636f766572656420696e207761746572206f7665726e6967687420666f7220757020746f20313220686f7572732e20446f206e6f7420736f616b20666f72206d6f7265207468616e20313220686f7572732c206f7220746865206265616e732077696c6c207475726e206d757368792e204f722c20626f696c206472696564206265616e73206f6e206869676820666f7220323220746f203235206d696e757465732e204164642074686520736f616b6564206265616e7320616e642074686520776174657220746f2074686520706f74206f662074686520707265737375726520636f6f6b65722e20506c61636520746865206c6964206f6e20746f70206f662074686520707265737375726520636f6f6b657220616e6420706c6163652074686520706f74206f6e207468652073746f76652e20496620796f752068617665206120776569676874206f6e20746f70206f66207468652076656e7420746f20726567756c617465207468652070726573737572652c2072656d6f76652069742066697273742e5c6e5c6e7061737361676520323a31205761736820667265736820766567657461626c65732e20322020506c616365207665676769657320696e2074686520737465616d6572206261736b65742e203320204d6f737420766567657461626c65732061726520636f6f6b65642077697468206120312f32206375702028313235206d6c29206f6620776174657220696e2074686520626f74746f6d206f662074686520707265737375726520636f6f6b6572207768656e2074686520766567657461626c65206f6e6c79206e6565647320746f20636f6f6b20666f722035206d696e757465732e203420205573652031206375702028323530206d6c29206f662077617465722069662074686520636f6f6b696e672074696d65206973203520746f203130206d696e757465732e5c6e5c6e7061737361676520333a332e204272696e6720746f206120626f696c206f766572206d656469756d20686561742c207374697272696e67206f63636173696f6e616c6c792e20436f76657220707265737375726520636f6f6b65722077697468206c69642c20616e64206c6f636b2e20436f6f6b20756e74696c20707265737375726520696e64696361746f72207265616368657320484947482070726573737572652028313520707369292e204d61696e7461696e2070726573737572652c207265647563696e672068656174206173206e65656465642c20616e6420636f6f6b203230206d696e757465732e2052656d6f76652066726f6d20686561742c20616e64206c6574207374616e6420756e74696c20696e64696361746f722073686f7773206e6f2070726573737572652e5c6e5c6e222c227175657374696f6e223a22686f7720746f20707265737375726520636f6f6b206265616e73227d",
+  "source_cluster_id": "sha256:30014c5d303cb373cf27710315315c1726472744c2306e5c2f6f1e2665914427",
+  "source_id": "15165",
+  "started": false,
+  "status": "excluded",
+  "unit_id": "sha256:8a453d4aebd37556f2fbe4bd043e5853ed8497c8bc6d46179341c343c820cfbe",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ]
+}

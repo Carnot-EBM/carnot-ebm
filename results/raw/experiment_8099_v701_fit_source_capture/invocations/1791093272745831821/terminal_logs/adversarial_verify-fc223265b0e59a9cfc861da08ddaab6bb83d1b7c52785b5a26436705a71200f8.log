@@ -1,0 +1,27 @@
+{
+  "reports": [
+    {
+      "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8099_v701_fit_source_capture/invocations/1791093272745831821/audit_candidate.json",
+      "loaded": true,
+      "exp_id": 8099,
+      "title": "",
+      "honest_verdict": "complete_disqualified_fit_source_capture",
+      "flag_count": 2,
+      "max_severity": 2,
+      "flags": [
+        {
+          "kind": "INFERENCE_PROVENANCE_CONTRADICTION",
+          "severity": "critical",
+          "detail": "Current-task inference provenance is contradictory: live_claim_with_no_invocation_evidence; substrate='live_llm_inference', live_evidence_count=0, negative_evidence_count=4. The duration check fails closed until the invocation scope agrees."
+        },
+        {
+          "kind": "SUBSTRATE_CLASS_MISMATCH",
+          "severity": "critical",
+          "detail": "inference_substrate_class=model_bounded_generation claims a model ran, but typed invocation evidence says it did not (['generation_calls_attempted', 'generation_calls_completed', 'model_loads_attempted', 'model_loads_completed']). Contradictory."
+        }
+      ],
+      "gate_version": "38e6c300bcbcf8e5649026dbf73383305e0b3b2ac77a16a15147fc463659432e"
+    }
+  ],
+  "flagged_count": 1
+}

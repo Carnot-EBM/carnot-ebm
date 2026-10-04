@@ -1,0 +1,70 @@
+{
+  "answer_bytes": "48616767656e20466f6f64202620506861726d61637920697320612067726f636572792073746f7265206c6f6361746564206174203136332053205475726e70696b6520526420696e20476f6c6574612c2043616c69666f726e69612e2054686579206f6666657220612076617269657479206f662070726f647563747320696e636c7564696e67207370656369616c747920666f6f642c2064656c69732c2062616b65726965732c2072657374617572616e74732c20616e64206865616c7468206d61726b6574732e20486f77657665722c206163636f7264696e6720746f20637573746f6d657220726576696577732c207468652073746f726520686173207365766572616c206973737565732074686174206e65656420696d70726f76656d656e742e204f6e6520637573746f6d657220636f6d706c61696e65642061626f757420746865207374616c652069636520637265616d2c207768696c6520616e6f7468657220637269746963697a6564207468652073746f726520666f722069747320686967682070726963657320616e64206c61636b206f66206f7267616e6963206f7074696f6e732e204164646974696f6e616c6c792c20736f6d6520637573746f6d65727320657870726573736564206672757374726174696f6e2077697468207468652073746f72652773206c61796f757420616e64206c61636b206f66207061726b696e672e2044657370697465207468657365206973737565732c2048616767656e20466f6f64202620506861726d61637920636f6e74696e75657320746f206f70657261746520696e20476f6c6574612e",
+  "arm": "full_source",
+  "capture_identity": "sha256:6d004fddbc71a82a3b23b351dc01f9d360f2f39595728dba2e40af68f0fa4e89",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 0.0,
+  "eligibility": false,
+  "exclusion_reason": "owned_validation_failed",
+  "failure_kind": "invalid_envelope",
+  "failure_status": false,
+  "family_id": "sha256:2780790732cf2b9f657fbfac7fa48ff365774b71113e4b7da65359e1f187b12b:full_source",
+  "human_target": null,
+  "input_tokens": null,
+  "issued_state": "sha256:6d004fddbc71a82a3b23b351dc01f9d360f2f39595728dba2e40af68f0fa4e89",
+  "metric": "bounded_probability_parse",
+  "numerator": 0,
+  "parsed": {
+    "citation_valid": false,
+    "completed": false,
+    "finish_reason": null,
+    "probability": null,
+    "schema_valid": false,
+    "source_sentence_id": null,
+    "status": "invalid_envelope",
+    "syntax_valid": false,
+    "usage": {}
+  },
+  "probability": null,
+  "public_eligible": false,
+  "public_hash": "sha256:ee162a0879f59f4d0e581dc4677a863b127bd0e1680ec95b52723dc2ef4c6fe0",
+  "raw_response": {},
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"163 S Turnpike Rd\\\",\\\"attributes\\\":{\\\"Ambience\\\":{\\\"casual\\\":false,\\\"classy\\\":false,\\\"divey\\\":false,\\\"hipster\\\":false,\\\"intimate\\\":false,\\\"romantic\\\":false,\\\"touristy\\\":false,\\\"trendy\\\":false,\\\"upscale\\\":false},\\\"BusinessParking\\\":null,\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":false,\\\"RestaurantsTakeOut\\\":false,\\\"WiFi\\\":\\\"no\\\"},\\\"business_stars\\\":1.5,\\\"categories\\\":\\\"Food, Specialty Food, Grocery, Delis, Bakeries, Restaurants, Health Markets\\\",\\\"city\\\":\\\"Goleta\\\",\\\"hours\\\":null,\\\"name\\\":\\\"Haggen Food & Pharmacy\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2015-09-29 21:56:52\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"We all know these guys are the worst, but STALE ICE CREAM, really?\\\\nMy Thrifty brand Chocolate Malted Krunch ice cream had stale, gummy malt balls :(\\\"},{\\\"review_date\\\":\\\"2015-08-24 04:35:45\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"@$!# you, Haggen!\\\\n\\\\nI was happy with my old vons who was just a block away.  Now I have to drive an exit away to the cheaper ralphs. Let's not forget that you laid off all the employees who have been there for years.\\\\n\\\\nBack to hell, demons! Back to hell!\\\"},{\\\"review_date\\\":\\\"2015-08-04 17:42:35\\\",\\\"review_stars\\\":1.0,\\\"review_text\\\":\\\"Worst grocery store in the world get outta Santa Barbara you SUUUUUUCK!!!!! Prices are too high for non organic food acting like it's organic n healthier just cause they don't package their produce so it's fresher even tho it's the same shit just trying to take our money, still going to Von's in other locations and by the way your stores are like ghost towns you ain't gonna survive hahahahah\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"Haggen Food & Pharmacy is a grocery store located at 163 S Turnpike Rd in Goleta, California. They offer a variety of products including specialty food, delis, bakeries, restaurants, and health markets. However, according to customer reviews, the store has several issues that need improvement. One customer complained about the stale ice cream, while another criticized the store for its high prices and lack of organic options. Additionally, some customers expressed frustration with the store's layout and lack of parking. Despite these issues, Haggen Food & Pharmacy continues to operate in Goleta.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 0,
+  "role": "fit",
+  "source_bytes": "7b2261646472657373223a223136332053205475726e70696b65205264222c2261747472696275746573223a7b22416d6269656e6365223a7b2263617375616c223a66616c73652c22636c61737379223a66616c73652c226469766579223a66616c73652c2268697073746572223a66616c73652c22696e74696d617465223a66616c73652c22726f6d616e746963223a66616c73652c22746f757269737479223a66616c73652c227472656e6479223a66616c73652c2275707363616c65223a66616c73657d2c22427573696e6573735061726b696e67223a6e756c6c2c224d75736963223a6e756c6c2c224f7574646f6f7253656174696e67223a66616c73652c2252657374617572616e7473476f6f64466f7247726f757073223a6e756c6c2c2252657374617572616e74735265736572766174696f6e73223a66616c73652c2252657374617572616e747354616b654f7574223a66616c73652c2257694669223a226e6f227d2c22627573696e6573735f7374617273223a312e352c2263617465676f72696573223a22466f6f642c205370656369616c747920466f6f642c2047726f636572792c2044656c69732c2042616b65726965732c2052657374617572616e74732c204865616c7468204d61726b657473222c2263697479223a22476f6c657461222c22686f757273223a6e756c6c2c226e616d65223a2248616767656e20466f6f64202620506861726d616379222c227265766965775f696e666f223a5b7b227265766965775f64617465223a22323031352d30392d32392032313a35363a3532222c227265766965775f7374617273223a312e302c227265766965775f74657874223a22576520616c6c206b6e6f772074686573652067757973206172652074686520776f7273742c20627574205354414c452049434520435245414d2c207265616c6c793f5c6e4d792054687269667479206272616e642043686f636f6c617465204d616c746564204b72756e63682069636520637265616d20686164207374616c652c2067756d6d79206d616c742062616c6c73203a28227d2c7b227265766965775f64617465223a22323031352d30382d32342030343a33353a3435222c227265766965775f7374617273223a312e302c227265766965775f74657874223a224024212320796f752c2048616767656e215c6e5c6e49207761732068617070792077697468206d79206f6c6420766f6e732077686f20776173206a757374206120626c6f636b20617761792e20204e6f772049206861766520746f20647269766520616e2065786974206177617920746f2074686520636865617065722072616c7068732e204c65742773206e6f7420666f72676574207468617420796f75206c616964206f666620616c6c2074686520656d706c6f796565732077686f2068617665206265656e20746865726520666f722079656172732e5c6e5c6e4261636b20746f2068656c6c2c2064656d6f6e7321204261636b20746f2068656c6c21227d2c7b227265766965775f64617465223a22323031352d30382d30342031373a34323a3335222c227265766965775f7374617273223a312e302c227265766965775f74657874223a22576f7273742067726f636572792073746f726520696e2074686520776f726c6420676574206f757474612053616e7461204261726261726120796f752053555555555555434b2121212121205072696365732061726520746f6f206869676820666f72206e6f6e206f7267616e696320666f6f6420616374696e67206c696b652069742773206f7267616e6963206e206865616c7468696572206a757374206361757365207468657920646f6e2774207061636b6167652074686569722070726f6475636520736f20697427732066726573686572206576656e2074686f2069742773207468652073616d652073686974206a75737420747279696e6720746f2074616b65206f7572206d6f6e65792c207374696c6c20676f696e6720746f20566f6e277320696e206f74686572206c6f636174696f6e7320616e64206279207468652077617920796f75722073746f72657320617265206c696b652067686f737420746f776e7320796f752061696e277420676f6e6e61207375727669766520686168616861686168227d5d2c227374617465223a224341227d",
+  "source_cluster_id": "sha256:4ceacd923521718ad2e37164e0fee0a1cfbe768e2fa3e16f400fa25f6d66683d",
+  "source_id": "14796",
+  "started": false,
+  "status": "excluded",
+  "unit_id": "sha256:2780790732cf2b9f657fbfac7fa48ff365774b71113e4b7da65359e1f187b12b",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ]
+}

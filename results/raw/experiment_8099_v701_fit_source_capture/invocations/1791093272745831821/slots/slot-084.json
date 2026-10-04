@@ -1,0 +1,73 @@
+{
+  "answer_bytes": "4174206c656173742032312070656f706c65206469656420696e20612073686970777265636b206f66662074686520636f617374206f66204861697469206166746572206120736d616c6c20626f6174206361727279696e67203530206d696772616e74732063617073697a656420647572696e6720612064616e6765726f7573206a6f75726e65792e2052657363756572732073617665642031322070656f706c652c206275742031312076696374696d732068617665206265656e206964656e7469666965642c20696e636c7564696e672038206d656e20616e64203320776f6d656e2e20546865204861697469616e20676f7665726e6d656e74207761726e7320616761696e737420696c6c6567616c206d6967726174696f6e20616e6420636f6e64656d6e732074686f73652077686f206f7267616e697a652073756368206a6f75726e6579732e",
+  "arm": "full_source",
+  "capture_identity": "sha256:6d004fddbc71a82a3b23b351dc01f9d360f2f39595728dba2e40af68f0fa4e89",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 0.0,
+  "eligibility": false,
+  "exclusion_reason": "owned_validation_failed",
+  "failure_kind": "invalid_envelope",
+  "failure_status": false,
+  "family_id": "sha256:f9dccbf94392c1e157d5ba8a328ef86c4bf10eb90638a926ef665fff044656a0:full_source",
+  "human_target": null,
+  "input_tokens": null,
+  "issued_state": "sha256:6d004fddbc71a82a3b23b351dc01f9d360f2f39595728dba2e40af68f0fa4e89",
+  "metric": "bounded_probability_parse",
+  "numerator": 0,
+  "parsed": {
+    "citation_valid": false,
+    "completed": false,
+    "finish_reason": null,
+    "probability": null,
+    "schema_valid": false,
+    "source_sentence_id": null,
+    "status": "invalid_envelope",
+    "syntax_valid": false,
+    "usage": {}
+  },
+  "probability": null,
+  "public_eligible": false,
+  "public_hash": "sha256:52f762089e0406482fa58cdbb0beb1bb0555dc974c409526f194352a457e66cd",
+  "raw_response": {},
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"At least 21 people were killed during a shipwreck off the northern coast of Haiti, the country's civil protection directorate told CNN on Thursday. A small boat carrying about 50 migrants left from the area of Le Borgne, west of Cap-Haitien, on Wednesday night. It began to sail toward the island of Providenciales in the Turks and Caicos when it was caught in bad weather, civil protection spokesman Joseph Edgar Celestin said. The vessel hit a reef and sank as it tried to return to shore near Le Borgne. Rescuers, most of them volunteers from the town of Le Borgne and surrounding communities, were dispatched to the scene  and rescued at least 12 people, Celestin said. The search for survivors is ongoing, Celestin added. So far, 11 victims -- eight men and three women -- have been identified, Celestin said. Haiti's government urged migrants not to board clandestine ships and condemned those organizing these illegal journeys.\\n\", \"original_answer\": \"At least 21 people died in a shipwreck off the coast of Haiti after a small boat carrying 50 migrants capsized during a dangerous journey. Rescuers saved 12 people, but 11 victims have been identified, including 8 men and 3 women. The Haitian government warns against illegal migration and condemns those who organize such journeys.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 0,
+  "role": "fit",
+  "source_bytes": "4174206c656173742032312070656f706c652077657265206b696c6c656420647572696e6720612073686970777265636b206f666620746865206e6f72746865726e20636f617374206f662048616974692c2074686520636f756e747279277320636976696c2070726f74656374696f6e206469726563746f7261746520746f6c6420434e4e206f6e2054687572736461792e204120736d616c6c20626f6174206361727279696e672061626f7574203530206d696772616e7473206c6566742066726f6d207468652061726561206f66204c6520426f72676e652c2077657374206f66204361702d4861697469656e2c206f6e205765646e6573646179206e696768742e20497420626567616e20746f207361696c20746f77617264207468652069736c616e64206f662050726f766964656e6369616c657320696e20746865205475726b7320616e6420436169636f73207768656e206974207761732063617567687420696e2062616420776561746865722c20636976696c2070726f74656374696f6e2073706f6b65736d616e204a6f736570682045646761722043656c657374696e20736169642e205468652076657373656c206869742061207265656620616e642073616e6b20617320697420747269656420746f2072657475726e20746f2073686f7265206e656172204c6520426f72676e652e2052657363756572732c206d6f7374206f66207468656d20766f6c756e74656572732066726f6d2074686520746f776e206f66204c6520426f72676e6520616e6420737572726f756e64696e6720636f6d6d756e69746965732c2077657265206469737061746368656420746f20746865207363656e652020616e642072657363756564206174206c656173742031322070656f706c652c2043656c657374696e20736169642e205468652073656172636820666f72207375727669766f7273206973206f6e676f696e672c2043656c657374696e2061646465642e20536f206661722c2031312076696374696d73202d2d206569676874206d656e20616e6420746872656520776f6d656e202d2d2068617665206265656e206964656e7469666965642c2043656c657374696e20736169642e204861697469277320676f7665726e6d656e74207572676564206d696772616e7473206e6f7420746f20626f61726420636c616e64657374696e6520736869707320616e6420636f6e64656d6e65642074686f7365206f7267616e697a696e6720746865736520696c6c6567616c206a6f75726e6579732e0a",
+  "source_cluster_id": "sha256:ce966144b2adf4277c0ba5767fce8899cf2ac9227d907c3776a8027aded70873",
+  "source_id": "11402",
+  "started": false,
+  "status": "excluded",
+  "unit_id": "sha256:f9dccbf94392c1e157d5ba8a328ef86c4bf10eb90638a926ef665fff044656a0",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ]
+}

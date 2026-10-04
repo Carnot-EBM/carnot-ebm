@@ -1,0 +1,71 @@
+{
+  "answer_bytes": "4261736564206f6e2074686520676976656e2070617373616765732c20796f752063616e2061736b20666f7220612070726f6772657373207265706f72742066726f6d20796f7572206368696c64277320746561636865722062792072657175657374696e67206974206469726563746c792066726f6d20746865207363686f6f6c206f722061736b696e6720746865207465616368657220696620697420697320617661696c61626c65206f6e6c696e65206f7220696620746865792063616e2073656e6420796f75206120636f70792e205468657265206973206e6f207370656369666963206d656e74696f6e206f6620686f77206f6674656e20796f752063616e2061736b20666f7220612070726f6772657373207265706f72742c20736f20746865206672657175656e63792063616e2062652064657465726d696e6564207468726f75676820636f6d6d756e69636174696f6e20776974682074686520746561636865722e",
+  "arm": "full_source",
+  "capture_identity": "sha256:6d004fddbc71a82a3b23b351dc01f9d360f2f39595728dba2e40af68f0fa4e89",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 0.0,
+  "eligibility": false,
+  "exclusion_reason": "owned_validation_failed",
+  "failure_kind": "invalid_envelope",
+  "failure_status": false,
+  "family_id": "sha256:9fea7ef3b778d80ed3cdbe4e8b516a294f929886fd6d2543e8609f4698842219:full_source",
+  "human_target": null,
+  "input_tokens": null,
+  "issued_state": "sha256:6d004fddbc71a82a3b23b351dc01f9d360f2f39595728dba2e40af68f0fa4e89",
+  "metric": "bounded_probability_parse",
+  "numerator": 0,
+  "parsed": {
+    "citation_valid": false,
+    "completed": false,
+    "finish_reason": null,
+    "probability": null,
+    "schema_valid": false,
+    "source_sentence_id": null,
+    "status": "invalid_envelope",
+    "syntax_valid": false,
+    "usage": {}
+  },
+  "probability": null,
+  "public_eligible": false,
+  "public_hash": "sha256:c07abd2dec59b8e9b32948e75eb24ae2eb15b6cb57bb88461564d1e3eaf6222a",
+  "raw_response": {},
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:8. \u201cA 10-minute parent-teacher consultation isn\u2019t enough to keep you abreast of what\u2019s happening at school, particularly if there are concerns about your child, so ask the teacher how you can keep each other informed, whether that\u2019s with a weekly chat after school or with email updates,\u201d says Kay.\\\\n\\\\npassage 2:Usually progress reports are either mailed home, sent home with your child, or put online, but if your child's progress report didn't make its way into your hands, feel free to request it from the school directly. Contact your child's teacher and ask if it's available online, or if he or she can send you a copy.\\\\n\\\\npassage 3:1 You can also ask to see some of your child's classwork. 2  The teacher should have samples on hand. 3  If there is something that you don't understand, ask the teacher to clarify or further explain what he or she means. 4  It is often easy to get upset during a meeting especially if your child is having problems with school.\\\\n\\\\n\\\",\\\"question\\\":\\\"how often can i ask for a progress report from my child's teacher?\\\"}\", \"original_answer\": \"Based on the given passages, you can ask for a progress report from your child's teacher by requesting it directly from the school or asking the teacher if it is available online or if they can send you a copy. There is no specific mention of how often you can ask for a progress report, so the frequency can be determined through communication with the teacher.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 0,
+  "role": "tune",
+  "source_bytes": "7b227061737361676573223a227061737361676520313a382e20e2809c412031302d6d696e75746520706172656e742d7465616368657220636f6e73756c746174696f6e2069736ee280997420656e6f75676820746f206b65657020796f752061627265617374206f662077686174e28099732068617070656e696e67206174207363686f6f6c2c20706172746963756c61726c792069662074686572652061726520636f6e6365726e732061626f757420796f7572206368696c642c20736f2061736b20746865207465616368657220686f7720796f752063616e206b6565702065616368206f7468657220696e666f726d65642c20776865746865722074686174e280997320776974682061207765656b6c792063686174206166746572207363686f6f6c206f72207769746820656d61696c20757064617465732ce2809d2073617973204b61792e5c6e5c6e7061737361676520323a557375616c6c792070726f6772657373207265706f7274732061726520656974686572206d61696c656420686f6d652c2073656e7420686f6d65207769746820796f7572206368696c642c206f7220707574206f6e6c696e652c2062757420696620796f7572206368696c6427732070726f6772657373207265706f7274206469646e2774206d616b65206974732077617920696e746f20796f75722068616e64732c206665656c206672656520746f20726571756573742069742066726f6d20746865207363686f6f6c206469726563746c792e20436f6e7461637420796f7572206368696c642773207465616368657220616e642061736b206966206974277320617661696c61626c65206f6e6c696e652c206f72206966206865206f72207368652063616e2073656e6420796f75206120636f70792e5c6e5c6e7061737361676520333a3120596f752063616e20616c736f2061736b20746f2073656520736f6d65206f6620796f7572206368696c64277320636c617373776f726b2e2032202054686520746561636865722073686f756c6420686176652073616d706c6573206f6e2068616e642e20332020496620746865726520697320736f6d657468696e67207468617420796f7520646f6e277420756e6465727374616e642c2061736b20746865207465616368657220746f20636c6172696679206f722066757274686572206578706c61696e2077686174206865206f7220736865206d65616e732e203420204974206973206f6674656e206561737920746f2067657420757073657420647572696e672061206d656574696e6720657370656369616c6c7920696620796f7572206368696c6420697320686176696e672070726f626c656d732077697468207363686f6f6c2e5c6e5c6e222c227175657374696f6e223a22686f77206f6674656e2063616e20692061736b20666f7220612070726f6772657373207265706f72742066726f6d206d79206368696c64277320746561636865723f227d",
+  "source_cluster_id": "sha256:7eed77402e76f5fb97f704c7d7e3b81fbb80b7c869a2b0f3036da3f0c035dc07",
+  "source_id": "12258",
+  "started": false,
+  "status": "excluded",
+  "unit_id": "sha256:9fea7ef3b778d80ed3cdbe4e8b516a294f929886fd6d2543e8609f4698842219",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ]
+}

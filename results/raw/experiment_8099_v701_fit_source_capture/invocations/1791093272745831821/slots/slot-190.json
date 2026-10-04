@@ -1,0 +1,72 @@
+{
+  "answer_bytes": "53757265212048657265277320686f7720746f207769706520612044656c6c20636f6d707574657220636c65616e206261736564206f6e2074686520676976656e2070617373616765733a0a0a312e20436c69636b2044656c6c20466163746f727920496d61676520526573746f72652e0a322e20436c69636b205965732c205265666f726d6174204861726420447269766520616e6420526573746f72652053797374656d20536f66747761726520746f20466163746f727920436f6e646974696f6e2e0a332e20436c69636b204e6578742e0a342e20436c69636b2046696e69736820746f20726573746172742074686520636f6d70757465722e0a0a536f2c2074686520737465707320746f207769706520612044656c6c20636f6d707574657220636c65616e206172653a0a0a312e20436c69636b2044656c6c20466163746f727920496d61676520526573746f72652e0a322e20436c69636b205965732c205265666f726d6174204861726420447269766520616e6420526573746f72652053797374656d20536f66747761726520746f20466163746f727920436f6e646974696f6e2e0a332e20436c69636b204e6578742e0a342e20436c69636b2046696e69736820746f20726573746172742074686520636f6d70757465722e0a0a4920686f706520746869732068656c707321204c6574206d65206b6e6f7720696620796f75206861766520616e792066757274686572207175657374696f6e732e",
+  "arm": "full_source",
+  "capture_identity": "sha256:6d004fddbc71a82a3b23b351dc01f9d360f2f39595728dba2e40af68f0fa4e89",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 0.0,
+  "eligibility": false,
+  "exclusion_reason": "owned_validation_failed",
+  "failure_kind": "invalid_envelope",
+  "failure_status": false,
+  "family_id": "sha256:0d91cf908e0a7f934d40dcd7822213ec41d2fb16c86e4c6a7e6edf9bf3db9196:full_source",
+  "human_target": null,
+  "input_tokens": null,
+  "issued_state": "sha256:6d004fddbc71a82a3b23b351dc01f9d360f2f39595728dba2e40af68f0fa4e89",
+  "metric": "bounded_probability_parse",
+  "numerator": 0,
+  "parsed": {
+    "citation_valid": false,
+    "completed": false,
+    "finish_reason": null,
+    "probability": null,
+    "schema_valid": false,
+    "source_sentence_id": null,
+    "status": "invalid_envelope",
+    "syntax_valid": false,
+    "usage": {}
+  },
+  "probability": null,
+  "public_eligible": false,
+  "public_hash": "sha256:e0cbf2a1c67b2d8656044bbdf8f8b832b8a55600a3a89546b2f682613d35cf0b",
+  "raw_response": {},
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Click Dell Factory Image Restore, then click Next.. Click Yes, Reformat Hard Drive and Restore System Software to Factory Condition, then Next to wipe the hard drive and restore the OS. Step 6. Click Finish to restart the computer.\\\\n\\\\npassage 2:Step 5. Click the Yes, reformat hard drive and restore system software to factory condition option and click Next to wipe the hard drive on your Dell laptop. Click Finish once the restoration is complete to restart your computer.\\\\n\\\\npassage 3:Step 5. Click the Yes, reformat hard drive and restore system software to factory condition option and click Next to wipe the hard drive on your Dell laptop.\\\\n\\\\n\\\",\\\"question\\\":\\\"how to wipe a dell computer clean\\\"}\", \"original_answer\": \"Sure! Here's how to wipe a Dell computer clean based on the given passages:\\n\\n1. Click Dell Factory Image Restore.\\n2. Click Yes, Reformat Hard Drive and Restore System Software to Factory Condition.\\n3. Click Next.\\n4. Click Finish to restart the computer.\\n\\nSo, the steps to wipe a Dell computer clean are:\\n\\n1. Click Dell Factory Image Restore.\\n2. Click Yes, Reformat Hard Drive and Restore System Software to Factory Condition.\\n3. Click Next.\\n4. Click Finish to restart the computer.\\n\\nI hope this helps! Let me know if you have any further questions.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 0,
+  "role": "tune",
+  "source_bytes": "7b227061737361676573223a227061737361676520313a436c69636b2044656c6c20466163746f727920496d61676520526573746f72652c207468656e20636c69636b204e6578742e2e20436c69636b205965732c205265666f726d6174204861726420447269766520616e6420526573746f72652053797374656d20536f66747761726520746f20466163746f727920436f6e646974696f6e2c207468656e204e65787420746f207769706520746865206861726420647269766520616e6420726573746f726520746865204f532e205374657020362e20436c69636b2046696e69736820746f20726573746172742074686520636f6d70757465722e5c6e5c6e7061737361676520323a5374657020352e20436c69636b20746865205965732c207265666f726d6174206861726420647269766520616e6420726573746f72652073797374656d20736f66747761726520746f20666163746f727920636f6e646974696f6e206f7074696f6e20616e6420636c69636b204e65787420746f2077697065207468652068617264206472697665206f6e20796f75722044656c6c206c6170746f702e20436c69636b2046696e697368206f6e63652074686520726573746f726174696f6e20697320636f6d706c65746520746f207265737461727420796f757220636f6d70757465722e5c6e5c6e7061737361676520333a5374657020352e20436c69636b20746865205965732c207265666f726d6174206861726420647269766520616e6420726573746f72652073797374656d20736f66747761726520746f20666163746f727920636f6e646974696f6e206f7074696f6e20616e6420636c69636b204e65787420746f2077697065207468652068617264206472697665206f6e20796f75722044656c6c206c6170746f702e5c6e5c6e222c227175657374696f6e223a22686f7720746f207769706520612064656c6c20636f6d707574657220636c65616e227d",
+  "source_cluster_id": "sha256:d1a050c3a13e08027041e5b4206f852765ec0b3e4f6569bd9750577c99840842",
+  "source_id": "12277",
+  "started": false,
+  "status": "excluded",
+  "unit_id": "sha256:0d91cf908e0a7f934d40dcd7822213ec41d2fb16c86e4c6a7e6edf9bf3db9196",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ]
+}

@@ -1,0 +1,86 @@
+{
+  "answer_bytes": "54776f2073686f6f74696e6773206f6363757272656420696e2057617368696e67746f6e2c20442e432e2c207769746820617574686f7269746965732073746174696e672074686579207765726520636f6e6e65637465642e205468652073686f6f74696e677320737461727465642077697468206120646f6d6573746963206b69646e617070696e6720696e636964656e742c20616e6420612067756172642061742074686520552e532e2043656e73757320427572656175207761732073686f74207768656e20617070726f616368696e6720746865207375737065637427732076656869636c652e20546865207375737065637420666c656420616e64206120636861736520656e737565642c20656e64696e6720696e20612073686f6f746f757420616e64206c656176696e6720616e206f66666963657220616e6420746865207375737065637420696e6a757265642e2054686520706f6c6963652063686965662062656c6965766573207468652073616d652063617220616e6420706572736f6e207765726520696e766f6c76656420696e20746865206b69646e617070696e672e205468652076696374696d2077617320666f756e6420616e6420696e20676f6f6420636f6e646974696f6e2e20546865206964656e746974696573206f662074686f736520696e766f6c7665642077657265206e6f7420646973636c6f7365642e",
+  "arm": "full_source",
+  "capture_identity": "sha256:6d004fddbc71a82a3b23b351dc01f9d360f2f39595728dba2e40af68f0fa4e89",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 0.0,
+  "eligibility": false,
+  "exclusion_reason": "owned_validation_failed",
+  "failure_kind": "invalid_envelope",
+  "failure_status": false,
+  "family_id": "sha256:6e5c8f2ca7bac6ea66ba86ac3d26c872361ffad15878f737723f37ae53d2752e:full_source",
+  "human_target": null,
+  "input_tokens": null,
+  "issued_state": "sha256:6d004fddbc71a82a3b23b351dc01f9d360f2f39595728dba2e40af68f0fa4e89",
+  "metric": "bounded_probability_parse",
+  "numerator": 0,
+  "parsed": {
+    "citation_valid": false,
+    "completed": false,
+    "finish_reason": null,
+    "probability": null,
+    "schema_valid": false,
+    "source_sentence_id": null,
+    "status": "invalid_envelope",
+    "syntax_valid": false,
+    "usage": {}
+  },
+  "probability": null,
+  "public_eligible": false,
+  "public_hash": "sha256:f24e422124707df2651b47894f387cebcf287993768e9e962c08e0befcc76f00",
+  "raw_response": {},
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Washington (CNN)Washington was rocked late Thursday by shootings -- one at the gates of the U.S. Census Bureau's headquarters and another in a popular area packed with restaurant patrons. The shootings were connected, authorities said. They began with what authorities believe was a domestic kidnapping incident, according to D.C. Police Chief Cathy Lanier. The suspect's vehicle was spotted outside the Census Bureau, which is in Suitland, Maryland. A guard apparently approached the vehicle and saw two people arguing. That guard was then shot at least once in the upper body, said Prince George's County Fire Department spokesman Mark Brady. The guard was in extremely critical condition, according to Brady. The police chief said the suspect then fled the scene. Officers picked up the chase, and the suspect fired gunshots at multiple locations, Lanier said. The chase ended in a crash on Washington's busy H Street. A shootout ensues, Lanier said. An officer and the suspect were wounded, according to the police chief. Both were conscious and talking when they left the scene. \\\"Right now, we have every reason to believe that the car that we have in this last incident here is the same car involved and the same person involved in the kidnapping,\\\" she said. Lanier told reporters the kidnapping victim was located and is in good condition. She did not identify the suspect, nor the guard, nor the officer who were injured. Steve Brusk reported from Washington. Dana Ford wrote from Atlanta. CNN's Greg Botelho also contributed to this report.\\n\", \"original_answer\": \"Two shootings occurred in Washington, D.C., with authorities stating they were connected. The shootings started with a domestic kidnapping incident, and a guard at the U.S. Census Bureau was shot when approaching the suspect's vehicle. The suspect fled and a chase ensued, ending in a shootout and leaving an officer and the suspect injured. The police chief believes the same car and person were involved in the kidnapping. The victim was found and in good condition. The identities of those involved were not disclosed.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 0,
+  "role": "fit",
+  "source_bytes": "57617368696e67746f6e2028434e4e2957617368696e67746f6e2077617320726f636b6564206c6174652054687572736461792062792073686f6f74696e6773202d2d206f6e6520617420746865206761746573206f662074686520552e532e2043656e7375732042757265617527732068656164717561727465727320616e6420616e6f7468657220696e206120706f70756c61722061726561207061636b656420776974682072657374617572616e7420706174726f6e732e205468652073686f6f74696e6773207765726520636f6e6e65637465642c20617574686f72697469657320736169642e205468657920626567616e2077697468207768617420617574686f7269746965732062656c6965766520776173206120646f6d6573746963206b69646e617070696e6720696e636964656e742c206163636f7264696e6720746f20442e432e20506f6c696365204368696566204361746879204c616e6965722e20546865207375737065637427732076656869636c65207761732073706f74746564206f757473696465207468652043656e737573204275726561752c20776869636820697320696e20537569746c616e642c204d6172796c616e642e2041206775617264206170706172656e746c7920617070726f6163686564207468652076656869636c6520616e64207361772074776f2070656f706c652061726775696e672e205468617420677561726420776173207468656e2073686f74206174206c65617374206f6e636520696e2074686520757070657220626f64792c2073616964205072696e63652047656f726765277320436f756e74792046697265204465706172746d656e742073706f6b65736d616e204d61726b2042726164792e205468652067756172642077617320696e2065787472656d656c7920637269746963616c20636f6e646974696f6e2c206163636f7264696e6720746f2042726164792e2054686520706f6c6963652063686965662073616964207468652073757370656374207468656e20666c656420746865207363656e652e204f66666963657273207069636b6564207570207468652063686173652c20616e642074686520737573706563742066697265642067756e73686f7473206174206d756c7469706c65206c6f636174696f6e732c204c616e69657220736169642e2054686520636861736520656e64656420696e2061206372617368206f6e2057617368696e67746f6e277320627573792048205374726565742e20412073686f6f746f757420656e737565732c204c616e69657220736169642e20416e206f66666963657220616e64207468652073757370656374207765726520776f756e6465642c206163636f7264696e6720746f2074686520706f6c6963652063686965662e20426f7468207765726520636f6e7363696f757320616e642074616c6b696e67207768656e2074686579206c65667420746865207363656e652e20225269676874206e6f772c207765206861766520657665727920726561736f6e20746f2062656c69657665207468617420746865206361722074686174207765206861766520696e2074686973206c61737420696e636964656e742068657265206973207468652073616d652063617220696e766f6c76656420616e64207468652073616d6520706572736f6e20696e766f6c76656420696e20746865206b69646e617070696e672c222073686520736169642e204c616e69657220746f6c64207265706f727465727320746865206b69646e617070696e672076696374696d20776173206c6f636174656420616e6420697320696e20676f6f6420636f6e646974696f6e2e2053686520646964206e6f74206964656e746966792074686520737573706563742c206e6f72207468652067756172642c206e6f7220746865206f6666696365722077686f207765726520696e6a757265642e20537465766520427275736b207265706f727465642066726f6d2057617368696e67746f6e2e2044616e6120466f72642077726f74652066726f6d2041746c616e74612e20434e4e2773204772656720426f74656c686f20616c736f20636f6e747269627574656420746f2074686973207265706f72742e0a",
+  "source_cluster_id": "sha256:6896043359d602608595b836e71b2e05ea32d2ddcb02bf907ca80f11c8c6599d",
+  "source_id": "15619",
+  "started": false,
+  "status": "excluded",
+  "unit_id": "sha256:6e5c8f2ca7bac6ea66ba86ac3d26c872361ffad15878f737723f37ae53d2752e",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20
+  ]
+}

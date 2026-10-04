@@ -1,0 +1,88 @@
+{
+  "answer_bytes": "53796d70746f6d73206f662048495620616e6420414944532063616e20696e636c7564652066657665722c2073776f6c6c656e206c796d706820676c616e64732c20736f7265207468726f61742c20736b696e20726173682c206d7573636c6520616368657320616e64206a6f696e74207061696e2c20756e757375616c206c6573696f6e73206f6e2074686520746f6e6775652c206e61757365612c20766f6d6974696e672c20616e642064696172726865612c20636f75676820616e642073686f72746e657373206f66206272656174682c206368726f6e696320666174696775652c206368696c6c732c20616e64206e69676874207377656174732c20726170696420776569676874206c6f73732c20626c7572726564206f7220646973746f7274656420766973696f6e2c20616e64206f746865722073796d70746f6d73206f6620696e66656374696f6e206f7220646973656173652e2054686573652073796d70746f6d73206d6179207661727920736c696768746c79206265747765656e206d656e20616e6420776f6d656e2e",
+  "arm": "full_source",
+  "capture_identity": "sha256:6d004fddbc71a82a3b23b351dc01f9d360f2f39595728dba2e40af68f0fa4e89",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 0.0,
+  "eligibility": false,
+  "exclusion_reason": "owned_validation_failed",
+  "failure_kind": "invalid_envelope",
+  "failure_status": false,
+  "family_id": "sha256:5bcac35a0fefddc98a713b901f48911997294414bd729bad9161def9abe149f9:full_source",
+  "human_target": null,
+  "input_tokens": null,
+  "issued_state": "sha256:6d004fddbc71a82a3b23b351dc01f9d360f2f39595728dba2e40af68f0fa4e89",
+  "metric": "bounded_probability_parse",
+  "numerator": 0,
+  "parsed": {
+    "citation_valid": false,
+    "completed": false,
+    "finish_reason": null,
+    "probability": null,
+    "schema_valid": false,
+    "source_sentence_id": null,
+    "status": "invalid_envelope",
+    "syntax_valid": false,
+    "usage": {}
+  },
+  "probability": null,
+  "public_eligible": false,
+  "public_hash": "sha256:1e3dcfc305407dda794d342f94a6fc6fc94ea948ede13874bfc28cb3228abdcb",
+  "raw_response": {},
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:This illness, known as primary or acute HIV infection, may last for a few weeks. Possible signs and symptoms include: 1  Fever. 2  Headache. 3  Muscle aches and joint pain. 4  Rash. 5  Sore throat. 6  Swollen lymph glands, mainly on the neck.\\\\n\\\\npassage 2:Common AIDS symptoms in men include: 1  swollen lymph glands. 2  unusual lesions on the tongue; skin rashes and bumps. 3  nausea, vomiting, and diarrhea. 4  cough and shortness of breath. 5  chronic fatigue. 6  fever, chills, and night sweats. 7  rapid weight loss. 8  blurred or distorted vision. 9  other symptoms of infection or disease.\\\\n\\\\npassage 3:HIV symptoms in women include: 1  fever. 2  swollen lymph nodes. 3  sore throat. 4  skin rash. 5  muscle soreness. 6  joint pain. 7  fatigue. 8  nausea/vomiting. 9  night sweats.\\\\n\\\\n\\\",\\\"question\\\":\\\"aids hiv symptoms\\\"}\", \"original_answer\": \"Symptoms of HIV and AIDS can include fever, swollen lymph glands, sore throat, skin rash, muscle aches and joint pain, unusual lesions on the tongue, nausea, vomiting, and diarrhea, cough and shortness of breath, chronic fatigue, chills, and night sweats, rapid weight loss, blurred or distorted vision, and other symptoms of infection or disease. These symptoms may vary slightly between men and women.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 0,
+  "role": "tune",
+  "source_bytes": "7b227061737361676573223a227061737361676520313a5468697320696c6c6e6573732c206b6e6f776e206173207072696d617279206f722061637574652048495620696e66656374696f6e2c206d6179206c61737420666f72206120666577207765656b732e20506f737369626c65207369676e7320616e642073796d70746f6d7320696e636c7564653a2031202046657665722e2032202048656164616368652e203320204d7573636c6520616368657320616e64206a6f696e74207061696e2e20342020526173682e20352020536f7265207468726f61742e2036202053776f6c6c656e206c796d706820676c616e64732c206d61696e6c79206f6e20746865206e65636b2e5c6e5c6e7061737361676520323a436f6d6d6f6e20414944532073796d70746f6d7320696e206d656e20696e636c7564653a2031202073776f6c6c656e206c796d706820676c616e64732e20322020756e757375616c206c6573696f6e73206f6e2074686520746f6e6775653b20736b696e2072617368657320616e642062756d70732e203320206e61757365612c20766f6d6974696e672c20616e642064696172726865612e20342020636f75676820616e642073686f72746e657373206f66206272656174682e203520206368726f6e696320666174696775652e2036202066657665722c206368696c6c732c20616e64206e69676874207377656174732e20372020726170696420776569676874206c6f73732e20382020626c7572726564206f7220646973746f7274656420766973696f6e2e203920206f746865722073796d70746f6d73206f6620696e66656374696f6e206f7220646973656173652e5c6e5c6e7061737361676520333a4849562073796d70746f6d7320696e20776f6d656e20696e636c7564653a2031202066657665722e2032202073776f6c6c656e206c796d7068206e6f6465732e20332020736f7265207468726f61742e20342020736b696e20726173682e203520206d7573636c6520736f72656e6573732e203620206a6f696e74207061696e2e20372020666174696775652e203820206e61757365612f766f6d6974696e672e203920206e69676874207377656174732e5c6e5c6e222c227175657374696f6e223a2261696473206869762073796d70746f6d73227d",
+  "source_cluster_id": "sha256:e67634b3f343ff8db684917b051af1912e724be7de784554a97ad5052a2262a3",
+  "source_id": "15407",
+  "started": false,
+  "status": "excluded",
+  "unit_id": "sha256:5bcac35a0fefddc98a713b901f48911997294414bd729bad9161def9abe149f9",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22
+  ]
+}

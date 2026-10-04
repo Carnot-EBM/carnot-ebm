@@ -1,0 +1,79 @@
+{
+  "answer_bytes": "4672656e636820666f6f642076617269657320627920726567696f6e20616e64206d65616c2e20427265616b6661737420696e204672616e6365206973207479706963616c6c79206c696768742c206f6674656e20696e636c7564696e672074617274696e657320776869636820697320746f6173742077697468206a616d2e20496e20536f7574682d57657374204672616e63652c207468652063756973696e6520656d70686173697a6573207269636820666f6f64732073756368206173206475636b2c20666f696520677261732c207072756e65732c206f7973746572732c206d757368726f6f6d732c2074727566666c65732c20616e6420697320636f6d6d6f6e6c79206163636f6d70616e696564206279206120726963682072656420426f7264656175782077696e652e204672656e636820726567696f6e616c2063756973696e657320616c736f2068656176696c79207574696c697a65206c6f63616c6c792067726f776e20766567657461626c65732c20696e636c7564696e6720706f7461746f65732c2068617269636f7420766572747320284672656e636820677265656e206265616e73292c20636172726f74732c206c65656b732c207475726e6970732c20617562657267696e652028656767706c616e74292c20636f7572676574746520287a75636368696e69292c20766172696f7573207479706573206f66206d757368726f6f6d732073756368206173206f7973746572206d757368726f6f6d7320616e642063657065732c20706f7263696e692c2074727566666c652c20616e64207368616c6c6f74732e",
+  "arm": "full_source",
+  "capture_identity": "sha256:6d004fddbc71a82a3b23b351dc01f9d360f2f39595728dba2e40af68f0fa4e89",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 0.0,
+  "eligibility": false,
+  "exclusion_reason": "owned_validation_failed",
+  "failure_kind": "invalid_envelope",
+  "failure_status": false,
+  "family_id": "sha256:2d84535a31dd51fcb83b0dd3bdf7c7cbd81159bbd59e63a326921653200d7dd8:full_source",
+  "human_target": null,
+  "input_tokens": null,
+  "issued_state": "sha256:6d004fddbc71a82a3b23b351dc01f9d360f2f39595728dba2e40af68f0fa4e89",
+  "metric": "bounded_probability_parse",
+  "numerator": 0,
+  "parsed": {
+    "citation_valid": false,
+    "completed": false,
+    "finish_reason": null,
+    "probability": null,
+    "schema_valid": false,
+    "source_sentence_id": null,
+    "status": "invalid_envelope",
+    "syntax_valid": false,
+    "usage": {}
+  },
+  "probability": null,
+  "public_eligible": false,
+  "public_hash": "sha256:87c06ef466bb3ee99315ca2c005fda071e4e9821cc2ff0321f64c159c99d9e7f",
+  "raw_response": {},
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Breakfast in France is usually a light affair, with the beverage (usually coffee) being just as important as the food. Some typical French breakfast choices:  1 Tartines, which is toast with jam, is a typical French breakfast loved for its simplicity and the sweet flavor that goes well with coffee.\\\\n\\\\npassage 2:South-West France: In the south-west of France the emphasis is on rich foods. The main specialities are duck, foie gras, prunes, oysters, mushrooms and truffles. And of course a nice rich red Bordeaux wine to go with it.\\\\n\\\\npassage 3:French regional cuisines use locally grown vegetables, such as: 1  Potatoes. 2  haricot verts (A type of French green bean). 3  Carrots. 4  leeks. 5  Turnips. 6  Aubergine (eggplant). 7  Courgette (zucchini). 8  Mushrooms, oyster mushrooms, cepes (c\u00e8pes). 9  Porcini. 10  Truffle.  shallots\\\\n\\\\n\\\",\\\"question\\\":\\\"types of food in france\\\"}\", \"original_answer\": \"French food varies by region and meal. Breakfast in France is typically light, often including tartines which is toast with jam. In South-West France, the cuisine emphasizes rich foods such as duck, foie gras, prunes, oysters, mushrooms, truffles, and is commonly accompanied by a rich red Bordeaux wine. French regional cuisines also heavily utilize locally grown vegetables, including potatoes, haricot verts (French green beans), carrots, leeks, turnips, aubergine (eggplant), courgette (zucchini), various types of mushrooms such as oyster mushrooms and cepes, porcini, truffle, and shallots.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 0,
+  "role": "fit",
+  "source_bytes": "7b227061737361676573223a227061737361676520313a427265616b6661737420696e204672616e636520697320757375616c6c792061206c69676874206166666169722c2077697468207468652062657665726167652028757375616c6c7920636f6666656529206265696e67206a75737420617320696d706f7274616e742061732074686520666f6f642e20536f6d65207479706963616c204672656e636820627265616b666173742063686f696365733a2020312054617274696e65732c20776869636820697320746f6173742077697468206a616d2c2069732061207479706963616c204672656e636820627265616b66617374206c6f76656420666f72206974732073696d706c696369747920616e642074686520737765657420666c61766f72207468617420676f65732077656c6c207769746820636f666665652e5c6e5c6e7061737361676520323a536f7574682d57657374204672616e63653a20496e2074686520736f7574682d77657374206f66204672616e63652074686520656d706861736973206973206f6e207269636820666f6f64732e20546865206d61696e207370656369616c697469657320617265206475636b2c20666f696520677261732c207072756e65732c206f7973746572732c206d757368726f6f6d7320616e642074727566666c65732e20416e64206f6620636f757273652061206e69636520726963682072656420426f7264656175782077696e6520746f20676f20776974682069742e5c6e5c6e7061737361676520333a4672656e636820726567696f6e616c2063756973696e657320757365206c6f63616c6c792067726f776e20766567657461626c65732c20737563682061733a20312020506f7461746f65732e2032202068617269636f742076657274732028412074797065206f66204672656e636820677265656e206265616e292e20332020436172726f74732e203420206c65656b732e203520205475726e6970732e20362020417562657267696e652028656767706c616e74292e20372020436f7572676574746520287a75636368696e69292e203820204d757368726f6f6d732c206f7973746572206d757368726f6f6d732c206365706573202863c3a8706573292e20392020506f7263696e692e203130202054727566666c652e20207368616c6c6f74735c6e5c6e222c227175657374696f6e223a227479706573206f6620666f6f6420696e206672616e6365227d",
+  "source_cluster_id": "sha256:b5f60c208cfb3209c1a1233bfb9a268a06948b421bc33a3991564270653468f8",
+  "source_id": "14454",
+  "started": false,
+  "status": "excluded",
+  "unit_id": "sha256:2d84535a31dd51fcb83b0dd3bdf7c7cbd81159bbd59e63a326921653200d7dd8",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ]
+}

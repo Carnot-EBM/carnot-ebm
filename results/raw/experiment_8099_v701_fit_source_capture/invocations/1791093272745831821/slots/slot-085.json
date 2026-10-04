@@ -1,0 +1,70 @@
+{
+  "answer_bytes": "4261736564206f6e207468652070726f76696465642070617373616765732c20686572652061726520746865206176657261676520424d497320706572206167652067726f75703a0a0a2a20466f7220382d796561722d6f6c64732c20746865206176657261676520424d492069732031372e3920666f7220626f797320616e642031382e3320666f72206769726c732e0a2a20466f72206164756c7473206167656420323020616e64206f6c6465722c20746865206865616c74687920424d492072616e67652069732066726f6d2031382e3520746f2032342e392c207769746820616e206176657261676520424d49206f662032382e3720666f7220776f6d656e20616e642032372e3520666f72206d656e2e0a2a20466f722031332d796561722d6f6c64732c20746865206176657261676520424d492069732032312e3920666f7220626f797320616e642032322e3120666f72206769726c732c20776974682061206865616c74687920424d492072616e6765206f662031352e3520746f2032322e3620666f7220626f797320616e642031352e3320746f2032332e3320666f72206769726c732e0a2a20466f722031382d796561722d6f6c64732c20746865206176657261676520424d492069732032362e3120666f7220626f797320616e642032342e3620666f72206769726c732e0a0a556e61626c6520746f20616e73776572206261736564206f6e20676976656e2070617373616765732e",
+  "arm": "full_source",
+  "capture_identity": "sha256:6d004fddbc71a82a3b23b351dc01f9d360f2f39595728dba2e40af68f0fa4e89",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 0.0,
+  "eligibility": false,
+  "exclusion_reason": "owned_validation_failed",
+  "failure_kind": "invalid_envelope",
+  "failure_status": false,
+  "family_id": "sha256:414b08381770ee63cc74c3462e057331c1f046d11a8827d8fb35e16af65d23cb:full_source",
+  "human_target": null,
+  "input_tokens": null,
+  "issued_state": "sha256:6d004fddbc71a82a3b23b351dc01f9d360f2f39595728dba2e40af68f0fa4e89",
+  "metric": "bounded_probability_parse",
+  "numerator": 0,
+  "parsed": {
+    "citation_valid": false,
+    "completed": false,
+    "finish_reason": null,
+    "probability": null,
+    "schema_valid": false,
+    "source_sentence_id": null,
+    "status": "invalid_envelope",
+    "syntax_valid": false,
+    "usage": {}
+  },
+  "probability": null,
+  "public_eligible": false,
+  "public_hash": "sha256:ecf942d6a03aa427f74647ebc53696ba18c39ec14213ae3809c7cf55f862eb78",
+  "raw_response": {},
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:The average BMI for an 8-year-old boy is 17.9, and girls of the same age have an average BMI of 18.3. By the age of 12, the average BMI for both girls and boys is 21.3, with a healthy range of about 15 to 21.8 for boys and 14.8 to 22.5 for girls.\\\\n\\\\npassage 2:For adults, the healthy BMI range is from 18.5 to 24.9, regardless of age or gender, and anything over this means you are considered overweight for your height. The average BMI for women age 20 and older is 28.7. Women 80 years and older have the lowest average BMI, at 26.7, followed by those between 20 and 29 years old, at 27.5, and women from 60 to 69 have the highest, at 29.6.\\\\n\\\\npassage 3:The average BMI for a 13-year-old boy is 21.9; for a girl of the same age it's slightly higher, at 22.1, The healthy BMI range for 13-year-olds is 15.5 to 22.6 for boys and 15.3 to 23.3 for girls. By the age of 18, the average BMI for a boy is 26.1, and for a girl, it's 24.6.\\\\n\\\\n\\\",\\\"question\\\":\\\"average bmi per age\\\"}\", \"original_answer\": \"Based on the provided passages, here are the average BMIs per age group:\\n\\n* For 8-year-olds, the average BMI is 17.9 for boys and 18.3 for girls.\\n* For adults aged 20 and older, the healthy BMI range is from 18.5 to 24.9, with an average BMI of 28.7 for women and 27.5 for men.\\n* For 13-year-olds, the average BMI is 21.9 for boys and 22.1 for girls, with a healthy BMI range of 15.5 to 22.6 for boys and 15.3 to 23.3 for girls.\\n* For 18-year-olds, the average BMI is 26.1 for boys and 24.6 for girls.\\n\\nUnable to answer based on given passages.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 0,
+  "role": "fit",
+  "source_bytes": "7b227061737361676573223a227061737361676520313a546865206176657261676520424d4920666f7220616e20382d796561722d6f6c6420626f792069732031372e392c20616e64206769726c73206f66207468652073616d6520616765206861766520616e206176657261676520424d49206f662031382e332e2042792074686520616765206f662031322c20746865206176657261676520424d4920666f7220626f7468206769726c7320616e6420626f79732069732032312e332c20776974682061206865616c7468792072616e6765206f662061626f757420313520746f2032312e3820666f7220626f797320616e642031342e3820746f2032322e3520666f72206769726c732e5c6e5c6e7061737361676520323a466f72206164756c74732c20746865206865616c74687920424d492072616e67652069732066726f6d2031382e3520746f2032342e392c207265676172646c657373206f6620616765206f722067656e6465722c20616e6420616e797468696e67206f7665722074686973206d65616e7320796f752061726520636f6e73696465726564206f76657277656967687420666f7220796f7572206865696768742e20546865206176657261676520424d4920666f7220776f6d656e2061676520323020616e64206f6c6465722069732032382e372e20576f6d656e20383020796561727320616e64206f6c646572206861766520746865206c6f77657374206176657261676520424d492c2061742032362e372c20666f6c6c6f7765642062792074686f7365206265747765656e20323020616e64203239207965617273206f6c642c2061742032372e352c20616e6420776f6d656e2066726f6d20363020746f20363920686176652074686520686967686573742c2061742032392e362e5c6e5c6e7061737361676520333a546865206176657261676520424d4920666f7220612031332d796561722d6f6c6420626f792069732032312e393b20666f722061206769726c206f66207468652073616d6520616765206974277320736c696768746c79206869676865722c2061742032322e312c20546865206865616c74687920424d492072616e676520666f722031332d796561722d6f6c64732069732031352e3520746f2032322e3620666f7220626f797320616e642031352e3320746f2032332e3320666f72206769726c732e2042792074686520616765206f662031382c20746865206176657261676520424d4920666f72206120626f792069732032362e312c20616e6420666f722061206769726c2c20697427732032342e362e5c6e5c6e222c227175657374696f6e223a226176657261676520626d692070657220616765227d",
+  "source_cluster_id": "sha256:739a38bd4c2e27be73e2f713b0c01bb891500e1ec2774b98899e17cf2f255897",
+  "source_id": "15363",
+  "started": false,
+  "status": "excluded",
+  "unit_id": "sha256:414b08381770ee63cc74c3462e057331c1f046d11a8827d8fb35e16af65d23cb",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ]
+}

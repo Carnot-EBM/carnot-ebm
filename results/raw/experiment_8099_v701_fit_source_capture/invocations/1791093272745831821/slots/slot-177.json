@@ -1,0 +1,76 @@
+{
+  "answer_bytes": "537572652120486572652773206120627269656620616e7377657220746f20746865207175657374696f6e2022486f7720646f20796f75206361726520666f72206f7263686964733f22206261736564206f6e2074686520676976656e2070617373616765733a0a0a546f206361726520666f72206f7263686964732c2070726f76696465207468656d207769746820627269676874206c6967687420627574206e6f206469726563742073756e2c207761746572207468656d2074686f726f7567686c79206f6e6365206f722074776963652061207765656b2c20616e64206d616b6520737572652074686520776174657220647261696e7320636f6d706c6574656c79206f7574206f662074686520706f742e20596f752063616e20616c736f2066657274696c697a65207468656d207768656e2074686579206172652067726f77696e672c20616e642070726f766964652067656e746c65206169722063697263756c6174696f6e20666f722074686520706c616e742e204164646974696f6e616c6c792c2061667465722074686520666c6f776572732064726f702c20796f752063616e206375742074686520666c6f776572207370696b65206261636b20746f2061206e6f6465206f722072656d6f766520697420656e746972656c7920746f20656e636f7572616765206e657720626c6f6f6d7320746f20656d657267652e",
+  "arm": "full_source",
+  "capture_identity": "sha256:6d004fddbc71a82a3b23b351dc01f9d360f2f39595728dba2e40af68f0fa4e89",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 0.0,
+  "eligibility": false,
+  "exclusion_reason": "owned_validation_failed",
+  "failure_kind": "invalid_envelope",
+  "failure_status": false,
+  "family_id": "sha256:21a6dd343ea1f36314c0bce684cefedf0da2517df48aaf3ea60583b1bb45ca61:full_source",
+  "human_target": null,
+  "input_tokens": null,
+  "issued_state": "sha256:6d004fddbc71a82a3b23b351dc01f9d360f2f39595728dba2e40af68f0fa4e89",
+  "metric": "bounded_probability_parse",
+  "numerator": 0,
+  "parsed": {
+    "citation_valid": false,
+    "completed": false,
+    "finish_reason": null,
+    "probability": null,
+    "schema_valid": false,
+    "source_sentence_id": null,
+    "status": "invalid_envelope",
+    "syntax_valid": false,
+    "usage": {}
+  },
+  "probability": null,
+  "public_eligible": false,
+  "public_hash": "sha256:38024a20a4e70dc44a2dbb42c66f295bb2b2064dcdc3f3f3248cf0785122195b",
+  "raw_response": {},
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Quick Guide for Basic Orchid Care. Orchids need six things to bloom. Light - Give orchids bright light, but no direct sun. Water - Water them thoroughly once or twice a week -- more when it's warmer, less when it's cooler. Make sure the water drains completely out of the holes at the bottom of the pot.\\\\n\\\\npassage 2:Cut Back the Orchid Flower Spike. After the flowers drop from the orchid you have three choices: leave the flower spike (or stem) intact, cut it back to a node, or remove it entirely. If you leave the stem intact, there is a chance that new blooms will emerge from the tip. You can also cut the stem back to the.\\\\n\\\\npassage 3:If you cannot identify your orchid, then start with these basic care guidelines: 1  Light - Give orchids bright light, but no direct sun. 2  Water - Water them thoroughly once or twice a week -- more when it's warmer, less when it's cooler. 3  Fertilizer - Fertilize them when they are growing.  Air movement - Provide gentle air circulation for the plant.\\\\n\\\\n\\\",\\\"question\\\":\\\"how do you care for orchids\\\"}\", \"original_answer\": \"Sure! Here's a brief answer to the question \\\"How do you care for orchids?\\\" based on the given passages:\\n\\nTo care for orchids, provide them with bright light but no direct sun, water them thoroughly once or twice a week, and make sure the water drains completely out of the pot. You can also fertilize them when they are growing, and provide gentle air circulation for the plant. Additionally, after the flowers drop, you can cut the flower spike back to a node or remove it entirely to encourage new blooms to emerge.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 0,
+  "role": "tune",
+  "source_bytes": "7b227061737361676573223a227061737361676520313a517569636b20477569646520666f72204261736963204f726368696420436172652e204f726368696473206e65656420736978207468696e677320746f20626c6f6f6d2e204c69676874202d2047697665206f72636869647320627269676874206c696768742c20627574206e6f206469726563742073756e2e205761746572202d205761746572207468656d2074686f726f7567686c79206f6e6365206f722074776963652061207765656b202d2d206d6f7265207768656e2069742773207761726d65722c206c657373207768656e206974277320636f6f6c65722e204d616b6520737572652074686520776174657220647261696e7320636f6d706c6574656c79206f7574206f662074686520686f6c65732061742074686520626f74746f6d206f662074686520706f742e5c6e5c6e7061737361676520323a437574204261636b20746865204f726368696420466c6f776572205370696b652e2041667465722074686520666c6f776572732064726f702066726f6d20746865206f726368696420796f7520686176652074687265652063686f696365733a206c656176652074686520666c6f776572207370696b6520286f72207374656d2920696e746163742c20637574206974206261636b20746f2061206e6f64652c206f722072656d6f766520697420656e746972656c792e20496620796f75206c6561766520746865207374656d20696e746163742c2074686572652069732061206368616e63652074686174206e657720626c6f6f6d732077696c6c20656d657267652066726f6d20746865207469702e20596f752063616e20616c736f2063757420746865207374656d206261636b20746f207468652e5c6e5c6e7061737361676520333a496620796f752063616e6e6f74206964656e7469667920796f7572206f72636869642c207468656e207374617274207769746820746865736520626173696320636172652067756964656c696e65733a203120204c69676874202d2047697665206f72636869647320627269676874206c696768742c20627574206e6f206469726563742073756e2e203220205761746572202d205761746572207468656d2074686f726f7567686c79206f6e6365206f722074776963652061207765656b202d2d206d6f7265207768656e2069742773207761726d65722c206c657373207768656e206974277320636f6f6c65722e2033202046657274696c697a6572202d2046657274696c697a65207468656d207768656e2074686579206172652067726f77696e672e2020416972206d6f76656d656e74202d2050726f766964652067656e746c65206169722063697263756c6174696f6e20666f722074686520706c616e742e5c6e5c6e222c227175657374696f6e223a22686f7720646f20796f75206361726520666f72206f726368696473227d",
+  "source_cluster_id": "sha256:91c3aa5990edfda3d5aab8fbcc7c78cf5af3e384218e44b4443d2aeb0308869d",
+  "source_id": "12418",
+  "started": false,
+  "status": "excluded",
+  "unit_id": "sha256:21a6dd343ea1f36314c0bce684cefedf0da2517df48aaf3ea60583b1bb45ca61",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ]
+}

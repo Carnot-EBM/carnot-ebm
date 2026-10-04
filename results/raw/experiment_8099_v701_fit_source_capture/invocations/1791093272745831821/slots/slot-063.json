@@ -1,0 +1,85 @@
+{
+  "answer_bytes": "496e20616e207570636f6d696e6720657069736f6465206f66202754686520426f6c6420616e64207468652042656175746966756c2c2720486f7065204c6f67616e2077696c6c206d616b652061206d6f7665206f6e204a6f686e202746696e6e272046696e6e6567616e2c2077686963682077696c6c20726569676e697465207468652066657564206265747765656e2068657220616e642053746566667920466f727265737465722e20486f70652062656c69657665732046696e6e20646573657276657320626574746572207468616e2053746566667920616e6420636f6e666964657320696e20686572206d6f746865722061626f757420686572206665656c696e67732e2046696e6e20616e6420486f70652077696c6c20626f6e64206f766572207468656972206469736c696b6520666f7220536865696c612043617274657220616e6420706c6f7420612077617920746f20627265616b207570206865722072656c6174696f6e73686970207769746820446561636f6e205368617270652e20537465666679206d617920736f6f6e2066696e64206f75742061626f75742074686520646576656c6f70696e6720636f6e6e656374696f6e206265747765656e2046696e6e20616e6420486f70652e",
+  "arm": "full_source",
+  "capture_identity": "sha256:6d004fddbc71a82a3b23b351dc01f9d360f2f39595728dba2e40af68f0fa4e89",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 0.0,
+  "eligibility": false,
+  "exclusion_reason": "owned_validation_failed",
+  "failure_kind": "invalid_envelope",
+  "failure_status": false,
+  "family_id": "sha256:8602fb7ae92d508802f1ffe44eb765fdce10b20e723829209e5ea3a60305a823:full_source",
+  "human_target": null,
+  "input_tokens": null,
+  "issued_state": "sha256:6d004fddbc71a82a3b23b351dc01f9d360f2f39595728dba2e40af68f0fa4e89",
+  "metric": "bounded_probability_parse",
+  "numerator": 0,
+  "parsed": {
+    "citation_valid": false,
+    "completed": false,
+    "finish_reason": null,
+    "probability": null,
+    "schema_valid": false,
+    "source_sentence_id": null,
+    "status": "invalid_envelope",
+    "syntax_valid": false,
+    "usage": {}
+  },
+  "probability": null,
+  "public_eligible": false,
+  "public_hash": "sha256:d1e771e44610ee804061ab00eacc68663c45ef1b698403e4d846369917f787b4",
+  "raw_response": {},
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"'Bold and the Beautiful' Spoilers: Hope and Steffy\u2019s New Feud, Logan Believes Finn Deserves Better?\\nThe Bold and the Beautiful (B&B) spoilers tease that Steffy Forrester (Jacqueline MacInnes Wood) and Hope Logan's (Annika Noelle) will be reignited. She Knows Soaps reports that Hope makes a play for John 'Finn' Finnegan (Tanner Novlan), and Steffy finds out.\\nHope and Steffy spent years fighting over Liam Spencer (Scott Clifton). He would waffle between the women, each one believing they were his favorite. He did this for years. Steffy decided she could not do that anymore, finding a man with only eyes for her.\\nSheila Carter's (Kimberlin Brown) charges were dropped, making her a free woman. Ever since her jail release, Sheila has been a thorn in Finn's side, demanding to have a relationship with him.\\nThe Bold and the Beautiful spoilers say that Finn and Hope will bond over Sheila and Deacon Sharpe's (Sean Kanan) relationship. They will plot for a way to break them up. In the meantime, they will develop a deep friendship that could become more.\\nSoaps Spoilers reports that Hope will confide in her mother, Brooke Logan (Katherine Kelly Lang), that she believes Finn deserves better than Steffy. She points out that she wouldn't leave town even with a Sheila threat if he were her husband.\\nIt's clear that Hope is beginning to develop feelings for the handsome doctor. It could spell trouble when Steffy gets wind of it.\\nB&B fans, do you think Finn and Hope will cross the line? Keep watching The Bold and the Beautiful, airing weekdays on CBS and streaming on Paramount Plus. Please share your thoughts with me in the comments section below. Remember to follow me to read more of my content.\", \"original_answer\": \"In an upcoming episode of 'The Bold and the Beautiful,' Hope Logan will make a move on John 'Finn' Finnegan, which will reignite the feud between her and Steffy Forrester. Hope believes Finn deserves better than Steffy and confides in her mother about her feelings. Finn and Hope will bond over their dislike for Sheila Carter and plot a way to break up her relationship with Deacon Sharpe. Steffy may soon find out about the developing connection between Finn and Hope.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 0,
+  "role": "fit",
+  "source_bytes": "27426f6c6420616e64207468652042656175746966756c272053706f696c6572733a20486f706520616e6420537465666679e2809973204e657720466575642c204c6f67616e2042656c69657665732046696e6e204465736572766573204265747465723f0a54686520426f6c6420616e64207468652042656175746966756c2028422642292073706f696c65727320746561736520746861742053746566667920466f7272657374657220284a61637175656c696e65204d6163496e6e657320576f6f642920616e6420486f7065204c6f67616e27732028416e6e696b61204e6f656c6c65292077696c6c20626520726569676e697465642e20536865204b6e6f777320536f617073207265706f727473207468617420486f7065206d616b6573206120706c617920666f72204a6f686e202746696e6e272046696e6e6567616e202854616e6e6572204e6f766c616e292c20616e64205374656666792066696e6473206f75742e0a486f706520616e6420537465666679207370656e74207965617273206669676874696e67206f766572204c69616d205370656e636572202853636f747420436c6966746f6e292e20486520776f756c6420776166666c65206265747765656e2074686520776f6d656e2c2065616368206f6e652062656c696576696e672074686579207765726520686973206661766f726974652e20486520646964207468697320666f722079656172732e2053746566667920646563696465642073686520636f756c64206e6f7420646f207468617420616e796d6f72652c2066696e64696e672061206d616e2077697468206f6e6c79206579657320666f72206865722e0a536865696c6120436172746572277320284b696d6265726c696e2042726f776e29206368617267657320776572652064726f707065642c206d616b696e67206865722061206672656520776f6d616e2e20457665722073696e636520686572206a61696c2072656c656173652c20536865696c6120686173206265656e20612074686f726e20696e2046696e6e277320736964652c2064656d616e64696e6720746f206861766520612072656c6174696f6e7368697020776974682068696d2e0a54686520426f6c6420616e64207468652042656175746966756c2073706f696c6572732073617920746861742046696e6e20616e6420486f70652077696c6c20626f6e64206f76657220536865696c6120616e6420446561636f6e20536861727065277320285365616e204b616e616e292072656c6174696f6e736869702e20546865792077696c6c20706c6f7420666f7220612077617920746f20627265616b207468656d2075702e20496e20746865206d65616e74696d652c20746865792077696c6c20646576656c6f702061206465657020667269656e6473686970207468617420636f756c64206265636f6d65206d6f72652e0a536f6170732053706f696c657273207265706f727473207468617420486f70652077696c6c20636f6e6669646520696e20686572206d6f746865722c2042726f6f6b65204c6f67616e20284b6174686572696e65204b656c6c79204c616e67292c2074686174207368652062656c69657665732046696e6e20646573657276657320626574746572207468616e205374656666792e2053686520706f696e7473206f757420746861742073686520776f756c646e2774206c6561766520746f776e206576656e2077697468206120536865696c61207468726561742069662068652077657265206865722068757362616e642e0a4974277320636c656172207468617420486f706520697320626567696e6e696e6720746f20646576656c6f70206665656c696e677320666f72207468652068616e64736f6d6520646f63746f722e20497420636f756c64207370656c6c2074726f75626c65207768656e2053746566667920676574732077696e64206f662069742e0a4226422066616e732c20646f20796f75207468696e6b2046696e6e20616e6420486f70652077696c6c2063726f737320746865206c696e653f204b656570207761746368696e672054686520426f6c6420616e64207468652042656175746966756c2c20616972696e67207765656b64617973206f6e2043425320616e642073747265616d696e67206f6e20506172616d6f756e7420506c75732e20506c6561736520736861726520796f75722074686f75676874732077697468206d6520696e2074686520636f6d6d656e74732073656374696f6e2062656c6f772e2052656d656d62657220746f20666f6c6c6f77206d6520746f2072656164206d6f7265206f66206d7920636f6e74656e742e",
+  "source_cluster_id": "sha256:542794fca9364ac8553195bb79d121fe52ed5e66a049888a4b60f0fa974ef595",
+  "source_id": "13575",
+  "started": false,
+  "status": "excluded",
+  "unit_id": "sha256:8602fb7ae92d508802f1ffe44eb765fdce10b20e723829209e5ea3a60305a823",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ]
+}

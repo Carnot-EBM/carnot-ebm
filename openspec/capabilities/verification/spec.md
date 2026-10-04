@@ -48049,3 +48049,23 @@ quality-independent selection, absent annotations, contamination and immutable r
 Implemented in `python/carnot/verify/development_methods_8098.py`; private
 regressions live in `tests/python/test_development_methods_8098.py`. Current
 readiness still requires the experiment's authenticated owned validation receipts.
+
+## REQ-VERIFY-8099-CAPTURE
+
+Freeze public fit128 and tune64 slots from the authenticated V701 role seal.
+Reject evaluator fields and cross-role source overlap before model loading.
+Use the qualified Exp7995 full-source risk prompt and parser without changing
+answer bytes. On the first32 sealed fit slots add identical duplicate, removed
+source and cyclically mismatched source requests. Altered evidence has no human
+correctness target. Report absolute probability changes and duplicate variation
+on paired source units, including parse denominators. Null effects remain valid.
+Keep every slot, bound generation to96 tokens and120 seconds, reserve at most
+288 calls and27648 tokens, and stop launching at3150 seconds. Started calls
+cannot retry. Interrupted ledgers retain their exact invocation scope.
+
+### SCENARIO-VERIFY-8099-PRIVATE
+
+Private stub transport tests SHALL precede loading. Test prompt identity, fixed
+answers, cyclic sources, label rejection, truncation, invalid probabilities,
+timeouts, interrupted checkpoint recovery, budget censoring and cold reductions.
+Count independent original sources, never duplicate or altered-source calls.

@@ -1,0 +1,72 @@
+{
+  "answer_bytes": "224a61636b27732042697374726f202620426167656c73222069732061206c6f63616c20627573696e65737320736974756174656420617420333839312053746174652053742c2053616e746120426172626172612c2043412e2049742066616c6c7320756e646572207468652063617465676f72696573206f662052657374617572616e74732c2053616e647769636865732c20616e6420427265616b666173742026204272756e63682e2054686520627573696e65737320686173206120726174696e67206f6620332e352073746172732e204261736564206f6e20637573746f6d657220726576696577732c207468652072657374617572616e7420697320706172746963756c61726c79206b6e6f776e20666f722069747320626167656c732c207769746820706172746963756c61722070726169736520666f72206974732063696e6e616d6f6e2072616973696e20626167656c20616e64206a616c617065c3b16f20616e64206368656464617220626167656c2e2054686520637573746f6d65727320616c736f20617070726563696174652074686520706572736f6e61626c652073746166662c206d656e74696f6e696e67204e696b6b69206173206120776f6e64657266756c20617373657420746f207468652072657374617572616e742e205468657920616c736f20636f6d6d656e642074686520666f6f64207175616c6974792c2073746174696e67207468617420746865792063616d6520696e20666f72206a75737420636f6666656520627574206c65667420776974682074686569722062656c6c69657320706c656173616e746c792066756c6c20616e64206576656e206120746f2d676f20626f782e205468652072657374617572616e7420646f6573206e6f74206f66666572206f7574646f6f722073656174696e6720616e6420696e666f726d6174696f6e2061626f757420627573696e65737320686f7572732c207061726b696e672c2057692d46692c2074616b652d6f757420736572766963652c20737569746162696c69747920666f722067726f7570732c206d757369632c20616e6420616d6269656e6365206973206e6f742070726f76696465642e",
+  "arm": "full_source",
+  "capture_identity": "sha256:6d004fddbc71a82a3b23b351dc01f9d360f2f39595728dba2e40af68f0fa4e89",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 0.0,
+  "eligibility": false,
+  "exclusion_reason": "owned_validation_failed",
+  "failure_kind": "invalid_envelope",
+  "failure_status": false,
+  "family_id": "sha256:913bc60ee1ca7f45decee84d8d093ce33a8d31e21d4b1994a73e30cd323baac2:full_source",
+  "human_target": null,
+  "input_tokens": null,
+  "issued_state": "sha256:6d004fddbc71a82a3b23b351dc01f9d360f2f39595728dba2e40af68f0fa4e89",
+  "metric": "bounded_probability_parse",
+  "numerator": 0,
+  "parsed": {
+    "citation_valid": false,
+    "completed": false,
+    "finish_reason": null,
+    "probability": null,
+    "schema_valid": false,
+    "source_sentence_id": null,
+    "status": "invalid_envelope",
+    "syntax_valid": false,
+    "usage": {}
+  },
+  "probability": null,
+  "public_eligible": false,
+  "public_hash": "sha256:04b5e4ad4ca92415208691172403578c5e7d695f6c2ac0b87bb96e6a886d4ae3",
+  "raw_response": {},
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"address\\\":\\\"3891 State St\\\",\\\"attributes\\\":{\\\"Ambience\\\":null,\\\"BusinessParking\\\":null,\\\"Music\\\":null,\\\"OutdoorSeating\\\":false,\\\"RestaurantsGoodForGroups\\\":null,\\\"RestaurantsReservations\\\":null,\\\"RestaurantsTakeOut\\\":null,\\\"WiFi\\\":null},\\\"business_stars\\\":3.5,\\\"categories\\\":\\\"Restaurants, Sandwiches, Breakfast & Brunch\\\",\\\"city\\\":\\\"Santa Barbara\\\",\\\"hours\\\":null,\\\"name\\\":\\\"Jack's Bistro & Bagels\\\",\\\"review_info\\\":[{\\\"review_date\\\":\\\"2015-10-01 15:45:34\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"I love Jacks. The cinnamon raisin bagel is the best\\\"},{\\\"review_date\\\":\\\"2015-08-07 17:06:30\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Very personable staff!!! Nikki is a wonderful asset to the restaurant!! Excellent food!! We thought we were going in for just coffee and left with our bellies pleasantly full:) and a to go box!!! C u next year.....\\\"},{\\\"review_date\\\":\\\"2012-12-14 02:43:14\\\",\\\"review_stars\\\":5.0,\\\"review_text\\\":\\\"Got to get the Jalape\u00f1o and cheddar bagel.  Delicious\\\"}],\\\"state\\\":\\\"CA\\\"}\", \"original_answer\": \"\\\"Jack's Bistro & Bagels\\\" is a local business situated at 3891 State St, Santa Barbara, CA. It falls under the categories of Restaurants, Sandwiches, and Breakfast & Brunch. The business has a rating of 3.5 stars. Based on customer reviews, the restaurant is particularly known for its bagels, with particular praise for its cinnamon raisin bagel and jalape\u00f1o and cheddar bagel. The customers also appreciate the personable staff, mentioning Nikki as a wonderful asset to the restaurant. They also commend the food quality, stating that they came in for just coffee but left with their bellies pleasantly full and even a to-go box. The restaurant does not offer outdoor seating and information about business hours, parking, Wi-Fi, take-out service, suitability for groups, music, and ambience is not provided.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 0,
+  "role": "fit",
+  "source_bytes": "7b2261646472657373223a2233383931205374617465205374222c2261747472696275746573223a7b22416d6269656e6365223a6e756c6c2c22427573696e6573735061726b696e67223a6e756c6c2c224d75736963223a6e756c6c2c224f7574646f6f7253656174696e67223a66616c73652c2252657374617572616e7473476f6f64466f7247726f757073223a6e756c6c2c2252657374617572616e74735265736572766174696f6e73223a6e756c6c2c2252657374617572616e747354616b654f7574223a6e756c6c2c2257694669223a6e756c6c7d2c22627573696e6573735f7374617273223a332e352c2263617465676f72696573223a2252657374617572616e74732c2053616e647769636865732c20427265616b666173742026204272756e6368222c2263697479223a2253616e74612042617262617261222c22686f757273223a6e756c6c2c226e616d65223a224a61636b27732042697374726f202620426167656c73222c227265766965775f696e666f223a5b7b227265766965775f64617465223a22323031352d31302d30312031353a34353a3334222c227265766965775f7374617273223a352e302c227265766965775f74657874223a2249206c6f7665204a61636b732e205468652063696e6e616d6f6e2072616973696e20626167656c206973207468652062657374227d2c7b227265766965775f64617465223a22323031352d30382d30372031373a30363a3330222c227265766965775f7374617273223a352e302c227265766965775f74657874223a225665727920706572736f6e61626c65207374616666212121204e696b6b69206973206120776f6e64657266756c20617373657420746f207468652072657374617572616e74212120457863656c6c656e7420666f6f6421212057652074686f75676874207765207765726520676f696e6720696e20666f72206a75737420636f6666656520616e64206c6566742077697468206f75722062656c6c69657320706c656173616e746c792066756c6c3a2920616e64206120746f20676f20626f7821212120432075206e65787420796561722e2e2e2e2e227d2c7b227265766965775f64617465223a22323031322d31322d31342030323a34333a3134222c227265766965775f7374617273223a352e302c227265766965775f74657874223a22476f7420746f2067657420746865204a616c617065c3b16f20616e64206368656464617220626167656c2e202044656c6963696f7573227d5d2c227374617465223a224341227d",
+  "source_cluster_id": "sha256:9781df9e0ba7424f43f584a8584b93834e39cd721549d7f74088689a878decca",
+  "source_id": "14094",
+  "started": false,
+  "status": "excluded",
+  "unit_id": "sha256:913bc60ee1ca7f45decee84d8d093ce33a8d31e21d4b1994a73e30cd323baac2",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ]
+}

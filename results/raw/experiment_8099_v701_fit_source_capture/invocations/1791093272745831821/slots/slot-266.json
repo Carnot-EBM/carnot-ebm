@@ -1,0 +1,81 @@
+{
+  "answer_bytes": "4261736564206f6e2074686520676976656e2070617373616765732c206120676f6f64207361666574792063756c74757265206973206f6e65207768657265207361666574792069732076616c75656420617320686967686c792061732070726f64756374697669747920616e64206d616e616765727320616e642073757065727669736f7273206172652068656c64206163636f756e7461626c6520666f722073616665747920696e207468652073616d65206d616e6e65722061732070726f64756374696f6e2e20497420697320616c736f2061626f757420676f6f64207361666574792061747469747564657320696e2070656f706c6520616e6420676f6f6420736166657479206d616e6167656d656e742065737461626c6973686564206279206f7267616e697a6174696f6e732e20546865204e6174696f6e616c2053616665747920436f756e63696c27732053616665747920436c696d617465205375727665792063616e2062652075736564206173206120676f6f64206d65616e73206f6620617373657373696e67207361666574792063756c747572652e",
+  "arm": "source_mismatched",
+  "capture_identity": "sha256:6d004fddbc71a82a3b23b351dc01f9d360f2f39595728dba2e40af68f0fa4e89",
+  "censor_status": false,
+  "condition": "source_mismatched",
+  "denominator": 1,
+  "duration_s": 0.0,
+  "eligibility": false,
+  "exclusion_reason": "owned_validation_failed",
+  "failure_kind": "invalid_envelope",
+  "failure_status": false,
+  "family_id": "sha256:bfeced756a445efbfbd6a8fb4c6a4cb0b43914196e29f7d79da266df1ba2734f:source_mismatched",
+  "human_target": null,
+  "input_tokens": null,
+  "intervention_source_id": "14374",
+  "issued_state": "sha256:6d004fddbc71a82a3b23b351dc01f9d360f2f39595728dba2e40af68f0fa4e89",
+  "metric": "bounded_probability_parse",
+  "numerator": 0,
+  "parsed": {
+    "citation_valid": false,
+    "completed": false,
+    "finish_reason": null,
+    "probability": null,
+    "schema_valid": false,
+    "source_sentence_id": null,
+    "status": "invalid_envelope",
+    "syntax_valid": false,
+    "usage": {}
+  },
+  "probability": null,
+  "public_eligible": false,
+  "public_hash": "sha256:b0f1e97b6f95dfba6dcca8e6b4a3ec6d50b8c3d500eb39061879af0c045341f5",
+  "raw_response": {},
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Methods and strategy used to defend your castle are not the same as defending your modern day apartment or house. Castles are immense structures that could have been left very vulnerable.However, royal guards devised many plans of defense for different types of attacks. choice one would surely regret when the time came to defend your castle. Now, if the castle is located on a steep hill that rises thousands of feet high into the air, it would take considerably more effort to reach the castle and this effort would tire the invading troops.\\\\n\\\\npassage 2:How to Defend Your Castle. Methods and strategy used to defend your castle are not the same as defending your modern day apartment or house. Castles are immense structures that could have been left very vulnerable. However, royal guards devised many plans of defense for different types of attacks. choice one would surely regret when the time came to defend your castle. Now, if the castle is located on a steep hill that rises thousands of feet high into the air, it would take considerably more effort to reach the castle and this effort would tire the invading troops.\\\\n\\\\npassage 3:More information related to the subject castle defend: Return to the Medieval Castle main page. Return to Medieval Castles | Medieval Siege Weapons home page. 1  Medieval Castle Defense-Click here to learn more! 2  Castle Floor Plans-Click here to learn more!ore information related to the subject castle defend: Return to the Medieval Castle main page. Return to Medieval Castles | Medieval Siege Weapons home page. 1  Medieval Castle Defense-Click here to learn more! 2  Castle Floor Plans-Click here to learn more!\\\\n\\\\n\\\",\\\"question\\\":\\\"how to defend a castle\\\"}\", \"original_answer\": \"Based on the given passages, a good safety culture is one where safety is valued as highly as productivity and managers and supervisors are held accountable for safety in the same manner as production. It is also about good safety attitudes in people and good safety management established by organizations. The National Safety Council's Safety Climate Survey can be used as a good means of assessing safety culture.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 0,
+  "role": "fit",
+  "source_bytes": "7b227061737361676573223a227061737361676520313a4c6561726e696e67206d6f72652061626f7574207361666574792063756c747572652e2041206c61726765206e756d626572206f6620666163746f727320636f6e7472696275746520746f207768657468657220796f752068617665206120676f6f64206f7220612e20626164207361666574792063756c747572652e20546865207461626c652062656c6f77206c6973747320746865206d61696e20666163746f72733b20696e646963617465732e207768617420776f756c642073686f77207468617420796f7520686164206120676f6f64207361666574792063756c747572652c20616e64207768617420776f756c642e20737570706f727420746865207361666574792063756c747572652e5c6e5c6e7061737361676520323a412074727565207361666574792063756c747572652069732065737461626c6973686564207768656e207361666574792069732076616c75656420617320686967686c792061732070726f6475637469766974792e204d616e616765727320616e642073757065727669736f7273206e65656420746f2062652068656c64206163636f756e7461626c6520666f722073616665747920696e207468652073616d65206d616e6e65722061732070726f64756374696f6e2e205361666574792063756c747572652069732061626f757420676f6f64207361666574792061747469747564657320696e2070656f706c652062757420697420697320616c736f20676f6f6420736166657479206d616e6167656d656e742065737461626c6973686564206279206f7267616e69736174696f6e732e20476f6f64207361666574792063756c74757265206d65616e7320676976696e67207468652068696768657374207072696f7269747920746f207361666574792e20546865204e6174696f6e616c2053616665747920436f756e63696c2068617320612053616665747920436c696d61746520537572766579207468617420696d707265737365642074686520617574686f72206173206120676f6f64206d65616e73206f6620617373657373696e67207361666574792063756c747572652e5c6e5c6e7061737361676520333a436f6d6d6f6e20746f70696320343a205361666574792063756c747572652e20496e74726f64756374696f6e2e2057686174206973207361666574792063756c747572653f20e2809c546865207361666574792063756c74757265206f6620616e206f7267616e69736174696f6e206973207468652e2070726f64756374206f6620696e646976696475616c20616e642067726f75702076616c7565732c206174746974756465732c2070657263657074696f6e732c20636f6d706574656e636965732c20616e642e207061747465726e73206f66206265686176696f757220746861742064657465726d696e65207468652e20636f6d6d69746d656e7420746f2c20616e6420746865207374796c6520616e642070726f66696369656e63792e206f662c20616e206f7267616e69736174696f6ee2809973206865616c746820616e64207361666574792e5c6e5c6e222c227175657374696f6e223a2277686174206d616b6573206120676f6f64207361666574792063756c74757265227d",
+  "source_cluster_id": "sha256:7bf0d93681631c06dae2c34c077d9c00611b1f07c7124f23d989115d0a3fa24e",
+  "source_id": "15530",
+  "started": false,
+  "status": "excluded",
+  "unit_id": "sha256:bfeced756a445efbfbd6a8fb4c6a4cb0b43914196e29f7d79da266df1ba2734f",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ]
+}

@@ -1,0 +1,90 @@
+{
+  "answer_bytes": "5468652042616c74696d6f726520526176656e732061726520657870656374656420746f206d616b65206120626967206d6f766520627920616371756972696e672072756e6e696e67206261636b204465727269636b2048656e72792066726f6d207468652054656e6e657373656520546974616e73206265666f726520746865204e464c20547261646520646561646c696e652e2054686520546974616e73207365656d20746f20626520656d62726163696e6720612072656275696c6420616e64206d61792062652073656c6c6572732061742074686520646561646c696e652e2048656e72792c20646573706974652061206c6573732070726f6475637469766520736561736f6e20696e20323032332c206973207374696c6c20636f6e73696465726564206f6e65206f662074686520626573742072756e6e696e67206261636b7320696e20746865206c65616775652e2054686520526176656e732c2077697468207468656972207374726f6e672072757368696e67206f6666656e736520616e64206c61636b206f662064657074682061742074686520706f736974696f6e2c20617265207365656e206173207468652066726f6e7472756e6e65727320746f206c616e642048656e72792e204974206973206c696b656c7920746861742048656e72792077696c6c20626520747261646564206e657874207765656b2e",
+  "arm": "source_mismatched",
+  "capture_identity": "sha256:6d004fddbc71a82a3b23b351dc01f9d360f2f39595728dba2e40af68f0fa4e89",
+  "censor_status": false,
+  "condition": "source_mismatched",
+  "denominator": 1,
+  "duration_s": 0.0,
+  "eligibility": false,
+  "exclusion_reason": "owned_validation_failed",
+  "failure_kind": "invalid_envelope",
+  "failure_status": false,
+  "family_id": "sha256:72ab4b15e7aec735972522a94dc9c98db8424af805ca4a9f273b350a10ba78e9:source_mismatched",
+  "human_target": null,
+  "input_tokens": null,
+  "intervention_source_id": "11319",
+  "issued_state": "sha256:6d004fddbc71a82a3b23b351dc01f9d360f2f39595728dba2e40af68f0fa4e89",
+  "metric": "bounded_probability_parse",
+  "numerator": 0,
+  "parsed": {
+    "citation_valid": false,
+    "completed": false,
+    "finish_reason": null,
+    "probability": null,
+    "schema_valid": false,
+    "source_sentence_id": null,
+    "status": "invalid_envelope",
+    "syntax_valid": false,
+    "usage": {}
+  },
+  "probability": null,
+  "public_eligible": false,
+  "public_hash": "sha256:5f7f4474204c55546eb5e32a3fc3636cc7ae07780c588b2150da6d1e4da142d7",
+  "raw_response": {},
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"Paul Walker is hardly the first actor to die during a production. But Walker's death in November 2013 at the age of 40 after a car crash was especially eerie given his rise to fame in the \\\"Fast and Furious\\\" film franchise. The release of \\\"Furious 7\\\" on Friday offers the opportunity for fans to remember -- and possibly grieve again -- the man that so many have praised as one of the nicest guys in Hollywood. \\\"He was a person of humility, integrity, and compassion,\\\" military veteran Kyle Upham said in an email to CNN. Walker secretly paid for the engagement ring Upham shopped for with his bride. \\\"We didn't know him personally but this was apparent in the short time we spent with him. I know that we will never forget him and he will always be someone very special to us,\\\" said Upham. The actor was on break from filming \\\"Furious 7\\\" at the time of the fiery accident, which also claimed the life of the car's driver, Roger Rodas. Producers said early on that they would not kill off Walker's character, Brian O'Connor, a former cop turned road racer. Instead, the script was rewritten and special effects were used to finish scenes, with Walker's brothers, Cody and Caleb, serving as body doubles. There are scenes that will resonate with the audience -- including the ending, in which the filmmakers figured out a touching way to pay tribute to Walker while \\\"retiring\\\" his character. At the premiere Wednesday night in Hollywood, Walker's co-star and close friend Vin Diesel gave a tearful speech before the screening, saying \\\"This movie is more than a movie.\\\" \\\"You'll feel it when you see it,\\\" Diesel said. \\\"There's something emotional that happens to you, where you walk out of this movie and you appreciate everyone you love because you just never know when the last day is you're gonna see them.\\\" There have been multiple tributes to Walker leading up to the release. Diesel revealed in an interview with the \\\"Today\\\" show that he had named his newborn daughter after Walker. Social media has also been paying homage to the late actor. A week after Walker's death, about 5,000 people attended an outdoor memorial to him in Los Angeles. Most had never met him. Marcus Coleman told CNN he spent almost $1,000 to truck in a banner from Bakersfield for people to sign at the memorial. \\\"It's like losing a friend or a really close family member ... even though he is an actor and we never really met face to face,\\\" Coleman said. \\\"Sitting there, bringing his movies into your house or watching on TV, it's like getting to know somebody. It really, really hurts.\\\" Walker's younger brother Cody told People magazine that he was initially nervous about how \\\"Furious 7\\\" would turn out, but he is happy with the film. \\\"It's bittersweet, but I think Paul would be proud,\\\" he said. CNN's Paul Vercammen contributed to this report.\\n\", \"original_answer\": \"The Baltimore Ravens are expected to make a big move by acquiring running back Derrick Henry from the Tennessee Titans before the NFL Trade deadline. The Titans seem to be embracing a rebuild and may be sellers at the deadline. Henry, despite a less productive season in 2023, is still considered one of the best running backs in the league. The Ravens, with their strong rushing offense and lack of depth at the position, are seen as the frontrunners to land Henry. It is likely that Henry will be traded next week.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 0,
+  "role": "fit",
+  "source_bytes": "526176656e732041707065617220746f204265204c616e64696e672053706f7420666f72204465727269636b2048656e72790a5468652042616c74696d6f726520526176656e732061707065617220746f20626520736520746f74206d616b65206120626967206d6f7665206168656164206f6620746865204e464c20547261646520646561646c696e65206f6e20547565736461792c2077697468207468652072756e6e696e672067616d6520746865207461726765742e0a57697468207468652054656e6e657373656520546974616e73207365656d696e676c7920656d62726163696e672061206d756368206e65656465642072656275696c642c206b69636b6564206f666620627920746865206465636973696f6e20746f2073746172742057696c6c204c65766973206173205279616e2054616e6e6568696c6c20697320696e6a7572656420616e64207468652074726164696e67206f66206c6f6e672d74696d652073616665747920616e64207465616d206361707461696e204b6576696e2042796172642c206974206170706561727320746861742074686520546974616e73206d61792062652073656c6c6572732061742074686520646561646c696e652e0a41206e756d626572206f66204e464c206a6f75726e616c697374732c2073706f72747320636f6e74656e742063726561746f72732c20616e6420616e616c79737473206861766520616c7265616479206265656e2073706563756c6174696e6720746861742074686520546974616e73206d6179206265207665727920627573792061742074686520646561646c696e652c20627574206e6f7720697420617070656172732074686174206f6e65206f662074686569722062696767657374206e616d65732077696c6c206c696b656c79206265206368616e67696e67206a657273657973206e657874207765656b2e0a5468617420706c6179657220697320546974616e732072756e6e696e67206261636b204465727269636b2048656e72792c2077686f20686173206c6f6e67206265656e206f6e65206f662074686520626573742072756e6e696e67206261636b7320696e20746865206c65616775652c206465737069746520686176696e67206120646f776e20736561736f6e20696e20323032332c20636f6d706172656420746f206869732070726f64756374696f6e20696e207072696f7220736561736f6e732e0a48656e727920686164206265656e2072756d6f72656420746f20626520617661696c61626c6520647572696e6720746865206f6666736561736f6e2c20736f2074726164696e672068696d206e657874207765656b20776f756c646e277420636f6d65206173206120636f6d706c6574652073686f636b2c20616e64206974206170706561727320746861742074776f207465616d732061726520636f6e7369646572656420746f206265206c656164696e6720746865207061636b207768656e20697420636f6d657320746f206c616e64696e672048656e72792e0a5468652042616c74696d6f726520526176656e7320616e6420436c6576656c616e642042726f776e7320616c7265616479206861766520612073746f7269656420726976616c72792c20616e642074686579206170706561722073657420746f20626174746c65206974206f757420666f722048656e727920696e2074686520636f6d696e6720646179732e0a486f77657665722c206974206170706561727320746861742074686520526176656e7320686176652074686520696e7369646520747261636b2e0a42616c74696d6f72652c20776869636820686173206120546f7020352072757368696e67206f6666656e736520696e20746865204e464c2c206861732068616420746f2072656c79206f6e20717561727465726261636b204c616d6172204a61636b736f6e20666f72207468652062756c6b206f662074686569722072757368696e6720796172647320616e642072757368696e6720746f756368646f776e732c20616e6420776974686f7574204a61636b736f6e277320636f6e747269627574696f6e732074686520526176656e7320776f756c642064726f70206f7574206f662074686520546f7020313020696e2072757368696e672e0a54686520526176656e732061726520616c736f20776974686f75742072756e6e696e67206261636b204a2e4b2e20446f6262696e732077686f207375666665726564206120736561736f6e2d656e64696e6720416368696c6c657320696e6a75727920696e2074686520736561736f6e206f70656e65722c206c656176696e6720746865207465616d20746f2072656c79206f6e20746865206c696b6573206f6620477573204564776172647320616e64204a7573746976652048696c6c2c20616c6f6e672077697468204d656c76696e20476f72646f6e2e0a546865206c6561647320746f2074686520526176656e7320686176696e6720696e74657265737420696e2048656e72792c20616e64206c696b656c79206265696e6720746865206d6f7374206167677265737369766520696e206c616e64696e672068696d2e0a5265676172646c657373206f66207768657265206865206c616e64732c2069742061707065617273206c696b656c7920746861742048656e72792077696c6c206265206f6e20746865206d6f7665206e657874207765656b2e",
+  "source_cluster_id": "sha256:7dfb5c7284b91d208931487d267a44f3832d3366b71e958bb01a2911503ef5b0",
+  "source_id": "13860",
+  "started": false,
+  "status": "excluded",
+  "unit_id": "sha256:72ab4b15e7aec735972522a94dc9c98db8424af805ca4a9f273b350a10ba78e9",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23
+  ]
+}

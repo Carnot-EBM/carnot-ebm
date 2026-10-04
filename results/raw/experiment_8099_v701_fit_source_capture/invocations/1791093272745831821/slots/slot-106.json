@@ -1,0 +1,83 @@
+{
+  "answer_bytes": "546f2072656865617420666f6f6420666f7220686f7420686f6c64696e672c206974206d7573742062652068656174656420746f2061206d696e696d756d2074656d7065726174757265206f662031363520c2b04620666f72203135207365636f6e64732077697468696e203220686f7572732e20546869732070726f636573732073686f756c6420626520646f6e65207573696e672070726f7065722070726f6365647572657320746f20656e7375726520666f6f64207361666574792e205468652074656d7065726174757265206f662074686520666f6f642073686f756c6420626520636865636b65642077697468206120636c65616e2c2073616e6974697a65642c20616e642063616c6962726174656420746865726d6f6d65746572206265666f72652073657276696e672e",
+  "arm": "full_source",
+  "capture_identity": "sha256:6d004fddbc71a82a3b23b351dc01f9d360f2f39595728dba2e40af68f0fa4e89",
+  "censor_status": false,
+  "condition": "complete_original_source",
+  "denominator": 1,
+  "duration_s": 0.0,
+  "eligibility": false,
+  "exclusion_reason": "owned_validation_failed",
+  "failure_kind": "invalid_envelope",
+  "failure_status": false,
+  "family_id": "sha256:19dd496a3ae54ae266336a0e83aa65ce8a312342bac469c62a1d718b496db395:full_source",
+  "human_target": null,
+  "input_tokens": null,
+  "issued_state": "sha256:6d004fddbc71a82a3b23b351dc01f9d360f2f39595728dba2e40af68f0fa4e89",
+  "metric": "bounded_probability_parse",
+  "numerator": 0,
+  "parsed": {
+    "citation_valid": false,
+    "completed": false,
+    "finish_reason": null,
+    "probability": null,
+    "schema_valid": false,
+    "source_sentence_id": null,
+    "status": "invalid_envelope",
+    "syntax_valid": false,
+    "usage": {}
+  },
+  "probability": null,
+  "public_eligible": false,
+  "public_hash": "sha256:53b8a989ecda8e807ce32cbc42c7f4b198fe2512a24f4447249cfa9eccd30691",
+  "raw_response": {},
+  "request": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:Food safety facts. 1  Cooking and pooling of eggs. Contaminated eggs can carry Salmonella enteritidis and can cause the elderly, small children and those with immune-compromised systems to get sick when consuming raw or undercooked eggs. 2  Food safety in your home kitchen. Food safety in your home kitchen is just as important as food safety in restaurant kitchens. In fact, as much as 60% of foodborne illness may be from home kitchens. Labeling raw and undercooked foods.\\\\n\\\\npassage 2:Reheat foods using proper procedures. \u2022 Reheat the following foods to 165 \u00b0F for 15 seconds within 2 hours: \u25ca Any food that has been cooked and cooled and will be reheated for hot holding, \u25ca Leftovers reheated for hot holding, \u25ca Products made from leftovers, such as soup or casseroles, and. \u25ca Precooked, processed foods that have been previously cooled. \u2022 Reheat foods rapidly using the correct equipment. When reheating food, the total time the temperature. of the food is between 41 \u00b0F and 165 \u00b0F cannot exceed 2 hours. \u2022 Serve reheated food immediately or place in appropriate hot holding unit. Monitor reheating process. \u2022 Check food temperatures with a clean, sanitized, and calibrated thermometer.\\\\n\\\\npassage 3:Use a food thermometer to check the temperature after cooking. All food should be reheated to 165 degrees Fahrenheit. Step 3 Put roasted food in the oven Put roasts, casseroles, and pasta dishes with sauce in an oven-safe pan and cover loosely with aluminum foil. Bake at 325 degrees and heat to 165 degrees.\\\\n\\\\n\\\",\\\"question\\\":\\\"how do you reheat food for hot holding\\\"}\", \"original_answer\": \"To reheat food for hot holding, it must be heated to a minimum temperature of 165 \u00b0F for 15 seconds within 2 hours. This process should be done using proper procedures to ensure food safety. The temperature of the food should be checked with a clean, sanitized, and calibrated thermometer before serving.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 0,
+  "role": "fit",
+  "source_bytes": "7b227061737361676573223a227061737361676520313a466f6f64207361666574792066616374732e20312020436f6f6b696e6720616e6420706f6f6c696e67206f6620656767732e20436f6e74616d696e6174656420656767732063616e2063617272792053616c6d6f6e656c6c6120656e74657269746964697320616e642063616e2063617573652074686520656c6465726c792c20736d616c6c206368696c6472656e20616e642074686f7365207769746820696d6d756e652d636f6d70726f6d697365642073797374656d7320746f20676574207369636b207768656e20636f6e73756d696e6720726177206f7220756e646572636f6f6b656420656767732e20322020466f6f642073616665747920696e20796f757220686f6d65206b69746368656e2e20466f6f642073616665747920696e20796f757220686f6d65206b69746368656e206973206a75737420617320696d706f7274616e7420617320666f6f642073616665747920696e2072657374617572616e74206b69746368656e732e20496e20666163742c206173206d75636820617320363025206f6620666f6f64626f726e6520696c6c6e657373206d61792062652066726f6d20686f6d65206b69746368656e732e204c6162656c696e672072617720616e6420756e646572636f6f6b656420666f6f64732e5c6e5c6e7061737361676520323a52656865617420666f6f6473207573696e672070726f7065722070726f636564757265732e20e280a2205265686561742074686520666f6c6c6f77696e6720666f6f647320746f2031363520c2b04620666f72203135207365636f6e64732077697468696e203220686f7572733a20e2978a20416e7920666f6f64207468617420686173206265656e20636f6f6b656420616e6420636f6f6c656420616e642077696c6c20626520726568656174656420666f7220686f7420686f6c64696e672c20e2978a204c6566746f7665727320726568656174656420666f7220686f7420686f6c64696e672c20e2978a2050726f6475637473206d6164652066726f6d206c6566746f766572732c207375636820617320736f7570206f72206361737365726f6c65732c20616e642e20e2978a20507265636f6f6b65642c2070726f63657373656420666f6f647320746861742068617665206265656e2070726576696f75736c7920636f6f6c65642e20e280a22052656865617420666f6f64732072617069646c79207573696e672074686520636f72726563742065717569706d656e742e205768656e20726568656174696e6720666f6f642c2074686520746f74616c2074696d65207468652074656d70657261747572652e206f662074686520666f6f64206973206265747765656e20343120c2b04620616e642031363520c2b0462063616e6e6f7420657863656564203220686f7572732e20e280a220536572766520726568656174656420666f6f6420696d6d6564696174656c79206f7220706c61636520696e20617070726f70726961746520686f7420686f6c64696e6720756e69742e204d6f6e69746f7220726568656174696e672070726f636573732e20e280a220436865636b20666f6f642074656d7065726174757265732077697468206120636c65616e2c2073616e6974697a65642c20616e642063616c6962726174656420746865726d6f6d657465722e5c6e5c6e7061737361676520333a557365206120666f6f6420746865726d6f6d6574657220746f20636865636b207468652074656d706572617475726520616674657220636f6f6b696e672e20416c6c20666f6f642073686f756c6420626520726568656174656420746f2031363520646567726565732046616872656e686569742e205374657020332050757420726f617374656420666f6f6420696e20746865206f76656e2050757420726f617374732c206361737365726f6c65732c20616e6420706173746120646973686573207769746820736175636520696e20616e206f76656e2d736166652070616e20616e6420636f766572206c6f6f73656c79207769746820616c756d696e756d20666f696c2e2042616b6520617420333235206465677265657320616e64206865617420746f2031363520646567726565732e5c6e5c6e222c227175657374696f6e223a22686f7720646f20796f752072656865617420666f6f6420666f7220686f7420686f6c64696e67227d",
+  "source_cluster_id": "sha256:3cfd2ec17c62e00ba175718aaad2ac581005cd4e49a95df784d4980af335b8a6",
+  "source_id": "14477",
+  "started": false,
+  "status": "excluded",
+  "unit_id": "sha256:19dd496a3ae54ae266336a0e83aa65ce8a312342bac469c62a1d718b496db395",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17
+  ]
+}
