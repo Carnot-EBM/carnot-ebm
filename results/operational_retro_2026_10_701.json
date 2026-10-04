@@ -1,0 +1,62 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.10.701",
+  "generated_at": "2026-10-04T09:11:09Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 41.4,
+  "experiments_completed": 9,
+  "compute_bound_experiments_count": 2,
+  "slowest_experiments": [
+    {
+      "experiment": "Capture bounded stream and retention features without future labels",
+      "duration_minutes": 14.89,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Measure full radial transactions and charged model acquisition",
+      "duration_minutes": 7.5,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Capture bounded Qwen fit scores and source-use controls",
+      "duration_minutes": 4.64,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Independently decide thirteen outcomes and the remaining PRD gaps",
+      "duration_minutes": 3.69,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Bound radial precision and preserve each board evidence boundary",
+      "duration_minutes": 3.39,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.10.701 executed 9 experiments (2 compute-bound, 7 synthesis-only) across 41.4 total wall-time minutes (averaging 5 minutes per experiment) reconstructed from disk-mtime fallback data. Execution was led by compute-bound task 'Capture bounded stream and retention features without future labels' (14.89 minutes) and synthesis task 'Measure full radial transactions and charged model acquisition' (7.5 minutes), followed by compute-bound task 'Capture bounded Qwen fit scores and source-use controls' (4.64 minutes), synthesis task 'Independently decide thirteen outcomes and the remaining PRD gaps' (3.69 minutes), and synthesis task 'Bound radial precision and preserve each board evidence boundary' (3.39 minutes). Point-in-time GPU monitor polling observed 0% utilization across both NVIDIA GeForce RTX 3090 GPUs with 4MB memory allocated outside active runs, and gpu_idle_on_compute_bound_tasks is recorded as false as neither compute-bound task showed idle failure or evaluated multiple models concurrently.",
+  "bottlenecks_identified": [
+    "Milestone wall time was concentrated in the slowest experiment: compute-bound task 'Capture bounded stream and retention features without future labels' accounted for 14.89 of the 41.4 total milestone wall-time minutes (36.0%), and the top two slowest tasks combined for 22.39 minutes (54.1%).",
+    "Compute-bound execution consumed 19.53 minutes (47.2% of milestone duration) across two tasks without intra-task stage breakdown, led by serial stream and retention feature extraction (14.89 minutes) and single-model Qwen fit score evaluation (4.64 minutes).",
+    "Synthesis-only tasks accounted for 7 of the 9 completed experiments and 3 of the top 5 slowest tasks (totaling 14.58 minutes among the top 5), led by 'Measure full radial transactions and charged model acquisition' at 7.5 minutes.",
+    "Milestone execution timing relied on disk-mtime fallback reconstruction following zero commits on the live git-log path, leaving intra-task execution phases (environment setup, data loading, model inference, and artifact emission) uninstrumented without phase-level timing breakdown.",
+    "Static point-in-time GPU monitor polling outside active runs leaves in-flight accelerator efficiency and memory bandwidth unmeasured during active compute-bound task execution windows."
+  ],
+  "improvements_suggested": [
+    "Instrument experiment runners with granular sub-phase timers to isolate latency across environment setup, data loading, feature extraction, model inference, and artifact emission.",
+    "Emit synchronous lifecycle start and completion timestamps directly into task result receipts during conductor execution to eliminate reliance on git-log or disk-mtime fallback reconstruction.",
+    "Profile and optimize the feature stream extraction pipeline in 'Capture bounded stream and retention features without future labels' (14.89 minutes) to reduce serial data processing and retention evaluation overhead.",
+    "Deploy continuous in-flight accelerator telemetry sampling during compute-bound execution windows to measure GPU utilization and memory bandwidth dynamically.",
+    "Restrict DualGPURunner orchestration strictly to parallel workloads involving two or more distinct models loaded simultaneously, avoiding misapplication to single-model tasks like bounded Qwen fit score evaluation.",
+    "Maintain failure_ledger pre-launch verification so doomed reruns continue to be blocked in sub-second time without expending execution budget."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Instrument experiment runners with granular intra-task sub-phase execution timing to expose data loading, inference, synthesis passes, and receipt emission latency.",
+    "Profile and optimize the stream feature extraction and retention calculation pipeline (which accounted for 14.89 minutes of milestone wall time).",
+    "Persist structured start and finish lifecycle timestamps directly into experiment receipt artifacts to replace disk-mtime fallback reconstruction."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Milestone 2026.10.701 executed 9 experiments (2 compute-bound, 7 synthesis-only) in 41.4 wall-time minutes, led by compute-bound feature capture (14.89 minutes) and radial transaction synthesis (7.5 minutes). The 0% GPU utilization observed on both RTX 3090 GPUs reflects point-in-time monitor polling outside active runs, and gpu_idle_on_compute_bound_tasks is false as neither single-model task required DualGPURunner. High-leverage operational gains lie in instrumenting granular sub-phase execution timers and optimizing feature stream processing pipelines, with estimated time savings set to 0% pending empirical phase telemetry."
+}

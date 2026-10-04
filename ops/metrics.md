@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-10-04 Milestone 2026.10.701 Operational Retrospective
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-10-04T09:11:17Z | 2026-10-04T09:14:18Z | Wrote operational retro for milestone 2026.10.701; adversarial reviewer verified clean | ~25k |
+
+---
+
 ## Session: 2026-10-04 Milestone 2026.10.700 Operational Retrospective
 
 ### Turn Log
