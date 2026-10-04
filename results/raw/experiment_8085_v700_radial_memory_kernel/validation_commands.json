@@ -1,0 +1,288 @@
+{
+  "code_hashes": {
+    "python/carnot/experiment_8085_v700_radial_memory_kernel.py": "sha256:65798daef561abc178d6706579fb612b7aa3e3c6e02c415a969fc2ac343d81d8",
+    "python/carnot/verify/radial_memory_8085.py": "sha256:c795da5b8aa5a608e30f63099ded75c2c4cdc3702288f1da367d624e18103091",
+    "scripts/experiments/experiment_8085_v700_radial_memory_kernel.py": "sha256:775b492fbbd2666033eb6fc9f4ba08ee1b01f39336f3cbce1b4f85ce13a1d7c9"
+  },
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8085_v700_radial_memory_kernel.py",
+        "--root",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "--worker-output",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8085_v700_radial_memory_kernel/work.json"
+      ],
+      "deadline_s": 300,
+      "expected_exit": 0,
+      "name": "measurement_normal_exit"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-8085-q_6jsv_b/.coverage",
+        "--rcfile=/tmp/carnot-8085-q_6jsv_b/coverage.ini",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_radial_memory_8085.py",
+        "--basetemp=/tmp/carnot-8085-q_6jsv_b/unit"
+      ],
+      "classification": "required",
+      "deadline_s": 180,
+      "expected_exit": 0,
+      "name": "focused_unit"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_primary_publication_7928.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_source_boundary_7852.py",
+        "--basetemp=/tmp/carnot-8085-q_6jsv_b/consumer"
+      ],
+      "classification": "required",
+      "deadline_s": 180,
+      "expected_exit": 0,
+      "name": "consumer_e2e015"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-8085-q_6jsv_b/.coverage",
+        "--rcfile=/tmp/carnot-8085-q_6jsv_b/coverage.ini",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8085_v700_radial_memory_kernel.py",
+        "--fixture-output",
+        "/tmp/carnot-8085-q_6jsv_b/success/experiment_8085_v700_radial_memory_kernel.json"
+      ],
+      "classification": "required",
+      "deadline_s": 120,
+      "expected_exit": 0,
+      "name": "private_cli_success"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-8085-q_6jsv_b/.coverage",
+        "--rcfile=/tmp/carnot-8085-q_6jsv_b/coverage.ini",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8085_v700_radial_memory_kernel.py",
+        "--fixture-output",
+        "/tmp/carnot-8085-q_6jsv_b/blocked/experiment_8085_v700_radial_memory_kernel.json",
+        "--root",
+        "/tmp/carnot-8085-q_6jsv_b/missing"
+      ],
+      "classification": "required",
+      "deadline_s": 120,
+      "expected_exit": 0,
+      "name": "private_cli_blocked"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-8085-q_6jsv_b/.coverage",
+        "--rcfile=/tmp/carnot-8085-q_6jsv_b/coverage.ini",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8085_v700_radial_memory_kernel.py",
+        "--fixture-output",
+        "/tmp/carnot-8085-q_6jsv_b/mutation/experiment_8085_v700_radial_memory_kernel.json",
+        "--mutate"
+      ],
+      "classification": "required",
+      "deadline_s": 120,
+      "expected_exit": 0,
+      "name": "private_cli_mutation"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-8085-q_6jsv_b/.coverage",
+        "--rcfile=/tmp/carnot-8085-q_6jsv_b/coverage.ini",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8085_v700_radial_memory_kernel.py",
+        "--cold-replay",
+        "/tmp/carnot-8085-q_6jsv_b/success/experiment_8085_v700_radial_memory_kernel.json"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "name": "private_cold_replay"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--data-file=/tmp/carnot-8085-q_6jsv_b/.coverage",
+        "--rcfile=/tmp/carnot-8085-q_6jsv_b/coverage.ini"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "name": "coverage_combine"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/carnot-8085-q_6jsv_b/.coverage",
+        "--rcfile=/tmp/carnot-8085-q_6jsv_b/coverage.ini",
+        "--fail-under=100",
+        "--show-missing"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "name": "coverage_report"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "json",
+        "--data-file=/tmp/carnot-8085-q_6jsv_b/.coverage",
+        "--rcfile=/tmp/carnot-8085-q_6jsv_b/coverage.ini",
+        "-o",
+        "/tmp/carnot-8085-q_6jsv_b/coverage.json"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "name": "coverage_json"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8085_v700_radial_memory_kernel.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/radial_memory_8085.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8085_v700_radial_memory_kernel.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_radial_memory_8085.py"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "name": "ruff_check"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8085_v700_radial_memory_kernel.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/radial_memory_8085.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8085_v700_radial_memory_kernel.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_radial_memory_8085.py"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "name": "ruff_format"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--config-file=/dev/null",
+        "--strict",
+        "--follow-imports=silent",
+        "--ignore-missing-imports",
+        "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8085_v700_radial_memory_kernel.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/radial_memory_8085.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8085_v700_radial_memory_kernel.py"
+      ],
+      "classification": "required",
+      "deadline_s": 180,
+      "expected_exit": 0,
+      "name": "mypy_strict"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/check_spec_coverage.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_radial_memory_8085.py"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "name": "scoped_spec"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7868_v683_intervention_protocol.py",
+        "--date",
+        "20260929",
+        "--fixture-e2e",
+        "/tmp/carnot-8085-q_6jsv_b/e2e016.json"
+      ],
+      "classification": "required",
+      "deadline_s": 120,
+      "expected_exit": 0,
+      "name": "e2e016"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7868_v683_intervention_protocol.py",
+        "--date",
+        "20260929",
+        "--cold-replay",
+        "/tmp/carnot-8085-q_6jsv_b/e2e016.json"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "name": "e2e016_replay"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q",
+        "--basetemp=/tmp/carnot-8085-q_6jsv_b/full"
+      ],
+      "classification": "diagnostic",
+      "deadline_s": 180,
+      "expected_exit": 0,
+      "name": "repository_full_suite"
+    }
+  ],
+  "config": {
+    "dictionary": {
+      "additions": 12,
+      "initial": 16,
+      "opportunities": [
+        64,
+        128,
+        192
+      ],
+      "per_opportunity": 4,
+      "update_rows": 64
+    },
+    "dimensions": 9,
+    "fixture_count": 64,
+    "fixture_deadline_s": 300,
+    "maxiter": 256,
+    "optimizer_deadline_s": 600,
+    "ridge": 0.01,
+    "seed": 7008085,
+    "tolerance": 1e-10
+  },
+  "terminal_checks": [
+    "cold_replay",
+    "adversarial",
+    "strict_rows"
+  ]
+}

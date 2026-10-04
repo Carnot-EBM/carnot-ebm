@@ -1,0 +1,35 @@
+.............F.                                                          [100%]
+=================================== FAILURES ===================================
+________________ test_real_cli_public_success_and_gate_failure _________________
+
+tmp_path = PosixPath('/tmp/carnot-8085-4f69nbb8/consumer/test_real_cli_public_success_a0')
+
+    def test_real_cli_public_success_and_gate_failure(tmp_path: Path) -> None:
+        """SCENARIO-REPORT-7852-TERMINAL: both child routes stay private."""
+        row = {
+            "family_id": "opaque-1",
+            "source_bytes": b"Alpha. Beta.".hex(),
+            "answer_bytes": b"Alpha.".hex(),
+        }
+        public = tmp_path / "public.jsonl"
+        output = tmp_path / "features.jsonl"
+        public.write_text(json.dumps(row) + "\n")
+        base = [
+            sys.executable,
+            "-u",
+            "scripts/experiments/experiment_7852_v682_source_boundary.py",
+            "--fixture-public",
+            str(public),
+            "--fixture-output",
+            str(output),
+        ]
+>       assert subprocess.run(base, capture_output=True, check=False).returncode == 0
+E       assert 2 == 0
+E        +  where 2 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', 'scripts/experiments/expe...not-8085-4f69nbb8/scripts/experiments/experiment_7852_v682_source_boundary.py': [Errno 2] No such file or directory\n").returncode
+E        +    where CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', 'scripts/experiments/expe...not-8085-4f69nbb8/scripts/experiments/experiment_7852_v682_source_boundary.py': [Errno 2] No such file or directory\n") = <function run at 0x7f62af7707c0>(['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', 'scripts/experiments/experiment_7852_v682_sourc...re-public', '/tmp/carnot-8085-4f69nbb8/consumer/test_real_cli_public_success_a0/public.jsonl', '--fixture-output', ...], capture_output=True, check=False)
+E        +      where <function run at 0x7f62af7707c0> = subprocess.run
+
+/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_source_boundary_7852.py:68: AssertionError
+=========================== short test summary info ============================
+FAILED ../../home/ianblenke/github.com/ianblenke/carnot/tests/python/test_source_boundary_7852.py::test_real_cli_public_success_and_gate_failure
+1 failed, 14 passed in 2.54s
