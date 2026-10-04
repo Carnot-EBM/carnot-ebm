@@ -1,0 +1,247 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_primary_publication_7928.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_current_work_receipt.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_qwen_development_capture_7995.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_source_boundary_7852.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_experiment_7942_v689_sentence_labels.py",
+        "--collect-only"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "external_cwd": false,
+      "name": "collect_consumers"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-8102-validation-ifk6jwqe/.coverage.unit",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8118_v702_fresh_acquisition_cost.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/fresh_acquisition_cost_8118.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8118_v702_fresh_acquisition_cost.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_fresh_acquisition_cost_8118.py"
+      ],
+      "classification": "required",
+      "deadline_s": 300,
+      "expected_exit": 0,
+      "external_cwd": false,
+      "name": "focused_coverage"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-8102-validation-ifk6jwqe/.coverage.success",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8118_v702_fresh_acquisition_cost.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/fresh_acquisition_cost_8118.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8118_v702_fresh_acquisition_cost.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8118_v702_fresh_acquisition_cost.py",
+        "--date",
+        "20261004",
+        "--fixture",
+        "/tmp/carnot-8102-validation-ifk6jwqe/public.json",
+        "--output",
+        "/tmp/carnot-8102-validation-ifk6jwqe/success/experiment_8118_v702_fresh_acquisition_cost.json"
+      ],
+      "classification": "required",
+      "deadline_s": 120,
+      "expected_exit": 0,
+      "external_cwd": true,
+      "name": "cli_success"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-8102-validation-ifk6jwqe/.coverage.blocked",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8118_v702_fresh_acquisition_cost.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/fresh_acquisition_cost_8118.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8118_v702_fresh_acquisition_cost.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8118_v702_fresh_acquisition_cost.py",
+        "--date",
+        "20261004",
+        "--fixture",
+        "/tmp/carnot-8102-validation-ifk6jwqe/absent.json",
+        "--output",
+        "/tmp/carnot-8102-validation-ifk6jwqe/blocked/experiment_8118_v702_fresh_acquisition_cost.json"
+      ],
+      "classification": "required",
+      "deadline_s": 120,
+      "expected_exit": 0,
+      "external_cwd": true,
+      "name": "cli_blocked"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-8102-validation-ifk6jwqe/.coverage.mutation",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8118_v702_fresh_acquisition_cost.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/fresh_acquisition_cost_8118.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8118_v702_fresh_acquisition_cost.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8118_v702_fresh_acquisition_cost.py",
+        "--date",
+        "20261004",
+        "--fixture",
+        "/tmp/carnot-8102-validation-ifk6jwqe/bad.json",
+        "--output",
+        "/tmp/carnot-8102-validation-ifk6jwqe/mutation/experiment_8118_v702_fresh_acquisition_cost.json"
+      ],
+      "classification": "required",
+      "deadline_s": 120,
+      "expected_exit": 0,
+      "external_cwd": true,
+      "name": "cli_mutation"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8118_v702_fresh_acquisition_cost.py",
+        "--date",
+        "20261004",
+        "--cold-replay",
+        "/tmp/carnot-8102-validation-ifk6jwqe/success/experiment_8118_v702_fresh_acquisition_cost.json"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "external_cwd": true,
+      "name": "cli_cold_replay"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "-q",
+        "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_primary_publication_7928.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_current_work_receipt.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_qwen_development_capture_7995.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_source_boundary_7852.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_experiment_7942_v689_sentence_labels.py"
+      ],
+      "classification": "required",
+      "deadline_s": 180,
+      "expected_exit": 0,
+      "external_cwd": false,
+      "name": "consumer_tests"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "combine",
+        "--data-file=/tmp/carnot-8102-validation-ifk6jwqe/.coverage.all",
+        "/tmp/carnot-8102-validation-ifk6jwqe/.coverage.unit",
+        "/tmp/carnot-8102-validation-ifk6jwqe/.coverage.success",
+        "/tmp/carnot-8102-validation-ifk6jwqe/.coverage.blocked",
+        "/tmp/carnot-8102-validation-ifk6jwqe/.coverage.mutation"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "external_cwd": false,
+      "name": "coverage_combine"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "json",
+        "--data-file=/tmp/carnot-8102-validation-ifk6jwqe/.coverage.all",
+        "--include=/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8118_v702_fresh_acquisition_cost.py,/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/fresh_acquisition_cost_8118.py,/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8118_v702_fresh_acquisition_cost.py",
+        "--fail-under=100",
+        "-o",
+        "/tmp/carnot-8102-validation-ifk6jwqe/coverage.json"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "external_cwd": false,
+      "name": "changed_code_coverage"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8118_v702_fresh_acquisition_cost.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/fresh_acquisition_cost_8118.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8118_v702_fresh_acquisition_cost.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_fresh_acquisition_cost_8118.py"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "external_cwd": false,
+      "name": "ruff_check"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8118_v702_fresh_acquisition_cost.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/fresh_acquisition_cost_8118.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8118_v702_fresh_acquisition_cost.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_fresh_acquisition_cost_8118.py"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "external_cwd": false,
+      "name": "ruff_format"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "--config-file=/dev/null",
+        "--strict",
+        "--follow-imports=skip",
+        "--ignore-missing-imports",
+        "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8118_v702_fresh_acquisition_cost.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/fresh_acquisition_cost_8118.py"
+      ],
+      "classification": "required",
+      "deadline_s": 120,
+      "expected_exit": 0,
+      "external_cwd": false,
+      "name": "strict_mypy"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/check_spec_coverage.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_fresh_acquisition_cost_8118.py"
+      ],
+      "classification": "required",
+      "deadline_s": 60,
+      "expected_exit": 0,
+      "external_cwd": false,
+      "name": "spec_coverage"
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q"
+      ],
+      "classification": "diagnostic",
+      "deadline_s": 180,
+      "expected_exit": 0,
+      "external_cwd": false,
+      "name": "repository_full_suite"
+    }
+  ]
+}

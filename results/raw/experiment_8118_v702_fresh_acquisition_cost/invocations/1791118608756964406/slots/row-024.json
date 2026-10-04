@@ -1,0 +1,141 @@
+{
+  "answer_bytes": "4261736564206f6e2074686520676976656e2070617373616765732c206120736e616b652072696e672063616e2073796d626f6c697a6520766172696f7573207468696e677320646570656e64696e67206f6e207468652066696e67657220697420697320776f726e206f6e2e204f6e207468652066697273742066696e6765722c20697420737567676573747320616e2065676f746973746963616c20706572736f6e207573696e672074686520736e616b6520746f20656e68616e6365207468656972207374617475732e204f6e20746865207365636f6e642066696e6765722c2069742073756767657374732061206d6174657269616c697374696320706572736f6e207573696e672074686520736e616b6520746f20656e68616e6365207468656972207765616c74682e204f6e207468652074686972642066696e6765722c20697420737567676573747320616e20656d6f74696f6e616c20706572736f6e207573696e672074686520736e616b6520746f206d6974696761746520746865697220656d6f74696f6e732e204f6e2074686520666f757274682066696e6765722c206974207375676765737473206120706572736f6e20776974682073657875616c20696e6869626974696f6e73207573696e672074686520736e616b6520746f206569746865722068696465206f72206f766572636f6d6520746869732070726f626c656d2e",
+  "arm": "full_source",
+  "capture_identity": "sha256:7633d95ab585db881922c5a40f6d355b28b77121e85d830c7907ffb0ba0f39af",
+  "censor_status": false,
+  "completion_sha256": "sha256:119d95e4bb21c78989ef5765a89ef2e10a1cfaf3345dc378f1b1a58ef7dc6f5d",
+  "component_costs": {
+    "cache_write_ns": 476024,
+    "exact_reuse_ns": 174949,
+    "generation_ms": 534.83,
+    "parsing_ns": 13174,
+    "prefill_ms": 549.244,
+    "request_failure_s": 0,
+    "request_wall_s": 1.2432363310363144
+  },
+  "condition": "complete_original_source",
+  "current_acquisition": true,
+  "denominator": 1,
+  "duration_s": 1.2432363310363144,
+  "eligibility": true,
+  "exclusion_reason": null,
+  "failure_kind": null,
+  "failure_status": false,
+  "family_id": "exp8118:sha256:1b0a2fedf0eaf67566bf1336e1c5ec446d3c81752bbc752b1788f6bf5be535e7:full_source",
+  "human_target": null,
+  "identical_historical_key": null,
+  "input_tokens": 469,
+  "issued_state": "sha256:7633d95ab585db881922c5a40f6d355b28b77121e85d830c7907ffb0ba0f39af",
+  "judgment_key": "sha256:7a62af99e83eddbb83a711b8402a45f8a0f5bc689090ea448c9b5ba8dab9a064",
+  "key_identity": {
+    "chat_template_sha256": "sha256:1479547fcbec594bd35a7b6e48d5a08703554b37b03a5889cabf3775d6bb165a",
+    "gguf_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773"
+  },
+  "measurement_scope": "current",
+  "metric": "bounded_probability_parse",
+  "numerator": 1,
+  "parsed": {
+    "citation_valid": true,
+    "completed": true,
+    "finish_reason": "stop",
+    "probability": 0.0,
+    "schema_valid": true,
+    "source_sentence_id": null,
+    "status": "completed",
+    "syntax_valid": true,
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 469,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 492
+    }
+  },
+  "probability": 0.0,
+  "public_eligible": true,
+  "public_hash": "sha256:775b4ac41fcff8f429470d888f3befc979a6e3d7717fa868a33016e34337c56b",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"unsupported_probability\": 0.0,\n  \"source_sentence_id\": null\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1791119026,
+    "id": "chatcmpl-gI2farHREnf77KNmBjWOjd0b5tl6KXnx",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 534.83,
+      "predicted_n": 23,
+      "predicted_per_second": 43.004319129443,
+      "predicted_per_token_ms": 23.253478260869567,
+      "prompt_ms": 549.244,
+      "prompt_n": 469,
+      "prompt_per_second": 853.9009984633423,
+      "prompt_per_token_ms": 1.171095948827292
+    },
+    "usage": {
+      "completion_tokens": 23,
+      "prompt_tokens": 469,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 492
+    }
+  },
+  "request": {
+    "cache_prompt": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "grammar": "root ::= \"{\" ws \"\\\"unsupported_probability\\\"\" ws \":\" ws probability ws \",\" ws \"\\\"source_sentence_id\\\"\" ws \":\" ws citation ws \"}\"\nprobability ::= \"0\" (\".\" [0-9]+)? | \"1\" (\".\" \"0\"+)?\ncitation ::= \"null\" | \"0\" | [1-9] [0-9]*\nws ::= [ \\t\\n\\r]*",
+    "max_tokens": 96,
+    "messages": [
+      {
+        "content": "Estimate the probability that the complete original answer contains any span unsupported by its original source. The target always refers to the ORIGINAL source, even when source evidence has been erased. Erasure removes information and does not change the answer's correctness. Return only a JSON object with unsupported_probability and source_sentence_id. Use null when no visible source sentence is a proposed witness.",
+        "role": "system"
+      },
+      {
+        "content": "{\"complete_source\": \"{\\\"passages\\\":\\\"passage 1:More recently they have become symbolic of sinister things. A snake ring worn on the first finger suggests this is an egotistical person and they are using the snake to enhance their status. A snake ring on the second finger suggests this is a materialistic person and they are using the snake to enhance their wealth.\\\\n\\\\npassage 2:(Laughs) Snakes, I think many times we have spoken why snakes, and what is the significance of a snake. Fundamentally, one aspect of this is that it is the symbolism for the Kundalini because of its nature, and its similarity with that of a snake in terms of movement and stillness.\\\\n\\\\npassage 3:A snake ring on the third finger suggests this is an emotional person and they are using the snake to mitigate their emotions. A snake ring on the fourth (little) finger, suggests this is a person with sexual inhibitions and they are using the snake to either hide or overcome this problem.\\\\n\\\\n\\\",\\\"question\\\":\\\"what does a snake ring symbolize\\\"}\", \"original_answer\": \"Based on the given passages, a snake ring can symbolize various things depending on the finger it is worn on. On the first finger, it suggests an egotistical person using the snake to enhance their status. On the second finger, it suggests a materialistic person using the snake to enhance their wealth. On the third finger, it suggests an emotional person using the snake to mitigate their emotions. On the fourth finger, it suggests a person with sexual inhibitions using the snake to either hide or overcome this problem.\", \"target\": \"any_unsupported_span_in_original_response\", \"visible_source_sentence_ids\": [0, 1, 2, 3, 4], \"source_evidence_erased\": false}",
+        "role": "user"
+      }
+    ],
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "seed": 69058,
+    "temperature": 0,
+    "top_p": 1
+  },
+  "reserved_tokens": 96,
+  "reuse": {
+    "changed_rejected": true,
+    "exact_hit": true,
+    "miss_action": "escalate",
+    "model_calls": 0,
+    "stale_model_rejected": true,
+    "status": "completed"
+  },
+  "role": "fit",
+  "source_bytes": "7b227061737361676573223a227061737361676520313a4d6f726520726563656e746c7920746865792068617665206265636f6d652073796d626f6c6963206f662073696e6973746572207468696e67732e204120736e616b652072696e6720776f726e206f6e207468652066697273742066696e676572207375676765737473207468697320697320616e2065676f746973746963616c20706572736f6e20616e64207468657920617265207573696e672074686520736e616b6520746f20656e68616e6365207468656972207374617475732e204120736e616b652072696e67206f6e20746865207365636f6e642066696e67657220737567676573747320746869732069732061206d6174657269616c697374696320706572736f6e20616e64207468657920617265207573696e672074686520736e616b6520746f20656e68616e6365207468656972207765616c74682e5c6e5c6e7061737361676520323a284c61756768732920536e616b65732c2049207468696e6b206d616e792074696d657320776520686176652073706f6b656e2077687920736e616b65732c20616e64207768617420697320746865207369676e69666963616e6365206f66206120736e616b652e2046756e64616d656e74616c6c792c206f6e6520617370656374206f6620746869732069732074686174206974206973207468652073796d626f6c69736d20666f7220746865204b756e64616c696e692062656361757365206f6620697473206e61747572652c20616e64206974732073696d696c617269747920776974682074686174206f66206120736e616b6520696e207465726d73206f66206d6f76656d656e7420616e64207374696c6c6e6573732e5c6e5c6e7061737361676520333a4120736e616b652072696e67206f6e207468652074686972642066696e676572207375676765737473207468697320697320616e20656d6f74696f6e616c20706572736f6e20616e64207468657920617265207573696e672074686520736e616b6520746f206d6974696761746520746865697220656d6f74696f6e732e204120736e616b652072696e67206f6e2074686520666f7572746820286c6974746c65292066696e6765722c2073756767657374732074686973206973206120706572736f6e20776974682073657875616c20696e6869626974696f6e7320616e64207468657920617265207573696e672074686520736e616b6520746f206569746865722068696465206f72206f766572636f6d6520746869732070726f626c656d2e5c6e5c6e222c227175657374696f6e223a227768617420646f6573206120736e616b652072696e672073796d626f6c697a65227d",
+  "source_cluster_id": "sha256:d24b9a3e609ce915d7902c9bb9eba0e5d9088e1d2e0239377a0e1d372bb7e366",
+  "source_id": "14317",
+  "started": true,
+  "status": "generated",
+  "unit_id": "sha256:1b0a2fedf0eaf67566bf1336e1c5ec446d3c81752bbc752b1788f6bf5be535e7",
+  "visible_ids": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ]
+}

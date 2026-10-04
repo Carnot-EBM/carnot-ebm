@@ -2,6 +2,30 @@
 
 # Research Reporting Capability Specification
 
+## REQ-REPORT-8118: Owned fresh acquisition cost publication
+
+Exp8118 SHALL publish its primary and primitive cost evidence through
+primary_publication after normal exit, cold reduction and owned validation.
+Authenticate Exp8111 public fit order and Exp8102 runtime terminal bytes; do not
+require fitted-head readiness or read human labels. Freeze validation argv before
+measurement. Current ledgers alone determine no_model_load (empty MODEL_SPECS),
+model_load_no_generation (2s floor), or model_bounded_generation (10s floor).
+Missing external evidence closes complete_blocked with exact failed operands;
+owned failures disqualify. Private oracle fixtures are circular_positive.
+Export a byte-bound acquisition manifest for Exp8119, every intended slot,
+component costs, raw transcripts, source/code/config hashes and CUDA custody.
+Run E2E-015/019, private success/blocked/mutation/cold replay, scoped consumers,
+Ruff, strict mypy, spec checks and100 percent new-statement coverage. Run the
+full Python suite once as repository-health evidence, separate from owned gates.
+The operator delegates ops/status/changelog/traceability reconciliation to the
+conductor; this task updates specifications only and never edits the conductor.
+
+### SCENARIO-REPORT-8118-TERMINAL
+
+Private external-CWD CLI tests cover zero-call blocking, normal publication,
+cold replay and mutated aggregates/keys/provenance. Terminal validation binds
+exact primary bytes. Generalization and learning-benefit scores remain zero.
+
 ## REQ-REPORT-8112: Invocation-derived bounded capture publication
 
 Exp8112 SHALL publish results/experiment_8112_v702_fit_source_capture.json and

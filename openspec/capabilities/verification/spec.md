@@ -2,6 +2,30 @@
 
 # Verification Capability Specification
 
+## REQ-VERIFY-8118: Bounded unseen-key acquisition panel
+
+Freeze the first24 fit sources in Exp8111 public order with original and exact
+reverse-sentence-block source variants from the qualified Exp8112 permutation.
+Preserve full source and original response bytes; use unique current request IDs
+and an isolated initially empty service cache. Record identical historical keys
+without reusing their completions. Cache keys include source/response bytes,
+model/runtime/template/parser versions, intervention and numerical configuration.
+Use cached_current_model, native GGUF chat tokenization, CARNOT_FORCE_LIVE=1,
+an owned CUDA lease and authenticated offload. At most48 calls,96 output tokens
+each,4608 total reserved tokens and6000 complete input tokens per call. One load
+has300s deadline; each call120s. Stop launches at1800s and model work by2100s.
+Measure load, prefill, generation, parsing, cache writes, failures and CUDA
+telemetry separately. Each acquired key gets immediate exact reuse without a
+model call and changed-content/stale-model rejection with explicit escalation.
+Readiness requires32 current completed calls across16 distinct source clusters,
+current CUDA and owned validation. No labels, accuracy claims or duration padding.
+
+### SCENARIO-VERIFY-8118-CACHE
+
+Private tests verify48 frozen slots, complete content, parser recheck, exact
+reuse, changed source/response/model/runtime/template/parser/config rejection,
+budget exclusions, zero-call blocking and independent source denominators.
+
 ## REQ-VERIFY-8112: Bounded complete-source sensitivity capture
 
 Exp8112 SHALL retain fit128/tune64 public order and unchanged answer bytes.
