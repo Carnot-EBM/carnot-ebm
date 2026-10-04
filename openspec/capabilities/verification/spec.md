@@ -2,6 +2,24 @@
 
 # Verification Capability Specification
 
+## REQ-VERIFY-8136: Independently replay administrative custody
+
+Rehash saved source, code, authority, primitive and validation log bytes.
+Independently reconstruct fourteen contract rows and thirteen historical
+dispositions. Prompt, model, gate and complete failure-history mutations SHALL
+invalidate authority agreement. Missing or retired scientific inputs retain
+their exact field, expected and observed operands without becoming a universal
+science gate. Historical Qwen identity stays in cited_upstream_artifacts.
+MODEL_SPECS=[], zero current calls and empty trained_head_specs describe this
+aggregation. Independent generalization and learning benefit remain zero.
+
+### SCENARIO-VERIFY-8136: Forged reductions and missing verdicts
+
+Cold replay rejects modified rows, authority, logs, code and rehashed historical
+reductions. Five primary verdicts retain exact values. Failed unpublished work
+and seven conductor skips gain no scientific verdict. Fixture success is
+circular_positive; actual administrative completion is a null science claim.
+
 ## REQ-VERIFY-8135: Independent V703 scientific limits
 
 Reduce source decisions, later learning with retention, and host service

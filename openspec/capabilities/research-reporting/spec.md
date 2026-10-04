@@ -2,6 +2,36 @@
 
 # Research Reporting Capability Specification
 
+## REQ-REPORT-8136: Bind V704 and preserve terminal V703 dispositions
+
+Exp8136 SHALL reuse the parameterized authority reader for exactly fourteen full
+tasks, Exp8136 through Exp8149. Require the literal Exact task contract heading,
+five-column table, V704 JSON contract and canonical full-task digest. Preserve
+V703 design bytes separately from its Exp8123 activation snapshot. Reconstruct
+thirteen outcomes from actual primaries and conductor records: five primaries,
+one failed unpublished producer and seven gate skips. Missing honest_verdict
+and verdict_class remain null. Conductor statuses are administrative records.
+Administrative contract readiness SHALL be independent of research readiness.
+External blocks finish complete_blocked with exact operands. Owned validation
+failures disqualify and zero readiness. Current execution loads no model.
+
+### SCENARIO-REPORT-8136: Private lifecycle and publication
+
+Tests SHALL exercise staging, activation, staging disappearance, immutable
+snapshots and twelve authority mutations using private copies. Script execution
+outside the checkout requires no PYTHONPATH. Private success, external block,
+owned failure and cold replay SHALL preserve missing verdicts and reject drift.
+Freeze validation argv before measurement. Require E2E-018, consumer tests,
+Ruff check/format, strict mypy, scoped spec coverage, 100 percent new statement
+coverage and normal unmodified adversarial/strict row validator exits before
+primary_publication. Run full Python health once, separately from owned gates.
+The conductor owns ops/status, ops/changelog and traceability reconciliation.
+
+Implementation: `python/carnot/reporting/v704_contract_custody.py`, its thin
+`scripts/experiments/experiment_8136_v704_contract_custody.py` runner and
+`tests/python/test_contract_custody_8136.py` implement this contract. The existing
+custody execution module owns bounded validation and primary publication.
+
 ## REQ-REPORT-8135: Terminal V703 branch accounting
 
 Exp8135 SHALL authenticate all thirteen full tasks, visible table, embedded JSON,
