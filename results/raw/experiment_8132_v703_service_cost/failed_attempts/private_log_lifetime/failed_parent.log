@@ -1,0 +1,64 @@
+[exp8132] start completed=0 pending=0
+[exp8132] preconditions_before completed=0 pending=0
+[exp8132] preconditions_after completed=0 pending=0
+[exp8132] subprocess_before_adversarial completed=0 pending=2
+[exp8132] subprocess_after_adversarial completed=1 pending=1
+[exp8132] subprocess_before_strict_rows completed=1 pending=1
+[exp8132] subprocess_after_strict_rows completed=2 pending=0
+[exp8132] subprocess_before_measurement_normal_exit completed=0 pending=1
+[exp8132] waiting_measurement_normal_exit completed=0 pending=1
+[exp8132] waiting_measurement_normal_exit completed=0 pending=1
+[exp8132] waiting_measurement_normal_exit completed=0 pending=1
+[exp8132] waiting_measurement_normal_exit completed=0 pending=1
+[exp8132] waiting_measurement_normal_exit completed=0 pending=1
+[exp8132] waiting_measurement_normal_exit completed=0 pending=1
+[exp8132] waiting_measurement_normal_exit completed=0 pending=1
+[exp8132] waiting_measurement_normal_exit completed=0 pending=1
+[exp8132] waiting_measurement_normal_exit completed=0 pending=1
+[exp8132] waiting_measurement_normal_exit completed=0 pending=1
+[exp8132] waiting_measurement_normal_exit completed=0 pending=1
+[exp8132] waiting_measurement_normal_exit completed=0 pending=1
+[exp8132] waiting_measurement_normal_exit completed=0 pending=1
+[exp8132] waiting_measurement_normal_exit completed=0 pending=1
+[exp8132] waiting_measurement_normal_exit completed=0 pending=1
+[exp8132] waiting_measurement_normal_exit completed=0 pending=1
+[exp8132] waiting_measurement_normal_exit completed=0 pending=1
+[exp8132] waiting_measurement_normal_exit completed=0 pending=1
+[exp8132] waiting_measurement_normal_exit completed=0 pending=1
+[exp8132] waiting_measurement_normal_exit completed=0 pending=1
+[exp8132] waiting_measurement_normal_exit completed=0 pending=1
+[exp8132] subprocess_after_measurement_normal_exit completed=1 pending=0
+[exp8132] subprocess_before_worktree_imports completed=0 pending=8
+[exp8132] subprocess_after_worktree_imports completed=1 pending=7
+[exp8132] subprocess_before_focused_pytest completed=1 pending=7
+[exp8132] waiting_focused_pytest completed=1 pending=7
+[exp8132] waiting_focused_pytest completed=1 pending=7
+[exp8132] waiting_focused_pytest completed=1 pending=7
+[exp8132] subprocess_after_focused_pytest completed=2 pending=6
+[exp8132] subprocess_before_changed_module_coverage completed=2 pending=6
+[exp8132] waiting_changed_module_coverage completed=2 pending=6
+[exp8132] waiting_changed_module_coverage completed=2 pending=6
+[exp8132] waiting_changed_module_coverage completed=2 pending=6
+[exp8132] waiting_changed_module_coverage completed=2 pending=6
+[exp8132] waiting_changed_module_coverage completed=2 pending=6
+[exp8132] subprocess_after_changed_module_coverage completed=3 pending=5
+[exp8132] subprocess_before_changed_module_coverage_report completed=3 pending=5
+[exp8132] subprocess_after_changed_module_coverage_report completed=4 pending=4
+[exp8132] subprocess_before_ruff_check completed=4 pending=4
+[exp8132] subprocess_after_ruff_check completed=5 pending=3
+[exp8132] subprocess_before_ruff_format completed=5 pending=3
+[exp8132] subprocess_after_ruff_format completed=6 pending=2
+[exp8132] subprocess_before_changed_module_mypy completed=6 pending=2
+[exp8132] subprocess_after_changed_module_mypy completed=7 pending=1
+[exp8132] subprocess_before_scoped_spec_coverage completed=7 pending=1
+[exp8132] subprocess_after_scoped_spec_coverage completed=8 pending=0
+Traceback (most recent call last):
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8132_v703_service_cost.py", line 16, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8132_v703_service_cost.py", line 991, in main
+    shutil.copyfile(original, saved)
+  File "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/shutil.py", line 260, in copyfile
+    with open(src, 'rb') as fsrc:
+         ^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/carnot-8132-validation-d7kg7ax7/coverage/test_outside_checkout_cli_rout0/success.log'

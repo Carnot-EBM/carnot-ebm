@@ -92697,3 +92697,33 @@ It rejects a missing task, reordered tasks, a changed prompt and stale digest.
 Schema, prior-failure, exclusion and gate checks run on the staged YAML.
 The current active roadmap and conductor hashes remain unchanged.
 This validates planning; it does not mark future experiment code implemented.
+
+## REQ-REPORT-8132: Qualify compact full-size service receipts before timing
+
+Publish Exp8132 through primary_publication after normally exited owned checks.
+Freeze validation argv before measurement. Qualify a full-size private receipt
+with unchanged adversarial and strict row validators before any timing.
+Store source copies and verbose logs once as hashed references. Keep primitive
+batch/source/condition rows, interrupted masks, exact input and code hashes.
+Current execution loads no LLM: no_model_load, MODEL_SPECS=[], zero calls.
+Historical Qwen acquisition belongs only in cited_upstream_artifacts and modeled
+cost bounds. Host readiness does not require optional natural update evidence.
+External blocks finish complete_blocked_<operand>; owned failures disqualify
+and zero readiness. Complete-service readiness stays zero without current
+end-to-end acquisition. Fixtures grant no natural learning or generalization.
+Ops and traceability reconciliation belongs to the conductor, as instructed.
+
+### SCENARIO-REPORT-8132: Private publication and cold replay
+
+Private CLI success, external block, mutation and cold replay run outside the
+checkout without PYTHONPATH. Capture argv, expected/actual exits, normal exit,
+log hashes and durations. Replay independently reconstructs reductions and
+rejects primitive, checkpoint, source, config, code, receipt and aggregate drift.
+Require scoped tests/consumers, Ruff, strict mypy, spec references and 100 percent
+new statement coverage. Run one bounded full Python health diagnostic separately.
+Preserve failed candidates and all prior primaries. Never edit the conductor.
+
+REQ-REPORT-8132 implementation: `carnot.experiment_8132_v703_service_cost`,
+the matching script-path CLI and private `test_service_cost_8132.py` implement
+qualification, four-arm timing, paired reduction, custody and terminal routes.
+The conductor owns the requested ops and traceability reconciliation.

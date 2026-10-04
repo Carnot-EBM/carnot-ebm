@@ -48459,3 +48459,34 @@ The staged tasks include independent decision and learning audits, source/evalua
 E2E checks, protocol-mutation checks and complete service cost accounting.
 Learning has no prerequisite on new source capture or a batch-trained head.
 No natural-data benefit is inferred from fixtures or disqualified V702 results.
+
+## REQ-VERIFY-8132: Paired radial service costs with separate acquisition bounds
+
+Use the qualified loaded Exp8105 extension without a new native port. Compare
+Python scalar/batch and native scalar/batch on identical vectors and query order.
+Freeze batches1/4/16/64/256, five explicit warmups and thirty independent batch
+repetitions per condition. Alternate arm order deterministically. Preserve
+cold, warm, miss, changed-content, eviction and restart lifecycle transactions.
+Include lookup, feature handling, conversion, serialization and durable writes.
+Record nanosecond timer units, input bytes, arithmetic and full latency.
+Keep numerical parity at1e-10 and identical typed decisions and durable states.
+Stop launching measurement at3000s; retain pending/censored units explicitly.
+Bootstrap paired log-speed ratios10000 times, using whole batches as units.
+A speed claim needs the one-sided95 percent lower bound above1; NFR-01 needs10.
+Report a zero-arithmetic Amdahl ceiling. Historical acquisition joins require
+exact content/runtime/template/parser/config keys and remain modeled bounds.
+Qualified Exp8130 natural update rows form a separate optional branch; absent
+rows block that join only. Lifecycle injections and supplied heads are fixtures.
+
+### SCENARIO-VERIFY-8132: Numerical, lifecycle and receipt boundaries
+
+Exercise E2E-003/004 on the actual loaded binding and checkpoint restore.
+Reject changed native bytes, decision drift, dropped units, invalid accounting,
+wrong acquisition keys and unsafe readiness. Repeated batches and exposed
+sources create no independent scientific sources. Test ceilings and missing
+masks explicitly; timeouts never count as validator passes.
+
+REQ-VERIFY-8132 workload clarification: use the three Exp8119 source-panel IDs.
+Each is the median-sized original in one public byte-size third. Keep captured
+permutations and cyclic query order. Report all three exposed source IDs and
+within-batch reuse; repetitions create no independent scientific sources.
