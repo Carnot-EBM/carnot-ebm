@@ -1,0 +1,64 @@
+{
+  "primary_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_8105_v701_native_radial_kernel.json",
+  "primary_sha256": "sha256:c09ce051ce5c1fd1c75366b1d71d47520241c27b0120d899de4197d21a6d96dc",
+  "report": {
+    "passed": true,
+    "receipts": [
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8105_v701_native_radial_kernel.py --cold-replay /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8105_v701_native_radial_kernel/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-u",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8105_v701_native_radial_kernel.py",
+          "--cold-replay",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8105_v701_native_radial_kernel/terminal_candidate.json"
+        ],
+        "duration_s": 1.5346641840878874,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8105_v701_native_radial_kernel/terminal_logs/00_cold_replay.log",
+        "log_sha256": "sha256:7f7ef4b3af799707e6e3c451694bb13cd05ac555a7efa6259bf09e0beb1cc414",
+        "name": "cold_replay",
+        "output_tail": "[exp8105] start: native radial fixture qualification; model calls=0\n[exp8105] start completed=0 pending=0\n[exp8105] before binding load\n[exp8105] after binding load\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py --json /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8105_v701_native_radial_kernel/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+          "--json",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8105_v701_native_radial_kernel/terminal_candidate.json"
+        ],
+        "duration_s": 0.8702847181120887,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8105_v701_native_radial_kernel/terminal_logs/01_adversarial.log",
+        "log_sha256": "sha256:caf023fa663a9f7e280d43a329036d445c1093f6e14f4c7edd6b9146409a7526",
+        "name": "adversarial",
+        "output_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8105_v701_native_radial_kernel/terminal_candidate.json\",\n      \"loaded\": true,\n      \"exp_id\": 8105,\n      \"title\": \"\",\n      \"honest_verdict\": \"complete_circular_positive_native_radial_kernel\",\n      \"flag_count\": 0,\n      \"max_severity\": -1,\n      \"flags\": [],\n      \"gate_version\": \"38e6c300bcbcf8e5649026dbf73383305e0b3b2ac77a16a15147fc463659432e\"\n    }\n  ],\n  \"flagged_count\": 0\n}\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8105_v701_native_radial_kernel/terminal_candidate.json",
+        "command_argv": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py",
+          "--strict",
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8105_v701_native_radial_kernel/terminal_candidate.json"
+        ],
+        "duration_s": 0.04103703098371625,
+        "exit_code": 0,
+        "log_path": "results/raw/experiment_8105_v701_native_radial_kernel/terminal_logs/02_strict_rows.log",
+        "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+        "name": "strict_rows",
+        "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+        "passed": true,
+        "scope": "terminal",
+        "timed_out": false
+      }
+    ]
+  }
+}

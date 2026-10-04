@@ -92249,3 +92249,34 @@ The sole primary is `results/experiment_8105_v701_native_radial_kernel.json`.
 Failed mutations remain provisional raw candidates. Global suite diagnostics
 remain distinct from component readiness. Operational and BMAD reconciliation
 is delegated to the conductor per the 2026-10-04 task instruction.
+
+## REQ-REPORT-8106: Charged acquisition and authenticated publication
+
+Exp8106 SHALL authenticate input bytes, native qualification and terminal
+sidecars before measurement. Available V701 current-call receipts SHALL join
+model load and fresh judgment separately, only with exact request/response and
+content/model/template identities. Conditional totals for reuse counts 1, 10,
+100 SHALL be labeled composed estimates, never directly measured end-to-end
+latency. Missing captures SHALL be terminal blocked for acquisition while valid
+host measurements retain service_cost_ready_score. Owned validation failures
+SHALL be disqualified with readiness zero. NFR-01 SHALL remain open without a
+matched complete deployed service achieving tenfold acceleration.
+
+### SCENARIO-REPORT-8106: Private executable qualification
+
+The real CLI SHALL run success, missing-input blocked, changed-content,
+mutation rejection and cold replay outside the checkout. Freeze owned unit,
+consumer, Ruff, strict mypy, scoped spec and 100 percent new-code statement
+coverage commands before timing; keep one global suite health run separate.
+Publish only normally exited, independently reduced, authenticated evidence
+through primary_publication after adversarial and strict row lints. No current
+model load or generation SHALL occur. Preserve existing primaries and failures.
+Ops/status/changelog/BMAD reconciliation is delegated to the conductor by the
+2026-10-04 task instruction.
+
+REQ-REPORT-8106 implementation uses the thin
+`scripts/experiments/experiment_8106_v701_radial_service_cost.py` entry point and
+primary_publication. Current V701 receipt joins remain separate from the current
+run's zero model-invocation counts. Primitive rows, conditional reuse estimates,
+private CLI receipts and the single failed bounded global diagnostic are retained
+under `results/raw/experiment_8106_v701_radial_service_cost/`. NFR-01 remains open.

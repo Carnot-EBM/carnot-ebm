@@ -48109,3 +48109,30 @@ REQ-VERIFY-8105 implementation: `crates/carnot-python/src/radial_8105.rs` and
 `tests/python/test_native_radial_8105.py`. Gaussian arithmetic, coefficient
 ridge gradients and complete center-state checkpoints cross the actual PyO3
 boundary. This scope supplies no independent natural-source evidence.
+
+## REQ-VERIFY-8106: Matched complete radial host transactions
+
+Exp8106 SHALL freeze thirty private request families, three repetitions, six
+modes (cold, warm, miss, content-change, eviction, restart) and sixteen/twenty-eight
+centers before timing. Exactly 1080 paired measured units SHALL use a seeded,
+alternating arm order; warmups SHALL be separate. Both arms SHALL use identical
+source rendering, lexical feature cache, canonical threshold fallback and durable
+state commits. Rendering, extraction, lookup, scoring, fallback, serialization,
+invalidation and commit costs SHALL remain separate primitive observations.
+Changed content SHALL invalidate the judgment content/model/template key. A
+missing exact judgment SHALL force abstention; any neutral numeric placeholder
+is explicitly fixture-only and SHALL NOT become a free model acquisition.
+
+### SCENARIO-VERIFY-8106: Durable parity and invalidation
+
+Private tests SHALL cross the loaded Rust binding (E2E-003), compare actions,
+probabilities and complete persisted states, and reopen the state in a fresh
+process (E2E-004). Warm hits, cold/miss extraction, real eviction and changed
+content misses SHALL be observed. A mutated row or checkpoint SHALL fail cold
+reduction. Repetitions SHALL NOT increase independent-source denominators.
+
+REQ-VERIFY-8106 implementation is `python/carnot/experiment_8106_v701_radial_service_cost.py`.
+Private tests in `tests/python/test_radial_service_cost_8106.py` cross the qualified
+native binary, cache invalidation, complete state serialization and cold restore.
+The measured scope is host service work with supplied radial coefficients.
+Unavailable exact changed-content judgments abstain and remain acquisition blocks.

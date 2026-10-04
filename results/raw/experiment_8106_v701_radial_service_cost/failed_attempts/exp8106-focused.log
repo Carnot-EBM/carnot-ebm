@@ -1,0 +1,125 @@
+........FF..F.                                                           [100%]
+=================================== FAILURES ===================================
+_________________________ test_state_hash_and_fallback _________________________
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261004T072333-2446606-8bb324aa/test_state_hash_and_fallback0')
+native = <module 'carnot._rust' from '/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_8105_v701_native_radial_kernel/_rust.cpython-312-x86_64-linux-gnu.so'>
+workload = {'acquisition': [], 'fixture': True, 'identity': {'model': 'fixture', 'template': 'fixture'}, 'judgments': {'sha256:01...51b85736abe4ee02b63': 0.25, 'sha256:154a1b5bbc21e28f1d134b92f1b20f6d4975d2c3e47130bfec16850caacb8d97': 0.25, ...}, ...}
+
+    def test_state_hash_and_fallback(tmp_path, native, workload):
+        """SCENARIO-VERIFY-8106: corrupt durable bytes and close ties cannot pass."""
+        state = e.prior.fixture(9, 16, 1)
+        state["coefficients"] = [0.0] * 17
+        p, actions, flags = e.score(state, [0.0] * 9, native, "rust")
+        assert p == pytest.approx([0.5]) and all(flags)
+>       assert actions == ["repair"]
+E       AssertionError: assert ['escalate'] == ['repair']
+E         
+E         At index 0 diff: 'escalate' != 'repair'
+E         Use -v to get more diff
+
+tests/python/test_radial_service_cost_8106.py:109: AssertionError
+_______________________ test_real_inputs_and_acquisition _______________________
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261004T072333-2446606-8bb324aa/test_real_inputs_and_acquisiti0')
+
+    def test_real_inputs_and_acquisition(tmp_path):
+        """REQ-REPORT-8106: historical receipts qualify only exact current-capture joins."""
+        data, checks, refs = e.inputs(e.ROOT, tmp_path)
+        assert len(data["public"]) == 30
+        assert not [c for c in checks if c.get("scope") == "service" and c["expected"] != c["observed"]]
+        assert refs and data["acquisition"]
+        assert len(data["judgments"]) == 30
+>       assert any(c["check"] == "capture_qualified" and c["observed"] is False for c in checks)
+E       assert False
+E        +  where False = any(<generator object test_real_inputs_and_acquisition.<locals>.<genexpr> at 0x7f2bd8877ed0>)
+
+tests/python/test_radial_service_cost_8106.py:123: AssertionError
+_______________________ test_main_routes_and_validation ________________________
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261004T072333-2446606-8bb324aa/test_main_routes_and_validatio0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f2b6466cf80>
+workload = {'acquisition': [], 'fixture': True, 'identity': {'model': 'fixture', 'template': 'fixture'}, 'judgments': {'sha256:01...51b85736abe4ee02b63': 0.25, 'sha256:154a1b5bbc21e28f1d134b92f1b20f6d4975d2c3e47130bfec16850caacb8d97': 0.25, ...}, ...}
+
+    def test_main_routes_and_validation(tmp_path, monkeypatch, workload):
+        """SCENARIO-REPORT-8106: orchestration preserves evidence and rejects failed workers."""
+        fixture = tmp_path / "input.json"
+        atomic_json(fixture, workload)
+        assert (
+            e.main(
+                [
+                    "--worker-output",
+                    str(tmp_path / "w" / "work.json"),
+                    "--root",
+                    str(tmp_path / "absent"),
+                ]
+            )
+            == 0
+        )
+        assert e.main(["--cold-replay", str(tmp_path / "absent.json")]) == 1
+        private = tmp_path / "private"
+        private.mkdir()
+        commands = e.validation_plan(private)
+        assert any("--strict" in c.argv for c in commands)
+        assert any("--fail-under=100" in c.argv for c in commands)
+        assert e.terminal(tmp_path / "w" / "work.json")["passed"] is False
+        output = tmp_path / "experiment_8106_private.json"
+        empty = json.loads((tmp_path / "w" / "work.json").read_text())
+        monkeypatch.setattr(
+            e, "execute", lambda commands, raw, private: [dict(passed=True, scope="owned")]
+        )
+        monkeypatch.setattr(e, "worker", lambda root, raw: empty)
+        monkeypatch.setattr(e, "publish_primary", lambda output, value, validator: dict(passed=True))
+>       assert e.main(["--output", str(output), "--root", str(tmp_path / "absent")]) == 0
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_radial_service_cost_8106.py:231: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/experiment_8106_v701_radial_service_cost.py:875: in main
+    dict(phase="owned_validation", duration_s=sum(r["duration_s"] for r in receipts[1:]))
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+.0 = <list_iterator object at 0x7f2bd97c7ca0>
+
+>       dict(phase="owned_validation", duration_s=sum(r["duration_s"] for r in receipts[1:]))
+                                                      ^^^^^^^^^^^^^^^
+    )
+E   KeyError: 'duration_s'
+
+python/carnot/experiment_8106_v701_radial_service_cost.py:875: KeyError
+----------------------------- Captured stdout call -----------------------------
+[exp8106] start completed=0 pending=0
+[exp8106] start completed=0 pending=0
+[exp7303-validation] before_subprocess cold_replay elapsed_s=0.000 unit=1/1
+[exp7303-validation:cold_replay] [exp8106] start completed=0 pending=0
+[exp7303-validation] after_subprocess cold_replay elapsed_s=1.335 exit=1 unit=1/1
+[exp7303-validation] before_subprocess adversarial elapsed_s=0.000 unit=1/1
+[exp7303-validation:adversarial] {
+[exp7303-validation:adversarial]   "reports": [
+[exp7303-validation:adversarial]     {
+[exp7303-validation:adversarial]       "artifact": "/tmp/pytest-carnot-ianblenke/20261004T072333-2446606-8bb324aa/test_main_routes_and_validatio0/w/work.json",
+[exp7303-validation:adversarial]       "loaded": true,
+[exp7303-validation:adversarial]       "exp_id": null,
+[exp7303-validation:adversarial]       "title": "",
+[exp7303-validation:adversarial]       "honest_verdict": "",
+[exp7303-validation:adversarial]       "flag_count": 0,
+[exp7303-validation:adversarial]       "max_severity": -1,
+[exp7303-validation:adversarial]       "flags": [],
+[exp7303-validation:adversarial]       "gate_version": "38e6c300bcbcf8e5649026dbf73383305e0b3b2ac77a16a15147fc463659432e"
+[exp7303-validation:adversarial]     }
+[exp7303-validation:adversarial]   ],
+[exp7303-validation:adversarial]   "flagged_count": 0
+[exp7303-validation:adversarial] }
+[exp7303-validation] after_subprocess adversarial elapsed_s=0.525 exit=0 unit=1/1
+[exp7303-validation] before_subprocess strict_rows elapsed_s=0.000 unit=1/1
+[exp7303-validation:strict_rows] 
+[exp7303-validation:strict_rows] verdict-row-consistency: checked 0, skipped 1 (no per-unit rows), unreadable 0.
+[exp7303-validation:strict_rows]   NOTE: most artifacts carry no per-unit row container, so their headline claims are not falsifiable from the artifact alone. That is a reporting-shape gap in those experiments, not a clean bill of health from this tool.
+[exp7303-validation] after_subprocess strict_rows elapsed_s=0.026 exit=0 unit=1/1
+[exp8106] start completed=0 pending=0
+=========================== short test summary info ============================
+FAILED tests/python/test_radial_service_cost_8106.py::test_state_hash_and_fallback
+FAILED tests/python/test_radial_service_cost_8106.py::test_real_inputs_and_acquisition
+FAILED tests/python/test_radial_service_cost_8106.py::test_main_routes_and_validation
+3 failed, 11 passed in 16.22s
