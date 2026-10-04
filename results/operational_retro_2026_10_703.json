@@ -1,0 +1,60 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.10.703",
+  "generated_at": "2026-10-04T20:21:28Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 29.3,
+  "experiments_completed": 5,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [
+    {
+      "experiment": "Measure complete radial service costs with qualified receipt storage",
+      "duration_minutes": 17.53,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Decide thirteen outcomes and remaining verification learning and deployment gaps",
+      "duration_minutes": 4.64,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Qualify the current supervisor reader and inspect only new outcomes",
+      "duration_minutes": 3.6,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Bound useful acceleration and preserve each board evidence boundary",
+      "duration_minutes": 3.22,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Bind thirteen tasks with the exact authority-reader format",
+      "duration_minutes": 0.33,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.10.703 completed 5 experiments (0 compute-bound, 5 synthesis-only) across 29.3 total wall-time minutes (averaging 6 minutes per experiment) reconstructed from disk-mtime fallback data. Execution wall time was heavily concentrated in synthesis task 'Measure complete radial service costs with qualified receipt storage' (17.53 minutes), followed by 'Decide thirteen outcomes and remaining verification learning and deployment gaps' (4.64 minutes), 'Qualify the current supervisor reader and inspect only new outcomes' (3.6 minutes), 'Bound useful acceleration and preserve each board evidence boundary' (3.22 minutes), and 'Bind thirteen tasks with the exact authority-reader format' (0.33 minutes). Point-in-time GPU monitor polling observed 0% utilization across both NVIDIA GeForce RTX 3090 GPUs with 4MB memory allocated, which is expected behavior for synthesis-only workloads, and gpu_idle_on_compute_bound_tasks is null as no compute-bound experiments were executed.",
+  "bottlenecks_identified": [
+    "Execution wall time was heavily concentrated in the slowest experiment: synthesis task 'Measure complete radial service costs with qualified receipt storage' consumed 17.53 of the 29.3 total milestone wall-time minutes (59.8%).",
+    "All 5 completed experiments were synthesis-only workloads totaling 29.3 minutes, with the top two tasks accounting for 22.17 minutes (75.7% of milestone wall time) in serial evaluation and decision logic.",
+    "Milestone timing relied on disk-mtime fallback reconstruction due to zero commits found on the live git-log path, leaving intra-task phases (environment setup, data loading, verification, and receipt serialization) uninstrumented without sub-phase telemetry.",
+    "Zero compute-bound experiments were executed this milestone; static GPU monitor polling showing 0% utilization on both RTX 3090 GPUs reflects synthesis-only execution where GPUs are not invoked."
+  ],
+  "improvements_suggested": [
+    "Instrument experiment runners with granular intra-task phase timers to isolate latency across environment setup, data loading, verification, and receipt serialization.",
+    "Emit synchronous start and completion lifecycle timestamps directly into task result receipts during conductor execution to eliminate reliance on disk-mtime fallback reconstruction.",
+    "Profile and optimize the radial service cost calculation pipeline in 'Measure complete radial service costs with qualified receipt storage' (17.53 minutes) to reduce serial execution overhead.",
+    "Maintain failure_ledger pre-launch checks so doomed reruns continue to be blocked in sub-second time without expending wall-time budget.",
+    "Enforce DualGPURunner orchestration strictly for concurrent workloads executing two or more distinct models in parallel, avoiding misapplication when compute-bound experiments resume."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Instrument experiment runners with granular intra-task sub-phase timers to isolate data loading, verification passes, and receipt serialization latency.",
+    "Profile and optimize the radial service cost calculation pipeline in 'Measure complete radial service costs with qualified receipt storage' (which accounted for 17.53 minutes of milestone wall time).",
+    "Persist structured start and finish lifecycle timestamps directly into experiment receipt artifacts to replace disk-mtime fallback reconstruction."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Milestone 2026.10.703 completed 5 synthesis-only experiments in 29.3 wall-time minutes without any compute-bound workloads, with wall time dominated by radial service cost measurement (17.53 minutes). Observed 0% GPU utilization across both RTX 3090 GPUs is expected behavior for synthesis tasks and gpu_idle_on_compute_bound_tasks is null. Highest-leverage operational gains lie in instrumenting granular sub-phase execution timers and profiling long-running synthesis calculation pipelines, with estimated time savings set to 0% pending empirical phase telemetry."
+}

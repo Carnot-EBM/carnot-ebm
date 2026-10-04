@@ -7239,4 +7239,11 @@ Operational evidence addendum: this entry supersedes earlier operational asserti
 - key result: honest operational negative — 9 experiments (2 compute-bound, 7 synthesis-only) completed in 44.6 wall-time minutes led by radial service transactions (16.78 min), owned Qwen acquisition (7.75 min), and Qwen source sensitivity (6.79 min), while available records lack intra-task stage breakdowns, continuous execution-window GPU telemetry, and multi-model dispatch opportunities
 - acceptance: no data available this milestone
 
+### Milestone 2026.10.703
+
+- exp_range: no data available this milestone
+- theme: Radial service cost measurement, verification learning gap decisions, and supervisor reader qualification across an all-synthesis set lacking sub-phase telemetry
+- key result: honest operational negative — 5 synthesis-only experiments completed in 29.3 wall-time minutes led by radial service costs with qualified receipt storage (17.53 min), verification learning gap decisions (4.64 min), supervisor reader qualification (3.60 min), and acceleration boundary preservation (3.22 min), while 0 compute-bound experiments were executed and available records lack intra-task stage breakdowns
+- acceptance: no data available this milestone
+
 
