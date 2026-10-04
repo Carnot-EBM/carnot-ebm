@@ -2,6 +2,29 @@
 
 # Research Reporting Capability Specification
 
+## REQ-REPORT-8135: Terminal V703 branch accounting
+
+Exp8135 SHALL authenticate all thirteen full tasks, visible table, embedded JSON,
+canonical digest and immutable Exp8123 activation bytes. Missing primaries,
+alternate conductor blocks, qualified nulls, disqualified measurements and valid
+results SHALL have separate dispositions. Unchanged external blocks terminate
+once as complete_blocked_<operand>; owned failures disqualify and zero readiness.
+Capstone execution has no success gate on upstream science. Current execution
+loads no model. Preserve input bytes, failed primaries, retirement history and
+exact failing operands. G1-G4 SHALL come from the unchanged publication gate.
+Publish only through primary_publication after normal owned validator exits.
+The conductor owns ops/status, ops/changelog and traceability reconciliation.
+
+### SCENARIO-REPORT-8135-PRIVATE
+
+Private success, mixed-null, missing-input, disqualified-source, table/prompt
+mutation and outside-checkout cold replay SHALL verify independent accounting.
+Freeze argv before reduction; run scoped consumer tests, E2E-018, Ruff, strict
+mypy, spec coverage and 100 percent new statement coverage. Retain one bounded
+full-suite repository-health diagnostic separately. Replay SHALL rehash raw,
+source, code and log bytes and independently recompute every reported reduction.
+
+
 ## REQ-REPORT-8124: Publish a normally validated no-model protocol
 
 Exp8124 publishes its primary and primitive evidence through primary_publication.

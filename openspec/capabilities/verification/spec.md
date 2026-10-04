@@ -2,6 +2,25 @@
 
 # Verification Capability Specification
 
+## REQ-VERIFY-8135: Independent V703 scientific limits
+
+Reduce source decisions, later learning with retention, and host service
+primitives independently. Flagged/disqualified inputs contribute no benefit.
+H1 and H2 retain a fixed two-member Holm family, source support, absent units
+and exposed-development scope. Protocol failures are distinct from valid nulls.
+Fixture outcomes are circular_positive. Independent generalization and
+generalized learning scores remain zero. FR-06/12, FR-11, FR-05/08/NFR-01,
+current ARC frontier and each board obligation SHALL receive separate decisions
+and falsifiable next actions. Environmental blocks retire no scientific family.
+
+### SCENARIO-VERIFY-8135-REDUCTION
+
+A blocked source branch SHALL NOT erase eligible learning or host service.
+Duplicate seeds create no new independent source. Missing, invalid and oracle
+units retain masks. Exact repeated qualified null scope can retire only with
+authenticated matching prior verdict and unchanged configuration evidence.
+
+
 ## REQ-VERIFY-8124: Seal V703 evidence and expected identity before observations
 
 Authenticate Exp8098 original640 source roles and Exp8111 custody without
