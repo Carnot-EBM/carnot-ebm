@@ -394,3 +394,9 @@ As of September 27, Tufa Labs leads the provisional public leaderboard with **27
 
 - **July 17 — Official submission diagnostics:** Organizers analyzed 500 failed submissions. Roughly one-third had no traceable notebook error; almost 20% required a GPU without enabling it. [Organizer announcement](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/727119)
 
+## 2026-10-04 13:08 UTC -- NEW
+
+- **September 3 — New ARC-AGI-3 results and reporting policy:** GPT-6 Astra scored **62.7%** on Semi-Private with the Standard harness and **99.9%** with the Provider Adapter harness. ARC Prize will publish both harness results with explicit labels on its benchmark leaderboard. [Official announcement](https://arcprize.org/blog/astra)
+
+- **New official event:** ARC Prize announced a **Research Summit on October 23, 2026, in Boston**, hosted with MIT. [Official event page](https://arcprize.org/events/research-summit-2026)
+
