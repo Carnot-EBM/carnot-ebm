@@ -1,0 +1,101 @@
+.........F                                                               [100%]
+=================================== FAILURES ===================================
+______________ test_freeze_precedes_evaluator_and_mutated_replay _______________
+
+world = PosixPath('/tmp/carnot-8137-reproduction/custody81110')
+tmp_path = PosixPath('/tmp/carnot-8137-reproduction/test_freeze_precedes_evaluator0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f2aa9456db0>
+
+    def test_freeze_precedes_evaluator_and_mutated_replay(world, tmp_path, monkeypatch):
+        """REQ-VERIFY-8124: actual capture manifest is sealed before labels open."""
+        runtime_world(world)
+        original = e.qualified.measure
+    
+        def measure(root, raw, **kwargs):
+            assert (raw / "evidence_capture_manifest.json").is_file()
+            return original(root, raw, **kwargs)
+    
+        monkeypatch.setattr(e.qualified, "measure", measure)
+        work = e.measure(world, tmp_path / "raw", fixture=True)
+        assert len(work["protocol_conformance_rows"]) == 640
+        assert all("y" not in r for r in work["protocol_conformance_rows"])
+        receipts = [dict(passed=True)]
+        raw = tmp_path / "raw"
+        atomic_json(raw / "validation_receipts.json", dict(rows=receipts))
+        value = e.build(work, raw, receipts, fixture=True)
+        output = tmp_path / (e.NAME + ".json")
+        atomic_json(output, value)
+        assert e.replay(output)
+        shard = raw / "evidence_capture_manifest.json"
+        old = shard.read_bytes()
+>       shard.write_bytes(b"changed")
+
+tests/python/test_evidence_protocol_8124.py:191: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1036: in write_bytes
+    with self.open(mode='wb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+file = PosixPath('/tmp/carnot-8137-reproduction/test_freeze_precedes_evaluator0/raw/evidence_capture_manifest.json')
+mode = 'wb', buffering = -1, encoding = None, errors = None, newline = None
+closefd = True, opener = None
+
+    def _compat_io_open(
+        file: object,
+        mode: str = "r",
+        buffering: int = -1,
+        encoding: str | None = None,
+        errors: str | None = None,
+        newline: str | None = None,
+        closefd: bool = True,
+        opener: Any | None = None,
+    ) -> Any:
+        target = (
+            _redirect_legacy_write_path(file, "io.open", ensure_parent=True)
+            if _is_write_intent(mode, None)
+            else file
+        )
+>       return _ORIGINAL_IO_OPEN(
+            target,
+            mode,
+            buffering,
+            encoding,
+            errors,
+            newline,
+            closefd,
+            opener,
+        )
+E       PermissionError: [Errno 13] Permission denied: '/tmp/carnot-8137-reproduction/test_freeze_precedes_evaluator0/raw/evidence_capture_manifest.json'
+
+python/carnot/testing/tracked_results_guard.py:175: PermissionError
+----------------------------- Captured stdout call -----------------------------
+[exp8124] phase=public_protocol_frozen completed=1 pending=0
+[exp8124] phase=expected_identity_frozen completed=1 pending=0
+[exp8124] phase=before_cache_identity completed=0 pending=0
+[exp8124] phase=after_cache_identity completed=1 pending=0
+[exp8124] phase=frozen_fit completed=256 pending=384
+[exp8124] phase=frozen_tune completed=384 pending=256
+[exp8124] phase=frozen_evaluation completed=640 pending=0
+[exp8124] phase=source_and_arm_order_frozen completed=640 pending=0
+[exp8111] phase=before_methods completed=0 pending=0
+[exp8111] phase=rebuild_original_public_selection completed=0 pending=640
+[exp8098] public_response_scan completed=1 pending=0
+[exp8111] phase=public_authenticated_evaluator_open completed=640 pending=0
+[exp8111] phase=original_annotation_scan completed=1 pending=0
+[exp8111] phase=after_methods completed=1 pending=0
+[exp8111] phase=before_stream_input completed=0 pending=0
+[exp8111] phase=historical_completion_custody completed=0 pending=320
+[exp8111] phase=historical_completion_custody completed=64 pending=256
+[exp8111] phase=historical_completion_custody completed=128 pending=192
+[exp8111] phase=historical_completion_custody completed=192 pending=128
+[exp8111] phase=historical_completion_custody completed=256 pending=64
+[exp8111] phase=after_stream_input completed=1 pending=0
+[exp8111] phase=measurement_normal_exit completed=640 pending=0
+[exp8124] phase=evidence_protocol_normal_exit completed=640 pending=0
+=========================== short test summary info ============================
+FAILED tests/python/test_evidence_protocol_8124.py::test_freeze_precedes_evaluator_and_mutated_replay
+1 failed, 9 passed in 11.57s

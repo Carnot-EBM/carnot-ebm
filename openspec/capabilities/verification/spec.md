@@ -2,6 +2,29 @@
 
 # Verification Capability Specification
 
+## REQ-VERIFY-8137: Qualify source transport after private seal failure
+
+Reproduce the Exp8124 private PermissionError before repair. Mutable private
+capture fixtures SHALL reach the unchanged tamper/replay assertions. Production
+capture seals remain read-only and tracked_results_guard remains active. Freeze
+unchanged V703 prefixes, twelve features, strict parser, UTF-8 quote offsets,
+one128-token call per arm,6000-token complete input and32-word quote ceiling.
+Authenticate original Exp8098 fit128/tune64/evaluation128 through Exp8111, retain
+missing sources and masks, and do not qualify stream/retention features. Expected
+nested runtime_identity.model_revision comes from authenticated Exp8102/8118
+before cache observation; missing expectations cannot borrow observed values.
+Ingest HART2603.05828v1, RT4CHART2603.27752v2 and SURE-RAG2605.03534 methods with
+source links and adaptation limits. Quotes prove byte custody only. Altered
+source diagnostics inherit no target; no entailment oracle or benefit is run.
+
+### SCENARIO-VERIFY-8137: Production ordering and private mutations
+
+Test actual production preconditions, absent/mutated expected identities, mutable
+private manifest tampering, immutable production seals, source masks and zero
+current model-call terminal builders. The original Exp8124 assertions remain.
+Source readiness requires source custody and all owned checks, independently of
+learning; external blocks retain exact operands and terminate complete_blocked.
+
 ## REQ-VERIFY-8136: Independently replay administrative custody
 
 Rehash saved source, code, authority, primitive and validation log bytes.

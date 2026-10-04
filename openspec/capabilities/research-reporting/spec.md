@@ -2,6 +2,28 @@
 
 # Research Reporting Capability Specification
 
+## REQ-REPORT-8137: Publish a validated no-model source protocol
+
+Exp8137 SHALL publish primitive source rows, frozen capture requests, permission
+evidence, expected identity and literature limits through primary_publication.
+Freeze validation argv before measurement. Require unit/consumer checks,
+E2E-015/019, outside-checkout CLI success/block/mutation/cold replay, Ruff
+check/format, strict mypy, scoped spec coverage and100 percent added statement
+coverage. Run the full Python suite once as separate repository-health evidence.
+Unmodified adversarial and strict row validators require normal exits before
+publication; failed owned validation disqualifies and zeros source readiness.
+Declare MODEL_SPECS=[], no_model_load, empty call ledger and trained_head_specs;
+historical Qwen belongs only in cited_upstream_artifacts. Fixture success remains
+circular_positive and both generalization scores remain0. The conductor owns
+ops/status, ops/changelog and traceability reconciliation.
+
+### SCENARIO-REPORT-8137: Independent terminal source accounting
+
+Private success, external block, source mutation and cold replay SHALL exercise
+the script path outside checkout without PYTHONPATH. Replay rehashes primitive,
+source, code and log bytes and independently rebuilds counts/readiness. Completed
+null and blocked results finish once; partial describes unfinished owned work.
+
 ## REQ-REPORT-8136: Bind V704 and preserve terminal V703 dispositions
 
 Exp8136 SHALL reuse the parameterized authority reader for exactly fourteen full

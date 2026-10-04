@@ -6450,3 +6450,18 @@ Capacity2606.11711v1: ingested primary Section2 and scheduler methods. Preserve
 V702 delay20/capacity32 and pending/lost-feedback accounting. Empirical center
 learning inherits no convex regret theorem. KAN-CL importance anchoring remains
 deferred under the existing retirement. No literature-service access gates science.
+
+### Exp8137 V704 primary source methods ingested — 2026-10-04
+
+- HART2603.05828v1, Sections3.2–3.4: ingested. Adapt source/answer attribution
+  and evidence linkage; no retrieval, mechanism classification or causal tracing
+  is reproduced. Source: https://arxiv.org/html/2603.05828v1 .
+- RT4CHART2603.27752v2, Sections3.3–3.6: ingested. Preserve complete-source
+  holistic/source_span requests and quote custody. No claim decomposition,
+  local/global joins, enhanced labels or entailment oracle is inherited.
+  Source: https://arxiv.org/html/2603.27752v2 .
+- SURE-RAG2605.03534, SectionsIV.A–IV.C: ingested. Preserve probabilities for
+  later tune-only selective calibration and retain altered-source target absence.
+  No sufficiency encoder, fitted calibration or risk-coverage score is measured.
+  Source: https://arxiv.org/html/2605.03534 . Primary HTML bytes are archived with
+  hashes below Exp8137 raw evidence. Citation-service failure cannot gate science.

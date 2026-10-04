@@ -52,6 +52,20 @@ def protocol() -> Json:
     return value
 
 
+def capture_seal(path: Path, value: Json, *, fixture: bool) -> Json:
+    """Allow private mutation tests to reach replay while production stays sealed.
+
+    A private fixture is byte-bound like production but must allow intentional
+    damage. Reject repository result paths before granting that write permission.
+    """
+    if fixture and path.resolve().is_relative_to((ROOT / "results").resolve()):
+        raise ValueError("private_capture_required")
+    reference = qualified.cohort.immutable(path, value)
+    if fixture:
+        path.chmod(0o600)
+    return reference
+
+
 def parse(transcript: str, source: bytes, arm: str) -> Json:
     """A valid substring shows byte custody; semantic entailment remains unknown.
 
@@ -287,8 +301,8 @@ def measure(
                     )
                 )
         progress("frozen_" + role, len(conformance), 640 - len(conformance))
-    manifest = qualified.cohort.immutable(
-        raw / "evidence_capture_manifest.json", dict(rows=conformance)
+    manifest = capture_seal(
+        raw / "evidence_capture_manifest.json", dict(rows=conformance), fixture=fixture
     )
     progress("source_and_arm_order_frozen", len(conformance))
     work = qualified.measure(root, raw, fixture=fixture, stream_path=stream_path, mutation=mutation)

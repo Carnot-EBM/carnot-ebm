@@ -1,0 +1,239 @@
+........F.FF.F.F........................................................ [ 97%]
+..                                                                       [100%]
+=================================== FAILURES ===================================
+_______________ test_cli_external_success_block_mutation_replay ________________
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261004T220204-2992367-a65d02c8/test_cli_external_success_bloc0')
+
+    def test_cli_external_success_block_mutation_replay(tmp_path):
+        """SCENARIO-REPORT-8098-CLI uses the actual script without ambient imports."""
+        fixture(tmp_path / "corpus")
+        env = dict(os.environ, PYTHONUNBUFFERED="1", JAX_PLATFORMS="cpu")
+        env.pop("PYTHONPATH", None)
+        for mode, expected in (
+            ("success", "null"),
+            ("blocked", "blocked"),
+            ("contamination", "disqualified"),
+            ("duplicate", "disqualified"),
+        ):
+            output = tmp_path / mode / "experiment_8098_v701_development_methods.json"
+            args = [
+                sys.executable,
+                "-u",
+                str(CLI),
+                "--fixture-root",
+                str(tmp_path / ("missing" if mode == "blocked" else "corpus")),
+                "--output",
+                str(output),
+            ]
+            if mode in {"contamination", "duplicate"}:
+                args += ["--mutate", mode]
+            result = subprocess.run(
+                args, cwd=tmp_path, env=env, capture_output=True, text=True, timeout=60
+            )
+>           assert result.returncode == 0, result.stdout + result.stderr
+E           AssertionError: [exp8098] start completed=0 pending=0
+E             [exp8098] preconditions_before completed=0 pending=0
+E             [exp8098] preconditions_after_methods_before completed=0 pending=0
+E             Traceback (most recent call last):
+E               File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_8098_v701_development_methods.py", line 13, in <module>
+E                 raise SystemExit(main())
+E                                  ^^^^^^
+E               File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8098_v701_development_methods.py", line 544, in main
+E                 plan = produce(root, raw, args.mutate, True)
+E                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E               File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_8098_v701_development_methods.py", line 296, in produce
+E                 methods = m.methods(ROOT / DESIGN)
+E                           ^^^^^^^^^^^^^^^^^^^^^^^^
+E               File "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/development_methods_8098.py", line 406, in methods
+E                 design.read_text()
+E             IndexError: list index out of range
+E             
+E           assert 1 == 0
+E            +  where 1 = CompletedProcess(args=['/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python', '-u', '/home/ianblenke/github.c...ify/development_methods_8098.py", line 406, in methods\n    design.read_text()\nIndexError: list index out of range\n').returncode
+
+tests/python/test_development_methods_8098.py:191: AssertionError
+__________________ test_preconditions_and_historical_operands __________________
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261004T220204-2992367-a65d02c8/test_preconditions_and_histori0')
+
+    def test_preconditions_and_historical_operands(tmp_path):
+        root = tmp_path / "inputs"
+        history, terminal, sidecar = private_inputs(root)
+        assert not e.preconditions(root)["failures"]
+        (root / "data/ragtruth/source_info.jsonl").unlink()
+>       plan = e.produce(root, tmp_path / "sealed", "", False)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_development_methods_8098.py:275: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/experiment_8098_v701_development_methods.py:296: in produce
+    methods = m.methods(ROOT / DESIGN)
+              ^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+design = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/research-roadmap-vNEXT.md')
+
+    def methods(design: Path) -> Json:
+        """Seal full design text as well as exact basis choices before outcome access."""
+        protocol = (
+>           design.read_text()
+            .split("## Frozen data and numerical protocol", 1)[1]
+            .split("## Dependency graph", 1)[0]
+            .split("<!-- V701_TASK_CONTRACT_START -->", 1)[0]
+        )
+E       IndexError: list index out of range
+
+python/carnot/verify/development_methods_8098.py:406: IndexError
+----------------------------- Captured stdout call -----------------------------
+[exp8098] preconditions_before completed=0 pending=0
+[exp8098] preconditions_after_methods_before completed=33 pending=0
+_________________ test_frozen_protocol_and_independent_replay __________________
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261004T220204-2992367-a65d02c8/test_frozen_protocol_and_indep0')
+
+    def test_frozen_protocol_and_independent_replay(tmp_path):
+        root = fixture(tmp_path / "corpus")
+>       plan = e.produce(root, tmp_path / "raw", "", True)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_development_methods_8098.py:286: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/experiment_8098_v701_development_methods.py:296: in produce
+    methods = m.methods(ROOT / DESIGN)
+              ^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+design = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/research-roadmap-vNEXT.md')
+
+    def methods(design: Path) -> Json:
+        """Seal full design text as well as exact basis choices before outcome access."""
+        protocol = (
+>           design.read_text()
+            .split("## Frozen data and numerical protocol", 1)[1]
+            .split("## Dependency graph", 1)[0]
+            .split("<!-- V701_TASK_CONTRACT_START -->", 1)[0]
+        )
+E       IndexError: list index out of range
+
+python/carnot/verify/development_methods_8098.py:406: IndexError
+----------------------------- Captured stdout call -----------------------------
+[exp8098] preconditions_before completed=0 pending=0
+[exp8098] preconditions_after_methods_before completed=0 pending=0
+__________________ test_readiness_and_code_receipt_mutations ___________________
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261004T220204-2992367-a65d02c8/test_readiness_and_code_receip0')
+
+    def test_readiness_and_code_receipt_mutations(tmp_path):
+        root = fixture(tmp_path / "corpus")
+        response = root / "data/ragtruth/response.jsonl"
+        records = [json.loads(line) for line in response.read_text().splitlines()]
+        for row in records:
+            row.pop("labels")
+        response.write_text("".join(json.dumps(row) + "\n" for row in records))
+>       plan = e.produce(root, tmp_path / "raw", "", True)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_development_methods_8098.py:338: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/experiment_8098_v701_development_methods.py:296: in produce
+    methods = m.methods(ROOT / DESIGN)
+              ^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+design = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/research-roadmap-vNEXT.md')
+
+    def methods(design: Path) -> Json:
+        """Seal full design text as well as exact basis choices before outcome access."""
+        protocol = (
+>           design.read_text()
+            .split("## Frozen data and numerical protocol", 1)[1]
+            .split("## Dependency graph", 1)[0]
+            .split("<!-- V701_TASK_CONTRACT_START -->", 1)[0]
+        )
+E       IndexError: list index out of range
+
+python/carnot/verify/development_methods_8098.py:406: IndexError
+----------------------------- Captured stdout call -----------------------------
+[exp8098] preconditions_before completed=0 pending=0
+[exp8098] preconditions_after_methods_before completed=0 pending=0
+_________ test_parent_publication_requires_normal_child_and_validation _________
+
+tmp_path = PosixPath('/tmp/pytest-carnot-ianblenke/20261004T220204-2992367-a65d02c8/test_parent_publication_requir0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fbf6cc3eb70>
+
+    def test_parent_publication_requires_normal_child_and_validation(tmp_path, monkeypatch):
+        root = fixture(tmp_path / "corpus")
+    
+        def child_run(checkout, spec, private, durable):
+            sealed = Path(spec["argv"][spec["argv"].index("--seal-output") + 1])
+            atomic_json(sealed, e.produce(root, sealed.parent, "", True))
+            log = tmp_path / "child.log"
+            log.write_text("private synthetic supervision fixture")
+            return dict(
+                passed=True,
+                name="seal_child",
+                log_path=str(log),
+                log_sha256=sha256_file(log),
+                test_only_synthetic_receipt=True,
+            )
+    
+        monkeypatch.setattr(e, "run_check", child_run)
+        monkeypatch.setattr(e, "validate", lambda raw: dict(passed=True, receipts=[]))
+        monkeypatch.setattr(e, "terminal", lambda *args: dict(passed=False, receipts=[]))
+        output = tmp_path / "publication" / (e.NAME + ".json")
+        health = tmp_path / "health.json"
+        atomic_json(health, dict(status="test_only"))
+        assert (
+>           e.main(
+                [
+                    "--root",
+                    str(root),
+                    "--output",
+                    str(output),
+                    "--health-receipt",
+                    str(health),
+                    "--mutate",
+                    "roles",
+                ]
+            )
+            == 0
+        )
+
+tests/python/test_development_methods_8098.py:408: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/experiment_8098_v701_development_methods.py:564: in main
+    child = run_check(
+tests/python/test_development_methods_8098.py:390: in child_run
+    atomic_json(sealed, e.produce(root, sealed.parent, "", True))
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+python/carnot/experiment_8098_v701_development_methods.py:296: in produce
+    methods = m.methods(ROOT / DESIGN)
+              ^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+design = PosixPath('/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/research-roadmap-vNEXT.md')
+
+    def methods(design: Path) -> Json:
+        """Seal full design text as well as exact basis choices before outcome access."""
+        protocol = (
+>           design.read_text()
+            .split("## Frozen data and numerical protocol", 1)[1]
+            .split("## Dependency graph", 1)[0]
+            .split("<!-- V701_TASK_CONTRACT_START -->", 1)[0]
+        )
+E       IndexError: list index out of range
+
+python/carnot/verify/development_methods_8098.py:406: IndexError
+----------------------------- Captured stdout call -----------------------------
+[exp8098] start completed=0 pending=0
+[exp8098] preconditions_before_validation completed=0 pending=0
+[exp8098] preconditions_before completed=0 pending=0
+[exp8098] preconditions_after_methods_before completed=0 pending=0
+=========================== short test summary info ============================
+FAILED tests/python/test_development_methods_8098.py::test_cli_external_success_block_mutation_replay
+FAILED tests/python/test_development_methods_8098.py::test_preconditions_and_historical_operands
+FAILED tests/python/test_development_methods_8098.py::test_frozen_protocol_and_independent_replay
+FAILED tests/python/test_development_methods_8098.py::test_readiness_and_code_receipt_mutations
+FAILED tests/python/test_development_methods_8098.py::test_parent_publication_requires_normal_child_and_validation
+5 failed, 69 passed in 72.90s (0:01:12)
