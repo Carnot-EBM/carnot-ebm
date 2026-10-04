@@ -21418,3 +21418,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - Preserve the V702 design and add planning-only specifications and traceability.
 - Leave the active roadmap and conductor source unchanged. No push or activation.
 - 2026-10-04: Bind thirteen tasks with the exact authority-reader format (⚠️ Research Finding) — honest_verdict=complete_null_contract_custody; results/experiment_8123_v703_contract_custody.json
+- 2026-10-04: Measure complete radial service costs with qualified receipt storage (⚠️ Research Finding) — honest_verdict=complete_circular_positive_host_service_fixture; results/experiment_8132_v703_service_cost.json
