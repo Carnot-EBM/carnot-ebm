@@ -21421,3 +21421,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-10-04: Measure complete radial service costs with qualified receipt storage (⚠️ Research Finding) — honest_verdict=complete_circular_positive_host_service_fixture; results/experiment_8132_v703_service_cost.json
 - 2026-10-04: Qualify the current supervisor reader and inspect only new outcomes (⚠️ Blocked) — honest_verdict=complete_blocked_validation_command_manifest; results/experiment_8133_v703_arc_reader_frontier.json
 - 2026-10-04: Bound useful acceleration and preserve each board evidence boundary (⚠️ Blocked) — honest_verdict=complete_blocked_complete_service_ready_score; results/experiment_8134_v703_hardware_service_boundary.json
+- 2026-10-04: Decide thirteen outcomes and remaining verification learning and deployment gaps (⚠️ Research Finding) — honest_verdict=complete_disqualified_owned_validation; results/experiment_8135_v703_capstone.json
