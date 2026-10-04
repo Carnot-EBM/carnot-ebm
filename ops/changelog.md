@@ -21397,3 +21397,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-10-04: Bind thirteen tasks and preserve V701 execution evidence (⚠️ Blocked) — honest_verdict=complete_blocked_design_exact_task_contract; results/experiment_8110_v702_contract_custody.json
 - 2026-10-04: Seal source interventions and an independent delayed-memory protocol (⚠️ Research Finding) — honest_verdict=complete_null_methods_and_stream_custody_sealed; results/experiment_8111_v702_methods_and_stream_custody.json
 - 2026-10-04: Measure Qwen source sensitivity with qualified bounded transport (⚠️ Blocked) — honest_verdict=complete_blocked_qwen_cache_revision; results/experiment_8112_v702_fit_source_capture.json
+- 2026-10-04: Learn new radial centers from delayed feedback without a batch-fit dependency (⚠️ Research Finding) — honest_verdict=complete_disqualified_owned_validation; results/experiment_8116_v702_independent_online_memory.json
