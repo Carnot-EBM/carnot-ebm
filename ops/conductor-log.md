@@ -19493,3 +19493,11 @@ code |
 | 2026-10-04 17:25 UTC | Bind thirteen tasks with the exact authority-reade | OK | 88 passed, 1 warning in 29.41s |
 | 2026-10-04 17:37 UTC | Seal evidence-span comparisons and qualify model i | FAIL | Codex CLI error: ile(log))] + atomic_json(raw / "validation_receipts.json" |
 | 2026-10-04 17:41 UTC | Seal evidence-span comparisons and qualify model i | SKIP | Pre-tests failing, self-heal failed: receipts = [dict(passed=True)] |
+| 2026-10-04 17:45 UTC | Seal evidence-span comparisons and qualify model i | FAIL | Codex CLI error: nding: int = 0) -> None: """Show phase changes and real |
+| 2026-10-04 17:47 UTC | Capture paired holistic and evidence-span Qwen jud | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8124-evidence-protocol) |
+| 2026-10-04 17:47 UTC | Train calibrated energy decisions from equal sourc | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8125-fit-evidence-capture, exp8124-evidence-protocol) |
+| 2026-10-04 17:47 UTC | Capture reserved Qwen evidence with frozen decisio | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8126-evidence-energy-fit) |
+| 2026-10-04 17:47 UTC | Independently test evidence-linked decision benefi | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8127-reserved-evidence-capture) |
+| 2026-10-04 17:47 UTC | Qualify frozen learning semantics and bounded term | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8124-evidence-protocol) |
+| 2026-10-04 17:47 UTC | Learn structural energy memory under the sealed de | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8129-learning-protocol-qualification, exp8124-evidence-protocol) |
+| 2026-10-04 17:47 UTC | Independently measure later learning benefit reten | GATE_BLOCK | Pre-emptive skip: upstream retired (exp8130-delayed-energy-memory) |
