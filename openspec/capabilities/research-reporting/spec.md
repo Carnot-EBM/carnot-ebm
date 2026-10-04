@@ -92367,3 +92367,32 @@ E2E-018 authority lifecycle. Require consumer tests, Ruff, strict mypy, scoped s
 coverage and 100 percent added statement coverage. Record one bounded full Python suite
 run separately as global health. Preserve all historical assertions and failed receipts.
 Operational and traceability reconciliation belongs to the conductor per the stop rule.
+
+## REQ-REPORT-8110: V702 authority and complete V701 custody
+
+Bind the visible thirteen-task table, executable JSON, full-task digest and
+separate immutable staged/activated bytes using the parameterized shipped reader
+for milestone 2026.10.702, first_id 8110 and count 13. A consumed staging pathname
+SHALL retain its observed absence; authenticate saved committed staging bytes
+separately. Preserve all thirteen V701 dispositions, nine historical primaries,
+four conductor skips and the alternate Exp8100 gate-block pathname. The
+quarantined Exp8099 primary and stale terminal binding remain historical failures.
+No global positive capstone is a prerequisite for any scientific branch.
+
+### SCENARIO-REPORT-8110-AUTHORITY
+
+Private E2E-018 controls SHALL reject ten full-task field mutations, visible order
+and digest drift, and accept missing staging after activation. Full prompts and
+prior failures belong to the canonical digest. Save immutable bytes and actual
+failed operands; missing external evidence is terminal complete_blocked_<check>.
+
+### SCENARIO-REPORT-8110-PUBLICATION
+
+Freeze argv before measurement. Require private CLI success, blocked, owned
+mutation and cold replay, scoped unit/consumer/spec checks, Ruff, strict mypy and
+100 percent new-code statement coverage. Capture normal exits, durations and log
+hashes. Record one bounded `.venv/bin/pytest tests/python -q` health diagnostic
+separately. Publish only checked bytes through primary_publication after strict
+row lint and adversarial verification. Owned failures disqualify readiness.
+Operational/status/changelog/traceability reconciliation is delegated to the
+conductor by the final 2026-10-04 task instruction.

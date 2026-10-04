@@ -48181,3 +48181,24 @@ remain explicit. Independent and generalized-learning benefit scores SHALL stay 
 Private null and harmful paired rows SHALL earn no benefit. Repeated seeds SHALL retain
 one source denominator. Missing masks and invalid rows remain visible. Cold reductions
 SHALL reject changed input bytes, aggregates, command manifests and validation receipts.
+
+## REQ-VERIFY-8110: Independent historical input qualification
+
+Authenticate Exp8098 public roles, Exp8102 stream/retention feature shards,
+Exp8085 numerical kernel and Exp8105 native binding independently. Require each
+qualified primary's exact hash, bound terminal sidecars, current code and named
+primitive inputs. Export independent historical readiness fields; unrelated
+historical negatives SHALL not share a qualification gate. Exp8099 contributes
+no qualified data. Numerical circular_positive fixtures qualify only arithmetic.
+Current inference is aggregation_from_upstream_artifacts, no_model_load,
+MODEL_SPECS=[], empty call_ledger and trained_head_specs. Historical Qwen calls
+remain historical. Generalization and learning benefit scores stay zero.
+
+### SCENARIO-VERIFY-8110-REPLAY
+
+Private missing feature, kernel, role and native operands SHALL block their own
+branch while preserving the others and authority readiness. Replay SHALL verify
+saved bytes after live-path deletion and independently rebuild authority rows,
+historical dispositions and all readiness reductions. Forged rows, input hashes,
+code hashes, history or receipts SHALL fail cold replay. Tests write outside
+results and preserve original historical assertions and primaries.
