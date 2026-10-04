@@ -1,0 +1,62 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.10.702",
+  "generated_at": "2026-10-04T15:43:36Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 44.6,
+  "experiments_completed": 9,
+  "compute_bound_experiments_count": 2,
+  "slowest_experiments": [
+    {
+      "experiment": "Measure batch crossover and complete radial service transactions",
+      "duration_minutes": 16.78,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Measure owned Qwen acquisition for unseen cache keys",
+      "duration_minutes": 7.75,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Measure Qwen source sensitivity with qualified bounded transport",
+      "duration_minutes": 6.79,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Decide all thirteen outcomes and the three remaining PRD gaps",
+      "duration_minutes": 3.56,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Assess only new live supervisor outcomes for transferable refinement",
+      "duration_minutes": 3.52,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.10.702 completed 9 experiments (2 compute-bound, 7 synthesis-only) across 44.6 total wall-time minutes (averaging 5 minutes per experiment) reconstructed from disk-mtime fallback data. Execution wall time was led by synthesis task 'Measure batch crossover and complete radial service transactions' (16.78 minutes), followed by compute-bound task 'Measure owned Qwen acquisition for unseen cache keys' (7.75 minutes), compute-bound task 'Measure Qwen source sensitivity with qualified bounded transport' (6.79 minutes), synthesis task 'Decide all thirteen outcomes and the three remaining PRD gaps' (3.56 minutes), and synthesis task 'Assess only new live supervisor outcomes for transferable refinement' (3.52 minutes). Point-in-time GPU monitor polling observed 0% utilization across both NVIDIA GeForce RTX 3090 GPUs with 4MB memory allocated outside active runs, and gpu_idle_on_compute_bound_tasks is recorded as false as neither single-model compute-bound task exhibited idle defects or required DualGPURunner.",
+  "bottlenecks_identified": [
+    "Wall time was heavily concentrated in the slowest experiment: synthesis task 'Measure batch crossover and complete radial service transactions' consumed 16.78 of the 44.6 total milestone wall-time minutes (37.6%), and the top two slowest tasks combined for 24.53 minutes (55.0%).",
+    "Compute-bound execution consumed 14.54 minutes (32.6% of milestone wall time) across two single-model tasks without intra-task stage breakdown: 'Measure owned Qwen acquisition for unseen cache keys' (7.75 minutes) and 'Measure Qwen source sensitivity with qualified bounded transport' (6.79 minutes).",
+    "Synthesis-only tasks accounted for 7 of the 9 completed experiments and 3 of the top 5 slowest tasks (totaling 23.86 minutes among the top 5), led by serial transaction and radial service calculations.",
+    "Milestone timing relied on disk-mtime fallback reconstruction due to zero commits found on the live git-log path, leaving intra-task phases (environment setup, data loading, model inference, and artifact emission) uninstrumented without phase-level telemetry.",
+    "Point-in-time GPU monitor polling outside active task execution leaves dynamic compute-bound accelerator utilization and memory bandwidth unmeasured during active workload windows."
+  ],
+  "improvements_suggested": [
+    "Instrument experiment runners with granular intra-task phase timers to isolate latency across environment setup, data loading, cache queries, inference, and artifact emission.",
+    "Emit synchronous start and completion lifecycle timestamps directly into task result receipts during conductor execution to eliminate reliance on disk-mtime fallback reconstruction.",
+    "Profile and optimize the radial service transaction calculation pipeline in 'Measure batch crossover and complete radial service transactions' (16.78 minutes) to minimize serial evaluation overhead.",
+    "Deploy continuous in-flight accelerator telemetry sampling during compute-bound execution windows to dynamically measure GPU utilization and memory bandwidth.",
+    "Enforce DualGPURunner orchestration strictly for concurrent workloads executing two or more distinct models in parallel, avoiding misapplication to single-model Qwen inference tasks.",
+    "Maintain failure_ledger pre-launch checks so doomed reruns continue to be blocked in sub-second time without expending wall-time budget."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Instrument experiment runners with granular intra-task sub-phase timers to isolate data loading, cache operations, inference passes, and receipt serialization latency.",
+    "Profile and optimize the radial service transaction processing pipeline in 'Measure batch crossover and complete radial service transactions' (which accounted for 16.78 minutes of milestone wall time).",
+    "Persist structured start and finish lifecycle timestamps directly into experiment receipt artifacts to replace disk-mtime fallback reconstruction."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Milestone 2026.10.702 executed 9 experiments (2 compute-bound, 7 synthesis-only) in 44.6 wall-time minutes, dominated by radial service transaction synthesis (16.78 minutes) and two compute-bound Qwen evaluation tasks (14.54 minutes combined). The 0% GPU utilization observed on both RTX 3090 GPUs reflects point-in-time monitor polling outside active runs, and gpu_idle_on_compute_bound_tasks is false because neither single-model workload required DualGPURunner. Highest-leverage operational gains lie in instrumenting granular sub-phase execution timers and profiling long-running synthesis calculation pipelines, with estimated time savings set to 0% pending empirical phase telemetry."
+}
